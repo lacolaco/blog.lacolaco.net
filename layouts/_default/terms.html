@@ -1,0 +1,17 @@
+{{ define "main" }}
+
+<div class="pagehead mb-4">
+  <h1>{{ i18n .Data.Plural | default .Data.Plural | title }}</h1>
+</div>
+
+<ul class="list-style-none d-flex">
+  {{ range .Site.Taxonomies.tags }}
+  <li class="mr-1">
+    <a class="d-inline-block Label Label--gray" href="{{ .Page.Permalink }}">{{ .Page.Title }} ({{ .Count }})</a>
+  </li>
+  {{ end }}
+</ul>
+
+{{ template "_internal/pagination.html" . -}}
+
+{{ end }}

@@ -1,0 +1,10 @@
+baseURL = "https://blog.lacolaco.net/"
+languageCode = "ja-JP"
+title = "blog.lacolaco.net"
+enableEmoji = true
+
+[taxonomies]
+  tag = "tags"
+
+[permalinks]
+  post = "/:year/:month/:slug"

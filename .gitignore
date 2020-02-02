@@ -1,0 +1,7 @@
+public
+static/css
+
+.DS_Store
+*.log
+node_modules
+.firebase

@@ -1,0 +1,27 @@
+{{ define "main" }}
+<article class="">
+  <header class="mb-4">
+    <div class="meta">
+      {{ if .Date -}}
+      <span>Published at: {{ .Date.Format "2006-01-02" }}</span>
+      {{ end -}}
+      {{ if .Params.tags -}}
+      {{ end -}}
+    </div>
+
+    <div class="pagehead">
+      <h1>{{ .Title | markdownify | emojify }}</h1>
+    </div>
+
+    <div>
+      {{ range .Params.tags -}}
+      <a href="{{ "/tags/" | relURL }}{{ . | urlize }}"><span class="Label Label--outline">#{{ . }}</span></a>
+      {{ end -}}
+    </div>
+  </header>
+
+  <main class="markdown-body">
+    {{ .Content }}
+  </main>
+</article>
+{{ end }}

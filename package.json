@@ -1,0 +1,22 @@
+{
+  "name": "blog.lacolaco.net",
+  "version": "1.0.0",
+  "private": true,
+  "repository": "git@github.com:lacolaco/blog.lacolaco.net.git",
+  "author": "Suguru Inatomi <suguru.inatomi@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "yarn build:css && hugo",
+    "build:css": "sass styles.scss static/css/styles.css -I node_modules --source-map",
+    "watch": "yarn watch:css & hugo server",
+    "watch:css": "sass --watch styles.scss static/css/styles.css -I node_modules --source-map",
+    "deploy": "yarn build && firebase deploy"
+  },
+  "dependencies": {
+    "@primer/css": "^14.2.0"
+  },
+  "devDependencies": {
+    "firebase-tools": "^7.12.1",
+    "sass": "^1.25.0"
+  }
+}

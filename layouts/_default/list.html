@@ -1,0 +1,32 @@
+{{ define "main" -}}
+
+<div class="pagehead mb-4">
+    {{if .Data.Term }}
+    <h1>Articles with #{{ .Data.Term }}</h1>
+    {{else}}
+    <h1>Articles</h1>
+    {{end}}
+</div>
+<div>
+    <ul class="list-style-none">
+        {{ range .Paginator.Pages -}}
+        <li class="mb-3">
+            <div class="flex-auto min-width-0 lh-condensed">
+                <a class="link-gray-dark v-align-middle no-underline h3" href="{{ .RelPermalink }}">{{ .Title | markdownify | emojify}}</a>
+                <span class="labels lh-default">
+                    {{ range .Params.tags -}}
+                    <a class="d-inline-block Label Label--gray" href="{{ "/tags/" | relURL }}{{ . | urlize }}">#{{ .}}</a>
+                    {{ end -}}
+                </span>
+                <div class="mt-1 text-small text-gray">
+                    <span class="v-align-middle">{{ .Date.Format "2006-01-02" }}</span>
+                </div>
+            </div>
+        </li>
+        {{ end -}}
+    </ul>
+</div>
+
+{{ template "_internal/pagination.html" . -}}
+
+{{ end -}}
