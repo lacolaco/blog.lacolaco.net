@@ -3,7 +3,7 @@
   <header class="mb-4">
     <div class="meta">
       {{ if .Date -}}
-      <span>Published at: {{ .Date.Format "2006-01-02" }}</span>
+      <span class="text-small text-gray">{{ .Date.Format "2006-01-02" }}</span>
       {{ end -}}
       {{ if .Params.tags -}}
       {{ end -}}
