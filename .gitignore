@@ -1,5 +1,6 @@
 public
 static/css
+resources/_gen
 
 .DS_Store
 *.log
