@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": true,
+    "noEmitOnError": true,
+    "typeRoots": ["node_modules/@types"],
+    "types": ["node"]
+  }
+}

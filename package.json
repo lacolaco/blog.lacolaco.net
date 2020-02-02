@@ -6,6 +6,7 @@
   "author": "Suguru Inatomi <suguru.inatomi@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "fetch-remote-posts": "ts-node ./scripts/fetch-remote-posts.ts",
     "build": "yarn build:css && hugo",
     "build:css": "sass styles.scss static/css/styles.css -I node_modules --source-map",
     "watch": "yarn watch:css & hugo server",
@@ -16,7 +17,13 @@
     "@primer/css": "^14.2.0"
   },
   "devDependencies": {
+    "@types/fs-extra": "^8.0.1",
+    "@types/node": "^13.7.0",
+    "axios": "^0.19.2",
     "firebase-tools": "^7.12.1",
-    "sass": "^1.25.0"
+    "fs-extra": "^8.1.0",
+    "sass": "^1.25.0",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
   }
 }
