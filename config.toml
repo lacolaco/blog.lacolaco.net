@@ -10,4 +10,4 @@ paginate = 20
   tag = "tags"
 
 [permalinks]
-  post = "/:year/:month/:slug"
+  post = "/:year/:month/:filename"
