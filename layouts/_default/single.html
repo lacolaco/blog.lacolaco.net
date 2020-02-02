@@ -20,6 +20,12 @@
     </div>
   </header>
 
+  {{ if (.Date.AddDate 1 0 0).Before now }}
+  <div class="mb-4 flash flash-warn">
+    This post was published over a year ago.
+  </div>
+  {{ end }}
+
   <main class="markdown-body">
     {{ .Content }}
   </main>
