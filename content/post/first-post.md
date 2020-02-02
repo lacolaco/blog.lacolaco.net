@@ -1,5 +1,5 @@
 ---
-title: "First Post :tada:"
+title: "First Post 🎉"
 date: 2020-02-02T09:55:17+09:00
 tags: ["tag1"]
 slug: "first-post"
@@ -7,7 +7,7 @@ slug: "first-post"
 
 ## Heading-2
 
-:+1:
+👍
 
 ### Heading-3
 

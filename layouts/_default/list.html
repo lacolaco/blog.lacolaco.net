@@ -1,11 +1,11 @@
 {{ define "main" -}}
 
 <div class="pagehead mb-4">
-    {{if .Data.Term }}
+    {{ if .Data.Term }}
     <h1>Articles with #{{ .Data.Term }}</h1>
-    {{else}}
+    {{ else }}
     <h1>Articles</h1>
-    {{end}}
+    {{ end }}
 </div>
 <div>
     <ul class="list-style-none">

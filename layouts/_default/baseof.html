@@ -4,11 +4,15 @@
     {{- partial "head.html" . -}}
   </head>
   <body>
-    <header class="">
+    <header>
       {{- partial "header.html" . -}}
     </header>
     <main class="p-3 p-lg-6">
       {{- block "main" . }}{{- end }}
     </main>
+
+    <footer class="p-3 p-lg-6">
+      {{- partial "footer.html" . -}}
+    </footer>
   </body>
 </html>

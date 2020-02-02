@@ -1,7 +1,9 @@
 baseURL = "https://blog.lacolaco.net/"
 languageCode = "ja-JP"
-title = "blog.lacolaco.net"
+title = "<output type=\"text\">"
 enableEmoji = true
+googleAnalytics = "UA-52362663-4"
+copyright = "© 2020 lacolaco.net"
 
 [taxonomies]
   tag = "tags"

@@ -1,9 +1,24 @@
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-<title>{{ .Title }}</title>
-<link href="/css/styles.css" rel="stylesheet" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+{{ $title := $.Site.Title }}
+{{ if .IsHome }}
+{{ $title = $.Site.Title }}
+{{ else if eq .Kind "page" }}
+{{ $title = printf "%s | %s" .Title $.Site.Title }}
+{{ else if eq .Kind "taxonomy" }}
+{{ $title = printf "Articles with #%s | %s" .Title $.Site.Title }}
+{{ else if eq .Kind "taxonomyTerm" }}
+{{ $title = printf "%s | %s" .Title $.Site.Title }}
+{{ end }}
+<title>{{ $title | emojify }}</title>
+
+{{ template "_internal/opengraph.html" . }}
+{{ template "_internal/google_analytics.html" . }}
+
+<link href="/css/styles.css" rel="stylesheet" />
 <link rel="stylesheet" href="/vendor/highlight/styles/vs.css" />
 <script src="/vendor/highlight/highlight.pack.js"></script>
 <script src="/vendor/anchorjs-4.2.2/anchor.min.js"></script>
