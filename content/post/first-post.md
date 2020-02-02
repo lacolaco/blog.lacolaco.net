@@ -1,7 +1,7 @@
 ---
 title: "First Post 🎉"
 date: 2020-02-02T09:55:17+09:00
-tags: ["tag1"]
+tags: ["test"]
 slug: "first-post"
 ---
 

@@ -7,7 +7,13 @@
 <ul class="list-style-none d-flex">
   {{ range .Site.Taxonomies.tags }}
   <li class="mr-1">
+    {{ if eq (lower .Page.Title) "angular" }}
+    <a class="d-inline-block Label bg-red text-white" href="{{ .Page.Permalink }}">{{ .Page.Title }} ({{ .Count }})</a>
+    {{ else if eq (lower .Page.Title) "web" }}
+    <a class="d-inline-block Label bg-blue text-white" href="{{ .Page.Permalink }}">{{ .Page.Title }} ({{ .Count }})</a>
+    {{ else }}
     <a class="d-inline-block Label Label--gray" href="{{ .Page.Permalink }}">{{ .Page.Title }} ({{ .Count }})</a>
+    {{ end }}
   </li>
   {{ end }}
 </ul>

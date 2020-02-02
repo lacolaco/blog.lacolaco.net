@@ -15,7 +15,7 @@
 
     <div>
       {{ range .Params.tags -}}
-      <a href="{{ "/tags/" | relURL }}{{ . | urlize }}"><span class="Label Label--outline">#{{ . }}</span></a>
+      {{ partial "tag.html" . -}}&nbsp;
       {{ end -}}
     </div>
   </header>
