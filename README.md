@@ -1,0 +1,1 @@
+![deploy](https://github.com/lacolaco/blog.lacolaco.net/workflows/deploy/badge.svg)
