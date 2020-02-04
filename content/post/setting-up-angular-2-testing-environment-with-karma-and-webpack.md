@@ -1,11 +1,11 @@
-+++
-title = "Setting up Angular Testing Environment with Karma and webpack"
-date = "2016-10-25T10:45:14+09:00"
+---
+title: "Setting up Angular Testing Environment with Karma and webpack"
+date: "2016-10-25T10:45:14+09:00"
+tags: [Angular, Testing, Karma]
+---
 
-+++
-
-This article will explain how to create an environment for Angular 2 testing. 
-It uses [Karma](https://karma-runner.github.io/1.0/index.html), [webpack](http://webpack.js.org/) and some useful stuffs. 
+This article will explain how to create an environment for Angular 2 testing.
+It uses [Karma](https://karma-runner.github.io/1.0/index.html), [webpack](http://webpack.js.org/) and some useful stuffs.
 And it focuses on simplicity and ease to use. Let’s understand it step by step.
 
 <!--more-->
@@ -25,33 +25,35 @@ And it focuses on simplicity and ease to use. Let’s understand it step by step
 app.component.ts:
 
 ```ts
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 @Component({
-    selector: 'my-app',
-    templateUrl: 'app.component.html'
+  selector: "my-app",
+  templateUrl: "app.component.html"
 })
-export class AppComponent { }
+export class AppComponent {}
+```
+
 app.module.ts:
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { AppComponent } from './app.component';
+
+```ts
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { AppComponent } from "./app.component";
 @NgModule({
-    imports: [
-        BrowserModule,
-    ],
-    declarations: [AppComponent],
-    bootstrap: [AppComponent],
+  imports: [BrowserModule],
+  declarations: [AppComponent],
+  bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
 ```
 
 main.ts:
 
 ```ts
-import 'core-js';
-import 'zone.js/dist/zone';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { AppModule } from './app.module';
+import "core-js";
+import "zone.js/dist/zone";
+import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
+import { AppModule } from "./app.module";
 platformBrowserDynamic().bootstrapModule(AppModule);
 ```
 
@@ -59,24 +61,20 @@ tsconfig.json:
 
 ```json
 {
-    "compilerOptions": {
-        "module": "es2015",
-        "target": "es5",
-        "noImplicitAny": false,
-        "sourceMap": true,
-        "moduleResolution": "node",
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "lib": [
-            "es2015", "dom"
-        ],
-        "types": [
-            "node"
-        ]
-    },
-    "awesomeTypeScriptLoaderOptions": {
-        "useWebpackText": true
-    }
+  "compilerOptions": {
+    "module": "es2015",
+    "target": "es5",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "lib": ["es2015", "dom"],
+    "types": ["node"]
+  },
+  "awesomeTypeScriptLoaderOptions": {
+    "useWebpackText": true
+  }
 }
 ```
 
@@ -84,34 +82,31 @@ webpack.config.js:
 
 ```js
 module.exports = () => {
-    return {
-        entry: {
-            main: './src/main.ts'
+  return {
+    entry: {
+      main: "./src/main.ts"
+    },
+    output: {
+      path: "./dist",
+      filename: "[name].bundle.js"
+    },
+    resolve: {
+      extensions: [".js", ".ts", ".html"]
+    },
+    module: {
+      rules: [
+        {
+          test: /\.ts$/,
+          loaders: ["awesome-typescript-loader", "angular2-template-loader"]
         },
-        output: {
-            path: './dist',
-            filename: '[name].bundle.js'
-        },
-        resolve: {
-            extensions: ['.js', '.ts', '.html']
-        },
-        module: {
-            rules: [
-                {
-                    test: /\.ts$/,
-                    loaders: [
-                        'awesome-typescript-loader',
-                        'angular2-template-loader'
-                    ]
-                },
-                {
-                    test: /\.html$/,
-                    loader: 'raw'
-                }
-            ]
-        },
-        devtool: 'inline-source-map'
-    };
+        {
+          test: /\.html$/,
+          loader: "raw"
+        }
+      ]
+    },
+    devtool: "inline-source-map"
+  };
 };
 ```
 
@@ -127,46 +122,45 @@ package.json (scripts only):
 Yay, We’ve created an awesome application quickly.
 
 ## Setting up Karma runner
+
 To make testing environment, we have to set up Karma test runner at first. Follow the command below:
 
 ```
-> npm i -D karma jasmine 
+> npm i -D karma jasmine
 > $(npm bin)/karma init
 ```
 
 This is the starting point of karma.config.js
 
 ```js
-module.exports = function (config) {
+module.exports = function(config) {
   config.set({
-    basePath: '',
-    frameworks: ['jasmine'],
-    files: [
-    ],
-    exclude: [
-    ],
-    preprocessors: {
-    },
-    reporters: ['progress'],
+    basePath: "",
+    frameworks: ["jasmine"],
+    files: [],
+    exclude: [],
+    preprocessors: {},
+    reporters: ["progress"],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,
-    browsers: ['Chrome'],
+    browsers: ["Chrome"],
     singleRun: true,
     concurrency: Infinity
-  })
-}
+  });
+};
 ```
 
 ## Add test file
+
 First step, let’s make a test file and add it into karma runner. Create test/main.js as following:
 
 ```js
-describe('Meaningful Test', () => {
-    it('1 + 1 => 2', () => {
-        expect(1 + 1).toBe(2);
-    });
+describe("Meaningful Test", () => {
+  it("1 + 1 => 2", () => {
+    expect(1 + 1).toBe(2);
+  });
 });
 ```
 
@@ -195,11 +189,12 @@ Let’s execute “npm test” command.
 Okey! Setting up karma runner is done! Let’s go to next step.
 
 ## Use modules and karma-webpack
-Now, our test is only one file. 
+
+Now, our test is only one file.
 So after now, all tests have to be written in test/main.js or add new file into karma configuration every times… Really?
 
 No! Don’t worry, guys. We can separate tests as modules and bundle it to the single test file.
- No updates on karma configuration by per test.
+No updates on karma configuration by per test.
 
 Let’s get it started. Install karma-webpack and karma-sourcemap-loader at first:
 
@@ -207,35 +202,32 @@ Let’s get it started. Install karma-webpack and karma-sourcemap-loader at firs
 > npm i -D karma-webpack karma-sourcemap-loader
 ```
 
-And then, update our karma.config.js. 
+And then, update our karma.config.js.
 Look at **preprocessors** and **webpack** property.
-`webpack` preprocessor executes webpack bundling using `test/main.js` as an entry point. 
+`webpack` preprocessor executes webpack bundling using `test/main.js` as an entry point.
 And `webpack` property is an configuration for the bundling.
 
 ```js
-module.exports = function (config) {
+module.exports = function(config) {
   config.set({
-    basePath: '',
-    frameworks: ['jasmine'],
-    files: [
-      { pattern: 'test/main.js', watched: false }
-    ],
-    exclude: [
-    ],
+    basePath: "",
+    frameworks: ["jasmine"],
+    files: [{ pattern: "test/main.js", watched: false }],
+    exclude: [],
     preprocessors: {
-      'test/main.js': ['webpack']
+      "test/main.js": ["webpack"]
     },
-    webpack: require('./webpack.config')({env: 'test'}),
-    reporters: ['progress'],
+    webpack: require("./webpack.config")({ env: "test" }),
+    reporters: ["progress"],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: false,
-    browsers: ['Chrome'],
+    browsers: ["Chrome"],
     singleRun: true,
     concurrency: Infinity
-  })
-}
+  });
+};
 ```
 
 Execute “npm test” again and see logs.
@@ -255,26 +247,26 @@ chunk    {0} main (main) 1.77 MB [entry] [rendered]
 ...
 ```
 
-webpack runs! karma-webpack is a very easy way to integrate Karma and webpack. 
+webpack runs! karma-webpack is a very easy way to integrate Karma and webpack.
 So now, let’s make the second test in **test/sub.js**:
 
 ```js
-describe('sub test', () => {
-    it('always fails', () => {
-        expect(0).toBe(1);
-    });
+describe("sub test", () => {
+  it("always fails", () => {
+    expect(0).toBe(1);
+  });
 });
 ```
 
 And import that in test/main.js:
 
 ```js
-describe('Meaningful Test', () => {
-    it('1 + 1 => 2', () => {
-        expect(1 + 1).toBe(2);
-    });
+describe("Meaningful Test", () => {
+  it("1 + 1 => 2", () => {
+    expect(1 + 1).toBe(2);
+  });
 });
-import './sub';
+import "./sub";
 ```
 
 test/sub.js contains the test fails always. In this state, try to run test once.
@@ -286,12 +278,12 @@ at Object.it (test/main.js:74:19)
 Chrome 54.0.2840 (Mac OS X 10.11.6): Executed 2 of 2 (1 FAILED) (0.045 secs / 0.014 secs)
 ```
 
-As you can see, the test failed. It’s expected totally. 
+As you can see, the test failed. It’s expected totally.
 But there is an important thing. Can you notice a weird information in that error logs?
 
-Yes, it’s a stack trace. 
-Despite we wrote failing test at test/sub.js, that error is logged as `at Object.it (test/main.js:74:19)`. 
-It’s because of webpack bundling. That stack trace, `(test/main.js:74:19)`, points at the line of the bundled file. 
+Yes, it’s a stack trace.
+Despite we wrote failing test at test/sub.js, that error is logged as `at Object.it (test/main.js:74:19)`.
+It’s because of webpack bundling. That stack trace, `(test/main.js:74:19)`, points at the line of the bundled file.
 It needs **sourcemap** information to show stack traces as we expect.
 
 Install **karma-sourcemap-loader**, which is a preprocessor for loading sourcemap into karma.
@@ -317,27 +309,28 @@ at Object.it (webpack:///test/sub.js:3:0 <- test/main.js:74:19)
 Chrome 54.0.2840 (Mac OS X 10.11.6): Executed 2 of 2 (1 FAILED) (0.03 secs / 0.007 secs)
 ```
 
-Woohoo! That’s a perfect stack trace. We’ve got an environment to execute karma tests with webpack. 
+Woohoo! That’s a perfect stack trace. We’ve got an environment to execute karma tests with webpack.
 But this is a starting point. Next step is setting up **Angular testing**.
 
 ## Setting up Angular Testing
-Currently we have the entry point for testing bundle but it’s a JavaScript file. 
+
+Currently we have the entry point for testing bundle but it’s a JavaScript file.
 Let’s create **src/main.spec.ts** and update **test/main.js** to import it. (no longer use test/sub.js).
 
 src/main.spec.ts:
 
 ```ts
-describe('main test', () => {
-    it('always fails', () => {
-        expect(0).toBe(1);
-    });
+describe("main test", () => {
+  it("always fails", () => {
+    expect(0).toBe(1);
+  });
 });
 ```
 
 test/main.js:
 
 ```js
-require('../src/main.spec.ts');
+require("../src/main.spec.ts");
 ```
 
 And install type definitions of Jasmine and add it into `types` property of tsconfig.json.
@@ -350,25 +343,20 @@ tsconfig.json:
 
 ```json
 {
-    "compilerOptions": {
-        "module": "es2015",
-        "target": "es5",
-        "noImplicitAny": false,
-        "sourceMap": true,
-        "moduleResolution": "node",
-        "experimentalDecorators": true,
-        "emitDecoratorMetadata": true,
-        "lib": [
-            "es2015", "dom"
-        ],
-        "types": [
-            "node",
-            "jasmine"
-        ]
-    },
-    "awesomeTypeScriptLoaderOptions": {
-        "useWebpackText": true
-    }
+  "compilerOptions": {
+    "module": "es2015",
+    "target": "es5",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "lib": ["es2015", "dom"],
+    "types": ["node", "jasmine"]
+  },
+  "awesomeTypeScriptLoaderOptions": {
+    "useWebpackText": true
+  }
 }
 ```
 
@@ -382,96 +370,99 @@ Chrome 54.0.2840 (Mac OS X 10.11.6): Executed 1 of 1 (1 FAILED) ERROR (0.034 sec
 ```
 
 ## Initializing Angular TestBed
-Angular testing uses **TestBed**. 
+
+Angular testing uses **TestBed**.
 We have to initialize it at the first of the test runner. In addition, importing **polyfills** and **zone.js** is needed.
 
 Update **src/main.spec.ts** as following:
 
 ```ts
-import 'core-js'; // ES6 + reflect-metadata
+import "core-js"; // ES6 + reflect-metadata
 // zone.js
-import 'zone.js/dist/zone';
-import 'zone.js/dist/proxy';
-import 'zone.js/dist/sync-test';
-import 'zone.js/dist/async-test';
-import 'zone.js/dist/jasmine-patch';
+import "zone.js/dist/zone";
+import "zone.js/dist/proxy";
+import "zone.js/dist/sync-test";
+import "zone.js/dist/async-test";
+import "zone.js/dist/jasmine-patch";
 // TestBed initialization
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 import {
-    BrowserDynamicTestingModule,
-    platformBrowserDynamicTesting,
-} from '@angular/platform-browser-dynamic/testing';
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting
+} from "@angular/platform-browser-dynamic/testing";
 TestBed.initTestEnvironment(
-    BrowserDynamicTestingModule,
-    platformBrowserDynamicTesting()
+  BrowserDynamicTestingModule,
+  platformBrowserDynamicTesting()
 );
 ```
 
 All preparing was completely ended! At the beginning, let’s make a pipe and its spec.
 
 ```ts
-src/echo.pipe.ts
-import { Pipe, PipeTransform } from '@angular/core';
+src / echo.pipe.ts;
+import { Pipe, PipeTransform } from "@angular/core";
 @Pipe({
-    name: 'echo'
+  name: "echo"
 })
 export class EchoPipe implements PipeTransform {
-    transform(value: any): any {
-        return value;
-    }
+  transform(value: any): any {
+    return value;
+  }
 }
 ```
 
 src/echo.pipe.spec.ts
 
 ```ts
-import { Component } from '@angular/core';
-import { TestBed, async } from '@angular/core/testing';
-import { EchoPipe } from './echo.pipe';
+import { Component } from "@angular/core";
+import { TestBed, async } from "@angular/core/testing";
+import { EchoPipe } from "./echo.pipe";
 @Component({
-    selector: 'test',
-    template: `
+  selector: "test",
+  template: `
     <p>{{ text | echo }}</p>
-    `
+  `
 })
 class TestComponent {
-    text: string;
+  text: string;
 }
-describe('EchoPipe', () => {
-beforeEach(() => {
-        TestBed.configureTestingModule({
-            declarations: [TestComponent, EchoPipe]
-        });
+describe("EchoPipe", () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [TestComponent, EchoPipe]
     });
-beforeEach(async(() => {
-        TestBed.compileComponents();
-    }));
-it('works well', async(() => {
-        const fixture = TestBed.createComponent(TestComponent);
-        fixture.componentInstance.text = 'foo';
-        fixture.detectChanges();
-        const el = fixture.debugElement.nativeElement as HTMLElement; 
-        expect(el.querySelector('p').textContent).toBe('foo');
-    }));
+  });
+  beforeEach(async(() => {
+    TestBed.compileComponents();
+  }));
+  it("works well", async(() => {
+    const fixture = TestBed.createComponent(TestComponent);
+    fixture.componentInstance.text = "foo";
+    fixture.detectChanges();
+    const el = fixture.debugElement.nativeElement as HTMLElement;
+    expect(el.querySelector("p").textContent).toBe("foo");
+  }));
 });
 ```
 
-At last, load that spec from src/main.spec.ts. 
+At last, load that spec from src/main.spec.ts.
 **require.context** is very useful utility of webpack that can load all modules in directory recursively.
 
 ```ts
 // TestBed initialization
 // ...
 // load all specs in ./src
-const context = (require as any).context('./', true, /\.spec\.ts$/);
-context.keys().map(context)
+const context = (require as any).context("./", true, /\.spec\.ts$/);
+context.keys().map(context);
 ```
 
 ## More things
-[Official documentation for testing](https://angular.io/docs/ts/latest/guide/testing.html) is a very good article. 
+
+[Official documentation for testing](https://angular.io/docs/ts/latest/guide/testing.html) is a very good article.
 You can trying it with the testing environment which we’ve created here.
 
 ## Conclusion
+
 - **karma-webpack** and sourcemap are awesome.
 - Create a testing entry point and initialize **TestBed**
 - Write tests!

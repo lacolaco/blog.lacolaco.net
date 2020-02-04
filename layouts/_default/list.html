@@ -12,7 +12,7 @@
         {{ range .Paginator.Pages -}}
         <li class="mb-2 pb-2 border-bottom">
             <div class="flex-auto min-width-0 lh-condensed">
-                <a class="link-gray-dark v-align-middle no-underline h3" href="{{ .RelPermalink }}">{{ .Title | markdownify | emojify}}</a>
+                <a class="link-gray-dark v-align-middle no-underline h3 mr-1" href="{{ .RelPermalink }}">{{ .Title | markdownify | emojify}}</a>
                 <span class="labels lh-default">
                     {{ range .Params.tags -}}
                     {{ partial "tag.html" . -}}&nbsp;
