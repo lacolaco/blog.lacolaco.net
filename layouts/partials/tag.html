@@ -1,6 +1,8 @@
 {{ if eq (lower .) "angular" }}
 <a class="d-inline-block Label bg-red text-white" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
 {{ else if eq (lower .) "web" }}
+<a class="d-inline-block Label bg-yellow-dark text-white" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
+{{ else if eq (lower .) "typescript" }}
 <a class="d-inline-block Label bg-blue text-white" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
 {{ else }}
 <a class="d-inline-block Label Label--gray" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>

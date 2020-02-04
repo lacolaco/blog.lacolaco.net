@@ -4,16 +4,10 @@
   <h1>{{ i18n .Data.Plural | default .Data.Plural | title }}</h1>
 </div>
 
-<ul class="list-style-none d-flex">
+<ul class="list-style-none d-flex flex-wrap">
   {{ range .Site.Taxonomies.tags }}
-  <li class="mr-1">
-    {{ if eq (lower .Page.Title) "angular" }}
-    <a class="d-inline-block Label bg-red text-white" href="{{ .Page.Permalink }}">{{ .Page.Title }} ({{ .Count }})</a>
-    {{ else if eq (lower .Page.Title) "web" }}
-    <a class="d-inline-block Label bg-blue text-white" href="{{ .Page.Permalink }}">{{ .Page.Title }} ({{ .Count }})</a>
-    {{ else }}
-    <a class="d-inline-block Label Label--gray" href="{{ .Page.Permalink }}">{{ .Page.Title }} ({{ .Count }})</a>
-    {{ end }}
+  <li class="mr-1 mb-1">
+    {{ partial "tag.html" .Page.Title -}}  ({{ .Count }})
   </li>
   {{ end }}
 </ul>
