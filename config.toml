@@ -11,3 +11,7 @@ paginate = 20
 
 [permalinks]
   post = "/:year/:month/:filename"
+
+[markup.highlight]
+    guessSyntax = true
+    noClasses = false
