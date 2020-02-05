@@ -22,6 +22,7 @@ jobs:
       with:
         node-version: '12.x'
     - run: yarn install
+    - run: yarn fetch-remote-posts
     - run: yarn build
     - run: yarn deploy
       env:

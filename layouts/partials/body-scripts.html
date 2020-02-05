@@ -1,9 +1,8 @@
 <script src="/vendor/highlight/highlight.pack.js"></script>
 <script src="/vendor/anchorjs-4.2.2/anchor.min.js"></script>
 <script>
+  hljs.initHighlightingOnLoad();
   window.addEventListener("DOMContentLoaded", function() {
-    hljs.initHighlightingOnLoad();
-
     anchors.add(
       ".markdown-body > h1, .markdown-body > h2, .markdown-body > h3, .markdown-body > h4"
     );

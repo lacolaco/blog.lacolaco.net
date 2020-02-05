@@ -1,19 +1,15 @@
 @import "@primer/css/support";
-@import "@primer/css/avatars/avatar";
+@import "@primer/css/avatars";
 @import "@primer/css/alerts";
 @import "@primer/css/base";
-@import "@primer/css/buttons/button";
+@import "@primer/css/box";
+@import "@primer/css/buttons";
 @import "@primer/css/header";
 @import "@primer/css/labels";
-@import "@primer/css/layout/container";
+@import "@primer/css/layout";
 @import "@primer/css/pagination";
 @import "@primer/css/markdown";
-@import "@primer/css/utilities/colors";
-@import "@primer/css/utilities/flexbox";
-@import "@primer/css/utilities/borders";
-@import "@primer/css/utilities/margin";
-@import "@primer/css/utilities/padding";
-@import "@primer/css/utilities/typography";
+@import "@primer/css/utilities";
 
 .markdown-body {
   p {
