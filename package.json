@@ -8,9 +8,9 @@
   "scripts": {
     "fetch-remote-posts": "ts-node ./scripts/fetch-remote-posts.ts",
     "build": "yarn build:css && hugo --minify",
-    "build:css": "sass styles.scss static/css/styles.css -I node_modules --source-map",
+    "build:css": "sass styles.scss static/css/styles.css -I node_modules --source-map --style compressed",
     "watch": "yarn watch:css & hugo server",
-    "watch:css": "sass --watch styles.scss static/css/styles.css -I node_modules --source-map",
+    "watch:css": "yarn run build:css --watch",
     "deploy": "yarn build && firebase deploy"
   },
   "dependencies": {
