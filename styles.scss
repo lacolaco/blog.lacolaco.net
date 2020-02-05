@@ -1,2 +1,11 @@
 @import "@primer/css/index.scss";
 
+.markdown-body {
+  p {
+    line-height: 1.8;
+  }
+
+  figcaption p {
+    text-align: center;
+  }
+}

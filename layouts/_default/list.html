@@ -7,6 +7,9 @@
     <h1>Articles</h1>
     {{ end }}
 </div>
+
+{{ partial "pagination.html" . -}}
+
 <div>
     <ul class="list-style-none">
         {{ range .Paginator.Pages -}}

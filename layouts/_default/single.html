@@ -30,10 +30,12 @@
     {{ .Content }}
   </main>
 
-  <section class="mt-4">
+  <section class="mt-4 d-flex flex-justify-between flex-content-center">
     <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button"
       data-show-count="false">Tweet</a>
     <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <span class="flex-auto"></span>
+    <button class="btn btn-sm" onclick="window.scrollTo(0, 0);">Scroll to top</button>
   </section>
 </article>
 {{ end }}

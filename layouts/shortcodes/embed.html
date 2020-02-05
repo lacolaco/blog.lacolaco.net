@@ -1,0 +1,7 @@
+<iframe
+  class="hatenablogcard"
+  style="width:100%;height:155px;max-width:680px;"
+  {{ if .Get 1 }}title="{{ .Get 1 }}"{{ end }}
+  src="https://hatenablog-parts.com/embed?url={{ .Get 0 }}"
+  width="300" height="150" frameborder="0" scrolling="no">
+</iframe>
