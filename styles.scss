@@ -1,4 +1,11 @@
-@import "@primer/css/index.scss";
+@import "@primer/css/core";
+@import "@primer/css/avatars";
+@import "@primer/css/alerts";
+@import "@primer/css/buttons";
+@import "@primer/css/header";
+@import "@primer/css/labels";
+@import "@primer/css/pagination";
+@import "@primer/css/markdown";
 
 .markdown-body {
   p {
