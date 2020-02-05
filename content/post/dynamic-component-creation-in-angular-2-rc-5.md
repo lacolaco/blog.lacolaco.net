@@ -1,8 +1,8 @@
-+++
-date = "2016-08-11T12:00:00+09:00"
-title = "Dynamic Component Creation in Angular 2 RC.5"
-
-+++
+---
+date: "2016-08-11T12:00:00+09:00"
+title: "Dynamic Component Creation in Angular 2 RC.5"
+tags: [Angular]
+---
 
 Few months ago, I wrote an article, [Dynamic Component Creation in Angular 2](/post/dynamic-component-creation-in-angular-2/).
 It said how to load a HTML template with using _dynamic component creation_.

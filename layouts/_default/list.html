@@ -18,7 +18,7 @@
                 <a class="link-gray-dark v-align-middle no-underline h3 mr-1" href="{{ .RelPermalink }}">{{ .Title | markdownify | emojify}}</a>
                 <span class="labels lh-default">
                     {{ range .Params.tags -}}
-                    {{ partial "tag.html" . -}}&nbsp;
+                    {{ partial "tag.html" . -}}
                     {{ end -}}
                 </span>
                 <div class="mt-1 text-small text-gray">

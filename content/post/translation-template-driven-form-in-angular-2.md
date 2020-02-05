@@ -1,8 +1,8 @@
-+++
-date = "2016-04-10T10:29:17+09:00"
-title = "[日本語訳] Template-driven Forms in Angular 2"
-
-+++
+---
+date: "2016-04-10T10:29:17+09:00"
+title: "[日本語訳] Template-driven Forms in Angular 2"
+tags: [Angular, Translation]
+---
 
 * Original: [Template-driven Forms in Angular 2](http://blog.thoughtram.io/angular/2016/03/21/template-driven-forms-in-angular-2.html)
 * Written by: [Pascal Precht](http://twitter.com/PascalPrecht)

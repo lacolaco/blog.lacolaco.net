@@ -1,10 +1,8 @@
-+++
-date = "2016-04-10T00:23:58+09:00"
-title = "ViewEncapsulationのフォールバック"
-slug = "angular2-view-encapsulation-fallback"
-tags = [ "Angular2" ]
-
-+++
+---
+date: "2016-04-10T00:23:58+09:00"
+title: "ViewEncapsulationのフォールバック"
+tags: [ Angular, Angular2 ]
+---
 
 ブラウザがShadow DOMを実装している場合は`ViewEncapsulation.Native`を、
 そうでない場合はデフォルトの`ViewEncapsulation.Emulated`を使うようにフォールバックを実装する方法。

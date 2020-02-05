@@ -1,8 +1,9 @@
-+++
-date = "2016-04-16T00:27:46+09:00"
-title = "[日本語訳] Angular 2 Component Styles"
+---
+date: "2016-04-16T00:27:46+09:00"
+title: "[日本語訳] Angular 2 Component Styles"
+tags: [Angular, Translation, Component Style]
+---
 
-+++
 * Original: [Component Styles - ts](https://angular.io/docs/ts/latest/guide/component-styles.html)
 * Written by: [angular.io](https://angular.io)
 * Translated at: 04/15/2016

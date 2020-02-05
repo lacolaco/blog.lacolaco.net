@@ -1,10 +1,8 @@
 ---
 title: "Angular2はいかにしてオブジェクトの変更を監視しているのか"
 date: 2016-01-15T15:58:22+09:00
-tags: [Angular]
+tags: [Angular, Change Detection]
 ---
-
-こんにちは、laco0416 です。
 
 今回は Angular2 がいかにしてオブジェクトの変更を監視し、データバインディングを解決しているのかを解き明かします。
 

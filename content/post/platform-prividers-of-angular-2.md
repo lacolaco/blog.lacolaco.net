@@ -1,8 +1,8 @@
-+++
-date = "2016-04-22T09:48:29+09:00"
-title = "Angular 2のPlatform Provider"
-
-+++
+---
+date: "2016-04-22T09:48:29+09:00"
+title: "Angular 2のPlatform Provider"
+tags: [Angular, Dependency Injection]
+---
 
 Angular 2のDependency Injection(DI)は主にサービスクラスのインスタンスを注入するのに用いられますが、
 実は他にも便利な使い方がいくつかあります。

@@ -1,7 +1,8 @@
-+++
-date = "2016-04-10T10:50:17+09:00"
-title = "[日本語訳] Angular 2 Change Detection Explained"
-+++
+---
+date: "2016-04-10T10:50:17+09:00"
+title: "[日本語訳] Angular 2 Change Detection Explained"
+tags: [Angular, Translation, Change Detection]
+---
 
 * Original: [Angular 2 Change Detection Explained](http://blog.thoughtram.io//angular/2016/02/22/angular-2-change-detection-explained.html)
 * Written by: [Pascal Precht](http://twitter.com/PascalPrecht)

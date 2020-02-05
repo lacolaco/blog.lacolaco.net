@@ -1,8 +1,8 @@
-+++
-date = "2016-04-24T13:13:35+09:00"
-title = "Broadcasting events in Angular 2"
-
-+++
+---
+date: "2016-04-24T13:13:35+09:00"
+title: "Broadcasting events in Angular 2"
+tags: [Angular, Tips]
+---
 
 Angular 1 has an utility for broadcasting an event, `$broadcast` and `$on`. 
 Now, Angular 2 dropped these features. Instead it has `@Output` annotation and `(event)` syntax.

@@ -1,8 +1,8 @@
-+++
-date = "2017-03-09T08:21:22+09:00"
-title = "[Angular 4.0] core/commonモジュールの変更について"
-
-+++
+---
+date: "2017-03-09T08:21:22+09:00"
+title: "[Angular 4.0] core/commonモジュールの変更について"
+tags: [Angular, Core, Common]
+---
 
 Angular 4.0新機能シリーズ第4弾です。今回はcoreモジュールとcommonモジュールに入った変更について解説します。
 

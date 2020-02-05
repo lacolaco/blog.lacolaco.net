@@ -1,7 +1,8 @@
-+++
-date = "2016-04-11T00:41:39+09:00"
-title = "Angular 2のローカル変数とexportAs"
-+++
+---
+date: "2016-04-11T00:41:39+09:00"
+title: "Angular 2のローカル変数とexportAs"
+tags: [Angular, Angular2]
+---
 
 Angular 2には**local variables**(ローカル変数)という機能があります。
 公式のチュートリアルやデベロッパーガイドを読んでいると突然登場してみなさんを惑わしているかもしれません。
