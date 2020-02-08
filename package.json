@@ -11,7 +11,7 @@
     "build:css": "sass styles.scss static/css/styles.css -I node_modules --source-map --style compressed",
     "watch": "yarn watch:css & hugo server",
     "watch:css": "yarn run build:css --watch",
-    "deploy": "yarn build && firebase deploy"
+    "deploy": "yarn build && firebase deploy --only hosting"
   },
   "dependencies": {
     "@primer/css": "^14.2.0"

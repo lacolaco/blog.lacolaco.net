@@ -4,9 +4,7 @@ on:
   push:
     branches: 
       - master
-  schedule:
-    # * runs per 30min
-    - cron:  '*/30 * * * *'
+  repository_dispatch:
 
 jobs:
   deploy:
