@@ -3,6 +3,7 @@ languageCode = "ja-JP"
 title = "<output type=\"text\">"
 enableEmoji = true
 googleAnalytics = "UA-52362663-4"
+disqusShortName = "blog-lacolaco"
 copyright = "© 2020 lacolaco.net"
 paginate = 20
 

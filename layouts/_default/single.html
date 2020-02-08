@@ -37,5 +37,10 @@
     <span class="flex-auto"></span>
     <button class="btn btn-sm" onclick="window.scrollTo(0, 0);">Scroll to top</button>
   </section>
+
+  <section class="mt-2">
+    {{ template "_internal/disqus.html" . }}
+  </section>
+
 </article>
 {{ end }}
