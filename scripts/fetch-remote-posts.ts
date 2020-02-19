@@ -37,6 +37,7 @@ function createFrontmatter(post: PostWithFrontmatter): string {
 title: "${post.title}"
 date: ${post.date}
 tags: [${post.tags.map(tag => `"${tag}"`).join(",")}]
+foreign: true
 ---
 `.trim();
 }

@@ -2,6 +2,7 @@
 title: "プロフェッショナルとエキスパート"
 date: 2020-02-08T21:07:00+09:00
 tags: ["Thought","NonTech","Philosophy"]
+foreign: true
 ---
 
 {{< tweet 1220314693950046208 >}}
