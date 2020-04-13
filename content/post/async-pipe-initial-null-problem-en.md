@@ -1,6 +1,6 @@
 ---
 title: "Initial Null Problem of AsyncPipe and async data-binding"
-date: 2020-02-19T10:05:27+09:00
+date: 2020-02-28T19:10:46+09:00
 tags: ["Angular","Library","soundng","AsyncPipe","English","RxJS"]
 foreign: true
 ---
@@ -202,7 +202,7 @@ export class RxSubscribeDirective<T> implements OnInit, OnDestroy {
 With this approach, the template is not rendered until the value first flows, and re-rendering can be triggered only when the value flows. It solves the Initial Null Problem, and is also CPU-friendly because re-rendering is limited only when necessary.
 
 
-By the way, the type of `state` in `let state`is inferred from the type of `source$` exactly if Ivy of Angular v9 or later, and  if `strictTemplates` flag is enabled. When you make a mistake use of `state`, AOT compiler throws an error.
+By the way, the type of `state` in `let state`is inferred from the type of `source$` exactly if Ivy and  `strictTemplates` flag are enabled. When you make a mistake use of `state`, AOT compiler throws an error.
 
 ```html
 <div *rxSubscribe="source$; let state">
