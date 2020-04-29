@@ -17,3 +17,5 @@ hasCJKLanguage = true
 [markup.highlight]
     guessSyntax = true
     noClasses = false
+[markup.goldmark.renderer]
+    unsafe = true
