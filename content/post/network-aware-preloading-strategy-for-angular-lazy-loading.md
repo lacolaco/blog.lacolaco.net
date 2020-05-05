@@ -1,7 +1,7 @@
 ---
 title: "Network-aware Preloading Strategy for Angular Lazy Loading"
 date: 2019-05-11T10:01:10Z
-tags: ["Angular", "LazyLoading", "Performance", "TypeScript"]
+tags: ["angular", "lazy-loading", "performance", "typescript"]
 ---
 
 This post explains how to make *network-aware* preloading strategy for lazy loading of Angular Router. 

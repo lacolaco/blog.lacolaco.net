@@ -1,7 +1,7 @@
 ---
 date: "2016-04-30T20:24:46+09:00"
 title: "Angular 2 New Router Overview"
-tags: [Angular, Router, Overview]
+tags: [angular, router, overview]
 ---
 
 EDIT(2016-05-02):

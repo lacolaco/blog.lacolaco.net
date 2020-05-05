@@ -1,7 +1,7 @@
 ---
 title: "Angular CDK drag-and-drop の紹介"
 date: 2018-08-29T23:29:16+09:00
-tags: [Angular, AngularCDK]
+tags: [angular, angular-cdk]
 ---
 
 こんにちは。

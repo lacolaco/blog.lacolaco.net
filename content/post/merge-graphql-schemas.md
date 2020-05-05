@@ -1,7 +1,7 @@
 ---
 title: "merge-graphql-schemasを使ってGraphQLのスキーマファイルを結合する"
 date: 2018-02-18T22:56:53+09:00
-tags: [GraphQL]
+tags: [graphql]
 ---
 
 [GraphQL Schemaをファイル分割してドキュメンテーションする](../modular-graphql-schema-documentation/)

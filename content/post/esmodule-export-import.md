@@ -1,7 +1,7 @@
 ---
 title: "ECMAScriptのimport/exportについてのメモ"
 date: 2018-06-26T14:12:31+09:00
-tags: [ECMAScript, JavaScript]
+tags: [ecmascript, javascript]
 ---
 
 js-primer という JavaScript の本を書く上で ES2015 の import/export 構文の仕様について気になったところがあって調べたメモ

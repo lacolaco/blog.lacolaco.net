@@ -1,7 +1,7 @@
 ---
 date: "2016-08-05T22:04:30+09:00"
 title: "How to Use Angular 2 Nightly Builds"
-tags: [Angular, Tips]
+tags: [angular, tips]
 ---
 
 This post explains how to use nightly-builds of Angular 2.

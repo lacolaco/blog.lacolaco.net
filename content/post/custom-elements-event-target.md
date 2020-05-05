@@ -1,7 +1,7 @@
 ---
 title: "Custom ElementsとEventTargetの話"
 date: 2018-04-25T10:54:52+09:00
-tags: [Custom Elements, Web Components, Web]
+tags: [customelements, webcomponents, web]
 ---
 
 Shadow DOM の Hayato Ito さんと、Custom Elements と EventTarget についてちょっと議論できた話。（ありがとうございました！）

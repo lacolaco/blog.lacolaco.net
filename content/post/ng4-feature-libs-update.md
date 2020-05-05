@@ -1,7 +1,7 @@
 ---
 title: "[Angular 4.0] router/http/animationsモジュールの更新について"
 date: "2017-03-13T12:00:00+09:00"
-tags: [Angular, Router, HTTP, Animations]
+tags: [angular, router, http, animations]
 ---
 
 Angular 4.0特集のラストはrouterモジュール、httpモジュールの変更と、新たに追加されたanimationsモジュールについての解説です。

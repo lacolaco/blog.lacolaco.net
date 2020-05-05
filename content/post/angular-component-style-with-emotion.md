@@ -1,7 +1,7 @@
 ---
 title: "Angularコンポーネントのスタイルにemotionを使う"
 date: 2018-07-28T01:12:53+09:00
-tags: [Angular, CSS, emotion]
+tags: [angular, css, emotion]
 ---
 
 追記

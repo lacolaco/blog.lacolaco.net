@@ -1,7 +1,7 @@
 ---
 title: "Deep-Dive into Angular Components: MatDivider"
 date: 2020-05-05T13:34:49+09:00
-tags: ["Angular","AngularMaterial","AngularCDK"]
+tags: ["angular","angular-material","angular-cdk", "english"]
 foreign: true
 ---
 

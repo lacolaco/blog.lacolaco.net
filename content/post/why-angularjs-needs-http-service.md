@@ -1,7 +1,7 @@
 ---
 title: "なぜAngularJSに$httpが必要だったのか（あるいはAngular HttpClientの価値について）"
 date: 2018-04-20T10:49:28+09:00
-tags: [AngularJS, Angular, Thought]
+tags: [angularjs, angular, thought]
 ---
 
 {{< embed "https://lacolaco.hatenablog.com/entry/2018/04/20/080000" >}}

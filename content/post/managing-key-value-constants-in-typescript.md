@@ -1,7 +1,7 @@
 ---
 title: "Managing Key-Value Constants in TypeScript"
 date: 2019-08-20T15:24:08Z
-tags: ["TypeScript", "Angular"]
+tags: ["typescript", "angular"]
 ---
 
 A lot of applications have a dropdown select menu in a form. Let's imagine a form control like below;

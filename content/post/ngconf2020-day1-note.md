@@ -1,7 +1,7 @@
 ---
 title: "ng-conf 2020 Day1 Note"
 date: 2020-04-06T22:53:27+09:00
-tags: ["Angular","ngconf","ngconf2020"]
+tags: ["angular","ngconf","ngconf2020"]
 foreign: true
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: "GraphQLとRESTfulについて今日考えてたこと　Backend for Usecase/Resourceについて"
 date: 2018-07-13T00:18:20+09:00
-tags: [Thought, GraphQL, Design]
+tags: [thought, graphql, design]
 ---
 
 DISCLAIMER: これは本当にただのメモ書きで、これがベストプラクティスだとかいう話ではないので、同じようなことを考えてる人いたら今度議論しましょうよ、って程度の話の種。

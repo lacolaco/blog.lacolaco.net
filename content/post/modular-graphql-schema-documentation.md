@@ -1,7 +1,7 @@
 ---
 title: "GraphQL Schemaをファイル分割してドキュメンテーションする"
 date: 2018-02-13T22:53:29+09:00
-tags: [GraphQL]
+tags: [graphql]
 ---
 
 GraphQL の Schema から静的なドキュメンテーションページを生成するツールとして、graphdoc というものがあります。

@@ -1,7 +1,7 @@
 ---
 date: "2017-03-08T19:00:00+09:00"
 title: "[Angular 4.0] formsモジュールの更新について"
-tags: [Angular, Forms]
+tags: [angular, forms]
 ---
 
 Angular 4.0ではformsモジュールにいくつかの変更が入っています。

@@ -1,7 +1,7 @@
 ---
 title: AngularにおけるListComponent/ListItemComponentの設計
 date: 2019-02-18T00:47:00.000Z
-tags: [Angular, Component Design]
+tags: [angular, design, component-design]
 ---
 
 `<ul>` と `<li>` のように、親子であることに意味がある密結合したコンポーネントを作るときのプラクティスについて。

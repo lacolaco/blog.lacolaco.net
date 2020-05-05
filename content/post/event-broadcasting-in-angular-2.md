@@ -1,7 +1,7 @@
 ---
 date: "2016-04-24T13:13:35+09:00"
 title: "Broadcasting events in Angular 2"
-tags: [Angular, Tips]
+tags: [angular, tips]
 ---
 
 Angular 1 has an utility for broadcasting an event, `$broadcast` and `$on`. 

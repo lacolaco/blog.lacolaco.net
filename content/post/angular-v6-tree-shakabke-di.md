@@ -1,7 +1,7 @@
 ---
 title: "Angular v6で導入されるTree-Shakable DIの紹介"
 date: 2018-03-01T15:08:47+09:00
-tags: [Angular]
+tags: [angular]
 ---
 
 追記: 最新では `scope` が `providedIn` に変わってます。

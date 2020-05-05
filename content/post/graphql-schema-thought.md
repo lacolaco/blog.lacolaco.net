@@ -1,7 +1,7 @@
 ---
 title: "GraphQLのスキーマについて今日考えてたこと"
 date: 2018-04-03T23:41:41+09:00
-tags: [GraphQL, Design]
+tags: [graphql, design]
 ---
 
 今日は GraphQL のクエリのスキーマを考えてた

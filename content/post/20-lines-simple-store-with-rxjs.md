@@ -1,7 +1,7 @@
 ---
 title: "20 Lines Simple Store with RxJS"
 date: 2018-01-05T12:34:43Z
-tags: ["TypeScript", "RxJS"]
+tags: ["typescript", "rxjs"]
 ---
 
 ```ts

@@ -1,7 +1,7 @@
 ---
 title: Angular ElementsによるAngularJSの段階的アップグレード戦略
 date: 2019-08-18T06:00:00+09:00
-tags: [Angular, Web, AngularJS, Angular Elements, Web Components]
+tags: [angular, web, angularjs, angular-elements, webcomponents]
 ---
 
 この記事では Angular のコンポーネントを Web 標準の Custom Elements に変換する **Angular Elements** 機能を使い、AngularJS アプリケーションを段階的に Angular に置き換えていく手段を解説する。

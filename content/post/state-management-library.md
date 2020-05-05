@@ -1,7 +1,7 @@
 ---
 title: 状態管理のライブラリを作りました
 date: "2018-01-12T12:17:16.472Z"
-tags: [TypeScript, Library, OSS]
+tags: [typescript, library, oss]
 ---
 
 TypeScript/JavaScript 用に状態管理のライブラリを作りました。

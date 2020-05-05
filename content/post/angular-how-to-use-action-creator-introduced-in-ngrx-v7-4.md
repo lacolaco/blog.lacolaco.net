@@ -1,7 +1,7 @@
 ---
 title: "Angular: How to use Action Creator introduced in NgRx v7.4"
 date: 2019-04-03T23:34:22Z
-tags: ["Angular", "NgRx", "TypeScript"]
+tags: ["angular", "ngrx", "typescript"]
 ---
 
 This article explains the **Action Creator** feature introduced in NgRx v7.4 and the implementation pattern using it.

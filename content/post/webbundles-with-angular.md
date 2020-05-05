@@ -2,7 +2,7 @@
 title: "AngularでWeb Bundlesを試す"
 date: 2019-12-25T04:48:53Z
 slug: "webbundles-with-angular"
-tags: ["Angular", "webpackaging", "Web"]
+tags: ["angular", "webpackaging", "web"]
 ---
 
 [Angularアドベントカレンダー #2](https://qiita.com/advent-calendar/2019/angular-2)の24日目代打記事です。

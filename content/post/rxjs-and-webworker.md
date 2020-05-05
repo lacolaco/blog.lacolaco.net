@@ -1,7 +1,7 @@
 ---
 title: "RxJSによるWeb Workerの抽象化 2つのアプローチ"
 date: 2019-03-26T15:36:08+09:00
-tags: [RxJS, Web Worker, Idea]
+tags: [rxjs, webworker, thought]
 ---
 
 この記事では、[RxJS](https://rxjs.dev) を使った Web Worker の抽象化を試みます。

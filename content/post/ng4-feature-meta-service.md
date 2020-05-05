@@ -1,7 +1,7 @@
 ---
 date: "2017-03-07T23:25:38+09:00"
 title: "[Angular 4.0] Metaサービスの使い方"
-tags: [Angular, Meta]
+tags: [angular, meta]
 ---
 
 Angular 4.0で追加された新しい組み込みサービス、`Meta`について解説します。

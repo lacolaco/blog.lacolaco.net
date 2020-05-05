@@ -1,7 +1,7 @@
 ---
 title: "CircleCIからGitHub Actionsへの移行 (Node.js)"
 date: 2019-09-16T12:29:57+09:00
-tags: [GitHub, GitHub Actions]
+tags: [github, github-actions]
 ---
 
 自作のライブラリのCIをCircleCIからGitHub Actionsへ移行したメモ

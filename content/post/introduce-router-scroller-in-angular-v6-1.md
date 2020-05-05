@@ -1,7 +1,7 @@
 ---
 title: Introduce Router Scroller in Angular v6.1
 date: "2018-06-09T02:34:29.892Z"
-tags: [Angular, Router]
+tags: [angular, router]
 ---
 
 With Angular’s next minor update, a new feature will be out.  

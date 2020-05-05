@@ -1,7 +1,7 @@
 ---
 title: "Setting up Angular Testing Environment with Karma and webpack"
 date: "2016-10-25T10:45:14+09:00"
-tags: [Angular, Testing, Karma]
+tags: [angular, testing, karma]
 ---
 
 This article will explain how to create an environment for Angular 2 testing.

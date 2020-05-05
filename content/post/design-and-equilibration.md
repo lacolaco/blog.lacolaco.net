@@ -1,7 +1,7 @@
 ---
 title: "良い設計と平衡"
 date: 2019-03-17T22:39:57+09:00
-tags: [Design, Thought]
+tags: [design, thought]
 ---
 
 **免責事項**: 思考過程のメモです

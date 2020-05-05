@@ -1,7 +1,7 @@
 ---
 title: "DESIGN DOC (Ivy): Separate Compilationを読む"
 date: 2018-03-03T23:49:36+09:00
-tags: [Angular, Ivy, Thought]
+tags: [angular, ivy, thought]
 ---
 
 {{< embed "https://github.com/angular/angular/blob/master/packages/compiler/design/separate_compilation.md" >}}

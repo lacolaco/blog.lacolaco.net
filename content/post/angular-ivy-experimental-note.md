@@ -1,7 +1,7 @@
 ---
 title: "ngIvyメモ"
 date: 2018-03-11T13:44:31+09:00
-tags: [Angular, Ivy, Thought]
+tags: [angular, ivy, thought]
 ---
 
 [DESIGN DOC \(Ivy\): Separate Compilation を読む](../read-ivy-design-doc-separate-compilation/)

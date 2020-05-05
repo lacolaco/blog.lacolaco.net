@@ -1,7 +1,7 @@
 ---
 date: "2016-04-22T09:48:29+09:00"
 title: "Angular 2のPlatform Provider"
-tags: [Angular, Dependency Injection]
+tags: [angular, dependency-injection]
 ---
 
 Angular 2のDependency Injection(DI)は主にサービスクラスのインスタンスを注入するのに用いられますが、

@@ -1,7 +1,7 @@
 ---
 title: "\"Differential Loading\" - A New Feature of Angular CLI v8"
 date: 2019-04-17T08:42:40Z
-tags: ["Angular", "Angular CLI", "JavaScript"]
+tags: ["angular", "angular-cli", "javascript"]
 ---
 
 ## TL;DR

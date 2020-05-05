@@ -1,7 +1,7 @@
 ---
 title: AngularコンポーネントにおけるSingle State Streamパターン
 date: 2019-07-11T00:40:00.000Z
-tags: [Angular, Architecture]
+tags: [angular, architecture]
 ---
 
 ## Single State Stream パターン

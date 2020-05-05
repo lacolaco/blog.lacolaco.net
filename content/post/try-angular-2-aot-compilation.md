@@ -1,7 +1,7 @@
 ---
 title: Try Angular 2 AoT compilation
 date: "2016-10-05T15:31:47.067Z"
-tags: [Angular, AoT, Angular CLI]
+tags: [angular, aot, angular-cli]
 ---
 
 with Angular-CLI

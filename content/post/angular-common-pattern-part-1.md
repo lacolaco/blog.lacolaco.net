@@ -1,7 +1,7 @@
 ---
 title: "Angular 頻出実装パターン その1"
 date: 2018-04-10T23:04:13+09:00
-tags: [Angular, Tips]
+tags: [angular, tips]
 ---
 
 僕が Angular アプリケーションを書くときに頻出する実装パターンを紹介する記事です。続くかどうかは未定です。

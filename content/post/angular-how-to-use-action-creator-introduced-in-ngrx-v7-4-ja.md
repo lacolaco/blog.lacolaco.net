@@ -1,7 +1,7 @@
 ---
 title: "NgRx v7.4で導入されるAction Creatorの使い方"
 date: 2019-04-03T22:33:47+09:00
-tags: [Angular, NgRx, TypeScript]
+tags: [angular, ngrx, typescript]
 ---
 
 

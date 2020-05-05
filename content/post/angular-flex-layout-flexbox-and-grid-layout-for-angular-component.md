@@ -1,7 +1,7 @@
 ---
 title: "Angular Flex-Layout: Flexbox and Grid Layout for Angular Component"
 date: "2018-09-28T12:03:47.715Z"
-tags: [Angular, CSS, flex-layout]
+tags: [angular, css, flex-layout]
 ---
 
 **CSS Flexbox** and **CSS Grid** are very powerful layout functions. These are already supported by all modern browsers except for IE 11. Unlike properties for styling (for example`color` and `border`), these are properties for **building a layout structure**. In other words, it is not used to beautify the surface of HTML elements but is used to create a foundation of application UI in cooperation with the hierarchical structure of HTML elements.

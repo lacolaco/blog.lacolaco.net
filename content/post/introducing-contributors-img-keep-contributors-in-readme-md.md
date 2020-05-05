@@ -1,7 +1,7 @@
 ---
 title: "Introducing contributors-img: Keep contributors in README.md"
 date: 2019-03-29T03:55:59Z
-tags: ["opensource", "GitHub", "Tools"]
+tags: ["opensource", "github", "tools"]
 ---
 
 Hey folks! I introduce a web app I've created, **contributors-img**.

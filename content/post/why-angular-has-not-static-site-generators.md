@@ -1,7 +1,7 @@
 ---
 title: "Angular Elementsの野望と、Angularに静的サイト用フレームワークがない理由"
 date: 2019-01-13T00:30:22+09:00
-tags: [Angular, Angular Elements, Ivy, Static Site Generator]
+tags: [angular, angular-elements, ivy, static_site_generator]
 ---
 
 「Angular って静的な Web サイトを吐き出せる技術とかないんですか」という質問を受けることがたびたびあります。

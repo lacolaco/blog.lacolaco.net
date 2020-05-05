@@ -1,7 +1,7 @@
 ---
 title: "Angular CLI v1.7からv6.0へのマイグレーションについて (for v6.0.0-rc.2)"
 date: 2018-04-09T07:00:00+09:00
-tags: [Angular, Angular CLI]
+tags: [angular, angular-cli]
 ---
 
 Angular フレームワークの v6.0.0 リリースにあわせ、Angular CLI も v1.7 系から v6.0 へメジャーアップデートをおこなう予定です。

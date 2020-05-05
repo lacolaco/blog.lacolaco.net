@@ -1,7 +1,7 @@
 ---
 title: AngularにおけるAtomic DesignとNgModule
 date: 2019-07-11T00:47:00.000Z
-Tags: [Angular, Architecture, Web, Atomic Design]
+Tags: [angular, architecture, web, atomic-design]
 ---
 
 Angular の UI コンポーネントにおける NgModule の粒度についての現在の考え。

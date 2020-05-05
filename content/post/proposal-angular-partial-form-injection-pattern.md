@@ -1,7 +1,7 @@
 ---
 title: "Angular Forms: Partial Form Injectionパターンの検討"
 date: 2020-02-08T10:23:15+09:00
-tags: ["Angular","Forms","Design","Thought"]
+tags: ["angular","forms","design","thought"]
 foreign: true
 ---
 

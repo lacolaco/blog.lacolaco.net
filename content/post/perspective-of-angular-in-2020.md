@@ -2,7 +2,7 @@
 title: "Perspective of Angular in 2020"
 date: 2019-12-24T15:00:16Z
 slug: "perspective-of-angular-in-2020"
-tags: ["Angular", "webdev"]
+tags: ["angular", "webdev"]
 ---
 
 [Angular Advent Calendar 2019](https://qiita.com/advent-calendar/2019/angular)の 25 日目の記事です。

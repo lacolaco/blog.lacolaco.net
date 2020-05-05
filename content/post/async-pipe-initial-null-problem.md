@@ -1,7 +1,7 @@
 ---
 title: "AsyncPipeの初期値null問題と非同期データバインディング"
 date: 2020-02-19T10:05:43+09:00
-tags: ["Angular","Library","soundng","AsyncPipe","RxJS"]
+tags: ["angular","library","soundng","async-pipe","rxjs"]
 foreign: true
 ---
 

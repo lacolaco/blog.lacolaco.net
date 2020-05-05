@@ -1,7 +1,7 @@
 ---
 title: How to Try Angular CLI with Bazel
 date: "2019-01-01T02:28:57.179Z"
-tags: [Angular, Angular CLI, Bazel]
+tags: [angular, angular-cli, bazel]
 ---
 
 ![](/img/how-to-try-angular-cli-with-bazel/1__ReNz4DpvQrUpGduIF8RS2w.png)

@@ -1,7 +1,7 @@
 ---
 title: 中規模AngularアプリにおけるNgModule構成とディレクトリ構造
 date: 2019-07-11T00:47:00.000Z
-tags: [Angular, Architecture]
+tags: [angular, architecture]
 ---
 
 ## 要点

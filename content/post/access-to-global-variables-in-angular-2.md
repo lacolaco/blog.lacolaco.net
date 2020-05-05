@@ -1,7 +1,7 @@
 ---
 title: "Access to global variables in Angular 2"
 date: "2016-10-04T10:24:38+09:00"
-tags: [Angular]
+tags: [angular]
 ---
 
 Don’t use `window` directly.

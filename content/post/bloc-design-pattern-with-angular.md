@@ -1,7 +1,7 @@
 ---
 title: FlutterのBLoCパターンをAngularで理解する
 date: "2018-05-22T19:48:05+09:00"
-tags: [Angular, Architecture, BLoC]
+tags: [angular, architecture, bloc]
 ---
 
 この記事では AngularDart/Flutter の文脈で新しいコンポーネント設計パターンとして広まりつつある**BLoC**パターンを、Angular の語彙で理解し、実装する方法を紹介する。

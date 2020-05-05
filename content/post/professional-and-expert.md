@@ -1,7 +1,7 @@
 ---
 title: "プロフェッショナルとエキスパート"
 date: 2020-02-08T21:07:00+09:00
-tags: ["Thought","NonTech","Philosophy"]
+tags: ["thought","nontech","philosophy"]
 foreign: true
 ---
 

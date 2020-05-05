@@ -1,7 +1,7 @@
 ---
 title: "システム設計と哲学的思考"
 date: 2019-09-24T21:27:46+09:00
-tags: [Design, Philosophy, Thought]
+tags: [design, philosophy, thought]
 ---
 
 「はじめての哲学的思考」という本を読んだ。

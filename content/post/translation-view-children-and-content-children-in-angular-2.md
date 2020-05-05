@@ -1,7 +1,7 @@
 ---
 date: "2016-04-16T11:15:00+09:00"
 title: "[日本語訳] ViewChildren and ContentChildren in Angular 2"
-tags: [Angular, Translation]
+tags: [angular, translation]
 ---
 
 

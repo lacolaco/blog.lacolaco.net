@@ -1,7 +1,7 @@
 ---
 title: DOMのXSSを防ぐTrusted TypesとAngularのセキュリティ機構
 date: 2019-05-13T00:16:00.000Z
-tags: [Angular, Web, Security, Trusted Types, XSS]
+tags: [angular, web, security, trusted-types, xss]
 ---
 
 **Trusted Types** とは、現在 Chrome で実験的に実装され始めている新しいセキュリティポリシーの提案である。このポリシーにより、DOM 操作を経由した XSS から Web ページを保護できるようになる。仕様そのものやユースケースについては以下の記事がおすすめであるため、まずはじめに読んでほしい。

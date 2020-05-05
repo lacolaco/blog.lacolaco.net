@@ -1,7 +1,7 @@
 ---
 title: "Angularとaxiosを使ったHTTP通信"
 date: 2018-04-20T08:00:17+09:00
-tags: [Angular, axios]
+tags: [angular, axios]
 ---
 
 題して「頼りすぎない Angular」ということで、Angular の層をなるべく*薄く*アプリケーションを作るにはどうすればいいかというのを考えるシリーズです。

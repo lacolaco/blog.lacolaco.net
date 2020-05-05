@@ -1,7 +1,7 @@
 ---
 date: "2016-04-10T00:23:58+09:00"
 title: "ViewEncapsulationのフォールバック"
-tags: [ Angular, Angular2 ]
+tags: [ angular, angular2 ]
 ---
 
 ブラウザがShadow DOMを実装している場合は`ViewEncapsulation.Native`を、

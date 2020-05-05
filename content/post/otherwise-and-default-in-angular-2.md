@@ -1,7 +1,7 @@
 ---
 date: "2016-04-17T11:25:31+09:00"
 title: "Angular 2のデフォルトルートとotherwiseルート"
-tags: [Angular, Router]
+tags: [angular, router]
 ---
 
 この記事ではAngular 2のルーターが持つ **useAsDefault** と **otherwise** の違いと、その使い方について解説します。

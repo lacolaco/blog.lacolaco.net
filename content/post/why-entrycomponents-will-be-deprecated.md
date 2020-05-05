@@ -2,7 +2,7 @@
 title: "なぜentryComponentsは非推奨になるのか"
 date: 2019-11-04T03:45:08Z
 slug: "why-entrycomponents-will-be-deprecated"
-tags: ["Angular", "Ivy"]
+tags: ["angular", "ivy"]
 ---
 
 この記事では、Angular v9.0 にて非推奨となる `entryComponents` 機能が、なぜ非推奨になるのかについてできるだけ簡単に解説します。

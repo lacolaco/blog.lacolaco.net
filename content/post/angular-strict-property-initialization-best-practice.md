@@ -1,7 +1,7 @@
 ---
 title: "AngularにおけるstrictPropertyInitializationのベストプラクティス"
 date: 2018-06-27T12:51:01+09:00
-tags: [Angular, TypeScript]
+tags: [angular, typescript]
 ---
 
 Angular コアチームの Stephen Fluin 氏が、こんなブログ記事をあげている。

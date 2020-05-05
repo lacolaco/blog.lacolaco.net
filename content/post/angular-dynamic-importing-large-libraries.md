@@ -1,7 +1,7 @@
 ---
 title: "Angular: Dynamic Importing Large Libraries"
 date: "2019-03-06T08:38:54.266Z"
-tags: [Angular, Code Splitting, Performance, webpack]
+tags: [angular, code-splitting, performance, webpack]
 ---
 
 This post explains how to import large 3rd-party libraries into your Angular application without pain on initial payload size.

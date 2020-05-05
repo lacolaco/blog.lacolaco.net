@@ -1,7 +1,7 @@
 ---
 date: "2016-10-23T10:33:17+09:00"
 title: "Angular AoT Compilation with webpack"
-tags: [Angular, webpack, AoT]
+tags: [angular, webpack, aot]
 ---
 
 How to use `@ngtools/webpack`.

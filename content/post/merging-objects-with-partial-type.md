@@ -1,7 +1,7 @@
 ---
 title: "Merging objects with Partial type"
 date: 2017-11-16T07:34:20Z
-tags: ["TypeScript"]
+tags: ["typescript"]
 ---
 
 My usual implementation pattern of immutable merging in TypeScript.

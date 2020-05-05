@@ -1,7 +1,7 @@
 ---
 date: "2016-05-25T13:00:00+09:00"
 title: "Dynamic Component Creation in Angular 2"
-tags: [Angular]
+tags: [angular]
 ---
 
 **Edit**

@@ -2,7 +2,7 @@
 title: "Angularの追いかけ方"
 date: 2019-12-25T03:21:16Z
 slug: "how-to-trace-angular"
-tags: ["Angular"]
+tags: ["angular"]
 ---
 
 [Angular \#2 Advent Calendar 2019](https://qiita.com/advent-calendar/2019/angular-2)の 25 日目の記事です。

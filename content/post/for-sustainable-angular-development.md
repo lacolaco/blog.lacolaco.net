@@ -1,7 +1,7 @@
 ---
 title: "持続可能なAngularアプリケーション開発のために大事なこと"
 date: 2018-05-15T12:15:14+09:00
-tags: [Angular, Development, Sustainability]
+tags: [angular, development, sustainability]
 ---
 
 Web にかぎらず、アプリケーションというのは作って終わりではなく、その後も継続して改修・改善されていくケースが多い。受託で開発して納品して終わりというケースでも、納品した先にメンテナンスする人がいる。

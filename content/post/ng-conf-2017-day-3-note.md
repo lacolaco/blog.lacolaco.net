@@ -1,7 +1,7 @@
 ---
 date: "2017-04-07T20:15:22-06:00"
 title: "ng-conf 2017 3日目 Keynoteメモ"
-tags: [ng-conf, Event]
+tags: [ng-conf, event]
 ---
 
 アメリカ・ソルトレイクシティで4/5から開催中のng-confに参加しています。

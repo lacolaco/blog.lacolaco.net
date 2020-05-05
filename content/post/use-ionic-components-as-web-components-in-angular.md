@@ -1,7 +1,7 @@
 ---
 title: Use Ionic components as Web Components in Angular
 date: "2019-03-07T06:06:20.856Z"
-tags: [Angular, Web Components, Ionic]
+tags: [angular, webcomponents, ionic]
 ---
 
 ![](/img/use-ionic-components-as-web-components-in-angular/1__Y2FNLwDY1sJ39QlfpLqAaQ.png)

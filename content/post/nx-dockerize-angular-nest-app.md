@@ -1,7 +1,7 @@
 ---
 title: "Nx: Angular+Nest.jsアプリをDockerビルドする"
 date: 2020-04-29T22:09:17+09:00
-tags: ["Nx","Docker","Angular","Nest.js"]
+tags: ["nx","docker","angular","nestjs"]
 foreign: true
 ---
 

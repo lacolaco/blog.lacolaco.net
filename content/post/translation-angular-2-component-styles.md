@@ -1,7 +1,7 @@
 ---
 date: "2016-04-16T00:27:46+09:00"
 title: "[日本語訳] Angular 2 Component Styles"
-tags: [Angular, Translation, Component Style]
+tags: [angular, translation, component-style]
 ---
 
 * Original: [Component Styles - ts](https://angular.io/docs/ts/latest/guide/component-styles.html)

@@ -1,7 +1,7 @@
 ---
 title: "Angularの学習コストは本当に高いのか？"
 date: 2019-02-19T00:15:47+09:00
-tags: [Angular, Thought]
+tags: [angular, thought]
 ---
 
 有言実行しなきゃね...

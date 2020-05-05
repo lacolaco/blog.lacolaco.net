@@ -1,7 +1,7 @@
 ---
 title: Enjoyable WebWorkers in Angular
 date: "2018-12-22T06:39:05.976Z"
-tags: [Angular, Web Worker, Comlink]
+tags: [angular, webworker, comlink]
 ---
 
 WebWorkers have attracted the attention as one of the most important things of web development in the near future. But today, it still has some problems. Especially, developer experience is not good. How to separate code, how to communicate with it, and how to deploy it… it’s not fun.

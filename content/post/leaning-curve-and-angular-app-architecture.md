@@ -1,7 +1,7 @@
 ---
 title: システムの学習曲線とAngularアプリケーションの設計
 date: 2019-07-24T08:50:00.000Z
-tags: [Angular, Architecture]
+tags: [angular, architecture]
 ---
 
 だいぶ決めつけと仮定で書いているので鵜呑みにしないで議論のタネということで。

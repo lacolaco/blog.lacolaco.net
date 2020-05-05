@@ -1,7 +1,7 @@
 ---
 title: Forget $compile in Angular 2
 date: "2016-10-02T14:42:39.927Z"
-tags: [Angular]
+tags: [angular]
 ---
 
 ### TL;DR

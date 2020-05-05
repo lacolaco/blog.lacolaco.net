@@ -1,7 +1,7 @@
 ---
 date: "2016-06-10T20:18:51+09:00"
 title: "Angular 2 Router v3.0.0-alpha.3を触ってみた"
-tags: [Angular, Router]
+tags: [angular, router]
 ---
 
 今日リリースされたAngular 2 Router v3.0.0-alpha.3を触ってみたうえでの注意点や感想を書いておきます。

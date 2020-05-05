@@ -1,7 +1,7 @@
 ---
 title: "AngularのContent Projectionの基本"
 date: 2020-02-10T15:57:13+09:00
-tags: ["Angular","Basic","WebComponents","ContentProjection"]
+tags: ["angular","basic","webcomponents","content_projection"]
 foreign: true
 ---
 
