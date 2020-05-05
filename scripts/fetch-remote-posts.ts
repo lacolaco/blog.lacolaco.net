@@ -22,7 +22,7 @@ async function fetchEsaPosts(): Promise<PostWithFrontmatter[]> {
   return posts.map(post => ({
     title: post.name,
     slug: slugify(post.category.replace('Blog/', '')),
-    date: post.updated_at,
+    date: post.created_at,
     tags: post.tags,
     body: post.body_md
   }));

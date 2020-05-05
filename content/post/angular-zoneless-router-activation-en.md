@@ -1,7 +1,7 @@
 ---
 title: "Zoneless Angular Tip: How To Detect Activated Route Change"
-date: 2020-03-24T10:40:56+09:00
-tags: ["zoneless","angular","change-detection","router","english"]
+date: 2020-03-24T09:27:32+09:00
+tags: ["english","angular","router","change-detection","zoneless"]
 foreign: true
 ---
 

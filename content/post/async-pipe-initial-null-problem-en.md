@@ -1,7 +1,7 @@
 ---
 title: "Initial Null Problem of AsyncPipe and async data-binding"
-date: 2020-02-28T19:10:46+09:00
-tags: ["angular","library","soundng","async-pipe","english","rxjs"]
+date: 2020-02-19T09:45:46+09:00
+tags: ["soundng","english","angular","library","rxjs","async-pipe"]
 foreign: true
 ---
 

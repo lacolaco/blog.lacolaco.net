@@ -1,7 +1,7 @@
 ---
 title: "状態論 (1)"
-date: 2020-04-13T22:42:36+09:00
-tags: ["thought","状態論","state-management"]
+date: 2020-04-13T14:46:59+09:00
+tags: ["状態論","thought","state-management"]
 foreign: true
 ---
 
