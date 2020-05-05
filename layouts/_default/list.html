@@ -1,6 +1,6 @@
 {{ define "main" -}}
 
-<div class="pagehead mb-4">
+<div class="pagehead">
     {{ if .Data.Term }}
     <h1>Articles with #{{ .Data.Term }}</h1>
     {{ else }}
@@ -8,7 +8,9 @@
     {{ end }}
 </div>
 
-{{ partial "pagination.html" . -}}
+<div class="mb-2" style="height: 64px;">
+    <div class="gcse-search"></div>
+</div>
 
 <div>
     <ul class="list-style-none">
@@ -29,7 +31,5 @@
         {{ end -}}
     </ul>
 </div>
-
-{{ partial "pagination.html" . -}}
 
 {{ end -}}
