@@ -5,7 +5,7 @@ enableEmoji = true
 googleAnalytics = "UA-52362663-4"
 disqusShortName = "blog-lacolaco"
 copyright = "© 2020 lacolaco.net"
-paginate = 20
+paginate = 1000000000
 hasCJKLanguage = true
 
 [taxonomies]
