@@ -1,7 +1,7 @@
 ---
 title: "Angular CDKのPortalを使ったローディングラッパーの実装"
 date: 2018-07-01T16:49:42+09:00
-tags: [Angular, Angular CDK]
+tags: [Angular, AngularCDK]
 ---
 
 今回は Angular CDK(Component Dev Kit)の **Portal** 機能を使って、ローディングラッパーコンポーネントを実装する例の紹介です。
