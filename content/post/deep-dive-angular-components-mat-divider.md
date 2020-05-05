@@ -1,21 +1,21 @@
 ---
-title: "Deep-Dive into Angular Components: MatDivider"
+title: 'Deep-Dive into Angular Components: MatDivider'
 date: 2020-05-05T13:34:49+09:00
-tags: ["angular","angular-material","angular-cdk", "english"]
+tags: ['angular', 'angular-material', 'angular-cdk', 'english']
 foreign: true
 ---
 
-This series explains how Angular Components are working by diving its source code deeply. 
+This series explains how Angular Components are working by diving its source code deeply.
 
-{{< figure src="https://img.esa.io/uploads/production/attachments/14362/2020/05/05/50720/406c57f0-4578-4b67-8114-769efc6c4fca.jpg" title="Photo by Markus Spiske on Unsplash" >}}
+{{< embed "https://github.com/angular/components" >}}
 
 ## MatDivider
 
-**MatDivider** is one of the simplest component in the Angular Material library. 
+**MatDivider** is one of the simplest component in the Angular Material library.
 
 {{< embed "https://material.angular.io/components/divider/overview" >}}
 
-It just can display a line separator but its source code is worth to read enough. 
+It just can display a line separator but its source code is worth to read enough.
 
 https://github.com/angular/components/blob/master/src/material/divider/divider.ts
 
@@ -23,12 +23,12 @@ https://github.com/angular/components/blob/master/src/material/divider/divider.t
 @Component({
   selector: 'mat-divider',
   host: {
-    'role': 'separator',
+    role: 'separator',
     '[attr.aria-orientation]': 'vertical ? "vertical" : "horizontal"',
     '[class.mat-divider-vertical]': 'vertical',
     '[class.mat-divider-horizontal]': '!vertical',
     '[class.mat-divider-inset]': 'inset',
-    'class': 'mat-divider'
+    class: 'mat-divider',
   },
   template: '',
   styleUrls: ['divider.css'],
@@ -38,14 +38,22 @@ https://github.com/angular/components/blob/master/src/material/divider/divider.t
 export class MatDivider {
   /** Whether the divider is vertically aligned. */
   @Input()
-  get vertical(): boolean { return this._vertical; }
-  set vertical(value: boolean) { this._vertical = coerceBooleanProperty(value); }
+  get vertical(): boolean {
+    return this._vertical;
+  }
+  set vertical(value: boolean) {
+    this._vertical = coerceBooleanProperty(value);
+  }
   private _vertical: boolean = false;
 
   /** Whether the divider is an inset divider. */
   @Input()
-  get inset(): boolean { return this._inset; }
-  set inset(value: boolean) { this._inset = coerceBooleanProperty(value); }
+  get inset(): boolean {
+    return this._inset;
+  }
+  set inset(value: boolean) {
+    this._inset = coerceBooleanProperty(value);
+  }
   private _inset: boolean = false;
 
   static ngAcceptInputType_vertical: BooleanInput;
@@ -53,7 +61,7 @@ export class MatDivider {
 }
 ```
 
-If you've understood every line above, you don't need to read following parts. 
+If you've understood every line above, you don't need to read following parts.
 
 ### Component Metadata
 
@@ -77,7 +85,7 @@ At first, look at the metadata of `MatDivider` line by line.
 })
 ```
 
-#### `selector` 
+#### `selector`
 
 The `selector` metadata is a CSS selector of the component. If you don't know this, you may need to go back to [getting started](angular.io/start).
 
@@ -87,9 +95,9 @@ The `host` metadata is a map of binding to host element. It can accept template 
 
 https://angular.io/api/core/Directive#host
 
-#####  `'role': 'separator'`
+##### `'role': 'separator'`
 
-`<mat-divider>` host element has always `role="separator"` attribute. This is an **ARIA** role attribute. This arrtibute tells the User Agent this non-built-in HTML tag is a separator. 
+`<mat-divider>` host element has always `role="separator"` attribute. This is an **ARIA** role attribute. This arrtibute tells the User Agent this non-built-in HTML tag is a separator.
 
 [The Roles Model \| Accessible Rich Internet Applications \(WAI\-ARIA\) 1\.0](https://www.w3.org/WAI/PF/aria/roles#separator)
 
@@ -109,9 +117,9 @@ https://github.com/angular/components/blob/master/src/material/divider/divider.s
 
 ```scss
 &.mat-divider-vertical {
-    border-top: 0;
-    border-right-width: $mat-divider-width;
-    border-right-style: solid;
+  border-top: 0;
+  border-right-width: $mat-divider-width;
+  border-right-style: solid;
 }
 ```
 
@@ -122,13 +130,13 @@ This line is similar to the above but interestingly `mat-divider-horizontal` cla
 - https://github.com/angular/components/blob/master/src/material/divider/divider.scss
 - https://github.com/angular/components/blob/master/src/material/divider/_divider-theme.scss
 
-As far I can imagine, this is set for user customization. Develoers can override horizontal-specific style by using `.mat-divider-hotizontal`. Angular Material supports user-customization at many points. 
+As far I can imagine, this is set for user customization. Develoers can override horizontal-specific style by using `.mat-divider-hotizontal`. Angular Material supports user-customization at many points.
 
 ```scss
 .my-app {
-    .mat-divider-horizontal {
-        border-top-width: 2px; // Override divider's thickness
-    }
+  .mat-divider-horizontal {
+    border-top-width: 2px; // Override divider's thickness
+  }
 }
 ```
 
@@ -136,14 +144,14 @@ To know that philosophy, you can watch a talk by the Angular Material maintainer
 
 {{< embed "https://videos.ng-conf.org/videos/a-philosophy-for-designing-components-with-composition" >}}
 
-##### `'[class.mat-divider-inset]': 'inset'` 
+##### `'[class.mat-divider-inset]': 'inset'`
 
-This sets `.mat-divider-inset` class to `<mat-divider>` host element. 
+This sets `.mat-divider-inset` class to `<mat-divider>` host element.
 
 ##### `'class': 'mat-divider'`
 
-This sets `.mat-divider` class to `<mat-divider>` host element. 
-Most of (maybe all?) Angular Material components/directives set its own class to the host element. 
+This sets `.mat-divider` class to `<mat-divider>` host element.
+Most of (maybe all?) Angular Material components/directives set its own class to the host element.
 
 ##### `template: ''`
 
@@ -151,7 +159,7 @@ This component doesn't has any children but just shows border of the host elemen
 
 ##### `styleUrls: ['divider.css']`
 
-This component has its own style. `divider.scss` will be compiled into `divider.css`. 
+This component has its own style. `divider.scss` will be compiled into `divider.css`.
 
 ##### `encapsulation: ViewEncapsulation.None`
 
@@ -159,7 +167,7 @@ Interesting point! Angular Material components basically **don't encapusulate it
 
 https://angular.io/api/core/Component#encapsulation
 
-`encapusulation` metadata is set to `Emulated` by default so we can use safely styles in the component template scope. 
+`encapusulation` metadata is set to `Emulated` by default so we can use safely styles in the component template scope.
 But scoped styles cannot be overrided from outside even developer. Angular Material explicitly turns off the mechanism to allow user customization.
 
 ##### `changeDetection: ChangeDetectionStrategy.OnPush`
@@ -176,14 +184,22 @@ Let's step down into `MatDivider` class.
 export class MatDivider {
   /** Whether the divider is vertically aligned. */
   @Input()
-  get vertical(): boolean { return this._vertical; }
-  set vertical(value: boolean) { this._vertical = coerceBooleanProperty(value); }
+  get vertical(): boolean {
+    return this._vertical;
+  }
+  set vertical(value: boolean) {
+    this._vertical = coerceBooleanProperty(value);
+  }
   private _vertical: boolean = false;
 
   /** Whether the divider is an inset divider. */
   @Input()
-  get inset(): boolean { return this._inset; }
-  set inset(value: boolean) { this._inset = coerceBooleanProperty(value); }
+  get inset(): boolean {
+    return this._inset;
+  }
+  set inset(value: boolean) {
+    this._inset = coerceBooleanProperty(value);
+  }
   private _inset: boolean = false;
 
   static ngAcceptInputType_vertical: BooleanInput;
@@ -199,7 +215,7 @@ export class MatDivider {
 
 #### `inset` Input
 
-Similar to `vertical` . :slightly_smiling_face: 
+Similar to `vertical` . :slightly_smiling_face:
 
 #### `static ngAcceptInputType_vertical: BooleanInput;`
 
@@ -207,10 +223,10 @@ Interesting point again! This is a special static field for communication with A
 
 https://angular.io/guide/template-typecheck#input-setter-coercion
 
-In short, sometimes an input field needs to accept a value which doesn't match type. To allow user to write an input shorthand like  `<mat-divider vertial>`, `vertial` setter has to accept `''` in addition to boolean value.
+In short, sometimes an input field needs to accept a value which doesn't match type. To allow user to write an input shorthand like `<mat-divider vertial>`, `vertial` setter has to accept `''` in addition to boolean value.
 
-That is why`static ngAcceptInputType_vertical: BooleanInput;` exists. 
-`BooleanInput` is a type provided from `@angular/cdk/coercion`.  `ngAcceptInputType_vertical` tells AoT compier that `vertical` input can accept types `string | boolean | null | undefined`. 
+That is why`static ngAcceptInputType_vertical: BooleanInput;` exists.
+`BooleanInput` is a type provided from `@angular/cdk/coercion`. `ngAcceptInputType_vertical` tells AoT compier that `vertical` input can accept types `string | boolean | null | undefined`.
 
 https://github.com/angular/components/blob/master/src/cdk/coercion/boolean-property.ts
 
@@ -229,6 +245,4 @@ Similar to the above.
 - `MatDivider` has a `separator` role.
 - `MatDivider` provides CSS classes to allow user customization.
 - `MatDivider` displays only host element border.
-- `MatDivide` can accept a shorthand of the boolean input  like `<mat-divider vertical>`
-
-
+- `MatDivider` can accept a shorthand of the boolean input like `<mat-divider vertical>`
