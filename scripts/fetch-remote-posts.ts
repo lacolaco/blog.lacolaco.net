@@ -23,6 +23,7 @@ async function fetchEsaPosts(): Promise<PostWithFrontmatter[]> {
     title: post.name,
     slug: slugify(post.category.replace('Blog/', '')),
     date: post.created_at,
+    updated_at: post.updated_at,
     tags: post.tags,
     body: post.body_md
   }));
@@ -37,6 +38,7 @@ function createFrontmatter(post: PostWithFrontmatter): string {
 ---
 title: "${post.title}"
 date: ${post.date}
+updated_at: ${post.updated_at}
 tags: [${post.tags.map(tag => `"${tag}"`).join(',')}]
 foreign: true
 ---

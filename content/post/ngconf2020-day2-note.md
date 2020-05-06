@@ -1,6 +1,7 @@
 ---
 title: "ng-conf 2020 Day 2 Note"
 date: 2020-04-03T08:19:14+09:00
+updated_at: 2020-05-05T16:18:00+09:00
 tags: ["ngconf","ngconf2020","angular"]
 foreign: true
 ---

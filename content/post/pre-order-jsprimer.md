@@ -1,6 +1,7 @@
 ---
 title: "JavaScriptの入門本 JavaScript Primerの予約販売がはじまりました"
 date: 2020-04-15T10:49:02+09:00
+updated_at: 2020-05-05T16:23:07+09:00
 tags: ["jsprimer","publishing"]
 foreign: true
 ---

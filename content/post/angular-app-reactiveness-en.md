@@ -1,6 +1,7 @@
 ---
 title: "Angular: Test Reactiveness with OnPush strategy"
 date: 2020-03-18T17:59:50+09:00
+updated_at: 2020-05-05T16:19:13+09:00
 tags: ["english","angular","reactive","on-push","zone.js","change-detection","zoneless"]
 foreign: true
 ---

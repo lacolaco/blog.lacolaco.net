@@ -1,9 +1,13 @@
 {{ define "main" }}
+
 <article class="">
   <header class="mb-4">
     <div class="meta">
       {{ if .Date -}}
       <span class="text-small text-gray">{{ .Date.Format "2006-01-02" }}</span>
+        {{ if $.Params.updated_at -}}
+        <span class="text-small text-gray">(Updated at: {{ (time .Params.updated_at).Format "2006-01-02" }})</span>
+        {{ end -}}
       {{ end -}}
       {{ if .Params.tags -}}
       {{ end -}}
@@ -20,7 +24,8 @@
     </div>
   </header>
 
-  {{ if (.Date.AddDate 1 0 0).Before now }}
+  {{ $LastUpdatedAt := (cond (ne .Params.updated_at nil) (time .Params.updated_at) .Date) -}}
+  {{ if ($LastUpdatedAt.AddDate 1 0 0).Before now }}
   <div class="mb-4 flash flash-warn">
     This post is possibly out of date.
   </div>

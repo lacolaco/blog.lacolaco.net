@@ -1,6 +1,7 @@
 ---
-title: "Deep-Dive into Angular Components: MatDivider"
+title: "Deep Dive into Angular Components: MatDivider"
 date: 2020-05-05T13:34:49+09:00
+updated_at: 2020-05-05T18:36:13+09:00
 tags: ["angular","angular-material","angular-cdk"]
 foreign: true
 ---
@@ -132,7 +133,7 @@ As far I can imagine, this is set for user customization. Develoers can override
 }
 ```
 
-To know that philosophy, you can watch a talk by the Angular Material maintainer, Jeremy Elborn.
+To know that philosophy, you can watch a talk by the Angular Material maintainer, Jeremy Elbourn.
 
 {{< embed "https://videos.ng-conf.org/videos/a-philosophy-for-designing-components-with-composition" >}}
 
