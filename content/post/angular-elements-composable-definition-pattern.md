@@ -6,7 +6,7 @@ tags: [angular, angular-elements]
 
 Assuming a situation we have...
 
-- An Angular componentlibrary project, `Lib1Module`
+- An Angular component library project, `Lib1Module`
 - An Angular Elements library project, `Lib1ElementsModule`
 - An Angular Elements library project, `Lib2ElementsModule` which uses `Lib1ElementsModule`
 
