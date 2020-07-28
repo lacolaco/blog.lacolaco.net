@@ -7,6 +7,7 @@ disqusShortName = "blog-lacolaco"
 copyright = "© 2020 lacolaco.net"
 paginate = 1000000000
 hasCJKLanguage = true
+rssLimit = 10
 
 [taxonomies]
   tag = "tags"
