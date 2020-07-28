@@ -20,3 +20,7 @@ rssLimit = 10
     noClasses = false
 [markup.goldmark.renderer]
     unsafe = true
+
+[minify]
+  disableXML = true
+  
