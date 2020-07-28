@@ -30,8 +30,8 @@
       {{ with .Site.Author.email }}<author>{{.}}{{ with $.Site.Author.name }} ({{.}}){{end}}</author>{{end}}
       <guid>{{ .Permalink }}</guid>
       <category>{{- delimit .Params.tags ", " -}}</category>
-      <description>{{- .RawContent -}}</description>
-      <content>{{- .RawContent -}}</content>
+      <description>{{- .Summary | html -}}</description>
+      <content>{{- .Content | html -}}</content>
     </item>
     {{ end }}
   </channel>
