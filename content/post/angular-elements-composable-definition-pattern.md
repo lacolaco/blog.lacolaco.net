@@ -1,7 +1,7 @@
 ---
 title: 'Angular Elements: Composable Definition Pattern'
 date: 2020-07-22T10:59:46+09:00
-tags: [angular, angular-elements]
+tags: [english, angular, angular-elements]
 ---
 
 Assuming a situation we have...
