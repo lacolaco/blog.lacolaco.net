@@ -40,7 +40,7 @@ Angular は、それらの攻撃が **データバインディングを介して
 
 2 つ目の `<p [innerHTML]="htmlSnippet"></p>` は、 `<p>` タグの `innerHTML` プロパティにデータを渡す。これが Angular のテンプレートで動的な HTML 文字列を展開する唯一の方法である。ただし、 `innerHTML` プロパティへのバインディングは Angular により監視されていて、危険な文字列を検知するとその部分を除去、あるいは安全な文字列に置換する **サニタイズ処理** を自動的に行う。上記の例では、 `<script>` タグの部分だけが除去され、それ以外の部分はそのまま適用される。
 
-![DOM%20XSS%20Trusted%20Types%20Angular/Untitled.png](DOM%20XSS%20Trusted%20Types%20Angular/Untitled.png)
+![Untitled.png](/img/trusted-types-and-angular-security/Untitled.png)
 
 他にも `<a [href]="...">` や `<img [src]="...">` など、XSS の危険性のあるプロパティへのデータバインディングはすべて Angular により検査されているため、**データバインディングによって DOM-based XSS が起こることは基本的にない**。
 
