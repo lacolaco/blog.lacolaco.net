@@ -21,7 +21,7 @@ Firestore のインスタンスを分けなくていいという条件付きな�
 
 リポジトリはこちら
 
-[](https://github.com/lacolaco/pokepartymatch)
+https://github.com/lacolaco/pokepartymatch
 
 GitHub Actions を使い、master ブランチへの push で staging 環境で自動デプロイし、 バージョンタグを打った commit を push したときに production 環境へ自動デプロイするようにした。
 
