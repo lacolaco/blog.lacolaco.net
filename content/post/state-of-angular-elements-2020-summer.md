@@ -48,9 +48,13 @@ export class AppModule {
 
 ### Custom Elements
 
+`createCustomElement()` 関数の戻り値は `HTMLElement` を継承したクラスオブジェクトになっており、そのまま `customElements.define()` に渡すこともできるし、
+もちろん `new` でインスタンス化することもできる。
+`HTMLElement`を継承している以上ほとんどの仕様には準拠しているが、特に Angular コンポーネントとの連携部分についての機能を以下にまとめる。
+
 **サポート済みの機能**
 
-- Input と属性の自動マッピング
+- Input と HTML 属性の自動マッピング
   - コンポーネントの Input から自動的に `observeAttributes` を設定
   - `attributeChangedCallback` から変更検知をトリガーして再描画
 - Output とカスタムイベントの自動マッピング
@@ -107,7 +111,7 @@ v6.0 とともに Angular Elements がリリースされてから 2 年、当初
 発表当初にあった、フレームワークに依存しない汎用コンポーネントライブラリのコードベースとして Angular を利用できるのではないか、という期待は今のところまだ実用段階にない。
 
 主な理由は Custom Elements を登録するための JavaScript のサイズがいまだ大きいことにある。Angular コンポーネントそのものに加え、コンポーネントをラップして Custom Elements に変換する層、そして NgModule とそれを bootstrap する platform 層など、ひとつの Angular Elements を生成するために必要なものがまだ多い。
-すでにReactやVue.jsなどのライブラリが存在するページにさらにAngular Elementsまで追加するのは多少のパフォーマンスの犠牲が必要になるだろう。
+すでに React や Vue.js などのライブラリが存在するページにさらに Angular Elements まで追加するのは多少のパフォーマンスの犠牲が必要になるだろう。
 将来的に NgModule 無しでのアプローチなどが生まれてくれば実用性は上がってくるかもしれない。
 
 ## まとめ: Angular Elements に不足しているもの
