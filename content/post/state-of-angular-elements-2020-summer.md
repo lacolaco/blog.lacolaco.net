@@ -41,7 +41,10 @@ export class AppModule {
 
 ## Web 標準仕様への準拠
 
-まずはじめに、Angular Elements という機能が Web 標準仕様にどれほど準拠できているかをまとめる。逆に Angular アプリケーション内で Custom Elements を利用するケースについては [Custom Elements Everywhere](https://custom-elements-everywhere.com/) にまとめられているのでそちらを参照すること。
+まずはじめに、Angular Elements という機能が Web 標準仕様にどれほど準拠できているかをまとめる。
+逆に Angular アプリケーション内で Custom Elements を利用するケースについては [Custom Elements Everywhere](https://custom-elements-everywhere.com/) にまとめられているのでそちらを参照すること。
+
+![](/img/state-of-angular-elements-2020-summer/2020-09-22T17-41-39.png)
 
 ### Custom Elements
 
