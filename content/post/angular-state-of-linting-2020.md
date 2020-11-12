@@ -46,6 +46,8 @@ Angular外のエコシステムへ柔軟に対応するためのプラグイン�
 そういう流れで、Angularチームの開発ロードマップからは "Migrate to ESLint" は無くなった。
 Angularチームが取り組むまでもなく、すでにコミュニティが推進していたからだ。
 
+Angular Roadmap https://angular.io/guide/roadmap
+
 ## 今できること
 
 Lintの設定をデフォルトからほとんど変えていないのであれば、v12, v13あたりで公式に推奨されるであろう移行ガイドを待っていてもよいだろう。
