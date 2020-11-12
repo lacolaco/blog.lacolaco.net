@@ -33,7 +33,7 @@ https://github.com/angular-eslint/angular-eslint#rules-list
 Migration to ESLint · Issue #13732 · angular/angular-cli 
 https://github.com/angular/angular-cli/issues/13732#issuecomment-719724640
 
-v12でAngular CLIはデフォルトのTSLintサポートを非推奨にする（おそらくOpt-inに切り替え警告を出す）。その後はそもそも"デフォルトLinter"というものを持たないようになる予定だ。
+v12でAngular CLIはデフォルトのTSLintサポートを非推奨にする（おそらくOpt-inに切り替え、利用者に警告を出す）。その後はそもそも"デフォルトLinter"というものを持たないようになる予定だ。
 `ng deploy` コマンドと同じように、`ng lint` コマンドはエントリポイントだけを提供し、実体はプラグインが提供するようになるだろう。
 
 v11のリリースブログにも同様のことが書かれている。
