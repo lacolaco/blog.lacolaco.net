@@ -66,7 +66,7 @@ const counterSlice = createSlice({
 });
 // Auto-generated reducer and action creators
 const { reducer, actions } = counterSlice;
-actions.increment(); // => Action { type: 'counter/increment'
+actions.increment(); // => Action { type: 'counter/increment' }
 ```
 
 If you are familiar with the Redux ["ducks" pattern](https://github.com/erikras/ducks-modular-redux), you will feel a sense of déjà vu when you see Slice, which is the exact representation of the ducks pattern as a type of object. The ducks pattern can be easily implemented by simply exporting each property individually from the return value of `createSlice()`.
