@@ -293,6 +293,6 @@ I put up an issue on the NgRx GitHub repository suggesting how to improve intero
 
 Since the RTK, the Redux ecosystem seems to be gaining momentum in spreading best practices that match real-world use cases. And I found out that there is an option to delegate the core of state management to the Redux official. I think the role of NgRx in combination with RTK will be to connect Redux with Angular's DI system and reactive programming with RxJS as a bridge. And I believe that this division of responsibilities will become more important in the future.
 
-The implementation example presented here is just one idea at the moment, and if we can find a better interoperable implementation pattern, we would love to see NgRx Store + RTK made by others. I'm looking forward to your feedback.
+The implementation example presented here is just one idea at the moment, and if you can find a better interoperable implementation pattern, I'd love to see NgRx Store + RTK made by others. I'm looking forward to your feedback.
 
 See you.
