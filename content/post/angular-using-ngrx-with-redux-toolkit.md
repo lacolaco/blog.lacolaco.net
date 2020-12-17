@@ -15,7 +15,7 @@ If you are already familiar with the Redux Toolkit, you can find it in the follo
 
 The Redux Toolkit (**RTK**) is the official library of the Redux development team. It provides best practices that match real-world use cases to make it easier and more effective for anyone to use Redux. A major theme of RTK is the reduction of cumbersome boilerplate code that has frequently occurred in Redux in the past. You can get a good overview of this through the Redux Toolkit Basic Tutorial. It is recommended that you read through it first.
 
-[https://redux-toolkit.js.org/tutorials/basic-tutorial](https://redux-toolkit.js.org/tutorials/basic-tutorial:embed:cite)
+[https://redux-toolkit.js.org/tutorials/basic-tutorial](https://redux-toolkit.js.org/tutorials/basic-tutorial)
 
 The ability to create Actions, Action Creators, Reducers, etc. with creating functions is also effective in reducing the existing boilerplate, but the most important thing is the last `createSlice` function.
 Just by looking at the code sample, you can see that the API is quite different from the impression of Redux so far, and the amount of code can be reduced considerably.
