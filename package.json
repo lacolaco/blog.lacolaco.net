@@ -14,7 +14,7 @@
     "deploy": "yarn build && firebase deploy --only hosting"
   },
   "dependencies": {
-    "@primer/css": "^14.2.0"
+    "@primer/css": "^15.2.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.0.1",

@@ -61,10 +61,10 @@
     lodash.camelcase "^4.3.0"
     protobufjs "^6.8.6"
 
-"@primer/css@^14.2.0":
-  version "14.2.0"
-  resolved "https://registry.yarnpkg.com/@primer/css/-/css-14.2.0.tgz#7debf703a68aeabbdc5ff38838ea1d649744f1cf"
-  integrity sha512-BvBuw0V8ypOFpFhvXRpPWQQ3w/piUMS/Pp/rRg3ddnw0eu2keC2Sj+CzJv3ofsiGoq7juHGfGQlqkOWmSQjXRw==
+"@primer/css@^15.2.0":
+  version "15.2.0"
+  resolved "https://registry.yarnpkg.com/@primer/css/-/css-15.2.0.tgz#ddf9651a9db2b9be03e7dfccfa612284ba1325ae"
+  integrity sha512-/vNDchWrxlXqd6E+SWQcChPHJVzGia9aCaTYoz8O9sJTnUSiTKOgSNCQuOXyUInPruTRSqj+z3MZxayKcTsWhA==
   dependencies:
     "@primer/octicons" "^9.1.1"
 
