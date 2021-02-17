@@ -13,10 +13,10 @@
     "deploy": "yarn build && firebase deploy --only hosting"
   },
   "dependencies": {
-    "@primer/css": "^15.2.0"
+    "@primer/css": "15.2.0"
   },
   "devDependencies": {
-    "firebase-tools": "^7.12.1",
-    "sass": "^1.25.0"
+    "firebase-tools": "7.12.1",
+    "sass": "1.25.0"
   }
 }
