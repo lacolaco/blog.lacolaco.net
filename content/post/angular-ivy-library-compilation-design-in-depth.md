@@ -9,7 +9,7 @@ tags: [angular, deep-dive, ivy, compiler, angular-library]
 想定する読者は、Angular のサードパーティライブラリを開発している人や、単に Angular の内部構造に興味がある人である。
 Angular アプリケーションを開発する上では、この記事で解説する内容を知っていなくても何の問題もない。
 
-この記事の内容は Angular チームによって書かれた Design Doc ベースに、現状の実装での検証結果を元に書いている。
+この記事の内容は Angular チームによって書かれた Design Doc をベースに、現状の実装での検証を加えて書いている。
 
 [Ivy Library Compilation \- Conceptual Design Doc](https://docs.google.com/document/d/148eXrCST6TM7Uo90KxaBrMbOkwJbYrQSQgRaGMK5WRc/edit#)
 
