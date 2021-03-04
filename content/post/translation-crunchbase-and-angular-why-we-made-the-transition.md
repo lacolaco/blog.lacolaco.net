@@ -2,7 +2,7 @@
 title: '[翻訳] CrunchbaseとAngular: 私たちが移行した理由'
 date: 2021-03-04T19:36:47+09:00
 updated_at: 2021-03-04T19:36:47+09:00
-tags: []
+tags: [angular, translation]
 ---
 
 - Original: [Crunchbase And Angular: Why We Made The Transition \- Crunchbase](https://about.crunchbase.com/blog/crunchbase-and-angular-why-we-made-the-transition/)
