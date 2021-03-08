@@ -1,6 +1,6 @@
 baseURL = "https://blog.lacolaco.net/"
 languageCode = "ja-JP"
-title = "blog.lacolaco.net"
+title = "lacolaco/tech"
 enableEmoji = true
 googleAnalytics = "UA-52362663-4"
 #disqusShortName = "blog-lacolaco"
