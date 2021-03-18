@@ -17,6 +17,6 @@
   },
   "devDependencies": {
     "firebase-tools": "9.5.0",
-    "sass": "1.25.0"
+    "sass": "1.32.8"
   }
 }
