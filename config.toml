@@ -16,8 +16,10 @@ rssLimit = 10
   post = "/:year/:month/:filename"
 
 [markup.highlight]
-    guessSyntax = true
-    noClasses = false
+  # guessSyntax = false
+  # noClasses = false
+  codeFences = false
+  # style = "github"
 [markup.goldmark.renderer]
     unsafe = true
 
