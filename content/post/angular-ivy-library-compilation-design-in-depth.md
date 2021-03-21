@@ -75,7 +75,7 @@ NPM に公開するライブラリを Ivy コンパイルするには、次の�
 簡単なコンポーネントのコンパイルの例を見てみよう。次のようなコンポーネントがあるとする。
 
 ```ts
-@Component([
+@Component({
   selector: 'some-comp',
   template: `<div> Hello! </div>`
 })

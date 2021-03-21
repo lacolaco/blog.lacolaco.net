@@ -75,7 +75,7 @@ The Angular decorator in the application will be analyzed by the compiler to gen
 Let's look at an example of compiling a simple component. Suppose we have the following component.
 
 ```ts
-@Component([
+@Component({
   selector: 'some-comp',
   template: `<div> Hello! </div>`
 })

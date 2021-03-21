@@ -12,14 +12,14 @@
     "watch": "yarn watch:js & yarn watch:css & hugo server -D",
     "watch:css": "sass styles.scss static/css/styles.css --watch -I node_modules --source-map",
     "watch:js": "esbuild main.js --watch --bundle --outfile=static/js/main.js --sourcemap",
-    "copy-vendor": "rsync -r node_modules/katex static/vendor/ && rsync -r node_modules/highlight.js static/vendor/",
+    "copy-vendor": "rsync -r node_modules/katex static/vendor/ && rsync -r node_modules/prismjs static/vendor/",
     "postinstall": "yarn copy-vendor"
   },
   "dependencies": {
     "@primer/css": "16.0.0-rc.33908e1",
     "anchor-js": "4.3.0",
-    "highlight.js": "10.7.0",
-    "katex": "0.13.0"
+    "katex": "0.13.0",
+    "prismjs": "1.23.0"
   },
   "devDependencies": {
     "autoprefixer": "10.2.5",
