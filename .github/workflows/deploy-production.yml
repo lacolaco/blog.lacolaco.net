@@ -1,0 +1,29 @@
+name: deploy
+
+on: 
+  push:
+    branches: 
+      - master
+  repository_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v2
+      with:
+        hugo-version: 'latest'
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '12.x'
+    - run: yarn install
+    - run: yarn build
+    - uses: FirebaseExtended/action-hosting-deploy@v0
+      with:
+        repoToken: "${{ secrets.GITHUB_TOKEN }}"
+        firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+        projectId: blog-lacolaco-net
+        channelId: live
