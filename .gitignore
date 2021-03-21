@@ -1,5 +1,7 @@
 public
 static/css
+static/js
+static/vendor
 resources/_gen
 
 .DS_Store
