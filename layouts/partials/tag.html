@@ -1,10 +1,8 @@
 {{ if eq (lower .) "angular" }}
-<a class="d-inline-block mr-1 Label bg-red text-white" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
-{{ else if eq (lower .) "web" }}
-<a class="d-inline-block mr-1 Label bg-yellow-dark text-white" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
+<a class="d-inline-block mr-1 Label color-bg-danger-inverse color-text-white" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
 {{ else if eq (lower .) "typescript" }}
-<a class="d-inline-block mr-1 Label bg-blue text-white" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
+<a class="d-inline-block mr-1 Label color-bg-info-inverse color-text-white" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
 {{ else }}
-<a class="d-inline-block mr-1 Label Label--gray" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
+<a class="d-inline-block mr-1 Label Label--secondary" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
 {{ end }}
 

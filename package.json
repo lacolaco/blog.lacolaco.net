@@ -6,17 +6,29 @@
   "author": "Suguru Inatomi <suguru.inatomi@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "yarn build:css && hugo --minify",
-    "build:css": "sass styles.scss static/css/styles.css -I node_modules --source-map --style compressed",
-    "watch": "yarn watch:css & hugo server -D",
-    "watch:css": "yarn run build:css --watch",
-    "deploy": "yarn build && firebase deploy --only hosting"
+    "build": "yarn build:css && yarn build:js && hugo --minify",
+    "build:css": "sass styles.scss -I node_modules | postcss -o static/css/styles.css",
+    "build:js": "esbuild main.js --bundle --minify --outfile=static/js/main.js",
+    "watch": "yarn watch:js & yarn watch:css & hugo server -D",
+    "watch:css": "sass styles.scss static/css/styles.css --watch -I node_modules --source-map",
+    "watch:js": "esbuild main.js --watch --bundle --outfile=static/js/main.js --sourcemap",
+    "deploy": "yarn build && firebase deploy --only hosting",
+    "copy-vendor": "rsync -r node_modules/{katex,highlight.js} static/vendor/",
+    "postinstall": "yarn copy-vendor"
   },
   "dependencies": {
-    "@primer/css": "15.2.0"
+    "@primer/css": "16.0.0-rc.33908e1",
+    "anchor-js": "4.3.0",
+    "highlight.js": "10.7.0",
+    "katex": "0.13.0"
   },
   "devDependencies": {
+    "autoprefixer": "10.2.5",
+    "cssnano": "4.1.10",
+    "esbuild": "0.9.6",
     "firebase-tools": "9.5.0",
+    "postcss": "8.2.8",
+    "postcss-cli": "8.3.1",
     "sass": "1.32.8"
   }
 }

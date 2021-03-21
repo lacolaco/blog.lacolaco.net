@@ -17,13 +17,13 @@
         {{ range .Paginator.Pages -}}
         <li class="mb-2 pb-2 border-bottom">
             <div class="flex-auto min-width-0 lh-condensed">
-                <a class="link-gray-dark v-align-middle no-underline h4 mr-1" href="{{ .RelPermalink }}">{{ .Title | markdownify | emojify}}</a>
+                <a class="Link--primary v-align-middle no-underline h4 mr-1" href="{{ .RelPermalink }}">{{ .Title | markdownify | emojify}}</a>
                 <span class="labels lh-default">
                     {{ range .Params.tags -}}
                     {{ partial "tag.html" . -}}
                     {{ end -}}
                 </span>
-                <div class="mt-1 text-small text-gray">
+                <div class="mt-1 text-small Label--secondary">
                     <span class="v-align-middle">{{ .Date.Format "2006-01-02" }}</span>
                 </div>
             </div>
