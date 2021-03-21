@@ -173,13 +173,13 @@
     "@opentelemetry/resources" "^0.12.0"
     "@opentelemetry/semantic-conventions" "^0.12.0"
 
-"@primer/css@16.0.0-rc.33908e1":
-  version "16.0.0-rc.33908e1"
-  resolved "https://registry.yarnpkg.com/@primer/css/-/css-16.0.0-rc.33908e1.tgz#4b479b75bf58a01b559899055829de79fe1d4fbe"
-  integrity sha512-E2ERyZoOKRwcbhptJXoTF74dlEiirb1kW/EfUZrcLScbH0jQ7Rxl1hW5XIWEt7g3tonB53how2HPMMArpZ/bQA==
+"@primer/css@16.0.0-rc.de5c865":
+  version "16.0.0-rc.de5c865"
+  resolved "https://registry.yarnpkg.com/@primer/css/-/css-16.0.0-rc.de5c865.tgz#0e8fe84a2c5c80cffb39ac83d3f688308b3685f4"
+  integrity sha512-Gvl8Zx+GTQ+l6qQIrMpu6nspEvxpyyFgodvVSiVz/MFRSAiuaEwJxzq35D/tEyaopxzzOzwZvxe+hRB1zEm/0A==
   dependencies:
     "@primer/octicons" "^9.1.1"
-    "@primer/primitives" "0.0.0-2021219201035"
+    "@primer/primitives" "0.0.0-20212382031"
 
 "@primer/octicons@^9.1.1":
   version "9.4.0"
@@ -188,10 +188,10 @@
   dependencies:
     object-assign "^4.1.1"
 
-"@primer/primitives@0.0.0-2021219201035":
-  version "0.0.0-2021219201035"
-  resolved "https://registry.yarnpkg.com/@primer/primitives/-/primitives-0.0.0-2021219201035.tgz#30c5ef22e82cf976ee5c68c141310b2dbbfa88f4"
-  integrity sha512-J6Fq782XjhVAOZ8cfzMmEC/olbtqzRCoU6s2oTB7Yq4/a9RAxEeXN4d4Toz/ReOSkhV2+zMNpKjiej+v9N37Xw==
+"@primer/primitives@0.0.0-20212382031":
+  version "0.0.0-20212382031"
+  resolved "https://registry.yarnpkg.com/@primer/primitives/-/primitives-0.0.0-20212382031.tgz#a45e406d984259f9960715b5a53290aaf75c1a04"
+  integrity sha512-LAl9NnEzxtvZ/GdoHzRU955nlMlsvHk+DUJJStJ1DaqgWn8n5+1pw1MmsY5+4OeULvleQOtzoNsSoeYW4eLyPQ==
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"

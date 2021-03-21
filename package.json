@@ -17,7 +17,7 @@
     "postinstall": "yarn copy-vendor"
   },
   "dependencies": {
-    "@primer/css": "16.0.0-rc.33908e1",
+    "@primer/css": "16.0.0-rc.de5c865",
     "anchor-js": "4.3.0",
     "highlight.js": "10.7.0",
     "katex": "0.13.0"
