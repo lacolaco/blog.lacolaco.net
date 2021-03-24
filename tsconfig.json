@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "target": "es2015",
+    "module": "es2020",
+    "lib": ["dom", "es2018"]
+  },
+  "files": ["src/main.ts"]
+}
