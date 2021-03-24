@@ -8,9 +8,8 @@ describe('LikeReactionButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LikeReactionButtonComponent ]
-    })
-    .compileComponents();
+      declarations: [LikeReactionButtonComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

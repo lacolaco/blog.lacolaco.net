@@ -1,6 +1,7 @@
 public
 assets/css
 assets/js
+assets/elements
 static/vendor
 resources/_gen
 

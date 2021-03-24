@@ -13,4 +13,4 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import "@jscutlery/cypress-mount/support";
+import '@jscutlery/cypress-mount/support';

@@ -11,10 +11,8 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
-const {
-  angularPreprocessor,
-} = require("@jscutlery/cypress-angular-preprocessor");
+const { angularPreprocessor } = require('@jscutlery/cypress-angular-preprocessor');
 
 module.exports = (on, config) => {
-  on("file:preprocessor", angularPreprocessor(config));
+  on('file:preprocessor', angularPreprocessor(config));
 };

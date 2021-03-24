@@ -1,10 +1,10 @@
 <button class="button">
   <ng-container *ngIf="isLiked; else notLiked">
-    <elements-favorite-icon></elements-favorite-icon>
+    <elements-favorite-icon class="icon"></elements-favorite-icon>
   </ng-container>
 
   <ng-template #notLiked>
-    <elements-favorite-border-icon></elements-favorite-border-icon>
+    <elements-favorite-border-icon class="icon"></elements-favorite-border-icon>
   </ng-template>
 
   <div class="likeCount" *ngIf="count > 0">

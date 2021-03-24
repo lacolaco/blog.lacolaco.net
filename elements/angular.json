@@ -42,19 +42,14 @@
         "build": {
           "builder": "ngx-build-plus:browser",
           "options": {
-            "outputPath": "dist/apps/elements",
+            "outputPath": "../assets/elements",
             "index": "apps/elements/src/index.html",
             "main": "apps/elements/src/main.ts",
             "polyfills": "apps/elements/src/polyfills.ts",
             "tsConfig": "apps/elements/tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "apps/elements/src/favicon.ico",
-              "apps/elements/src/assets"
-            ],
-            "styles": [
-              "apps/elements/src/styles.scss"
-            ],
+            "assets": ["apps/elements/src/favicon.ico", "apps/elements/src/assets"],
+            "styles": ["apps/elements/src/styles.scss"],
             "scripts": [],
             "singleBundle": true
           },
@@ -108,17 +103,12 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/elements/src/**/*.ts",
-              "apps/elements/src/**/*.html"
-            ]
+            "lintFilePatterns": ["apps/elements/src/**/*.ts", "apps/elements/src/**/*.html"]
           }
         },
         "test": {
           "builder": "ngx-build-plus:karma",
-          "outputs": [
-            "coverage/apps/elements"
-          ],
+          "outputs": ["coverage/apps/elements"],
           "options": {
             "jestConfig": "apps/elements/jest.config.js",
             "passWithNoTests": true
@@ -147,9 +137,7 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": [
-              "apps/elements-e2e/**/*.{js,ts}"
-            ]
+            "lintFilePatterns": ["apps/elements-e2e/**/*.{js,ts}"]
           }
         }
       }

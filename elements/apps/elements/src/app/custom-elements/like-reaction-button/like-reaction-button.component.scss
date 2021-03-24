@@ -1,4 +1,5 @@
 :host {
+  display: inline-block;
 }
 
 .button {
@@ -14,6 +15,11 @@
   &:hover {
     background-color: rgba(220, 24, 24, 0.1);
   }
+}
+
+.icon {
+  height: 18px;
+  width: 18px;
 }
 
 .likeCount {

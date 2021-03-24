@@ -18,7 +18,7 @@ export class AppModule {
       'like-reaction-button',
       createCustomElement(LikeReactionButtonComponent, {
         injector: this.injector,
-      })
+      }),
     );
   }
 }

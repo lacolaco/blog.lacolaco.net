@@ -8,9 +8,8 @@ describe('FavoriteBorderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FavoriteBorderIconComponent ]
-    })
-    .compileComponents();
+      declarations: [FavoriteBorderIconComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

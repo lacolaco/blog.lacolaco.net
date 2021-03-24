@@ -1,14 +1,14 @@
-import { TestBed } from "@angular/core/testing";
-import { AppComponent } from "./app.component";
+import { TestBed } from '@angular/core/testing';
+import { AppComponent } from './app.component';
 
-describe("AppComponent", () => {
+describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [AppComponent],
     }).compileComponents();
   });
 
-  it("should create the app", () => {
+  it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
@@ -17,15 +17,13 @@ describe("AppComponent", () => {
   it(`should have as title 'elements'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual("elements");
+    expect(app.title).toEqual('elements');
   });
 
-  it("should render title", () => {
+  it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector("h1").textContent).toContain(
-      "Welcome to elements!"
-    );
+    expect(compiled.querySelector('h1').textContent).toContain('Welcome to elements!');
   });
 });
