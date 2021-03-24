@@ -15,7 +15,7 @@
     "watch:js": "esbuild src/main.ts --watch --bundle --outfile=assets/js/main.js --sourcemap",
     "watch:hugo": "hugo server -D",
     "copy-vendor": "rsync -r node_modules/katex static/vendor/ && rsync -r node_modules/prismjs static/vendor/",
-    "format": "prettier --write 'src'",
+    "format": "prettier --write 'src' 'elements'",
     "postinstall": "yarn copy-vendor"
   },
   "dependencies": {
