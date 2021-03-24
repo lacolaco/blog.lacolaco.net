@@ -7,12 +7,13 @@
   "license": "MIT",
   "scripts": {
     "build": "yarn build:css && yarn build:js && hugo --minify",
-    "build:css": "sass styles.scss -I node_modules | postcss -o assets/css/styles.css",
+    "build:css": "sass src/styles.scss -I node_modules | postcss -o assets/css/styles.css",
     "build:js": "esbuild src/main.ts --bundle --minify --outfile=assets/js/main.js",
     "watch": "yarn watch:js & yarn watch:css & hugo server -D",
-    "watch:css": "sass styles.scss assets/css/styles.css --watch -I node_modules --source-map",
-    "watch:js": "esbuild main.js --watch --bundle --outfile=assets/js/main.js --sourcemap",
+    "watch:css": "sass src/styles.scss assets/css/styles.css --watch -I node_modules --source-map",
+    "watch:js": "esbuild src/main.ts --watch --bundle --outfile=assets/js/main.js --sourcemap",
     "copy-vendor": "rsync -r node_modules/katex static/vendor/ && rsync -r node_modules/prismjs static/vendor/",
+    "format": "prettier --write 'src'",
     "postinstall": "yarn copy-vendor"
   },
   "dependencies": {
@@ -27,6 +28,7 @@
     "esbuild": "0.9.6",
     "postcss": "8.2.8",
     "postcss-cli": "8.3.1",
+    "prettier": "2.2.1",
     "sass": "1.32.8"
   }
 }

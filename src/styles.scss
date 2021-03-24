@@ -1,0 +1,22 @@
+@use 'styles/syntax-highlight.scss';
+@use 'styles/markdown.scss';
+
+@import "@primer/css/support";
+@import "@primer/css/avatars";
+@import "@primer/css/alerts";
+@import "@primer/css/base";
+@import "@primer/css/box";
+@import "@primer/css/buttons";
+@import "@primer/css/header";
+@import "@primer/css/labels";
+@import "@primer/css/links";
+@import "@primer/css/layout";
+@import "@primer/css/pagination";
+@import "@primer/css/markdown";
+@import "@primer/css/utilities";
+
+/* Theming Google Custom Search Engine  */
+.gsc-control-cse {
+  background-color: var(--color-bg-primary) !important;
+  border-color: var(--color-bg-primary) !important;
+}
