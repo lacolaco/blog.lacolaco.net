@@ -28,7 +28,8 @@
       "unitTestRunner": "jest"
     },
     "@nrwl/angular:component": {
-      "style": "scss"
+      "style": "scss",
+      "changeDetection": "OnPush"
     }
   },
   "projects": {
@@ -39,7 +40,7 @@
       "prefix": "elements",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "ngx-build-plus:browser",
           "options": {
             "outputPath": "dist/apps/elements",
             "index": "apps/elements/src/index.html",
@@ -51,8 +52,11 @@
               "apps/elements/src/favicon.ico",
               "apps/elements/src/assets"
             ],
-            "styles": ["apps/elements/src/styles.scss"],
-            "scripts": []
+            "styles": [
+              "apps/elements/src/styles.scss"
+            ],
+            "scripts": [],
+            "singleBundle": true
           },
           "configurations": {
             "production": {
@@ -63,7 +67,7 @@
                 }
               ],
               "optimization": true,
-              "outputHashing": "all",
+              "outputHashing": "none",
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
@@ -85,7 +89,7 @@
           }
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "ngx-build-plus:dev-server",
           "options": {
             "browserTarget": "elements:build"
           },
@@ -111,8 +115,10 @@
           }
         },
         "test": {
-          "builder": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/elements"],
+          "builder": "ngx-build-plus:karma",
+          "outputs": [
+            "coverage/apps/elements"
+          ],
           "options": {
             "jestConfig": "apps/elements/jest.config.js",
             "passWithNoTests": true
@@ -141,7 +147,9 @@
         "lint": {
           "builder": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/elements-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/elements-e2e/**/*.{js,ts}"
+            ]
           }
         }
       }
