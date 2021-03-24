@@ -1,6 +1,6 @@
 public
-static/css
-static/js
+assets/css
+assets/js
 static/vendor
 resources/_gen
 

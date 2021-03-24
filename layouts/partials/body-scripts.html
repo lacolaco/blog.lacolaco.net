@@ -1,4 +1,5 @@
-<script src="/js/main.js"></script>
+{{ $js := resources.Get "js/main.js" | resources.Fingerprint}}
+<script type="text/javascript" src="{{ $js.Permalink }}" integrity="{{ $js.Data.Integrity }}"></script>
 
 <script async src="https://cse.google.com/cse.js?cx=016749829816792588257:vx30glhznqb"></script>
 

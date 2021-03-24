@@ -21,4 +21,6 @@
 
 <link rel="stylesheet" href="/vendor/katex/dist/katex.min.css" />
 <link rel="stylesheet" href="/vendor/prismjs/plugins/toolbar/prism-toolbar.css" />
-<link rel="stylesheet" href="/css/styles.css"  />
+
+{{ $style := resources.Get "css/styles.css" | resources.Fingerprint }}
+<link rel="stylesheet" href="{{ $style.Permalink }}">
