@@ -19,7 +19,7 @@
     "postinstall": "yarn copy-vendor"
   },
   "dependencies": {
-    "@primer/css": "16.0.0-rc.33908e1",
+    "@primer/css": "16.2.0",
     "anchor-js": "4.3.0",
     "katex": "0.13.0",
     "prismjs": "1.23.0"
