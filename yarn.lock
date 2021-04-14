@@ -44,25 +44,25 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
-"@primer/css@16.0.0-rc.33908e1":
-  version "16.0.0-rc.33908e1"
-  resolved "https://registry.yarnpkg.com/@primer/css/-/css-16.0.0-rc.33908e1.tgz#4b479b75bf58a01b559899055829de79fe1d4fbe"
-  integrity sha512-E2ERyZoOKRwcbhptJXoTF74dlEiirb1kW/EfUZrcLScbH0jQ7Rxl1hW5XIWEt7g3tonB53how2HPMMArpZ/bQA==
+"@primer/css@16.2.0":
+  version "16.2.0"
+  resolved "https://registry.yarnpkg.com/@primer/css/-/css-16.2.0.tgz#c858b8328aa554281541b0b0a8dc2683610c6ffe"
+  integrity sha512-nELaaTJAuDBfyoHuz9c5P3ALDVavt/BSyAAa7KEpyi9S3BupYSitCwGkcJE+U6LtCUzHoqv31N9R2eJJxTgCyQ==
   dependencies:
-    "@primer/octicons" "^9.1.1"
-    "@primer/primitives" "0.0.0-2021219201035"
+    "@primer/octicons" "12.1.0"
+    "@primer/primitives" "4.2.0"
 
-"@primer/octicons@^9.1.1":
-  version "9.4.0"
-  resolved "https://registry.yarnpkg.com/@primer/octicons/-/octicons-9.4.0.tgz#eea0d26844cef16d9fde5e764b6c5dba8c9619fa"
-  integrity sha512-7tAWOTt3Ay3Vkf9XwietC40TV1pxk5PS2DAODsOPnMfMd9Yzm2tfvHu0Q3dcffxGZxu7n5ZM6MFWbr/+4dqSdA==
+"@primer/octicons@12.1.0":
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/@primer/octicons/-/octicons-12.1.0.tgz#770c8395dc54604637c56ccb261707f9e9d59ddb"
+  integrity sha512-jayKLMTCx/0zh4fjYmkxdlEgQ8STwevn5S48fkvi/03asITmBkaYAMPrUgO8VNSQkSPHIEuc3oTLXgh+JwH0UQ==
   dependencies:
     object-assign "^4.1.1"
 
-"@primer/primitives@0.0.0-2021219201035":
-  version "0.0.0-2021219201035"
-  resolved "https://registry.yarnpkg.com/@primer/primitives/-/primitives-0.0.0-2021219201035.tgz#30c5ef22e82cf976ee5c68c141310b2dbbfa88f4"
-  integrity sha512-J6Fq782XjhVAOZ8cfzMmEC/olbtqzRCoU6s2oTB7Yq4/a9RAxEeXN4d4Toz/ReOSkhV2+zMNpKjiej+v9N37Xw==
+"@primer/primitives@4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@primer/primitives/-/primitives-4.2.0.tgz#a54d052bd8b8fcc0a2f5029f44a192939f87f09f"
+  integrity sha512-/2/9ueCWWzqaLRSJ3TNGthMVX8DBn/oa+ZY9eB/TmxUPglXd8AQMxV2wz+pAoy8SpXXwe84JuEgHTAghzAOh0w==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
