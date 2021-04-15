@@ -44,25 +44,25 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
-"@primer/css@16.2.0":
-  version "16.2.0"
-  resolved "https://registry.yarnpkg.com/@primer/css/-/css-16.2.0.tgz#c858b8328aa554281541b0b0a8dc2683610c6ffe"
-  integrity sha512-nELaaTJAuDBfyoHuz9c5P3ALDVavt/BSyAAa7KEpyi9S3BupYSitCwGkcJE+U6LtCUzHoqv31N9R2eJJxTgCyQ==
+"@primer/css@16.3.0":
+  version "16.3.0"
+  resolved "https://registry.yarnpkg.com/@primer/css/-/css-16.3.0.tgz#1dca32ff75e6bf23fbe8c27c014b35dfe1294ac0"
+  integrity sha512-nfgvRLPVGS1cdEh/Y1cak17gwEVI8HtQpbGQHvBcWrVQ78sbS3EHvdRUGpFM/Lyi/WKVZInAAwIXG9RWKukOag==
   dependencies:
-    "@primer/octicons" "12.1.0"
-    "@primer/primitives" "4.2.0"
+    "@primer/octicons" "13.0.0"
+    "@primer/primitives" "4.2.1"
 
-"@primer/octicons@12.1.0":
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/@primer/octicons/-/octicons-12.1.0.tgz#770c8395dc54604637c56ccb261707f9e9d59ddb"
-  integrity sha512-jayKLMTCx/0zh4fjYmkxdlEgQ8STwevn5S48fkvi/03asITmBkaYAMPrUgO8VNSQkSPHIEuc3oTLXgh+JwH0UQ==
+"@primer/octicons@13.0.0":
+  version "13.0.0"
+  resolved "https://registry.yarnpkg.com/@primer/octicons/-/octicons-13.0.0.tgz#dab1f156ac601d2cb7c83eab9242a1739429cf2e"
+  integrity sha512-kMNu3Ny3eocOTl2hxRC0YX0na7zJwpSIQNiZqmyqbLMKp2YwNAwk5Tan4RLGe35f30st+EbNq15dEjiMzslAcw==
   dependencies:
     object-assign "^4.1.1"
 
-"@primer/primitives@4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@primer/primitives/-/primitives-4.2.0.tgz#a54d052bd8b8fcc0a2f5029f44a192939f87f09f"
-  integrity sha512-/2/9ueCWWzqaLRSJ3TNGthMVX8DBn/oa+ZY9eB/TmxUPglXd8AQMxV2wz+pAoy8SpXXwe84JuEgHTAghzAOh0w==
+"@primer/primitives@4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@primer/primitives/-/primitives-4.2.1.tgz#e8fac9b4b78eb81d81384ce5fcfe32bbb4115861"
+  integrity sha512-sI0Bw/PMCZ1kfPX1MRwoNYD6RWdvU0sGk9YYD8euYASwrr4E6aNH9dutMmHTRVe/N3/coBN7QUkV79GMt0UKyQ==
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
