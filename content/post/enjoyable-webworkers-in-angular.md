@@ -171,7 +171,7 @@ export class MarkdownService {
 
 #### Run the app!
 
-To see the work of Comlink and WorkerPlugin, finish the application. Here is `AppComponent` modified to use `MarkdownService` and show the result.
+Finish the application. Here is `AppComponent` modified to use `MarkdownService` and show the result.
 
 ```ts
 import { MarkdownService } from './service/markdown.service';
