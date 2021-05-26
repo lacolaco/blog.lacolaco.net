@@ -54,7 +54,7 @@
     "@angular/compiler-cli": "11.2.6",
     "@angular/language-service": "11.2.6",
     "@jscutlery/cypress-angular-preprocessor": "0.4.3",
-    "@jscutlery/cypress-mount": "0.8.1",
+    "@jscutlery/cypress-mount": "0.10.1",
     "@nrwl/cli": "11.5.2",
     "@nrwl/cypress": "11.5.2",
     "@nrwl/eslint-plugin-nx": "11.5.2",
