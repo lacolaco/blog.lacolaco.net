@@ -40,6 +40,25 @@ At first, install `marked` and `@types/marked` to compile markdown to HTML.
 yarn add marked && yarn add --dev @types/marked
 ```
 
+Next, create `src/tsconfig.worker.json` for the application project. Its location is next to `tsconfig.app.json`.
+
+```json
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/worker",
+    "lib": [
+      "es2018",
+      "webworker"
+    ],
+    "types": []
+  },
+  "include": [
+    "**/*.worker.ts"
+  ]
+}
+```
+
 Create a file named `markdown.worker.ts` in `src/app/worker` directory and write a function as the below. This file will be the entry point of the worker module.
 
 ```shell
