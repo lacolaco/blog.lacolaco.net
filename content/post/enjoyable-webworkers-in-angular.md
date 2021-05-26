@@ -2,7 +2,7 @@
 title: Enjoyable WebWorkers in Angular
 date: '2018-12-22T06:39:05.976Z'
 updated_at: '2021-05-26T11:13:01+0900'
-tags: [angular, webworker, comlink, webpack, off-the-main-thread]
+tags: [english, angular, webworker, comlink, webpack, off-the-main-thread]
 ---
 
 [Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) have attracted the attention as one of the most important things of web development. [**Comlink**](https://github.com/GoogleChromeLabs/comlink) is a JavaScript library created by Google Chrome team to **make WebWorkers enjoyable**. It provides an easy way to communicate with classes defined in Worker-side.
@@ -21,7 +21,7 @@ This post explains how to integrate Comlink with your Angular application that c
 Create an example application by using [Angular CLI](https://angular.io/guide/quickstart#install-cli). 
 
 ```shell
-$ ng new angular-comlink-example --defaultshu
+$ ng new angular-comlink-example --defaults
 ```
 
 After application setup, install Comlink as the below. Comlink has its own TypeScript definition in the package, so you don’t need additional installation.
