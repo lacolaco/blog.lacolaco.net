@@ -21,7 +21,7 @@ This post explains how to integrate Comlink with your Angular application that c
 Create an example application by using [Angular CLI](https://angular.io/guide/quickstart#install-cli). 
 
 ```shell
-$ ng new angular-comlink-example --defaults
+$ ng new angular-comlink-example --defaultshu
 ```
 
 After application setup, install Comlink as the below. Comlink has its own TypeScript definition in the package, so you don’t need additional installation.
