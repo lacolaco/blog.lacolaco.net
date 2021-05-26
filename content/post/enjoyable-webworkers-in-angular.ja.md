@@ -29,7 +29,7 @@ $ yarn add comlink # or npm install comlink
 まずはじめに`marked`と`@types/marked`の 2 つのパッケージをインストールする。
 
 ```shell
-yarn add marked && yarn add --dev @types/marked
+$ yarn add marked && yarn add --dev @types/marked
 ```
 
 次に、 `ng generate webworker` コマンドを使い、 `worker/markdown.worker.ts` ファイルを作成する。このコマンドは TypeScript ファイルだけでなく、Web Worker 用の `tsconfig.worker.json` も同時に生成し、そのファイルを参照するように `angular.json` ファイルも更新される。
