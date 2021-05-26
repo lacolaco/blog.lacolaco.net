@@ -1828,10 +1828,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@jscutlery/cypress-angular-preprocessor@0.4.3":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@jscutlery/cypress-angular-preprocessor/-/cypress-angular-preprocessor-0.4.3.tgz#2be798cb4e1ac48a9e572997f339ed6845f8927f"
-  integrity sha512-Wnv9mOe/nPKsDRfv9H0SYoXq8RO8IQETt/QoX45DYX0AKDGMjk1OJEoG5K0CgYDJmeXbAQdL9PCRmrYB++Mf9A==
+"@jscutlery/cypress-angular-preprocessor@0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@jscutlery/cypress-angular-preprocessor/-/cypress-angular-preprocessor-0.5.0.tgz#eccb212e25da27775590b0945e243a2ff3acd937"
+  integrity sha512-xW2gh4EgKY7lpPZWbwU4+pzn4ndTrr37XLvKkREmg+RReSVks0uMChFiRWP08GtZS7R1mPXYg3Qcoct1u7DxRQ==
 
 "@jscutlery/cypress-mount@0.8.1":
   version "0.8.1"
