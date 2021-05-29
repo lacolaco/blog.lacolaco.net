@@ -1,5 +1,5 @@
 {{ $js := resources.Get "js/main.js" | resources.Fingerprint}}
-<script src="{{ $js.Permalink }}"></script>
+<script src="{{ $js.RelPermalink }}"></script>
 
 <script async src="https://cse.google.com/cse.js?cx=016749829816792588257:vx30glhznqb"></script>
 
