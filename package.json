@@ -10,6 +10,7 @@
     "build:css": "sass src/styles.scss -I node_modules | postcss -o assets/css/styles.css",
     "build:js": "esbuild src/main.ts --bundle --minify --outfile=assets/js/main.js",
     "build:hugo": "hugo --minify",
+    "start": "yarn watch",
     "watch": "run-p 'watch:*'",
     "watch:css": "sass src/styles.scss assets/css/styles.css --watch -I node_modules --source-map",
     "watch:js": "esbuild src/main.ts --watch --bundle --outfile=assets/js/main.js --sourcemap",
