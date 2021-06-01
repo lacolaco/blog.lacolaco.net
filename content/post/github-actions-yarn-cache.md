@@ -40,6 +40,7 @@ https://github.com/actions/cache/blob/main/examples.md#node---yarn
 ```
 
 しかしこのサンプル、いったい何をしていて、果たしてこの書き方は最適なのだろうか？今一度 Yarn 自体から振り返って考えてみたい。
+この記事での Yarn は Yarn v1 を対象としている。
 
 ## Yarn キャッシュ
 
