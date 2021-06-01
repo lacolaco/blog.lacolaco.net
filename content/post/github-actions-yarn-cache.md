@@ -40,24 +40,30 @@ https://github.com/actions/cache/blob/main/examples.md#node---yarn
 ```
 
 しかしこのサンプル、いったい何をしていて、果たしてこの書き方は最適なのだろうか？今一度 Yarn 自体から振り返って考えてみたい。
-この記事での Yarn は Yarn v1 を対象としている。
 
 ## Yarn キャッシュ
 
-Yarn のキャッシュとは、マシン上でグローバルに管理されるネットワークキャッシュである。`yarn add` や `yarn install`などが実行され、NPM からパッケージをダウンロードするたびにキャッシュが保存されている。同じパッケージの同じバージョンをダウンロードするときにはインターネットアクセスせずにキャッシュからインストールされる。
+ここで保存しようとしている Yarn キャッシュとは、マシン上でグローバルに管理されるネットワークキャッシュである。`yarn add` や `yarn install`などが実行され、NPM からパッケージをダウンロードするたびにキャッシュが保存されている。同じパッケージの同じバージョンをダウンロードするときにはインターネットアクセスせずにキャッシュからインストールされる。
+
+Yarn v1 では次のように書かれている。
 
 > Yarn stores every package in a global cache in your user directory on the file system.
 
 {{< embed "https://classic.yarnpkg.com/en/docs/cli/cache/" >}}
 
-このキャッシュがマシン上のどこに実際に存在するかは、`yarn cache dir`コマンドで確認できる。場所は OS によって違うし、Yarn のバージョンによっても変わることもあるかもしれない。デフォルトでどこに生成されるかは環境次第である。
+Yarn v2 では次のように書かれている。
+
+> The way it works is simple: each time a package is downloaded from a remote location ... a copy will be stored within the cache.
+
+{{< embed "https://yarnpkg.com/features/offline-cache" >}}
+
+このキャッシュがマシン上のどこに実際に存在するかは環境依存となっているようだ。OS によって違うし、Yarn のバージョンによっても変わることもあるかもしれない。そのため、上記のサンプル設定ではまずコマンドを実行して現在の設定を取得することで、次のキャッシュステップで `path` に Yarn キャッシュを指定できるわけである。
 
 ```shell
+# v1の例
 $ yarn cache dir
 /Users/laco/Library/Caches/Yarn/v6
 ```
-
-`actions/cache`の Yarn 設定例にある 1 つ目のステップは、GitHub Actions の実行環境における Yarn キャッシュの場所を特定し、それを次のステップで使うために出力している。こうすることで、次のキャッシュステップで `path` に Yarn キャッシュを指定できるわけである。
 
 ### YARN_CACHE_FOLDER
 
@@ -68,6 +74,14 @@ $ yarn cache dir
 
 ```shell
 YARN_CACHE_FOLDER=<path> yarn <command>
+```
+
+これは Yarn v2 でも同じである。Yarn v2 の場合はそもそもグローバルキャッシュ自体がオプトインであるため、グローバルキャッシュを有効にするオプションも同時に設定する必要がある。
+
+https://yarnpkg.com/configuration/yarnrc/#cacheFolder
+
+```shell
+YARN_CACHE_FOLDER=<path> YARN_ENABLE_GLOBAL_CACHE=true yarn <command>
 ```
 
 これを利用すれば、Yarn キャッシュを使う GitHub Actions はかなりシンプルに記述できるだろう。
@@ -90,7 +104,7 @@ Yarn キャッシュはそもそもマシン上でグローバル管理されて
 
 ## シンプルな Yarn キャッシュ
 
-前置きが長くなったが、私が愛用している Yarn プロジェクト用のキャッシュ設定は次のものである。`YARN_CACHE_FOLDER`環境変数をワークフローのグローバルで設定し、すべての`yarn`コマンドで自動的に利用されるようにする。キャッシュには主キーだけを与え、OS だけをキーに含める。キャッシュを破棄したくなったときには `v1`部分をインクリメントすればよい。
+前置きが長くなったが、私が愛用している Yarn プロジェクト用のキャッシュ設定は次のものである。`YARN_CACHE_FOLDER`環境変数をワークフローのグローバルで設定し、すべての`yarn`コマンドで自動的に利用されるようにする。キャッシュには主キーだけを与え、OS だけをキーに含める。キャッシュを破棄したくなったときには `v1`部分をインクリメントすればよい。また、Yarn v2 であれば追加で `YARN_ENABLE_GLOBAL_CACHE: true`も環境変数に追加するだけでいい。
 
 ```yml
 env:
