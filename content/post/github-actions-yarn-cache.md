@@ -1,5 +1,5 @@
 ---
-title: 'Github Actions: Yarn キャッシュをシンプルに使う'
+title: 'GitHub Actions: Yarn キャッシュをシンプルに使う'
 date: 2021-06-01T22:58:58+09:00
 updated_at: 2021-06-01T22:58:58+09:00
 tags: ['github-actions', 'github', 'yarn']
