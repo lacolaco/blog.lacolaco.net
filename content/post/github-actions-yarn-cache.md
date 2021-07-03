@@ -1,8 +1,18 @@
 ---
 title: 'GitHub Actions: Yarn キャッシュをシンプルに使う'
 date: 2021-06-01T22:58:58+09:00
-updated_at: 2021-06-01T22:58:58+09:00
+updated_at: 2021-07-03T09:28:56.449Z
 tags: ['github-actions', 'github', 'yarn']
+---
+
+**追記（2021-07-03）**
+
+`actions/setup-node` が公式にキャッシュ機能を実装したため、この記事で紹介した `actions/cache` を使った方法はまったく無用になった。
+
+{{< embed "https://github.blog/changelog/2021-07-02-github-actions-setup-node-now-supports-dependency-caching/" >}}
+
+今後は `actions/setup-node` の `cache` オプションで事足りるだろう。以下は読まなくていい。
+
 ---
 
 GitHub Actions で継続的インテグレーション・デプロイを構成すると、すぐに問題になるのはキャッシュの活用だろう。
