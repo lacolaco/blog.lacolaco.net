@@ -1,5 +1,5 @@
 {{ define "main" }}
-{{ $LastUpdatedAt := (cond (ne .Params.updated_at nil) (time .Params.updated_at) .Date) -}}
+{{ $LastUpdatedAt := (time (index .Params "updated_at" | default .Date)) }}
 <article class="">
   <header class="mb-4">
     <div class="meta">
