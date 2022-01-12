@@ -23,7 +23,7 @@
     "@primer/css": "17.11.1",
     "anchor-js": "4.3.1",
     "katex": "0.13.18",
-    "prismjs": "1.25.0"
+    "prismjs": "1.26.0"
   },
   "devDependencies": {
     "autoprefixer": "10.4.2",
