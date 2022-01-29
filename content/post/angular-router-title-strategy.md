@@ -61,7 +61,7 @@ export class AppTitleStrategy extends TitleStrategy {
 
   override updateTitle(snapshot: RouterStateSnapshot) {
     const title = this.buildTitle(snapshot);
-    this.titleService(title ? `My App | ${title}` : 'My App');
+    this.titleService.setTitle(title ? `My App | ${title}` : 'My App');
   }
 }
 
