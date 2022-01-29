@@ -1,4 +1,4 @@
-import renderMathInElement from 'katex/dist/contrib/auto-render';
+import renderMathInElement from 'katex/contrib/auto-render';
 
 document.addEventListener('DOMContentLoaded', function () {
   renderMathInElement(document.body, {
