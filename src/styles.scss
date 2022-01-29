@@ -2,6 +2,7 @@
 @use 'styles/markdown.scss';
 
 @import '@primer/css/support';
+@import '@primer/css/color-modes';
 @import '@primer/css/avatars';
 @import '@primer/css/alerts';
 @import '@primer/css/base';
@@ -17,6 +18,6 @@
 
 /* Theming Google Custom Search Engine  */
 .gsc-control-cse {
-  background-color: var(--color-bg-primary) !important;
-  border-color: var(--color-bg-primary) !important;
+  background-color: var(--color-canvas-default) !important;
+  border-color: var(--color-canvas-default) !important;
 }
