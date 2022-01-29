@@ -22,7 +22,7 @@
   "dependencies": {
     "@primer/css": "19.2.0",
     "anchor-js": "4.3.1",
-    "katex": "0.13.18",
+    "katex": "0.15.2",
     "prismjs": "1.26.0"
   },
   "devDependencies": {
