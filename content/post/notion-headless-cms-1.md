@@ -1,7 +1,7 @@
 ---
 title: 'NotionヘッドレスCMS化記録 (1) Notion APIとTypeScript'
 date: '2022-02-13T10:22:00.000Z'
-updated_at: '2022-02-13T12:59:00.000Z'
+updated_at: '2022-02-13T13:21:00.000Z'
 tags:
   - 'Notion'
   - 'TypeScript'
@@ -51,7 +51,7 @@ export type BlockObject = ElementType<Awaited<ReturnType<Client['blocks']['child
 
 ```typescript
 // Client.databases.query.resultsの型定義
-		results: Array<{
+    results: Array<{
         ...
         properties: Record<string, ...> | null;
         object: "page";
@@ -63,7 +63,7 @@ export type BlockObject = ElementType<Awaited<ReturnType<Client['blocks']['child
     }>;
 ```
 
-今回のユースケースでは `properties` を持たないページはイレギュラーでしかないため、この型定義のまま扱うと Type Guard を何度も書くことになる。 `PageObject` 型は常に `properties` フィールドを持つように定義するため、独自のユーティリティ型として `Match<T, U>` を作成し、次のようにして `properties` フィールドの存在を保証した。また同様に、 `BlockObject` も `type` フィールドの存在を保証するように定義した。
+今回のユースケースでは `properties` を持たないページはイレギュラーでしかないため、この型定義のまま扱うと Type Guard を何度も書くことになる。そこで `PageObject` 型が常に `properties` フィールドを持つように、独自のユーティリティ型として `MatchType<T, U>` を作成し、次のようにして `properties` フィールドの存在を保証した。また同様に、 `BlockObject` も `type` フィールドの存在を保証するように定義した。
 
 ```typescript
 // util-types.d.ts
