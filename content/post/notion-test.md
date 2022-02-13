@@ -1,7 +1,7 @@
 ---
 title: 'Notionテスト記事'
 date: '2022-02-11T11:47:00.000Z'
-updated_at: '2022-02-13T06:55:00.000Z'
+updated_at: '2022-02-13T15:43:00.000Z'
 tags:
   - 'test'
   - 'テスト'
@@ -51,7 +51,7 @@ export class Comp {}
   "object": "block",
   "id": "5bd54197-d4e7-43ba-a701-7e53863d532a",
   "created_time": "2022-02-13T02:16:00.000Z",
-  "last_edited_time": "2022-02-13T02:16:00.000Z",
+  "last_edited_time": "2022-02-13T15:43:00.000Z",
   "has_children": false,
   "archived": false,
   "type": "callout",
@@ -60,7 +60,7 @@ export class Comp {}
       {
         "type": "text",
         "text": {
-          "content": "This is callout.",
+          "content": "This is callout.\nMultiline callout.",
           "link": null
         },
         "annotations": {
@@ -71,14 +71,30 @@ export class Comp {}
           "code": false,
           "color": "default"
         },
-        "plain_text": "This is callout.",
+        "plain_text": "This is callout.\nMultiline callout.",
         "href": null
       }
     ],
     "icon": {
       "type": "emoji",
-      "emoji": "➡️"
+      "emoji": "👉"
     }
+  },
+  "depth": 0
+}
+</pre>
+<pre hidden data-blocktype="bookmark">
+{
+  "object": "block",
+  "id": "68c29153-f43d-4981-8f63-7175a16e8b47",
+  "created_time": "2022-02-13T13:40:00.000Z",
+  "last_edited_time": "2022-02-13T13:40:00.000Z",
+  "has_children": false,
+  "archived": false,
+  "type": "bookmark",
+  "bookmark": {
+    "caption": [],
+    "url": "https://blog.lacolaco.net/2022/02/notion-headless-cms-1/"
   },
   "depth": 0
 }
