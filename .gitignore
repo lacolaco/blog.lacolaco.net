@@ -4,8 +4,10 @@ assets/js
 assets/elements
 static/vendor
 resources/_gen
+posts.json
 
 .DS_Store
 *.log
 node_modules
 .firebase
+.env
