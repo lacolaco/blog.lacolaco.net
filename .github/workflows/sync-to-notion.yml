@@ -16,6 +16,8 @@ jobs:
           node-version: '16.x'
       - run: yarn install
       - run: yarn notion:fetch
+        env:
+          NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
