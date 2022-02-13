@@ -49,6 +49,7 @@ export class LocalPostRenderer {
       updated_at: remoteUpdatedAt,
       tags,
       draft: !publishable,
+      source: page.url,
     });
     const body = await renderContentMarkdown(page.content, (url) => this.imagesRepository.download(slug, url));
     const content = format([frontmatter, body].join('\n\n'), {

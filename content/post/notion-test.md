@@ -1,11 +1,12 @@
 ---
 title: 'Notionテスト記事'
 date: '2022-02-11T11:47:00.000Z'
-updated_at: '2022-02-13T06:17:00.000Z'
+updated_at: '2022-02-13T06:55:00.000Z'
 tags:
   - 'test'
   - 'テスト'
-draft: false
+draft: true
+source: 'https://www.notion.so/Notion-80f5c54939b64e7ab25825bdb35f1cae'
 ---
 
 この記事は Notion をヘッドレス CMS として利用してブログ記事を作成するシステムのテスト用記事です。
