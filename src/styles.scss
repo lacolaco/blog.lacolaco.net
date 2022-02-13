@@ -17,7 +17,14 @@
 @import '@primer/css/utilities';
 
 /* Theming Google Custom Search Engine  */
-.gsc-control-cse {
-  background-color: var(--color-canvas-default) !important;
-  border-color: var(--color-canvas-default) !important;
+.google-search-box {
+  .gsc-control-cse {
+    background-color: var(--color-canvas-default);
+    border-color: var(--color-canvas-default);
+    padding: 1em 0;
+
+    input {
+      color: var(--color-canvas-default);
+    }
+  }
 }
