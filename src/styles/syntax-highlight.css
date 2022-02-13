@@ -1,7 +1,5 @@
-@use '@primer/css/support/mixins/color-modes' as colorModes;
-
-// GitHub-like colors
-@include colorModes.color-mode(light) {
+/* GitHub-like colors */
+:root {
   --color-syntax-highlight-comment: #6a737d;
   --color-syntax-highlight-literal: #005cc5;
   --color-syntax-highlight-entity: #6f42c1;
@@ -9,15 +7,17 @@
   --color-syntax-highlight-tag: #22863a;
   --color-syntax-highlight-keyword: #d73a49;
   --color-syntax-highlight-string: #032f62;
-}
-@include colorModes.color-mode(dark) {
-  --color-syntax-highlight-comment: #8b949e;
-  --color-syntax-highlight-literal: #79c0ff;
-  --color-syntax-highlight-entity: #d2a8ff;
-  --color-syntax-highlight-class-name: #c9d1d9;
-  --color-syntax-highlight-tag: #7ee787;
-  --color-syntax-highlight-keyword: #ff7b72;
-  --color-syntax-highlight-string: #a5d6ff;
+
+  /* Dark Mode */
+  @media (prefers-color-scheme: dark) {
+    --color-syntax-highlight-comment: #8b949e;
+    --color-syntax-highlight-literal: #79c0ff;
+    --color-syntax-highlight-entity: #d2a8ff;
+    --color-syntax-highlight-class-name: #c9d1d9;
+    --color-syntax-highlight-tag: #7ee787;
+    --color-syntax-highlight-keyword: #ff7b72;
+    --color-syntax-highlight-string: #a5d6ff;
+  }
 }
 
 /* Theming */
@@ -86,7 +86,7 @@ pre[class*='language-'] {
   color: var(--color-syntax-highlight-literal);
 }
 
-// json
+/* json */
 .language-json {
   .token.property {
     color: var(--color-syntax-highlight-string);
