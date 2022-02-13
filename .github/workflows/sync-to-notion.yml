@@ -14,6 +14,11 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16.x'
+      - uses: tibdex/github-app-token@v1
+        id: generate-token
+        with:
+          app_id: ${{ secrets.WORKER_APP_ID }}
+          private_key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}
       - run: yarn install
       - run: yarn notion:fetch
         env:
@@ -21,7 +26,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.generate-token.outputs.token }}
           commit-message: 'fix: apply changes from Notion'
           branch: sync-to-notion
           delete-branch: true
