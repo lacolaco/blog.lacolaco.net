@@ -7,12 +7,12 @@
   "license": "MIT",
   "scripts": {
     "build": "run-s 'build:css' 'build:js' 'build:hugo'",
-    "build:css": "sass src/styles.scss -I node_modules | postcss -o assets/css/styles.css",
+    "build:css": "postcss src/styles.css -o assets/css/styles.css",
     "build:js": "esbuild src/main.ts --bundle --minify --outfile=assets/js/main.js",
     "build:hugo": "hugo --minify",
     "start": "yarn watch",
     "watch": "run-p 'watch:*'",
-    "watch:css": "sass src/styles.scss assets/css/styles.css --watch -I node_modules --source-map",
+    "watch:css": "postcss src/styles.css -o assets/css/styles.css --watch --map",
     "watch:js": "esbuild src/main.ts --watch --bundle --outfile=assets/js/main.js --sourcemap",
     "watch:hugo": "hugo server -D",
     "copy-vendor": "rsync -r node_modules/katex static/vendor/ && rsync -r node_modules/prismjs static/vendor/",
@@ -44,8 +44,9 @@
     "npm-run-all": "4.1.5",
     "postcss": "8.4.6",
     "postcss-cli": "9.1.0",
+    "postcss-import": "14.0.2",
     "prettier": "2.5.1",
-    "sass": "1.49.7",
+    "tailwindcss": "3.0.22",
     "undici": "4.14.1"
   }
 }

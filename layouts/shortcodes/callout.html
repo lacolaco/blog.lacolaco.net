@@ -1,0 +1,4 @@
+<div class="callout border rounded-md mb-4 p-3 color-border-accent-emphasis color-bg-accent flex flex-row space-x-3 items-baseline">
+  {{ if .Get 0 }}<span class="icon text-base">{{ .Get 0 }}</span>{{ end }}
+  <p class="text-base mb-0">{{ .Inner | markdownify | emojify }}</p>
+</div>
