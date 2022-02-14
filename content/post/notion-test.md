@@ -1,7 +1,7 @@
 ---
 title: 'Notionテスト記事'
 date: '2022-02-11T11:47:00.000Z'
-updated_at: '2022-02-14T14:54:00.000Z'
+updated_at: '2022-02-14T15:46:00.000Z'
 tags:
   - 'test'
   - 'テスト'
@@ -60,7 +60,7 @@ Multiline callout.
   "object": "block",
   "id": "f7ed6bf6-4174-4bd8-ab2d-554258eb7942",
   "created_time": "2022-02-13T16:04:00.000Z",
-  "last_edited_time": "2022-02-13T16:05:00.000Z",
+  "last_edited_time": "2022-02-14T15:46:00.000Z",
   "has_children": true,
   "archived": false,
   "type": "toggle",
@@ -69,7 +69,7 @@ Multiline callout.
       {
         "type": "text",
         "text": {
-          "content": "This is a toggle summar",
+          "content": "This is a ",
           "link": null
         },
         "annotations": {
@@ -80,7 +80,24 @@ Multiline callout.
           "code": false,
           "color": "default"
         },
-        "plain_text": "This is a toggle summar",
+        "plain_text": "This is a ",
+        "href": null
+      },
+      {
+        "type": "text",
+        "text": {
+          "content": "toggle summary",
+          "link": null
+        },
+        "annotations": {
+          "bold": true,
+          "italic": false,
+          "strikethrough": false,
+          "underline": false,
+          "code": false,
+          "color": "default"
+        },
+        "plain_text": "toggle summary",
         "href": null
       }
     ]
@@ -91,7 +108,7 @@ Multiline callout.
       "object": "block",
       "id": "d890aada-773c-481c-a4dc-c4e6d234f779",
       "created_time": "2022-02-13T16:04:00.000Z",
-      "last_edited_time": "2022-02-13T16:06:00.000Z",
+      "last_edited_time": "2022-02-14T15:46:00.000Z",
       "has_children": false,
       "archived": false,
       "type": "paragraph",
@@ -100,7 +117,7 @@ Multiline callout.
           {
             "type": "text",
             "text": {
-              "content": "Here is the inner toggle. ",
+              "content": "Here is the ",
               "link": null
             },
             "annotations": {
@@ -111,10 +128,75 @@ Multiline callout.
               "code": false,
               "color": "default"
             },
-            "plain_text": "Here is the inner toggle. ",
+            "plain_text": "Here is the ",
+            "href": null
+          },
+          {
+            "type": "text",
+            "text": {
+              "content": "inner toggle.",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": true,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "inner toggle.",
             "href": null
           }
         ]
+      },
+      "depth": 1
+    },
+    {
+      "object": "block",
+      "id": "15371810-29e2-4596-a67f-2e564cfcee57",
+      "created_time": "2022-02-14T15:46:00.000Z",
+      "last_edited_time": "2022-02-14T15:46:00.000Z",
+      "has_children": false,
+      "archived": false,
+      "type": "paragraph",
+      "paragraph": {
+        "text": [
+          {
+            "type": "text",
+            "text": {
+              "content": "Image in toggle ",
+              "link": null
+            },
+            "annotations": {
+              "bold": false,
+              "italic": false,
+              "strikethrough": false,
+              "underline": false,
+              "code": false,
+              "color": "default"
+            },
+            "plain_text": "Image in toggle ",
+            "href": null
+          }
+        ]
+      },
+      "depth": 1
+    },
+    {
+      "object": "block",
+      "id": "133bf0a6-576d-45fe-bf64-f759658391a7",
+      "created_time": "2022-02-14T15:46:00.000Z",
+      "last_edited_time": "2022-02-14T15:46:00.000Z",
+      "has_children": false,
+      "archived": false,
+      "type": "image",
+      "image": {
+        "caption": [],
+        "type": "external",
+        "external": {
+          "url": "https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb"
+        }
       },
       "depth": 1
     }
@@ -122,7 +204,11 @@ Multiline callout.
 }
 </pre>
 
-Here is the inner toggle.
+Here is the _inner toggle._
+
+Image in toggle
+
+![](https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb)
 
 <pre hidden data-blocktype="embed">
 {
@@ -530,7 +616,7 @@ Here is the inner toggle.
   "object": "block",
   "id": "aee4c716-d28b-40e5-9a28-4e5830203e6f",
   "created_time": "2022-02-14T00:03:00.000Z",
-  "last_edited_time": "2022-02-14T14:54:00.000Z",
+  "last_edited_time": "2022-02-14T15:46:00.000Z",
   "has_children": false,
   "archived": false,
   "type": "link_preview",
