@@ -45,11 +45,20 @@ export class LocalPostsRepository {
 export class ImagesRepository {
   constructor(private readonly imagesDir: string) {}
 
-  async download(slug: string, imageUrl: string): Promise<string> {
+  async clearPostImages(slug: string) {
+    const dir = path.resolve(this.imagesDir, slug);
+    await fs.rm(dir, { recursive: true });
+  }
+
+  async download(slug: string, imageUrl: string): Promise<string | null> {
     console.log(`[ImagesRepository] downloading ${imageUrl}`);
     const url = new URL(imageUrl);
     const resp = await request(url);
-    const filename = decodeURIComponent(url.pathname).split('/').pop() as string;
+    const [, filename] = decodeURIComponent(url.pathname).match(/^\/secure\.notion-static\.com\/(.*)/) ?? [];
+    if (filename == null) {
+      console.warn(`[ImagesRepository] unsupported url format: ${imageUrl}`);
+      return null;
+    }
     const relPath = `${slug}/${filename}`;
     const absPath = path.resolve(this.imagesDir, relPath);
     await fs.mkdir(path.dirname(absPath), { recursive: true });

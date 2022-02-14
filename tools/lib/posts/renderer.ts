@@ -43,6 +43,7 @@ export class LocalPostRenderer {
       console.log(`create ${slug}`);
     }
 
+    await this.imagesRepository.clearPostImages(slug);
     const frontmatter = renderFrontmatter({
       title,
       date: remoteCreatedAt,

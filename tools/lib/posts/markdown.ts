@@ -24,11 +24,11 @@ type BlockObjectRendererMap = {
   [T in RenderableBlockObjectType]: BlockObjectRenderer<T>;
 };
 
-type ExternalImageResolver = (url: string) => Promise<string>;
+type ExternalImageResolver = (url: string) => Promise<string | null>;
 
 export async function renderContentMarkdown(
   content: BlockObject[],
-  externalImageResolver: ExternalImageResolver,
+  resolveExternalImage: ExternalImageResolver,
 ): Promise<string> {
   const renderer: BlockObjectRendererMap = {
     heading_1: (block) => `# ${renderRichTextArray(block.heading_1.text)}\n\n`,
@@ -49,7 +49,10 @@ export async function renderContentMarkdown(
         case 'external':
           return `![${renderRichTextArray(block.image.caption)}](${block.image.external.url})\n\n`;
         case 'file':
-          const imagePath = await externalImageResolver(block.image.file.url);
+          const imagePath = await resolveExternalImage(block.image.file.url);
+          if (!imagePath) {
+            return '';
+          }
           return `![${renderRichTextArray(block.image.caption)}](/img/${imagePath})\n\n`;
       }
     },
