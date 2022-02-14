@@ -1,7 +1,7 @@
 ---
 title: 'Notionテスト記事'
 date: '2022-02-11T11:47:00.000Z'
-updated_at: '2022-02-14T00:03:00.000Z'
+updated_at: '2022-02-14T14:54:00.000Z'
 tags:
   - 'test'
   - 'テスト'
@@ -22,6 +22,8 @@ lorem ipsum [link in paragraph](https://www.google.com) test
 Multi-line **paragraph1**  
 **_Multi-line_** ~~paragraph2~~  
 `Multi-line` _**paragraph3**_
+
+![](</img/notion-test/angular_(1).png>)
 
 ![](</img/notion-test/angular_(1).png>)
 
@@ -528,7 +530,7 @@ Here is the inner toggle.
   "object": "block",
   "id": "aee4c716-d28b-40e5-9a28-4e5830203e6f",
   "created_time": "2022-02-14T00:03:00.000Z",
-  "last_edited_time": "2022-02-14T00:03:00.000Z",
+  "last_edited_time": "2022-02-14T14:54:00.000Z",
   "has_children": false,
   "archived": false,
   "type": "link_preview",
