@@ -15,18 +15,18 @@ export class LocalPostRenderer {
     await Promise.all(posts.map((page) => this.renderPost(page, options)));
   }
 
-  async renderPost(page: NotionPost, options: { forceUpdate?: boolean } = {}) {
-    const { created_time: remoteCreatedAt, last_edited_time: remoteUpdatedAt, archived } = page;
+  async renderPost(post: NotionPost, options: { forceUpdate?: boolean } = {}) {
+    const { created_time: remoteCreatedAt, last_edited_time: remoteUpdatedAt, archived } = post;
     if (archived) {
       return;
     }
-    const pageProps = createPagePropertyMap(page);
-    const title = pageProps.get('title', 'title')?.title[0]?.plain_text;
-    const slug = pageProps.get('Y~YJ', 'rich_text')?.rich_text[0]?.plain_text ?? null;
-    const tags = pageProps.get('v%5EIo', 'multi_select')?.multi_select.map((node) => node.name) ?? [];
-    const publishable = pageProps.get('vssQ', 'checkbox')?.checkbox ?? false;
+    const props = createPagePropertyMap(post);
+    const title = props.get('title', 'title')?.title[0]?.plain_text;
+    const slug = props.get('Y~YJ', 'rich_text')?.rich_text[0]?.plain_text ?? null;
+    const tags = props.get('v%5EIo', 'multi_select')?.multi_select.map((node) => node.name) ?? [];
+    const publishable = props.get('vssQ', 'checkbox')?.checkbox ?? false;
     if (title == null || slug == null) {
-      console.warn(`title or slug is null: ${JSON.stringify(page, null, 2)}`);
+      console.warn(`title or slug is null: ${JSON.stringify(post, null, 2)}`);
       return;
     }
     // skip if local post is already up to date
@@ -49,9 +49,9 @@ export class LocalPostRenderer {
       updated_at: remoteUpdatedAt,
       tags,
       draft: !publishable,
-      source: page.url,
+      source: post.url,
     });
-    const body = await renderContentMarkdown(page.content, (url) => this.imagesRepository.download(slug, url));
+    const body = await renderContentMarkdown(post.content, (url) => this.imagesRepository.download(slug, url));
     const content = format([frontmatter, body].join('\n\n'), {
       parser: 'markdown',
       ...require('../../../.prettierrc.json'),

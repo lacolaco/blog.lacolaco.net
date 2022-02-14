@@ -47,10 +47,10 @@ export async function renderContentMarkdown(
     image: async (block) => {
       switch (block.image.type) {
         case 'external':
-          return `![${block.image.caption}](${block.image.external.url})\n\n`;
+          return `![${renderRichTextArray(block.image.caption)}](${block.image.external.url})\n\n`;
         case 'file':
           const imagePath = await externalImageResolver(block.image.file.url);
-          return `![${block.image.caption}](/img/${imagePath})\n\n`;
+          return `![${renderRichTextArray(block.image.caption)}](/img/${imagePath})\n\n`;
       }
     },
     code: (block) => {
