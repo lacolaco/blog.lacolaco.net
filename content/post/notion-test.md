@@ -1,7 +1,7 @@
 ---
 title: 'Notionテスト記事'
 date: '2022-02-11T11:47:00.000Z'
-updated_at: '2022-02-13T16:11:00.000Z'
+updated_at: '2022-02-14T00:03:00.000Z'
 tags:
   - 'test'
   - 'テスト'
@@ -310,7 +310,7 @@ Here is the inner toggle.
       "object": "block",
       "id": "30464eb2-6360-410f-9b84-8e21d0f43237",
       "created_time": "2022-02-13T16:11:00.000Z",
-      "last_edited_time": "2022-02-13T16:11:00.000Z",
+      "last_edited_time": "2022-02-14T00:03:00.000Z",
       "has_children": false,
       "archived": false,
       "type": "table_row",
@@ -474,7 +474,7 @@ Here is the inner toggle.
   "object": "block",
   "id": "30464eb2-6360-410f-9b84-8e21d0f43237",
   "created_time": "2022-02-13T16:11:00.000Z",
-  "last_edited_time": "2022-02-13T16:11:00.000Z",
+  "last_edited_time": "2022-02-14T00:03:00.000Z",
   "has_children": false,
   "archived": false,
   "type": "table_row",
@@ -521,5 +521,20 @@ Here is the inner toggle.
     ]
   },
   "depth": 1
+}
+</pre>
+<pre hidden data-blocktype="link_preview">
+{
+  "object": "block",
+  "id": "aee4c716-d28b-40e5-9a28-4e5830203e6f",
+  "created_time": "2022-02-14T00:03:00.000Z",
+  "last_edited_time": "2022-02-14T00:03:00.000Z",
+  "has_children": false,
+  "archived": false,
+  "type": "link_preview",
+  "link_preview": {
+    "url": "https://github.com/makenotion/notion-sdk-js"
+  },
+  "depth": 0
 }
 </pre>
