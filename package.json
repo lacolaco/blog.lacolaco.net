@@ -21,7 +21,7 @@
     "notion:fetch": "node -r @swc/register tools/notion.ts fetch"
   },
   "dependencies": {
-    "@primer/css": "19.3.0",
+    "@primer/css": "19.4.0",
     "anchor-js": "4.3.1",
     "date-fns": "2.28.0",
     "katex": "0.15.2",
