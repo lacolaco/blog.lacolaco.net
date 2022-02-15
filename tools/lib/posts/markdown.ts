@@ -24,6 +24,9 @@ class BlockRenderer implements NodeRenderer<BlockObject> {
   }
 
   async waitForStable(): Promise<void> {
+    if (this.taskQueue.length === 0) {
+      return;
+    }
     await lastValueFrom(forkJoin(this.taskQueue));
   }
 
