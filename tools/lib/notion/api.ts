@@ -22,7 +22,7 @@ export class NotionAPI {
     return pages;
   }
 
-  async fetchChildBlocks(parentId: string, depth = 0): Promise<BlockObject[]> {
+  async fetchChildBlocks(parentId: string): Promise<BlockObject[]> {
     const blocks: BlockObject[] = [];
     let cursor = null;
     do {
@@ -32,10 +32,10 @@ export class NotionAPI {
       for (const block of results) {
         if ('type' in block) {
           if (block.has_children) {
-            const children = await this.fetchChildBlocks(block.id, depth + 1);
-            blocks.push({ ...block, depth, children });
+            const children = await this.fetchChildBlocks(block.id);
+            blocks.push({ ...block, children });
           } else {
-            blocks.push({ ...block, depth });
+            blocks.push({ ...block });
           }
         }
       }

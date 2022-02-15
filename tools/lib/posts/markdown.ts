@@ -1,109 +1,94 @@
-import { BlockObject } from '../notion';
-import * as yaml from 'js-yaml';
+import { forkJoin, lastValueFrom, Observable } from 'rxjs';
+import { BlockObject as AnyBlockObject } from '../notion';
+import { ImagesRepository } from './repository';
+import { NodeRenderer } from './types';
+import { isNotNull } from './utils';
 
-type BlockObjectType = BlockObject['type'];
-type RenderableBlockObjectType = Extract<
-  BlockObjectType,
-  | 'heading_1'
-  | 'heading_2'
-  | 'heading_3'
-  | 'paragraph'
-  | 'image'
-  | 'code'
-  | 'bulleted_list_item'
-  | 'numbered_list_item'
-  | 'quote'
-  | 'divider'
-  | 'bookmark'
-  | 'callout'
->;
-type BlockObjectRenderer<T extends BlockObjectType> = (
-  block: MatchType<BlockObject, { type: T }>,
-) => Promise<string | null> | string | null;
-type BlockObjectRendererMap = {
-  [T in RenderableBlockObjectType]: BlockObjectRenderer<T>;
-};
+type BlockType = AnyBlockObject['type'];
+type BlockObject<T extends BlockType = BlockType> = MatchType<AnyBlockObject, { type: T }>;
 
-type ExternalImageResolver = (url: string) => Promise<string | null>;
+class BlockRenderer implements NodeRenderer<BlockObject> {
+  private taskQueue: Array<Observable<void>> = [];
 
-export async function renderContentMarkdown(
-  content: BlockObject[],
-  resolveExternalImage: ExternalImageResolver,
-): Promise<string> {
-  const renderer: BlockObjectRendererMap = {
-    heading_1: (block) => `# ${renderRichTextArray(block.heading_1.text)}\n\n`,
-    heading_2: (block) => `## ${renderRichTextArray(block.heading_2.text)}\n\n`,
-    heading_3: (block) => `### ${renderRichTextArray(block.heading_3.text)}\n\n`,
-    paragraph: (block) => {
-      return `${block.paragraph.text
-        .map((node) => {
-          if (node.type !== 'text') {
-            return '';
-          }
-          return renderRichText(node);
-        })
-        .join('')}\n\n`;
-    },
-    image: async (block) => {
-      switch (block.image.type) {
-        case 'external':
-          return `![${renderRichTextArray(block.image.caption)}](${block.image.external.url})\n\n`;
-        case 'file':
-          const imagePath = await resolveExternalImage(block.image.file.url);
-          if (!imagePath) {
-            return '';
-          }
-          return `![${renderRichTextArray(block.image.caption)}](/img/${imagePath})\n\n`;
-      }
-    },
-    code: (block) => {
-      const delimiter = '```';
-      const text = block.code.text.map((node) => node.plain_text).join('');
-      return `${delimiter}${block.code.language}\n${text}\n${delimiter}\n\n`;
-    },
-    divider: () => '---\n\n',
-    quote: (block) => {
-      return `> ${renderRichTextArray(block.quote.text)}\n\n`;
-    },
-    bulleted_list_item: (block) => {
-      const indent = '\t'.repeat(block.depth);
-      const text = renderRichTextArray(block.bulleted_list_item.text);
-      return `${indent}- ${text}\n`;
-    },
-    numbered_list_item: (block) => {
-      const indent = '\t'.repeat(block.depth);
-      const text = renderRichTextArray(block.numbered_list_item.text);
-      return `${indent}1. ${text}\n`;
-    },
-    bookmark: (block) => {
-      return `{{< embed "${block.bookmark.url}" >}}\n\n`;
-    },
-    callout: (block) => {
-      const emojiIcon = block.callout.icon?.type === 'emoji' ? block.callout.icon.emoji : null;
-      const text = renderRichTextArray(block.callout.text);
-      if (emojiIcon) {
-        return `{{< callout "${emojiIcon}">}}\n${text}\n{{< /callout >}}\n\n`;
-      } else {
-        return `{{< callout >}}\n${text}\n{{< /callout >}}\n\n`;
-      }
-    },
-  } as const;
+  constructor(
+    private readonly pageSlug: string,
+    private readonly downloadExternalImage: (url: string, localPath: string) => Observable<void>,
+  ) {}
 
-  const render = async (block: BlockObject): Promise<string> => {
-    const fn = (renderer as Record<BlockObjectType, BlockObjectRenderer<any>>)[block.type];
-    return (
-      (await fn?.(block)) ?? `<pre hidden data-blocktype="${block.type}">\n${JSON.stringify(block, null, 2)}\n</pre>\n`
-    );
-  };
+  render(block: BlockObject): string | null {
+    const visit = (block: BlockObject) => {
+      const contents: string[] = block.children?.map((child) => visit(child)).filter(isNotNull) ?? [];
+      return this.renderBlock(block, contents);
+    };
+    return visit(block);
+  }
 
-  const walk = async (block: BlockObject): Promise<string> => {
-    if (block.children == null) {
-      return render(block);
+  async waitForStable(): Promise<void> {
+    await lastValueFrom(forkJoin(this.taskQueue));
+  }
+
+  private renderBlock(block: BlockObject, contents: string[]): string | null {
+    switch (block.type) {
+      case 'heading_1':
+        return `# ${richText(block.heading_1.text)}\n\n`;
+      case 'heading_2':
+        return `## ${richText(block.heading_2.text)}\n\n`;
+      case 'heading_3':
+        return `### ${richText(block.heading_3.text)}\n\n`;
+      case 'paragraph':
+        return `${richText(block.paragraph.text)}\n\n`;
+      case 'code':
+        const delimiter = '```';
+        const language = block.code.language ?? '';
+        return `${delimiter}${language}\n${plainText(block.code.text)}\n${delimiter}\n\n`;
+      case 'bulleted_list_item':
+        return `- ${richText(block.bulleted_list_item.text)}\n${contents.map(indent()).join('')}`;
+      case 'numbered_list_item':
+        return `1. ${richText(block.numbered_list_item.text)}\n${contents.map(indent()).join('')}`;
+      case 'quote':
+        return `> ${richText(block.quote.text)}\n\n`;
+      case 'divider':
+        return `---\n\n`;
+      case 'bookmark':
+        return `{{< embed "${block.bookmark.url}" >}}\n\n`;
+      case 'callout':
+        const emojiIcon = block.callout.icon?.type === 'emoji' ? block.callout.icon.emoji : null;
+        const text = richText(block.callout.text);
+        if (emojiIcon) {
+          return `{{< callout "${emojiIcon}">}}\n${text}\n{{< /callout >}}\n\n`;
+        } else {
+          return `{{< callout >}}\n${text}\n{{< /callout >}}\n\n`;
+        }
+      case 'image':
+        switch (block.image.type) {
+          case 'external':
+            return `![${richText(block.image.caption)}](${block.image.external.url})\n\n`;
+          case 'file':
+            const url = block.image.file.url;
+            const name = decodeURIComponent(new URL(url).pathname).replace(/^\/secure\.notion-static\.com\//, '');
+            const localPath = `${this.pageSlug}/${name}`;
+            this.addTask(this.downloadExternalImage(url, localPath));
+            return `![${richText(block.image.caption)}](/img/${localPath})\n\n`;
+        }
+      default:
+        return `<pre hidden data-blocktype="${block.type}">\n${JSON.stringify(block, null, 2)}\n</pre>\n\n`;
     }
-    return (await Promise.all([render(block), ...block.children.map((child) => walk(child))])).join('');
-  };
+  }
 
-  return (await Promise.all(content.map(walk))).join('');
+  private addTask(task: Observable<void>) {
+    this.taskQueue.push(task);
+  }
+}
+
+export class PostContentRenderer {
+  constructor(private readonly imagesRepo: ImagesRepository) {}
+
+  async render(slug: string, content: BlockObject[]): Promise<string> {
+    const renderer = new BlockRenderer(slug, (url, localPath) => this.imagesRepo.download(url, localPath));
+    const result = content.map((block) => renderer.render(block)).join('');
+    await renderer.waitForStable();
+    return result;
+  }
 }
 
 type RichTextObject = {
@@ -118,59 +103,57 @@ type RichTextObject = {
   };
 };
 
-function renderRichTextArray(array: RichTextObject[]): string {
-  return array.map(renderRichText).join('');
+function richText(text: RichTextObject[]): string {
+  function renderNode(node: RichTextObject): string {
+    const { plain_text, href, annotations } = node;
+    if (annotations.code) {
+      return `\`${plain_text}\``;
+    }
+    if (annotations.bold) {
+      return renderNode({
+        ...node,
+        plain_text: `**${plain_text}**`,
+        annotations: { ...annotations, bold: false },
+      });
+    }
+    if (annotations.italic) {
+      const mark = plain_text.startsWith('*') ? '_' : '*';
+      return renderNode({
+        ...node,
+        plain_text: `${mark}${plain_text}${mark}`,
+        annotations: { ...annotations, italic: false },
+      });
+    }
+    if (annotations.strikethrough) {
+      return renderNode({
+        ...node,
+        plain_text: `~~${plain_text}~~`,
+        annotations: { ...annotations, strikethrough: false },
+      });
+    }
+    if (annotations.underline) {
+      return renderNode({
+        ...node,
+        plain_text: `__${plain_text}__`,
+        annotations: { ...annotations, underline: false },
+      });
+    }
+    if (href) {
+      return renderNode({ ...node, plain_text: `[${plain_text}](${href})`, href: null });
+    }
+    if (plain_text.includes('\n')) {
+      return plain_text.replace(/\n/g, '  \n');
+    }
+    return plain_text;
+  }
+
+  return text.map(renderNode).join('');
 }
 
-function renderRichText(richText: RichTextObject): string {
-  const { plain_text, href, annotations } = richText;
-  if (annotations.code) {
-    return `\`${plain_text}\``;
-  }
-  if (annotations.bold) {
-    return renderRichText({
-      ...richText,
-      plain_text: `**${plain_text}**`,
-      annotations: { ...annotations, bold: false },
-    });
-  }
-  if (annotations.italic) {
-    const mark = plain_text.startsWith('*') ? '_' : '*';
-    return renderRichText({
-      ...richText,
-      plain_text: `${mark}${plain_text}${mark}`,
-      annotations: { ...annotations, italic: false },
-    });
-  }
-  if (annotations.strikethrough) {
-    return renderRichText({
-      ...richText,
-      plain_text: `~~${plain_text}~~`,
-      annotations: { ...annotations, strikethrough: false },
-    });
-  }
-  if (annotations.underline) {
-    return renderRichText({
-      ...richText,
-      plain_text: `__${plain_text}__`,
-      annotations: { ...annotations, underline: false },
-    });
-  }
-  if (href) {
-    return renderRichText({ ...richText, plain_text: `[${plain_text}](${href})`, href: null });
-  }
-  if (plain_text.includes('\n')) {
-    return plain_text.replace(/\n/g, '  \n');
-  }
-  return plain_text;
+function plainText(text: RichTextObject[]): string {
+  return text.map((node) => node.plain_text).join('');
 }
 
-export function renderFrontmatter(params: Record<string, unknown>): string {
-  const frontmatter = yaml.dump(params, { forceQuotes: true });
-  return [`---`, frontmatter, `---`].join('\n');
-}
-
-export function parseFrontmatter(content: string): Record<string, unknown> {
-  const [, frontmatter] = content.split('---\n');
-  return yaml.load(frontmatter) as Record<string, unknown>;
+function indent(depth = 1) {
+  return (text: string) => '\t'.repeat(depth) + text;
 }

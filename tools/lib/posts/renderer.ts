@@ -1,21 +1,25 @@
 import { isAfter as isAfterDate } from 'date-fns';
 import { format } from 'prettier';
-import { parseFrontmatter, renderContentMarkdown, renderFrontmatter } from './markdown';
+import { parseFrontmatter, renderFrontmatter } from './frontmatter';
+import { PostContentRenderer } from './markdown';
 import { ImagesRepository, LocalPostsRepository } from './repository';
 import { NotionPost } from './types';
 import { createPagePropertyMap } from './utils';
 
 export class LocalPostRenderer {
+  private readonly postContentRenderer = new PostContentRenderer(this.imagesRepository);
+
   constructor(
     private readonly localPostsRepositiry: LocalPostsRepository,
     private readonly imagesRepository: ImagesRepository,
+    private readonly options: { forceUpdate?: boolean },
   ) {}
 
-  async renderPosts(posts: NotionPost[], options: { forceUpdate?: boolean } = {}) {
-    await Promise.all(posts.map((page) => this.renderPost(page, options)));
+  async renderPosts(posts: NotionPost[]) {
+    await Promise.all(posts.map((page) => this.renderPost(page)));
   }
 
-  async renderPost(post: NotionPost, options: { forceUpdate?: boolean } = {}) {
+  private async renderPost(post: NotionPost) {
     const { created_time: remoteCreatedAt, last_edited_time: remoteUpdatedAt, archived } = post;
     if (archived) {
       return;
@@ -34,7 +38,11 @@ export class LocalPostRenderer {
     if (localContent != null) {
       const localFrontmatter = parseFrontmatter(localContent);
       const localUpdatedAt = (localFrontmatter['updated_at'] as string) ?? (localFrontmatter['date'] as string);
-      if (!isAfterDate(new Date(remoteUpdatedAt), new Date(localUpdatedAt)) && !options.forceUpdate) {
+      if (
+        localUpdatedAt &&
+        !isAfterDate(new Date(remoteUpdatedAt), new Date(localUpdatedAt)) &&
+        !this.options.forceUpdate
+      ) {
         console.log(`skip ${slug} (local is up to date)`);
         return;
       }
@@ -52,7 +60,8 @@ export class LocalPostRenderer {
       draft: !publishable,
       source: post.url,
     });
-    const body = await renderContentMarkdown(post.content, (url) => this.imagesRepository.download(slug, url));
+
+    const body = await this.postContentRenderer.render(slug, post.content);
     const content = format([frontmatter, body].join('\n\n'), {
       parser: 'markdown',
       ...require('../../../.prettierrc.json'),

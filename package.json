@@ -25,7 +25,8 @@
     "anchor-js": "4.3.1",
     "date-fns": "2.28.0",
     "katex": "0.15.2",
-    "prismjs": "1.26.0"
+    "prismjs": "1.26.0",
+    "rxjs": "7.5.4"
   },
   "devDependencies": {
     "@notionhq/client": "0.4.13",
