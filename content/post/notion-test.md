@@ -102,7 +102,6 @@ Multiline callout.
       }
     ]
   },
-  "depth": 0,
   "children": [
     {
       "object": "block",
@@ -149,8 +148,7 @@ Multiline callout.
             "href": null
           }
         ]
-      },
-      "depth": 1
+      }
     },
     {
       "object": "block",
@@ -180,8 +178,7 @@ Multiline callout.
             "href": null
           }
         ]
-      },
-      "depth": 1
+      }
     },
     {
       "object": "block",
@@ -197,18 +194,11 @@ Multiline callout.
         "external": {
           "url": "https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb"
         }
-      },
-      "depth": 1
+      }
     }
   ]
 }
 </pre>
-
-Here is the _inner toggle._
-
-Image in toggle
-
-![](https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb)
 
 <pre hidden data-blocktype="embed">
 {
@@ -222,10 +212,10 @@ Image in toggle
   "embed": {
     "caption": [],
     "url": "https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw"
-  },
-  "depth": 0
+  }
 }
 </pre>
+
 <pre hidden data-blocktype="video">
 {
   "object": "block",
@@ -241,10 +231,10 @@ Image in toggle
     "external": {
       "url": "https://www.youtube.com/watch?v=TmWIrBPE6Bc"
     }
-  },
-  "depth": 0
+  }
 }
 </pre>
+
 <pre hidden data-blocktype="equation">
 {
   "object": "block",
@@ -256,10 +246,11 @@ Image in toggle
   "type": "equation",
   "equation": {
     "expression": "e=mc^2"
-  },
-  "depth": 0
+  }
 }
 </pre>
+
+e=mc^2
 
 <pre hidden data-blocktype="table_of_contents">
 {
@@ -270,10 +261,10 @@ Image in toggle
   "has_children": false,
   "archived": false,
   "type": "table_of_contents",
-  "table_of_contents": {},
-  "depth": 0
+  "table_of_contents": {}
 }
 </pre>
+
 <pre hidden data-blocktype="table">
 {
   "object": "block",
@@ -288,7 +279,6 @@ Image in toggle
     "has_column_header": false,
     "has_row_header": false
   },
-  "depth": 0,
   "children": [
     {
       "object": "block",
@@ -339,8 +329,7 @@ Image in toggle
             }
           ]
         ]
-      },
-      "depth": 1
+      }
     },
     {
       "object": "block",
@@ -391,8 +380,7 @@ Image in toggle
             }
           ]
         ]
-      },
-      "depth": 1
+      }
     },
     {
       "object": "block",
@@ -443,186 +431,23 @@ Image in toggle
             }
           ]
         ]
-      },
-      "depth": 1
+      }
     }
   ]
 }
 </pre>
-<pre hidden data-blocktype="table_row">
-{
-  "object": "block",
-  "id": "b65cbedb-317e-48d5-bcdb-03551b833885",
-  "created_time": "2022-02-13T16:11:00.000Z",
-  "last_edited_time": "2022-02-13T16:11:00.000Z",
-  "has_children": false,
-  "archived": false,
-  "type": "table_row",
-  "table_row": {
-    "cells": [
-      [
-        {
-          "type": "text",
-          "text": {
-            "content": "0,0",
-            "link": null
-          },
-          "annotations": {
-            "bold": false,
-            "italic": false,
-            "strikethrough": false,
-            "underline": false,
-            "code": false,
-            "color": "default"
-          },
-          "plain_text": "0,0",
-          "href": null
-        }
-      ],
-      [
-        {
-          "type": "text",
-          "text": {
-            "content": "0,1",
-            "link": null
-          },
-          "annotations": {
-            "bold": false,
-            "italic": false,
-            "strikethrough": false,
-            "underline": false,
-            "code": false,
-            "color": "default"
-          },
-          "plain_text": "0,1",
-          "href": null
-        }
-      ]
-    ]
-  },
-  "depth": 1
-}
-</pre>
-<pre hidden data-blocktype="table_row">
-{
-  "object": "block",
-  "id": "58ae5509-56c5-4615-9c94-d1ff86d31337",
-  "created_time": "2022-02-13T16:11:00.000Z",
-  "last_edited_time": "2022-02-13T16:11:00.000Z",
-  "has_children": false,
-  "archived": false,
-  "type": "table_row",
-  "table_row": {
-    "cells": [
-      [
-        {
-          "type": "text",
-          "text": {
-            "content": "1,0",
-            "link": null
-          },
-          "annotations": {
-            "bold": false,
-            "italic": false,
-            "strikethrough": false,
-            "underline": false,
-            "code": false,
-            "color": "default"
-          },
-          "plain_text": "1,0",
-          "href": null
-        }
-      ],
-      [
-        {
-          "type": "text",
-          "text": {
-            "content": "1,1",
-            "link": null
-          },
-          "annotations": {
-            "bold": false,
-            "italic": false,
-            "strikethrough": false,
-            "underline": false,
-            "code": false,
-            "color": "default"
-          },
-          "plain_text": "1,1",
-          "href": null
-        }
-      ]
-    ]
-  },
-  "depth": 1
-}
-</pre>
-<pre hidden data-blocktype="table_row">
-{
-  "object": "block",
-  "id": "30464eb2-6360-410f-9b84-8e21d0f43237",
-  "created_time": "2022-02-13T16:11:00.000Z",
-  "last_edited_time": "2022-02-14T00:03:00.000Z",
-  "has_children": false,
-  "archived": false,
-  "type": "table_row",
-  "table_row": {
-    "cells": [
-      [
-        {
-          "type": "text",
-          "text": {
-            "content": "2,0",
-            "link": null
-          },
-          "annotations": {
-            "bold": false,
-            "italic": false,
-            "strikethrough": false,
-            "underline": false,
-            "code": false,
-            "color": "default"
-          },
-          "plain_text": "2,0",
-          "href": null
-        }
-      ],
-      [
-        {
-          "type": "text",
-          "text": {
-            "content": "2,1",
-            "link": null
-          },
-          "annotations": {
-            "bold": false,
-            "italic": false,
-            "strikethrough": false,
-            "underline": false,
-            "code": false,
-            "color": "default"
-          },
-          "plain_text": "2,1",
-          "href": null
-        }
-      ]
-    ]
-  },
-  "depth": 1
-}
-</pre>
+
 <pre hidden data-blocktype="link_preview">
 {
   "object": "block",
   "id": "aee4c716-d28b-40e5-9a28-4e5830203e6f",
   "created_time": "2022-02-14T00:03:00.000Z",
-  "last_edited_time": "2022-02-14T15:46:00.000Z",
+  "last_edited_time": "2022-02-15T09:14:00.000Z",
   "has_children": false,
   "archived": false,
   "type": "link_preview",
   "link_preview": {
     "url": "https://github.com/makenotion/notion-sdk-js"
-  },
-  "depth": 0
+  }
 }
 </pre>

@@ -20,16 +20,17 @@ const program = new Command();
 program
   .command('fetch')
   .option('-f, --force', 'force update', false)
-  .action(async (options: { force: boolean }) => {
+  .option('-D, --dry-run', 'dry run', false)
+  .action(async (options: { force: boolean; dryRun: boolean }) => {
     const remotePostsRepo = new RemotePostsRepository(notion);
-    const localPostsRepo = new LocalPostsRepository(postsDir);
-    const imagesRepo = new ImagesRepository(imagesDir);
-    const renderer = new LocalPostRenderer(localPostsRepo, imagesRepo);
+    const localPostsRepo = new LocalPostsRepository(postsDir, { dryRun: options.dryRun });
+    const imagesRepo = new ImagesRepository(imagesDir, { dryRun: options.dryRun });
+    const renderer = new LocalPostRenderer(localPostsRepo, imagesRepo, { forceUpdate: options.force });
 
     // collect posts from notion
     const posts = await remotePostsRepo.query();
     // write posts to file
-    await renderer.renderPosts(posts, { forceUpdate: options.force });
+    await renderer.renderPosts(posts);
   });
 
 program.parse(process.argv);

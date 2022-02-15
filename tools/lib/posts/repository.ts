@@ -1,5 +1,7 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import * as stream from 'stream';
+import { Observable, of, switchMap } from 'rxjs';
 import { request } from 'undici';
 import { NotionAPI } from '../notion';
 import { NotionPost } from './types';
@@ -25,9 +27,12 @@ export class RemotePostsRepository {
 }
 
 export class LocalPostsRepository {
-  constructor(private readonly postsDir: string) {}
+  constructor(private readonly postsDir: string, private readonly options: { dryRun?: boolean } = {}) {}
 
   async savePost(slug: string, content: string) {
+    if (this.options.dryRun) {
+      return;
+    }
     const filePath = path.resolve(this.postsDir, `${slug}.md`);
     await fs.writeFile(filePath, content, { encoding: 'utf8' });
   }
@@ -43,27 +48,33 @@ export class LocalPostsRepository {
 }
 
 export class ImagesRepository {
-  constructor(private readonly imagesDir: string) {}
+  constructor(private readonly imagesDir: string, private readonly options: { dryRun?: boolean } = {}) {}
 
   async clearPostImages(slug: string) {
+    if (this.options.dryRun) {
+      return;
+    }
     const dir = path.resolve(this.imagesDir, slug);
-    await fs.rm(dir, { recursive: true });
+    try {
+      await fs.rm(dir, { recursive: true });
+    } catch {}
   }
 
-  async download(slug: string, imageUrl: string): Promise<string | null> {
-    console.log(`[ImagesRepository] downloading ${imageUrl}`);
-    const url = new URL(imageUrl);
-    const resp = await request(url);
-    const [, filename] = decodeURIComponent(url.pathname).match(/^\/secure\.notion-static\.com\/(.*)/) ?? [];
-    if (filename == null) {
-      console.warn(`[ImagesRepository] unsupported url format: ${imageUrl}`);
-      return null;
+  async saveImage(localPath: string, data: stream.Readable): Promise<void> {
+    const absPath = path.resolve(this.imagesDir, localPath);
+    if (this.options.dryRun) {
+      return;
     }
-    const relPath = `${slug}/${filename}`;
-    const absPath = path.resolve(this.imagesDir, relPath);
     await fs.mkdir(path.dirname(absPath), { recursive: true });
-    await fs.writeFile(absPath, resp.body);
-    console.log(`[ImagesRepository] downloaded ${absPath}`);
-    return relPath;
+    await fs.writeFile(absPath, data);
+  }
+
+  download(imageUrl: string, localPath: string): Observable<void> {
+    console.log(`[ImagesRepository] downloading ${localPath}`);
+
+    return of(new URL(imageUrl)).pipe(
+      switchMap((url) => request(url)),
+      switchMap((response) => this.saveImage(localPath, response.body)),
+    );
   }
 }

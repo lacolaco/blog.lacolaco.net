@@ -11,6 +11,5 @@ export type BlockObject = MatchType<
   ElementType<Awaited<ReturnType<Client['blocks']['children']['list']>>['results']>,
   { type: unknown }
 > & {
-  depth: number;
   children?: BlockObject[];
 };

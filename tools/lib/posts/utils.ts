@@ -19,3 +19,7 @@ function matchPropertyType<PropType extends string, Prop extends { type: string 
 ): property is MatchType<Prop, { type: PropType }> {
   return property.type === type;
 }
+
+export function isNotNull<T>(value: T | null | undefined): value is T {
+  return value !== null && value !== undefined;
+}

@@ -9,3 +9,7 @@ export type Frontmatter = {
   tags: string[];
   [key: string]: string | string[] | boolean | null;
 };
+
+export interface NodeRenderer<T> {
+  render(node: T): string | null;
+}
