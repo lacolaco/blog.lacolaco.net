@@ -69,6 +69,11 @@ export const equation = (expression: string) => {
   return `$$\n${expression}\n$$\n\n`;
 };
 
+export const details = (summary: RichText, contents: string[]) => {
+  const summaryTag = `<summary>${plainText(summary)}</summary>`;
+  return `<details>\n${summaryTag}\n<div class="px-[1em]">\n\n${contents.join('')}\n\n</div>\n</details>\n\n`;
+};
+
 function indent(text: string): string {
   return `\t${text}`;
 }

@@ -60,6 +60,7 @@ export function renderBlock(block: BlockObject, context: RendererContext): strin
       case 'equation':
         return md.equation(node.equation.expression);
       case 'toggle':
+        return md.details(node.toggle.text, contents);
       case 'video':
       case 'table':
       case 'table_row':

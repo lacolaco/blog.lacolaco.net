@@ -55,150 +55,18 @@ Multiline callout.
 
 {{< embed "https://blog.lacolaco.net/2022/02/notion-headless-cms-1/" >}}
 
-<pre hidden data-blocktype="toggle">
-{
-  "object": "block",
-  "id": "f7ed6bf6-4174-4bd8-ab2d-554258eb7942",
-  "created_time": "2022-02-13T16:04:00.000Z",
-  "last_edited_time": "2022-02-14T15:46:00.000Z",
-  "has_children": true,
-  "archived": false,
-  "type": "toggle",
-  "toggle": {
-    "text": [
-      {
-        "type": "text",
-        "text": {
-          "content": "This is a ",
-          "link": null
-        },
-        "annotations": {
-          "bold": false,
-          "italic": false,
-          "strikethrough": false,
-          "underline": false,
-          "code": false,
-          "color": "default"
-        },
-        "plain_text": "This is a ",
-        "href": null
-      },
-      {
-        "type": "text",
-        "text": {
-          "content": "toggle summary",
-          "link": null
-        },
-        "annotations": {
-          "bold": true,
-          "italic": false,
-          "strikethrough": false,
-          "underline": false,
-          "code": false,
-          "color": "default"
-        },
-        "plain_text": "toggle summary",
-        "href": null
-      }
-    ]
-  },
-  "children": [
-    {
-      "object": "block",
-      "id": "d890aada-773c-481c-a4dc-c4e6d234f779",
-      "created_time": "2022-02-13T16:04:00.000Z",
-      "last_edited_time": "2022-02-14T15:46:00.000Z",
-      "has_children": false,
-      "archived": false,
-      "type": "paragraph",
-      "paragraph": {
-        "text": [
-          {
-            "type": "text",
-            "text": {
-              "content": "Here is the ",
-              "link": null
-            },
-            "annotations": {
-              "bold": false,
-              "italic": false,
-              "strikethrough": false,
-              "underline": false,
-              "code": false,
-              "color": "default"
-            },
-            "plain_text": "Here is the ",
-            "href": null
-          },
-          {
-            "type": "text",
-            "text": {
-              "content": "inner toggle.",
-              "link": null
-            },
-            "annotations": {
-              "bold": false,
-              "italic": true,
-              "strikethrough": false,
-              "underline": false,
-              "code": false,
-              "color": "default"
-            },
-            "plain_text": "inner toggle.",
-            "href": null
-          }
-        ]
-      }
-    },
-    {
-      "object": "block",
-      "id": "15371810-29e2-4596-a67f-2e564cfcee57",
-      "created_time": "2022-02-14T15:46:00.000Z",
-      "last_edited_time": "2022-02-14T15:46:00.000Z",
-      "has_children": false,
-      "archived": false,
-      "type": "paragraph",
-      "paragraph": {
-        "text": [
-          {
-            "type": "text",
-            "text": {
-              "content": "Image in toggle ",
-              "link": null
-            },
-            "annotations": {
-              "bold": false,
-              "italic": false,
-              "strikethrough": false,
-              "underline": false,
-              "code": false,
-              "color": "default"
-            },
-            "plain_text": "Image in toggle ",
-            "href": null
-          }
-        ]
-      }
-    },
-    {
-      "object": "block",
-      "id": "133bf0a6-576d-45fe-bf64-f759658391a7",
-      "created_time": "2022-02-14T15:46:00.000Z",
-      "last_edited_time": "2022-02-14T15:46:00.000Z",
-      "has_children": false,
-      "archived": false,
-      "type": "image",
-      "image": {
-        "caption": [],
-        "type": "external",
-        "external": {
-          "url": "https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb"
-        }
-      }
-    }
-  ]
-}
-</pre>
+<details>
+<summary>This is a toggle summary</summary>
+<div class="px-[1em]">
+
+Here is the _inner toggle._
+
+Image in toggle
+
+{{< figure src="https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb" caption="" >}}
+
+</div>
+</details>
 
 <pre hidden data-blocktype="embed">
 {
