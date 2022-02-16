@@ -58,6 +58,7 @@ export function renderBlock(block: BlockObject, context: RendererContext): strin
             return md.image(`/img/${localPath}`, node.image.caption);
         }
       case 'equation':
+        return md.equation(node.equation.expression);
       case 'toggle':
       case 'video':
       case 'table':

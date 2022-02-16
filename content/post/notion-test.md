@@ -1,7 +1,7 @@
 ---
 title: 'Notionテスト記事'
 date: '2022-02-11T11:47:00.000Z'
-updated_at: '2022-02-14T15:46:00.000Z'
+updated_at: '2022-02-16T15:08:00.000Z'
 tags:
   - 'test'
   - 'テスト'
@@ -235,22 +235,11 @@ Multiline callout.
 }
 </pre>
 
-<pre hidden data-blocktype="equation">
-{
-  "object": "block",
-  "id": "a46bb489-e679-43c5-8b52-cbf20416aa10",
-  "created_time": "2022-02-13T16:08:00.000Z",
-  "last_edited_time": "2022-02-13T16:08:00.000Z",
-  "has_children": false,
-  "archived": false,
-  "type": "equation",
-  "equation": {
-    "expression": "e=mc^2"
-  }
-}
-</pre>
-
+$$
 e=mc^2
+$$
+
+This is inline equation: $e=mc^2$
 
 <pre hidden data-blocktype="table_of_contents">
 {

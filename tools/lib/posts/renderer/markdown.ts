@@ -1,15 +1,35 @@
-type RichText = RichTextNode[];
-type RichTextNode = {
+type TextAnnotations = {
+  bold: boolean;
+  italic: boolean;
+  strikethrough: boolean;
+  underline: boolean;
+  code: boolean;
+};
+
+type TextNode = {
+  type: 'text';
   plain_text: string;
   href: string | null;
-  annotations: {
-    bold: boolean;
-    italic: boolean;
-    strikethrough: boolean;
-    underline: boolean;
-    code: boolean;
-  };
+  annotations: TextAnnotations;
 };
+
+type MentionNode = {
+  type: 'mention';
+  plain_text: string;
+  href: string | null;
+  annotations: TextAnnotations;
+};
+
+type EquationNode = {
+  type: 'equation';
+  plain_text: string;
+  href: string | null;
+  annotations: TextAnnotations;
+};
+
+type RichTextNode = TextNode | MentionNode | EquationNode;
+
+type RichText = Array<RichTextNode>;
 
 export const heading = (text: RichText, level: 1 | 2 | 3) => `${'#'.repeat(level)} ${decorateText(text)}\n\n`;
 export const paragraph = (text: RichText) => `${decorateText(text)}\n\n`;
@@ -45,13 +65,24 @@ export const image = (url: string, caption: RichText) => {
   return `{{< figure src="${url}" caption="${decorateText(caption)}" >}}\n\n`;
 };
 
+export const equation = (expression: string) => {
+  return `$$\n${expression}\n$$\n\n`;
+};
+
 function indent(text: string): string {
   return `\t${text}`;
 }
 
 function decorateText(text: RichText): string {
   const renderNode = (node: RichTextNode): string => {
-    const { plain_text, href, annotations } = node;
+    const { type, plain_text, href, annotations } = node;
+    if (type === 'mention') {
+      // mention is only available in Notion
+      return '';
+    }
+    if (type === 'equation') {
+      return `$${plain_text}$`;
+    }
     if (annotations.code) {
       return `\`${plain_text}\``;
     }
