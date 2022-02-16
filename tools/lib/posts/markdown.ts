@@ -75,6 +75,11 @@ class BlockRenderer implements NodeRenderer<BlockObject> {
             this.addTask(this.downloadExternalImage(url, localPath));
             return `![${richText(block.image.caption)}](/img/${localPath})\n\n`;
         }
+      case 'equation':
+      case 'toggle':
+      case 'video':
+      case 'table':
+      case 'table_row':
       default:
         return `<pre hidden data-blocktype="${block.type}">\n${JSON.stringify(block, null, 2)}\n</pre>\n\n`;
     }
