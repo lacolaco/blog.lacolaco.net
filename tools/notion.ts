@@ -5,7 +5,7 @@ import * as path from 'path';
 import { ImagesRepository, LocalPostsRepository, RemotePostsRepository } from './lib/posts/repository';
 import { Client } from '@notionhq/client';
 import { NotionAPI } from './lib/notion';
-import { LocalPostRenderer } from './lib/posts/renderer';
+import { LocalPostFactory } from './lib/posts/factory';
 
 if (process.env.NOTION_AUTH_TOKEN == null) {
   console.error('Please set NOTION_AUTH_TOKEN');
@@ -25,12 +25,12 @@ program
     const remotePostsRepo = new RemotePostsRepository(notion);
     const localPostsRepo = new LocalPostsRepository(postsDir, { dryRun: options.dryRun });
     const imagesRepo = new ImagesRepository(imagesDir, { dryRun: options.dryRun });
-    const renderer = new LocalPostRenderer(localPostsRepo, imagesRepo, { forceUpdate: options.force });
+    const postFactory = new LocalPostFactory(localPostsRepo, imagesRepo, { forceUpdate: options.force });
 
     // collect posts from notion
     const posts = await remotePostsRepo.query();
     // write posts to file
-    await renderer.renderPosts(posts);
+    await postFactory.create(posts);
   });
 
 program.parse(process.argv);

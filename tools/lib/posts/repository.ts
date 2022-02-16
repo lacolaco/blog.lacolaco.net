@@ -1,17 +1,16 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
 import * as stream from 'stream';
-import { Observable, of, switchMap } from 'rxjs';
 import { request } from 'undici';
 import { NotionAPI } from '../notion';
-import { NotionPost } from './types';
+import { NotionPostPage } from './types';
 
 const postsDatabaseId = 'b47a04005a1541dfbf4a548ee42d04ab';
 
 export class RemotePostsRepository {
   constructor(private readonly notion: NotionAPI) {}
 
-  async query(): Promise<Array<NotionPost>> {
+  async query(): Promise<Array<NotionPostPage>> {
     // collect pages
     const pages = await this.notion.queryAllPages(postsDatabaseId);
 
@@ -69,12 +68,10 @@ export class ImagesRepository {
     await fs.writeFile(absPath, data);
   }
 
-  download(imageUrl: string, localPath: string): Observable<void> {
+  async download(imageUrl: string, localPath: string): Promise<void> {
     console.log(`[ImagesRepository] downloading ${localPath}`);
-
-    return of(new URL(imageUrl)).pipe(
-      switchMap((url) => request(url)),
-      switchMap((response) => this.saveImage(localPath, response.body)),
-    );
+    const resp = await request(new URL(imageUrl));
+    await this.saveImage(localPath, resp.body);
+    return;
   }
 }

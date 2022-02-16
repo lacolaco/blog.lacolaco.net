@@ -112,7 +112,7 @@ jobs:
 
 これで、Notion で記事を書けば約 10 分後には GitHub に取り込みプルリクエストが作成され、自動デプロイされたプレビュー環境で表示のチェックができるようになった。完成である。
 
-![](/img/notion-headless-cms-3/a77e6ae3-f511-4160-b81b-0582ca167cf7/Untitled.png)
+{{< figure src="/img/notion-headless-cms-3/a77e6ae3-f511-4160-b81b-0582ca167cf7/Untitled.png" caption="" >}}
 
 Notion に Webhook ができればもう少しスマートになるが、今の API の使い方でもレートリミットなどは問題なさそうなのでしばらくはこのまま運用する。
 

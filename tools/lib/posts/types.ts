@@ -1,15 +1,11 @@
+import { ObservableInput } from 'rxjs';
 import { BlockObject, PageObject } from '../notion';
 
-export type NotionPost = PageObject & { content: BlockObject[] };
+export type NotionPostPage = PageObject & { content: BlockObject[] };
 
-export type Frontmatter = {
-  title: string;
-  createdAt: string;
-  updatedAt: string | null;
-  tags: string[];
-  [key: string]: string | string[] | boolean | null;
-};
+export type TaskFactory<T = any> = () => ObservableInput<T>;
 
-export interface NodeRenderer<T> {
-  render(node: T): string | null;
+export interface RendererContext {
+  readonly slug: string;
+  readonly fetchExternalImage: (req: { url: string; localPath: string }) => void;
 }

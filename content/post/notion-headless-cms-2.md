@@ -30,7 +30,7 @@ source: 'https://www.notion.so/Notion-CMS-2-Markdown-4047b3f13e884bcab2757dd81a6
 
 Notion のページプロパティはページに紐付けられるメタ情報のセットで、次の画像のようなプロパティ名と値の Key-Value マップのデータである。
 
-![[object Object]](/img/notion-headless-cms-2/Untitled.png)
+{{< figure src="/img/notion-headless-cms-2/a91ff2bf-6fba-4f51-a2f8-780243849007/Untitled.png" caption="ページプロパティ" >}}
 
 問題はこのプロパティ情報を格納した `PageObject` の `properties` オブジェクトが、自由記述のプロパティ表示名をキーとして、プロパティ固有の ID が値側に格納されていることである。
 

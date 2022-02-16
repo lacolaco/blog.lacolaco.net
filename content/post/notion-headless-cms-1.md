@@ -93,7 +93,7 @@ Notion においてページオブジェクトはブロックオブジェクト�
 
 [https://developers.notion.com/reference/get-block-children](https://developers.notion.com/reference/get-block-children)
 
-> Returns only the first level of children for the specified block. See block objects
+> Returns only the first level of children for the specified block. See [block objects](https://developers.notion.com/reference/block)  
 >  for more detail on determining if that block has nested children.
 
 孫レベルのブロックそのものはレスポンスに含まれていないが、各ブロックオブジェクトは `has_children` フィールドを持っており、これが真であればそのブロックを親とする孫ブロックがあることを示す。
