@@ -1,4 +1,4 @@
-name: sync-to-notion
+name: sync-with-notion
 
 on:
   schedule:
@@ -30,7 +30,7 @@ jobs:
         with:
           token: ${{ steps.generate-token.outputs.token }}
           commit-message: 'fix: apply changes from Notion'
-          branch: sync-to-notion
+          branch: sync-with-notion
           delete-branch: true
           title: 'fix: apply changes from Notion'
           body: '@lacolaco Review and apply changes from Notion'

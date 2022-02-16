@@ -54,6 +54,8 @@ class BlockRenderer implements NodeRenderer<BlockObject> {
         return `---\n\n`;
       case 'bookmark':
         return `{{< embed "${block.bookmark.url}" >}}\n\n`;
+      case 'link_preview':
+        return `{{< embed "${block.link_preview.url}" >}}\n\n`;
       case 'callout':
         const emojiIcon = block.callout.icon?.type === 'emoji' ? block.callout.icon.emoji : null;
         const text = richText(block.callout.text);
