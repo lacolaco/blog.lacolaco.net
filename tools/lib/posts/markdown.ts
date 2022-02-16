@@ -8,7 +8,7 @@ type BlockType = AnyBlockObject['type'];
 type BlockObject<T extends BlockType = BlockType> = MatchType<AnyBlockObject, { type: T }>;
 
 class BlockRenderer implements NodeRenderer<BlockObject> {
-  private taskQueue: Array<Observable<void>> = [];
+  private asyncTasks: Array<Observable<void>> = [];
 
   constructor(
     private readonly pageSlug: string,
@@ -24,10 +24,10 @@ class BlockRenderer implements NodeRenderer<BlockObject> {
   }
 
   async waitForStable(): Promise<void> {
-    if (this.taskQueue.length === 0) {
+    if (this.asyncTasks.length === 0) {
       return;
     }
-    await lastValueFrom(forkJoin(this.taskQueue));
+    await lastValueFrom(forkJoin(this.asyncTasks));
   }
 
   private renderBlock(block: BlockObject, contents: string[]): string | null {
@@ -81,7 +81,7 @@ class BlockRenderer implements NodeRenderer<BlockObject> {
   }
 
   private addTask(task: Observable<void>) {
-    this.taskQueue.push(task);
+    this.asyncTasks.push(task);
   }
 }
 
