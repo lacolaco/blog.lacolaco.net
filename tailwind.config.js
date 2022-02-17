@@ -11,20 +11,22 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: 'var(--color-fg-primary)',
-        default: 'var(--color-fg-default)',
         'accent-muted': 'var(--color-accent-muted)',
         'accent-subtle': 'var(--color-accent-subtle)',
       },
       textColor: {
+        default: 'var(--color-fg-default)',
         header: 'var(--color-header-text)',
         'header-logo': 'var(--color-header-logo)',
       },
       backgroundColor: {
-        primary: 'var(--color-bg-primary)',
+        light: '#FFFFFF',
+        dark: '#0d1117',
         header: 'var(--color-header-bg)',
       },
-      borderColor: {},
+      borderColor: {
+        default: 'var(--color-border-default)',
+      },
     },
   },
   plugins: [
