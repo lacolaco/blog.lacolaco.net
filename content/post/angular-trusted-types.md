@@ -73,12 +73,10 @@ export class AppComponent {
 当然だが、バイパスする場合 HTML の安全性、XSS の回避は完全に開発者の責任となることは留意しなくてはならない。
 特に user-generated な文字列を挿入するケースでは、独自のサニタイズ処理を行うことは必須だろう。
 
-<div class="flash">
-  
+{{< callout >}}
 `<script>`タグを含むHTMLをバイパスして `innerHTML` に挿入されても何も動作しないように見えるが、これはサニタイズされたのではなく `<script>` タグの[仕様](https://www.w3.org/TR/2014/REC-html5-20141028/scripting-1.html#the-script-element)である。
 `<script>` タグのノード自体は作成されているが、実行はされない。動的な `<script>` タグの挿入は `document.createElement` などのAPIを使おう。
-
-</div>
+{{</ callout >}}
 
 `innerHTML` へのテンプレートバインディングから実際に DOM に挿入されるまでの流れを簡単に模式化すると次のようになる。
 処理の流れはバインディングされた HTML が string か `SafeHtml` かでサニタイズの有無が変わるが、

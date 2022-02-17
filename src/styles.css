@@ -8,7 +8,6 @@
 /* TODO: migrate to tailwindcss components */
 @import '@primer/css/dist/support';
 @import '@primer/css/dist/color-modes';
-@import '@primer/css/dist/alerts';
 @import '@primer/css/dist/base';
 @import '@primer/css/dist/box';
 @import '@primer/css/dist/buttons';
