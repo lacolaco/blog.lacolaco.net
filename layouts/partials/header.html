@@ -1,21 +1,21 @@
-<div class="Header flex flex-row items-center">
-  <div class="Header-item">
+<div class="flex flex-row items-center text-header bg-header p-[16px] z-30 text-sm space-x-4">
+  <div class="flex items-center">
     <a
       href="{{ .Site.BaseURL }}"
-      class="Header-link f4 d-flex flex-items-center"
+      class="font-semibold text-header-logo text-base flex items-center hover:text-header hover:no-underline"
     >
       <span>{{ .Site.Title }}</span>
     </a>
   </div>
 
-  <div class="Header-item Header-item--full"></div>
-  <div class="Header-item">
-    <a href="/tags/" class="Header-link">Tags</a>
+  <div class="flex items-center flex-auto"></div>
+  <div class="flex items-center">
+    <a href="/tags/" class="font-semibold text-header-logo hover:text-header hover:no-underline">Tags</a>
   </div>
-  <div class="Header-item">
-    <a href="/index.xml" class="Header-link">RSS</a>
+  <div class="flex items-center">
+    <a href="/index.xml" class="font-semibold text-header-logo hover:text-header hover:no-underline">RSS</a>
   </div>
-  <div class="Header-item mr-0">
+  <div class="flex items-center">
     <a href="https://lacolaco.net" target="_blank" rel="noopener">
       <img
         class="rounded shadow block"

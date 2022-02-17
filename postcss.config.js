@@ -6,8 +6,12 @@ module.exports = {
     require('tailwindcss/nesting'),
     require('tailwindcss'),
     require('autoprefixer'),
-    require('cssnano')({
-      preset: 'default',
-    }),
+    ...(process.env.NODE_ENV === 'production'
+      ? [
+          require('cssnano')({
+            preset: 'default',
+          }),
+        ]
+      : []),
   ],
 };
