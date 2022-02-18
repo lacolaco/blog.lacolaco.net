@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html data-color-mode="auto" data-light-theme="light" data-dark-theme="dark">
+<html>
   <head>
     {{- partial "head.html" . -}}
   </head>
-  <body>
+  <body class="bg-default text-default">
     <header>
       {{- partial "header.html" . -}}
     </header>
-    <main class="bg-light dark:bg-dark p-4 lg:p-10 lg:max-w-screen-lg lg:mx-auto">
+    <main class="p-4 lg:p-10 lg:max-w-screen-lg lg:mx-auto">
       {{- block "main" . }}{{- end }}
     </main>
 

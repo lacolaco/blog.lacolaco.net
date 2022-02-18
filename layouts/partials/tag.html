@@ -1,8 +1,8 @@
 {{ if eq (lower .) "angular" }}
-<a class="Label Label--danger inline-block" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
+<a class="label border-red-500 text-red-500 inline-block" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
 {{ else if eq (lower .) "typescript" }}
-<a class="Label Label--accent inline-block" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
+<a class="label border-blue-500 text-blue-500 inline-block" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
 {{ else }}
-<a class="Label inline-block" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
+<a class="label text-muted inline-block" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ .}}</a>
 {{ end }}
 

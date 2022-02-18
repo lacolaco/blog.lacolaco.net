@@ -17,7 +17,7 @@
         {{ range .Paginator.Pages -}}
         <li class="pb-2 border-solid border-transparent border-b-default">
             <div class="flex-auto min-w-0 leading-tight">
-                <div class="flex flex-row items-center space-x-1">
+                <div class="flex flex-row flex-wrap items-center space-x-1">
                     <a class="text-base text-default font-semibold no-underline" href="{{ .RelPermalink }}">{{ .Title | markdownify | emojify}}</a>
                     {{ range .Params.tags -}}
                     {{ partial "tag.html" . -}}

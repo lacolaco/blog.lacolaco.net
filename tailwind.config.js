@@ -10,19 +10,18 @@ module.exports = {
   content: ['layouts/**/*.html', 'content/**/*.{md,html}'],
   theme: {
     extend: {
-      colors: {
-        'accent-muted': 'var(--color-accent-muted)',
-        'accent-subtle': 'var(--color-accent-subtle)',
-      },
+      colors: {},
       textColor: {
-        default: 'var(--color-fg-default)',
-        muted: 'var(--color-fg-muted)',
+        default: 'var(--color-text-default)',
+        muted: 'var(--color-text-muted)',
+        accent: 'var(--color-text-accent)',
         header: 'var(--color-header-text)',
-        'header-logo': 'var(--color-header-logo)',
+        'header-muted': 'var(--color-header-text-muted)',
       },
       backgroundColor: {
-        light: '#FFFFFF',
-        dark: '#0d1117',
+        default: 'var(--color-bg-default)',
+        muted: 'var(--color-bg-muted)',
+        subtle: 'var(--color-bg-subtle)',
         header: 'var(--color-header-bg)',
       },
       borderColor: {
@@ -31,7 +30,10 @@ module.exports = {
     },
   },
   plugins: [
-    plugin(({ addComponents, theme }) => {
+    plugin(({ addComponents, addBase, theme }) => {
+      addBase({
+        a: { color: theme('textColor.accent') },
+      });
       addComponents({
         '.flash': {
           padding: `${theme('padding.5')} ${theme('padding.4')}`,
@@ -39,8 +41,42 @@ module.exports = {
           borderWidth: theme('borderWidth.DEFAULT'),
           borderRadius: theme('borderRadius.DEFAULT'),
           color: theme('colors.default'),
-          backgroundColor: theme('colors.accent-subtle'),
-          borderColor: theme('borderColor.accent-muted'),
+          backgroundColor: theme('backgroundColor.transparent'),
+          borderColor: theme('borderColor.default'),
+        },
+      });
+      addComponents({
+        '.label': {
+          display: 'inline-block',
+          padding: `0 ${theme('padding.2')}`,
+          fontSize: '12px',
+          lineHeight: '1.5',
+          fontWeight: '500',
+          border: '1px solid transparent',
+          borderRadius: theme('borderRadius.xl'),
+          borderColor: theme('borderColor.default'),
+          '&:hover': {
+            textDecoration: 'none',
+          },
+        },
+      });
+      addComponents({
+        '.markdown-body': {
+          code: {
+            backgroundColor: theme('backgroundColor.muted'),
+          },
+          blockquote: {
+            color: theme('textColor.muted'),
+          },
+          pre: {
+            backgroundColor: theme('backgroundColor.subtle'),
+          },
+          p: {
+            lineHeight: '1.8',
+          },
+          'figcaption p': {
+            textAlign: 'center',
+          },
         },
       });
     }),
