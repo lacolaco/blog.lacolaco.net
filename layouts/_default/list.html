@@ -8,23 +8,23 @@
     {{ end }}
 </div>
 
-<div class="mb-2 google-search-box" style="height: 64px;">
+<div class="mb-2 google-search-box h-[64px]">
     <div class="gcse-search"></div>
 </div>
 
 <div>
-    <ul class="list-style-none">
+    <ul class="list-none space-y-2">
         {{ range .Paginator.Pages -}}
-        <li class="mb-2 pb-2 border-bottom">
-            <div class="flex-auto min-width-0 lh-condensed">
-                <a class="Link--primary v-align-middle no-underline h4 mr-1" href="{{ .RelPermalink }}">{{ .Title | markdownify | emojify}}</a>
-                <span class="labels lh-default">
+        <li class="pb-2 border-solid border-transparent border-b-default">
+            <div class="flex-auto min-w-0 leading-tight">
+                <div class="flex flex-row items-center space-x-1">
+                    <a class="text-base text-default font-semibold no-underline" href="{{ .RelPermalink }}">{{ .Title | markdownify | emojify}}</a>
                     {{ range .Params.tags -}}
                     {{ partial "tag.html" . -}}
                     {{ end -}}
-                </span>
-                <div class="mt-1 text-small Label--secondary">
-                    <span class="v-align-middle">{{ .Date.Format "2006-01-02" }}</span>
+                </div>
+                <div class="mt-1 text-xs text-muted">
+                    <span class="align-middle">{{ .Date.Format "2006-01-02" }}</span>
                 </div>
             </div>
         </li>

@@ -24,7 +24,7 @@
 
 code[class*='language-'],
 pre[class*='language-'] {
-  color: var(--color-fg-default);
+  color: theme('textColor.default');
 }
 
 .token.property,
@@ -70,7 +70,7 @@ pre[class*='language-'] {
   color: var(--color-syntax-highlight-tag);
 
   .token.punctuation {
-    color: var(--color-text-primary);
+    color: theme('textColor.default');
   }
 }
 

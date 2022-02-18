@@ -1,12 +1,12 @@
 {{ define "main" }}
 
-<div class="pagehead mb-4">
+<div class="mb-4">
   <h1>{{ i18n .Data.Plural | default .Data.Plural | title }}</h1>
 </div>
 
-<ul class="list-style-none d-flex flex-wrap">
+<ul class="list-none flex flex-wrap">
   {{ range .Site.Taxonomies.tags }}
-  <li class="mr-1 mb-1">
+  <li class="mr-2 mb-2">
     {{ partial "tag.html" .Page.Title -}}  ({{ .Count }})
   </li>
   {{ end }}

@@ -16,6 +16,7 @@ module.exports = {
       },
       textColor: {
         default: 'var(--color-fg-default)',
+        muted: 'var(--color-fg-muted)',
         header: 'var(--color-header-text)',
         'header-logo': 'var(--color-header-logo)',
       },

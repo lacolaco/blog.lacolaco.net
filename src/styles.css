@@ -1,9 +1,10 @@
-@import 'styles/syntax-highlight';
-@import 'styles/markdown';
-
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+@import 'styles/theme.css';
+@import 'styles/syntax-highlight.css';
+@import 'styles/markdown.css';
 
 /* TODO: migrate to tailwindcss components */
 @import '@primer/css/dist/color-modes';
@@ -13,7 +14,6 @@
 @import '@primer/css/dist/links';
 @import '@primer/css/dist/pagination';
 @import '@primer/css/dist/markdown';
-@import '@primer/css/dist/utilities';
 
 /* Theming Google Custom Search Engine  */
 .google-search-box {
