@@ -71,6 +71,14 @@ Image in toggle
   "id": "90200a59-49bb-45d6-a9ac-f9f0e31e3f29",
   "created_time": "2022-02-13T16:06:00.000Z",
   "last_edited_time": "2022-02-13T16:06:00.000Z",
+  "created_by": {
+    "object": "user",
+    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+  },
+  "last_edited_by": {
+    "object": "user",
+    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+  },
   "has_children": false,
   "archived": false,
   "type": "embed",
@@ -87,6 +95,14 @@ Image in toggle
   "id": "0d14cb05-3fab-4434-874e-68dd26741b96",
   "created_time": "2022-02-13T16:07:00.000Z",
   "last_edited_time": "2022-02-13T16:07:00.000Z",
+  "created_by": {
+    "object": "user",
+    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+  },
+  "last_edited_by": {
+    "object": "user",
+    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+  },
   "has_children": false,
   "archived": false,
   "type": "video",
@@ -112,6 +128,14 @@ This is inline equation: $e=mc^2$
   "id": "c3906a6f-cd9c-4985-934a-c55aa0420747",
   "created_time": "2022-02-13T16:08:00.000Z",
   "last_edited_time": "2022-02-13T16:08:00.000Z",
+  "created_by": {
+    "object": "user",
+    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+  },
+  "last_edited_by": {
+    "object": "user",
+    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+  },
   "has_children": false,
   "archived": false,
   "type": "table_of_contents",
@@ -125,6 +149,14 @@ This is inline equation: $e=mc^2$
   "id": "5b6d8f1d-26f2-4754-8cb3-a66aa3b95544",
   "created_time": "2022-02-13T16:11:00.000Z",
   "last_edited_time": "2022-02-13T16:11:00.000Z",
+  "created_by": {
+    "object": "user",
+    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+  },
+  "last_edited_by": {
+    "object": "user",
+    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+  },
   "has_children": true,
   "archived": false,
   "type": "table",
@@ -139,6 +171,14 @@ This is inline equation: $e=mc^2$
       "id": "b65cbedb-317e-48d5-bcdb-03551b833885",
       "created_time": "2022-02-13T16:11:00.000Z",
       "last_edited_time": "2022-02-13T16:11:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+      },
       "has_children": false,
       "archived": false,
       "type": "table_row",
@@ -190,6 +230,14 @@ This is inline equation: $e=mc^2$
       "id": "58ae5509-56c5-4615-9c94-d1ff86d31337",
       "created_time": "2022-02-13T16:11:00.000Z",
       "last_edited_time": "2022-02-13T16:11:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+      },
       "has_children": false,
       "archived": false,
       "type": "table_row",
@@ -241,6 +289,14 @@ This is inline equation: $e=mc^2$
       "id": "30464eb2-6360-410f-9b84-8e21d0f43237",
       "created_time": "2022-02-13T16:11:00.000Z",
       "last_edited_time": "2022-02-14T00:03:00.000Z",
+      "created_by": {
+        "object": "user",
+        "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+      },
+      "last_edited_by": {
+        "object": "user",
+        "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+      },
       "has_children": false,
       "archived": false,
       "type": "table_row",
