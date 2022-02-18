@@ -1,0 +1,4 @@
+<details>
+  {{ if .Get 0 }}<summary class="text-base">{{ .Get 0 }}</summary>{{ end }}
+  <div class="px-4 text-base">{{ .Inner | markdownify | emojify }}</div>
+</details>

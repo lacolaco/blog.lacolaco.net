@@ -55,9 +55,7 @@ Multiline callout.
 
 {{< embed "https://blog.lacolaco.net/2022/02/notion-headless-cms-1/" >}}
 
-<details>
-<summary>This is a toggle summary</summary>
-<div class="px-[1em]">
+{{<details "This is a toggle summary">}}
 
 Here is the _inner toggle._
 
@@ -65,8 +63,7 @@ Image in toggle
 
 {{< figure src="https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb" caption="" >}}
 
-</div>
-</details>
+{{< /details >}}
 
 <pre hidden data-blocktype="embed">
 {
