@@ -1,0 +1,4 @@
+{
+  "extends": ["config:base", "github>lacolaco/renovate-config:automerge-types"],
+  "stabilityDays": 5
+}
