@@ -1,7 +1,7 @@
 ---
 title: 'Rust+wasmでSVGを生成したら10倍速くなった'
 date: '2022-02-26T03:29:00.000Z'
-updated_at: '2022-02-26T07:55:00.000Z'
+updated_at: '2022-02-26T08:15:00.000Z'
 tags:
   - 'Rust'
   - 'WebAssembly'
@@ -14,7 +14,7 @@ draft: false
 source: 'https://www.notion.so/Rust-wasm-SVG-10-48a52b0559eb43a5b9046e66f64550ce'
 ---
 
-[https://contrib.rocks](https://contrib.rocks) は GitHub の API から取得したコントリビューター情報から SVG 画像を生成している。これまでは SVG.js を使った TypeScript での実装だったが、興味本位で Rust で実装したものを Web Assembly(wasm)として実行するようにしたところ、パフォーマンスが顕著に向上したためそのまま採用することにした。
+[https://contrib.rocks](https://contrib.rocks) は GitHub の API から取得したコントリビューター情報から SVG 画像を生成している。これまでは SVG.js を使った TypeScript での実装だったが、興味本位で Rust で実装したものを WebAssembly(wasm)として実行するようにしたところ、パフォーマンスが顕著に向上したためそのまま採用することにした。
 
 {{< embed "https://github.com/lacolaco/contributors-img/pull/1089" >}}
 
