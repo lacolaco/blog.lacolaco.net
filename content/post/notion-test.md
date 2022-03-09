@@ -139,7 +139,9 @@ This is inline equation: $e=mc^2$
   "has_children": false,
   "archived": false,
   "type": "table_of_contents",
-  "table_of_contents": {}
+  "table_of_contents": {
+    "color": "gray"
+  }
 }
 </pre>
 
