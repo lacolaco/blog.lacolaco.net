@@ -1,7 +1,7 @@
 ---
 title: 'webpack と ES Module Import Assertions についての調査'
 date: '2022-03-09T00:18:00.000Z'
-updated_at: '2022-03-09T01:28:00.000Z'
+updated_at: '2022-03-09T01:43:00.000Z'
 tags:
   - 'webpack'
   - 'ESModule'
@@ -47,7 +47,7 @@ ES Module の Import Assertions が各環境で使えるようになるのも遠
 
 webpack といえば Loader によってさまざまな形式のファイルをモジュール解決できるのが魅力だ。webpack の Import Assertions は JSON 以外にも対応しているのか一応試してみた。
 
-JSON の拡張である JSON5 のファイル `data.json5` をパスできるか試してみた。事前に `json5-loader` をインストールした上で、特に webpack 設定には手を入れずに `type: 'json5'` を指定してみたが、これではモジュール解決できなかった。エラーを見るに、JSON としてパースしようとして失敗したようだ。なぜ JSON だと解釈したのだろうか？
+JSON の拡張である JSON5 のファイル `data.json5` をパースできるか試してみた。事前に `json5-loader` をインストールした上で、特に webpack 設定には手を入れずに `type: 'json5'` を指定してみたが、これではモジュール解決できなかった。エラーを見るに、JSON としてパースしようとして失敗したようだ。なぜ JSON だと解釈したのだろうか？
 
 {{< figure src="/img/webpack-esm-import-assertions/11e6c8bd-1eb3-4717-aa28-3b98ca7089ef/Untitled.png" caption="data.json5のパース（アサーションあり）は失敗" >}}
 
@@ -59,7 +59,7 @@ JSON の拡張である JSON5 のファイル `data.json5` をパスできるか
 
 ## 現状の結論
 
-webpack の Import Assertions 対応は、現状では JSON 形式のアサーションだけが可能なようだ。そもそも拡張子さえあればもともと JSON のインポートはビルトインサポートされていることから、この対応はあくまで構文としてのパースできるようにするものである。
+webpack の Import Assertions 対応は、現状では JSON 形式のアサーションだけが可能なようだ。そもそも拡張子さえあればもともと JSON のインポートはビルトインサポートされていることから、この対応で何か新しい機能が増えているわけではない。
 
 開発者はこれまでどおりアサーションなしにインポートしてもよいが、それは webpack が気を利かせてくれているだけだ。そして webpack 以外でも JSON を読み込める標準化された記法に切り替えるという選択肢も用意されている、ということだろう。
 
