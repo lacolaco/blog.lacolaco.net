@@ -29,7 +29,7 @@
     "rxjs": "7.5.4"
   },
   "devDependencies": {
-    "@notionhq/client": "0.4.13",
+    "@notionhq/client": "1.0.4",
     "@swc/cli": "0.1.55",
     "@swc/core": "1.2.139",
     "@swc/register": "0.1.10",
