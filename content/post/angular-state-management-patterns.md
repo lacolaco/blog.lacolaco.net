@@ -1,7 +1,7 @@
 ---
 title: 'Angularアプリケーションの状態管理パターン'
 date: '2022-05-11T02:10:00.000Z'
-updated_at: '2022-05-12T12:01:00.000Z'
+updated_at: '2022-05-12T12:31:00.000Z'
 tags:
   - 'angular'
   - 'State Management'
