@@ -32,7 +32,7 @@ type RichTextNode = TextNode | MentionNode | EquationNode;
 type RichText = Array<RichTextNode>;
 
 export const heading = (text: RichText, level: 1 | 2 | 3) => `${'#'.repeat(level)} ${decorateText(text)}\n\n`;
-export const paragraph = (text: RichText) => `${decorateText(text)}\n\n`;
+export const paragraph = (text: RichText) => `\n${decorateText(text)}\n\n`;
 
 export const codeBlock = (text: RichText, language?: string) => {
   const delimiter = '```';

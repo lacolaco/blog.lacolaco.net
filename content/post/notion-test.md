@@ -1,7 +1,7 @@
 ---
 title: 'Notionテスト記事'
 date: '2022-02-11T11:47:00.000Z'
-updated_at: '2022-02-16T15:08:00.000Z'
+updated_at: '2022-05-12T10:55:00.000Z'
 tags:
   - 'test'
   - 'テスト'
@@ -10,6 +10,17 @@ source: 'https://www.notion.so/Notion-80f5c54939b64e7ab25825bdb35f1cae'
 ---
 
 この記事は Notion をヘッドレス CMS として利用してブログ記事を作成するシステムのテスト用記事です。
+
+## コンポーネントクラスによるリアクティブな状態管理
+
+最初のパターンに次のようなニーズが生まれると、次の段階にリファクタリングされると考えられる。
+
+- コンポーネントが管理する状態が増えたため、コンポーネントクラスの複雑化に対処したい
+  - コンポーネントクラスのコード削減
+- 手続き的なコードをリアクティブに書きたい
+  - イベントドリブンに処理を行うことで非同期処理との親和性を高める
+
+このパターンは、最初のパターンと同じくコンポーネントクラスのフィールドとして状態管理するが、その管理がリアクティブな形式に沿っている点が違っている。次のような実装を想像してほしい。
 
 # Heading 1
 
@@ -31,6 +42,10 @@ Multi-line **paragraph1**
 - List item 2
   - List item 2-1
   - List item 2-2
+- List item 3
+  - List item 3-1
+
+ParagraphParagraphParagraphParagraphParagraph
 
 1. Numbered List item 1
 1. Numbered List item 2
