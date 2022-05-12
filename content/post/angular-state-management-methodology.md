@@ -1,7 +1,7 @@
 ---
 title: 'Angularアプリケーションの状態管理パターン'
 date: '2022-05-11T02:10:00.000Z'
-updated_at: '2022-05-12T11:47:00.000Z'
+updated_at: '2022-05-12T12:01:00.000Z'
 tags:
   - 'angular'
   - 'State Management'
@@ -20,9 +20,9 @@ Standalone Components など、Angular のメンタルモデルが変わって�
 
 ```typescript
 @Component({
-  template: `<p> {{ message }} </p>`
+  template: `<p>{{ message }}</p>`,
 })
-export MyComponent {
+export class MyComponent {
   message: string;
 
   updateMessage(message: string) {
@@ -50,10 +50,10 @@ import { createStore } from 'awesome-state-management-library';
 const store = createStore({ message: '' });
 
 @Component({
-  template: `<p> {{ message$ | async }} </p>`
+  template: `<p>{{ message$ | async }}</p>`,
 })
-export MyComponent {
-  readonly message$: Observable<string> = store.select(state => state.message);
+export class MyComponent {
+  readonly message$: Observable<string> = store.select((state) => state.message);
 
   updateMessage(message: string) {
     store.setState({ message });
@@ -86,7 +86,7 @@ const store = createStore({ message: '' });
 
 @Injectable()
 export class MyComponentStore {
-  readonly message$ = store.select(state => state.message);
+  readonly message$ = store.select((state) => state.message);
 
   updateMessage(message: string) {
     this.store.setState({ message });
@@ -97,10 +97,10 @@ export class MyComponentStore {
 import { MyComponentStore } from './my-component-store';
 
 @Component({
-  template: `<p> {{ message$ | async }} </p>`,
-  providers: [MyComponentStore]
+  template: `<p>{{ message$ | async }}</p>`,
+  providers: [MyComponentStore],
 })
-export MyComponent {
+export class MyComponent {
   readonly message$: Observable<string> = this.store.message$;
 
   constructor(private store: MyComponentStore) {}
@@ -133,11 +133,10 @@ export MyComponent {
 import { AppStore } from '../app-store';
 
 @Component({
-  template: `<p> {{ message$ | async }} </p>`
+  template: `<p>{{ message$ | async }}</p>`,
 })
-export MyComponent {
-  readonly message$: Observable<string>
-    = this.appStore.select(state => state.message);
+export class MyComponent {
+  readonly message$: Observable<string> = this.appStore.select((state) => state.message);
 
   constructor(private appStore: AppStore) {}
 

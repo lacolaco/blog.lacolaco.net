@@ -22,21 +22,21 @@ export function renderBlock(block: BlockObject, context: RendererContext): strin
   const stringify = (node: BlockObject, contents: string[]): string | null => {
     switch (node.type) {
       case 'heading_1':
-        return md.heading(node.heading_1.text, 1);
+        return md.heading(node.heading_1.rich_text, 1);
       case 'heading_2':
-        return md.heading(node.heading_2.text, 2);
+        return md.heading(node.heading_2.rich_text, 2);
       case 'heading_3':
-        return md.heading(node.heading_3.text, 3);
+        return md.heading(node.heading_3.rich_text, 3);
       case 'paragraph':
-        return md.paragraph(node.paragraph.text);
+        return md.paragraph(node.paragraph.rich_text);
       case 'code':
-        return md.codeBlock(node.code.text, node.code.language);
+        return md.codeBlock(node.code.rich_text, node.code.language);
       case 'bulleted_list_item':
-        return md.bulletedListItem(node.bulleted_list_item.text, contents);
+        return md.bulletedListItem(node.bulleted_list_item.rich_text, contents);
       case 'numbered_list_item':
-        return md.numberedListItem(node.numbered_list_item.text, contents);
+        return md.numberedListItem(node.numbered_list_item.rich_text, contents);
       case 'quote':
-        return md.quote(node.quote.text);
+        return md.quote(node.quote.rich_text);
       case 'divider':
         return md.divider();
       case 'bookmark':
@@ -45,7 +45,7 @@ export function renderBlock(block: BlockObject, context: RendererContext): strin
         return md.linkPreview(node.link_preview.url);
       case 'callout':
         const emojiIcon = node.callout.icon?.type === 'emoji' ? node.callout.icon.emoji : undefined;
-        return md.callout(node.callout.text, emojiIcon);
+        return md.callout(node.callout.rich_text, emojiIcon);
       case 'image':
         switch (node.image.type) {
           case 'external':
@@ -60,7 +60,7 @@ export function renderBlock(block: BlockObject, context: RendererContext): strin
       case 'equation':
         return md.equation(node.equation.expression);
       case 'toggle':
-        return md.details(node.toggle.text, contents);
+        return md.details(node.toggle.rich_text, contents);
       case 'video':
       case 'table':
       case 'table_row':
