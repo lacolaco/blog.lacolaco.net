@@ -1,7 +1,7 @@
 ---
 title: 'Angularアプリケーションの状態管理パターン'
 date: '2022-05-11T02:10:00.000Z'
-updated_at: '2022-05-12T12:31:00.000Z'
+updated_at: '2022-05-13T00:13:00.000Z'
 tags:
   - 'angular'
   - 'State Management'
@@ -178,7 +178,7 @@ export function createStore(initialState) {
 - [https://ngneat.github.io/elf/](https://ngneat.github.io/elf/)
 - [https://rematchjs.org/](https://rematchjs.org/)
 
-一方で、シングルトンサービスによる状態管理をサポートするライブラリは、Depenency Injection 関連の振る舞いを含める必要があるため、Angular に依存したライブラリになる。このパターンを実装する上で代表的なライブラリは `@ngrx/store` や `@ngxs/store` 、Akita などだ。だが、シングルトンサービスによる状態管理であったとしてもサービスの実装までライブラリに任せるか、サービスは自前で用意して状態管理の核となる部分だけライブラリに任せるかは、アプリケーションごとに判断できる部分だ。
+一方で、シングルトンサービスによる状態管理をサポートするライブラリは、Dependency Injection 関連の振る舞いを含める必要があるため、Angular に依存したライブラリになる。このパターンを実装する上で代表的なライブラリは `@ngrx/store` や `@ngxs/store` 、Akita などだ。だが、シングルトンサービスによる状態管理であったとしても、サービスの実装までライブラリに任せるか、サービスは自前で用意して上述したような状態管理の核となる部分だけライブラリに任せるかは、アプリケーションごとに判断できる部分だ。
 
 - [https://ngrx.io/guide/store](https://ngrx.io/guide/store)
 - [https://www.ngxs.io/](https://www.ngxs.io/)
