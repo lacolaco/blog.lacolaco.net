@@ -1,7 +1,7 @@
 ---
 title: 'Angularアプリケーションの状態管理パターン'
 date: '2022-05-11T02:10:00.000Z'
-updated_at: '2022-05-13T00:13:00.000Z'
+updated_at: '2022-05-18T02:58:00.000Z'
 tags:
   - 'angular'
   - 'State Management'
@@ -181,6 +181,7 @@ export function createStore(initialState) {
 一方で、シングルトンサービスによる状態管理をサポートするライブラリは、Dependency Injection 関連の振る舞いを含める必要があるため、Angular に依存したライブラリになる。このパターンを実装する上で代表的なライブラリは `@ngrx/store` や `@ngxs/store` 、Akita などだ。だが、シングルトンサービスによる状態管理であったとしても、サービスの実装までライブラリに任せるか、サービスは自前で用意して上述したような状態管理の核となる部分だけライブラリに任せるかは、アプリケーションごとに判断できる部分だ。
 
 - [https://ngrx.io/guide/store](https://ngrx.io/guide/store)
+- [https://rx-angular.io/web/state/general/overview](https://rx-angular.io/web/state/general/overview)
 - [https://www.ngxs.io/](https://www.ngxs.io/)
 - [https://datorama.github.io/akita/docs/store](https://datorama.github.io/akita/docs/store)
 
