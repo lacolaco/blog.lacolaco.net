@@ -34,7 +34,7 @@
     "@swc/core": "1.2.139",
     "@swc/register": "0.1.10",
     "@types/js-yaml": "4.0.5",
-    "@types/prettier": "2.6.1",
+    "@types/prettier": "2.6.3",
     "@types/prismjs": "1.26.0",
     "@types/tailwindcss": "3.0.10",
     "autoprefixer": "10.4.7",
