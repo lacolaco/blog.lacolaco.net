@@ -39,7 +39,7 @@
     "@types/tailwindcss": "3.0.10",
     "autoprefixer": "10.4.7",
     "commander": "9.2.0",
-    "cssnano": "5.1.7",
+    "cssnano": "5.1.9",
     "dotenv": "16.0.1",
     "esbuild": "0.14.23",
     "js-yaml": "4.1.0",
