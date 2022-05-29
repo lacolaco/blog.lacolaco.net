@@ -18,7 +18,8 @@ jobs:
         hugo-version: 'latest'
     - uses: actions/setup-node@v3
       with:
-        node-version: '12.x'
+        node-version-file: .node-version
+        cache: yarn
     - run: yarn install
     - run: yarn build
       env:
