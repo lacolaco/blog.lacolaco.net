@@ -36,7 +36,7 @@
     "@types/js-yaml": "4.0.5",
     "@types/prettier": "2.6.3",
     "@types/prismjs": "1.26.0",
-    "@types/tailwindcss": "3.0.10",
+    "@types/tailwindcss": "3.0.11",
     "autoprefixer": "10.4.7",
     "commander": "9.3.0",
     "cssnano": "5.1.11",
