@@ -31,7 +31,7 @@
   "devDependencies": {
     "@notionhq/client": "1.0.4",
     "@swc/cli": "0.1.57",
-    "@swc/core": "1.2.139",
+    "@swc/core": "1.2.218",
     "@swc/register": "0.1.10",
     "@types/js-yaml": "4.0.5",
     "@types/prettier": "2.6.3",
