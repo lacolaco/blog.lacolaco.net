@@ -1,7 +1,7 @@
 ---
 title: 'Angular: ボタンコンポーネントの実装'
 date: '2022-07-20T02:25:00.000Z'
-updated_at: '2022-07-20T05:52:00.000Z'
+updated_at: '2022-07-20T06:02:00.000Z'
 tags:
   - 'angular'
   - 'components'
@@ -79,7 +79,6 @@ export class FancyButtonComponent {
   selector: 'button[app-fancy-button]',
   template: `<ng-content></ng-content>`,
   styleUrls: ['./fancy-button.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FancyButtonComponent {}
 ```
