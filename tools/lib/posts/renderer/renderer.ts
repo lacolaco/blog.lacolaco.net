@@ -61,17 +61,25 @@ export function renderBlock(block: BlockObject, context: RendererContext): strin
         return md.equation(node.equation.expression);
       case 'toggle':
         return md.details(node.toggle.rich_text, contents);
+      case 'embed':
+        return md.embed(node.embed.url);
       case 'video':
+        switch (node.video.type) {
+          case 'external':
+            return md.video(node.video.external.url);
+        }
       case 'table':
       case 'table_row':
-      default:
-        return `<pre hidden data-blocktype="${node.type}">\n${JSON.stringify(node, null, 2)}\n</pre>\n\n`;
     }
+    return null;
   };
 
   const visit = (node: BlockObject) => {
     const contents: string[] = node.children?.map((child) => visit(child)).filter(isNotNull) ?? [];
-    return stringify(node, contents);
+    return (
+      stringify(node, contents) ??
+      `<pre hidden data-blocktype="${node.type}">\n${JSON.stringify(node, null, 2)}\n</pre>\n\n`
+    );
   };
   return visit(block);
 }

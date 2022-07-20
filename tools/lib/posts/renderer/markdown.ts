@@ -73,6 +73,29 @@ export const details = (summary: RichText, contents: string[]) => {
   return `{{<details "${plainText(summary)}">}}\n\n${contents.join('')}\n\n{{< /details >}}\n\n`;
 };
 
+export const embed = (url: string) => {
+  const parsedUrl = new URL(url);
+  // Stackblitz
+  if (parsedUrl.host === 'stackblitz.com' && parsedUrl.searchParams.get('embed') === '1') {
+    return `{{< stackblitz "${url}" >}}\n\n`;
+  }
+  // Twitter status
+  if (parsedUrl.host === 'twitter.com' && parsedUrl.pathname.includes('/status/')) {
+    const statusId = parsedUrl.pathname.split('/')[3];
+    return `{{< tweet "${statusId}" >}}\n\n`;
+  }
+  return null;
+};
+
+export const video = (url: string) => {
+  const parsedUrl = new URL(url);
+  // YouTube
+  if (parsedUrl.host === 'www.youtube.com' && parsedUrl.searchParams.has('v')) {
+    return `{{< youtube "${parsedUrl.searchParams.get('v')}" >}}\n\n`;
+  }
+  return null;
+};
+
 function indent(text: string): string {
   return `\t${text}`;
 }
