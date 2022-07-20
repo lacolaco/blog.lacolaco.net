@@ -1,7 +1,7 @@
 ---
 title: 'Notionテスト記事'
 date: '2022-02-11T11:47:00.000Z'
-updated_at: '2022-07-20T06:23:00.000Z'
+updated_at: '2022-07-20T06:31:00.000Z'
 tags:
   - 'test'
   - 'テスト'
@@ -69,64 +69,9 @@ Image in toggle
 
 {{< /details >}}
 
-<pre hidden data-blocktype="embed">
-{
-  "object": "block",
-  "id": "90200a59-49bb-45d6-a9ac-f9f0e31e3f29",
-  "parent": {
-    "type": "page_id",
-    "page_id": "80f5c549-39b6-4e7a-b258-25bdb35f1cae"
-  },
-  "created_time": "2022-02-13T16:06:00.000Z",
-  "last_edited_time": "2022-02-13T16:06:00.000Z",
-  "created_by": {
-    "object": "user",
-    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
-  },
-  "last_edited_by": {
-    "object": "user",
-    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
-  },
-  "has_children": false,
-  "archived": false,
-  "type": "embed",
-  "embed": {
-    "caption": [],
-    "url": "https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw"
-  }
-}
-</pre>
+{{< tweet "1492833480694439940" >}}
 
-<pre hidden data-blocktype="video">
-{
-  "object": "block",
-  "id": "0d14cb05-3fab-4434-874e-68dd26741b96",
-  "parent": {
-    "type": "page_id",
-    "page_id": "80f5c549-39b6-4e7a-b258-25bdb35f1cae"
-  },
-  "created_time": "2022-02-13T16:07:00.000Z",
-  "last_edited_time": "2022-02-13T16:07:00.000Z",
-  "created_by": {
-    "object": "user",
-    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
-  },
-  "last_edited_by": {
-    "object": "user",
-    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
-  },
-  "has_children": false,
-  "archived": false,
-  "type": "video",
-  "video": {
-    "caption": [],
-    "type": "external",
-    "external": {
-      "url": "https://www.youtube.com/watch?v=TmWIrBPE6Bc"
-    }
-  }
-}
-</pre>
+{{< youtube "TmWIrBPE6Bc" >}}
 
 $$
 e=mc^2
@@ -382,3 +327,7 @@ This is inline equation: $e=mc^2$
 </pre>
 
 {{< embed "https://github.com/makenotion/notion-sdk-js" >}}
+
+## Stackblitz embed
+
+{{< stackblitz "https://stackblitz.com/edit/angular-ivy-qxbz13?embed=1&file=src/app/fancy-button/fancy-button.component.ts" >}}
