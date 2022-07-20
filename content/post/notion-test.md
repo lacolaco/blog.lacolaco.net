@@ -1,7 +1,7 @@
 ---
 title: 'Notionテスト記事'
 date: '2022-02-11T11:47:00.000Z'
-updated_at: '2022-07-20T06:23:00.000Z'
+updated_at: '2022-07-20T06:31:00.000Z'
 tags:
   - 'test'
   - 'テスト'
@@ -382,3 +382,33 @@ This is inline equation: $e=mc^2$
 </pre>
 
 {{< embed "https://github.com/makenotion/notion-sdk-js" >}}
+
+## Stackblitz embed
+
+<pre hidden data-blocktype="embed">
+{
+  "object": "block",
+  "id": "54e00d6b-546e-43bc-85df-2dbb00af55c9",
+  "parent": {
+    "type": "page_id",
+    "page_id": "80f5c549-39b6-4e7a-b258-25bdb35f1cae"
+  },
+  "created_time": "2022-07-20T06:31:00.000Z",
+  "last_edited_time": "2022-07-20T06:31:00.000Z",
+  "created_by": {
+    "object": "user",
+    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+  },
+  "last_edited_by": {
+    "object": "user",
+    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
+  },
+  "has_children": false,
+  "archived": false,
+  "type": "embed",
+  "embed": {
+    "caption": [],
+    "url": "https://stackblitz.com/edit/angular-ivy-qxbz13?embed=1&file=src/app/fancy-button/fancy-button.component.ts"
+  }
+}
+</pre>
