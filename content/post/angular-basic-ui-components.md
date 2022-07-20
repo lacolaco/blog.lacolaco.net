@@ -1,7 +1,7 @@
 ---
 title: 'Angular: ボタンコンポーネントの実装'
 date: '2022-07-20T02:25:00.000Z'
-updated_at: '2022-07-20T06:02:00.000Z'
+updated_at: '2022-07-20T06:25:00.000Z'
 tags:
   - 'angular'
   - 'components'
@@ -93,33 +93,7 @@ export class FancyButtonComponent {}
 
 実装の詳細は、次の動作するサンプルを参考にしてほしい。
 
-<pre hidden data-blocktype="embed">
-{
-  "object": "block",
-  "id": "8e2aed1d-40dc-4f11-9c7b-1c8d9b0aa53b",
-  "parent": {
-    "type": "page_id",
-    "page_id": "4518985f-136b-4811-8aef-e72b464720a4"
-  },
-  "created_time": "2022-07-20T05:28:00.000Z",
-  "last_edited_time": "2022-07-20T05:33:00.000Z",
-  "created_by": {
-    "object": "user",
-    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
-  },
-  "last_edited_by": {
-    "object": "user",
-    "id": "f4f222d4-d508-405d-ba6c-da82ee26ee54"
-  },
-  "has_children": false,
-  "archived": false,
-  "type": "embed",
-  "embed": {
-    "caption": [],
-    "url": "https://stackblitz.com/edit/angular-ivy-qxbz13?embed=1&file=src/app/fancy-button/fancy-button.component.ts"
-  }
-}
-</pre>
+{{< embed "https://stackblitz.com/edit/angular-emotion?embed=1&file=src/app/app.component.ts" >}}
 
 ### 参考リンク
 
