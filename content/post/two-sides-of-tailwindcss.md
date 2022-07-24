@@ -1,7 +1,7 @@
 ---
 title: 'Tailwind CSSの二面性、デザインシステムを借りるということ'
 date: '2022-07-24T00:52:00.000Z'
-updated_at: '2022-07-24T12:45:00.000Z'
+updated_at: '2022-07-24T12:59:00.000Z'
 tags:
   - '雑記'
   - 'tailwindcss'
@@ -36,7 +36,7 @@ Tailwind CSS がデフォルトで提供しているユーティリティ CSS �
 
 このビルドツールはいわば、**Tailwind コンフィグを入力とし、CSS ライブラリを出力とする関数**と捉えることもできるだろう。だから、どのような CSS ライブラリが出力されるかについては、入力次第であるとしか言えないのだ。
 
-### デザインシステムを表現する CSS ライブラリ
+### デザインシステムを表現する CSS ライブラリとしての本質
 
 {{< figure src="/img/two-sides-of-tailwindcss/e8aac7d8-328b-40e8-99ed-5c91c18e5866/Untitled.png" caption="“An API for your design system”" >}}
 
