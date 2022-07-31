@@ -1,7 +1,7 @@
 ---
 title: 'Google Cloud の Workload Identity 連携でGitHub Actionsから認証する'
 date: '2022-07-30T12:36:00.000Z'
-updated_at: '2022-07-30T13:50:00.000Z'
+updated_at: '2022-07-31T02:36:00.000Z'
 tags:
   - 'GitHub Actions'
   - 'Google Cloud'
@@ -69,7 +69,7 @@ GitHub Actions の JWT が含んでいるフィールドはここに説明され
 
 属性マッピングができたら、属性条件を設定してトークン発行できるリクエスト元を制限する。今回は自分しか触らないレポジトリでの認証なので、「ワークフローの実行者が `lacolaco` である」という条件を書いた。
 
-{{< figure src="/img/github-actions-oidc-google-cloud/f32ba112-5e9d-4d6f-b771-e1bb5b73ad24/Untitled.png" caption="" >}}
+{{< figure src="/img/github-actions-oidc-google-cloud/fa85c010-c61b-4929-b208-41cbd68a0225/Untitled.png" caption="" >}}
 
 ## GCP: Workload Identity プールにサービスアカウントを追加する
 
@@ -87,7 +87,11 @@ GCP 側の作業ができたので、最後に GitHub Actions 側を設定して
 
 {{< embed "https://github.com/google-github-actions/auth" >}}
 
-`actions/checkout` アクションの **あと** に、次のように認証ステップを追加する。これだけで終わり。
+“Usage” にドキュメンテーションされているとおり、`permissions` に `id-token: write` を追記し、`actions/checkout` アクションの **あと** に、次のように認証ステップを追加する。これだけで終わり。
+
+{{< callout "👉">}}
+`permissions` はひとつ設定すると設定していない権限がすべて `none` になるので注意
+{{< /callout >}}
 
 ```yaml
 - uses: actions/checkout@v2
