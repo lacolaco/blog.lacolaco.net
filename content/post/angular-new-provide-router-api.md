@@ -1,7 +1,7 @@
 ---
 title: 'Angular: provideRouter によるルーティング設定 (v14.2)'
 date: '2022-08-29T12:18:00.000Z'
-updated_at: '2022-08-29T14:25:00.000Z'
+updated_at: '2022-08-29T14:56:00.000Z'
 tags:
   - 'angular'
   - 'router'
@@ -43,7 +43,7 @@ import { Page2Component } from './page2.component';
 export class AppModule {}
 ```
 
-{{< stackblitz "https://stackblitz.com/edit/angular-ivy-mmfp8p?embed=1&file=src/app/app.module.ts" >}}
+{{< stackblitz "https://stackblitz.com/edit/angular-ivy-mmfp8p?ctl=1&embed=1&file=src/app/app.module.ts" >}}
 
 ## スタンドアロン API ベースのアプリケーションでの使用例
 
@@ -61,7 +61,7 @@ bootstrapApplication(AppComponent, {
 });
 ```
 
-{{< stackblitz "https://stackblitz.com/edit/angular-ivy-5obw68?embed=1&file=src/main.ts" >}}
+{{< stackblitz "https://stackblitz.com/edit/angular-ivy-5obw68?ctl=1&embed=1&file=src/main.ts" >}}
 
 ## RouterFeatures によるオプション設定
 
