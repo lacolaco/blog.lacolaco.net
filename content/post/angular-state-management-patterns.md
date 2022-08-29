@@ -53,7 +53,9 @@ const store = createStore({ message: '' });
   template: `<p>{{ message$ | async }}</p>`,
 })
 export class MyComponent {
-  readonly message$: Observable<string> = store.select((state) => state.message);
+  readonly message$: Observable<string> = store.select(
+    (state) => state.message,
+  );
 
   updateMessage(message: string) {
     store.setState({ message });
@@ -136,7 +138,9 @@ import { AppStore } from '../app-store';
   template: `<p>{{ message$ | async }}</p>`,
 })
 export class MyComponent {
-  readonly message$: Observable<string> = this.appStore.select((state) => state.message);
+  readonly message$: Observable<string> = this.appStore.select(
+    (state) => state.message,
+  );
 
   constructor(private appStore: AppStore) {}
 

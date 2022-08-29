@@ -68,7 +68,11 @@ bootstrapApplication(AppComponent, {
 これまで `RouterModule.forRoot` の第 2 引数で設定していたオプションは、 `provideRouter` では可変長配列になっている第 2 引数以降に `RouterFeature` 型のオブジェクトを渡して設定する。 `RouterFeature` オブジェクトの生成は `withXXX` という命名の関数が用意されており、その戻り値を渡す。
 
 ```typescript
-import { provideRouter, withDebugTracing, withRouterConfig } from '@angular/router';
+import {
+  provideRouter,
+  withDebugTracing,
+  withRouterConfig,
+} from '@angular/router';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -113,7 +117,8 @@ export class LazyLoadedModule {}
 export const routes: Route[] = [
   {
     path: 'lazy',
-    loadChildren: () => import('./lazy/lazy.module').then((m) => m.LazyLoadedModule),
+    loadChildren: () =>
+      import('./lazy/lazy.module').then((m) => m.LazyLoadedModule),
   },
   // ...
 ];

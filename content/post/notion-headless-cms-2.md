@@ -50,7 +50,9 @@ Notion のページプロパティはページに紐付けられるメタ情報�
 Notion の GUI 上ではいつでもプロパティ表示名を変更できるため、キー側をもとに特定のプロパティを探索するのは堅牢性に欠ける。まずはプロパティの ID をキーにしたマップオブジェクトに詰め替えることから始めることになった。
 
 ```typescript
-const properties = Object.fromEntries(Object.values(page.properties).map((prop) => [prop.id, prop]));
+const properties = Object.fromEntries(
+  Object.values(page.properties).map((prop) => [prop.id, prop]),
+);
 ```
 
 ### プロパティの型をプロパティタイプから推論する
@@ -61,7 +63,9 @@ Notion のページプロパティはいくつものデータ型をサポート�
 
 ```typescript
 export function createPagePropertyMap(page: PageObject) {
-  const properties = Object.fromEntries(Object.values(page.properties).map((prop) => [prop.id, prop]));
+  const properties = Object.fromEntries(
+    Object.values(page.properties).map((prop) => [prop.id, prop]),
+  );
   return {
     get<PropType extends string>(id: string, type: PropType) {
       const prop = properties[id];
@@ -73,7 +77,10 @@ export function createPagePropertyMap(page: PageObject) {
   } as const;
 }
 
-function matchPropertyType<PropType extends string, Prop extends { type: string }>(
+function matchPropertyType<
+  PropType extends string,
+  Prop extends { type: string },
+>(
   property: Prop,
   type: PropType,
 ): property is MatchType<Prop, { type: PropType }> {
@@ -213,7 +220,11 @@ function renderRichText(richText: RichTextObject): string {
     });
   }
   if (href) {
-    return renderRichText({ ...richText, plain_text: `[${plain_text}](${href})`, href: null });
+    return renderRichText({
+      ...richText,
+      plain_text: `[${plain_text}](${href})`,
+      href: null,
+    });
   }
   if (plain_text.includes('\n')) {
     return plain_text.replace(/\n/g, '  \n');
