@@ -14,7 +14,9 @@ export function renderPage(
   const body = content.map((block) => renderBlock(block, context)).join('');
   return format([frontmatter, body].join('\n\n'), {
     parser: 'markdown',
-    ...require('../../../../.prettierrc.json'),
+    printWidth: 80,
+    singleQuote: true,
+    trailingComma: 'all',
   });
 }
 
