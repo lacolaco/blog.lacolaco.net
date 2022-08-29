@@ -38,9 +38,13 @@ declare type ElementType<T> = T extends (infer U)[] ? U : never;
 // notion/types.ts
 import { Client } from '@notionhq/client';
 
-export type PageObject = ElementType<Awaited<ReturnType<Client['databases']['query']>>['results']>;
+export type PageObject = ElementType<
+  Awaited<ReturnType<Client['databases']['query']>>['results']
+>;
 
-export type BlockObject = ElementType<Awaited<ReturnType<Client['blocks']['children']['list']>>['results']>;
+export type BlockObject = ElementType<
+  Awaited<ReturnType<Client['blocks']['children']['list']>>['results']
+>;
 ```
 
 これでページオブジェクトを引数に取る関数が記述できるようになったと思ったが、まだこれだけでは実用的ではなかった。
@@ -78,7 +82,9 @@ export type PageObject = MatchType<
 >;
 
 export type BlockObject = MatchType<
-  ElementType<Awaited<ReturnType<Client['blocks']['children']['list']>>['results']>,
+  ElementType<
+    Awaited<ReturnType<Client['blocks']['children']['list']>>['results']
+  >,
   {
     type: unknown;
   }

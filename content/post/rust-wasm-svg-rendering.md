@@ -207,11 +207,15 @@ async function main() {
 
   async function run(dataSize: number) {
     console.log(`=== data size: ${dataSize} ===`);
-    const contributors = new Array(dataSize).fill(null).map((_, i) => createMockContributor({ login: `login${i}` }));
+    const contributors = new Array(dataSize)
+      .fill(null)
+      .map((_, i) => createMockContributor({ login: `login${i}` }));
     await benchmark_js(times, contributors);
     await benchmark_rust(times, contributors);
     for (const measure of performance.getEntriesByType('measure')) {
-      console.log(`${measure.name}: ${(measure.duration / times).toPrecision(2)}ms`);
+      console.log(
+        `${measure.name}: ${(measure.duration / times).toPrecision(2)}ms`,
+      );
     }
     performance.clearMarks();
     performance.clearMeasures();
