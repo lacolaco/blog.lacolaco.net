@@ -20,6 +20,9 @@
     "postinstall": "yarn copy-vendor",
     "notion:fetch": "node -r @swc/register tools/notion.ts fetch"
   },
+  "engines": {
+    "node": "^16.17.0"
+  },
   "dependencies": {
     "@primer/css": "19.8.2",
     "anchor-js": "4.3.1",
