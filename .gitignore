@@ -11,3 +11,4 @@ posts.json
 node_modules
 .firebase
 .env
+.hugo_build.lock

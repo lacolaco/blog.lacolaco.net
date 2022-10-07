@@ -1,0 +1,7 @@
+<iframe
+  class="common-iframe"
+  style="aspect-ratio: 4/3;"
+  {{ if .Get 1 }}title="{{ .Get 1 }}"{{ end }}
+  src="{{ .Get 0 }}"
+  width="{{ .Get "width" | default "100%" }}" frameborder="0" scrolling="no">
+</iframe>
