@@ -1,4 +1,5 @@
 {
   "extends": ["config:base", "github>lacolaco/renovate-config:automerge-types"],
+  "postUpdateOptions": ["yarnDedupeHighest"],
   "stabilityDays": 5
 }
