@@ -1,0 +1,23 @@
+name: trigger-sync-from-pr-comment
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  trigger-sync:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.issue.pull_request && github.event.issue.pull_request.head.ref == 'sync-with-notion' && github.event.comment.body == '/sync' }}
+    steps:
+      - name: Trigger Workflow
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'sync-with-notion.yml',
+              ref: 'main',
+            })
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
