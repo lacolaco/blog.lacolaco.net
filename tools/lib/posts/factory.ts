@@ -26,14 +26,16 @@ export class LocalPostFactory {
     const slug = pageProps.get('Y~YJ', 'rich_text')?.rich_text[0]?.plain_text ?? null;
     const tags = pageProps.get('v%5EIo', 'multi_select')?.multi_select.map((node) => node.name) ?? [];
     const publishable = pageProps.get('vssQ', 'checkbox')?.checkbox ?? false;
+    const createdAtOverride = pageProps.get('%3CDyF', 'date')?.date?.start ?? null;
+    const updatedAtOverride = pageProps.get('_sHV', 'date')?.date?.start ?? null;
     if (title == null || slug == null) {
       console.warn(`title or slug is null: ${JSON.stringify(page, null, 2)}`);
       return;
     }
     const props = {
       title,
-      date: createdAt,
-      updated_at: updatedAt,
+      date: createdAtOverride ?? createdAt,
+      updated_at: updatedAtOverride ?? updatedAt,
       tags,
       draft: !publishable,
       source: page.url,
