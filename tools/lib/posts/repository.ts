@@ -1,6 +1,6 @@
-import * as fs from 'fs/promises';
-import * as path from 'path';
-import * as stream from 'stream';
+import { writeFile, readFile, rm, mkdir } from 'node:fs/promises';
+import * as path from 'node:path';
+import { Readable } from 'node:stream';
 import { request } from 'undici';
 import { NotionAPI } from '../notion';
 import { NotionPostPage } from './types';
@@ -33,13 +33,13 @@ export class LocalPostsRepository {
       return;
     }
     const filePath = path.resolve(this.postsDir, `${slug}.md`);
-    await fs.writeFile(filePath, content, { encoding: 'utf8' });
+    await writeFile(filePath, content, { encoding: 'utf8' });
   }
 
   async loadPost(slug: string): Promise<string | null> {
     const filePath = path.resolve(this.postsDir, `${slug}.md`);
     try {
-      return await fs.readFile(filePath, { encoding: 'utf8' });
+      return await readFile(filePath, { encoding: 'utf8' });
     } catch (e) {
       return null;
     }
@@ -55,17 +55,17 @@ export class ImagesRepository {
     }
     const dir = path.resolve(this.imagesDir, slug);
     try {
-      await fs.rm(dir, { recursive: true });
+      await rm(dir, { recursive: true });
     } catch {}
   }
 
-  async saveImage(localPath: string, data: stream.Readable): Promise<void> {
+  async saveImage(localPath: string, data: Readable): Promise<void> {
     const absPath = path.resolve(this.imagesDir, localPath);
     if (this.options.dryRun) {
       return;
     }
-    await fs.mkdir(path.dirname(absPath), { recursive: true });
-    await fs.writeFile(absPath, data);
+    await mkdir(path.dirname(absPath), { recursive: true });
+    await writeFile(absPath, data);
   }
 
   async download(imageUrl: string, localPath: string): Promise<void> {
