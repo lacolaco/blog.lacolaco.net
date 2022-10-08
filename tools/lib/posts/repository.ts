@@ -33,6 +33,7 @@ export class LocalPostsRepository {
       return;
     }
     const filePath = path.resolve(this.postsDir, `${slug}.md`);
+    await mkdir(path.dirname(filePath), { recursive: true });
     await writeFile(filePath, content, { encoding: 'utf8' });
   }
 

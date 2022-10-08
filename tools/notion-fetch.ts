@@ -12,7 +12,7 @@ if (process.env.NOTION_AUTH_TOKEN == null) {
   process.exit(1);
 }
 const notion = new NotionAPI(new Client({ auth: process.env.NOTION_AUTH_TOKEN }));
-const postsDir = path.resolve(__dirname, '../content/post');
+const postsDir = path.resolve(__dirname, '../content/post/notion');
 const imagesDir = path.resolve(__dirname, '../static/img');
 
 const { values } = parseArgs({
