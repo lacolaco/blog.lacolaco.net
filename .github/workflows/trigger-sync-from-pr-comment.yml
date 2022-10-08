@@ -22,6 +22,6 @@ jobs:
               workflow_id: 'sync-with-notion.yml',
               ref: 'main',
               inputs: {
-                forceUpdate: false
+                forceUpdate: 'false'
               }
             })
