@@ -7,9 +7,12 @@ on:
 jobs:
   trigger-sync:
     runs-on: ubuntu-latest
-    if: ${{ github.event.issue.pull_request && github.event.issue.pull_request.head.ref == 'sync-with-notion' && github.event.comment.body == '/sync' }}
+    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/sync' }}
     steps:
+      - uses: xt0rted/pull-request-comment-branch@v1
+        id: comment-branch
       - name: Trigger Workflow
+        if: ${{ success() && steps.comment-branch.outputs.head_ref == 'sync-with-notion' }}
         uses: actions/github-script@v6
         with:
           script: |
@@ -19,5 +22,3 @@ jobs:
               workflow_id: 'sync-with-notion.yml',
               ref: 'main',
             })
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
