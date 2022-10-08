@@ -1,7 +1,7 @@
 ---
 title: 'Notionテスト記事'
 date: '2022-02-11T11:47:00.000Z'
-updated_at: '2022-10-08T03:01:00.000Z'
+updated_at: '2022-10-08T11:38:00.000Z'
 tags:
   - 'test'
 draft: true
