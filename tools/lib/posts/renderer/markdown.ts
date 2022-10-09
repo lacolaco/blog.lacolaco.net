@@ -51,7 +51,9 @@ export const quote = (text: RichText) => `> ${decorateText(text)}\n\n`;
 
 export const divider = () => '---\n\n';
 
-export const linkPreview = (url: string) => `{{< embed "${url}" >}}\n\n`;
+export const linkPreview = (url: string) => {
+  return embed(url) ?? `{{< embed "${url}" >}}\n\n`;
+};
 
 export const callout = (text: RichText, emojiIcon?: string) => {
   if (emojiIcon) {
@@ -83,6 +85,11 @@ export const embed = (url: string) => {
   if (parsedUrl.host === 'twitter.com' && parsedUrl.pathname.includes('/status/')) {
     const statusId = parsedUrl.pathname.split('/')[3];
     return `{{< tweet "${statusId}" >}}\n\n`;
+  }
+  // Google slide (pub->embed replace)
+  if (parsedUrl.host === 'docs.google.com' && /^\/presentation\/.+\/pub$/.test(parsedUrl.pathname)) {
+    const embedUrl = url.replace('/pub', '/embed');
+    return `{{< iframe "${embedUrl}" >}}\n\n`;
   }
   return null;
 };

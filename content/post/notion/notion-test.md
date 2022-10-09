@@ -1,7 +1,7 @@
 ---
 title: 'Notionテスト記事'
 date: '2022-02-11T11:47:00.000Z'
-updated_at: '2022-10-08T03:01:00.000Z'
+updated_at: '2022-10-09T01:20:00.000Z'
 tags:
   - 'test'
 draft: true
@@ -330,3 +330,7 @@ This is inline equation: $e=mc^2$
 ## Stackblitz embed
 
 {{< stackblitz "https://stackblitz.com/edit/angular-ivy-qxbz13?embed=1&file=src/app/fancy-button/fancy-button.component.ts" >}}
+
+embed: Google Slide (auto iframe)
+
+{{< iframe "https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/embed" >}}
