@@ -1,8 +1,13 @@
 ---
 title: '発表スライド: Standalone-based Angular App'
-date: 2022-09-28
-updated_at: 2022-10-07T09:39:33+09:00
-tags: ["Angular", "standalone component", "slide"]
+date: '2022-09-28'
+updated_at: '2022-09-28'
+tags:
+  - 'angular'
+  - 'standalone component'
+  - 'presentation'
+draft: false
+source: 'https://www.notion.so/Standalone-based-Angular-App-48d047d843834029a49a35e649f01a9d'
 ---
 
 [Startup Angular #4](https://voicy.connpass.com/event/258261/) で使用した発表スライド
