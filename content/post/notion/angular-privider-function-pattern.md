@@ -1,7 +1,7 @@
 ---
 title: 'Angular: Provider Function Pattern'
 date: '2022-10-16T07:08:00.000Z'
-updated_at: '2022-10-16T09:54:00.000Z'
+updated_at: '2022-10-16T13:24:00.000Z'
 tags:
   - 'angular'
   - 'standalone component'
@@ -162,12 +162,12 @@ export class HeroService {
 @NgModule({})
 export class HeroModule {
   static forRoot(params: HeroServiceParams): ModuleWithProviders {
-		return {
-			ngModule: HeroModule,
-			providers: [
-				HeroService,
-				{ provide: HERO_SERVICE_PARAMS, useValue: params },
-			],
+    return {
+      ngModule: HeroModule,
+      providers: [
+        HeroService,
+        { provide: HERO_SERVICE_PARAMS, useValue: params },
+      ],
     }
 　　　　}
 }
@@ -204,10 +204,10 @@ export class HeroService {
 }
 
 export function provideHeroService(params: HeroServiceParams): Provider[] {
-	return [
-		HeroService,
-		{ provide: HERO_SERVICE_PARAMS, useValue: params },
-	];
+  return [
+    HeroService,
+    { provide: HERO_SERVICE_PARAMS, useValue: params },
+  ];
 }
 
 // application side
