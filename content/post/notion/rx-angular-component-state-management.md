@@ -1,7 +1,7 @@
 ---
 title: 'rx-angular/state を使ったコンポーネントローカル状態管理'
 date: '2022-10-26T06:46:00.000Z'
-updated_at: '2022-10-26T08:50:00.000Z'
+updated_at: '2022-10-26T09:17:00.000Z'
 tags:
   - 'angular'
   - 'rxjs'
@@ -18,7 +18,7 @@ Angular v14 からのスタンドアロンコンポーネントを中心とし�
 
 ちなみに、単純に機能の面だけみれば NgRx Component Store や Elf など他にも同様のライブラリはある。RxAngular を今回取り上げたのは、個人的に筋がいいと思っているのと、それらと比べて知名度がまだ低そうなので持ち上げたいのが理由である。
 
-[https://ngrx.io/guide/component-store/comparison](https://ngrx.io/guide/component-store/comparison)
+[https://ngrx.io/guide/component-store/](https://ngrx.io/guide/component-store/)
 
 {{< embed "https://ngneat.github.io/elf/" >}}
 
