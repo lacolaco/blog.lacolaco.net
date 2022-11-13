@@ -22,7 +22,7 @@
     "notion:fetch": "yarn ts tools/notion-fetch.ts"
   },
   "engines": {
-    "node": "^16.17.0"
+    "node": "^18.0.0"
   },
   "dependencies": {
     "@primer/css": "19.8.2",
