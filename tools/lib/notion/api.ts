@@ -4,12 +4,18 @@ import { BlockObject, PageObject } from './types';
 export class NotionAPI {
   constructor(private readonly client: Client) {}
 
-  async queryAllPages(databaseId: string): Promise<PageObject[]> {
+  async queryAllPages(databaseId: string, filter: { distribution: string }): Promise<PageObject[]> {
     const pages: PageObject[] = [];
     let cursor = null;
     do {
       const { results, next_cursor, has_more } = await this.client.databases.query({
         database_id: databaseId,
+        filter: {
+          property: 'distribution',
+          multi_select: {
+            contains: filter.distribution,
+          },
+        },
         sorts: [{ timestamp: 'created_time', direction: 'descending' }],
       });
       for (const page of results) {

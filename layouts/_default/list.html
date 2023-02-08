@@ -17,7 +17,7 @@
         <li class="pb-6 border-solid border-transparent">
             <div class="flex-auto min-w-0 leading-tight">
                 <div class="flex flex-col items-start gap-y-1">
-                    <a class="text-xl text-default font-bold no-underline" href="{{ .RelPermalink }}">{{ .Title | markdownify | emojify }}</a>
+                    <a class="text-xl text-default font-bold no-underline" href="{{ .RelPermalink }}">{{ .Params.Emoji }} {{ .Title | markdownify | emojify }}</a>
                     <div class="flex flex-row items-center gap-x-2">
                         <span class="text-xs text-muted align-middle">{{ .Date.Format "2006-01-02" }}</span>
                     </div>

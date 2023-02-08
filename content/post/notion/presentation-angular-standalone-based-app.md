@@ -1,6 +1,6 @@
 ---
 title: '発表スライド: Standalone-based Angular App'
-date: '2022-09-28'
+date: '2022-09-28T00:00:00.000Z'
 updated_at: '2022-09-28'
 tags:
   - 'angular'

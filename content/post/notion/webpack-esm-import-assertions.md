@@ -1,7 +1,6 @@
 ---
 title: 'webpack と ES Module Import Assertions についての調査'
 date: '2022-03-09T00:18:00.000Z'
-updated_at: '2022-03-09T01:43:00.000Z'
 tags:
   - 'webpack'
   - 'ESModule'

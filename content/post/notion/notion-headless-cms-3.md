@@ -1,7 +1,6 @@
 ---
 title: 'NotionヘッドレスCMS化記録 (3) GitHub Actionsと自動デプロイ'
 date: '2022-02-15T23:13:00.000Z'
-updated_at: '2022-02-16T00:44:00.000Z'
 tags:
   - 'Notion'
   - 'Markdown'

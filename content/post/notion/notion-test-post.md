@@ -1,10 +1,10 @@
 ---
 title: 'Notionテスト記事'
 date: '2022-02-11T11:47:00.000Z'
-updated_at: '2022-10-09T01:20:00.000Z'
 tags:
   - 'test'
 draft: true
+emoji: '📝'
 source: 'https://www.notion.so/Notion-80f5c54939b64e7ab25825bdb35f1cae'
 ---
 
@@ -22,9 +22,9 @@ Multi-line **paragraph1**
 **_Multi-line_** ~~paragraph2~~  
 `Multi-line` _**paragraph3**_
 
-{{< figure src="/img/notion-test/7b83dc98-a03f-425c-a4a1-df0fe492714b/angular_(1).png" caption="" >}}
+{{< figure src="/img/notion-test-post/7b83dc98-a03f-425c-a4a1-df0fe492714b/angular_(1).png" caption="" >}}
 
-{{< figure src="/img/notion-test/193122c7-3622-4210-ad72-3ac7363e970c/angular_(1).png" caption="" >}}
+{{< figure src="/img/notion-test-post/193122c7-3622-4210-ad72-3ac7363e970c/angular_(1).png" caption="This is a caption text" >}}
 
 - List item 1
 - List item 2

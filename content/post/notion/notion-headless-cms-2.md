@@ -1,7 +1,6 @@
 ---
 title: 'NotionヘッドレスCMS化記録 (2) ページプロパティの読み取りとMarkdown生成'
 date: '2022-02-13T23:59:00.000Z'
-updated_at: '2022-02-14T00:43:00.000Z'
 tags:
   - 'Notion'
   - 'TypeScript'

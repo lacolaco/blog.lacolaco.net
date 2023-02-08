@@ -1,7 +1,6 @@
 ---
 title: 'Rust+wasmでSVGを生成したら10倍速くなった'
 date: '2022-02-26T03:29:00.000Z'
-updated_at: '2022-02-26T08:15:00.000Z'
 tags:
   - 'Rust'
   - 'WebAssembly'

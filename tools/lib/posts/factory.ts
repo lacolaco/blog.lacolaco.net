@@ -2,7 +2,7 @@ import { defer, forkJoin, lastValueFrom } from 'rxjs';
 import { BlockObject } from '../notion';
 import { renderPage, renderRichText } from './renderer/renderer';
 import { ImagesRepository, LocalPostsRepository } from './repository';
-import { NotionPostPage, TaskFactory } from './types';
+import { NotionPostPage, PostAttributes, TaskFactory } from './types';
 import { createPagePropertyMap } from './utils';
 
 export class LocalPostFactory {
@@ -17,7 +17,7 @@ export class LocalPostFactory {
   }
 
   private async createPost(page: NotionPostPage) {
-    const { created_time: createdAt, last_edited_time: updatedAt, archived } = page;
+    const { created_time: createdAt, archived, icon } = page;
     if (archived) {
       return;
     }
@@ -33,13 +33,17 @@ export class LocalPostFactory {
       console.warn(`title or slug is null: ${JSON.stringify(page, null, 2)}`);
       return;
     }
-    const props = {
+    const emoji = icon?.type === 'emoji' ? icon.emoji : undefined;
+
+    const publishedAt = new Date(createdAtOverride ?? createdAt);
+    const props: PostAttributes = {
       title,
-      date: createdAtOverride ?? createdAt,
-      updated_at: updatedAtOverride ?? updatedAt,
+      date: publishedAt.toISOString(),
+      updated_at: updatedAtOverride ?? undefined,
       tags,
       summary: summary.length > 0 ? renderRichText(summary) : undefined,
       draft: !publishable,
+      emoji,
       source: page.url,
     };
     // render post content

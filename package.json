@@ -6,7 +6,7 @@
   "author": "Suguru Inatomi <suguru.inatomi@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "ts": "node -r esbuild-register",
+    "tsx": "node -r esbuild-register",
     "build": "run-s 'build:css' 'build:js' 'build:hugo'",
     "build:css": "postcss src/styles.css -o assets/css/styles.css",
     "build:js": "esbuild src/main.ts --bundle --minify --outfile=assets/js/main.js",
@@ -19,7 +19,7 @@
     "copy-vendor": "rsync -r node_modules/katex static/vendor/ && rsync -r node_modules/prismjs static/vendor/",
     "format": "prettier --write 'src' 'tools'",
     "postinstall": "yarn copy-vendor",
-    "notion:fetch": "yarn ts tools/notion-fetch.ts"
+    "notion:fetch": "yarn tsx tools/notion-fetch.ts"
   },
   "engines": {
     "node": "^18.0.0"

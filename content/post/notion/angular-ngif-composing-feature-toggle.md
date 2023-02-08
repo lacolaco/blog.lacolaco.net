@@ -1,7 +1,6 @@
 ---
 title: 'Angular: NgIfを合成したフィーチャートグルディレクティブ'
 date: '2023-02-08T05:10:00.000Z'
-updated_at: '2023-02-08T11:45:00.000Z'
 tags:
   - 'angular'
   - 'directive'
