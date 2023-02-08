@@ -1,7 +1,7 @@
 ---
 title: 'Angular Component Visual Testing with Cypress'
 date: '2022-10-08T01:26:00.000Z'
-updated_at: '2022-10-08T03:03:00.000Z'
+updated_at: '2022-10-08'
 tags:
   - 'angular'
   - 'testing'
