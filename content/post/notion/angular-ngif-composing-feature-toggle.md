@@ -3,8 +3,6 @@ title: 'Angular: NgIfを合成したフィーチャートグルディレクテ�
 date: '2023-02-08T05:10:00.000Z'
 tags:
   - 'angular'
-  - 'directive'
-  - 'hostDirectives'
 summary: 'Angularの組み込みディレクティブ `NgIf` を使って、ある条件を満たすときにだけビューの一部分を描画するケースは多い。今回はそのようなフィーチャートグルのユースケースをAngular v15で導入された `hostDirectives` 機能を使って実装してみよう。'
 draft: false
 source: 'https://www.notion.so/Angular-NgIf-c30c4744b39047558495a126d32ad0d9'
