@@ -20,6 +20,10 @@ export function renderPage(
   });
 }
 
+export function renderRichText(text: md.RichText): string {
+  return md.decorateText(text);
+}
+
 export function renderBlock(block: BlockObject, context: RendererContext): string | null {
   const stringify = (node: BlockObject, contents: string[]): string | null => {
     switch (node.type) {

@@ -1,11 +1,12 @@
 ---
 title: 'Angular: provideRouter によるルーティング設定 (v14.2)'
 date: '2022-08-29T12:18:00.000Z'
-updated_at: '2022-08-29T14:56:00.000Z'
+updated_at: '2022-08-29'
 tags:
   - 'angular'
   - 'router'
   - 'standalone component'
+summary: 'Angular v14.2で追加された Routerパッケージの `provideRouter` APIは、 `RouterModule.forRoot` を使わずにルーティング設定を行うことができる。このAPIはアプリケーションがスタンドアロンコンポーネントを使っていなくても使用できる。'
 draft: false
 source: 'https://www.notion.so/Angular-provideRouter-v14-2-df74379c5f804dff9fb816ae978af4a8'
 ---

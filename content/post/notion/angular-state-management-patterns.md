@@ -1,11 +1,12 @@
 ---
 title: 'Angularアプリケーションの状態管理パターン'
 date: '2022-05-11T02:10:00.000Z'
-updated_at: '2022-05-18T02:58:00.000Z'
+updated_at: '2023-02-08T11:31:00.000Z'
 tags:
   - 'angular'
   - 'State Management'
   - '状態管理'
+summary: 'Angularアプリケーションの状態管理の方法はさまざまな実装がありえるが、その中でも典型的ないくつかのパターンを、それがどのようなニーズがあって選ばれるのかという考察を踏まえながら列挙する。'
 draft: false
 source: 'https://www.notion.so/Angular-49cd00ee40f044eca73c43f946510dff'
 ---

@@ -1,11 +1,12 @@
 ---
 title: 'Angular: Provider Function Pattern'
 date: '2022-10-16T07:08:00.000Z'
-updated_at: '2022-10-16T13:24:00.000Z'
+updated_at: '2022-10-16'
 tags:
   - 'angular'
   - 'standalone component'
   - 'dependency injection'
+summary: 'Angular v14から導入された Standalone API に適応する形で、標準ライブラリやサードパーティライブラリが提供するAPIにある共通のパターンが表れ始めた。この記事では、私が “Provider Function” と呼んでいるその新しいパターンについて解説する。'
 draft: false
 source: 'https://www.notion.so/Angular-Provider-Function-Pattern-613bc5ddc46c4c0a8e30b0f0dc1b8d4d'
 ---

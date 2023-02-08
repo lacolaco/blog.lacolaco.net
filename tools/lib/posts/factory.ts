@@ -1,6 +1,6 @@
 import { defer, forkJoin, lastValueFrom } from 'rxjs';
 import { BlockObject } from '../notion';
-import { renderPage } from './renderer/renderer';
+import { renderPage, renderRichText } from './renderer/renderer';
 import { ImagesRepository, LocalPostsRepository } from './repository';
 import { NotionPostPage, TaskFactory } from './types';
 import { createPagePropertyMap } from './utils';
@@ -25,6 +25,7 @@ export class LocalPostFactory {
     const title = pageProps.get('title', 'title')?.title[0]?.plain_text;
     const slug = pageProps.get('Y~YJ', 'rich_text')?.rich_text[0]?.plain_text ?? null;
     const tags = pageProps.get('v%5EIo', 'multi_select')?.multi_select.map((node) => node.name) ?? [];
+    const summary = pageProps.get('A%3DGM', 'rich_text')?.rich_text ?? [];
     const publishable = pageProps.get('vssQ', 'checkbox')?.checkbox ?? false;
     const createdAtOverride = pageProps.get('%3CDyF', 'date')?.date?.start ?? null;
     const updatedAtOverride = pageProps.get('_sHV', 'date')?.date?.start ?? null;
@@ -37,6 +38,7 @@ export class LocalPostFactory {
       date: createdAtOverride ?? createdAt,
       updated_at: updatedAtOverride ?? updatedAt,
       tags,
+      summary: summary.length > 0 ? renderRichText(summary) : undefined,
       draft: !publishable,
       source: page.url,
     };

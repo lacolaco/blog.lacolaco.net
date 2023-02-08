@@ -1,20 +1,21 @@
 ---
 title: 'rx-angular/state を使ったコンポーネントローカル状態管理'
 date: '2022-10-26T06:46:00.000Z'
-updated_at: '2022-10-26T09:17:00.000Z'
+updated_at: '2022-10-26'
 tags:
   - 'angular'
   - 'rxjs'
   - 'rx-angular'
   - 'State Management'
   - 'standalone component'
+summary: 'Angular v14からのスタンドアロンコンポーネントを中心とした新しい流れの中で、RxAngularファミリーの `@rx-angular/state` を使ったAngularコンポーネントの状態管理が個人的に気に入っているので紹介したい。'
 draft: false
 source: 'https://www.notion.so/rx-angular-state-e7898e37330444828657dff38ca1f349'
 ---
 
-{{< embed "https://www.rx-angular.io/docs/state" >}}
-
 Angular v14 からのスタンドアロンコンポーネントを中心とした新しい流れの中で、RxAngular ファミリーの `@rx-angular/state` を使った Angular コンポーネントの状態管理が個人的に気に入っているので紹介したい。
+
+{{< embed "https://www.rx-angular.io/docs/state" >}}
 
 ちなみに、単純に機能の面だけみれば NgRx Component Store や Elf など他にも同様のライブラリはある。RxAngular を今回取り上げたのは、個人的に筋がいいと思っているのと、それらと比べて知名度がまだ低そうなので持ち上げたいのが理由である。
 

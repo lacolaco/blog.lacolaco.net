@@ -29,7 +29,7 @@ type EquationNode = {
 
 type RichTextNode = TextNode | MentionNode | EquationNode;
 
-type RichText = Array<RichTextNode>;
+export type RichText = Array<RichTextNode>;
 
 export const heading = (text: RichText, level: 1 | 2 | 3) => `${'#'.repeat(level)} ${decorateText(text)}\n\n`;
 export const paragraph = (text: RichText) => `\n${decorateText(text)}\n\n`;
@@ -107,7 +107,7 @@ function indent(text: string): string {
   return `\t${text}`;
 }
 
-function decorateText(text: RichText): string {
+export function decorateText(text: RichText): string {
   const renderNode = (node: RichTextNode): string => {
     const { type, plain_text, href, annotations } = node;
     if (type === 'mention') {

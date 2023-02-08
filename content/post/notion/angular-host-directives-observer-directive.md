@@ -1,13 +1,14 @@
 ---
 title: 'Angular v15 hostDirectivesのユースケース検討: 状態監視系ディレクティブの合成'
 date: '2022-10-30T09:53:00.000Z'
-updated_at: '2022-10-30T13:42:00.000Z'
+updated_at: '2022-10-30'
 tags:
   - 'angular'
   - 'directive'
   - 'hostDirectives'
   - 'example'
   - 'IntersectionObserver'
+summary: 'この記事ではAngular v15で追加される `@Directive.hostDirectives` の実用的なユースケースとして、状態監視系ディレクティブを合成する使い道を検討する。'
 draft: false
 source: 'https://www.notion.so/Angular-v15-hostDirectives-8921bbca9dc243128119845110ae380e'
 ---
