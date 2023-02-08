@@ -7,17 +7,6 @@
   --color-syntax-highlight-tag: #22863a;
   --color-syntax-highlight-keyword: #d73a49;
   --color-syntax-highlight-string: #032f62;
-
-  /* Dark Mode */
-  @media (prefers-color-scheme: dark) {
-    --color-syntax-highlight-comment: #8b949e;
-    --color-syntax-highlight-literal: #79c0ff;
-    --color-syntax-highlight-entity: #d2a8ff;
-    --color-syntax-highlight-class-name: #c9d1d9;
-    --color-syntax-highlight-tag: #7ee787;
-    --color-syntax-highlight-keyword: #ff7b72;
-    --color-syntax-highlight-string: #a5d6ff;
-  }
 }
 
 /* Theming */

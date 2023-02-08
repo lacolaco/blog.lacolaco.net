@@ -13,17 +13,4 @@
   --color-header-text: #f0f6fc;
   --color-header-text-muted: rgba(240, 246, 252, 0.7);
   --color-header-bg: #161b22;
-
-  @media (prefers-color-scheme: dark) {
-    --color-text-default: #c9d1d9;
-    --color-text-muted: #8b949e;
-    --color-text-accent: #58a6ff;
-
-    --color-bg-default: #0d1117;
-    --color-bg-muted: rgba(110, 118, 129, 0.4);
-    --color-bg-subtle: #161b22;
-
-    --color-border-default: #30363d;
-    --color-border-muted: #21262d;
-  }
 }
