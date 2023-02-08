@@ -1,7 +1,7 @@
 ---
 title: 'GitHub Actions: setup-nodeのNode.jsバージョンをpackage.jsonで指定する'
 date: '2022-10-03T13:39:00.000Z'
-updated_at: '2022-10-03T13:56:00.000Z'
+updated_at: '2022-10-03'
 tags:
   - 'GitHub Actions'
   - 'Node.js'

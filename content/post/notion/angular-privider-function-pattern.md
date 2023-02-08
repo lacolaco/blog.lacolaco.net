@@ -1,7 +1,7 @@
 ---
 title: 'Angular: Provider Function Pattern'
 date: '2022-10-16T07:08:00.000Z'
-updated_at: '2022-10-16T13:24:00.000Z'
+updated_at: '2022-10-16'
 tags:
   - 'angular'
   - 'standalone component'

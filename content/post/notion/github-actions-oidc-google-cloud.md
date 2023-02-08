@@ -1,7 +1,7 @@
 ---
 title: 'Google Cloud の Workload Identity 連携でGitHub Actionsから認証する'
 date: '2022-07-30T12:36:00.000Z'
-updated_at: '2022-07-31T02:36:00.000Z'
+updated_at: '2022-07-30'
 tags:
   - 'GitHub Actions'
   - 'Google Cloud'

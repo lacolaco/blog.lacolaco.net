@@ -1,7 +1,7 @@
 ---
 title: 'Angular: browserslist設定ファイルの削除とオプトイン (v15)'
 date: '2022-09-15T00:09:00.000Z'
-updated_at: '2022-09-15T00:20:00.000Z'
+updated_at: '2022-09-15'
 tags:
   - 'angular'
   - 'commit note'
@@ -11,9 +11,9 @@ draft: false
 source: 'https://www.notion.so/Angular-browserslist-v15-5d1a14f0328a4165a2e580e75aefe9ec'
 ---
 
-{{< embed "https://github.com/angular/angular-cli/commit/9beb878e2eecd32e499c8af557f22f46548248fc" >}}
-
 Angular CLI は `ng new` や `ng generate application` で生成されるアプリケーションテンプレートから `.browserslistrc` ファイルを削除する。
+
+{{< embed "https://github.com/angular/angular-cli/commit/9beb878e2eecd32e499c8af557f22f46548248fc" >}}
 
 Angular CLI はフレームワークがデフォルトでサポートするブラウザセットを内部で管理しており、同じ設定をすべてのアプリケーションで二重に管理する必要はないとされたためだ。
 

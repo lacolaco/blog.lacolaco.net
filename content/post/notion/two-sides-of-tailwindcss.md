@@ -1,7 +1,7 @@
 ---
 title: 'Tailwind CSSの二面性、デザインシステムを借りるということ'
 date: '2022-07-24T00:52:00.000Z'
-updated_at: '2022-07-24T14:05:00.000Z'
+updated_at: '2022-07-24'
 tags:
   - '雑記'
   - 'tailwindcss'

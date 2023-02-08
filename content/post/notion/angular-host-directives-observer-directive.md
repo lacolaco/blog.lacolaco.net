@@ -1,7 +1,7 @@
 ---
 title: 'Angular v15 hostDirectivesのユースケース検討: 状態監視系ディレクティブの合成'
 date: '2022-10-30T09:53:00.000Z'
-updated_at: '2022-10-30T13:42:00.000Z'
+updated_at: '2022-10-30'
 tags:
   - 'angular'
   - 'directive'

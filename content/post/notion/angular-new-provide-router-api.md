@@ -1,7 +1,7 @@
 ---
 title: 'Angular: provideRouter によるルーティング設定 (v14.2)'
 date: '2022-08-29T12:18:00.000Z'
-updated_at: '2022-08-29T14:56:00.000Z'
+updated_at: '2022-08-29'
 tags:
   - 'angular'
   - 'router'

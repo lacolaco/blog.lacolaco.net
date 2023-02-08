@@ -1,7 +1,7 @@
 ---
 title: 'Angular: ボタンコンポーネントの実装'
 date: '2022-07-20T02:25:00.000Z'
-updated_at: '2022-07-20T08:03:00.000Z'
+updated_at: '2022-07-20'
 tags:
   - 'angular'
   - 'components'

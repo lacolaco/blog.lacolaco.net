@@ -12,7 +12,9 @@ draft: false
 source: 'https://www.notion.so/Angular-Component-Visual-Testing-with-Cypress-06291552322a41529379de518e857222'
 ---
 
-Angular コンポーネントの見た目が崩れていないことを確認する画像回帰テストを、できるだけ最小ステップで既存の Angular CLI プロジェクトに導入する手順を紹介する。いくつか検討したが、この方法が現状では比較的追加要素が少なく、導入上の困難が少ないと思われる。もっといい方法を知っている人がいたらぜひ Twitter [@laco2net](https://twitter.com/laco2net) などで教えてほしい。
+Angular コンポーネントの見た目が崩れていないことを確認する画像回帰テストを、できるだけ最小ステップで既存の Angular CLI プロジェクトに導入する手順を紹介する。
+
+いくつか検討したが、この方法が現状では比較的追加要素が少なく、導入上の困難が少ないと思われる。もっといい方法を知っている人がいたらぜひ Twitter [@laco2net](https://twitter.com/laco2net) などで教えてほしい。
 
 ## サンプルレポジトリ
 
