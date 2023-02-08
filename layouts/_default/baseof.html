@@ -3,16 +3,22 @@
   <head>
     {{- partial "head.html" . -}}
   </head>
-  <body class="bg-default text-default">
-    <header>
-      {{- partial "header.html" . -}}
+  <body>
+    <header class="bg-header">
+      <div class="container mx-auto px-4">
+        {{- partial "header.html" . -}}
+      </div>
     </header>
-    <main class="p-4 lg:p-10 lg:max-w-screen-lg lg:mx-auto">
+    <main>
+      <div class="container mx-auto px-4 py-4">
       {{- block "main" . }}{{- end }}
+      </div>
     </main>
 
-    <footer class="p-4 lg:p-10">
-      {{- partial "footer.html" . -}}
+    <footer>
+      <div class="container mx-auto px-4 py-4">
+        {{- partial "footer.html" . -}}
+      </div>
     </footer>
 
     {{- partial "body-scripts.html" . -}}

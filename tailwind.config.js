@@ -10,6 +10,10 @@ module.exports = {
   content: ['layouts/**/*.html', 'content/**/*.{md,html}'],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['"M PLUS 1p"', 'sans-serif'],
+        mono: ['"Source Code Pro"', 'monospace'],
+      },
       colors: {},
       textColor: {
         default: 'var(--color-text-default)',
@@ -62,7 +66,9 @@ module.exports = {
       });
       addComponents({
         '.markdown-body': {
+          fontFamily: theme('fontFamily.sans'),
           code: {
+            fontFamily: theme('fontFamily.mono'),
             backgroundColor: theme('backgroundColor.muted'),
           },
           blockquote: {

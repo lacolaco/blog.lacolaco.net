@@ -3,7 +3,7 @@
   --color-text-muted: #57606a;
   --color-text-accent: #0969da;
 
-  --color-bg-default: #ffffff;
+  --color-bg-default: rgba(255, 255, 255, 0.9);
   --color-bg-muted: rgba(175, 184, 193, 0.2);
   --color-bg-subtle: #f6f8fa;
 
@@ -13,4 +13,10 @@
   --color-header-text: #f0f6fc;
   --color-header-text-muted: rgba(240, 246, 252, 0.7);
   --color-header-bg: #161b22;
+}
+
+body {
+  font-family: theme(fontFamily.sans);
+  color: theme(textColor.default);
+  background-color: theme(backgroundColor.default);
 }

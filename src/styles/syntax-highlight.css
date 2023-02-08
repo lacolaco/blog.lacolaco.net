@@ -13,6 +13,7 @@
 
 code[class*='language-'],
 pre[class*='language-'] {
+  font-family: theme('fontFamily.mono');
   color: theme('textColor.default');
 }
 
