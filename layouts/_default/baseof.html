@@ -5,18 +5,18 @@
   </head>
   <body>
     <header class="bg-header">
-      <div class="container mx-auto px-4">
+      <div class="container">
         {{- partial "header.html" . -}}
       </div>
     </header>
     <main>
-      <div class="container mx-auto px-4 py-4">
+      <div class="container py-4">
       {{- block "main" . }}{{- end }}
       </div>
     </main>
 
     <footer>
-      <div class="container mx-auto px-4 py-4">
+      <div class="container py-4">
         {{- partial "footer.html" . -}}
       </div>
     </footer>

@@ -27,6 +27,7 @@ export class LocalPostFactory {
     const tags = pageProps.get('v%5EIo', 'multi_select')?.multi_select.map((node) => node.name) ?? [];
     const summary = pageProps.get('A%3DGM', 'rich_text')?.rich_text ?? [];
     const publishable = pageProps.get('vssQ', 'checkbox')?.checkbox ?? false;
+    const canonicalUrl = pageProps.get('zD%3A%7D', 'url')?.url ?? null;
     const createdAtOverride = pageProps.get('%3CDyF', 'date')?.date?.start ?? null;
     const updatedAtOverride = pageProps.get('_sHV', 'date')?.date?.start ?? null;
     if (title == null || slug == null) {
@@ -45,6 +46,7 @@ export class LocalPostFactory {
       draft: !publishable,
       emoji,
       source: page.url,
+      canonicalUrl: canonicalUrl ?? undefined,
     };
     // render post content
     const deferredTasks: Array<TaskFactory> = [];

@@ -19,4 +19,5 @@ export type PostAttributes = {
   readonly draft: boolean;
   readonly emoji?: string;
   readonly source: string;
+  readonly canonicalUrl?: string;
 };

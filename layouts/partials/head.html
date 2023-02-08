@@ -28,3 +28,7 @@
 
 {{ $style := resources.Get "css/styles.css" | resources.Fingerprint }}
 <link rel="stylesheet" href="{{ $style.RelPermalink }}">
+
+{{ if .Params.canonicalUrl }}
+<link rel="canonical" href="{{ .Params.canonicalUrl }}">
+{{ end }}

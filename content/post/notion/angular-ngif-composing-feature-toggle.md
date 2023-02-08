@@ -3,11 +3,10 @@ title: 'Angular: NgIfを合成したフィーチャートグルディレクテ�
 date: '2023-02-08T05:10:00.000Z'
 tags:
   - 'angular'
-  - 'directive'
-  - 'hostDirectives'
 summary: 'Angularの組み込みディレクティブ `NgIf` を使って、ある条件を満たすときにだけビューの一部分を描画するケースは多い。今回はそのようなフィーチャートグルのユースケースをAngular v15で導入された `hostDirectives` 機能を使って実装してみよう。'
 draft: false
 source: 'https://www.notion.so/Angular-NgIf-c30c4744b39047558495a126d32ad0d9'
+canonicalUrl: 'https://zenn.dev/lacolaco/articles/angular-ngif-composing-feature-toggle'
 ---
 
 Angular の組み込みディレクティブ `NgIf` を使って、ある条件を満たすときにだけビューの一部分を描画するケースは多い。たとえば、特定の権限を持つユーザーにだけ表示されるビューを実装することがある。 `NgIf` を直接使う場合には、その条件ロジックをテンプレートあるいはコンポーネントで持つことになる。一箇所だけならよいが、同じようなロジックを多用するならそのロジックを含めて再利用可能にしたい。

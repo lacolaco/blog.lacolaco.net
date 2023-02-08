@@ -31,6 +31,16 @@ module.exports = {
       borderColor: {
         default: 'var(--color-border-default)',
       },
+      container: {
+        center: true,
+        padding: {
+          DEFAULT: '1rem',
+          sm: '1rem',
+          lg: '2rem',
+          xl: '8rem',
+          '2xl': '12rem',
+        },
+      },
     },
   },
   plugins: [
