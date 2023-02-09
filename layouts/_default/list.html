@@ -21,7 +21,7 @@
                     <div class="flex flex-row items-center gap-x-2">
                         <span class="text-xs text-muted align-middle">{{ .Date.Format "2006-01-02" }}</span>
                     </div>
-                    <div class="text-sm text-muted leading-normal markdown-body">
+                    <div class="text-sm text-muted leading-normal break-all markdown-body">
                         {{ .Summary | markdownify | emojify }}
                     </div>
                 </div>
