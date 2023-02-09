@@ -2,6 +2,7 @@
 {{ $LastUpdatedAt := (time (index .Params "updated_at" | default .Date)) }}
 <article class="">
   <header class="mb-4">
+    <h1 class="text-3xl leading-tight">{{ .Params.Emoji }} {{ .Title | markdownify | emojify }}</h1>
     <div class="meta">
       {{ if .Date -}}
       <span class="text-small text-muted">{{ .Date.Format "2006-01-02" }}</span>
@@ -12,11 +13,6 @@
       {{ if .Params.tags -}}
       {{ end -}}
     </div>
-
-    <div class="pagehead leading-tight">
-      <h1>{{ .Params.Emoji }} {{ .Title | markdownify | emojify }}</h1>
-    </div>
-
     <div class="py-1">
       {{ range .Params.tags -}}
       {{ partial "tag.html" . -}}
