@@ -40,7 +40,7 @@
     "@types/prismjs": "1.26.0",
     "@types/tailwindcss": "3.0.11",
     "autoprefixer": "10.4.13",
-    "cssnano": "5.1.14",
+    "cssnano": "5.1.15",
     "dotenv": "16.0.3",
     "esbuild": "0.17.5",
     "esbuild-register": "3.4.2",
