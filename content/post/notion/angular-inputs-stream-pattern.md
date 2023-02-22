@@ -1,5 +1,5 @@
 ---
-title: 'Angular: Inputs Stream パターン'
+title: 'Angular: Input を Observable で扱えるようにする Inputs Stream パターン'
 date: '2023-02-14T00:40:00.000Z'
 tags:
   - 'angular'
@@ -7,7 +7,7 @@ tags:
   - 'rx-angular'
 summary: 'Angular コンポーネントへのインプット `@Input()` に渡される値の変化を、 `Observable` で扱いたいことは少なくない。今回は最近試していて手触りがよい `@rx-angular/state` を使ったインプットの Observable化を紹介する。'
 draft: false
-source: 'https://www.notion.so/Angular-Inputs-Stream-02ff5a3536af4d6996091ea3f818ad95'
+source: 'https://www.notion.so/Angular-Input-Observable-Inputs-Stream-02ff5a3536af4d6996091ea3f818ad95'
 canonicalUrl: 'https://zenn.dev/lacolaco/articles/angular-inputs-stream-pattern'
 ---
 
