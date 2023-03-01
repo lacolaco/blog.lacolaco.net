@@ -34,9 +34,14 @@ export type RichText = Array<RichTextNode>;
 export const heading = (text: RichText, level: 1 | 2 | 3) => `${'#'.repeat(level)} ${decorateText(text)}\n\n`;
 export const paragraph = (text: RichText) => `\n${decorateText(text)}\n\n`;
 
-export const codeBlock = (text: RichText, language?: string) => {
-  const delimiter = '```';
-  return `${delimiter}${language ?? ''}\n${plainText(text)}\n${delimiter}\n\n`;
+export const codeBlock = (text: RichText, language: string, caption: RichText) => {
+  switch (language) {
+    case 'mermaid':
+      return `<div class="text-center">\n{{< mermaid >}}\n${plainText(text)}\n{{< /mermaid >}}\n</div>\n\n`;
+    default:
+      const delimiter = '```';
+      return `${delimiter}${language ?? ''}\n${plainText(text)}\n${delimiter}\n\n`;
+  }
 };
 
 export const bulletedListItem = (text: RichText, contents: string[]) => {
