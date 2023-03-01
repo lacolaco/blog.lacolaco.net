@@ -36,7 +36,7 @@ export function renderBlock(block: BlockObject, context: RendererContext): strin
       case 'paragraph':
         return md.paragraph(node.paragraph.rich_text);
       case 'code':
-        return md.codeBlock(node.code.rich_text, node.code.language);
+        return md.codeBlock(node.code.rich_text, node.code.language, node.code.caption);
       case 'bulleted_list_item':
         return md.bulletedListItem(node.bulleted_list_item.rich_text, contents);
       case 'numbered_list_item':

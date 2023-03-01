@@ -3,3 +3,7 @@
 
 <script async src="https://cse.google.com/cse.js?cx=016749829816792588257:vx30glhznqb"></script>
 
+{{- if .HasShortcode "mermaid" }}
+<script type="module" src="/vendor/mermaid/dist/mermaid.esm.min.mjs"></script>
+<script>mermaid.initialize({ startOnLoad: true });</script>
+{{- end }}

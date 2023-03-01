@@ -82,6 +82,16 @@ $$
 
 This is inline equation: {{< raw >}}$e=mc^2${{< /raw >}}
 
+<div class="text-center">
+{{< mermaid >}}
+graph TD;
+  A-->B;
+  A-->C;
+  B-->D;
+  C-->D;
+{{< /mermaid >}}
+</div>
+
 <pre hidden data-blocktype="table_of_contents">
 {
   "object": "block",

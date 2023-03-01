@@ -16,7 +16,7 @@
     "watch:css": "postcss src/styles.css -o assets/css/styles.css --watch --map",
     "watch:js": "esbuild src/main.ts --watch --bundle --outfile=assets/js/main.js --sourcemap",
     "watch:hugo": "hugo server -D",
-    "copy-vendor": "rsync -r node_modules/katex static/vendor/ && rsync -r node_modules/prismjs static/vendor/",
+    "copy-vendor": "rsync -r node_modules/katex static/vendor/ && rsync -r node_modules/prismjs static/vendor/ && rsync -r node_modules/mermaid static/vendor/",
     "format": "prettier --write 'src' 'tools'",
     "postinstall": "yarn copy-vendor",
     "notion:fetch": "yarn tsx tools/notion-fetch.ts"
@@ -29,6 +29,7 @@
     "anchor-js": "4.3.1",
     "date-fns": "2.29.3",
     "katex": "0.16.4",
+    "mermaid": "^10.0.0",
     "prismjs": "1.29.0",
     "rxjs": "7.8.0"
   },
