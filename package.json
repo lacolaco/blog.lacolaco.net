@@ -25,7 +25,7 @@
     "node": "^18.0.0"
   },
   "dependencies": {
-    "@primer/css": "19.8.2",
+    "@primer/css": "20.8.3",
     "anchor-js": "4.3.1",
     "date-fns": "2.29.3",
     "katex": "0.16.4",
