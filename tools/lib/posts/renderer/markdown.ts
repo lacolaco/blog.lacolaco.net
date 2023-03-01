@@ -68,7 +68,8 @@ export const image = (url: string, caption: RichText) => {
 };
 
 export const equation = (expression: string) => {
-  return `$$\n${expression}\n$$\n\n`;
+  // 数式内の文字列をMarkdownとして解釈しないようにする
+  return `{{< raw >}}\n\$\$\n${expression}\n\$\$\n{{< /raw >}}\n\n`;
 };
 
 export const details = (summary: RichText, contents: string[]) => {
@@ -115,7 +116,7 @@ export function decorateText(text: RichText): string {
       return '';
     }
     if (type === 'equation') {
-      return `$${plain_text}$`;
+      return `{{< raw >}}\$${plain_text}\${{< /raw >}}`;
     }
     if (annotations.code) {
       return `\`${plain_text}\``;
