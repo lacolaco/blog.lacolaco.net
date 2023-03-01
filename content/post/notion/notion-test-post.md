@@ -72,11 +72,15 @@ Image in toggle
 
 {{< youtube "TmWIrBPE6Bc" >}}
 
+{{< raw >}}
+
 $$
 e=mc^2
 $$
 
-This is inline equation: $e=mc^2$
+{{< /raw >}}
+
+This is inline equation: {{< raw >}}$e=mc^2${{< /raw >}}
 
 <pre hidden data-blocktype="table_of_contents">
 {
