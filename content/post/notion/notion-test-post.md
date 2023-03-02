@@ -72,15 +72,15 @@ Image in toggle
 
 {{< youtube "TmWIrBPE6Bc" >}}
 
-{{< raw >}}
+{{< katex >}}
 
 $$
 e=mc^2
 $$
 
-{{< /raw >}}
+{{< /katex >}}
 
-This is inline equation: {{< raw >}}$e=mc^2${{< /raw >}}
+This is inline equation: {{< katex >}}$e=mc^2${{< /katex >}}
 
 <div class="text-center">
 {{< mermaid >}}

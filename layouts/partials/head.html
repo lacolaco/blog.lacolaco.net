@@ -23,7 +23,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1p:wght@400;700&family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
 
+
+{{- if .HasShortcode "katex" }}
 <link rel="stylesheet" href="/vendor/katex/dist/katex.min.css" />
+{{- end }}
+
 <link rel="stylesheet" href="/vendor/prismjs/plugins/toolbar/prism-toolbar.css" />
 
 {{ $style := resources.Get "css/styles.css" | resources.Fingerprint }}
@@ -32,3 +36,5 @@
 {{ if .Params.canonicalUrl }}
 <link rel="canonical" href="{{ .Params.canonicalUrl }}">
 {{ end }}
+
+
