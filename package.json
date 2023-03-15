@@ -40,7 +40,7 @@
     "@types/prettier": "2.7.2",
     "@types/prismjs": "1.26.0",
     "@types/tailwindcss": "3.0.11",
-    "autoprefixer": "10.4.13",
+    "autoprefixer": "10.4.14",
     "cssnano": "5.1.15",
     "dotenv": "16.0.3",
     "esbuild": "0.17.11",
