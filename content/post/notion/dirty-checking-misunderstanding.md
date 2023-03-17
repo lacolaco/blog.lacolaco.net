@@ -15,7 +15,11 @@ Angular のレンダリングメカニズムや変更検知などの文脈で �
 
 Angular のレンダリングメカニズムは、コンポーネントの状態が変更されたことを検知して再レンダリングするが、これは言いかえればコンポーネントが Dirty になったことを検知している。Dirty なコンポーネントを検知するとレンダリング処理が実行され、コンポーネントとビューを同期したあとにコンポーネントを Pristine に戻す。これを繰り返している。
 
-`ChangeDetectorRef.markAsDirty()` という API はまさにこのメカニズムを象徴している。呼び出し元のコンポーネントを明示的に Dirty 状態に遷移させて、再レンダリングの必要があることをフレームワークに伝えることができる。
+`ChangeDetectorRef.markForCheck()` という API はこのメカニズムを象徴している。呼び出し元のコンポーネントを明示的に Dirty 状態に遷移させて、再レンダリングの必要があることをフレームワークに伝えることができる。
+
+{{< embed "https://angular.io/api/core/ChangeDetectorRef#markforcheck" >}}
+
+> Components are normally marked as dirty (in need of rerendering) when inputs have changed or events have fired in the view. Call this method to ensure that a component is checked even if these triggers have not occurred.
 
 同様に、Angular のフォーム API においても各コントロールが Dirty と Pristine の状態を持つ。同じ空文字列であってもユーザーがまだ触れていない状態か、ユーザーが触れた上での空なのかは意味が異なる。この文脈でも `FormControl.markAsDirty()` と`FormControl.markAsPristine()` という API がある。Dirty/Pristine という状態概念は Angular の文脈のなかで一貫した基礎的な用語であるといえる。
 
