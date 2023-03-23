@@ -1,5 +1,5 @@
 ---
-title: 'YAPC::Kyoto 2023に参加した'
+title: 'YAPC::Kyoto 2023 に参加した '
 date: '2023-03-19T15:14:00.000Z'
 tags:
   - 'Random'
@@ -21,9 +21,9 @@ YAPC::Kyoto 2023 に一般参加者として参加した。YAPC 自体が初め�
 
 ## **地方のエンジニアが作る日本の IT コミュニティの未来**
 
-{{< tweet "1637273660452147200" >}}
+{{< tweet user="laco2net" id="1637273660452147200" >}}
 
-{{< tweet "1637272683368034306" >}}
+{{< tweet user="laco2net" id="1637272683368034306" >}}
 
 ## **my$talk=qr{\b((?:ir)?reg(?:ular )?exp(?:ressions?)?)\b}ig;**
 

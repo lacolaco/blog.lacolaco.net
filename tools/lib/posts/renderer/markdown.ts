@@ -89,8 +89,8 @@ export const embed = (url: string) => {
   }
   // Twitter status
   if (parsedUrl.host === 'twitter.com' && parsedUrl.pathname.includes('/status/')) {
-    const statusId = parsedUrl.pathname.split('/')[3];
-    return `{{< tweet "${statusId}" >}}\n\n`;
+    const [, user, , statusId] = parsedUrl.pathname.split('/');
+    return `{{< tweet user="${user}" id="${statusId}" >}}\n\n`;
   }
   // Google slide (pub->embed replace)
   if (parsedUrl.host === 'docs.google.com' && /^\/presentation\/.+\/pub$/.test(parsedUrl.pathname)) {

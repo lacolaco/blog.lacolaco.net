@@ -68,7 +68,7 @@ Image in toggle
 
 {{< /details >}}
 
-{{< tweet "1492833480694439940" >}}
+{{< tweet user="laco2net" id="1492833480694439940" >}}
 
 {{< youtube "TmWIrBPE6Bc" >}}
 

@@ -8,15 +8,15 @@ js-primer という JavaScript の本を書く上で ES2015 の import/export �
 
 {{< embed "https://github.com/asciidwango/js-primer/pull/505" >}}
 
-{{< tweet 1011466070387904512 >}}
+{{< tweet user="laco2net" id="1011466070387904512" >}}
 
-{{< tweet 1011466632210743297 >}}
+{{< tweet user="laco2net" id="1011466632210743297" >}}
 
-{{< tweet 1011467526927052800 >}}
+{{< tweet user="laco2net" id="1011467526927052800" >}}
 
-{{< tweet 1011467908134809600 >}}
+{{< tweet user="laco2net" id="1011467908134809600" >}}
 
-{{< tweet 1011468925152870400 >}}
+{{< tweet user="laco2net" id="1011468925152870400" >}}
 
 ## デフォルトエクスポートの扱い
 

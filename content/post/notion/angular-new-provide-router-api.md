@@ -15,7 +15,7 @@ Angular v14.2 で追加された Router パッケージの `provideRouter` API �
 
 {{< embed "https://github.com/angular/angular/pull/47010" >}}
 
-{{< tweet "1563213226627608577" >}}
+{{< tweet user="angular" id="1563213226627608577" >}}
 
 というわけで、 `NgModule` ベースの従来からのアプリケーションとスタンドアロン API ベースのアプリケーションの両方で、この新しい `provideRouter` API の使用例を紹介する。
 
