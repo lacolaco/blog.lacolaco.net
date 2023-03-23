@@ -1,5 +1,5 @@
 ---
-title: 'YAPC::Kyoto 2023に参加した'
+title: 'YAPC::Kyoto 2023 に参加した '
 date: '2023-03-19T15:14:00.000Z'
 tags:
   - 'Random'
