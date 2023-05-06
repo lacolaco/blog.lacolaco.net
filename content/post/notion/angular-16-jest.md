@@ -9,6 +9,7 @@ summary: 'Angular v16から、実験的機能として Jest によるユニッ�
 draft: false
 emoji: '🃏'
 source: 'https://www.notion.so/Angular-Angular-CLI-Jest-aa5b128387fb4b2fbc916ec77c9f5d2a'
+canonicalUrl: 'https://zenn.dev/lacolaco/articles/angular-16-jest'
 ---
 
 Angular v16 から、実験的機能として Jest によるユニットテスト実行がサポートされた。この記事では新規に作成した Angular プロジェクトでさっそく Jest を有効化してみた。Angular が Jest サポートを検討している背景などは公式ブログを参照してほしい。
