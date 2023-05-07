@@ -31,7 +31,7 @@
     "katex": "0.16.4",
     "mermaid": "^10.0.0",
     "prismjs": "1.29.0",
-    "rxjs": "7.8.0"
+    "rxjs": "7.8.1"
   },
   "devDependencies": {
     "@notionhq/client": "2.2.4",
