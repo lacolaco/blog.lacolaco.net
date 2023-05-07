@@ -41,7 +41,7 @@
     "@types/prismjs": "1.26.0",
     "@types/tailwindcss": "3.0.11",
     "autoprefixer": "10.4.14",
-    "cssnano": "5.1.15",
+    "cssnano": "6.0.1",
     "dotenv": "16.0.3",
     "esbuild": "0.17.18",
     "esbuild-register": "3.4.2",
