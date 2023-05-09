@@ -16,7 +16,7 @@
 }
 
 body {
-  font-family: theme(fontFamily.sans);
-  color: theme(textColor.default);
-  background-color: theme(backgroundColor.default);
+  /* font-family: theme(fontFamily.sans); */
+  /* color: theme(textColor.default); */
+  /* background-color: theme(backgroundColor.default); */
 }

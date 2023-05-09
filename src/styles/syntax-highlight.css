@@ -39,7 +39,8 @@ pre[class*='language-'] {
   }
 }
 
-.token.keyword {
+.token.keyword,
+.token.inserted {
   color: var(--color-syntax-highlight-keyword);
   font-weight: normal;
 }

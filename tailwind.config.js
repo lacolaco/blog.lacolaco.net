@@ -37,11 +37,11 @@ module.exports = {
       container: {
         center: true,
         padding: {
-          DEFAULT: '1rem',
-          sm: '2rem',
-          lg: '4rem',
-          xl: '8rem',
-          '2xl': '12rem',
+          DEFAULT: '2rem',
+          sm: '4rem',
+          lg: '8rem',
+          xl: '12rem',
+          '2xl': '16rem',
         },
       },
     },
@@ -53,7 +53,7 @@ module.exports = {
       });
       addComponents({
         '.flash': {
-          padding: `${theme('padding.5')} ${theme('padding.4')}`,
+          padding: `${theme('padding.4')} ${theme('padding.4')}`,
           borderStyle: 'solid',
           borderWidth: theme('borderWidth.DEFAULT'),
           borderRadius: theme('borderRadius.DEFAULT'),
@@ -96,11 +96,23 @@ module.exports = {
           'figcaption p': {
             textAlign: 'center',
           },
+          ul: {
+            listStyle: 'disc',
+            ul: {
+              listStyle: 'circle',
+              ul: {
+                listStyle: 'square',
+              },
+            },
+          },
+          ol: {
+            listStyle: 'decimal',
+          },
         },
       });
     }),
   ],
   corePlugins: {
-    preflight: false,
+    preflight: true,
   },
 };

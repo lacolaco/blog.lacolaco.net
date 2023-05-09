@@ -1,32 +1,41 @@
 {{ define "main" -}}
+{{ $Pages := .Pages }}
+{{ if .IsHome }}
+  {{ $Pages = where site.RegularPages "Type" "in" .Site.Params.mainSections }}
+{{ end }}
 
-<div class="pagehead">
-    {{ if .Data.Term }}
-    <h1 class="leading-none text-xl">Articles with #{{ .Data.Term }}</h1>
-    {{ else }}
-    {{ end }}
+{{ if .Data.Term }}
+<div class="pagehead mb-2">
+    <h1 class="leading-none text-xl font-bold">Articles with #{{ .Data.Term }}</h1>
 </div>
-
+{{ else }}
 <div class="mb-2 google-search-box h-[64px]">
     <div class="gcse-search"></div>
 </div>
+{{ end }}
 
 <div>
+    {{ range $Pages.GroupByDate "2006" }} <!-- year -->
+    <h2 class="mb-4 text-3xl font-bold">{{ .Key }}</h2>
     <ul class="list-none">
-        {{ range .Paginator.Pages -}}
+        {{ range .Pages }}
         <li class="pb-6 border-solid border-transparent">
-            <div class="flex-auto min-w-0 leading-tight">
-                <div class="flex flex-col items-start gap-y-1">
-                    <div class="flex flex-row items-center gap-x-2">
-                        <span class="text-xs text-muted align-middle">{{ .Date.Format "2006-01-02" }}</span>
-                    </div>
-                    <a class="text-xl text-default font-bold no-underline" href="{{ .RelPermalink }}">{{ .Params.Emoji }} {{ .Title | markdownify | emojify }}</a>
+            <div class="flex flex-col items-start leading-none">
+                <time class="text-xs text-muted align-middle" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "2006-01-02" }}</time>
+                <a class="no-underline" href="{{ .RelPermalink }}">
+                    {{ .Params.Emoji }} 
+                    <span class="text-lg text-default font-bold underline">{{ .Title | markdownify | emojify }}</span>
+                </a>
+                <div class="mt-1">
+                    {{ range .Params.tags -}}
+                    {{ partial "tag.html" . -}}
+                    {{ end -}}
                 </div>
-
             </div>
         </li>
         {{ end -}}
     </ul>
+    {{ end -}}
 </div>
 
 {{ end -}}

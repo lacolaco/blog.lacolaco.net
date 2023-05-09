@@ -2,17 +2,17 @@
 {{ $LastUpdatedAt := (time (index .Params "updated_at" | default .Date)) }}
 <article class="">
   <header class="mb-4">
-    <h1 class="text-3xl leading-tight">{{ .Params.Emoji }} {{ .Title | markdownify | emojify }}</h1>
-    <div class="meta">
+    <div class="meta leading-none">
       {{ if .Date -}}
-      <span class="text-small text-muted">{{ .Date.Format "2006-01-02" }}</span>
+      <span class="text-sm text-muted">{{ .Date.Format "2006-01-02" }}</span>
         {{ if $LastUpdatedAt.After .Date -}}
-        <span class="text-small text-muted">(Updated at: {{ (time .Params.updated_at).Format "2006-01-02" }})</span>
+        <span class="text-sm text-muted">(Updated at: {{ (time .Params.updated_at).Format "2006-01-02" }})</span>
         {{ end -}}
       {{ end -}}
       {{ if .Params.tags -}}
       {{ end -}}
     </div>
+    <h1 class="text-2xl font-bold leading-tight">{{ .Params.Emoji }} {{ .Title | markdownify | emojify }}</h1>
     <div class="py-1">
       {{ range .Params.tags -}}
       {{ partial "tag.html" . -}}

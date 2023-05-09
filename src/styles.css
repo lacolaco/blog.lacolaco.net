@@ -1,5 +1,4 @@
 /* TODO: migrate to tailwindcss */
-@import '@primer/css/dist/base';
 @import 'tailwindcss/base';
 @import 'styles/theme.css';
 
