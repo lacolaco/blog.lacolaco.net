@@ -6,7 +6,6 @@
   "author": "Suguru Inatomi <suguru.inatomi@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "tsx": "node -r esbuild-register",
     "build": "run-s 'build:css' 'build:js' 'build:hugo'",
     "build:css": "postcss src/styles.css -o assets/css/styles.css",
     "build:js": "esbuild src/main.ts --bundle --minify --outfile=assets/js/main.js",
@@ -16,15 +15,17 @@
     "watch:css": "postcss src/styles.css -o assets/css/styles.css --watch --map",
     "watch:js": "esbuild src/main.ts --watch --bundle --outfile=assets/js/main.js --sourcemap",
     "watch:hugo": "hugo server -D",
-    "copy-vendor": "rsync -r node_modules/katex static/vendor/ && rsync -r node_modules/prismjs static/vendor/ && rsync -r node_modules/mermaid static/vendor/",
-    "format": "prettier --write 'src' 'tools'",
+    "copy-vendor": "cpx \"node_modules/{katex,prismjs,mermaid,@fontsource}/**/*\" static/vendor/",
+    "format": "prettier --cache --write 'src' 'tools'",
     "postinstall": "yarn copy-vendor",
-    "notion:fetch": "yarn tsx tools/notion-fetch.ts"
+    "notion:fetch": "tsx tools/notion-fetch.ts"
   },
   "engines": {
     "node": "^18.0.0"
   },
   "dependencies": {
+    "@fontsource/m-plus-2": "^4.5.12",
+    "@fontsource/source-code-pro": "^4.5.14",
     "@primer/css": "19.8.2",
     "anchor-js": "5.0.0",
     "date-fns": "2.29.3",
@@ -41,10 +42,10 @@
     "@types/prismjs": "1.26.0",
     "@types/tailwindcss": "3.0.11",
     "autoprefixer": "10.4.14",
+    "cpx": "^1.5.0",
     "cssnano": "6.0.1",
     "dotenv": "16.0.3",
     "esbuild": "0.17.18",
-    "esbuild-register": "3.4.2",
     "js-yaml": "4.1.0",
     "npm-run-all": "4.1.5",
     "postcss": "8.4.23",
@@ -52,6 +53,7 @@
     "postcss-import": "15.1.0",
     "prettier": "2.8.8",
     "tailwindcss": "3.3.2",
+    "tsx": "^3.12.7",
     "undici": "5.21.0"
   }
 }

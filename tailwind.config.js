@@ -11,8 +11,11 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"M PLUS 1p"', 'sans-serif'],
-        mono: ['"Source Code Pro"', 'monospace'],
+        sans: `"M PLUS 2",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif`,
+        mono: `"Source Code Pro",monospace`,
+      },
+      fontWeight: {
+        normal: '400',
       },
       colors: {},
       textColor: {
@@ -35,8 +38,8 @@ module.exports = {
         center: true,
         padding: {
           DEFAULT: '1rem',
-          sm: '1rem',
-          lg: '2rem',
+          sm: '2rem',
+          lg: '4rem',
           xl: '8rem',
           '2xl': '12rem',
         },
