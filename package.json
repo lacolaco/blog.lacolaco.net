@@ -15,7 +15,7 @@
     "watch:css": "postcss src/styles.css -o assets/css/styles.css --watch --map",
     "watch:js": "esbuild src/main.ts --watch --bundle --outfile=assets/js/main.js --sourcemap",
     "watch:hugo": "hugo server -D",
-    "copy-vendor": "rsync -r node_modules/{katex,prismjs,mermaid,@fontsource} static/vendor/",
+    "copy-vendor": "cpx \"node_modules/{katex,prismjs,mermaid,@fontsource}/**/*\" static/vendor/",
     "format": "prettier --cache --write 'src' 'tools'",
     "postinstall": "yarn copy-vendor",
     "notion:fetch": "tsx tools/notion-fetch.ts"
@@ -42,6 +42,7 @@
     "@types/prismjs": "1.26.0",
     "@types/tailwindcss": "3.0.11",
     "autoprefixer": "10.4.14",
+    "cpx": "^1.5.0",
     "cssnano": "6.0.1",
     "dotenv": "16.0.3",
     "esbuild": "0.17.18",
