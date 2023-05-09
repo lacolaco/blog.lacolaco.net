@@ -10,9 +10,6 @@
   --color-border-default: #d0d7de;
   --color-border-muted: hsla(210, 18%, 87%, 1);
 
-  --color-header-text: #f0f6fc;
-  --color-header-text-muted: rgba(240, 246, 252, 0.7);
-  --color-header-bg: #161b22;
 }
 
 body {

@@ -6,7 +6,7 @@
 
 {{ if .Data.Term }}
 <div class="pagehead mb-2">
-    <h1 class="leading-none text-xl font-bold">Articles with #{{ .Data.Term }}</h1>
+    <h1 class="leading-none text-xl font-semibold">Articles with #{{ .Data.Term }}</h1>
 </div>
 {{ else }}
 <div class="mb-2 google-search-box h-[64px]">
@@ -19,7 +19,7 @@
     <h2 class="mb-4 text-3xl font-bold">{{ .Key }}</h2>
     <ul class="list-none">
         {{ range .Pages }}
-        <li class="pb-6 border-solid border-transparent">
+        <li class="pb-4 border-solid border-transparent">
             <div class="flex flex-col items-start leading-none">
                 <time class="text-xs text-muted align-middle" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "2006-01-02" }}</time>
                 <a class="no-underline" href="{{ .RelPermalink }}">

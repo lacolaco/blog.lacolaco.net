@@ -1,6 +1,6 @@
 baseURL = "https://blog.lacolaco.net/"
 languageCode = "ja-JP"
-title = "lacolaco/tech"
+title = "遠近法主義"
 enableEmoji = true
 googleAnalytics = "G-0BEKSBSM5X"
 #disqusShortName = "blog-lacolaco"
