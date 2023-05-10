@@ -28,7 +28,7 @@
     "@fontsource/source-code-pro": "^4.5.14",
     "@primer/css": "19.8.2",
     "anchor-js": "5.0.0",
-    "date-fns": "2.29.3",
+    "date-fns": "2.30.0",
     "katex": "0.16.4",
     "mermaid": "^10.0.0",
     "prismjs": "1.29.0",
