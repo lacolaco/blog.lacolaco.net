@@ -4,10 +4,10 @@ date: '2022-10-26T06:46:00.000Z'
 updated_at: '2022-10-26'
 tags:
   - 'angular'
-  - 'rxjs'
+  - 'tech'
   - 'rx-angular'
   - 'State Management'
-  - 'standalone component'
+  - '状態管理'
 summary: 'Angular v14からのスタンドアロンコンポーネントを中心とした新しい流れの中で、RxAngularファミリーの `@rx-angular/state` を使ったAngularコンポーネントの状態管理が個人的に気に入っているので紹介したい。'
 draft: false
 source: 'https://www.notion.so/rx-angular-state-e7898e37330444828657dff38ca1f349'

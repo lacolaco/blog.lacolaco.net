@@ -3,9 +3,9 @@ title: 'Tailwind CSSの二面性、デザインシステムを借りるという
 date: '2022-07-24T00:52:00.000Z'
 updated_at: '2022-07-24'
 tags:
-  - '雑記'
+  - 'tech'
   - 'tailwindcss'
-  - 'design system'
+  - '雑記'
 draft: false
 source: 'https://www.notion.so/Tailwind-CSS-6ede1797c0244d72aea305528ed253b1'
 ---

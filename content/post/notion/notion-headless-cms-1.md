@@ -2,6 +2,7 @@
 title: 'NotionヘッドレスCMS化記録 (1) Notion APIとTypeScript'
 date: '2022-02-13T10:22:00.000Z'
 tags:
+  - 'tech'
   - 'Notion'
   - 'TypeScript'
 draft: false

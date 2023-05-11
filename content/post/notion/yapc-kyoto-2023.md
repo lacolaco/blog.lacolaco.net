@@ -2,7 +2,7 @@
 title: 'YAPC::Kyoto 2023 に参加した '
 date: '2023-03-19T15:14:00.000Z'
 tags:
-  - 'Random'
+  - '雑記'
 summary: 'YAPC::Kyoto 2023に一般参加者として参加した。YAPC自体が初めてだったが楽しいイベントだった。'
 draft: false
 emoji: '⛩️'

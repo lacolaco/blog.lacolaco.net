@@ -3,6 +3,8 @@ title: 'Angular: 属性値からの型変換が書きやすくなるinput transf
 date: '2023-05-10T15:31:00.000Z'
 tags:
   - 'angular'
+  - 'tech'
+  - 'commit note'
 draft: false
 source: 'https://www.notion.so/Angular-input-transforms-2131694edc7e4221ad63e13b749d4fc0'
 ---
@@ -43,8 +45,11 @@ export class Foo {
 なぜこのような型変換が必要かというと、HTML の仕様上、 `[prop]` というように `[]` を伴わない属性値の指定では、それをインプットプロパティが受け取る時に `string` か `undefined` にしかならないからだ。
 
 ```html
-<some [foo]="true" /> // boolean <some foo="true" /> // string <some foo /> //
-undefined
+<some [disabled]="true" /> // boolean
+
+<some disabled="true" /> // string
+
+<some disabled /> // undefined
 ```
 
 特に問題になるのは `disabled` のように boolean 型のインプットとしてもサポートしつつ、その属性がついているだけでも `true` 扱いにするような、HTML 標準の属性に振る舞いを合わせるときだ。これはいままでは CDK を使って次のように書いていた。

@@ -3,6 +3,7 @@ title: 'Angular: Angular CLI の Jest サポートを試す'
 date: '2023-05-06T01:37:00.000Z'
 tags:
   - 'angular'
+  - 'tech'
   - 'testing'
   - 'jest'
 summary: 'Angular v16から、実験的機能として Jest によるユニットテスト実行がサポートされた。この記事では新規に作成した Angular プロジェクトでさっそく Jest を有効化してみた。'

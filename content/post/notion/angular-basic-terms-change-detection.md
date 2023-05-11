@@ -3,6 +3,7 @@ title: 'Angularの基本語彙: 変更検知'
 date: '2023-02-22T11:10:00.000Z'
 tags:
   - 'angular'
+  - 'tech'
 summary: 'Zennで公開している『Angularの基本語彙』に新しく「変更検知」の章を追加した。'
 draft: false
 source: 'https://www.notion.so/Angular-5be92ed116af4773ab1d19300a72928c'

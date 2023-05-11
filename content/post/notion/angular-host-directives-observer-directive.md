@@ -4,9 +4,8 @@ date: '2022-10-30T09:53:00.000Z'
 updated_at: '2022-10-30'
 tags:
   - 'angular'
-  - 'directive'
-  - 'hostDirectives'
-  - 'example'
+  - 'tech'
+  - 'standalone component'
   - 'IntersectionObserver'
 summary: 'この記事ではAngular v15で追加される `@Directive.hostDirectives` の実用的なユースケースとして、状態監視系ディレクティブを合成する使い道を検討する。'
 draft: false

@@ -4,9 +4,9 @@ date: '2022-09-15T00:09:00.000Z'
 updated_at: '2022-09-15'
 tags:
   - 'angular'
-  - 'commit note'
+  - 'tech'
   - 'browserslist'
-  - 'Angular CLI'
+  - 'commit note'
 summary: 'Angular CLI は `ng new` や `ng generate application` で生成されるアプリケーションテンプレートから `.browserslistrc` ファイルを削除する。'
 draft: false
 source: 'https://www.notion.so/Angular-browserslist-v15-5d1a14f0328a4165a2e580e75aefe9ec'

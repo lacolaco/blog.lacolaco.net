@@ -4,10 +4,9 @@ date: '2022-07-20T02:25:00.000Z'
 updated_at: '2022-07-20'
 tags:
   - 'angular'
-  - 'components'
+  - 'tech'
   - 'a11y'
   - 'HTML'
-  - 'button'
 summary: 'この記事では、基本的なUIコンポーネントの代表例として、**ボタンコンポーネント**の実装において考慮すべき点を踏まえながら、典型的な実装例を示す。'
 draft: false
 source: 'https://www.notion.so/Angular-4518985f136b48118aefe72b464720a4'

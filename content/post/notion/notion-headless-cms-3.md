@@ -2,10 +2,10 @@
 title: 'NotionヘッドレスCMS化記録 (3) GitHub Actionsと自動デプロイ'
 date: '2022-02-15T23:13:00.000Z'
 tags:
+  - 'tech'
   - 'Notion'
-  - 'Markdown'
-  - 'GitHub'
   - 'GitHub Actions'
+  - 'GitHub'
 draft: false
 source: 'https://www.notion.so/Notion-CMS-3-GitHub-Actions-47d8a28980af4cd7a9432091d4335b30'
 ---

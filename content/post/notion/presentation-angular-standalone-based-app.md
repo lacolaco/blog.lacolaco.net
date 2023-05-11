@@ -4,6 +4,7 @@ date: '2022-09-28T00:00:00.000Z'
 updated_at: '2022-09-28'
 tags:
   - 'angular'
+  - 'tech'
   - 'standalone component'
   - 'presentation'
 draft: false
