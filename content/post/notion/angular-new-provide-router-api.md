@@ -4,6 +4,7 @@ date: '2022-08-29T12:18:00.000Z'
 updated_at: '2022-08-29'
 tags:
   - 'angular'
+  - 'tech'
   - 'router'
   - 'standalone component'
 summary: 'Angular v14.2で追加された Routerパッケージの `provideRouter` APIは、 `RouterModule.forRoot` を使わずにルーティング設定を行うことができる。このAPIはアプリケーションがスタンドアロンコンポーネントを使っていなくても使用できる。'

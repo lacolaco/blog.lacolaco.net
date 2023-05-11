@@ -3,6 +3,8 @@ title: 'Angular: 依存性の注入にコンストラクタ引数ではなくinj
 date: '2023-03-23T00:44:00.000Z'
 tags:
   - 'angular'
+  - 'tech'
+  - 'dependency injection'
   - 'TypeScript'
 summary: '依存性の注入にコンストラクタ引数ではなくAngular v14から導入された `inject()` 関数を使うべきであると言える理由を解説する。'
 draft: false

@@ -3,9 +3,9 @@ title: 'Google Cloud の Workload Identity 連携でGitHub Actionsから認証�
 date: '2022-07-30T12:36:00.000Z'
 updated_at: '2022-07-30'
 tags:
-  - 'GitHub Actions'
+  - 'tech'
   - 'Google Cloud'
-  - '雑記'
+  - 'GitHub Actions'
 summary: 'いまさらだが、秘密鍵を共有する方法ではなく、GitHub Actions のOIDCトークンを使った方法を使ってGCPの認証を有効にしてみたので、その作業メモ。'
 draft: false
 source: 'https://www.notion.so/Google-Cloud-Workload-Identity-GitHub-Actions-2f780bc54f7d42d789fd8149884d8233'

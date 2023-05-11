@@ -4,10 +4,10 @@ date: '2022-10-08T01:26:00.000Z'
 updated_at: '2022-10-08'
 tags:
   - 'angular'
+  - 'tech'
   - 'testing'
-  - 'cypress'
   - 'visual testing'
-  - 'standalone component'
+  - 'cypress'
 summary: 'Angularコンポーネントの見た目が崩れていないことを確認する画像回帰テストを、できるだけ最小ステップで既存のAngular CLIプロジェクトに導入する手順を紹介する。'
 draft: false
 source: 'https://www.notion.so/Angular-Component-Visual-Testing-with-Cypress-06291552322a41529379de518e857222'

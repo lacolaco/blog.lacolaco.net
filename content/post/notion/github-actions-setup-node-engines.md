@@ -3,6 +3,7 @@ title: 'GitHub Actions: setup-nodeのNode.jsバージョンをpackage.jsonで指
 date: '2022-10-03T13:39:00.000Z'
 updated_at: '2022-10-03'
 tags:
+  - 'tech'
   - 'GitHub Actions'
   - 'Node.js'
 summary: 'GitHub Actionsのsetup-node v3.5.0で、 package.json の engines.node フィールドがサポートされた。'

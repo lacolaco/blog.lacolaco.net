@@ -3,6 +3,7 @@ title: 'Angular: Input を Observable で扱えるようにする Inputs Stream 
 date: '2023-02-14T00:40:00.000Z'
 tags:
   - 'angular'
+  - 'tech'
   - 'rxjs'
   - 'rx-angular'
 summary: 'Angular コンポーネントへのインプット `@Input()` に渡される値の変化を、 `Observable` で扱いたいことは少なくない。今回は最近試していて手触りがよい `@rx-angular/state` を使ったインプットの Observable化を紹介する。'
