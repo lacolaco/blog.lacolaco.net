@@ -59,7 +59,7 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 
 @Directive()
 export class Foo {
-  #disabled: number;
+  #disabled = false;
 
   @Input()
   set disabled(v: BooleanInput) {
@@ -78,7 +78,7 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 
 @Directive()
 export class Foo {
-  @Input({ transform: coerceBooleanProperty }) disabled: boolean;
+  @Input({ transform: coerceBooleanProperty }) disabled = false;
 }
 ```
 
