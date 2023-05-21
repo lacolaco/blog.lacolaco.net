@@ -1,0 +1,39 @@
+---
+import HeaderLink from './HeaderLink.astro';
+import { SITE_TITLE } from '../consts';
+
+type Props = {
+  class?: string;
+};
+
+const { class: className } = Astro.props;
+---
+
+<header class={className}>
+  <div class="relative">
+    <div class="flex flex-row items-center justify-end gap-x-4 py-2 text-sm font-semibold">
+      <div class="flex items-center">
+        <a href="/tags/" class="text-default hover:text-default-muted hover:no-underline" title="tags">Tags</a>
+      </div>
+      <div class="flex items-center">
+        <a href="/index.xml" class="text-default hover:text-default-muted hover:no-underline" title="RSS feed">RSS</a>
+      </div>
+      <div class="flex items-center">
+        <a href="https://lacolaco.net" target="_blank" rel="noopener" title="profile">
+          <img
+            class="rounded-full border border-solid border-gray-400 block"
+            src="/icons/laco.png"
+            height="32"
+            width="32"
+          />
+        </a>
+      </div>
+    </div>
+
+    <div class="flex flex-col items-center pt-2 pb-8 gap-y-1">
+      <a href="/" class="text-center text-3xl font-semibold text-default hover:text-default-muted hover:underline">
+        {SITE_TITLE}
+      </a>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,17 @@
+---
+type Props = {
+  src: string;
+};
+
+const { src } = Astro.props;
+---
+
+<iframe class="stackblitz-iframe" src={src}></iframe>
+
+<style>
+  iframe {
+    border: none;
+    width: 100%;
+    aspect-ratio: 16/9;
+  }
+</style>

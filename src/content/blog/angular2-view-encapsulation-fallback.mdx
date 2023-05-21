@@ -1,0 +1,27 @@
+---
+title: 'ViewEncapsulationのフォールバック'
+date: '2016-04-10T00:00:00.000Z'
+tags:
+  - 'tech'
+  - 'angular'
+published: true
+source: 'https://www.notion.so/ViewEncapsulation-5f9d3b12aa0a4be992e5c8c9e4f6f53b'
+---
+
+ブラウザが Shadow DOM を実装している場合は`ViewEncapsulation.Native`を、 そうでない場合はデフォルトの`ViewEncapsulation.Emulated`を使うようにフォールバックを実装する方法。
+
+### Shadow DOM Check
+
+まずアプリケーション全体で統一の`ViewEncapsulation`を使うためにコンフィグ用の`default-view-encapsulation.ts`を用意します。 よくよく調べると Angular2 の`Native`は Shadow DOM v1 ではないようだけど、 `BrowserDomAdapter`経由で調べるので Angular 側がいつ v1 準拠になっても大丈夫にしてある。
+
+```plaintext
+import {ViewEncapsulation} from "angular2/core";
+import {BrowserDomAdapter} from "angular2/platform/browser";
+
+let domAdapter = new BrowserDomAdapter();
+
+export var DEFAULT_VIEW_ENCAPSULATION = domAdapter.supportsNativeShadowDOM() ?
+    ViewEncapsulation.Native : ViewEncapsulation.Emulated;
+```
+
+Chrome と Safari でしか見てないけど Chrome のほうが若干初期ロードが速い気がする。 SharedStyle を使わない分 JS での処理が少ないだろうことは予想できる。

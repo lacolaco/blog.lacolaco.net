@@ -26,9 +26,10 @@ jobs:
           app_id: ${{ secrets.WORKER_APP_ID }}
           private_key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}
       - run: yarn install
-      - run: yarn notion:fetch ${{ github.event.inputs.forceUpdate && '--force' || '' }}
+      - run: yarn notion-fetch ${{ github.event.inputs.forceUpdate && '--force' || '' }}
         env:
           NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:

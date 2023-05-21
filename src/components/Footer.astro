@@ -1,0 +1,19 @@
+---
+import { SITE_COPYRIGHT } from '../consts';
+
+type Props = {
+  class?: string;
+};
+
+const { class: className } = Astro.props;
+---
+
+<footer class={className}>
+  <div
+    class="flex flex-col justify-between pt-[40px] pb-[8px] text-sm text-default border-transparent border-solid border-t-default"
+  >
+    <ul class="list-none flex">
+      <li class="">{SITE_COPYRIGHT}</li>
+    </ul>
+  </div>
+</footer>
