@@ -8,7 +8,7 @@ import { fetchChildBlocks, queryAllPages } from './utils';
 const { NOTION_AUTH_TOKEN, NOTION_DATABASE_ID, NODE_ENV } = process.env;
 const isDevMode = NODE_ENV === 'development';
 const notion = new Client({ auth: NOTION_AUTH_TOKEN });
-const manifestFilePath = new URL('../../manifest.json', import.meta.url);
+const manifestFilePath = new URL('../manifest.json', import.meta.url);
 
 export class NotionDatabase {
   async queryBlogPages(): Promise<PageObjectWithContent[]> {

@@ -23,7 +23,7 @@ const postsByYear = Array.from(
       acc.set(year, posts);
       return acc;
     }, new Map<string, CollectionEntry<'blog'>[]>())
-    .entries()
+    .entries(),
 ).sort(([a], [b]) => Number(b) - Number(a));
 ---
 

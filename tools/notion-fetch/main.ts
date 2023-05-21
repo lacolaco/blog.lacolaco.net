@@ -1,19 +1,17 @@
 import 'dotenv/config';
 
-import * as path from 'node:path';
 import { parseArgs } from 'node:util';
-import { NotionDatabase } from './lib/notion';
-import { renderPosts } from './lib/renderer';
-import { FileSystem } from './lib/file-system';
+import { FileSystem } from './file-system';
+import { NotionDatabase } from './notion';
+import { renderPosts } from './renderer';
 
 if (process.env.NOTION_AUTH_TOKEN == null) {
   console.error('Please set NOTION_AUTH_TOKEN');
   process.exit(1);
 }
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-const imagesDir = path.resolve(__dirname, '../public/images');
-const postsDir = path.resolve(__dirname, '../src/content/blog');
+const imagesDir = new URL('../../public/images', import.meta.url).toString();
+const postsDir = new URL('../../src/content/blog', import.meta.url).toString();
 
 const { values } = parseArgs({
   args: process.argv.slice(2),
