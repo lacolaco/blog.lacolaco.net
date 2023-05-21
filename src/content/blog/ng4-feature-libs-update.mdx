@@ -1,0 +1,95 @@
+---
+title: '[Angular 4.0] router/http/animationsモジュールの更新について'
+date: '2017-03-13T00:00:00.000Z'
+tags:
+  - 'tech'
+  - 'angular'
+published: true
+source: 'https://www.notion.so/Angular-4-0-router-http-animations-aa3078a5d0bb4538aa415008ca903a52'
+---
+
+Angular 4.0 特集のラストは router モジュール、http モジュールの変更と、新たに追加された animations モジュールについての解説です。
+
+## router モジュールの変更
+
+### イベントの追加
+
+`Router`が発火するイベントに、Lazy Loading 用の`RouteConfigLoadStart`と`RouteConfigLoadEnd`が追加されました。 `RouterModule.forChild()`で遅延して読み込まれた設定を Router に取り込みはじめた時と、それが終わった時に発火されます。
+
+### `runGuardsAndResolvers`設定の追加
+
+`Route`に新しく`runGuardsAndResolvers`プロパティが追加されました。 これは同じルートが選択されているときに、Guard や Resolver が再実行するタイミングを制御するためのものです。
+
+`runGuardsAndResolvers`が取り得る値は `paramsChange`、`paramsOrQueryParamsChange`そして`always`の 3 種類です。 `paramsChange`はデフォルトの設定で、これまでの挙動と同じです。 Guard と Resolver が再実行するのはパスパラメータかマトリクスパラメータが変わったときだけです。 `paramsOrQueryParamsChange`では、デフォルトの挙動に加えてクエリパラメータの変更時にも再実行されます。 そして`always`ではあらゆるナビゲーションで再実行されます。
+
+`runGuardsAndResolvers`は次のように設定します。
+
+```plaintext
+{
+    path: 'admin',
+    component: AdminCmp,
+    runGuardsAndResolvers: 'paramsChange',
+    canActivate: [AdminAuth]
+},
+```
+
+## http モジュールの変更
+
+### リクエストオプションの`search`が非推奨に
+
+`RequestOptions`型の`search`プロパティが非推奨の API となります。 このプロパティはリクエスト URL にクエリパラメータを付与するためのものでしたが、今後は新しく追加される`params`プロパティを使います。
+
+次のコードを見ればとても使いやすくなることがわかります。
+
+```plaintext
+// Before
+const search = new URLSearchParams();
+search.append('id', 'foo');
+search.append('name', 'bar');
+
+this.http.get(url, {search});
+
+// After
+this.http.get(url, {params: {id: 'foo', name: 'bar'}});
+```
+
+これまで`search`プロパティが受け取るオブジェクトの型は`string|URLSearchParams`でしたが、 4.0 以降はこれに加えて`&#123;[key: string]: any|any[]&#125;`型のマップオブジェクトを受け取ることができます。 `params`プロパティも同じ型のオブジェクトを受け取れます。 内部的には`params`をパースして内部の`search`プロパティを組み立てる、という処理になっているので、 4.x 系の間は破壊的変更を防ぐためにどちらのプロパティも同じ挙動で動作しますが、 5.0 からは`search`プロパティは外部からは見えないようになります。
+
+## animations モジュール
+
+animations モジュールはこれまで core モジュールに同梱されていたアニメーション API を、独立したモジュールに分割したものです。 アニメーションを必要としないアプリケーションが不要なコードを含まないようにすることを目的としています。
+
+また、animations モジュールはさらに便利になる新しい API がいくつも開発中です。 まだ 4.0 ではリリースされませんが、ひとつだけ 4.0 に含まれる変更があるので紹介します。
+
+### transition 式の関数サポート
+
+`transition`の第 1 引数はこれまで文字列で`hide =&gt; show`や`* =&gt; void`など定義していましたが、 これに加えて`fromState`と`toState`を受け取って`boolean`を返す関数を渡せるようになります。 次のコード例を見てください。
+
+```plaintext
+transition('hide => show', ...)
+// equivalent to
+const hide2show = (from, to) => from === 'hide' && to === 'show';
+transition(hide2show, ...)
+
+transition('void => *', ...)
+// equivalent to
+const fromVoid = (from, to) => from === 'void';
+transition(fromVoid, ...)
+```
+
+## まとめ
+
+- Lazy Loading のサポート強化
+- Guard/Resolve がさらに便利に
+- Http の`search`が非推奨に
+- animations モジュールの追加
+
+---
+
+**Angular 4.0 Features**
+
+- [新しい ngIf の使い方](/post/ng4-feature-ngif/)
+- [Meta サービスの使い方](/post/ng4-feature-meta-service/)
+- [forms モジュールの更新について](/post/ng4-feature-forms-update/)
+- [core/common モジュールの変更について](/post/ng4-feature-core-update/)
+- [router/http/animations モジュールの変更について](/post/ng4-feature-libs-update/)

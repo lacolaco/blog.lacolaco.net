@@ -1,0 +1,103 @@
+---
+title: '[Angular 4.0] Metaサービスの使い方'
+date: '2017-03-07T00:00:00.000Z'
+tags:
+  - 'tech'
+  - 'angular'
+published: true
+source: 'https://www.notion.so/Angular-4-0-Meta-fe6eb6f925344204b31ca32dbec371ba'
+---
+
+Angular 4.0 で追加された新しい組み込みサービス、`Meta`について解説します。
+
+## `Meta`サービス
+
+`Meta`サービスは、その名のとおり、HTML の`&lt;meta&gt;`タグに対する操作を行うためのサービスです。 `@angular/platform-browser`パッケージから提供されていて、2.0 ですでに実装されている`Title`サービスと同じように使用できます。
+
+```plaintext
+import { Meta } from '@angular/platform-browser';
+
+@Injectable()
+export class MyService {
+    constructor(metaService: Meta) {}
+}
+```
+
+### `getTag(attrSelector: string): HTMLMetaElement`
+
+`getTag`メソッドは、引数の`attrSelector`に該当する meta タグ要素を取得するものです。 `attrSelector`は通常の CSS セレクタではなく、属性をベースにした文字列です。 たとえば`property`が`fb:app_id`の meta タグを取得したい場合は次のように呼び出します。
+
+```plaintext
+const tag = metaService.getTag('property=fb:app_id');
+```
+
+同じ引数で、複数件の戻り値を返せる`getTags`もあります。
+
+```plaintext
+const tags = metaService.getTags('name=author');
+```
+
+### `addTag(tag: MetaDefinition, forceCreation: boolean = false): HTMLMetaElement`
+
+`addTag`メソッドは新しく meta タグを head に追加するためのものです。 引数は`MetaDefinition`型のオブジェクトと、すでに同じ meta タグが存在するときに上書きするかどうかのフラグです。 戻り値には新しく生成された、あるいはすでに存在していた meta タグ要素が渡されます。
+
+`MetaDefinition`インターフェースは次のような定義になっています。
+
+```plaintext
+export type MetaDefinition = {
+  charset?: string;
+  content?: string;
+  httpEquiv?: string;
+  id?: string;
+  itemprop?: string;
+  name?: string;
+  property?: string;
+  scheme?: string;
+  url?: string;
+}
+```
+
+実際の使い方は次のようになります。
+
+```plaintext
+metaService.addTag({name: 'author', content: 'page author'});
+```
+
+こちらも同時に複数件を処理する`addTags`メソッドが用意されています。
+
+```plaintext
+metaService.addTags([
+    {name: 'twitter:title', content: 'Content Title'},
+    {property: 'og:title', content: 'Content Title'}
+]);
+```
+
+### `updateTag(tag: MetaDefinition, selector?: string): HTMLMetaElement`
+
+`updateTag`メソッドはすでに存在する meta タグを更新するためのものです。 第 2 引数にセレクタが渡されなければ、第 1 引数の`name`や`property`をもとに更新対象を自動で判別します。 また、対象が存在しなければ meta タグの追加を行います。
+
+### `removeTag(attrSelector: string): void`
+
+`removeTag`メソッドはセレクタにヒットした meta タグを除去します。
+
+### `removeTagElement(meta: HTMLMetaElement): void`
+
+こちらは、セレクタではなく meta タグ要素を受け取り、その要素を DOM 上から除去します。
+
+## まとめ
+
+これまで SNS へのシェアなどのために meta タグを操作する必要があったときは、直接 DOM を操作する必要がありました。 ただブラウザ上で動かすだけなら問題ないですが、Angular はクロスプラットフォームに動作できることが目標なので、これは避けるべきものでした。
+
+今回導入された`Meta`は Angular 内部で統合されているので、 将来的には Universal によるサーバーサイドレンダリング時にも使えて、SEO のための meta タグ操作も可能になるよう設計されています。 ぜひ独自のサービスから組み込みの`Meta`に乗り換えておきたいところです。 ただし、この API はまだ experimental なので、半年後の次期メジャーアップデート(5.0)の時には多少の破壊的変更が入るかもしれないことに留意しましょう。
+
+`Meta`についてもっと知りたい方は[ソースコード](https://github.com/angular/angular/blob/master/modules/%40angular/platform-browser/src/browser/meta.ts)や、 [テストコード](https://github.com/angular/angular/blob/master/modules/%40angular/platform-browser/test/browser/meta_spec.ts)を 読むとよいでしょう。
+
+---
+
+**Angular 4.0 Features**
+
+- [新しい ngIf の使い方](/post/ng4-feature-ngif/)
+- [Meta サービスの使い方](/post/ng4-feature-meta-service/)
+- [forms モジュールの更新について](/post/ng4-feature-forms-update/)
+- [core/common モジュールの変更について](/post/ng4-feature-core-update/)
+- [router/http/animations モジュールの変更について](/post/ng4-feature-libs-update/)

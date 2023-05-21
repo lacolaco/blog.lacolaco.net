@@ -7,7 +7,7 @@ const plugin = require('tailwindcss/plugin');
  * @type { import('tailwindcss/tailwind-config').TailwindConfig }
  */
 module.exports = {
-  content: ['layouts/**/*.html', 'content/**/*.{md,html}'],
+  content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
       fontFamily: {

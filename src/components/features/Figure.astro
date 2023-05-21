@@ -1,0 +1,15 @@
+---
+type Props = {
+  src: string;
+  caption?: string;
+};
+
+const { src, caption } = Astro.props;
+---
+
+<figure>
+  <img src={src} />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style></style>

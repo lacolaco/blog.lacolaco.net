@@ -1,0 +1,79 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { format as formatDate } from 'date-fns';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Header from '../components/Header.astro';
+import TagList from '../components/TagList.astro';
+import { SITE_TITLE } from '../consts';
+
+type Props = {
+  posts: CollectionEntry<'blog'>[];
+  groupName?: string;
+};
+
+const { posts, groupName } = Astro.props;
+const postsByYear = Array.from(
+  posts
+    .reduce((acc, post) => {
+      const year = formatDate(post.data.date, 'yyyy');
+      const posts = acc.get(year) ?? [];
+      posts.push(post);
+      acc.set(year, posts);
+      return acc;
+    }, new Map<string, CollectionEntry<'blog'>[]>())
+    .entries()
+).sort(([a], [b]) => Number(b) - Number(a));
+---
+
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <BaseHead title={SITE_TITLE} description={''} />
+  </head>
+
+  <body>
+    <Header class="container" />
+    <main class="container py-4">
+      {
+        groupName ? (
+          <div class="mb-4">
+            <h1 class="leading-none text-xl font-semibold">{groupName}</h1>
+          </div>
+        ) : (
+          <div class="mb-4 google-search-box h-[64px]">
+            <div class="gcse-search" />
+          </div>
+        )
+      }
+      <div>
+        {
+          postsByYear.map(([year, posts]) => (
+            <div>
+              <h2 class="mb-4 text-3xl font-bold">{year}</h2>
+              <ul class="list-none">
+                {posts.map((post) => (
+                  <li class="pb-4 border-solid border-transparent">
+                    <div class="flex flex-col items-start leading-none">
+                      <FormattedDate class="text-xs text-muted align-middle" date={post.data.date} />
+                      <a class="no-underline" href={`/${formatDate(post.data.date, 'yyyy/MM')}/${post.slug}/`}>
+                        <span class="text-lg text-default font-bold underline">{post.data.title}</span>
+                      </a>
+                      <div class="mt-1">
+                        <TagList tags={post.data.tags ?? []} />
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+    </main>
+    <Footer class="container py-4" />
+
+    <script async src="https://cse.google.com/cse.js?cx=016749829816792588257:vx30glhznqb"></script>
+  </body>
+</html>

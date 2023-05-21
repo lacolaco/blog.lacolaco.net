@@ -1,14 +1,23 @@
-public
-assets/css
-assets/js
-assets/elements
-static/vendor
-resources/_gen
-posts.json
+# build output
+dist/
 
-.DS_Store
-*.log
-node_modules
+# generated types
+.astro/
 .firebase
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# environment variables
 .env
-.hugo_build.lock
+.env.production
+
+# macOS-specific files
+.DS_Store

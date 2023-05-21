@@ -1,0 +1,102 @@
+---
+title: 'ng-conf 2017 1日目 Keynoteメモ'
+date: '2017-04-05T00:00:00.000Z'
+tags:
+  - 'tech'
+  - 'angular'
+published: true
+source: 'https://www.notion.so/ng-conf-2017-1-Keynote-b0f5f2b306014805b6f332feed870c3c'
+---
+
+アメリカ・ソルトレイクシティで 4/5 から開催中の ng-conf に参加しています。 1 日目の Keynote の内容を現地からかいつまんでまとめます。
+
+## Keynote
+
+- スピーカー
+  - Igor Minar
+  - Stephen Fluin
+
+### ドキュメンテーションのアクセス数
+
+- 2017 年 4 月現在 AngularJS 1.3M vs Angular 810K
+- まだまだ AngularJS が優勢だけど、どんどん Angular の採用事例は増えている
+
+### Code of Conduct
+
+- Angular の管理するリポジトリやそれに付随するコミュニティにおける行動規範を https://github.com/angular/code-of-conduct にまとめた
+- 何か問題が起きたら conduct@angular.io に連絡してほしい
+
+### エコシステム
+
+- エコシステムにもっとも重要なのは一貫性
+- AngularJS と Angular の名前を徹底して使い分けていくことで、名前を見ただけで何を指しているかわかるのでコミュニケーションが楽になる
+
+### Language Services
+
+- VS Code, WebStorm, Angular IDE(Eclipse plugin)の 3 つで使えるようになった
+
+### Ionic
+
+- npm で 100 万 install されている
+- キラーアプリ: UNTAPPED
+- 本日 3.0 リリース: Angular 4.0 対応、起動時間の短縮、デスクトップ・タブレット環境のサポート
+
+### Angular Today
+
+- 多くのアプリケーションがプロダクションとしてリリースされている
+- Angular アプリケーションのうち 17%はすでに v4
+- Google 社内の 200 以上のアプリケーションはすべて v4 にアップデート済み
+
+### 採用事例: [NBA.com](http://www.nba.com/)
+
+- Drupal や D3、Redux などと併用してプロダクションに採用している
+
+### v4 について
+
+- ユーザーへの利点
+  - より小さく、より速く
+  - 4.0 を install してビルドするだけで UX が改善する
+- 開発者への利点
+  - ngIf, ngFor などの新 API による Reactive Angular の改善
+  - Angular CLI の 1.0 リリース
+- stable な API の一般的なユースケースについては破壊的変更なし
+- スムーズなアップデートを可能にした
+
+### 進行中の計画
+
+- Angular Universal
+  - 基本的な API は platform-server として v4 でリリースできた
+  - 高レイヤーのライブラリやドキュメンテーションをこれから増やしていく
+- Progressive Web Apps
+  - Angular CLI で serviceWorker: true のサポート
+  - これからも PWA 支援を続ける
+
+### Google における Angular
+
+- Google では常にリリース前の最新のビルドを使っている
+- npm にリリースされる最新のビルドは常に Google のチェックを通過している
+
+### 最新版を使って欲しい
+
+- Google のチェックを通過している
+- 新機能や最新の修正が入っている
+- 多くのツールやライブラリとの統合
+- **Angular v4 は長期サポート(LTS)バージョンになった**
+  - 2018 年 10 月まで、重大なバグフィックスやセキュリティパッチが続けられる
+  - もし会社の都合でなかなか最新版に上げられないときはこれで説得してほしい
+
+### v5 のテーマ
+
+- 単純さ
+  - クライアントサイド、サーバーサイド、JIT、AOT など、複雑さが増している
+  - v5 では開発者が気にしなければならないものを減らしていく
+- スピードとサイズ
+  - Tree-Shaking の効果が高まるようなコード生成に改善していく
+- スムーズなアップデート
+  - v2 から v4 と同じようにアップデートできるようにする
+
+---
+
+オープンソースで開発されているのでほとんどの内容はすでに知られていることでしたが、LTS の発表には驚きました。 今回は採用事例についての話が多く、Angular をプロダクションにどんどん使ってもらいたいことは強く伝わってきました。
+
+Keynote は 3 日目にもあるので、そちらもメモを投稿する予定です。近いうちに Keynote の動画は youtube に上がると思うので、詳しく知りたい方はご自身で確認してください。

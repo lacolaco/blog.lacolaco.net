@@ -1,0 +1,251 @@
+---
+title: '[日本語訳] ViewChildren and ContentChildren in Angular 2'
+date: '2016-04-16T00:00:00.000Z'
+tags:
+  - 'tech'
+  - 'angular'
+  - 'translation'
+published: true
+source: 'https://www.notion.so/ViewChildren-and-ContentChildren-in-Angular-2-a2178d0a22104f9b9dfc7fca9a317c9a'
+---
+
+import Figure from '../../components/features/Figure.astro';
+
+- Original: [ViewChildren and ContentChildren in Angular 2](http://blog.mgechev.com/2016/01/23/angular2-viewchildren-contentchildren-difference-viewproviders/)
+- Written by: [Minko Gechev](http://twitter.com/mgechev)
+- Translated at: 04/16/2016
+
+---
+
+この記事では Angular 2 の **View Children** と **Content Children** の違いについて解説します。
+
+それぞれの子要素に対して、親コンポーネントからどのようにアクセスするのかを理解し、 そして`@Component`デコレータの `providers` と `viewProviders` の 2 つのプロパティの違いについても述べていきます。
+
+## プリミティブの合成
+
+まず初めに、Angular 2 のコンポーネントとディレクティブの関係についておさらいしましょう。 ユーザーインタフェースを作るのに一般的なデザインは[Composite パターン](https://ja.wikipedia.org/wiki/Composite_%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3)です。 このデザインパターンは異なるプリミティブを合成し、1 つのインスタンスとして同じ方法で扱えるようにします。 関数型プラグラミングの世界では関数を合成することもできます。例えば次のように
+
+```plaintext
+map ((*2).(+1)) [1, 2, 3]
+-- [4,6,8]
+```
+
+この Haskell のコードは`(*2)`と`(+1)`という 2 つの関数を合成し、 リスト内の各アイテム`n`に対して`n -&gt; + 1 -&gt; * 2`という流れで適用されます。
+
+## UI における合成
+
+ユーザーインタフェースにおいても同じことがいえます。 コンポーネントを 1 つの関数として見てみましょう。 各関数は順序に従って合成可能であり、結果として複雑なコンポーネントを作ることができます。
+
+この構造は次の図で表すことができます。
+
+<Figure src="http://blog.mgechev.com/images/component-directive-angular2.png" caption="" />
+
+この図には 2 つの要素があります。
+
+- Directive: ロジックを持った要素ですが、構造は内包していません。
+- Component: 1 つの要素であり、1 つのディレクティブでもあります。そして複数のディレクティブを内包しています。(コンポーネントを内包することもできます)
+
+これはつまり、次のような構造を作ることができるということです。
+
+<Figure src="http://blog.mgechev.com/images/component-tree-angular2.png" caption="" />
+
+上の図を見ると、コンポーネントとディレクティブによる階層構造ができていることがわかります。 末端の要素はディレクティブか、ディレクティブを内包しないコンポーネントのどちらかになります。
+
+## Angular 2 におけるコンポーネントの合成
+
+さて、そろそろ Angular 2 の具体的な話をしましょう。
+
+これから説明することをわかりやすくするために、簡単なアプリケーションを作っていきます。
+
+```plaintext
+// ...@Component({  selector: 'todo-app',  providers: [TodoList],  directives: [TodoCmp, TodoInputCmp],  template: `    <section>      Add todo:      <todo-input (onTodo)="addTodo($event)"></todo-input>    </section>    <section>      <h4 *ngIf="todos.getAll().length">Todo list</h4>      <todo *ngFor="var todo of todos.getAll()" [todo]="todo">      </todo>    </section>    <ng-content select="footer"></ng-content>  `})class TodoAppCmp {  constructor(private todos: TodoList) {}  addTodo(todo) {    this.todos.add(todo);  }}// ...
+```
+
+これは _Yet another MV_ todo application\* です. (訳注：アプリケーションの名前なのでそのまま残しています。)
+
+上では `todo-app` というセレクタで、テンプレートを持ったコンポーネントを定義しています。 そして、子要素として使われるディレクティブのセットを定義しています。
+
+このコンポーネントは次のように使われます。
+
+```html
+<todo-app></todo-app>
+```
+
+これは標準的な XML の構文なので、 開始タグと終了タグの間に任意の content を挿入することができます。
+
+```html
+<todo-app> <footer>Yet another todo app!</footer></todo-app>
+```
+
+## `ng-content` による基本的な content の表示
+
+ここで `todo-app` コンポーネントの定義にちょっと戻りましょう。 テンプレートの最後の要素 `&lt;ng-content select="footer"&gt;&lt;/ng-content&gt;` に気づきましたか？ `ng-content` を使うと、そのコンポーネントの開始タグと終了タグの間に置かれた content を、テンプレートの中に投影することができます！ `ng-content` に与えている `select` 属性は CSS のセレクタで、content の中から投影するものを選ぶことができます。 上の例では `footer` が `todo-app` コンポーネントの一番下に挿入されます。
+
+もし `select` 要素を省いた場合は、content 全体が投影されます。
+
+`&lt;todo-input&gt;` と `&lt;todo&gt;` の 2 つのコンポーネントについては今回の話には関係ないので実装部分を省略していますが、 このアプリケーションの完成形はこんな感じになります。
+
+<Figure src="http://blog.mgechev.com/images/todo-app-sample.gif" caption="" />
+
+## ViewChildren と ContentChildren
+
+ここまでは簡単でしたね！さて、ようやく View Children と Content Children という概念を定義する準備ができました。
+
+その定義とは、「テンプレートの中に配置された子要素を _View Children_ と呼ぶ」、 そして「開始タグと終了タグの間に置かれた要素を _Content Children_ と呼ぶ」です。
+
+つまり、`todo-input` と `todo` の 2 つの要素は `todo-app` にとっての View Children であり、 `footer` は Content Child であるというわけです。
+
+### 子要素にアクセスする
+
+ようやく本題に入れます！2 種類の子要素にどうやってアクセスし、操作するのか、その方法を見ていきましょう！
+
+### View Children を使った例
+
+Angular 2 では次のプロパティデコレータを `angular2/core` パッケージで提供しています。：
+
+- `@ViewChildren`
+- `@ViewChild`
+- `@ContentChildren`
+- `@ContentChild`
+
+これは次のように使います。
+
+```plaintext
+import {ViewChild, ViewChildren, Component...} from 'angular2/core';
+
+// ...
+
+@Component({
+  selector: 'todo-app',
+  providers: [TodoList],
+  directives: [TodoCmp, TodoInputCmp],
+  template: `...`
+})
+class TodoAppCmp {
+  @ViewChild(TodoInputCmp)
+  inputComponent: TodoInputCmp
+
+  @ViewChildren(TodoCmp)
+  todoComponents: QueryList<TodoCmp>;
+
+  constructor(private todos: TodoList) {}
+  ngAfterViewInit() {
+    // available here
+  }
+}
+
+// ...
+```
+
+上の例では、 `@ViewChildren` と `@ViewChild` を使っています。 プロパティをデコレートすると、要素をクエリできるようになります。 上の例だと、子コンポーネントである `TodoInputCmp` を `@ViewChild`で、 `TodoCmp` を `@ViewChildren` でクエリしています。 2 つのデコレータを使い分けている理由は、 `TodoInputCmp` は 1 つしかないので `@ViewChild` を使えますが、 `TodoCmp` は複数個が表示されるので `@ViewChildren` を使う必要があるからです。
+
+もう一つ重要なことは、 `inputComponent` と `todoComponents` の型です。 前者のプロパティの型は `TodoInputCmp` になっています。 これはクエリした結果要素が見つからなければ null になり、見つかればそのコンポーネントのインスタンスが代入されます。 一方、 `todoComponents` プロパティの型は `QueryList&lt;TodoCmp&gt;` で、動的に増えたり減ったりする `TodoCmp`のインスタンスを扱えます。 `QueryList` は Observable なコレクションなので、新しく追加されたり、要素が削除された時にはイベントを発生してくれます。
+
+**Angular の DOM コンパイラは **`todo-app`** コンポーネントを先に初期化し、その後子要素を初期化します。** **つまり **`todo-app`** コンポーネントの初期化の間は **`inputComponent`** も **`todoComponents`** もまだ初期化されていません** **これらは **`ngAfterCiewInit`** ライフサイクルフックのタイミングで使用可能になります**
+
+### Content Children にアクセスする
+
+Content Children についてもほとんど同じルールが通用しますが、少しだけ違いがあります。 それを説明するために、 `TodoAppCmp` を使う側のルートコンポーネントを見てみましょう。
+
+```plaintext
+@Component({
+  selector: 'footer',
+  template: '<ng-content></ng-content>'
+})
+class Footer {}
+
+@Component(...)
+class TodoAppCmp {...}
+
+@Component({
+  selector: 'app',
+  styles: [
+    'todo-app { margin-top: 20px; margin-left: 20px; }'
+  ],
+  template: `
+    <content>
+      <todo-app>
+        <footer>
+          <small>Yet another todo app!</small>
+        </footer>
+      </todo-app>
+    </content>
+  `,
+  directives: [TodoAppCmp, NgModel, Footer]
+})
+export class AppCmp {}
+```
+
+ここでは 2 つのコンポーネント `Footer` と `AppCmp` を定義しています。 `Footer` は開始タグと終了タグの間に渡された要素をすべて投影します( `&lt;footer&gt;ここが表示されます&lt;/footer&gt;` ) 一方、 `AppCmp` は `TodoAppCmp` を使い、さらに `Footer` を開始タグと終了タグの間に渡しています。 つまり、これは我々の用語では `Footer` は Content Child であるといえます。これにアクセスするには次の例のようにします。
+
+```plaintext
+// ...
+@Component(...)
+class TodoAppCmp {
+  @ContentChild(Footer)
+  footer: Footer;
+
+  ngAfterContentInit() {
+    // this.footer is now with value set
+  }
+}
+// ...
+```
+
+View Children と Content Children の違いは、使っているデコレータとライフサイクルフックの種類だけです。 Content Children には `@ContentChild` または `@ContentChildren` デコレータを使い、 `ngAfterContentInit` ライフサイクルで使用可能になります。
+
+## `viewProviders` と `providers`
+
+もうほとんど説明は終わってしまいました！ 最後のステップは、 `providers` と `viewProviders` の違いを理解することです。 (もしあなたが Angular 2 の DI のメカニズムを理解していなければ、まず [私の本](https://www.packtpub.com/web-development/switching-angular-2) を読むといいでしょう)
+
+さて、それでは `TodoAppCmp` の宣言部分を覗いてみましょう。
+
+```plaintext
+class TodoList {
+  private todos: Todo[] = [];
+  add(todo: Todo) {}
+  remove(todo: Todo) {}
+  set(todo: Todo, index: number) {}
+  get(index: number) {}
+  getAll() {}
+}
+
+@Component({
+  // ...
+  viewProviders: [TodoList],
+  directives: [TodoCmp, TodoInputCmp],
+  // ...
+})
+class TodoAppCmp {
+  constructor(private todos: TodoList) {}
+  // ...
+}
+```
+
+`@Component` デコレータの中で `viewProviders` プロパティがセットされ、 `TodoList` サービスが渡されています。 `TodoList` サービスはすべての Todo のアイテムを保持しているサービスです。
+
+`TodoAppCmp` のコンストラクタでは `TodoList` をインジェクトしていますが、 これは `TodoAppCmp` コンポーネントの中で使われている他のディレクティブ(もちろんコンポーネントも)でもインジェクト可能です。 つまり、 `TodoList` は次の場所からアクセス可能です
+
+- TodoAppCmp
+- TodoCmp
+- TodoInputCmp
+
+ところが、 `Footer` コンポーネントのコンストラクタでこのサービスをインジェクトしようとすると、次のようなエラーが表示されるでしょう。
+
+```plaintext
+EXCEPTION: No provider for TodoList! (Footer -> TodoList)
+```
+
+**これは **`viewProviders`** によって宣言されたプロバイダはそのコンポーネントと View Children にだけアクセス可能になるということです**
+
+`Footer` でも `TodoList` サービスにアクセスしたい場合は、 `viewProviders` から `providers` に変える必要があります。
+
+### `viewProviders` はいつ使うべき？
+
+いったいどういう時に、Content Children からアクセスできないように `viewProviders` を使うべきなのでしょうか？ 仮にあなたがサードパーティのライブラリを作り、その中でインターナルなサービスを使うとします。 そのサービスはライブラリの内部的な API の一部で、他のユーザーからはアクセスさせたくないものです。 そのようなプライベートな依存性を `providers` を使って登録し、ライブラリで公開しているコンポーネントの中にユーザーが Content Children を渡すと、 その人はアクセスできてしまいます。 しかし、あなたが `viewProviders` を使えば、そのサービスは外からは使えなくなります。
+
+## まとめ
+
+この記事ではコンポーネントとディレクティブの合成の方法について解説しました。 また、View Children と Content Children の違いと、それらにどうやってアクセスするのかについても紹介しました。
+
+そして最後に、 `viewProviders` と `providers` の意味についても説明しました。 もしこのテーマにもっと興味がある場合は、私が書いている[Switching to Angular 2](https://www.packtpub.com/web-development/switching-angular-2)を読むことをおすすめします！

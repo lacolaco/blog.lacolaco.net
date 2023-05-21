@@ -1,0 +1,20 @@
+---
+type Props = {
+  content: string;
+};
+
+const { content } = Astro.props;
+---
+
+<div class="text-center">
+  <div class="mermaid">
+    {content}
+  </div>
+</div>
+
+<script>
+  import mermaid from 'mermaid';
+  document.addEventListener('DOMContentLoaded', function () {
+    mermaid.initialize({});
+  });
+</script>

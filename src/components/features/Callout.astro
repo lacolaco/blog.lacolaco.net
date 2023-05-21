@@ -1,0 +1,14 @@
+---
+type Props = {
+  icon?: string;
+};
+
+const { icon } = Astro.props;
+---
+
+<div
+  class="rounded-md mb-4 p-4 border border-solid border-sky-700 bg-sky-500 bg-opacity-30 flex flex-row space-x-3 items-baseline"
+>
+  {icon && <span class="text-base">{icon}</span>}
+  <div class="text-base"><slot /></div>
+</div>

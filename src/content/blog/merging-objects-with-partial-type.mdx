@@ -1,0 +1,35 @@
+---
+title: 'Merging objects with Partial type'
+date: '2017-11-16T00:00:00.000Z'
+tags:
+  - 'tech'
+  - 'TypeScript'
+published: true
+source: 'https://www.notion.so/Merging-objects-with-Partial-type-eb888a6f797f4562907a2adb7ea9d36a'
+---
+
+My usual implementation pattern of immutable merging in TypeScript.
+
+```plaintext
+class MyClass {
+  constructor(public id: string, public name: string) {}
+
+  clone() {
+    return new MyClass(this.id, this.name);
+  }
+
+  merge(another: Partial<MyClass>) {
+    return Object.assign(this.clone(), another);
+  }
+}
+
+const objA = new MyClass("1", "foo");
+
+const objB = objA.merge({ name: "bar" });
+
+console.log(objA !== objB);
+console.log(objB.id === "1");
+console.log(objB.name === "bar");
+```
+
+`Partial&lt;MyClass&gt;` allows us to pass an object matching `MyClass` partially.

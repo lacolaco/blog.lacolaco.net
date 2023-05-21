@@ -1,0 +1,156 @@
+---
+title: 'Nx: Angular+Nest.jsアプリをDockerビルドする'
+date: '2020-04-29T00:00:00.000Z'
+tags:
+  - 'tech'
+  - 'angular'
+  - 'Nx'
+published: true
+source: 'https://www.notion.so/Nx-Angular-Nest-js-Docker-eb5832c419094ad19bfad5ed2f86a16b'
+---
+
+import Figure from '../../components/features/Figure.astro';
+
+本稿では [Nx](nx.dev) を使った Angular+Nest.js の monorepo アプリケーションを単一の Docker イメージとしてデプロイ可能にする手順を記す。
+
+サンプルコードの最終的な状態は以下のリポジトリに公開している。
+
+[https://github.com/lacolaco/nx-angular-nest-docker-example](https://github.com/lacolaco/nx-angular-nest-docker-example)
+
+## 0. 背景
+
+一般的には Single Page Application のクライアントとサーバーは別のコンテナとしてデプロイされ Nginx などで静的ファイルへのリクエストと API リクエストを振り分けることが多いが、今回はあえて単一の Docker コンテナで HTTP サーバーを立ち上げ、そのサーバーから静的ファイルとしてクライアントをサーブする。 なぜかというと、今回は[Google Cloud Run](https://cloud.google.com/run?hl=ja)にアプリケーションをデプロイすることが目的だからだ。Cloud Run には単一の Dockerfile からビルドされるイメージをデプロイできる。
+
+利点としては、まず環境が Cloud Run だけで完結すること。そしてクライアントとサーバーあわせた End-to-End の整合性がとりやすいことがある。 欠点としては個別にデプロイできないことや静的ファイルに特化した配信戦略を取りにくいことだ。ただし Cloud Run は Firebase Hosting と連携することで Google の CDN 網を利用できるため、静的ファイルに適切なレスポンスヘッダをつければ Firebase Hosting と同じ CDN でのキャッシュが機能する。
+
+## 1. workspace の作成
+
+まずは Nx の workspace を作成する。 `create-nx-workspace` コマンドを使い、今回は `angular-nest` を選択するが、本稿の趣旨においては別に `react-express` でも違いはない。
+
+```plaintext
+$ npx create-nx-workspace@latest angular-nest-docker-example`
+```
+
+## 2. outputPath の変更 (client, server)
+
+`angular-nest` テンプレートのデフォルトで生成されるプロジェクトは、クライアントサイドが `&lt;application-name&gt;` 、サーバーサイドが `api` となっている。これをそれぞれ `dist/apps/client` と `dist/apps/server` にビルド結果が出力されるようにする。
+
+<Figure
+  src="https://img.esa.io/uploads/production/attachments/14362/2020/04/29/50720/b4788f7b-46f4-4f81-a245-2e21d073a9ef.png"
+  caption=""
+/>
+
+<Figure
+  src="https://img.esa.io/uploads/production/attachments/14362/2020/04/29/50720/ab9b76d1-9c44-4046-b035-14ff8552e70d.png"
+  caption=""
+/>
+
+## 3. `@nestjs/serve-static` の追加 (server)
+
+クライアントサイドをビルドした生成物を Nest.js がサーブできるように、静的ファイル配信用のモジュールを追加する。
+
+```plaintext
+$ yarn add @nestjs/serve-static`
+```
+
+静的ファイルはさきほど変更した outputPath のとおり、client と server が隣接するディレクトリになるため、ルートディレクトリには `../client` を指定する。 `/api*` は API のエンドポイントにマッチするように除外しておく。
+
+```plaintext
+import { Module } from '@nestjs/common';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'path';
+
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
+@Module({
+  imports: [
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', 'client'),
+      exclude: ['/api*']
+    })
+  ],
+  controllers: [AppController],
+  providers: [AppService]
+})
+export class AppModule {}
+```
+
+加えて、API のエンドポイントが `/api/hello` となるように `main.ts` と `app.controller.ts` も微修正する。
+
+<Figure
+  src="https://img.esa.io/uploads/production/attachments/14362/2020/04/29/50720/14911365-d4a5-45d3-a2fb-db9cb9af9aa3.png"
+  caption=""
+/>
+
+<Figure
+  src="https://img.esa.io/uploads/production/attachments/14362/2020/04/29/50720/551cf696-a389-4509-adde-96b69baa6435.png"
+  caption=""
+/>
+
+## 5. プロジェクト間依存関係の設定
+
+サーバーサイドがクライアントサイドのビルド生成物を配信するということは、サーバーサイドからクライアントサイドへのビルド順番の依存関係があるということだ。このプロジェクト間の依存関係は `nx.json` で定義できる。
+
+<Figure
+  src="https://img.esa.io/uploads/production/attachments/14362/2020/04/29/50720/4089b50f-d651-47f3-9a43-7888c00ef520.png"
+  caption=""
+/>
+
+`nx dep-graph` コマンドで依存関係を可視化すると以下のようになる。
+
+<Figure
+  src="https://img.esa.io/uploads/production/attachments/14362/2020/04/29/50720/db993e3d-b3ac-4ee2-bb8e-fa01c2fb064f.png"
+  caption=""
+/>
+
+この状態になっていると、サーバーサイドをビルドする際に自動的にクライアントサイドのビルドを先に実行することができる。
+
+```plaintext
+$ nx build api --with-deps
+```
+
+<Figure
+  src="https://img.esa.io/uploads/production/attachments/14362/2020/04/29/50720/a63eddd9-ca08-4b8b-af13-1aa8029bd80a.png"
+  caption=""
+/>
+
+これで monorepo 内の依存関係を解決した上で `dist` ディレクトリに生成物を出力できるようになった。ためしに `dist/apps/server/main.js` を実行すれば、Angular アプリケーションが Nest.js の API を実行するアプリケーションが起動できる。
+
+## 6. Dockerfile の作成
+
+Dockerfile を作ってデプロイ可能なイメージをビルドするが、その前にいくつか準備が必要になる。
+
+まず、今のバージョン（Nx v9.2.3）の `angular-nest` で生成される `package.json` から、`postinstall` の `ngcc` の実行スクリプトを削除する。これがあると Dockerfile 内でモジュールをインストールしたときに不要な処理が実行される。
+
+<Figure
+  src="https://img.esa.io/uploads/production/attachments/14362/2020/04/29/50720/e16b8950-ff65-4705-982f-124bb24fe7eb.png"
+  caption=""
+/>
+
+次に、サーバーの `main.ts` が使用する環境変数を `port` から `PORT` に変更する。どちらでもよいが一般的に大文字のほうを使うため変更した。
+
+<Figure
+  src="https://img.esa.io/uploads/production/attachments/14362/2020/04/29/50720/907fd1e3-f772-4575-bf11-4a5a68b20930.png"
+  caption=""
+/>
+
+そして Dockerfile は次のような形にした。Nx のビルドはサーバーサイドもバンドルするため、本当は Dockerfile では `node_modules` のインストールをしたくないのだが、Nest.js が `tslib` が見つからずエラーになってしまうため仕方なくインストールしている。
+
+```plaintext
+FROM node:12WORKDIR /appCOPY package.json yarn.lock ./RUN yarn install --production# add appCOPY ./dist/ ./# start appCMD node apps/server/main.js
+```
+
+あとは `docker build .` でビルドし、 `docker run` コマンドで実行できることを確認する。
+
+<Figure
+  src="https://img.esa.io/uploads/production/attachments/14362/2020/04/29/50720/94340e50-27ee-4c6f-9dd8-96697ae808db.png"
+  caption=""
+/>
+
+これで Cloud Run にデプロイ可能な状態となった。
+
+## 課題
+
+- Dockerfile で node_modules をインストールするなら、最初から Nest.js のビルドでバンドルをしないようにしたほうがイメージサイズが減るのではないか
+  - Nest.js である必要もないので面倒そうなら express に換装してもよさそう

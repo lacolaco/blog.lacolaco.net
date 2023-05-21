@@ -1,19 +1,19 @@
 import 'dotenv/config';
 
-import { parseArgs } from 'node:util';
 import * as path from 'node:path';
-import { ImagesRepository, LocalPostsRepository, RemotePostsRepository } from './lib/posts/repository';
-import { Client } from '@notionhq/client';
-import { NotionAPI } from './lib/notion';
-import { LocalPostFactory } from './lib/posts/factory';
+import { parseArgs } from 'node:util';
+import { NotionDatabase } from './lib/notion';
+import { renderPosts } from './lib/renderer';
+import { FileSystem } from './lib/file-system';
 
 if (process.env.NOTION_AUTH_TOKEN == null) {
   console.error('Please set NOTION_AUTH_TOKEN');
   process.exit(1);
 }
-const notion = new NotionAPI(new Client({ auth: process.env.NOTION_AUTH_TOKEN }));
-const postsDir = path.resolve(__dirname, '../content/post/notion');
-const imagesDir = path.resolve(__dirname, '../static/img');
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+const imagesDir = path.resolve(__dirname, '../public/images');
+const postsDir = path.resolve(__dirname, '../src/content/blog');
 
 const { values } = parseArgs({
   args: process.argv.slice(2),
@@ -30,16 +30,19 @@ const { values } = parseArgs({
 });
 const { force = false, 'dry-run': dryRun = false } = values;
 
-const remotePostsRepo = new RemotePostsRepository(notion);
-const localPostsRepo = new LocalPostsRepository(postsDir, { dryRun });
-const imagesRepo = new ImagesRepository(imagesDir, { dryRun });
-const postFactory = new LocalPostFactory(localPostsRepo, imagesRepo, { forceUpdate: force });
-
 async function main() {
+  const db = new NotionDatabase();
+  const imagesFS = new FileSystem(imagesDir, { dryRun });
+  const postsFS = new FileSystem(postsDir, { dryRun });
   // collect posts from notion
-  const posts = await remotePostsRepo.query();
-  // write posts to file
-  await postFactory.create(posts);
+  const pages = await db.queryBlogPages();
+  if (pages.length > 0) {
+    // convert page content to post markdown
+    const posts = await renderPosts(pages, imagesFS);
+    // write posts to file
+    await Promise.all(posts.map((post) => postsFS.save(post.filename, post.content, { encoding: 'utf-8' })));
+  }
+  console.log('Done');
 }
 
 main().catch((err) => {

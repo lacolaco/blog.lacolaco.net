@@ -1,0 +1,16 @@
+---
+import { urlize } from '../libs/strings';
+
+export interface Props {
+  name: string;
+  count?: number;
+}
+
+const { name, count } = Astro.props;
+const urlizedName = urlize(name);
+---
+
+<a
+  class="text-muted leading-tight text-xs inline-block border border-gray-300 bg-white hover:bg-gray-200 px-2 py-0.5 rounded-lg"
+  href={`/tags/${urlizedName}`}>#{name} {count && `(${count})`}</a
+>
