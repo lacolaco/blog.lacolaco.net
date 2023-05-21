@@ -3,7 +3,7 @@ import type { FileSystem } from '../file-system';
 import type { BlockObject, PageObjectWithContent } from '../notion';
 import { getFile } from './utils';
 import { renderFrontmatter } from './frontmatter';
-import { renderBlock } from './markdown';
+import { renderBlock, renderTitle } from './markdown';
 import type { RenderContext, RenderResult } from './types';
 import { featureComponents } from './features';
 
@@ -21,7 +21,7 @@ export async function renderPost(page: PageObjectWithContent, imagesFS: FileSyst
     features: new Set(),
   };
 
-  const title = page.properties.title.title[0].plain_text;
+  const title = renderTitle(page.properties.title);
   const published = page.properties.published.checkbox;
   const tags = page.properties.tags.multi_select.map((tag) => tag.name);
   const createdAtOverride = page.properties.created_at_override?.date?.start ?? null;
@@ -55,7 +55,7 @@ export async function renderPost(page: PageObjectWithContent, imagesFS: FileSyst
     context.imageRequests.map(async (req) => {
       const data = await getFile(req.url);
       await imagesFS.save(`${page.slug}/${req.filename}`, data);
-    })
+    }),
   );
 
   return {

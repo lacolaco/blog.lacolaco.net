@@ -1,6 +1,10 @@
-import type { BlockObject } from '../notion';
+import type { BlockObject, PageProperty } from '../notion';
 import type { RenderContext } from './types';
 import { isNotNull } from './utils';
+
+export function renderTitle(block: PageProperty<'title'>): string {
+  return plainText(block.title);
+}
 
 export async function renderBlock(block: BlockObject, context: RenderContext): Promise<string | null> {
   const render = async (node: BlockObject): Promise<string | null> => {

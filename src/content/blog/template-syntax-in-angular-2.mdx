@@ -1,5 +1,5 @@
 ---
-title: 'Angular 2の'
+title: 'Angular 2の * シンタックス'
 date: '2016-04-11T00:00:00.000Z'
 tags:
   - 'tech'
@@ -18,7 +18,7 @@ Angular 2 は基本的にコンポーネント志向であり、アプリケー�
 
 次の`myDirective`ディレクティブは、付与した要素のスタイルを変更し、`color`を`red`にします。
 
-```plaintext
+```
 import {Component, Directive, ElementRef, Renderer} from 'angular2/core'
 
 @Directive({
@@ -62,7 +62,7 @@ export class App {
 
 直感的だし、何も違和感のない DOM 構造です。ここで、`myDirective`ディレクティブに`*`記号を付けて実行するとどうなるか見てみましょう。
 
-```plaintext
+```
 @Component({
   selector: 'my-app',
   template: `
@@ -87,7 +87,7 @@ export class App {
 
 わかりやすい例として、`ngIf`ディレクティブのソースコードを見てみましょう。
 
-```plaintext
+```
 @Directive({selector: '[ngIf]', inputs: ['ngIf']})
 export class NgIf {
   private _prevCondition: boolean = null;
@@ -122,7 +122,7 @@ export class NgIf {
 
 次の例では`myDirective`ディレクティブを使って、同じ要素を 2 個生成するようにしています。
 
-```plaintext
+```
 import {Component, Directive, ViewContainerRef, TemplateRef} from 'angular2/core'
 
 @Directive({
@@ -170,7 +170,7 @@ Kobito.Fi9CZD.png
 
 先程の`*myDirective`を使った例は`template`要素を使うと次のように書けます。
 
-```plaintext
+```
 @Component({
   selector: 'my-app',
   template: `
