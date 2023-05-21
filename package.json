@@ -36,7 +36,7 @@
     "@types/cli-progress": "^3.11.0",
     "@types/js-yaml": "4.0.5",
     "@types/katex": "^0.16.0",
-    "@types/node": "18.16.7",
+    "@types/node": "18.16.10",
     "@types/prettier": "2.7.2",
     "@types/tailwindcss": "3.0.11",
     "cli-progress": "^3.12.0",
