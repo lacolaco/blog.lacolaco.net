@@ -9,7 +9,7 @@ import TagList from '../components/TagList.astro';
 
 type Props = CollectionEntry<'blog'>['data'];
 
-const { title, date, tags, updatedAt } = Astro.props;
+const { title, date, tags, updatedAt, canonicalUrl } = Astro.props;
 
 const isUpdated = updatedAt && isAfterDate(updatedAt, date);
 const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { years: 2 }));
@@ -19,6 +19,8 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
 <html lang="ja">
   <head>
     <BaseHead title={title} description={''} />
+
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
   </head>
 
   <body>
