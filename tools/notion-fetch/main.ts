@@ -10,8 +10,8 @@ if (process.env.NOTION_AUTH_TOKEN == null) {
   process.exit(1);
 }
 
-const imagesDir = new URL('../../public/images', import.meta.url).toString();
-const postsDir = new URL('../../src/content/blog', import.meta.url).toString();
+const imagesDir = new URL('../../public/images', import.meta.url).pathname;
+const postsDir = new URL('../../src/content/blog', import.meta.url).pathname;
 
 const { values } = parseArgs({
   args: process.argv.slice(2),
