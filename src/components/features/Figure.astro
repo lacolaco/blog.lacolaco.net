@@ -12,4 +12,9 @@ const { src, caption } = Astro.props;
   {caption && <figcaption>{caption}</figcaption>}
 </figure>
 
-<style></style>
+<style>
+  figure > figcaption {
+    text-align: center;
+    color: #666;
+  }
+</style>
