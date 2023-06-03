@@ -1,17 +1,19 @@
 import 'dotenv/config';
 
+import { NotionDatabase } from '@lib/notion';
 import { parseArgs } from 'node:util';
 import { FileSystem } from './file-system';
-import { NotionDatabase } from './notion';
 import { renderPosts } from './renderer';
 
-if (process.env.NOTION_AUTH_TOKEN == null) {
+const { NOTION_AUTH_TOKEN, NOTION_DATABASE_ID } = process.env;
+if (NOTION_AUTH_TOKEN == null) {
   console.error('Please set NOTION_AUTH_TOKEN');
   process.exit(1);
 }
 
 const imagesDir = new URL('../../public/images', import.meta.url).pathname;
 const postsDir = new URL('../../src/content/blog', import.meta.url).pathname;
+const manifestFilePath = new URL('./manifest.json', import.meta.url).pathname;
 
 const { values } = parseArgs({
   args: process.argv.slice(2),
@@ -29,7 +31,7 @@ const { values } = parseArgs({
 const { force = false, 'dry-run': dryRun = false } = values;
 
 async function main() {
-  const db = new NotionDatabase();
+  const db = new NotionDatabase(NOTION_AUTH_TOKEN, NOTION_DATABASE_ID, manifestFilePath);
   const imagesFS = new FileSystem(imagesDir, { dryRun });
   const postsFS = new FileSystem(postsDir, { dryRun });
   // collect posts from notion

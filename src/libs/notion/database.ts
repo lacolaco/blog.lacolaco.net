@@ -5,18 +5,17 @@ import { Client } from '@notionhq/client';
 import type { BlogPageProperties, PageObjectWithContent } from './types';
 import { fetchChildBlocks, queryAllPages } from './utils';
 
-const { NOTION_AUTH_TOKEN, NOTION_DATABASE_ID, NODE_ENV } = process.env;
-const isDevMode = NODE_ENV === 'development';
-const notion = new Client({ auth: NOTION_AUTH_TOKEN });
-const manifestFilePath = new URL('../manifest.json', import.meta.url);
-
 export class NotionDatabase {
+  private notion = new Client({ auth: this.authToken });
+
+  constructor(private authToken: string, private databaseID: string, private manifestFilePath: string) {}
+
   async queryBlogPages(): Promise<PageObjectWithContent[]> {
     // collect pages
     console.log('Fetching pages...');
-    const pages = await queryAllPages(notion, NOTION_DATABASE_ID, {
+    const pages = await queryAllPages(this.notion, this.databaseID, {
       and: [
-        ...(isDevMode ? [] : [{ property: 'published', checkbox: { equals: true } }]),
+        { property: 'published', checkbox: { equals: true } },
         { property: 'slug', rich_text: { is_not_empty: true } },
         { property: 'title', title: { is_not_empty: true } },
         {
@@ -27,7 +26,7 @@ export class NotionDatabase {
     });
     console.log(`Fetched ${pages.length} pages`);
     // filter pages with last edited time
-    const manifest = await readFile(manifestFilePath, 'utf-8').then((s) => JSON.parse(s));
+    const manifest = await readFile(this.manifestFilePath, 'utf-8').then((s) => JSON.parse(s));
     const editedPages = pages.filter((page) => {
       const lastEditedTime = page.last_edited_time;
       const lastEditedTimeInManifest = manifest[page.id];
@@ -38,7 +37,7 @@ export class NotionDatabase {
     pages.forEach((page) => {
       manifest[page.id] = page.last_edited_time;
     });
-    await writeFile(manifestFilePath, JSON.stringify(manifest, null, 2));
+    await writeFile(this.manifestFilePath, JSON.stringify(manifest, null, 2));
 
     if (editedPages.length === 0) {
       return [];
@@ -51,7 +50,7 @@ export class NotionDatabase {
       editedPages.map((page) =>
         limit(async () => {
           const properties = page.properties as BlogPageProperties;
-          const blocks = await fetchChildBlocks(notion, page.id).catch((e) => {
+          const blocks = await fetchChildBlocks(this.notion, page.id).catch((e) => {
             console.error(`Failed to fetch content of ${page.url}`, e);
             return [];
           });

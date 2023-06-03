@@ -1,6 +1,10 @@
 import type { Client } from '@notionhq/client';
 import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
+type ElementType<T> = T extends (infer U)[] ? U : never;
+
+type MatchType<T, U, V = never> = T extends U ? T : V;
+
 export type DatabaseQueryParams = Parameters<Client['databases']['query']>[0];
 export type QueryFilterObject = DatabaseQueryParams['filter'];
 

@@ -1,11 +1,11 @@
+import type { BlockObject, PageObjectWithContent } from '@lib/notion';
 import { format } from 'prettier';
 import type { FileSystem } from '../file-system';
-import type { BlockObject, PageObjectWithContent } from '../notion';
-import { getFile } from './utils';
+import { featureComponents } from './features';
 import { renderFrontmatter } from './frontmatter';
 import { renderBlock, renderTitle } from './markdown';
 import type { RenderContext, RenderResult } from './types';
-import { featureComponents } from './features';
+import { getFile } from './utils';
 
 const imagesRootPath = '/images';
 

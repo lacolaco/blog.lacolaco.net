@@ -1,4 +1,4 @@
-import type { BlockObject, PageProperty } from '../notion';
+import type { BlockObject, PageProperty } from '@lib/notion';
 import type { RenderContext } from './types';
 import { isNotNull } from './utils';
 

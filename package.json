@@ -10,7 +10,7 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "format": "prettier --cache --write 'src' 'tools' 'notion-gateway'",
+    "format": "prettier --cache --write 'src' 'tools'",
     "astro": "astro",
     "notion-fetch": "tsx tools/notion-fetch/main.ts"
   },

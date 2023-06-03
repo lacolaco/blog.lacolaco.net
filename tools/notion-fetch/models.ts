@@ -1,4 +1,4 @@
-import type { BlockObject } from './notion';
+import type { BlockObject } from '@lib/notion';
 
 export type BlogPostObject = {
   readonly slug: string;
