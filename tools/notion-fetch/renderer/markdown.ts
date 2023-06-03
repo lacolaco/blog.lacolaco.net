@@ -109,7 +109,7 @@ const table = async (block: BlockObject<'table'>, context: RenderContext) => {
     isNotNull,
   );
   const columns = rows[0] ? rows[0].split('|').length - 2 : 0;
-  const header = hasHeader ? rows.shift() : `|${'|'.repeat(columns)}`;
+  const header = hasHeader ? rows.shift() : `|${'|'.repeat(columns)}\n`;
   const alignment = `|${':--|'.repeat(columns)}`;
   return `${header}${alignment}\n${rows.join('')}\n\n`;
 };
