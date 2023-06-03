@@ -2,7 +2,7 @@
 title: 'Angularアプリケーションの状態管理パターン'
 date: '2022-05-11T02:10:00.000Z'
 tags:
-  - 'angular'
+  - 'Angular'
   - 'tech'
   - 'State Management'
   - '状態管理'
@@ -127,7 +127,7 @@ export class MyComponent {
 - 親子関係にない離れたコンポーネントとの間で状態を共有したい
 - コンポーネントよりも長いライフサイクルで状態を保持したい
 
-シングルトンサービスとは、典型的には `@Injectable(&#123; providedIn 'root' &#125;)` で提供されるような、コンポーネントの親子関係などにかかわらず同一のインスタンスにアクセスできるようなサービスである。
+シングルトンサービスとは、典型的には `@Injectable({ providedIn 'root' })` で提供されるような、コンポーネントの親子関係などにかかわらず同一のインスタンスにアクセスできるようなサービスである。
 
 ```typescript
 import { AppStore } from '../app-store';

@@ -3,7 +3,7 @@ title: 'Angular 2のローカル変数とexportAs'
 date: '2016-04-11T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
 published: true
 source: 'https://www.notion.so/Angular-2-exportAs-5d985bb53b5341d8b097d2f5cf8ddb57'
 ---
@@ -16,7 +16,7 @@ Angular 2 には**local variables**(ローカル変数)という機能があり�
 
 次の例では、`input`要素をローカル変数`i`として定義し、 ボタンをクリックするときに`input`要素の値をコンポーネントに渡しています。
 
-```plaintext
+```
 @Component({
   selector: 'my-app',
   template: `
@@ -44,7 +44,7 @@ export class App {
 
 `var-*`シンタックスを使って先程のテンプレートを書き直すと次のようになります。
 
-```plaintext
+```
 @Component({
   selector: 'my-app',
   template: `
@@ -69,7 +69,7 @@ Angular 2 のローカル変数は、HTML 要素のインスタンスを簡単�
 
 同じように`form`要素をローカル変数に代入して便利に使ってみましょう！ 次の例では`form`要素をローカル変数`f`に代入し、ボタンのクリックイベントで`reset()`メソッドを呼び出しています。
 
-```plaintext
+```
 @Component({
   selector: 'my-app',
   template: `
@@ -89,9 +89,9 @@ export class App {
 
 ここまでのローカル変数は定義された要素のインスタンスを引き出すだけでしたが、 ローカル変数は`exportAs`という機能によってさらに強力な機能になります。さっそく見ていきましょう！
 
-`exportAs`属性はディレクティブのメタデータの 1 つで、 ローカル変数に HTML 要素ではなくディレクティブのインスタンスを代入させたいときに使います。 Angular 2 に組み込まれている`ngForm`ディレクティブは`exportAs`を活用しているいいサンプルです。 `ngForm`ディレクティブのセレクタは`&lt;form&gt;`に一致するようになっていて、 HTML 標準の`form`要素が自動的に`ngForm`ディレクティブで拡張されています。
+`exportAs`属性はディレクティブのメタデータの 1 つで、 ローカル変数に HTML 要素ではなくディレクティブのインスタンスを代入させたいときに使います。 Angular 2 に組み込まれている`ngForm`ディレクティブは`exportAs`を活用しているいいサンプルです。 `ngForm`ディレクティブのセレクタは`<form>`に一致するようになっていて、 HTML 標準の`form`要素が自動的に`ngForm`ディレクティブで拡張されています。
 
-```plaintext
+```
 @Directive({
   selector: 'form:not([ngNoForm]):not([ngFormModel]),ngForm,[ngForm]',
   bindings: [formDirectiveProvider],
@@ -105,11 +105,11 @@ export class App {
 
 [angular/ng_form.ts at master · angular/angular](https://github.com/angular/angular/blob/master/modules%2Fangular2%2Fsrc%2Fcommon%2Fforms%2Fdirectives%2Fng_form.ts#L80-L88)
 
-ここで、`exportAs: 'ngForm'`というメタデータの設定に注目してください。 `ngForm`は`form`要素に一致しますが、ただ`&lt;form #f&gt;`のようにローカル変数を定義しても代入されるのは`HTMLFormElement`のインスタンスだけです。 `form`要素に隠れている`ngForm`ディレクティブのインスタンスを得るには、`&lt;form #f="ngForm"&gt;`という定義を行います。 つまり、`exportAs`で指定された名前をキーに、ディレクティブのインスタンスを得ることができるのです。
+ここで、`exportAs: 'ngForm'`というメタデータの設定に注目してください。 `ngForm`は`form`要素に一致しますが、ただ`<form #f>`のようにローカル変数を定義しても代入されるのは`HTMLFormElement`のインスタンスだけです。 `form`要素に隠れている`ngForm`ディレクティブのインスタンスを得るには、`<form #f="ngForm">`という定義を行います。 つまり、`exportAs`で指定された名前をキーに、ディレクティブのインスタンスを得ることができるのです。
 
 `ngForm`のインスタンスを使うと、フォームの操作がとても簡単になります。次の例ではフォームに入力された値を JSON オブジェクトとして取り出して表示しています。
 
-```plaintext
+```
 @Component({
   selector: 'my-app',
   template: `
@@ -142,7 +142,7 @@ export class App {
 
 `MyDiv`ディレクティブは、`div`要素に一致するセレクタと、自身の`text-transform`スタイルを切り替えるメソッドを持っています。 そしてインスタンスを`myDiv`として公開しています。
 
-```plaintext
+```
 @Directive({
   selector: "div",
   exportAs: "myDiv"
@@ -168,7 +168,7 @@ class MyDiv {
 
 これをコンポーネントから使うと、次のようになります。
 
-```plaintext
+```
 @Component({
   selector: 'my-app',
   template: `

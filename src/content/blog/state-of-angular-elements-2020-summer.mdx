@@ -3,7 +3,7 @@ title: 'Angular Elementsの現在地 (2020 Summer)'
 date: '2020-09-22T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - 'Angular Elements'
 published: true
 source: 'https://www.notion.so/Angular-Elements-2020-Summer-c392710074624b3eacb775d58b6b9652'
@@ -24,7 +24,7 @@ Angular Elements に触れたことがない読者のために、Angular Element
 
 ライブラリとして提供される API はシンプルで、 `@angular/elements` パッケージの `createCustomElement()` 関数にコンポーネントクラスを渡すだけである。Custom Element にコンバートされたコンポーネントは元の Angular アプリケーションからは独立し、そのコンポーネントを頂点とする小さな Angular アプリケーションのように振る舞う。ただし、DI の解決に関してはコンバート時にベースとなる `Injector` を受け取っておく必要がある。
 
-```plaintext
+```
 @Component({...})
 export class MyButtonComponent {}
 
@@ -81,14 +81,14 @@ Angular コンポーネントはデフォルトでカプセル化 CSS の機構�
 
 - ネイティブ Shadow DOM の利用
   - オプトインの機能として `ViewEncapsulation.ShadowDom` を設定できる
-- `&lt;slot&gt;` サポート （`ViewEncapsulation.ShadowDom` 時のみ）
-  - Angular テンプレート中の `&lt;slot&gt;` はそのまま残り、 `::slotted()` も利用できる
+- `<slot>` サポート （`ViewEncapsulation.ShadowDom` 時のみ）
+  - Angular テンプレート中の `<slot>` はそのまま残り、 `::slotted()` も利用できる
   - `ShadowDom` 以外のときには動作しない
 
 **未サポートの機能**
 
-- `&lt;ng-content&gt;` から `&lt;slot&gt;` への自動変換
-  - `&lt;ng-content&gt;` は ViewEncapsulation 設定によらず Angular アプリケーション中では正しく動作するが、 `&lt;slot&gt;` は `ShadowDom` 設定のとき、かつ Custom Elements にコンバートされたあとにしか動作しない
+- `<ng-content>` から `<slot>` への自動変換
+  - `<ng-content>` は ViewEncapsulation 設定によらず Angular アプリケーション中では正しく動作するが、 `<slot>` は `ShadowDom` 設定のとき、かつ Custom Elements にコンバートされたあとにしか動作しない
 - Shadow Parts のエミュレーション
   - Shadow Parts による外部からのスタイリングは `ShadowDom` 設定のときのみ機能する
   - `::ng-deep` を利用せず外部からスタイリングする方法がまだ確立されていない
@@ -101,7 +101,7 @@ v6.0 とともに Angular Elements がリリースされてから 2 年、当初
 
 コンポーネントを Custom Elements として利用することで、動的なコンポーネントの挿入、更新、破棄などライフサイクルの管理を Web ブラウザに一任できるという戦略。これは Angular の動的コンポーネントが静的コンテンツと相性が悪いという問題に根ざしており、これが根本的に解決されればこのユースケースの重要度は下がるだろう。
 
-具体的な用例でいえば、 [angular.io](http://angular.io/) 内のサンプルコードや StackBlitz へのリンクなどは Angular Elements で表示されている。 `&lt;code-snippet&gt;` のような Angular Elements をあらかじめ登録しておき、Markdown のドキュメンテーション中でタグを記述すればドキュメント中にリッチなコンテンツを展開できるようになっている。
+具体的な用例でいえば、 [angular.io](http://angular.io/) 内のサンプルコードや StackBlitz へのリンクなどは Angular Elements で表示されている。 `<code-snippet>` のような Angular Elements をあらかじめ登録しておき、Markdown のドキュメンテーション中でタグを記述すればドキュメント中にリッチなコンテンツを展開できるようになっている。
 
 <Figure
   src="/images/state-of-angular-elements-2020-summer/dc6b5be8-3726-4d13-8c2d-c293e9b2bdce/2020-09-22T17-30-55.png"
@@ -127,8 +127,8 @@ v6.0 とともに Angular Elements がリリースされてから 2 年、当初
 2020 年夏現在、Angular Elements に不足していると思われるものを以下にまとめる。
 
 - 標準 HTML 要素の `extends` のサポート
-  - `&lt;my-button&gt;` 要素を `extends: 'button'` できるようになれば `&lt;button myButton&gt;` のような属性セレクタ形式のコンポーネントを正しく変換できるようになる
-- `&lt;ng-content&gt;` と `&lt;slot&gt;` の透過的なサポート
+  - `<my-button>` 要素を `extends: 'button'` できるようになれば `<button myButton>` のような属性セレクタ形式のコンポーネントを正しく変換できるようになる
+- `<ng-content>` と `<slot>` の透過的なサポート
 - `ViewEncapsulation.Emulated` での Shadow Parts サポート
 - ドキュメンテーションとロードマップ
   - リリース直後からドキュメンテーションはあまりアップデートされておらず、現在のユースケースに合わせたものに洗練されると良い。Slot や Shadow Parts など新しい標準仕様に関する記述も不足している

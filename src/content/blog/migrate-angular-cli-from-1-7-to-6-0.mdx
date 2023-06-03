@@ -3,7 +3,7 @@ title: 'Angular CLI v1.7からv6.0へのマイグレーションについて (fo
 date: '2018-04-09T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
 published: true
 source: 'https://www.notion.so/Angular-CLI-v1-7-v6-0-for-v6-0-0-rc-2-9dab9594a41d4af69f3536e029edd915'
 ---
@@ -29,7 +29,7 @@ Angular フレームワークの v6.0.0 リリースにあわせ、Angular CLI �
 
 グローバルではなく、プロジェクトローカルの Angular CLI を v6.0 系に更新します。 yarn であれば次のコマンドで更新します。
 
-```plaintext
+```
 yarn add --dev @angular/cli@^6.0.0-rc.2
 ```
 
@@ -45,7 +45,7 @@ Angular CLI v1.7 から v6.0 へのアップデートのうち、最大の変更
 
 とはいえ今までの設定をすべて書き直す必要はなく、Angular CLI v6 には古い形式の`.angular-cli.json`から`angular.json`ベースのプロジェクトに自動でマイグレーションしてくれる機能があります。 Angular CLI v1.7.3 のプロジェクトをマイグレーションするには、次のようにコマンドを実行します。
 
-```plaintext
+```
 ng update @angular/cli --migrate-only --from=1.7.3
 ```
 

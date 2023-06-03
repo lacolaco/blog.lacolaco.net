@@ -4,7 +4,7 @@ date: '2018-12-22T00:00:00.000Z'
 updatedAt: '2021-05-26'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - 'Web Worker'
 published: true
 source: 'https://www.notion.so/Enjoyable-WebWorkers-in-Angular-d98e8a7e98534346b12bcc4bec8a0cb7'
@@ -33,13 +33,13 @@ This post explains how to integrate Comlink with your Angular application that c
 
 Create an example application by using [Angular CLI](https://angular.io/guide/quickstart#install-cli).
 
-```plaintext
+```
 $ ng new angular-comlink-example --defaults
 ```
 
 After application setup, install Comlink as the below. Comlink has its own TypeScript definition in the package, so you don’t need additional installation.
 
-```plaintext
+```
 $ cd angular-comlink-example
 $ yarn add comlink # or npm install comlink
 ```
@@ -48,7 +48,7 @@ $ yarn add comlink # or npm install comlink
 
 For example, let’s make a markdown processor which can convert markdown text to HTML. At first, install `marked` and `@types/marked` to compile markdown to HTML.
 
-```plaintext
+```
 yarn add marked && yarn add --dev @types/marked
 ```
 
@@ -68,11 +68,11 @@ Next, create `src/tsconfig.worker.json` for the application project. Its locatio
 
 Create a file named `markdown.worker.ts` in `src/app/worker` directory and write a function as the below. This file will be the entry point of the worker module.
 
-```plaintext
+```
 $ touch src/app/worker/markdown.worker.ts
 ```
 
-```plaintext
+```
 // worker/markdown.worker.ts
 import * as marked from 'marked';
 
@@ -93,7 +93,7 @@ export const api = {
 
 To expose that functions as the worker, call `Comlink.expose` function and pass the `api` object.
 
-```plaintext
+```
 import * as marked from 'marked';
 import { expose } from 'comlink';
 
@@ -112,13 +112,13 @@ That’s all to implement Worker-side code. Just write a function and expose it.
 
 Next step. Let’s call the `compileMarkdown` function through Comlink. At first, create `MarkdownService` as Angular service to separate business logic from component. Execute following command;
 
-```plaintext
+```
 $ ng generate service service/markdown
 ```
 
 And here is an initial implementation.
 
-```plaintext
+```
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -131,7 +131,7 @@ export class MarkdownService {
 
 To use `worker/markdown.worker.ts` , import Comlink and create a proxied worker instance with `wrap` function as the below. A module worker instance is instanciated by `new Worker(new URL('../worker/markdown.worker', import.meta.url)`. This syntax is defined by [webpack’s Web Workers support](https://webpack.js.org/guides/web-workers/).
 
-```plaintext
+```
 import { wrap } from 'comlink';
 
 async function compileMarkdown(source: string): Promise<string> {
@@ -144,11 +144,11 @@ async function compileMarkdown(source: string): Promise<string> {
 
 Now `worker` instance has functions exposed by `Comlink.expose` with its types.
 
-To retrieve type of `api`, pass `typeof import('../worker/markdown.worker).api` into `wrap&lt;T&gt;`. This `import` is not ES Module import but TypeScript’s feature that **import only type definition** without any JavaScript references which will be eliminated after TypeScript compilation process and it can be separated to different bundles.
+To retrieve type of `api`, pass `typeof import('../worker/markdown.worker).api` into `wrap<T>`. This `import` is not ES Module import but TypeScript’s feature that **import only type definition** without any JavaScript references which will be eliminated after TypeScript compilation process and it can be separated to different bundles.
 
 The following is the final example of `service/markdown.service.ts`. If the environment doesn’t support `window.Worker`, it will fallback to on-the-main theaed processing with dynamic `import()` to keep the initial bundle small.
 
-```plaintext
+```
 import { Injectable } from '@angular/core';
 import { wrap } from 'comlink';
 
@@ -179,7 +179,7 @@ export class MarkdownService {
 
 Finish the application. Here is `AppComponent` modified to use `MarkdownService` and show the result.
 
-```plaintext
+```
 import { MarkdownService } from './service/markdown.service';
 import { Component } from '@angular/core';
 

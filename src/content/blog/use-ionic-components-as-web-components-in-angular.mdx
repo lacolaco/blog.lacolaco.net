@@ -3,7 +3,7 @@ title: 'Use Ionic components as Web Components in Angular'
 date: '2019-03-07T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - 'Ionic'
 published: true
 source: 'https://www.notion.so/Use-Ionic-components-as-Web-Components-in-Angular-5abcd25b94664e91a124bb3a3026bc78'
@@ -32,7 +32,7 @@ I choose Angular as an example because Angular has great interop with Web Compon
 
 At first, enable Custom Elements support of Angular templates. Without this, Angular emits errors on Custom Elements because they are unknown tags. Open `app.module.ts` and add `schemas` metadata as the following.
 
-```plaintext
+```
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -72,7 +72,7 @@ from [https://blog.ionicframework.com/ionic-release-4-1-hydrogen-out-now/](https
 
 Let’s use this in Angular with Observable data. Write `app.component.ts` like the below. When `loadText()` method is called, `text$` stream will updated with a new value after 1000ms.
 
-```plaintext
+```
 import { Component } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 

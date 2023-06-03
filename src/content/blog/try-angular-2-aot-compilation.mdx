@@ -3,7 +3,7 @@ title: 'Try Angular 2 AoT compilation'
 date: '2016-10-05T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
 published: true
 source: 'https://www.notion.so/Try-Angular-2-AoT-compilation-6b7d57eab6c948d98a5ac7d374d32343'
 ---
@@ -23,13 +23,13 @@ Ahead-of-Time(AoT) compilation is a key feature of Angular 2. It bring us big pe
 
 Type a command to install angular-cli package in global
 
-```plaintext
+```
 > npm install -g angular-cli
 ```
 
 After installation, check the version.
 
-```plaintext
+```
 > ng versionangular-cli: 1.0.0-beta.16node: 6.7.0os: darwin x64
 ```
 
@@ -37,7 +37,7 @@ After installation, check the version.
 
 Create new project with CLI
 
-```plaintext
+```
 > ng new example-app
 ```
 
@@ -45,7 +45,7 @@ It takes a long long time. Be patient…
 
 After that, move to the generated directory.
 
-```plaintext
+```
 > cd example-app
 ```
 
@@ -53,7 +53,7 @@ After that, move to the generated directory.
 
 At first, let’s build the project in JiT mode. Type a command:
 
-```plaintext
+```
 > ng build
 ```
 
@@ -63,13 +63,13 @@ Built files will be in `dist` directory.
 
 Let’s explore and measure the bundled file. Install a tool from npm:
 
-```plaintext
+```
 > npm install -g source-map-explorer
 ```
 
 And use source-map-explorer for the bundle and source map
 
-```plaintext
+```
 > source-map-explorer dist/main.bundle.js dist/main.map
 ```
 
@@ -88,13 +88,13 @@ Awesome! Now we can see that `@angular/compiler` is the largest module. In JiT m
 
 To build with AoT, use `— aot` option.
 
-```plaintext
+```
 > ng build --aot
 ```
 
 And explore the bundle again.
 
-```plaintext
+```
 > source-map-explorer dist/main.bundle.js dist/main.map
 ```
 

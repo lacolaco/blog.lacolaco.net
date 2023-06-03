@@ -4,7 +4,7 @@ date: '2020-02-03T00:00:00.000Z'
 updatedAt: '2020-05-05'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - 'forms'
   - '設計'
 published: true
@@ -15,7 +15,7 @@ source: 'https://www.notion.so/Angular-Forms-Partial-Form-Injection-e4ec3823e1e4
 
 たとえば次のようなデータモデルを想定しよう。ヘルストラッカーアプリのようなイメージで、一日の起床時間と就寝時間、そしてその日のワークアウトの内容を記録できるフォームだ。
 
-```plaintext
+```
 interface ActivityInput {
     activityTimes: {
         awokeAt: {
@@ -40,7 +40,7 @@ interface WorkoutInput {
 
 このようなデータモデルのフォームを構築するに際し、まず **部分フォーム** を作成する。部分フォームは関心によって境界づけられる。今回の例では、 `activityTimes` と `workouts` がそれぞれ 部分フォーム の単位となる。 具体的には、それぞれの部分フォームごとにフォームモデルを作成する。対象がネストされたグループ構造であれば `FormGroup`を、リスト構造であれば `FormArray`を選択する。もちろん関心の分け方によっては `FormControl` を選択することもありえる。
 
-```plaintext
+```
 @Component({
   selector: "my-app",
   templateUrl: "./app.component.html",
@@ -73,7 +73,7 @@ export class AppComponent {
 
 部分フォームの作成後、これらを合成し、全体のフォームモデルを作成する。
 
-```plaintext
+```
 @Component({
   selector: "my-app",
   templateUrl: "./app.component.html",
@@ -100,7 +100,7 @@ export class AppComponent {
 
 `ActivityTimesFormComponent` は次のように作成する。Input で `model: FormGroup` を定義し、親から注入可能にする。テンプレートでは ルートレベルで `[formGroup]="model"` を使ってフォーム構築する。内部は通常の Reactive Form の実装と何ら変わらない。
 
-```plaintext
+```
 @Component({
   selector: 'app-activity-times-form',
   templateUrl: './activity-times-form.component.html',
@@ -180,4 +180,4 @@ Partial Form Injection によって作られるフォームには以下の特徴
   - 子コンポーネントから親コンポーネントへ副作用を起こすことを機械的に禁じることができないだろうか
 - 部分フォームコンポーネントのインターフェースを定義できないだろうか
   - あるコンポーネントが部分フォームコンポーネントであることを型レベルで静的に表明できないだろうか
-  - 例えば `class ActivityTimesForm extends PartialForm&lt;FormGroup&gt;`のような
+  - 例えば `class ActivityTimesForm extends PartialForm<FormGroup>`のような

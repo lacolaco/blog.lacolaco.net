@@ -3,7 +3,7 @@ title: '[Angular 4.0] formsモジュールの更新について'
 date: '2017-03-08T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
 published: true
 source: 'https://www.notion.so/Angular-4-0-forms-e87dce047a3243d2b14be546a741e9d9'
 ---
@@ -38,9 +38,9 @@ Angular 4.0 では forms モジュールにいくつかの変更が入ってい�
 
 ## デフォルトで`novalidate`が付与されるようになる
 
-Angular 4.0 からは、テンプレート中の`&lt;form&gt;`には自動的に`novalidate`属性が付与されるようになります。 これはブラウザ間でのバリデーションの挙動の差を生まないため、forms モジュールが提供するバリデータだけが動作するための変更です。
+Angular 4.0 からは、テンプレート中の`<form>`には自動的に`novalidate`属性が付与されるようになります。 これはブラウザ間でのバリデーションの挙動の差を生まないため、forms モジュールが提供するバリデータだけが動作するための変更です。
 
-もちろん元の挙動に戻すことは可能です。`ngNativeValidate`ディレクティブを`&lt;form&gt;`タグに付与することで 2 系の挙動になります。
+もちろん元の挙動に戻すことは可能です。`ngNativeValidate`ディレクティブを`<form>`タグに付与することで 2 系の挙動になります。
 
 ```html
 <form ngNativeValidate></form>

@@ -3,7 +3,7 @@ title: '[日本語訳] Angular 2 Component Styles'
 date: '2016-04-16T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - 'translation'
 published: true
 source: 'https://www.notion.so/Angular-2-Component-Styles-448489093c084dc8986a050b8741eaff'
@@ -27,7 +27,7 @@ Angular 2 のアプリケーションは標準の CSS によってスタイリ�
 
 Angular 2 のコンポーネントを書くとき、HTML のテンプレートだけでなく、CSS のスタイルも決めるでしょう。 コンポーネントのテンプレートに対してスタイルを適用する 1 つの方法は、コンポーネントのメタデータ中の`styles`プロパティを使うことです。 `styles`プロパティは string の配列として CSS を受け取ります。
 
-```plaintext
+```
 @Component({
   selector: 'hero-app',
   template: `
@@ -40,7 +40,7 @@ Angular 2 のコンポーネントを書くとき、HTML のテンプレート�
 
 コンポーネントスタイルはこれまでのグローバルのスタイルとはいくつか違いが有ります。
 
-第一に、セレクタはそのコンポーネントのテンプレート内にしか適用されません。 上の例にある`h1 &#123; &#125;`セレクタは、`hero-app`コンポーネントのテンプレート内にある`&lt;h1&gt;`タグにだけ適用され、 それ以外の他の場所には影響しません。
+第一に、セレクタはそのコンポーネントのテンプレート内にしか適用されません。 上の例にある`h1 { }`セレクタは、`hero-app`コンポーネントのテンプレート内にある`<h1>`タグにだけ適用され、 それ以外の他の場所には影響しません。
 
 これは古典的な CSS とくらべてモジュール化において大きな改良点です。
 
@@ -81,7 +81,7 @@ Angular 2 のコンポーネントを書くとき、HTML のテンプレート�
 
 `:host-context`擬似クラスセレクタは、`:host`の関数フォームと同じように動作します。 コンポーネントのホスト要素の親 _すべて_ に、該当するセレクタを持っていないかをチェックします。
 
-次の例ではコンポーネント中の`&lt;h2&gt;`要素の`background-color`スタイルを、祖先の要素が`theme-light`を持っている時だけ変更するように書いています。
+次の例ではコンポーネント中の`<h2>`要素の`background-color`スタイルを、祖先の要素が`theme-light`を持っている時だけ変更するように書いています。
 
 ```css
 :host-context(.theme-light) h2 {
@@ -95,7 +95,7 @@ Angular 2 のコンポーネントを書くとき、HTML のテンプレート�
 
 ただし、`/deep/`セレクタを使うと、強制的に子コンポーネントの内部にスタイルを適用することができます。 ネストはどこまででも深く適用され、テンプレート中の子だけでなく、content としての子にも作用します。
 
-次の例では、コンポーネント自身とその子すべてが持つ`&lt;h3&gt;`要素にマッチする CSS を書いています。
+次の例では、コンポーネント自身とその子すべてが持つ`<h3>`要素にマッチする CSS を書いています。
 
 ```css
 :host /deep/ h3 {
@@ -103,11 +103,11 @@ Angular 2 のコンポーネントを書くとき、HTML のテンプレート�
 }
 ```
 
-`/deep/`セレクタは`&gt;&gt;&gt;`と書くこともできます。
+`/deep/`セレクタは`>>>`と書くこともできます。
 
 ### 注意
 
-`/deep/`と`&gt;&gt;&gt;`は`ViewEncapsulation.Emulated`でしか使えません。 `ViewEncapsulation.Emulated`はコンポーネントのデフォルトの設定です。
+`/deep/`と`>>>`は`ViewEncapsulation.Emulated`でしか使えません。 `ViewEncapsulation.Emulated`はコンポーネントのデフォルトの設定です。
 
 ## スタイルをコンポーネントへ読み込む方法
 
@@ -123,7 +123,7 @@ Angular 2 のコンポーネントを書くとき、HTML のテンプレート�
 
 `@Component`デコレータの`styles`プロパティで、string の配列として記述できます。
 
-```plaintext
+```
 @Component({
   selector: 'hero-app',
   template: `
@@ -136,9 +136,9 @@ Angular 2 のコンポーネントを書くとき、HTML のテンプレート�
 
 ### テンプレートインラインスタイル
 
-テンプレート HTML 中に`&lt;style&gt;`タグで直接埋め込むこともできます。
+テンプレート HTML 中に`<style>`タグで直接埋め込むこともできます。
 
-```plaintext
+```
 @Component({
   selector: 'hero-controls',
   template: `
@@ -158,7 +158,7 @@ Angular 2 のコンポーネントを書くとき、HTML のテンプレート�
 
 外部の CSS ファイルを`styleUrls`として記述することができます。
 
-```plaintext
+```
 @Component({
   selector: 'hero-details',
   template: `
@@ -180,7 +180,7 @@ export class HeroDetailsComponent {
 
 Webpack を使っている場合は、外部 CSS を使いつつ`styles`プロパティを使用することもできます。
 
-```plaintext
+```
 styles: [require('my.component.css')]
 ```
 
@@ -188,9 +188,9 @@ styles: [require('my.component.css')]
 
 ### Link タグによる読み込み
 
-さらに、`&lt;link&gt;`タグで CSS ファイルを読み込むこともできます。
+さらに、`<link>`タグで CSS ファイルを読み込むこともできます。
 
-```plaintext
+```
 @Component({
   selector: 'hero-team',
   template: `
@@ -224,7 +224,7 @@ styles: [require('my.component.css')]
 
 これらはコンポーネントのメタデータにある`encapsulation`プロパティにセットします。
 
-```plaintext
+```
 // warning: few browsers support shadow DOM encapsulation at this time
 encapsulation: ViewEncapsulation.Native
 ```

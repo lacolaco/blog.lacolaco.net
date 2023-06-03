@@ -3,7 +3,7 @@ title: 'Broadcasting events in Angular 2'
 date: '2016-04-24T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
 published: true
 source: 'https://www.notion.so/Broadcasting-events-in-Angular-2-3af033c8da5647f19adf4eef3310067f'
 ---
@@ -14,7 +14,7 @@ Angular 1 has an utility for broadcasting an event, `$broadcast` and `$on`. Now,
 
 First, we have to define `Broadcaster`.
 
-```plaintext
+```
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/filter';
@@ -48,13 +48,13 @@ export class Broadcaster {
 
 Angular 1’s `$broadcast` is used with **string** key.
 
-```plaintext
+```
 $broadcast('MyEvent', data)
 ```
 
 Of course, we can implement string-based propagation that uses string keys.
 
-```plaintext
+```
 // app.ts (application root component)
 @Component({
     selector: 'app',
@@ -67,7 +67,7 @@ Of course, we can implement string-based propagation that uses string keys.
 class App {}
 ```
 
-```plaintext
+```
 // child.ts
 @Component({
     selector: 'child'
@@ -99,7 +99,7 @@ If we mistake the event name, event propagation will be broken, but we cannot ge
 
 We cannot know a type of the event data. Any types will be accepted to the event with same name.
 
-```plaintext
+```
 $broadcast('MyEvent', '100');$broadcast('MyEvent', 100);
 ```
 
@@ -109,7 +109,7 @@ So, we should make a safety broadcaster, which uses **types** to specify an even
 
 Let’s make **domain-specific** broadcaster, `MessageEvent`!
 
-```plaintext
+```
 import {Injectable} from 'angular2/core';
 import {Observable} from 'rxjs/Observable';
 import {Broadcaster} from './broadcast';
@@ -130,7 +130,7 @@ export class MessageEvent {
 
 Then, we can use it with perfect type-safety! Look at new `child.ts`.
 
-```plaintext
+```
 import {Component} from 'angular2/core';
 import {MessageEvent} from '../../services/message_event';
 

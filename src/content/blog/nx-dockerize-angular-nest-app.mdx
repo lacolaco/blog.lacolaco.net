@@ -3,7 +3,7 @@ title: 'Nx: Angular+Nest.jsアプリをDockerビルドする'
 date: '2020-04-29T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - 'Nx'
 published: true
 source: 'https://www.notion.so/Nx-Angular-Nest-js-Docker-eb5832c419094ad19bfad5ed2f86a16b'
@@ -27,13 +27,13 @@ import Figure from '../../components/features/Figure.astro';
 
 まずは Nx の workspace を作成する。 `create-nx-workspace` コマンドを使い、今回は `angular-nest` を選択するが、本稿の趣旨においては別に `react-express` でも違いはない。
 
-```plaintext
+```
 $ npx create-nx-workspace@latest angular-nest-docker-example`
 ```
 
 ## 2. outputPath の変更 (client, server)
 
-`angular-nest` テンプレートのデフォルトで生成されるプロジェクトは、クライアントサイドが `&lt;application-name&gt;` 、サーバーサイドが `api` となっている。これをそれぞれ `dist/apps/client` と `dist/apps/server` にビルド結果が出力されるようにする。
+`angular-nest` テンプレートのデフォルトで生成されるプロジェクトは、クライアントサイドが `<application-name>` 、サーバーサイドが `api` となっている。これをそれぞれ `dist/apps/client` と `dist/apps/server` にビルド結果が出力されるようにする。
 
 <Figure
   src="https://img.esa.io/uploads/production/attachments/14362/2020/04/29/50720/b4788f7b-46f4-4f81-a245-2e21d073a9ef.png"
@@ -49,13 +49,13 @@ $ npx create-nx-workspace@latest angular-nest-docker-example`
 
 クライアントサイドをビルドした生成物を Nest.js がサーブできるように、静的ファイル配信用のモジュールを追加する。
 
-```plaintext
+```
 $ yarn add @nestjs/serve-static`
 ```
 
 静的ファイルはさきほど変更した outputPath のとおり、client と server が隣接するディレクトリになるため、ルートディレクトリには `../client` を指定する。 `/api*` は API のエンドポイントにマッチするように除外しておく。
 
-```plaintext
+```
 import { Module } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'path';
@@ -106,7 +106,7 @@ export class AppModule {}
 
 この状態になっていると、サーバーサイドをビルドする際に自動的にクライアントサイドのビルドを先に実行することができる。
 
-```plaintext
+```
 $ nx build api --with-deps
 ```
 
@@ -137,7 +137,7 @@ Dockerfile を作ってデプロイ可能なイメージをビルドするが、
 
 そして Dockerfile は次のような形にした。Nx のビルドはサーバーサイドもバンドルするため、本当は Dockerfile では `node_modules` のインストールをしたくないのだが、Nest.js が `tslib` が見つからずエラーになってしまうため仕方なくインストールしている。
 
-```plaintext
+```
 FROM node:12WORKDIR /appCOPY package.json yarn.lock ./RUN yarn install --production# add appCOPY ./dist/ ./# start appCMD node apps/server/main.js
 ```
 
