@@ -8,10 +8,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Setup Hugo
-      uses: peaceiris/actions-hugo@v2
-      with:
-        hugo-version: 'latest'
     - uses: actions/setup-node@v3
       with:
         node-version-file: package.json
