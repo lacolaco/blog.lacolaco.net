@@ -25,19 +25,3 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
           projectId: blog-lacolaco-net
           channelId: live
-
-  deploy-notion-gateway:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version-file: package.json
-          cache: yarn
-      - run: yarn install
-        working-directory: notion-gateway
-      - run: yarn deploy
-        working-directory: notion-gateway
-        env:
-          CLOUDFLARE_API_TOKEN: '${{ secrets.CLOUDFLARE_API_TOKEN }}'
