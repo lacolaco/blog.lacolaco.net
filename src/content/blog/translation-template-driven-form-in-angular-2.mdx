@@ -3,7 +3,7 @@ title: '[日本語訳] Template-driven Forms in Angular 2'
 date: '2016-04-10T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - 'translation'
 published: true
 source: 'https://www.notion.so/Template-driven-Forms-in-Angular-2-3f8c4b9e854245a2b428a333076afb0a'
@@ -48,7 +48,7 @@ Angular はフォームを組み立てるのに 3 つの異なる方法を用意
 
 私たちはおそらくこんなフォームを何度も作ったことがあります。 ユーザーの名前と住所を入力するコントロールを持ったシンプルな HTML のフォームで、ここには何の特別なものはありません。
 
-私たちはここで、Angular が連れてきた`&lt;form&gt;`というセレクターを持つ`ngForm`ディレクティブによって、 実は私たちの`form`要素がすでに`ngForm`のインスタンスになっているということに気づきません。 `ngForm`はとある理由のために存在します。 `ngForm`は私たちにフォームが持っている現在の状態を伝えてくれます。状態というのは次のものです。
+私たちはここで、Angular が連れてきた`<form>`というセレクターを持つ`ngForm`ディレクティブによって、 実は私たちの`form`要素がすでに`ngForm`のインスタンスになっているということに気づきません。 `ngForm`はとある理由のために存在します。 `ngForm`は私たちにフォームが持っている現在の状態を伝えてくれます。状態というのは次のものです。
 
 - フォームの値の JSON 表現
 - フォーム全体のバリデーション状態
@@ -57,7 +57,7 @@ Angular はフォームを組み立てるのに 3 つの異なる方法を用意
 
 ディレクティブのメタデータの`exportAs`プロパティを使うと、コンポーネントのテンプレート内でディレクティブのインスタンスにアクセスできます。 例えば、`draggable`ディレクティブを作ったとき、そのインスタンスを次のように`draggable`という名前で外部に露出できます。
 
-```plaintext
+```
 @Directive({
   selector: '[draggable]',
   exportAs: 'draggable'
@@ -69,7 +69,7 @@ class Draggable {
 
 そして、ディレクティブを使っているテンプレート内でローカル変数の仕組みを使ってアクセスすることができます。
 
-```plaintext
+```
 <div draggable #myDraggable="draggable">I'm draggable!</div>
 ```
 
@@ -85,7 +85,7 @@ class Draggable {
 
 さあ私たちはフォームの値とそのバリデーション状態にアクセスできるようになりました。 まずはフォームから送信されたデータをログに表示してみましょう。 私たちがやらなければならないのは、フォームの`submit`イベントにハンドラーを追加してフォームの値を渡すことだけです。 実は`ngForm`のインスタンスには`value`プロパティがあるので、次のようになります。
 
-```plaintext
+```
 <form #form="ngForm" (submit)="logForm(form.value)">
   ...
 </form>
@@ -99,7 +99,7 @@ class Draggable {
 
 さらに、次のようなコンポーネントを用意します。
 
-```plaintext
+```
 @Component({
   selector: 'app',
   template: ...
@@ -120,7 +120,7 @@ class App {
 
 いくつかのオブジェクトをフォームに追加し、フォームコントロールとして登録してみましょう！
 
-```plaintext
+```
 <form #form="ngForm" (ngSubmit)="logForm(form.value)">
   <label>Firstname:</label>
   <input type="text" ngControl="firstname">
@@ -143,7 +143,7 @@ class App {
 
 ばっちりですね！このフォームに適当な値を入力して送信すれば、次のようなログが見られるでしょう。
 
-```plaintext
+```
 {
   firstname: 'Pascal',
   lastname: 'Precht',
@@ -155,7 +155,7 @@ class App {
 
 素晴らしいですね！ 私たちはこの JSON オブジェクトを手に入れて、サーバーへ直接送信することができます。 しかしちょっと待ってください？もし次のようなもっと複雑な構造が欲しい時はどうすればいいんでしょうか？
 
-```plaintext
+```
 {
   name: {
     firstname: 'Pascal',
@@ -179,7 +179,7 @@ class App {
 
 さっそく`ngControlGroup`を使ってコントロールをグループ化してみましょう！
 
-```plaintext
+```
 <fieldset ngControlGroup="name">
   <label>Firstname:</label>
   <input type="text" ngControl="firstname">
@@ -200,11 +200,11 @@ class App {
 </fieldset>
 ```
 
-ご覧のとおり、上のコードでは私たちはフォームコントロールを`&lt;fieldset&gt;`要素でラップし、 `ngControlGroup`ディレクティブを適用しています。 これは特に意味があるわけではなく、代わりに`&lt;div&gt;`要素を使ってもかまいません。 ポイントは、何かしらの要素である必要があり、 そこに`ngControlGroup`をつけることで`ngForm`に対して登録されるということです。
+ご覧のとおり、上のコードでは私たちはフォームコントロールを`<fieldset>`要素でラップし、 `ngControlGroup`ディレクティブを適用しています。 これは特に意味があるわけではなく、代わりに`<div>`要素を使ってもかまいません。 ポイントは、何かしらの要素である必要があり、 そこに`ngControlGroup`をつけることで`ngForm`に対して登録されるということです。
 
 このフォームを送信すれば次のような出力が得られるでしょう。
 
-```plaintext
+```
 {
   name: {
     firstname: 'Pascal',
@@ -228,7 +228,7 @@ Angular 2 における`ngModel`は双方向データバインディングを実�
 
 `ngControl`は`ngModel`がバインドできるようになっています。 つまり次のように書くことが出来ます。
 
-```plaintext
+```
 <fieldset ngControlGroup="name">
   <label>Firstname:</label>
   <input type="text" ngControl="firstname" [(ngModel)]="firstname">

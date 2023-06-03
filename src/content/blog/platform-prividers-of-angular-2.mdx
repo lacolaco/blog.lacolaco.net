@@ -3,7 +3,7 @@ title: 'Angular 2のPlatform Provider'
 date: '2016-04-22T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
 published: true
 source: 'https://www.notion.so/Angular-2-Platform-Provider-5ae80d320b244a6bb01b7ffa6feb932a'
 ---
@@ -16,7 +16,7 @@ Angular 2 の Dependency Injection(DI)は主にサービスクラスのインス
 
 Angular 2 の DI は基本的に、 **トークン** に対して値をセットします。 TypeScript では「型ベースの DI」とよく言われますが、これは型(型アノテーションに使われているクラス)がトークンになっています。 このトークンはクラスじゃなくてもよくて、文字列でも何でも、オブジェクトであれば何でも許容されます。
 
-```plaintext
+```
 providers: [
     MyClass, // 自動的にMyClassがインスタンス化される
     new Provider(MyClass, {useClass: MyClass}), // 上と同義
@@ -26,13 +26,13 @@ providers: [
 
 Angular 2 では、トークンを定数として提供して、ユーザーが値を自由にセットできるようにしているものがいくつかあります。 代表的なのは`APP_BASE_HREF`です。これは Angular 2 の`Location`がベースパスとして使うバスを設定するためのトークンです
 
-```plaintext
+```
 new Provider(APP_BASE_HREF, {useValue: "/basepath/"})
 ```
 
 さらにもう一つ重要なのは、`＠Component`や`bootstrap`で Provider が要求される場面では、Provider の配列を渡せるということです。 配列を渡した場合は内部で自動的に展開されるので、複数の Provider が依存しあっている場合に 1 つの配列にまとめることができます。
 
-```plaintext
+```
 const MY_PROVIDERS = [
     MyClassA,
     new Provider(MyClassB, {useValue: new MyClassB("initial")}),
@@ -56,7 +56,7 @@ providers: [
 
 さて、Angular 2 の DI の基礎を振り返ったところで、ここから先の話で必要になるのが `multi`オプションです。 Provider は、同じトークンに対して 2 回値をセットすると、先に Provide した方は上書きされてしまいます。
 
-```plaintext
+```
 [
     MyClass,
     new Provider(MyClass, {useClass: MockMyClass}) // 上書きする
@@ -65,7 +65,7 @@ providers: [
 
 `multi`オプションは、同じトークンに対して複数の Provide を行うときに、上書きではなく **追加** を行います。 次の例では、複数のクラスをまとめるトークンを作り、`multi`で追加しています。
 
-```plaintext
+```
 [
     new Provider(MY_PROVIDERS, {useClass: MyClassA, multi: true}),
     new Provider(MY_PROVIDERS, {useClass: MyClassB, multi: true}),
@@ -83,7 +83,7 @@ providers: [
 
 例えば、アプリケーション全体で使うモーダルのコンポーネント `ModalComponent` を作ったとしましょう。
 
-```plaintext
+```
 @Component({
     selector: "my-modal",
     template: `...`
@@ -95,7 +95,7 @@ class ModalComponent {
 
 このコンポーネントを別のコンポーネントから使うには、使う側のコンポーネントの `directives` にクラスを指定しないといけません。
 
-```plaintext
+```
 @Component({
     selector: "my-app",
     template: "<my-model></my-model>",
@@ -109,13 +109,13 @@ class AppComponent {
 
 `PLATFORM_DIRECTIVES`に`ModalComponent`を追加することで、プラットフォームの共通ディレクティブであるとして自動的に解決してくれるようになります。
 
-```plaintext
+```
 new Provider(PLATFORM_DIRECTIVES, {useValue: [ModalComponent], multi: true})
 ```
 
-もっとも便利なユースケースは、`ROUTER_DIRECTIVES`でしょう。 angular2/router が提供している`routerLink`や`&lt;router-outlet&gt;`をコンポーネントから使うには、`directives: [ROUTER_DIRECTIVES]` という記述が必要です。 ここで`PLATFORM_DIRECTIVES`を使うと、アプリケーション全体でどこでも使えるようになります。
+もっとも便利なユースケースは、`ROUTER_DIRECTIVES`でしょう。 angular2/router が提供している`routerLink`や`<router-outlet>`をコンポーネントから使うには、`directives: [ROUTER_DIRECTIVES]` という記述が必要です。 ここで`PLATFORM_DIRECTIVES`を使うと、アプリケーション全体でどこでも使えるようになります。
 
-```plaintext
+```
 new Provider(PLATFORM_DIRECTIVES, {useValue: ROUTER_DIRECTIVES, multi: true})
 ```
 
@@ -127,7 +127,7 @@ new Provider(PLATFORM_DIRECTIVES, {useValue: ROUTER_DIRECTIVES, multi: true})
 
 [PLATFORM_PIPES - ts](https://angular.io/docs/ts/latest/api/compiler/PLATFORM_PIPES-let.html)
 
-```plaintext
+```
 new Provider(PLATFORM_PIPES, {useValue: [MyPipe], multi:true});
 ```
 
@@ -137,7 +137,7 @@ new Provider(PLATFORM_PIPES, {useValue: [MyPipe], multi:true});
 
 [OpaqueToken - ts](https://angular.io/docs/ts/latest/api/core/OpaqueToken-class.html)
 
-```plaintext
+```
 var t = new OpaqueToken("value");
 var injector = Injector.resolveAndCreate([
   provide(t, {useValue: "bindingValue"})

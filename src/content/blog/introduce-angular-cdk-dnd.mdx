@@ -3,7 +3,7 @@ title: 'Angular CDK drag-and-drop の紹介'
 date: '2018-08-29T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - 'Angular CDK'
 published: true
 source: 'https://www.notion.so/Angular-CDK-drag-and-drop-a3993f7db21f4b38a87e6c15cb98c825'
@@ -15,7 +15,7 @@ import Figure from '../../components/features/Figure.astro';
 
 この記事では Angular CDK の次期アップデートで提供される、 **drag-and-drop** 機能を紹介します。 執筆時点ではまだ npm パッケージとして公開されていないので、一般に利用できるまでにはもうしばらくかかりますが、 もし早く使いたい方は、次のコマンドで開発版ビルドをインストールしましょう。 なお、開発版ビルドですので自己責任でお願いします。
 
-```plaintext
+```
 $ yarn add angular/cdk-builds
 ```
 
@@ -59,7 +59,7 @@ drag-and-drop はその名のとおり、UI 上でのドラッグアンドドロ
 
 このままでは動いて面白い以上の意味がないので、`cdk-drop`コンポーネントを使います。 `cdk-drop`コンポーネントは、`cdkDrag`ディレクティブをグルーピングし、動きに制限をつけて、限られた領域内でだけ移動できるようにします。
 
-たとえば、`ul`要素の外側に `&lt;cdk-drop&gt;` コンポーネントを配置すると、`ul`の内部でだけ移動できるようになり、移動中は並び替えが行われるようになります。
+たとえば、`ul`要素の外側に `<cdk-drop>` コンポーネントを配置すると、`ul`の内部でだけ移動できるようになり、移動中は並び替えが行われるようになります。
 
 ```html
 <cdk-drop>
@@ -85,7 +85,7 @@ drag-and-drop はその名のとおり、UI 上でのドラッグアンドドロ
 
 <Figure src="https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180829/20180829200735.gif" caption="" />
 
-見てのとおり、 `&lt;cdk-drop&gt;`タグの内側でだけ並べ替えが行われるようになりましたが、ドロップしてしまうともとの状態に戻ります。 これは`cdk-drop`コンポーネントの仕様で、ドラッグアンドドロップが終了すると、その内部の`cdkDrag`の順序は復元されます。 ただし、ドラッグアンドドロップ終了時には`dropped`イベントが発行されていて、このイベントをもとにコンポーネント側からデータモデルを更新することで、 ドラッグアンドドロップによる並べ替えを実現できます。
+見てのとおり、 `<cdk-drop>`タグの内側でだけ並べ替えが行われるようになりましたが、ドロップしてしまうともとの状態に戻ります。 これは`cdk-drop`コンポーネントの仕様で、ドラッグアンドドロップが終了すると、その内部の`cdkDrag`の順序は復元されます。 ただし、ドラッグアンドドロップ終了時には`dropped`イベントが発行されていて、このイベントをもとにコンポーネント側からデータモデルを更新することで、 ドラッグアンドドロップによる並べ替えを実現できます。
 
 ### 並べ替え
 
@@ -102,7 +102,7 @@ export class AppComponent {
 }
 ```
 
-そしてテンプレートを次のように変更し、`list`プロパティの要素を繰り返し表示します。先程までと同じように、`&lt;cdk-drop&gt;`タグのなかで繰り返される並べ替えの対象に`cdkDrag`ディレクティブを付与します。
+そしてテンプレートを次のように変更し、`list`プロパティの要素を繰り返し表示します。先程までと同じように、`<cdk-drop>`タグのなかで繰り返される並べ替えの対象に`cdkDrag`ディレクティブを付与します。
 
 ```html
 <h2>好きなネタ</h2>
@@ -115,7 +115,7 @@ export class AppComponent {
 </cdk-drop>
 ```
 
-ポイントは `&lt;cdk-drop [data]="list" (dropped)="drop($event)"&gt;` です。`[data]`プロパティには並べ替えの対象となるデータモデルを渡します。 次に、`(dropped)="drop($event)"`では、`dropped`イベントハンドラで`drop`メソッドを呼び出しています。 `drop`メソッドは次のように記述します。
+ポイントは `<cdk-drop [data]="list" (dropped)="drop($event)">` です。`[data]`プロパティには並べ替えの対象となるデータモデルを渡します。 次に、`(dropped)="drop($event)"`では、`dropped`イベントハンドラで`drop`メソッドを呼び出しています。 `drop`メソッドは次のように記述します。
 
 ```typescript
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
@@ -134,7 +134,7 @@ export class AppComponent {
 }
 ```
 
-`CdkDragDrop&lt;string[]&gt;`は、`drop`イベントの引数の型です。ジェネリックの`string[]`は並べ替え対象の配列の型を表しています。
+`CdkDragDrop<string[]>`は、`drop`イベントの引数の型です。ジェネリックの`string[]`は並べ替え対象の配列の型を表しています。
 
 `moveItemInArray`関数は、基本的な配列の並べ替えを行ってくれる CDK の機能です。中身は単なる JavaScript の配列の並べ替えですが、Angular チームによる実装にまかせておくのが安心だと思います。
 

@@ -3,7 +3,7 @@ title: 'Forget $compile in Angular 2'
 date: '2016-10-02T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - 'AngularJS'
 published: true
 source: 'https://www.notion.so/Forget-compile-in-Angular-2-b423a3edd0c94e599e1235e08c72bc64'
@@ -26,7 +26,7 @@ Before `@NgModule` introduced, I used `ViewContainerRef` and `RuntimeCompiler` w
 
 Dynamic component factory is a just function that calls `Component()` decorator function to **create decorated class object** dynamically.
 
-```plaintext
+```
   private createDynamicComponent(selector, template) {
     const metadata = new ComponentMetadata({
       selector,
@@ -40,7 +40,7 @@ Dynamic component factory is a just function that calls `Component()` decorator 
 
 And then, I passed the class to `RuntimeCompiler` and get `ComponentFactory`.
 
-```plaintext
+```
 this.compiler
   .compileComponentAsync(this.createDynamicComponent(selector, template))
   .then(factory => {

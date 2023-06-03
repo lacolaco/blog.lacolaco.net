@@ -3,7 +3,7 @@ title: 'Angular: provideRouter によるルーティング設定 (v14.2)'
 date: '2022-08-29T12:18:00.000Z'
 updatedAt: '2022-08-29'
 tags:
-  - 'angular'
+  - 'Angular'
   - 'tech'
   - 'router'
   - 'standalone component'
@@ -27,7 +27,7 @@ Angular v14.2 で追加された Router パッケージの `provideRouter` API �
 
 従来からの `NgModule` ベースのアプリケーションでは、これまで `RouterModule.forRoot` を `imports` 配列に追加していたコードを、 `provideRouter` の戻り値を `providers` 配列に追加するように書き換えればよい。
 
-ただし、 `routerLink` や `&lt;router-outlet&gt;` などのディレクティブをコンポーネントの HTML テンプレートで使うにはそれらをエクスポートしている `RouterModule` が必要なので、 `imports` 配列には素の `RouterModule` が残るだろう。
+ただし、 `routerLink` や `<router-outlet>` などのディレクティブをコンポーネントの HTML テンプレートで使うにはそれらをエクスポートしている `RouterModule` が必要なので、 `imports` 配列には素の `RouterModule` が残るだろう。
 
 ```typescript
 import { BrowserModule } from '@angular/platform-browser';

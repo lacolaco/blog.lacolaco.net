@@ -3,7 +3,7 @@ title: 'Angular: ボタンコンポーネントの実装'
 date: '2022-07-20T02:25:00.000Z'
 updatedAt: '2022-07-20'
 tags:
-  - 'angular'
+  - 'Angular'
   - 'tech'
   - 'a11y'
   - 'HTML'
@@ -18,13 +18,13 @@ import Stackblitz from '../../components/features/Stackblitz.astro';
 
 ## ボタンコンポーネントのよくある失敗
 
-HTML には標準の `&lt;button&gt;` 要素がある。そのため、わざわざボタンコンポーネントを実装する目的は、たいてい `&lt;button&gt;` 要素の標準のデザインではなく、独自の装飾を加え、それをアプリケーション中で再利用するためである。
+HTML には標準の `<button>` 要素がある。そのため、わざわざボタンコンポーネントを実装する目的は、たいてい `<button>` 要素の標準のデザインではなく、独自の装飾を加え、それをアプリケーション中で再利用するためである。
 
-`&lt;button&gt;` 要素はユーザーが直接操作する対話型のコンテンツであり、HTML の中でも特にアクセシビリティの保証が重要になる。また、 `&lt;button&gt;` 要素はただクリックイベントを発火するだけでなく、多くの属性や振る舞いが複雑に絡み合っているため、カスタム要素で `&lt;button&gt;` 要素を再現することは難しい。
+`<button>` 要素はユーザーが直接操作する対話型のコンテンツであり、HTML の中でも特にアクセシビリティの保証が重要になる。また、 `<button>` 要素はただクリックイベントを発火するだけでなく、多くの属性や振る舞いが複雑に絡み合っているため、カスタム要素で `<button>` 要素を再現することは難しい。
 
 <LinkPreview src="https://developer.mozilla.org/ja/docs/Web/HTML/Element/button" />
 
-そのため、次のように `&lt;button&gt;` 要素をラップしたボタンコンポーネントはアクセシビリティの確保に苦労することになる。
+そのため、次のように `<button>` 要素をラップしたボタンコンポーネントはアクセシビリティの確保に苦労することになる。
 
 ```typescript
 @Component({
@@ -39,7 +39,7 @@ HTML には標準の `&lt;button&gt;` 要素がある。そのため、わざわ
 export class FancyButtonComponent {}
 ```
 
-たとえば、 `&lt;button&gt;` 要素には `type` 属性がある。フォームの中に組み込まれる場合は任意の指定ができなければ不便だ。また、 `disabled` 属性や `aria-hidden` のような ARIA 属性も考えると、 `&lt;app-fancy-button&gt;` コンポーネントは `&lt;button&gt;` タグが受け取ることのできるすべての属性を橋渡ししなければならない。
+たとえば、 `<button>` 要素には `type` 属性がある。フォームの中に組み込まれる場合は任意の指定ができなければ不便だ。また、 `disabled` 属性や `aria-hidden` のような ARIA 属性も考えると、 `<app-fancy-button>` コンポーネントは `<button>` タグが受け取ることのできるすべての属性を橋渡ししなければならない。
 
 ```typescript
 @Component({
@@ -85,13 +85,13 @@ export class FancyButtonComponent {
 export class FancyButtonComponent {}
 ```
 
-このセレクタによって、 `&lt;button&gt;` 要素のうち `app-fancy-button` 属性を持つものだけが`FancyButtonComponent` だと識別される。したがって、このコンポーネントを使うテンプレートは次のようになる。
+このセレクタによって、 `<button>` 要素のうち `app-fancy-button` 属性を持つものだけが`FancyButtonComponent` だと識別される。したがって、このコンポーネントを使うテンプレートは次のようになる。
 
 ```html
 <button app-fancy-button (click)="onClick()">Click Me</button>
 ```
 
-テンプレート上には標準の `&lt;button&gt;` 要素がそのまま記述されているため、ボタンコンポーネントの利用者は、 `&lt;button&gt;` 要素固有の属性や振る舞いに自由にアクセスできる。このような実装ならば、 `FancyButtonComponent` はホスト要素に対する CSS スタイリングだけを担うことができる。
+テンプレート上には標準の `<button>` 要素がそのまま記述されているため、ボタンコンポーネントの利用者は、 `<button>` 要素固有の属性や振る舞いに自由にアクセスできる。このような実装ならば、 `FancyButtonComponent` はホスト要素に対する CSS スタイリングだけを担うことができる。
 
 実装の詳細は、次の動作するサンプルを参考にしてほしい。
 

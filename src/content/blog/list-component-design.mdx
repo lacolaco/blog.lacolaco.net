@@ -3,17 +3,17 @@ title: 'AngularにおけるListComponent/ListItemComponentの設計'
 date: '2019-02-18T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - '設計'
 published: true
 source: 'https://www.notion.so/Angular-ListComponent-ListItemComponent-b0a1124520914ae6a17a7291930e0970'
 ---
 
-`&lt;ul&gt;` と `&lt;li&gt;` のように、親子であることに意味がある密結合したコンポーネントを作るときのプラクティスについて。
+`<ul>` と `<li>` のように、親子であることに意味がある密結合したコンポーネントを作るときのプラクティスについて。
 
 例として、 メニューを表示するための `MenuListComponent` を考える。Input として表示するメニューの要素 ( `MenuItem` 型) の配列を受け取り、それを ngFor で表示するものだ
 
-```plaintext
+```
 @Component({
   selector: 'menu-list',
   template: `
@@ -33,7 +33,7 @@ export class MenuListComponent {
 
 使う側は次のようになる。シンプルに Input で渡しているだけだ。
 
-```plaintext
+```
 @Component({
   selector: 'app-root',
   template: `
@@ -52,11 +52,11 @@ export class AppComponent {
 
 例えば、「メニューの中でグループを 2 つに分けて、divider で区切って表示したい」とか「新登場の要素を先頭に表示してバッジを付けて強調したい」とか、思いつくことはたくさんある。それらを将来的に吸収できるコンポーネントかというと、問題がある。ngFor を `MenuListComponent` に任せていることから、配列をどのように反復して表示するか、順序やグループ分けというものが UI コンポーネントである `MenuListComponent` の責務になっている。つまり、UI とコンテンツの責務が混在している。これを解決するには、コンテンツの責務を切り出してあげるほかない。
 
-次のように、 `&lt;ng-content&gt;` を使ってリストの中身を外からもらうようにする。 ngFor をおこなう=コンテンツの責務を持つのはアプリケーション側だ。ただし `menu-list-item` クラスの CSS を `AppComponent` が持つのは UI の責務が漏れてしまうので、その責務を持つための `MenuListItemComponent` を作成する必要がある。URL やラベルは `MenuListItemComponent` の Input として渡すことになる。
+次のように、 `<ng-content>` を使ってリストの中身を外からもらうようにする。 ngFor をおこなう=コンテンツの責務を持つのはアプリケーション側だ。ただし `menu-list-item` クラスの CSS を `AppComponent` が持つのは UI の責務が漏れてしまうので、その責務を持つための `MenuListItemComponent` を作成する必要がある。URL やラベルは `MenuListItemComponent` の Input として渡すことになる。
 
-`&lt;ng-content&gt;` で渡される要素は Shadow DOM の外から与えられるので、 `MenuListComponent` から `MenuListItemComponent` へ子孫セレクタでのアクセスはできないことに注意が必要だ。
+`<ng-content>` で渡される要素は Shadow DOM の外から与えられるので、 `MenuListComponent` から `MenuListItemComponent` へ子孫セレクタでのアクセスはできないことに注意が必要だ。
 
-```plaintext
+```
 @Component({
   selector: 'menu-list',
   template: `<ng-content></ng-content>`,
@@ -81,7 +81,7 @@ export class MenuListItemComponent {
 
 結果として、 `AppComponent` は次のようになる。
 
-```plaintext
+```
 @Component({
   selector: 'app-root',
   template: `
@@ -104,7 +104,7 @@ export class AppComponent {
 
 ここで便利なのが、Sass の `mixin` と `include` を使った手法だ。まずはリストの構造にかかわるスタイルを `menu-list-base.scss` ファイルに記述する。
 
-```plaintext
+```
 @mixin menu-list() {
   display: flex;
   flex-direction: column;
@@ -117,7 +117,7 @@ export class AppComponent {
 
 次に、 `MenuListComponent` と `MenuListItemComponent` のスタイルをそれぞれ `.scss` ファイルに外部化し、それぞれから `menu-list-base.scss` ファイルを参照する。そしてそれぞれの `:host` スタイルの中で対応する mixin を `@include` する。
 
-```plaintext
+```
 // menu-list.component.scss
 @import "menu-list-base";
 

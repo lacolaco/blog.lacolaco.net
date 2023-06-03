@@ -3,7 +3,7 @@ title: '[日本語訳] ViewChildren and ContentChildren in Angular 2'
 date: '2016-04-16T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - 'translation'
 published: true
 source: 'https://www.notion.so/ViewChildren-and-ContentChildren-in-Angular-2-a2178d0a22104f9b9dfc7fca9a317c9a'
@@ -25,12 +25,12 @@ import Figure from '../../components/features/Figure.astro';
 
 まず初めに、Angular 2 のコンポーネントとディレクティブの関係についておさらいしましょう。 ユーザーインタフェースを作るのに一般的なデザインは[Composite パターン](https://ja.wikipedia.org/wiki/Composite_%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3)です。 このデザインパターンは異なるプリミティブを合成し、1 つのインスタンスとして同じ方法で扱えるようにします。 関数型プラグラミングの世界では関数を合成することもできます。例えば次のように
 
-```plaintext
+```
 map ((*2).(+1)) [1, 2, 3]
 -- [4,6,8]
 ```
 
-この Haskell のコードは`(*2)`と`(+1)`という 2 つの関数を合成し、 リスト内の各アイテム`n`に対して`n -&gt; + 1 -&gt; * 2`という流れで適用されます。
+この Haskell のコードは`(*2)`と`(+1)`という 2 つの関数を合成し、 リスト内の各アイテム`n`に対して`n -> + 1 -> * 2`という流れで適用されます。
 
 ## UI における合成
 
@@ -57,7 +57,7 @@ map ((*2).(+1)) [1, 2, 3]
 
 これから説明することをわかりやすくするために、簡単なアプリケーションを作っていきます。
 
-```plaintext
+```
 // ...@Component({  selector: 'todo-app',  providers: [TodoList],  directives: [TodoCmp, TodoInputCmp],  template: `    <section>      Add todo:      <todo-input (onTodo)="addTodo($event)"></todo-input>    </section>    <section>      <h4 *ngIf="todos.getAll().length">Todo list</h4>      <todo *ngFor="var todo of todos.getAll()" [todo]="todo">      </todo>    </section>    <ng-content select="footer"></ng-content>  `})class TodoAppCmp {  constructor(private todos: TodoList) {}  addTodo(todo) {    this.todos.add(todo);  }}// ...
 ```
 
@@ -79,11 +79,11 @@ map ((*2).(+1)) [1, 2, 3]
 
 ## `ng-content` による基本的な content の表示
 
-ここで `todo-app` コンポーネントの定義にちょっと戻りましょう。 テンプレートの最後の要素 `&lt;ng-content select="footer"&gt;&lt;/ng-content&gt;` に気づきましたか？ `ng-content` を使うと、そのコンポーネントの開始タグと終了タグの間に置かれた content を、テンプレートの中に投影することができます！ `ng-content` に与えている `select` 属性は CSS のセレクタで、content の中から投影するものを選ぶことができます。 上の例では `footer` が `todo-app` コンポーネントの一番下に挿入されます。
+ここで `todo-app` コンポーネントの定義にちょっと戻りましょう。 テンプレートの最後の要素 `<ng-content select="footer"></ng-content>` に気づきましたか？ `ng-content` を使うと、そのコンポーネントの開始タグと終了タグの間に置かれた content を、テンプレートの中に投影することができます！ `ng-content` に与えている `select` 属性は CSS のセレクタで、content の中から投影するものを選ぶことができます。 上の例では `footer` が `todo-app` コンポーネントの一番下に挿入されます。
 
 もし `select` 要素を省いた場合は、content 全体が投影されます。
 
-`&lt;todo-input&gt;` と `&lt;todo&gt;` の 2 つのコンポーネントについては今回の話には関係ないので実装部分を省略していますが、 このアプリケーションの完成形はこんな感じになります。
+`<todo-input>` と `<todo>` の 2 つのコンポーネントについては今回の話には関係ないので実装部分を省略していますが、 このアプリケーションの完成形はこんな感じになります。
 
 <Figure src="http://blog.mgechev.com/images/todo-app-sample.gif" caption="" />
 
@@ -110,7 +110,7 @@ Angular 2 では次のプロパティデコレータを `angular2/core` パッ�
 
 これは次のように使います。
 
-```plaintext
+```
 import {ViewChild, ViewChildren, Component...} from 'angular2/core';
 
 // ...
@@ -139,7 +139,7 @@ class TodoAppCmp {
 
 上の例では、 `@ViewChildren` と `@ViewChild` を使っています。 プロパティをデコレートすると、要素をクエリできるようになります。 上の例だと、子コンポーネントである `TodoInputCmp` を `@ViewChild`で、 `TodoCmp` を `@ViewChildren` でクエリしています。 2 つのデコレータを使い分けている理由は、 `TodoInputCmp` は 1 つしかないので `@ViewChild` を使えますが、 `TodoCmp` は複数個が表示されるので `@ViewChildren` を使う必要があるからです。
 
-もう一つ重要なことは、 `inputComponent` と `todoComponents` の型です。 前者のプロパティの型は `TodoInputCmp` になっています。 これはクエリした結果要素が見つからなければ null になり、見つかればそのコンポーネントのインスタンスが代入されます。 一方、 `todoComponents` プロパティの型は `QueryList&lt;TodoCmp&gt;` で、動的に増えたり減ったりする `TodoCmp`のインスタンスを扱えます。 `QueryList` は Observable なコレクションなので、新しく追加されたり、要素が削除された時にはイベントを発生してくれます。
+もう一つ重要なことは、 `inputComponent` と `todoComponents` の型です。 前者のプロパティの型は `TodoInputCmp` になっています。 これはクエリした結果要素が見つからなければ null になり、見つかればそのコンポーネントのインスタンスが代入されます。 一方、 `todoComponents` プロパティの型は `QueryList<TodoCmp>` で、動的に増えたり減ったりする `TodoCmp`のインスタンスを扱えます。 `QueryList` は Observable なコレクションなので、新しく追加されたり、要素が削除された時にはイベントを発生してくれます。
 
 **Angular の DOM コンパイラは **`todo-app`** コンポーネントを先に初期化し、その後子要素を初期化します。** **つまり **`todo-app`** コンポーネントの初期化の間は **`inputComponent`** も **`todoComponents`** もまだ初期化されていません** **これらは **`ngAfterCiewInit`** ライフサイクルフックのタイミングで使用可能になります**
 
@@ -147,7 +147,7 @@ class TodoAppCmp {
 
 Content Children についてもほとんど同じルールが通用しますが、少しだけ違いがあります。 それを説明するために、 `TodoAppCmp` を使う側のルートコンポーネントを見てみましょう。
 
-```plaintext
+```
 @Component({
   selector: 'footer',
   template: '<ng-content></ng-content>'
@@ -176,9 +176,9 @@ class TodoAppCmp {...}
 export class AppCmp {}
 ```
 
-ここでは 2 つのコンポーネント `Footer` と `AppCmp` を定義しています。 `Footer` は開始タグと終了タグの間に渡された要素をすべて投影します( `&lt;footer&gt;ここが表示されます&lt;/footer&gt;` ) 一方、 `AppCmp` は `TodoAppCmp` を使い、さらに `Footer` を開始タグと終了タグの間に渡しています。 つまり、これは我々の用語では `Footer` は Content Child であるといえます。これにアクセスするには次の例のようにします。
+ここでは 2 つのコンポーネント `Footer` と `AppCmp` を定義しています。 `Footer` は開始タグと終了タグの間に渡された要素をすべて投影します( `<footer>ここが表示されます</footer>` ) 一方、 `AppCmp` は `TodoAppCmp` を使い、さらに `Footer` を開始タグと終了タグの間に渡しています。 つまり、これは我々の用語では `Footer` は Content Child であるといえます。これにアクセスするには次の例のようにします。
 
-```plaintext
+```
 // ...
 @Component(...)
 class TodoAppCmp {
@@ -200,7 +200,7 @@ View Children と Content Children の違いは、使っているデコレータ
 
 さて、それでは `TodoAppCmp` の宣言部分を覗いてみましょう。
 
-```plaintext
+```
 class TodoList {
   private todos: Todo[] = [];
   add(todo: Todo) {}
@@ -232,7 +232,7 @@ class TodoAppCmp {
 
 ところが、 `Footer` コンポーネントのコンストラクタでこのサービスをインジェクトしようとすると、次のようなエラーが表示されるでしょう。
 
-```plaintext
+```
 EXCEPTION: No provider for TodoList! (Footer -> TodoList)
 ```
 

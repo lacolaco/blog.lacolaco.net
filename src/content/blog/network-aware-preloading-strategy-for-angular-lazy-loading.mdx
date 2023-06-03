@@ -3,7 +3,7 @@ title: 'Network-aware Preloading Strategy for Angular Lazy Loading'
 date: '2019-05-11T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
 published: true
 source: 'https://www.notion.so/Network-aware-Preloading-Strategy-for-Angular-Lazy-Loading-4cdbdec6e74c4ea486e26c899e5369af'
 ---
@@ -38,7 +38,7 @@ Angular Router supports customizing preloading behavior with `PreloadingStrategy
 
 `PreloadAllModules` loads all lazy modules immediately after bootstrapping. In other word, this is “As soon as possible” strategy.
 
-```plaintext
+```
 import { RouterModule, NoPreloading, PreloadAllModules } from '@angular/router';
 
 @NgModule({
@@ -55,7 +55,7 @@ class AppRoutingModule {}
 
 The `preload` method takes two arguments; `route` and `load` . `route` is a route object that you declare in `routes` array. `load` is a function that trigger loading a module.
 
-```plaintext
+```
 // custom-preloading-strategy.ts
 import { PreloadingStrategy, Route } from '@angular/router';
 import { Observable, EMPTY } from 'rxjs';
@@ -106,7 +106,7 @@ Let’s make network-aware preloading strategy with Network Information API! The
 
 `navigator.connection` is landed in limited browsers. So we MUST detect the feature. In this case,
 
-```plaintext
+```
 export function shouldPreload(route: Route): boolean {
   // Get NetworkInformation object
   const conn = navigator.connection;
@@ -122,7 +122,7 @@ export function shouldPreload(route: Route): boolean {
 
 At first, “Save Data” mode should be prioritized the best. It means the user strongly cares about payload size for their cost- or performance-constraints. Use `NetworkInformation.saveData` property and return `false`.
 
-```plaintext
+```
 export function shouldPreload(route: Route): boolean {
   // Get NetworkInformation object
   const conn = navigator.connection;
@@ -143,7 +143,7 @@ Network Information API can recognize the network’s effective connection type;
 
 In this sample, the application disables preloading when the user is in 2G network.
 
-```plaintext
+```
 export function shouldPreload(route: Route): boolean {
   // Get NetworkInformation object
   const conn = navigator.connection;

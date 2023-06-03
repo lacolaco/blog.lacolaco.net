@@ -3,7 +3,7 @@ title: 'Angular ElementsによるAngularJSの段階的アップグレード戦�
 date: '2019-08-18T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - 'Angular Elements'
   - 'AngularJS'
   - 'Web'
@@ -31,7 +31,7 @@ HTML 要素は `HTMLElement` クラスを継承したサブクラスとして定
 
 独自要素のタグ名は標準要素と区別するために ハイフンを 1 つ以上含むことが仕様で定められている
 
-```plaintext
+```
 class MyElement extends HTMLElement {}
 
 window.customElements.define("my-element", MyElement);
@@ -57,7 +57,7 @@ Custom Elements は Web 標準の機能であり、アプリケーションの�
 
 端的に言えば、独自タグの外側が AngularJS で、内側で React を使ったとしても、お互いのことは関心外にできる。
 
-```plaintext
+```
 const MyComp = () => <div>My Component</div>;
 
 class MyElement extends HTMLElement {
@@ -73,7 +73,7 @@ window.customElements.define('my-element', MyElement);
 
 あるいは lit-html を使って次のようにも書ける。
 
-```plaintext
+```
 import { html, render } from 'lit-html';
 
 const myComp = () => html`<div>My Component</div>`;
@@ -91,7 +91,7 @@ window.customElements.define('my-element', MyElement);
 
 属性を経由して外からデータを受け取ることも当然できるし、イベントを外に発火することもできる。ここでは割愛するが、属性の値取得は 1 回だけでなく変更を監視することもできる。
 
-```plaintext
+```
 const MyComp = (props) => <button onClick={props.onClick()}>{ props.label }</button>;
 
 class MyElement extends HTMLElement {
@@ -124,7 +124,7 @@ Angular Elements とは、Angular の Component を Custom Element に変換す�
 
 レンダリングだけでなく、Custom Elements の属性を Angular Component の `Input` に接続し、 `Output` から `dispatchEvent` に接続してくれる。
 
-```plaintext
+```
 import { createCustomElement } from '@angular/elements';
 import { MyComponent } from './my-component';
 
@@ -139,8 +139,8 @@ AngularJS から Angular への移行をコンポーネント単位で行いな�
 
 # Demo
 
-以下のデモでは、AngularJS アプリケーション中に `&lt;app-counter&gt;` タグを配置している。アップグレードしたい領域を独自タグで囲むが、Custom Elements が登録されるまではただの未知タグとしてブラウザは無視するので既存アプリケーションに影響がない。
+以下のデモでは、AngularJS アプリケーション中に `<app-counter>` タグを配置している。アップグレードしたい領域を独自タグで囲むが、Custom Elements が登録されるまではただの未知タグとしてブラウザは無視するので既存アプリケーションに影響がない。
 
-`window.enableAngular` フラグを有効にすると、Angular Elements で `&lt;app-counter&gt;` タグに `CounterComponent` を適用する。すると Angular コンポーネントがレンダリングされ、タグの内側のノードを置き換えてくれる。
+`window.enableAngular` フラグを有効にすると、Angular Elements で `<app-counter>` タグに `CounterComponent` を適用する。すると Angular コンポーネントがレンダリングされ、タグの内側のノードを置き換えてくれる。
 
 [https://stackblitz.com/edit/angularjs-angular-elements-poc?embed=1&file=src/index.html](https://stackblitz.com/edit/angularjs-angular-elements-poc?embed=1&file=src/index.html)

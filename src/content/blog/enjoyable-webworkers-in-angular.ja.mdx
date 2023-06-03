@@ -3,7 +3,7 @@ title: 'Angular: Comlink を使った Web Worker の導入'
 date: '2021-05-26T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - 'Web Worker'
 published: true
 source: 'https://www.notion.so/Angular-Comlink-Web-Worker-1247081c70a74563886a056d3778a33f'
@@ -19,13 +19,13 @@ import Figure from '../../components/features/Figure.astro';
 
 [Angular CLI](https://angular.jp/guide/quickstart#install-cli)を使って、サンプルアプリケーションを作成する。この記事で使用する Angular CLI のバージョンは v12 を前提としている。
 
-```plaintext
+```
 $ ng new angular-comlink-example --defaults
 ```
 
 アプリケーションのセットアップが終わったあと、 `comlink` パッケージをインストールする。Comlink は TypeScript 型定義も同梱しているため型定義を追加でインストールする必要はない。
 
-```plaintext
+```
 $ cd angular-comlink-example
 $ yarn add comlink # or npm install comlink
 ```
@@ -34,13 +34,13 @@ $ yarn add comlink # or npm install comlink
 
 例として、Markdown テキストを HTML へ変換するアプリケーションを作成する。 まずはじめに`marked`と`@types/marked`の 2 つのパッケージをインストールする。
 
-```plaintext
+```
 $ yarn add marked && yarn add --dev @types/marked
 ```
 
 次に、 `ng generate webworker` コマンドを使い、 `worker/markdown.worker.ts` ファイルを作成する。このコマンドは TypeScript ファイルだけでなく、Web Worker 用の `tsconfig.worker.json` も同時に生成し、そのファイルを参照するように `angular.json` ファイルも更新される。
 
-```plaintext
+```
 $ ng generate webWorker worker/markdown
 
 CREATE tsconfig.worker.json (289 bytes)
@@ -50,7 +50,7 @@ UPDATE angular.json (3204 bytes)
 
 生成された `markdown.worker.ts` ファイルの内容はすべて削除し、次のように Markdown テキストを HTML へコンパイルする API を記述する。
 
-```plaintext
+```
 // worker/markdown.worker.ts
 import * as marked from 'marked';
 
@@ -71,7 +71,7 @@ export const api = {
 
 `compileMmarkdown` 関数をこのワーカーの API として公開するため、`Comlink.expose`関数を呼び出し、`api`オブジェクトを渡す。
 
-```plaintext
+```
 import * as marked from 'marked';
 import { expose } from 'comlink';
 
@@ -90,13 +90,13 @@ expose(api); // Expose as worker's API
 
 続いて、Comlink を通してワーカーの `compileMarkdown`関数を UI スレッド側から呼び出す。 まずは Angular サービスとして `MarkdownService`クラスを作成し、コンポーネントから呼び出し可能な状態にする。
 
-```plaintext
+```
 $ ng generate service service/markdown
 ```
 
 `MarkdownService`クラスには引数に Markdown テキストを受け取りコンパイル結果を Promise で返す `compile`メソッドを定義しておく。
 
-```plaintext
+```
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -109,7 +109,7 @@ export class MarkdownService {
 
 `worker/markdown.worker.ts`を呼び出すため、Comlink をインポートして `wrap`関数でワーカーインスタンスをプロキシする。 ワーカーは`new Worker(new URL('../worker/markdown.worker', import.meta.url)`でインスタンス化される。この記述形式は[webpack の Web Worker サポート](https://webpack.js.org/guides/web-workers/)で定義されたものである。
 
-```plaintext
+```
 import { wrap } from 'comlink';
 
 async function compileMarkdown(source: string): Promise<string> {
@@ -122,11 +122,11 @@ async function compileMarkdown(source: string): Promise<string> {
 
 ここで `worker` 変数は `Comlink.expose`で公開された関数を持っており、その型も保持されている。
 
-`api`の型を取り出すために、 `typeof import('../worker/markdown.worker).api` を `wrap&lt;T&gt;`のジェネリクスに渡している。この `import` は ES モジュールのインポートではなく TypeScript の型定義だけをインポートしている。そのため TypeScript のコンパイル後には除去され、静的な参照は残らず JavaScript のバンドルを分割できる。
+`api`の型を取り出すために、 `typeof import('../worker/markdown.worker).api` を `wrap<T>`のジェネリクスに渡している。この `import` は ES モジュールのインポートではなく TypeScript の型定義だけをインポートしている。そのため TypeScript のコンパイル後には除去され、静的な参照は残らず JavaScript のバンドルを分割できる。
 
 以下は`service/markdown.service.ts`の最終的な例だ。環境が `window.Worker` をサポートしていない場合は、動的 `import()` を使用してメインスレッドでの処理にフォールバックする。この場合でも自動的にコードは分割され、モジュールは遅延読み込みされる。
 
-```plaintext
+```
 import { Injectable } from '@angular/core';
 import { wrap } from 'comlink';
 
@@ -157,7 +157,7 @@ export class MarkdownService {
 
 アプリケーションを完成させよう。ここでは、`AppComponent` を `MarkdownService`を使用し、その結果を表示するように変更する。
 
-```plaintext
+```
 import { MarkdownService } from './service/markdown.service';
 import { Component } from '@angular/core';
 

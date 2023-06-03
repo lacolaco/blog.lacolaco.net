@@ -3,7 +3,7 @@ title: 'Angular v15 hostDirectivesのユースケース検討: 状態監視系�
 date: '2022-10-30T09:53:00.000Z'
 updatedAt: '2022-10-30'
 tags:
-  - 'angular'
+  - 'Angular'
   - 'tech'
   - 'standalone component'
   - 'IntersectionObserver'
@@ -200,7 +200,7 @@ export class BannerComponent {
 
 ## インプット・アウトプットの再公開は名前の設計が重要
 
-今回の検討で感じたのは、 `outputs` を使ったケースでは `&lt;app-banner&gt;` コンポーネントが `viewportIn` / `viewportOut` を自身のアウトプットとして再公開したが、 `ViewportDirective` が公開するときに適した命名とは違っているように思う。
+今回の検討で感じたのは、 `outputs` を使ったケースでは `<app-banner>` コンポーネントが `viewportIn` / `viewportOut` を自身のアウトプットとして再公開したが、 `ViewportDirective` が公開するときに適した命名とは違っているように思う。
 
 ディレクティブのインプット・アウトプットは、ディレクティブ名を prefix とするような命名がされやすい。たとえば `routerLink` に対して `routerLinkActive` のような感じだ。なぜかといえば同じホスト要素に複数の属性ディレクティブが付与されることがあり、名前空間を分けて衝突しないようにするからだ。
 

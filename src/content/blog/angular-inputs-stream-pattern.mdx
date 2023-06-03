@@ -2,7 +2,7 @@
 title: 'Angular: Input を Observable で扱えるようにする Inputs Stream パターン'
 date: '2023-02-14T00:40:00.000Z'
 tags:
-  - 'angular'
+  - 'Angular'
   - 'tech'
   - 'rxjs'
   - 'rx-angular'
@@ -26,7 +26,7 @@ Angular コンポーネントへのインプット `@Input()` に渡される値
 - setter メソッドは渡された値をコンポーネント内部の**インプットストア**に格納する
 - コンポーネントのロジックやテンプレートに使う値は、インプットストアを購読することでリアクティブに取り出す
 
-## `inputs: RxState&lt;Inputs&gt;`
+## `inputs: RxState<Inputs>`
 
 今回は例として `@rx-angular/state` を使ったインプットストアの実装を示している。単に `new RxState()` しているだけなので特筆することはない。
 

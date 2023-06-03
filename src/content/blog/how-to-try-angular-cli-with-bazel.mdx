@@ -3,7 +3,7 @@ title: 'How to Try Angular CLI with Bazel'
 date: '2019-01-01T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - 'Bazel'
 published: true
 source: 'https://www.notion.so/How-to-Try-Angular-CLI-with-Bazel-b3355b6fa9f94b0da35d23b772427c5b'
@@ -30,7 +30,7 @@ This is based on Minko Gechev’s introduction post.
 
 Not mentioned in Minko’s post, Angular Bazel needs global Bazel environment with its version higher than **v0.18.0.**
 
-```plaintext
+```
 $ **brew install bazel**
 $ **bazel version**
   INFO: Invocation ID: f973b7f6-a2b8-4821-a343-3036ac99183d
@@ -47,7 +47,7 @@ https://docs.bazel.build/versions/master/install.html
 
 To use Bazel schematics with `ng new` , it has to be installed in the same place to the CLI. In other words, you have to install Angular Bazel with `--global` flag. If you installed Angular CLI with yarn, execute `yarn add --global` .
 
-```plaintext
+```
 $ npm -g i @angular/bazel@7.2.0-rc.0
 ```
 
@@ -55,7 +55,7 @@ $ npm -g i @angular/bazel@7.2.0-rc.0
 
 Create new application with `ng new` .
 
-```plaintext
+```
 $ ng new bzl-app --collection=@angular/bazel
 ```
 
@@ -69,7 +69,7 @@ To run Angular application, just execute `ng serve` .
 
 `ng serve` command without `--prod` runs `ts_devserver` target defined in `src/BUILD.bazel` .
 
-```plaintext
+```
 ts_devserver(
     name = "devserver",
     port = 4200,
@@ -92,7 +92,7 @@ https://github.com/bazelbuild/rules_typescript
 
 Technically, `ng serve` is the same to `bazel run //src:devserver` . And then, the below log is shown.
 
-```plaintext
+```
 Server listening on http://<Your Machine Name>.local:4200/
 ```
 
@@ -102,7 +102,7 @@ https://github.com/bazelbuild/rules_typescript/issues/339
 
 With `--prod` , it uses `history_server` from Nodejs Rules.
 
-```plaintext
+```
 history_server(
     name = "prodserver",
     data = [
@@ -123,7 +123,7 @@ Angular Bazel already supports `ng build --prod` . But its build output is comp
 
 After running`ng build --prod` , `dist` directory has some sub directories and many output files. In Angular Bazel, `dist/bzl-app` directory is not _**serve-able**_ with other simple HTTP server, because it doesn’t contain `index.html` . It is not regular structure.
 
-```plaintext
+```
 dist
 ├── bin
 ├── bzl-app
@@ -134,7 +134,7 @@ dist
 
 To run application built by `ng build --prod` , execute `dist/bin/src/prodserver` executable file. It runs `history_server` as same as `ng serve --prod` . It’s a very performant web server implemented in Go.
 
-```plaintext
+```
 $ ./dist/bin/src/prodserver --port=4200
 ```
 

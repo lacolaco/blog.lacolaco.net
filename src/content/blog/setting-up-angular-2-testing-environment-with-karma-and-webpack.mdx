@@ -3,7 +3,7 @@ title: 'Setting up Angular Testing Environment with Karma and webpack'
 date: '2016-10-25T00:00:00.000Z'
 tags:
   - 'tech'
-  - 'angular'
+  - 'Angular'
   - 'testing'
 published: true
 source: 'https://www.notion.so/Setting-up-Angular-Testing-Environment-with-Karma-and-webpack-ba94cfed9b6441d3862b55c25fe0cea7'
@@ -15,7 +15,7 @@ This article will explain how to create an environment for Angular 2 testing. It
 
 ## Create an Application (no tests)
 
-```plaintext
+```
 > npm init -y
 > npm i -S @angular/{core,common,compiler,platform-browser,platform-browser-dynamic} rxjs zone.js core-js
 > npm i -D typescript webpack@~2.1.0-beta awesome-typescript-loader angular2-template-loader raw-loader node-static @types/node
@@ -27,7 +27,7 @@ This article will explain how to create an environment for Angular 2 testing. It
 
 app.component.ts:
 
-```plaintext
+```
 import { Component } from "@angular/core";
 @Component({
   selector: "my-app",
@@ -38,7 +38,7 @@ export class AppComponent {}
 
 app.module.ts:
 
-```plaintext
+```
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { AppComponent } from "./app.component";
@@ -52,7 +52,7 @@ export class AppModule {}
 
 main.ts:
 
-```plaintext
+```
 import "core-js";
 import "zone.js/dist/zone";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
@@ -83,7 +83,7 @@ tsconfig.json:
 
 webpack.config.js:
 
-```plaintext
+```
 module.exports = () => {
   return {
     entry: {
@@ -128,14 +128,14 @@ Yay, We’ve created an awesome application quickly.
 
 To make testing environment, we have to set up Karma test runner at first. Follow the command below:
 
-```plaintext
+```
 > npm i -D karma jasmine
 > $(npm bin)/karma init
 ```
 
 This is the starting point of karma.config.js
 
-```plaintext
+```
 module.exports = function(config) {
   config.set({
     basePath: "",
@@ -159,7 +159,7 @@ module.exports = function(config) {
 
 First step, let’s make a test file and add it into karma runner. Create test/main.js as following:
 
-```plaintext
+```
 describe("Meaningful Test", () => {
   it("1 + 1 => 2", () => {
     expect(1 + 1).toBe(2);
@@ -169,7 +169,7 @@ describe("Meaningful Test", () => {
 
 And update files property in karma configuration:
 
-```plaintext
+```
 files: [
   { pattern: 'test/main.js' }
 ],
@@ -202,13 +202,13 @@ No! Don’t worry, guys. We can separate tests as modules and bundle it to the s
 
 Let’s get it started. Install karma-webpack and karma-sourcemap-loader at first:
 
-```plaintext
+```
 > npm i -D karma-webpack karma-sourcemap-loader
 ```
 
 And then, update our karma.config.js. Look at **preprocessors** and **webpack** property. `webpack` preprocessor executes webpack bundling using `test/main.js` as an entry point. And `webpack` property is an configuration for the bundling.
 
-```plaintext
+```
 module.exports = function(config) {
   config.set({
     basePath: "",
@@ -233,7 +233,7 @@ module.exports = function(config) {
 
 Execute “npm test” again and see logs.
 
-```plaintext
+```
 > karma start
 webpack: wait until bundle finished:
 Hash: 1130517a944241558f1f
@@ -250,7 +250,7 @@ chunk    {0} main (main) 1.77 MB [entry] [rendered]
 
 webpack runs! karma-webpack is a very easy way to integrate Karma and webpack. So now, let’s make the second test in **test/sub.js**:
 
-```plaintext
+```
 describe("sub test", () => {
   it("always fails", () => {
     expect(0).toBe(1);
@@ -260,7 +260,7 @@ describe("sub test", () => {
 
 And import that in test/main.js:
 
-```plaintext
+```
 describe("Meaningful Test", () => {
   it("1 + 1 => 2", () => {
     expect(1 + 1).toBe(2);
@@ -271,7 +271,7 @@ import "./sub";
 
 test/sub.js contains the test fails always. In this state, try to run test once.
 
-```plaintext
+```
 Chrome 54.0.2840 (Mac OS X 10.11.6) sub test always fails FAILED
 Expected 0 to be 1.
 at Object.it (test/main.js:74:19)
@@ -284,13 +284,13 @@ Yes, it’s a stack trace. Despite we wrote failing test at test/sub.js, that er
 
 Install **karma-sourcemap-loader**, which is a preprocessor for loading sourcemap into karma.
 
-```plaintext
+```
 > npm i -D karma-sourcemap-loader
 ```
 
 Next, update karma.config.js to add “sourcemap” into preprocessors.
 
-```plaintext
+```
 preprocessors: {
     'test/main.js': ['webpack', 'sourcemap']
 },
@@ -298,7 +298,7 @@ preprocessors: {
 
 It’s ready! Let’s fail our test again and see error logs.
 
-```plaintext
+```
 Chrome 54.0.2840 (Mac OS X 10.11.6) sub test always fails FAILED
 Expected 0 to be 1.
 at Object.it (webpack:///test/sub.js:3:0 <- test/main.js:74:19)
@@ -313,7 +313,7 @@ Currently we have the entry point for testing bundle but it’s a JavaScript fil
 
 src/main.spec.ts:
 
-```plaintext
+```
 describe("main test", () => {
   it("always fails", () => {
     expect(0).toBe(1);
@@ -323,13 +323,13 @@ describe("main test", () => {
 
 test/main.js:
 
-```plaintext
+```
 require("../src/main.spec.ts");
 ```
 
 And install type definitions of Jasmine and add it into `types` property of tsconfig.json.
 
-```plaintext
+```
 > npm i -D @types/jasmine
 ```
 
@@ -356,7 +356,7 @@ tsconfig.json:
 
 Run tests. As below, sourcemap is working well even if tests are written in TypeScript.
 
-```plaintext
+```
 Chrome 54.0.2840 (Mac OS X 10.11.6) main test always fails FAILED
 Expected 0 to be 1.
 at Object.<anonymous> (webpack:///src/main.spec.ts:3:18 <- test/main.js:74:19)
@@ -369,7 +369,7 @@ Angular testing uses **TestBed**. We have to initialize it at the first of the t
 
 Update **src/main.spec.ts** as following:
 
-```plaintext
+```
 import "core-js"; // ES6 + reflect-metadata
 // zone.js
 import "zone.js/dist/zone";
@@ -393,7 +393,7 @@ All preparing was completely ended! At the beginning, let’s make a pipe and it
 
 src/echo.pipe.ts;
 
-```plaintext
+```
 import { Pipe, PipeTransform } from "@angular/core";
 @Pipe({
   name: "echo"
@@ -407,7 +407,7 @@ export class EchoPipe implements PipeTransform {
 
 src/echo.pipe.spec.ts
 
-```plaintext
+```
 import { Component } from "@angular/core";
 import { TestBed, async } from "@angular/core/testing";
 import { EchoPipe } from "./echo.pipe";
@@ -441,7 +441,7 @@ describe("EchoPipe", () => {
 
 At last, load that spec from src/main.spec.ts. **require.context** is very useful utility of webpack that can load all modules in directory recursively.
 
-```plaintext
+```
 // TestBed initialization
 // ...
 // load all specs in ./src
