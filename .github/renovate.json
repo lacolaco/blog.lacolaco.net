@@ -5,6 +5,10 @@
   "stabilityDays": 5,
   "packageRules": [
     {
+      "groupName": "@astrojs packages",
+      "matchPackagePrefixes": ["@astrojs/"]
+    },
+    {
       "groupName": "esbuild packages",
       "matchPackageNames": ["esbuild", "esbuild-register"]
     },
