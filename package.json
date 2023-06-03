@@ -23,7 +23,7 @@
     "@astrojs/rss": "^2.4.1",
     "@astrojs/sitemap": "^1.3.0",
     "@astrojs/tailwind": "^3.1.2",
-    "@fontsource/m-plus-2": "^4.5.12",
+    "@fontsource/m-plus-2": "^5.0.0",
     "@fontsource/source-code-pro": "^4.5.14",
     "@primer/css": "19.8.2",
     "astro": "^2.3.3",
