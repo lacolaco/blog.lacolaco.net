@@ -289,10 +289,10 @@ function richText(text: RichText, context: RenderContext): string {
     if (plain_text.includes('\n')) {
       return plain_text.replace(/\n/g, '  \n');
     }
-    return plain_text;
+    return escapeMDX(plain_text);
   };
 
-  return text.map(renderNode).map(escapeMDX).join('');
+  return text.map(renderNode).join('');
 }
 
 function plainText(text: RichText): string {
