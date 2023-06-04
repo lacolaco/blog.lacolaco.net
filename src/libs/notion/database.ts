@@ -1,18 +1,21 @@
-import pLimit from 'p-limit';
-import { readFile, writeFile } from 'node:fs/promises';
-import { SingleBar } from 'cli-progress';
 import { Client } from '@notionhq/client';
-import type { BlogPageProperties, PageObjectWithContent } from './types';
+import { readFile } from 'node:fs/promises';
+import * as path from 'node:path';
+import pLimit from 'p-limit';
+import { PostData } from '../post/schema';
+import type { BlogPageObject, BlogPageProperties, PageObjectWithContent } from './types';
 import { fetchChildBlocks, queryAllPages } from './utils';
+
+const postCollectionDir = new URL('../../content/post', import.meta.url).pathname;
+
+const limit = pLimit(2);
 
 export class NotionDatabase {
   private notion = new Client({ auth: this.authToken });
 
-  constructor(private authToken: string, private databaseID: string, private manifestFilePath: string) {}
+  constructor(private authToken: string, private databaseID: string) {}
 
-  async queryBlogPages(): Promise<PageObjectWithContent[]> {
-    // collect pages
-    console.log('Fetching pages...');
+  async queryBlogPages2(): Promise<BlogPageObject[]> {
     const pages = await queryAllPages(this.notion, this.databaseID, {
       and: [
         { property: 'published', checkbox: { equals: true } },
@@ -24,48 +27,36 @@ export class NotionDatabase {
         },
       ],
     });
-    console.log(`Fetched ${pages.length} pages`);
-    // filter pages with last edited time
-    const manifest = await readFile(this.manifestFilePath, 'utf-8').then((s) => JSON.parse(s));
-    const editedPages = pages.filter((page) => {
-      const lastEditedTime = page.last_edited_time;
-      const lastEditedTimeInManifest = manifest[page.id];
-      return lastEditedTime !== lastEditedTimeInManifest;
+    return pages.map((page) => {
+      const properties = page.properties as BlogPageProperties;
+      const slug = properties.slug.rich_text[0].plain_text;
+      return { ...page, slug } as BlogPageObject;
     });
-    console.log(`${editedPages.length} pages are edited`);
-    // update manifest
-    pages.forEach((page) => {
-      manifest[page.id] = page.last_edited_time;
-    });
-    await writeFile(this.manifestFilePath, JSON.stringify(manifest, null, 2));
+  }
 
-    if (editedPages.length === 0) {
-      return [];
+  async isCached(page: BlogPageObject): Promise<boolean> {
+    const filepath = path.resolve(postCollectionDir, `${page.slug}.json`);
+    const data = await readFile(filepath, 'utf-8')
+      .then((s) => JSON.parse(s) as PostData)
+      .catch(() => null);
+    if (!data) {
+      return false;
     }
-    console.log('Fetching page content...');
-    const progress = new SingleBar({});
-    progress.start(editedPages.length, 0);
-    const limit = pLimit(2);
-    const pagesWithContent = await Promise.all(
-      editedPages.map((page) =>
-        limit(async () => {
-          const properties = page.properties as BlogPageProperties;
-          const blocks = await fetchChildBlocks(this.notion, page.id).catch((e) => {
-            console.error(`Failed to fetch content of ${page.url}`, e);
-            return [];
-          });
-          progress.increment();
-          return {
-            ...page,
-            properties,
-            slug: properties.slug.rich_text[0].plain_text,
-            content: blocks,
-          };
-        }),
-      ),
-    );
-    progress.stop();
-    console.log('Fetched page content');
-    return pagesWithContent;
+    const lastEditedTime = page.last_edited_time;
+    const lastEditedTimeInCache = data.lastEditedAt;
+    return lastEditedTime === lastEditedTimeInCache;
+  }
+
+  async getPageContents(page: BlogPageObject): Promise<PageObjectWithContent> {
+    const content = await limit(async () => {
+      return fetchChildBlocks(this.notion, page.id).catch((e) => {
+        console.error(`Failed to fetch content of ${page.url}`, e);
+        return [];
+      });
+    });
+    return {
+      ...page,
+      content,
+    };
   }
 }

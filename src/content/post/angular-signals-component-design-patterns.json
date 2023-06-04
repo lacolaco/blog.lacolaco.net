@@ -1,6 +1,6 @@
 {
   "pageId": "c0a2a317-2b8f-47ef-821d-9ef5e602c5f9",
-  "lastEditedAt": "2023-06-03T13:04:00.000Z",
+  "lastEditedAt": "2023-06-04T14:00:00.000Z",
   "slug": "angular-signals-component-design-patterns",
   "properties": {
     "title": "SignalベースのAngularコンポーネント設計パターン",
@@ -59,7 +59,7 @@
       "text": [
         {
           "type": "text",
-          "text": "もっとも基本的なパターンである ",
+          "text": "もっとも基本的なパターンである",
           "annotations": {}
         },
         {
@@ -71,7 +71,7 @@
         },
         {
           "type": "text",
-          "text": " は、あらゆる振る舞いを親コンポーネントからのインプットに依存し、親コンポーネントへのアウトプットによってアプリケーションに作用するものだ。",
+          "text": "は、あらゆる振る舞いを親コンポーネントからのインプットに依存し、親コンポーネントへのアウトプットによってアプリケーションに作用するものだ。",
           "annotations": {}
         }
       ]

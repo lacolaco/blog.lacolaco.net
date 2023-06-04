@@ -1,19 +1,10 @@
 import type { Client } from '@notionhq/client';
-import type { BlockObjectResponse } from '@notionhq/client/build/src/api-endpoints';
-
-type ElementType<T> = T extends (infer U)[] ? U : never;
-
-type MatchType<T, U, V = never> = T extends U ? T : V;
+import type { BlockObjectResponse, PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
 export type DatabaseQueryParams = Parameters<Client['databases']['query']>[0];
 export type QueryFilterObject = DatabaseQueryParams['filter'];
 
-export type PageObject = MatchType<
-  ElementType<Awaited<ReturnType<Client['databases']['query']>>['results']>,
-  {
-    properties: unknown;
-  }
->;
+export type PageObject = PageObjectResponse;
 
 export type PageProperties = PageObject['properties'];
 export type PageProperty<T extends string> = PageProperties[string] & { type: T };
@@ -26,6 +17,11 @@ export type BlogPageProperties = PageProperties & {
   canonical_url: PageProperty<'url'>;
   created_at_override: PageProperty<'date'>;
   updated_at: PageProperty<'date'>;
+};
+
+export type BlogPageObject = PageObject & {
+  properties: BlogPageProperties;
+  slug: string;
 };
 
 export type BlockObjectType = BlockObjectResponse['type'] | unknown;
