@@ -1,0 +1,265 @@
+{
+  "pageId": "2131694e-dc7e-4221-ad63-e13b749d4fc0",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "angular-new-input-transforms",
+  "properties": {
+    "title": "Angular: 属性値からの型変換が書きやすくなるinput transforms",
+    "date": "2023-05-10T15:31:00.000Z",
+    "tags": ["Angular", "tech", "commit note"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular v16.0が出て間もないが、なかなか面白そうな機能追加が進んでいる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular/pull/50225"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "端的には、次のようなコードが書けるようになる。テンプレートでのプロパティバインディングとしては ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "string",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型で受け取りつつも、受け取った内部では ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "number",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型のプロパティとして保持するために、型変換を挟んでいる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// foo.directive.ts\n@Directive()\nexport class Foo {\n  @Input({transform: (incomingValue: string) => parseInt(incomingValue)}) value: number;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これと同様のことはこれまで Setterプロパティと Angular CDK の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "coercion",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ユーティリティが解決してきた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { NumberInput, coerceNumberProperty } from '@angular/cdk/coercion';\n\n@Directive()\nexport class Foo {\n  #value: number;\n\n  @Input() \n  set value(v: NumberInput) {\n    this.#value = coerceNumberProperty(v);\n  }\n}"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://material.angular.io/cdk/coercion/overview"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "なぜこのような型変換が必要かというと、HTMLの仕様上、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "[prop]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というように ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "[]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を伴わない属性値の指定では、それをインプットプロパティが受け取る時に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "string",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " か ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "undefined",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " にしかならないからだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<some [disabled]=\"true\" /> // boolean\n\n<some disabled=\"true\" />   // string\n\n<some disabled />          // undefined"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "特に問題になるのは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabled",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のようにboolean型のインプットとしてもサポートしつつ、その属性がついているだけでも ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "true",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 扱いにするような、HTML標準の属性に振る舞いを合わせるときだ。これはいままではCDKを使って次のように書いていた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';\n\n@Directive()\nexport class Foo {\n  #disabled = false;\n\n  @Input() \n  set disabled(v: BooleanInput) {\n    this.#disabled = coerceBooleanProperty(v);\n  }\n  get disabled() {\n    return this.#disabled;\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これが冒頭で紹介した新しい書き方だと次のように書けそうだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';\n\n@Directive()\nexport class Foo {\n  @Input({ transform: coerceBooleanProperty }) disabled = false;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "おそらく順当に進めば v16.1 で導入されるのではなかろうか？汎用性の高いコンポーネントやディレクティブを作る上ではボイラープレートコードを減らしてくれそうなので、期待したい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "参考リンク",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Add Superpowers to your Angular Inputs 🔋 (New feature 🎉) | by Enea Jahollari | May, 2023 | ITNEXT ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "https://itnext.io/add-superpowers-to-your-angular-inputs-new-feature-4fb89b31b6e8",
+              "href": "https://itnext.io/add-superpowers-to-your-angular-inputs-new-feature-4fb89b31b6e8",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

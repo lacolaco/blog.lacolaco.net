@@ -1,6 +1,6 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-import { format as formatDate } from 'date-fns';
+import { PostData } from '@lib/post';
+import { compareDesc, format as formatDate } from 'date-fns';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
@@ -9,20 +9,21 @@ import TagList from '../components/TagList.astro';
 import { SITE_TITLE } from '../consts';
 
 type Props = {
-  posts: CollectionEntry<'blog'>[];
+  posts: PostData[];
   groupName?: string;
 };
 
 const { posts, groupName } = Astro.props;
 const postsByYear = Array.from(
   posts
+    .sort((a, b) => compareDesc(a.properties.date, b.properties.date))
     .reduce((acc, post) => {
-      const year = formatDate(post.data.date, 'yyyy');
+      const year = formatDate(post.properties.date, 'yyyy');
       const posts = acc.get(year) ?? [];
       posts.push(post);
       acc.set(year, posts);
       return acc;
-    }, new Map<string, CollectionEntry<'blog'>[]>())
+    }, new Map<string, PostData[]>())
     .entries(),
 ).sort(([a], [b]) => Number(b) - Number(a));
 ---
@@ -56,12 +57,12 @@ const postsByYear = Array.from(
                 {posts.map((post) => (
                   <li class="pb-4 border-solid border-transparent">
                     <div class="flex flex-col items-start leading-none">
-                      <FormattedDate class="text-xs text-muted align-middle" date={post.data.date} />
-                      <a class="no-underline" href={`/${formatDate(post.data.date, 'yyyy/MM')}/${post.slug}/`}>
-                        <span class="text-lg text-default font-bold underline">{post.data.title}</span>
+                      <FormattedDate class="text-xs text-muted align-middle" date={post.properties.date} />
+                      <a class="no-underline" href={`/${formatDate(post.properties.date, 'yyyy/MM')}/${post.slug}/`}>
+                        <span class="text-lg text-default font-bold underline">{post.properties.title}</span>
                       </a>
                       <div class="mt-1">
-                        <TagList tags={post.data.tags ?? []} />
+                        <TagList tags={post.properties.tags ?? []} />
                       </div>
                     </div>
                   </li>

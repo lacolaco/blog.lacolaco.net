@@ -1,0 +1,441 @@
+{
+  "pageId": "e87dce04-7a32-43d2-b14b-e546a741e9d9",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "ng4-feature-forms-update",
+  "properties": {
+    "title": "[Angular 4.0] formsモジュールの更新について",
+    "date": "2017-03-08T00:00:00.000Z",
+    "tags": ["tech", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 4.0ではformsモジュールにいくつかの変更が入っています。 追加された新機能と、新しいNgFormの挙動について解説します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "email",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "バリデータの追加",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "新たに組み込みの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "email",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "バリデータが追加され、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "input[type=email]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素の値が正しくメールアドレスの文字列になっているかどうか、NgFormがチェックするようになります。 組み込みバリデータなのでこの機能を使うために特別な記述は必要ありません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "equalsTo",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "バリデータの追加",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "こちらが目玉の機能です。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "equalsTo",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "バリデータは、入力された値が特定のコントロールの値と同じかどうかを検査してくれるものです。 メールアドレスの確認など、同じ内容を2回入力させるようなフォームで有用です。 使い方は次のようになります。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "equalsTo",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "属性の右辺には一致させたいコントロールの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "絶対パス",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を設定します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<form>\n    <input type=\"email\" name=\"mail\">\n    <input type=\"email\" name=\"mailConfirm\" equalsTo=\"mail\">\n</form>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もしフォームのモデルが入れ子構造になっているのなら、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "でパスの階層を表現します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<form>\n    <div ngModelGroup=\"user\">\n        <input type=\"email\" ngModel name=\"mail\">\n        <input type=\"email\" ngModel name=\"mailConfirm\" equalsTo=\"user.mail\">\n    </div>\n</form>"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "デフォルトで",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "novalidate",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が付与されるようになる",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 4.0からは、テンプレート中の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<form>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "には自動的に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "novalidate",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "属性が付与されるようになります。 これはブラウザ間でのバリデーションの挙動の差を生まないため、formsモジュールが提供するバリデータだけが動作するための変更です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もちろん元の挙動に戻すことは可能です。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngNativeValidate",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ディレクティブを",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<form>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "タグに付与することで2系の挙動になります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<form ngNativeValidate>"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "email",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "バリデータの追加",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "equalsTo",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "バリデータの追加",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "novalidate",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "のデフォルト化と、",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "ngNativeValidate",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "による回避",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次回はcoreモジュールやテンプレートシンタックスに関する変更について解説する予定です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 4.0 Features",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "新しいngIfの使い方",
+              "href": "/post/ng4-feature-ngif/",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Metaサービスの使い方",
+              "href": "/post/ng4-feature-meta-service/",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "formsモジュールの更新について",
+              "href": "/post/ng4-feature-forms-update/",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "core/commonモジュールの変更について",
+              "href": "/post/ng4-feature-core-update/",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "router/http/animationsモジュールの変更について",
+              "href": "/post/ng4-feature-libs-update/",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

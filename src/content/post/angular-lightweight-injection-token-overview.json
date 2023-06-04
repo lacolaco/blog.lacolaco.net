@@ -1,0 +1,1051 @@
+{
+  "pageId": "66159df0-e348-42f1-9a27-5319c346cdc3",
+  "lastEditedAt": "2023-05-21T05:22:00.000Z",
+  "slug": "angular-lightweight-injection-token-overview",
+  "properties": {
+    "title": "Angular: Lightweight Injection Tokenという新しいテクニック",
+    "date": "2020-07-29T00:00:00.000Z",
+    "tags": ["tech", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "最近Angularチームが発見し、Angularライブラリの実装におけるパターンとして普及させようとしているのが、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Lightweight Injection Token",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というテクニックだ。これはこれまで不可能だった ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "コンポーネント(ディレクティブ)のTree-Shaking",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を可能にする。本稿ではこの新しいテクニックの概要、そして生まれた経緯や深く知るための参考リンクをまとめる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "なお、Lightweight Injection Tokenについては公式ドキュメントでも解説される予定であるため、そちらを参照すればいい部分は省略する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular - Optimizing client app size with lightweight injection tokens",
+          "href": "https://next.angular.io/guide/lightweight-injection-tokens",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Lightweight Injection Tokenの概要",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ひとことでいえば、「オプショナルな機能に関連するInjection Tokenとして代替の軽量トークンを使う」ということである。AngularのDIを深く理解していればこれだけでピンと来るかもしれないが、具体例から概要をつかもう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "あるAngularライブラリが、次のような使い方ができる ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<lib-card>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コンポーネントを提供している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<lib-card>\n  Hello World!\n</lib-card>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このコンポーネントは、Contentとして ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<lib-card-header>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コンポーネントを配置すると、カードのヘッダーとして取り扱う ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "オプショナル",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " な機能があることをイメージしよう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<lib-card>\n  <lib-card-header>Greeting Card</lib-card-header>\n  Hello World!\n</lib-card>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ライブラリ側はこのような使い方ができるコンポーネントを実装するとおおよそ次のようになるだろう。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使って ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardHeaderComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の参照を得る。ただしこのヘッダーを置くかどうかはユーザー次第なので、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardHeaderComponent|null",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という形でnullを許容することになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: 'lib-card-header',\n  ...,\n})\nclass CardHeaderComponent {}\n\n@Component({\n  selector: 'lib-card',\n  ...,\n})\nclass CardComponent {\n  @ContentChild(CardHeaderComponent)\n  header: CardHeaderComponent|null = null;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここで問題になるのが、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " から ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardHeaderComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " への参照の持ち方である。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild(CardHeaderComponent)",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "header: CardHeaderComponent|null",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の2箇所で参照を持っているが、この2つは性質が異なる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "後者の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "header: CardHeaderComponent|null",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "型",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "としての参照である。この参照はTypeScriptのコンパイル時型チェックにのみ用いられ、コンパイル後のJavaScriptには残らないため問題にならない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "問題は前者の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild(CardHeaderComponent)",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " だ。これは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "値",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "としての参照であり、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardHeaderComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というクラスオブジェクトそのものを参照している。それが直接 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " デコレーターに渡されているのだから、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ユーザーがヘッダーを使おうが使わまいが、この参照は実行時に残る",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "@ViewChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の走査条件として使われるコンポーネント/ディレクティブのクラス参照はどうしてもTree-Shakingできず、これがAngularライブラリを利用したときの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "バンドルサイズの肥大化の原因",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "となる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これを解決するためのアプローチが、Lightweight Injection Tokenだ。上記の例で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " デコレーターに渡していたクラスを、次のように軽量なオブジェクトを利用したInjection Tokenに置き換える。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "// Lightweight Injection Token\nabstract class CardHeaderToken {}\n\n@Component({\n  selector: 'lib-card-header',\n  providers: [\n    {provide: CardHeaderToken, useExisting: CardHeaderComponent}\n  ]\n  ...,\n})\nclass CardHeaderComponent extends CardHeaderToken {}\n\n@Component({\n  selector: 'lib-card',\n  ...,\n})\nclass CardComponent {\n  @ContentChild(CardHeaderToken) header: CardHeaderToken|null = null;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まず ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardHeaderToken",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 抽象クラスを作成し、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardHeaderComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をその具象クラスとする。そしてコンポーネントプロバイダーで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardHeaderToken",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に対して自身のクラスオブジェクトを提供する。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ではトークンを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "デコレーターの走査条件とする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これにより、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " から直接の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardHeaderComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " への参照はなくなり、ライブラリのユーザーが ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<lib-card-header>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コンポーネントを呼び出したときだけ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardHeaderToken",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に対して ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardHeaderComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " クラスのインスタンスが提供されることになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ViewChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の引数としてDIトークンを渡せるようになるのがバージョン 10.1.0からなので、このアプローチが取れるのは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "バージョン 10.1.0以降",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "になる（ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "as any",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " で突破する手法はあるが）。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "feat(core): support injection token as predicate in queries (#37506) · angular/angular@97dc85b",
+          "href": "https://github.com/angular/angular/commit/97dc85ba5e4eb6cfa741908a04cfccb1459cec9b",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "なぜ今なのか、これまでの経緯",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この問題は昔からずっと存在したが、実はバージョン8まではそれほど重大な問題ではなかった。なぜかというとバージョン8以前、つまりIvy以前 (ViewEngine, VE) はAOTコンパイルによってテンプレートコンパイルされた結果の生成コードが、もとのコンポーネントとは別のクラス実体をもっていたからだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ViewEngineでは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " クラスのデコレーターとそのメタデータをもとに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardComponentNgFactory",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " クラスが生成される。そして、JavaScriptとしてコードサイズが大きいのはほとんどの場合NgFactory側である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "つまり上記の例でいえば、 たとえ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardComponentNgFactory",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " クラスが ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardHeaderComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " への参照を持っていたとしても、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardHeaderComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " そのものが大きくないために問題にならなかったのだ。サイズが大きいのは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardHeaderComponenNgFactory",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のほうで、NgFactoryは テンプレート中で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<lib-card-header>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使わない限り参照されないため、不完全ではあるがTree-ShakingできていたのがViewEngine方式だった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "バージョン9からデフォルトになったIvy方式のAOTコンパイルは、生成コードを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "もとのクラスの静的フィールドとして合成する",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "。よって AOTコンパイルすると ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardHeaderComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " そのもののサイズが大きくなり、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CardComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に巻き込まれて一緒にバンドルされるサイズが顕著に大きくなる。いままで行なわれていた生成コードのTree-ShakingがIvyによりなくなってしまった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "つまり、Lightweight Injection TokenはViewEngine時代には顕在化していなかったがIvyによってクリティカルになった問題を解決するために編み出された、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Ivy時代のAngualrライブラリ実装パターン",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もっともポピュラーなAngularのコンポーネントライブラリであるAngular Materialではバージョン9リリース時からバンドルサイズの増加が報告されており、その解消の過程でAngularチームが辿り着いた答えである。現在Angular ComponentsチームはAngular Materialの各コンポーネントをLightweight Injection Tokenパターンに置き換える作業を進めている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/components/issues/19610"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Use light-weight injection pattern for optimized tree-shaking/bundle size · Issue #19576 · angular/components",
+          "href": "https://github.com/angular/components/issues/19576",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "コンポーネント以外のLightweight Injection Token",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ところで、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " などの走査条件でなくとも、通常のDIの中でもオプショナルなものについてはLightweight Injection Tokenパターンを使うべきである。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@Optional()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使っていてもそのトークンの参照は残るためTree-Shakingはできない。コンストラクタDIでは型注釈部分にしか参照がないためコンパイルすれば消えそうに見えるが、コンストラクタ引数の型注釈はAOTコンパイル時に自動的に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@Inject()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " デコレーターに変換されるため、実体参照をもつのである。つまりこれも ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と全く同じ構造であり、同じ問題をもちうる。ライブラリ作者であればオプショナルなプロバイダーのトークンは可能な限り軽量にしておくべきだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "class MyComponent {\n  constructor(@Optional() srv: OptionalService) {}\n}\n\n// Same\nclass MyComponent {\n  constructor(@Optional() @Inject(OptionalService) srv: OptionalService) {}\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ちなみにコンポーネントのLightweight Injection Tokenとして ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "InjectionToken",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " オブジェクトを使うこともできるはずだ。公式ドキュメントでは抽象クラスの例が紹介されているが、どちらが定着するかは今後のコミュニティでの受け入れられ方次第だろう。ただ、トークンの抽象クラスとコンポーネントクラスを継承関係にするとそのままコンポーネントのAPI定義として利用もできるため、おそらくは抽象クラスのほうが便利な場面は多そうだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "const CardHeaderToken\n  = new InjectionToken<CardHeaderComponent>(\"CardHeaderComponent\");"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://angular.io/guide/dependency-injection-providers#non-class-dependencies",
+          "href": "https://angular.io/guide/dependency-injection-providers#non-class-dependencies",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "参考リンク",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "以下に参考リンクをまとめる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Misko HeveryによるDesign Doc [https://hackmd.io/@mhevery/SyqDjUlrU](https://hackmd.io/@mhevery/SyqDjUlrU)",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "公式ドキュメントへの追加PR ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "https://github.com/angular/angular/pull/36144",
+              "href": "https://github.com/angular/angular/pull/36144",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angular MaterialのIssue ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "https://github.com/angular/components/issues/19576",
+              "href": "https://github.com/angular/components/issues/19576",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

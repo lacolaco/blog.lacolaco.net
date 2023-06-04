@@ -1,0 +1,1115 @@
+{
+  "pageId": "0bbe31d5-b26e-4cc9-802d-80dd2ff17ecb",
+  "lastEditedAt": "2023-05-21T00:15:00.000Z",
+  "slug": "angular-using-ngrx-with-redux-toolkit",
+  "properties": {
+    "title": "Angular: Using NgRx Store with Redux Toolkit 🚀",
+    "date": "2020-12-16T00:00:00.000Z",
+    "tags": ["tech", "Angular", "NgRx", "状態管理"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This article introduces the idea of combining ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgRx Store",
+          "href": "https://ngrx.io/guide/store",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", the de facto standard state management library for Angular applications, with the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Redux Toolkit",
+          "href": "https://redux-toolkit.js.org/",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", a library from the Redux team.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "I expect that this will eventually become the solid configuration for Angular applications.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "What is the Redux Toolkit (RTK)?",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "If you are already familiar with the Redux Toolkit, you can find it in the following “NgRx Store with RTK” section.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The Redux Toolkit (",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RTK",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ") is the official library of the Redux development team. It provides best practices that match real-world use cases to make it easier and more effective for anyone to use Redux. A major theme of RTK is the reduction of cumbersome boilerplate code that has frequently occurred in Redux in the past. You can get a good overview of this through the Redux Toolkit Basic Tutorial. It is recommended that you read through it first.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://redux-toolkit.js.org/tutorials/basic-tutorial",
+          "href": "https://redux-toolkit.js.org/tutorials/basic-tutorial",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The ability to create Actions, Action Creators, Reducers, etc. with creating functions is also effective in reducing the existing boilerplate, but the most important thing is the last ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "createSlice",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " function. Just by looking at the code sample, you can see that the API is quite different from the impression of Redux so far, and the amount of code can be reduced considerably.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://redux-toolkit.js.org/tutorials/basic-tutorial#introducing-createslice",
+          "href": "https://redux-toolkit.js.org/tutorials/basic-tutorial#introducing-createslice",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "const counterSlice = createSlice({  name: 'counter',  initialState: 0,  reducers: {    increment: (state) => state + 1,    decrement: (state) => state - 1,  },});const store = configureStore({  reducer: counterSlice.reducer,});document.getElementById('increment').addEventListener('click', () => {  store.dispatch(counterSlice.actions.increment());});"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In the future, Redux will basically be based on this Slice. Most of the existing Redux logic should be able to be solved by ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "createSlice()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", unless you are using it in a very complex way.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "This API is the standard approach for writing Redux logic. (https://redux-toolkit.js.org/api/createSlice)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The concept of Slice is a new one created by the Redux Toolkit, but its essence is not entirely new. Here is a detailed explanation of Slice.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "The concept of Slice",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "“Slice” is an object that encapsulates the Reducer and Action Creators created under the namespace.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "createSlice returns a “slice” object that contains the generated reducer function as a field named reducer, and the generated action creators inside an object called actions. (https://redux-toolkit.js.org/tutorials/basic-tutorial)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "// Creating a sliceconst counterSlice = createSlice({  name: 'counter',  initialState: 0,  reducers: {    increment: (state) => state + 1,  },});// Auto-generated reducer and action creatorsconst { reducer, actions } = counterSlice;actions.increment(); // => Action { type: 'counter/increment' }"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "If you are familiar with the Redux ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "“ducks” pattern",
+          "href": "https://github.com/erikras/ducks-modular-redux",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ", you will feel a sense of déjà vu when you see Slice, which is the exact representation of the ducks pattern as a type of object. The ducks pattern can be easily implemented by simply exporting each property individually from the return value of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "createSlice()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "Thanks to createSlice, we already have our action creators and the reducer right here in one file. All we have to do is export them separately, and our todos slice file now matches the common “ducks” pattern. (https://redux-toolkit.js.org/tutorials/intermediate-tutorial)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// ducks pattern exports\nexport const { increment } = counterSlice.actions;\nexport default counterSlice.reducer;"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The reason why it is called “Slice” will become clearer when we apply multiple Slices to a single Store. To combine multiple Slices, we will continue to use the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "combineReducers",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " function. The Slice is the combination of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "[name]: namedReducer",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " in this combine step. Each slice is a thin layer of the whole reducer.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-using-ngrx-with-redux-toolkit/bb5e869b-eaa7-40bc-b04f-877e764e9ebe/slices.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "There have been various approaches to dividing the Reducer in this way, and the ducks pattern has been popular. It creates modules that are scoped by namespaces while ensuring atomic state updates through centralized state management infrastructure. The reason why RTK and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "createSlice()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " should be used is that it is easy and anyone can implement the scalable Redux best practices in the same way.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "NgRx Store with RTK",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Redux is a framework-agnostic library. But why NgRx Store is widely used for Angular app state management instead of plain Redux?",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Because it’s easy to set up in Angular’s DI.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Because they want to manage state changes with RxJS (Observable)",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Because they want to use TypeScript’s type checking",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Because it requires less boilerplate code than plain Redux",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "RTK can also solve the needs of TypeScript-friendliness and simplicity of description, and it also has the sense of security of being a Redux official. So, by using NgRx Store with RTK, we can write state management logic that blends naturally into Angular applications while benefiting from the Redux ecosystem. This is the starting point of my idea, and I am confident that it will work.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "StoreModule.forFeature()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and Slice",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In NgRx Store, you can create a “Feature State” by using ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "StoreModule.forFeature()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " for lazy loading or simply for separation of concerns. For applications of a large size, it is common to modularize them into Feature States instead of managing everything in the Root State.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import counterReducer, { name as counterFeatureKey } from './state/counter';\n@NgModule({\n  imports: [StoreModule.forFeature(counterFeatureKey, counterReducer)],\n})\nexport class CounterModule {}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "To create a Feature State, you need a string that is the key to distinguish the Feature and a Reducer function corresponding to the Feature State. And as mentioned earlier, RTK’s Slice has the same information. In other words, Feature State and Slice are both APIs aimed at modularizing state management, and their essence is almost the same.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "By the way, NgRx Store is a state management library for Angular, based on RxJS, but its core is strongly inspired by Redux.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "Store is RxJS powered global state management for Angular applications, inspired by Redux. (https://ngrx.io/guide/store)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This is not only the idea but also the interface of Action and Reducer, the principle part of Redux, is the same. So the objects generated by RTK can be directly applied to NgRx Store. In other words, the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "key",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Reducer",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " required for the Feature State can be generated by Slice.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "I will explain the implementation with a simple example. It is a small application, but it has everything you need to integrate NgRx Store with RTK.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "embed",
+      "url": "https://codesandbox.io/embed/staging-dust-pg930?fontsize=14&hidenavigation=1&module=%2Fsrc%2Fapp%2Fcounter%2Fcounter-slice.ts&theme=dark&view=editor"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "0. Setup NgRx Store",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "First, we need to prepare ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "StoreModule.forRoot()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " to make ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Store",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " available to components and services. If it is fully modularized, there will be no reducer to pass to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "forRoot()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@NgModule({\n  imports: [BrowserModule, StoreModule.forRoot({})],\n  // ...\n})\nexport class AppModule {}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "1. Create a counter slice",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The first thing to do is to create a Slice. Create ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "counter/counter-slice.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and use the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "createSlice()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " function to create a Slice object. That’s almost all the code for state management.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { createSlice } from '@reduxjs/toolkit';\nconst counterSlice = createSlice({\n  name: 'counter',\n  initialState: {\n    count: 0,\n  },\n  reducers: {\n    increment: (state) => {\n      state.count++;\n    },\n  },\n});"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "2. Make a “ducks” module",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Based on the Slice created in step 1, we will modularize the Slice according to the ducks pattern: default export for Reducer, named export for Action Creator and other objects. Using object destructuring, we can write like the following:",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "const {\n  reducer,\n  actions: { increment },\n  name,\n} = counterSlice;\nexport default counterSlice.reducer;\nexport { increment, name };"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This is a preference, so if you don’t find the ducks pattern valuable, you can export the Slice object as is.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "3.Setup ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "StoreModule.forFeature()",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "We will use the object exported from ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "counter-slice.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " to set the Feature State of NgRx. Just call ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "StoreModule.forFeature()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " in ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "counter.module.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and pass the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "name",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "reducer",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " of the Slice as follows:",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import counterReducer, { name as counterFeatureKey } from './counter-slice';\n@NgModule({\n  imports: [StoreModule.forFeature(counterFeatureKey, counterReducer)],\n  // ...\n})\nexport class CounterModule {}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "4. Creating a Feature selector",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In the NgRx Store, it is common to use a Feature Selector to retrieve the Feature State from the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Store",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". This time, ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "counter-slice.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " itself will create and export a Feature Selector. The type of the Feature State managed by ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "counterSlice",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " can be retrieved using ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ReturnType<typeof reducer>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", thanks to RTK’s strong type inference support.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "export const selectFeature = createFeatureSelector<ReturnType<typeof reducer>>(\n  name\n);"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "5. Access to Feature State",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Finally, refer to the Feature State from the component, dispatch an Action to update it, and you are done. The code in this area is not affected by the RTK.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { createSelector, Store } from '@ngrx/store';\nimport * as counterSlice from './counter-slice';\n@Component({\n  selector: 'app-counter',\n  template: `<button (click)=\"increment()\">INCREMENT</button>:    {{ counter$ | async }}`,\n})\nexport class CounterComponent {\n  constructor(private readonly store: Store<{}>) {}\n  // Get state\n  counter$ = this.store.select(\n    createSelector(counterSlice.selectFeature, (state) => state.count)\n  );\n  increment() {\n    // Update state\n    this.store.dispatch(counterSlice.increment());\n  }\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Advantages and disadvantages",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This is a brief summary of the advantages and disadvantages of using NgRx Store with RTK.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Advantage: minimized boilerplate",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Compared to the bare Redux, utilities provided by NgRx such as ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "createReducer",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "createAction",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " simplify the description, while ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "createSlice()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " reduces waste to the absolute minimum. It not only reduces the amount of code but also hides the combination of multiple APIs in just one ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "createSlice()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", which is very good in terms of ease of remembering how to use it.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// NgRx\nimport { createAction, createReducer } from '@ngrx/store';\nexport const increment = createAction('[Counter Component] Increment');\nexport const initialState = 0;\nconst _counterReducer = createReducer(\n  initialState,\n  on(increment, (state) => state + 1)\n);\nexport function counterReducer(state, action) {\n  return _counterReducer(state, action);\n}"
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// Redux Toolkit\nimport { createSlice } from '@reduxjs/toolkit';\nconst counterSlice = createSlice({\n  name: 'counter',\n  initialState: 0,\n  reducers: {\n    increment: (state) => state + 1,\n  },\n});"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Advantage: Redux Ecosystem",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "RTK will become a central part of the Redux ecosystem in the near future, and new projects derived from RTK are emerging. For example, the recently released ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RTK Query",
+          "href": "https://rtk-query-docs.netlify.app/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " is an experimental library that automates the common Redux use case of fetching data and caching the response. RTK-based state management makes it easier to keep up with the evolution of the Redux ecosystem.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Disadvantage: Increased bundle size",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The RTK comes with some middleware by default, so the bundle size should be larger than the plain NgRx Store. Tree-shaking will mitigate this, but the increment will not be zero.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Conclusion",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "I had the opportunity to introduce my idea on the interoperability between NgRx Store and RTK.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "I put up an issue on the NgRx GitHub repository suggesting how to improve interoperability with RTK, and the NgRx maintainer was very positive, and also Mark Erikson, the Redux maintainer, showed up and welcomed it.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/ngrx/platform/issues/2809"
+    },
+    {
+      "type": "tweet",
+      "url": "https://twitter.com/acemarke/status/1336804656777932803"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Since the RTK, the Redux ecosystem seems to be gaining momentum in spreading best practices that match real-world use cases. And I found out that there is an option to delegate the core of state management to the Redux official. I think the role of NgRx in combination with RTK will be to connect Redux with Angular’s DI system and reactive programming with RxJS as a bridge. And I believe that this division of responsibilities will become more important in the future.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The implementation example presented here is just one idea at the moment, and if you can find a better interoperable implementation pattern, I’d love to see NgRx Store + RTK made by others. I’m looking forward to your feedback.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "See you.",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

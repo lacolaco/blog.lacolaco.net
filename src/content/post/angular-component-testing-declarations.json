@@ -1,0 +1,700 @@
+{
+  "pageId": "49b8a626-10b5-40be-869b-0a39ab002ff9",
+  "lastEditedAt": "2023-05-21T05:56:00.000Z",
+  "slug": "angular-component-testing-declarations",
+  "properties": {
+    "title": "Angular Testing: TestBedにはdeclarationsではなくimportsを設定する",
+    "date": "2021-07-07T00:00:00.000Z",
+    "tags": ["tech", "Angular", "testing"]
+  },
+  "content": [
+    {
+      "type": "link_preview",
+      "url": "https://scrapbox.io/lacolaco-engineering/TestBedにはdeclarationsではなくimportsを設定する"
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "コンポーネントのテストにおいて、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TestBed.configureTestingModule()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "declarations",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を設定するユースケースはそれほど多くない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular CLI の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng generate component",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドで生成される spec ファイルが次のようなコードをスキャフォールドするため、それをそのまま使わなければならないと勘違いしている開発者も多いが、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "スキャフォールドはお手本ではない",
+          "href": "https://scrapbox.io/lacolaco-engineering/%E3%82%B9%E3%82%AD%E3%83%A3%E3%83%95%E3%82%A9%E3%83%BC%E3%83%AB%E3%83%89%E3%81%AF%E3%81%8A%E6%89%8B%E6%9C%AC%E3%81%A7%E3%81%AF%E3%81%AA%E3%81%84",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { ComponentFixture, TestBed } from '@angular/core/testing';\nimport { FooComponent } from './foo.component';\n\ndescribe('FooComponent', () => {\n    let component: FooComponent;\n    let fixture: ComponentFixture<FooComponent>;\n\n    beforeEach(async () => {\n        await TestBed.configureTestingModule({\n            declarations: [FooComponent],\n        }).compileComponents();\n    });\n\n    beforeEach(() => {\n        fixture = TestBed.createComponent(FooComponent);\n        component = fixture.componentInstance;\n        fixture.detectChanges();\n    });\n\n    it('should create', () => {\n        expect(component).toBeTruthy();\n    });\n});"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "TestBed に declarations を設定しない",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "TestBed に ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "declarations",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " を設定してコンポーネントテストをすると面倒なことがいくつかある",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "対象コンポーネントの子コンポーネントが解決できない",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "schemas: [NO_ERRORS_SCHEMA]",
+                              "annotations": {
+                                "code": true
+                              }
+                            },
+                            {
+                              "type": "text",
+                              "text": " で解消されがち",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": [
+                            {
+                              "type": "bulleted_list",
+                              "items": [
+                                {
+                                  "type": "bulleted_list_item",
+                                  "text": [
+                                    {
+                                      "type": "text",
+                                      "text": "テンプレートがコンパイルエラーになっていることに気づかずデプロイ前のビルドで発覚することもしばしば",
+                                      "annotations": {}
+                                    }
+                                  ],
+                                  "children": []
+                                },
+                                {
+                                  "type": "bulleted_list_item",
+                                  "text": [
+                                    {
+                                      "type": "text",
+                                      "text": "NO_ERRORS_SCHEMA を安易に使うのをやめたい話 - とんかつ時々あんどーなつ",
+                                      "href": "https://kasaharu.hatenablog.com/entry/20210705/1625492137",
+                                      "annotations": {}
+                                    }
+                                  ],
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "コンポーネントのコンストラクタで注入される依存オブジェクトが提供されていない",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "imports",
+                              "annotations": {
+                                "code": true
+                              }
+                            },
+                            {
+                              "type": "text",
+                              "text": " や ",
+                              "annotations": {}
+                            },
+                            {
+                              "type": "text",
+                              "text": "providers",
+                              "annotations": {
+                                "code": true
+                              }
+                            },
+                            {
+                              "type": "text",
+                              "text": " でセットアップする",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "spec ファイル側での ",
+                              "annotations": {}
+                            },
+                            {
+                              "type": "text",
+                              "text": "imports",
+                              "annotations": {
+                                "code": true
+                              }
+                            },
+                            {
+                              "type": "text",
+                              "text": " 忘れ",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": [
+                            {
+                              "type": "bulleted_list",
+                              "items": [
+                                {
+                                  "type": "bulleted_list_item",
+                                  "text": [
+                                    {
+                                      "type": "text",
+                                      "text": "アプリケーションコードで新しく実装するたびにするたびにテスト側でも同じモジュールを追加する",
+                                      "annotations": {}
+                                    }
+                                  ],
+                                  "children": []
+                                },
+                                {
+                                  "type": "bulleted_list_item",
+                                  "text": [
+                                    {
+                                      "type": "text",
+                                      "text": "アプリケーションコードでは不要になったモジュールをテスト側に残り続けることもしばしば",
+                                      "annotations": {}
+                                    }
+                                  ],
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "TestBed.configureTestingModule()",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "の目的",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "numbered_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "テスト対象の依存関係解決",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "テストダブルのセットアップ",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "テストダブルのセットアップはテストだけの関心なのでそのままで問題ない",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "同じコンポーネントを二度宣言しない",
+              "annotations": {
+                "bold": true
+              }
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "アプリケーション側でそのコンポーネントを ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "declarations",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " に追加しているモジュールがすでにあるはず",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "TestBed でその NgModule をインポートすればテスト対象の依存関係解決は達成されるはず",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "コンポーネントのテストが同時にその NgModule のテストにもなる",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "解決されるべき依存関係が解決されないときテストが失敗する",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { ComponentFixture, TestBed } from '@angular/core/testing';\nimport { FooComponent } from './foo.component';\nimport { FooModule } from './foo.module';\n\ndescribe('FooComponent', () => {\n    let component: FooComponent;\n    let fixture: ComponentFixture<FooComponent>;\n\n    beforeEach(async () => {\n        await TestBed.configureTestingModule({\n            imports: [FooModule], // 対象のコンポーネントを提供するモジュールをインポートするだけ\n        }).compileComponents();\n    });\n\n    beforeEach(() => {\n        fixture = TestBed.createComponent(FooComponent); // FooModuleで宣言されているため生成できる\n        component = fixture.componentInstance;\n        fixture.detectChanges();\n    });\n\n    it('should create', () => {\n        expect(component).toBeTruthy();\n    });\n});"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "NgModule を分割するモチベーション",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "すべてをコンポーネントが ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "AppModule",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " で宣言されていると上記のアプローチはとりづらい",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "対象コンポーネントと関係ない依存オブジェクトが初期化されるオーバーヘッドが無駄",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "AppModule",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "にはアプリケーションの初期化に閉じた関心（いわゆる ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "forRoot()",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "）が多くあり、ユニットテストで読み込まれるのが不都合な場面もある",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "再利用可能な NgModule を分割しておくことは",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "AppModule",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "の肥大化を防ぐだけでなくユニットテストの書きやすさにもつながる",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "TestBed に declarations を設定するユースケース",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "TestHost を使うテストケース",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Angular 日本語ドキュメンテーション - コンポーネントのテストシナリオ",
+                      "href": "https://angular.jp/guide/testing-components-scenarios#%E3%83%86%E3%82%B9%E3%83%88%E3%83%9B%E3%82%B9%E3%83%88%E5%86%85%E9%83%A8%E3%81%AE%E3%82%B3%E3%83%B3%E3%83%9D%E3%83%BC%E3%83%8D%E3%83%B3%E3%83%88",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "対象コンポーネントを直接テストするのではなくテンプレート経由でテスト用のホストコンポーネントを用意する",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "この場合 ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "declarations",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " にはテストホストだけがあり、その依存関係を解決するために対象コンポーネントの NgModule を ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "imports",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " に追加すればよい",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "テストホストを使っても使わなくても ",
+                              "annotations": {}
+                            },
+                            {
+                              "type": "text",
+                              "text": "imports: [FooModule]",
+                              "annotations": {
+                                "code": true
+                              }
+                            },
+                            {
+                              "type": "text",
+                              "text": " は変わらず有用である",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "ディレクティブのテストも基本的にこの形になる",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { ComponentFixture, TestBed } from '@angular/core/testing';\nimport { FooDirective } from './foo.directive';\nimport { FooModule } from './foo.module';\n\n@Component({\n    template: `<div appFoo></div>`\n})\nclass TestHostComponent {}\n\ndescribe('FooDirective', () => {\n    let host: TestHostComponent;\n    let fixture: ComponentFixture<TestHostComponent>;\n\n    beforeEach(async () => {\n        await TestBed.configureTestingModule({\n            declarations: [TestHostComponent], // テストホストの宣言\n            imports: [FooModule], // 対象のディレクティブを提供するモジュール\n        }).compileComponents();\n    });\n\n    beforeEach(() => {\n        fixture = TestBed.createComponent(TestHostComponent); // FooModuleで宣言されているため生成できる\n        host = fixture.componentInstance;\n        fixture.detectChanges();\n    });\n\n    it('should create', () => {\n        expect(host).toBeTruthy();\n    });\n});"
+    }
+  ]
+}

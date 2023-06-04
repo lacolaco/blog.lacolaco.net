@@ -1,0 +1,1330 @@
+{
+  "pageId": "09047f7d-f09e-48ec-b004-a98745ede141",
+  "lastEditedAt": "2023-05-21T05:55:00.000Z",
+  "slug": "angular-content-projection-101",
+  "properties": {
+    "title": "AngularのContent Projectionの基本",
+    "date": "2020-02-10T00:00:00.000Z",
+    "tags": ["tech", "Angular", "Web Components"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "本稿では Angularコンポーネント間でビュー領域を受け渡しする ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Content Projection",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という概念と、その実装パターンについてあらためて解説する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Re-thinking about ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ul>",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "さて、Angularの話に入る前にまずはHTML標準の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ul>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 要素について考えてみよう。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ul>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は言わずとしれた Unordered ListのためのHTML要素だが、われわれが常日頃 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ul>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使うときは次のようにHTMLを書く。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<ul>\n    <li>Item 1</li>\n    <li>Item 2</li>\n</ul>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angularの文脈において、開始タグと終了タグの間の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<li>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の位置にあるものは、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ul>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Content",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と呼ばれる。そして、自身に与えられた Content を自身のビューの一部として投影することを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Content Projection",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と呼ぶ。AngularJSの概念のなかでは transclusionとも呼ばれたが、今は Content Projectionが一般的な語彙である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "HTML標準要素は基本的にすべての要素が自動的にContent Projectionを透過的におこなう。だからこそわれわれは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<div>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を重ねがけできるし、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<a>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "タグの中に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "タグを置くこともできる。勘がいい読者は気づいているかもしれないが、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<li>Item 1</li>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " における ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Item 1",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " も TextNode のContentである。HTMLとDOMはContent Projectionによって成り立っていて、ほぼすべてのHTML標準要素はContentをそのまま投影する。そしてその投影のネスト構造にあわせたCSSセレクタを使ってスタイリングされている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "AngularのContent ProjectionとWeb Components",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angularに話を戻そう。Angularのコンポーネントは基本的にWeb Componentsの概念を踏襲している。そのため、Angularのコンポーネントについて学ぶ上でWeb Componentsの基本概念は踏まえておく必要がある。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Web ComponentsのCustom ElementsはHTMLのカスタム要素を定義する機能である。カスタム要素は標準要素と違い、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "自動的にContent Projectionはおこなわれない",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "。特にShadow DOMと組み合わせたカスタム要素は、スタンドアロンでカプセル化されたビューであるため、カプセル化の外からビューを与えて干渉することはカスタム要素側が許可しない限り不可能だ。 そしてShadow DOMでは、自身のDOMツリー内に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<slot>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という要素を宣言すると、その位置にContentが投影される。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://developer.mozilla.org/ja/docs/Web/HTML/Element/slot",
+          "href": "https://developer.mozilla.org/ja/docs/Web/HTML/Element/slot",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "   ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "https://developer.mozilla.org/ja/docs/Web/Web_Components/Using_templates_and_slots",
+          "href": "https://developer.mozilla.org/ja/docs/Web/Web_Components/Using_templates_and_slots",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これと同様の概念をAngularのコンポーネントも備えていて、それが ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ng-content>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 疑似要素と、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " / ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChildren()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 機能だ。 これらの概念は基本的にAngular 2.0.0のリリース時から変わっておらず、Angularのコンポーネント機能の根幹を支えている概念である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Content Projection 101: ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ng-content>",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "一番簡単でインスタントなContent Projectionの方法は、Angularコンポーネントのテンプレートで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ng-content>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 疑似要素を使う方法だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://stackblitz.com/edit/ivy-argkah",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このように ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HelloComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ng-content>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 疑似要素でContent Projectionの準備をしていれば、親コンポーネントがContentを渡せば自動的にその位置に投影される。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: 'hello',\n  template: `\n  <h1>Hello <ng-content></ng-content></h1>\n  `,\n})\nexport class HelloComponent  {}"
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<hello>World</hello>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "<ng-content>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "select",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 属性を使って任意のCSSセレクタにマッチしたContentだけを抽出して投影することもできる。次のように ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HelloComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のテンプレートを編集し、親コンポーネントから ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<span greeting>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のようにCSSセレクタにマッチする要素を渡すと、その要素だけを選択して投影する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://stackblitz.com/edit/ivy-do5tyk",
+          "href": "https://stackblitz.com/edit/ivy-do5tyk",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<h1>\n  <ng-content select=\"[name]\"></ng-content>! \n  <ng-content select=\"[greeting]\"></ng-content> \n</h1>"
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<hello>\n  <span greeting>Hello</span>\n  <span name>World</span>\n</hello>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このとき、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HelloComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " にとって2種類の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "子",
+          "annotations": {
+            "italic": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が生まれている。それが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "View Child",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Content Child",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " であり、Angularのなかでもとりわけ重要な概念である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "<h1>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 要素は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HelloComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "View Child",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " である。自身の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ビュー",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の一部であり、自身の内部に閉じた本当の子要素である。 Contentとして渡された",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "World",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HelloComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Content Child",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " である。DOMツリー上は子要素として描画されるが、テンプレート上に存在するわけではなくContentとして投影されている意味論上の子要素である。 これらはAngularのレンダリングシステム上で明確に区別されており、AngularのAPIの各所に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "View",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Content",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の語彙の使い分けが見られるはずだ。 この基本概念を踏まえなければ、これより先のContent Projectionの理解は難しい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Content Projection 201: ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " & ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TemplateRef",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "<ng-content>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " はテンプレートだけで完結するインスタントな方法だが、現在のAngularの仕様上いくつかの制約がある。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "<ng-content>",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " はContentをテンプレート化できない。つまり同じContentを繰り返し投影することができない",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "<ng-content>",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " はディレクティブクラスによる選択ができない。CSSセレクターによってのみ選択できる",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そこで、より柔軟にContentを扱うためのAPIとして ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIと ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ng-template>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " API が存在する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://angular.io/api/core/ContentChild",
+          "href": "https://angular.io/api/core/ContentChild",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://angular.io/api/core/TemplateRef",
+          "href": "https://angular.io/api/core/TemplateRef",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " デコレーターは、その引数の条件に一致するContent Childの参照をコンポーネント内に保持できる機能である。条件に使用できるのは",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ディレクティブ（コンポーネント）クラス",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "テンプレート参照変数名",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "のいずれかである。 次の例では、親から与えられた ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<span>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 要素を テンプレート参照変数 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "#helloName",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をキーにして取得している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://stackblitz.com/edit/ivy-fngydx?file=src%2Fapp%2Fapp.component.html",
+          "href": "https://stackblitz.com/edit/ivy-fngydx?file=src%2Fapp%2Fapp.component.html",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: 'hello',\n  template: `\n  <h1>\n    Hello <ng-content></ng-content>\n  </h1>\n  `,\n})\nexport class HelloComponent  {\n\n  @ContentChild('helloName')\n  content: ElementRef<any>;\n}"
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<hello>\n  <span #helloName>World</span>\n</hello>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "しかしこのままでは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " で取得したContentは投影できない。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ng-content>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は Contentの取得と投影をセットでおこなうが、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " はあくまでもContentの参照を得る機能である。ここで得られる ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "content",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<span>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " タグの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ElementRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "になっているが、投影をおこなうためには渡されたContentが投影可能な ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Template",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " である必要がある。 Templateは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ng-template>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " タグを使って宣言する。つまり、次のように親から ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ng-template>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 要素をContentとして渡すことができる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<hello>\n  <ng-template #helloName>\n    <span>World</span>\n  </ng-template>\n</hello>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "HelloComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 側では、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使って受け取ったTemplateの参照 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TemplateRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を、 次のように",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*ngTemplateOutlet",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ディレクティブを使ってテンプレート中に投影する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://stackblitz.com/edit/ivy-4y6nwq?file=src%2Fapp%2Fapp.component.html",
+          "href": "https://stackblitz.com/edit/ivy-4y6nwq?file=src%2Fapp%2Fapp.component.html",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: \"hello\",\n  template: `\n    <h1>Hello <ng-container *ngTemplateOutlet=\"nameTemplate\"></ng-container></h1>\n  `,\n})\nexport class HelloComponent {\n  @ContentChild(\"helloName\")\n  nameTemplate: TemplateRef<any>;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Templateは再利用可能なテンプレート部品なので、同じContentを何度でも繰り返し表示できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://stackblitz.com/edit/ivy-rr1pwi?file=src/app/hello.component.ts",
+          "href": "https://stackblitz.com/edit/ivy-rr1pwi?file=src/app/hello.component.ts",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: \"hello\",\n  template: `\n    <h1>Hello <ng-container *ngTemplateOutlet=\"nameTemplate\"></ng-container></h1>\n    <h2>Hello <ng-container *ngTemplateOutlet=\"nameTemplate\"></ng-container></h2>\n    <h3>Hello <ng-container *ngTemplateOutlet=\"nameTemplate\"></ng-container></h3>\n  `,\n})\nexport class HelloComponent {\n  @ContentChild(\"helloName\")\n  nameTemplate: TemplateRef<any>;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "複雑なContent Projectionが必要なときには、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ng-content>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ではなく ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChild()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<ng-template>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使ったアプローチを取る必要がある",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "AngularのコンポーネントやWeb Componentsでは Content Projectionは明示的に宣言する必要がある",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "インスタントなContent Projectionは ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "<ng-content>",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " だけで可能",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "再利用可能なテンプレートを受け取りたいときは ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "@ContentChild()",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " と ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "TemplateRef",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " を使った方法が必要",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

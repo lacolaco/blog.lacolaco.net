@@ -1,0 +1,667 @@
+{
+  "pageId": "e4ec3823-e1e4-48d7-a390-0387a87e3095",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "proposal-angular-partial-form-injection-pattern",
+  "properties": {
+    "title": "Angular Forms: Partial Form Injectionパターンの検討",
+    "date": "2020-02-03T00:00:00.000Z",
+    "tags": ["tech", "Angular", "forms", "設計"],
+    "updatedAt": "2020-05-05T00:00:00.000Z"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Partial Form Injection",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " とは、AngularのReactiveFormsを使った実装において、フォームのデータモデルをいくつかの部分フォーム（Partial Form）のコンポジションとして構成する手法につけた名前である。 この記事のサンプルアプリケーションは https://stackblitz.com/edit/ivy-3fq2no?file=src%2Fapp%2Fapp.component.html で実行できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "たとえば次のようなデータモデルを想定しよう。ヘルストラッカーアプリのようなイメージで、一日の起床時間と就寝時間、そしてその日のワークアウトの内容を記録できるフォームだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "interface ActivityInput {\n    activityTimes: {\n        awokeAt: {\n            hour: number;\n            minute: number;\n        };\n        sleptAt: {\n            hour: number;\n            minute: number;\n        }\n    };\n    workouts: WorkoutInput[];\n}\n\ninterface WorkoutInput {\n    type: 'running' | 'walking' | 'swimming';\n    minutes: number;\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "部分フォームの作成",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このようなデータモデルのフォームを構築するに際し、まず ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "部分フォーム",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を作成する。部分フォームは関心によって境界づけられる。今回の例では、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "activityTimes",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "workouts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " がそれぞれ 部分フォーム の単位となる。 具体的には、それぞれの部分フォームごとにフォームモデルを作成する。対象がネストされたグループ構造であれば ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "FormGroup",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を、リスト構造であれば ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "FormArray",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を選択する。もちろん関心の分け方によっては ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "FormControl",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を選択することもありえる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: \"my-app\",\n  templateUrl: \"./app.component.html\",\n  styleUrls: [\"./app.component.css\"]\n})\nexport class AppComponent {\n  activityTimesForm = new FormGroup({\n    awokeAt: new FormGroup({\n      hour: new FormControl(null),\n      minute: new FormControl(null)\n    }),\n    sleptAt: new FormGroup({\n      hour: new FormControl(null),\n      minute: new FormControl(null)\n    })\n  });\n\n  workoutsForm = new FormArray([]);\n  \n  addWorkout() {\n    this.workoutsForm.push(\n      new FormGroup({\n        type: new FormControl(\"running\"),\n        minutes: new FormControl(0)\n      })\n    );\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "部分フォームの作成後、これらを合成し、全体のフォームモデルを作成する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: \"my-app\",\n  templateUrl: \"./app.component.html\",\n  styleUrls: [\"./app.component.css\"]\n})\nexport class AppComponent {\n  ...\n    \n  activityInputForm = new FormGroup({\n    activityTimes: this.activityTimesForm,\n    workouts: this.workoutsForm\n  });"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "HTMLフォームの構築",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "さて、次はHTMLフォームを組み立てるためのテンプレートの記述に移ろう。 このパターンが Partial Form ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Injection",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と呼ばれる所以は、それぞれのPartial Formに対応するコンポーネントを作成し、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "パタメータとして注入する",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ことにある。つまり、親テンプレートは次のようになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<form [formGroup]=\"activityInputForm\">\n\t<app-activity-times-form [model]=\"activityTimesForm\">\n\t</app-activity-times-form>\n</form>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ActivityTimesFormComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は次のように作成する。Inputで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "model: FormGroup",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を定義し、親から注入可能にする。テンプレートでは ルートレベルで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "[formGroup]=\"model\"",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使ってフォーム構築する。内部は通常のReactive Formの実装と何ら変わらない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: 'app-activity-times-form',\n  templateUrl: './activity-times-form.component.html',\n  styleUrls: ['./activity-times-form.component.css']\n})\nexport class ActivityTimesFormComponent {\n\n  @Input()\n  model: FormGroup;\n}"
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<ng-container [formGroup]=\"model\">\n  <div formGroupName=\"awokeAt\">\n    <span>Awoke at:</span>\n    <span>\n    <input type=\"number\" formControlName=\"hour\"> \n    : \n    <input type=\"number\" formControlName=\"name\" >\n    </span>\n  </div>\n\n  <div formGroupName=\"sleptAt\">\n    <span>Slept at:</span>\n    <span>\n    <input type=\"number\" formControlName=\"hour\"> \n    : \n    <input type=\"number\" formControlName=\"name\" >\n    </span>\n  </div>\n</ng-container>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "WorkoutsComponentについての説明は同様であるため割愛する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "手法の評価",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Partial Form Injectionによって作られるフォームには以下の特徴が見られる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "フォームモデルは親コンポーネントによって一元的に管理される。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "HTMLフォームはそれぞれの子コンポーネントによって個別に管理される。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "フォームモデルの一元管理",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "フォームは全体としての整合性を強く要求される。バリデーションのエラーや、touched・dirtyのようなフォームの状態が",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "全体として統合されている",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ことに意味がある。よって個別のコンポーネントがフォームモデルを独自に構築するアプローチは成立しない。フォームモデルの一元管理は必然的な帰結である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "似たアプローチとして、それぞれの子コンポーネントに ControlValueAccessor (CVA) を実装させ、カスタムフォームコントロールとして振る舞わせる手法もある。この方法を取らなかったのは以下の理由による。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "CVAは自身に紐付けられているフォームモデルを参照することができず、内包する自身のフォームモデルとの同期が簡単でないため",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "子コンポーネントがCVAとして振る舞うためにAngular Forms的作法の関心を持たざるをえなくなるため（この点については後述する）",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "一方で親コンポーネントからInputとして部分フォームモデルを注入することで以下のような課題も発生する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "親子コンポーネント間の結合は強くなり、子コンポーネントの再利用性は著しく下がる",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "フォームモデルの構造は親が管理しているため、HTMLフォームの構築のために親コンポーネントが持つ部分フォームモデルの定義を知る必要がある。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "親と同じフォームモデルを参照するため、子コンポーネントでの操作が親コンポーネントに副作用を与えうる。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "総じて、再利用性に重きを置くカスタムフォームコントロールでは従来どおりCVAによる実装を取るべきであり、そうではなくユースケースに強く依存した複雑なフォームにおいては、管理しやすい粒度に分割するためのアプローチとしてPartial Form Injectionは有用であるといえる。 言い換えれば、ボトムアップ的合成のアプローチがCVAであり、トップダウン的分解のアプローチがPartial Form Injectionである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "HTMLフォームの個別管理",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "フォームの実装が難しい理由のひとつは、HTMLレイアウトとしての関心をフォームのデータモデルとマッピングする必要があるためである。 また、フォームはステートフルなUIであるため、状態によってスタイルを変えたりエラーを表示したりといった",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "状態に対してリアクティブなUI",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "であることも強く求められる。 これは管理するフォームが大きくなるほどより困難になるため、コンポーネントとして分離することでメンテナンス性を確保する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そのためにはHTMLフォームの構築を担う部分フォームコンポーネントは極力HTMLフォームの構築以外の関心を持たせないほうがよい。データの処理やバリデーションなどはすべて親に移譲し、子は部分フォームモデルの状態に対してリアクティブにHTMLを構築することだけに集中させたい。 CVAによるアプローチは再利用可能なフォームコントロールであることを表明する実装を求められるため、部分フォームコンポーネントにとっては形式的なコードが増える。再利用を目的としないのであれば無駄であり、HTMLフォームの構築に関心を集中させたいという目的に逆行する。 また、上述の「子コンポーネントでの操作が親コンポーネントに副作用を与えうる」という課題に対しても、部分フォームコンポーネントは一切の能動的ロジックを持たず親に処理を移譲する方針は解決策となる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "結論",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "単純でないフォームを構築する上での汎用的アプローチとして採用できるのではないか。 ただしこのアプローチの力点は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ユースケースに強く依存した複雑なフォームを管理しやすい粒度に分割すること",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " であることに留意したうえで、再利用性を犠牲にしていることに自覚的であるべきだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "課題",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ReactiveForms自体の型安全性の問題",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "親から渡すフォームモデルの構造と子が期待するフォームモデルの構造が一致していることを静的に検証できないだろうか",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "フレームワークの改善を待たずとも、ジェネリクスを備えたラッパーを作ることで比較的容易に解決はできる",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "部分フォームモデルを読み取り専用にできないだろうか",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "子コンポーネントから親コンポーネントへ副作用を起こすことを機械的に禁じることができないだろうか",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "部分フォームコンポーネントのインターフェースを定義できないだろうか",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "あるコンポーネントが部分フォームコンポーネントであることを型レベルで静的に表明できないだろうか",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "例えば ",
+                              "annotations": {}
+                            },
+                            {
+                              "type": "text",
+                              "text": "class ActivityTimesForm extends PartialForm<FormGroup>",
+                              "annotations": {
+                                "code": true
+                              }
+                            },
+                            {
+                              "type": "text",
+                              "text": "のような",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,723 @@
+{
+  "pageId": "aa9c6eae-0193-468f-8855-ea5a38f72e0d",
+  "lastEditedAt": "2023-05-21T03:16:00.000Z",
+  "slug": "managing-key-value-constants-in-typescript",
+  "properties": {
+    "title": "Managing Key-Value Constants in TypeScript",
+    "date": "2019-08-20T00:00:00.000Z",
+    "tags": ["tech", "TypeScript"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "A lot of applications have a dropdown select menu in a form. Let’s imagine a form control like below;",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/l1s38h340la686epz47u.gif",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Typically, each select menu’s item has ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ID",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "label",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". The ID is responsible to communicate with other components, services, or server-side. The label is responsible to display text for users.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This post explains how to manage constants for the menu items which has ID and mapping for its label. It uses TypeScript’s ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "as const",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " feature which is introduced since v3.4.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Define colorIDs Tuple",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In TypeScript, a tuple is an array, but its length and items are fixed. You can define a tuple with ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "as const",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " directive on the array literal. (",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "as const",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " directive needs TypeScript 3.4+)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Create ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "colors.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and define ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "colorIDs",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " tuple as following;",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "export const colorIDs = [\"green\", \"red\", \"blue\"] as const;"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The type of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "colorIDs",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is not ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "string[]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " but ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "['green', 'red', 'blue']",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " . Its length is absolutely 3 and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "colorIDs[0]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is always ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "'green'",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". This is a tuple!",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Extract ColorID Type",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "A Tuple type can be converted to its item’s ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "union type",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". In this case, you can get ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "'green' | 'red' | 'blue'",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " type from the tuple.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Add a line to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "colors.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " like below;",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "export const colorIDs = [\"green\", \"red\", \"blue\"] as const;\n\ntype ColorID = typeof colorIDs[number]; // === 'green' | 'red' | 'blue'"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Got confusing? Don’t worry. It’s not magic.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "colorIDs[number]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " means “fields which can be access by number”, which are ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "'green'",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " , ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "'red'",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", or ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "'blue'",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " .",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "So ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "typeof colorIDs[number]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " becomes the union type ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "'green' | 'red' | 'blue'",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Define colorLabels map",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "colorLabels",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " map is an object like the below;",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "const colorLabels = {\n  blue: \"Blue\",\n  green: \"Green\",\n  red: \"Red\"\n};"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Because ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "colorLabels",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " has no explicit type, you cannot notice even if you missed to define ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "red",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ’s label.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Let’s make sure that ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "colorLabels",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " has a complete label set of all colors! ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ColorID",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " can help it.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "TypeScript gives us ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Record",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " type to define Key-Value map object. The key is ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ColorID",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and the value is string. So ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "colorLabels",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ’s type should be ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Record<ColorID, string>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " .",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "export const colorIDs = [\"green\", \"red\", \"blue\"] as const;\n\ntype ColorID = typeof colorIDs[number];\n\nexport const colorLabels: Record<ColorID, string> = {\n  green: \"Green\",\n  red: \"Red\",\n  blue: \"Blue\"\n} as const;"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "When you missed to define ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "red",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " field, TypeScript compiler throw the error on the object.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/kl5wx6dfejnfmiicr7ck.png",
+      "caption": "Compiler Error"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "By the way, ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Angular v8.0+ is compatible with TypeScript v3.4",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". The demo app in the above is the following;",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { Component } from \"@angular/core\";\nimport { FormControl } from \"@angular/forms\";\n\nimport { colorIDs, colorLabels } from \"./colors\";\n\n@Component({\n  selector: \"app-root\",\n  template: `\n    <label for=\"favoriteColor\">Select Favorite Color:&nbsp;</label>\n    <select id=\"favoriteColor\" [formControl]=\"favoriteColorControl\">\n      <option *ngFor=\"let id of colorIDs\" [ngValue]=\"id\">\n        {{ colorLabels[id] }}\n      </option>\n    </select>\n    <div>Selected color ID: {{ favoriteColorControl.value }}</div>\n  `\n})\nexport class AppComponent {\n  readonly colorIDs = colorIDs;\n  readonly colorLabels = colorLabels;\n\n  readonly favoriteColorControl = new FormControl(this.colorIDs[0]);\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Conclusion",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "as const",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " turns an array into a ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "tuple",
+              "annotations": {
+                "bold": true
+              }
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "typeof colorIDs[number]",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " returns an ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "union type",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " of its item",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Define an object with ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "Record<ColorID, string>",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " for keeping a complete field set.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

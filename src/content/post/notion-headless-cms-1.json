@@ -1,0 +1,655 @@
+{
+  "pageId": "0d887003-a8d1-457f-a6be-c484dfcb2346",
+  "lastEditedAt": "2023-05-11T00:29:00.000Z",
+  "slug": "notion-headless-cms-1",
+  "properties": {
+    "title": "NotionヘッドレスCMS化記録 (1) Notion APIとTypeScript",
+    "date": "2022-02-13T10:22:00.000Z",
+    "tags": ["tech", "Notion", "TypeScript"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このブログ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "https://blog.lacolaco.net",
+          "href": "https://blog.lacolaco.net",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Hugo",
+          "href": "https://gohugo.io",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " で生成しており、これまではMarkdownファイルをローカルで手書きして記事を書いていた。そしてより気軽に記事を書ける環境を求めて、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Notion",
+          "href": "https://notion.so",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " をヘッドレスCMSとして使ってみることにした。ちなみにこの記事もNotionで書いている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この試みは特に新しいものではないため、それほど苦労せず実現できるだろうと思っていたが、実際に開発してみると思っていたよりも苦労した。そこでこの記事から何回かに分けて、NotionをヘッドレスCMSとして使うにあたっての困難とそれを乗り越えるための工夫について書き残す。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回の内容はNotionの開発者向けAPIとSDKをTypeScriptで利用するにあたって苦労した点だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Notion JavaScript Client",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "公式ドキュメント",
+          "href": "https://developers.notion.com/docs/getting-started",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " に書かれているように、Notion APIは公式のJavaScript向けクライアントライブラリ（以下 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@notionhq/client",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ") が提供されている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/makenotion/notion-sdk-js",
+          "href": "https://github.com/makenotion/notion-sdk-js",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ライブラリのパッケージはnpmで配布されているため、誰でも簡単にNotion APIを使ったアプリケーションを開発できる。また、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@notionhq/client",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のコードベースはTypeScriptで書かれているため、TypeScriptプロジェクトで利用すれば静的型の支援を受けながら開発できる…と思っていたが、ここに少し落とし穴があった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "データモデル単体の型定義が公開されていない",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Notion APIで取得するページやブロックなどのデータは、各APIエンドポイントのレスポンス型に内包される形でしかアクセスできない。つまり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@notionhq/client",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " から ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "PageObject",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "BlockObject",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " などの独立した型定義がインポートできない。ソースコードを見れば内部的に定義されているものは見つけられるが、パブリックAPIとしては提供されていない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "API呼び出しからレスポンスデータの処理をまとめて書いてしまうならそれほど困らないが、ソースコードを構造化し、モジュールごとに責務を分割したいと思ったら、個々のデータモデルを引数として受け取る関数が記述できないのは困りものだった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "結局この問題はAPI呼び出しメソッドの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ReturnType",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型から内部のモデル部分の型を取り出すことにした。Promiseを返すメソッドであるため ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Awaited",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型も併用し、さらに配列の要素の型を取り出すために自作の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ElementType<T>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型も用意した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// utils-types.d.ts\ndeclare type ElementType<T> = T extends (infer U)[] ? U : never;\n\n// notion/types.ts\nimport { Client } from '@notionhq/client';\n\nexport type PageObject =\n\tElementType<Awaited<ReturnType<Client['databases']['query']>>['results']>;\n\nexport type BlockObject =\n  ElementType<Awaited<ReturnType<Client['blocks']['children']['list']>>['results']>;"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これでページオブジェクトを引数に取る関数が記述できるようになったと思ったが、まだこれだけでは実用的ではなかった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "データモデルのUnion型が親切じゃない",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ページオブジェクトにはページのプロパティ情報を格納した ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "properties",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " フィールドがあるが、上述の型定義で取り出した ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "PageObject",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型にはそれが存在しない。正しくは、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "properties",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " フィールドをもたない型とのUnion型になっているため、Type Guardを通さないとアクセスできない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// Client.databases.query.resultsの型定義\n    results: Array<{\n        ...\n        properties: Record<string, ...> | null;\n        object: \"page\";\n        id: string;\n        ...\n    } | {\n        object: \"page\";\n        id: string;\n    }>;"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回のユースケースでは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "properties",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を持たないページはイレギュラーでしかないため、この型定義のまま扱うとType Guardを何度も書くことになる。そこで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "PageObject",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型が常に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "properties",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " フィールドを持つように、独自のユーティリティ型として ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "MatchType<T, U>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を作成し、次のようにして ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "properties",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " フィールドの存在を保証した。また同様に、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "BlockObject",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " も ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " フィールドの存在を保証するように定義した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// util-types.d.ts\ndeclare type MatchType<T, U, V = never> = T extends U ? T : V;\n\n// notion/types.ts\nexport type PageObject = MatchType<\n  ElementType<Awaited<ReturnType<Client['databases']['query']>>['results']>,\n  {\n    properties: unknown;\n  }\n>;\n\nexport type BlockObject = MatchType<\n  ElementType<Awaited<ReturnType<Client['blocks']['children']['list']>>['results']>,\n  { \n    type: unknown;\n  }\n>;"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これで型の問題は解決したと思ったが、もうひとつ重大な問題が残っていた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "ネストしたブロックがレスポンスに含まれていない",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Notionにおいてページオブジェクトはブロックオブジェクトでもあり、ページのコンテンツはページ（ブロック）を親とする子ブロックのリストとして表現される。そして、あるブロックの子ブロックを取得するAPIは、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ネストした孫レベルのブロックをレスポンスに含まない",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://developers.notion.com/reference/get-block-children",
+          "href": "https://developers.notion.com/reference/get-block-children",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "Returns only the first level of children for the specified block. See ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "block objects",
+          "href": "https://developers.notion.com/reference/block",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "\n for more detail on determining if that block has nested children.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "孫レベルのブロックそのものはレスポンスに含まれていないが、各ブロックオブジェクトは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "has_children",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " フィールドを持っており、これが真であればそのブロックを親とする孫ブロックがあることを示す。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "つまり、ページに含まれるコンテンツをすべて取得したいと思ったら、ページ直下の子ブロックだけでなく、その子ブロックのうち ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "has_children",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が真であるブロックの子ブロックをさらに取得する必要がある。この問題を解決するため、独自に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "depth",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という再帰呼び出しの深さを保持するフィールドを用意し、末端まですべてのブロックを取得できるようにした。また、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "depth",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "children",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "BlockObject",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型に加え、型定義が本当に完成した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// notion/types.ts\nimport { Client } from '@notionhq/client';\n\nexport type PageObject = MatchType<\n  ElementType<Awaited<ReturnType<Client['databases']['query']>>['results']>,\n  {\n    properties: unknown;\n  }\n>;\n\nexport type BlockObject = MatchType<\n  ElementType<Awaited<ReturnType<Client['blocks']['children']['list']>>['results']>,\n  { type: unknown }\n> & {\n  depth: number;\n  children?: BlockObject[];\n};\n\n// notion/api.ts\nasync fetchChildBlocks(parentId: string, depth = 0): Promise<BlockObject[]> {\n  const blocks: BlockObject[] = [];\n  let cursor = null;\n  do {\n    const { results, next_cursor, has_more } = await this.client.blocks.children.list({\n      block_id: parentId,\n    });\n    for (const block of results) {\n      if ('type' in block) {\n        if (block.has_children) {\n          const children = await this.fetchChildBlocks(block.id, depth + 1);\n          blocks.push({ ...block, depth, children });\n        } else {\n          blocks.push({ ...block, depth });\n        }\n      }\n    }\n    cursor = has_more ? next_cursor : null;\n  } while (cursor !== null);\n  return blocks;\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ・次回予告",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "NotionをブログのヘッドレスCMSとして利用するシステムの開発にあたって、Notion APIとTypeScriptに関するいくつかの困難を非公開APIや ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "any",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に頼らずどうにか乗り越えられた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここからは、APIから取得したデータをもとにMarkdownファイルを生成し、ブログのデプロイフローへ組み込んでいくが、ここにもいろいろと苦労した点があったのでそれらはまた次回に。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

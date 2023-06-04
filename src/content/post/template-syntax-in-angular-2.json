@@ -1,0 +1,1162 @@
+{
+  "pageId": "8d9ba74a-f57a-443d-b493-69454c9916c8",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "template-syntax-in-angular-2",
+  "properties": {
+    "title": "Angular 2の * シンタックス",
+    "date": "2016-04-11T00:00:00.000Z",
+    "tags": ["tech", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "先日主催したイベントで「Angular 2の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "記号が何の意味があるのかわからなくて気持ち悪い」という声を聞き、意外に知られてないと思ったので一度きちんと書いておこうと思います。 みなさんのAngular 2への理解の手助けになれば幸いです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 2におけるディレクティブ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 2は基本的にコンポーネント志向であり、アプリケーションはコンポーネントで組み立てます。ただし、Angular 1と同じようにHTML要素やコンポーネントを修飾するためにディレクティブを使うことができます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "myDirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ディレクティブは、付与した要素のスタイルを変更し、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "color",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "red",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "にします。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import {Component, Directive, ElementRef, Renderer} from 'angular2/core'\n\n@Directive({\n  selector: \"[myDirective]\"\n})\nclass MyDirective {\n  \n  constructor(\n    private el: ElementRef, \n    private renderer: Renderer\n  ) {}\n  \n  ngOnInit() {\n    this.renderer.setElementStyle(this.el.nativeElement, \"color\", \"red\");\n  }\n}\n\n@Component({\n  selector: 'my-app',\n  template: `\n    <div myDirective>Hello {{name}}</div>\n  `,\n  directives: [MyDirective]\n})\nexport class App {\n  constructor() {\n    this.name = 'Angular2'\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ディレクティブにもコンポーネントと同じようにライフサイクルのメソッドフックが存在します。コンストラクタのDIで得たインスタンスを",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngOnInit",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で使用しています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、ディレクティブの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "selector",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "メタデータは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "myDirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素でも",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "[myDirective]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "属性でも、もちろん",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".myDirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "クラスでもかまいません。(あまり知られていませんしオススメもしませんが、実はコンポーネントの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "selector",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "も要素である必要はありません。)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "*",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "シンタックス：テンプレート化",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ディレクティブの基本的なことをおさらいした上で、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "記号について解説します。まずは上述の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "myDirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ディレクティブが実際にどのようなDOMを生成しているかを確認しましょう。Chromeの開発者ツールでみると、次のような構成になっています。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "my-app",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素の中にテンプレートが展開され、その中で",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "mydirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "属性が付与された",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "div",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素にスタイルが適用されています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://qiita-image-store.s3.amazonaws.com/0/20253/92d3ae19-886f-7b1b-5a1e-9d175a4e1cf0.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "直感的だし、何も違和感のないDOM構造です。ここで、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "myDirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ディレクティブに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "記号を付けて実行するとどうなるか見てみましょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: 'my-app',\n  template: `\n    <div *myDirective>Hello {{name}}</div>\n  `,\n  directives: [MyDirective]\n})\nexport class App {\n  constructor() {\n    this.name = 'Angular2'\n  }\n}"
+    },
+    {
+      "type": "image",
+      "url": "https://qiita-image-store.s3.amazonaws.com/0/20253/59e3f444-d704-800d-0162-977c07daaa3a.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "なんと、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<!--template bindings={}-->",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "という謎のコメントを残して",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "div",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素が消えてしまいました！",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "要素の「テンプレート化」",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "myDirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プレフィックスをつけると",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "div",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素が消えてしまいました。これは単に消えたのではなく、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "「テンプレート化された」",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のです。「テンプレート化」とは、要素をテンプレートとして保存し、いつでも複製できるようにする仕組みのことです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "わかりやすい例として、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ディレクティブのソースコードを見てみましょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Directive({selector: '[ngIf]', inputs: ['ngIf']})\nexport class NgIf {\n  private _prevCondition: boolean = null;\n\n  constructor(private _viewContainer: ViewContainerRef, private _templateRef: TemplateRef) {}\n\n  set ngIf(newCondition: any /* boolean */) {\n    if (newCondition && (isBlank(this._prevCondition) || !this._prevCondition)) {\n      this._prevCondition = true;\n      this._viewContainer.createEmbeddedView(this._templateRef);\n    } else if (!newCondition && (isBlank(this._prevCondition) || this._prevCondition)) {\n      this._prevCondition = false;\n      this._viewContainer.clear();\n    }\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "angular/ng_if.ts at master · angular/angular",
+          "href": "https://github.com/angular/angular/blob/master/modules/angular2/src/common/directives/ng_if.ts#L26-L41",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ディレクティブは、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に与えられた値",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "newCondition",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "をもとに、要素を生成したり、削除したりします。この「生成」を行うためにテンプレートが必要なのです。つまり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が付与された要素をテンプレートとして",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ディレクティブが保持していて、そのテンプレートをもとに新しい要素を複製して表示しています。 これと同じ仕組みで",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*ngFor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "も動作しています。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngFor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ディレクティブの場合は生成する数が複数になるだけで、本質的には",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と何も変わりません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ngIf",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "や",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "ngFor",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "のように、そのディレクティブが付与された要素そのものをテンプレートとして用いるときに ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "*",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " シンタックスによるテンプレート化が必要なのです。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "ViewContainerRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TemplateRef",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "先ほど",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "myDirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プレフィックスをつけた際に要素が消えてしまったのは、テンプレート化しただけでそのテンプレートを元に要素を作っていなかったからです。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "myDirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "でもテンプレートを使えるようにしてみましょう！",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "テンプレート化された要素は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TemplateRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "というクラスのインスタンスとしてDIできます。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TemplateRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プレフィックスが付けられていないとDIできないので、基本的にはディレクティブは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TemplateRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使用するか、しないかのどちらかを決める必要があります。(※オプショナルなDIを使って切り替えることも可能)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "テンプレートだけでは要素は生成できないので、テンプレートを元に要素を作ってくれるものもDIする必要があります。それが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ViewContainerRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "です。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ViewContainerRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "はディレクティブが付与された要素「があった場所」をコンテナとして使うためのクラスです。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ViewContainerRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TemplateRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使うことで、コンテナの中にテンプレートから生成された要素を配置することができます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次の例では",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "myDirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ディレクティブを使って、同じ要素を2個生成するようにしています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import {Component, Directive, ViewContainerRef, TemplateRef} from 'angular2/core'\n\n@Directive({\n  selector: \"[myDirective]\"\n})\nclass MyDirective {\n  \n  constructor(\n    private _template: TemplateRef,\n    private _viewContainer: ViewContainerRef\n  ) {}\n  \n  ngOnInit() {\n    for(let i = 0; i < 2; i++) {\n      this._viewContainer.createEmbeddedView(this._template);\n    }\n  }\n}\n\n@Component({\n  selector: 'my-app',\n  template: `\n    <div *myDirective>Hello {{name}}</div>\n  `,\n  directives: [MyDirective]\n})\nexport class App {\n  constructor() {\n    this.name = 'Angular2'\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ViewContainerRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "クラスの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "createEmbeddedView",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "メソッドに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TemplateRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のインスタンスを渡すと、そのテンプレートを元に要素を生成し、コンテナに埋め込んでくれます。上記コードで生成されるDOMは次のようになります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://qiita-image-store.s3.amazonaws.com/0/20253/99459f2b-907a-678f-b2ef-3c4846579283.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Kobito.Fi9CZD.png",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ご覧のとおり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "my-app",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のテンプレートHTMLとはまったく違う構造になっています。テンプレート化を用いたディレクティブはコンポーネント側で定義したDOM構造を容易に破壊できてしまいます。なので明示的に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "シンタックスを使わないかぎり",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TemplateRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は得られないようになっているのです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "<template>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使う方法",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "余談ですが、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "シンタックスは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "template",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素で置き換えることができます。つまり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "template",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素によってテンプレート化が可能だということです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "先程の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*myDirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使った例は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "template",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素を使うと次のように書けます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: 'my-app',\n  template: `\n    <template myDirective>\n      <div>Hello {{name}}</div>\n    </template>\n  `,\n  directives: [MyDirective]\n})\nexport class App {\n  constructor() {\n    this.name = 'Angular2'\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "template",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プレフィックスのない",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "myDirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を付与し、その中にテンプレート化したいHTMLを記述します。これで先ほどとまったく同じテンプレート化が可能です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 2の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "シンタックスはHTML要素のテンプレート化のためのものであり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "や",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*ngFor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "などの組み込みのディレクティブだけではなく、独自に使うことができる便利な機能です。ただし使いこなすのは簡単ではないので、コンポーネントによるビューの組み立てを身につけた後に習得して欲しい中級者向けのテクニックです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回のサンプルコードは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Plunker",
+          "href": "http://plnkr.co/edit/ylBGrQhdlOZ0SunPLid6?p=preview",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "にあります。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1047 @@
+{
+  "pageId": "48a52b05-59eb-43a5-b904-6e66f64550ce",
+  "lastEditedAt": "2023-05-11T00:28:00.000Z",
+  "slug": "rust-wasm-svg-rendering",
+  "properties": {
+    "title": "Rust+wasmでSVGを生成したら10倍速くなった",
+    "date": "2022-02-26T03:29:00.000Z",
+    "tags": ["tech", "Rust", "WebAssembly", "wasm"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://contrib.rocks",
+          "href": "https://contrib.rocks",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " はGitHubのAPIから取得したコントリビューター情報からSVG画像を生成している。これまでは SVG.js を使ったTypeScriptでの実装だったが、興味本位でRustで実装したものをWebAssembly(wasm)として実行するようにしたところ、パフォーマンスが顕著に向上したためそのまま採用することにした。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/contributors-img/pull/1089"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Rustもwasmもまともに触ったのは今回がはじめてだったため、実装には洗練する余地が多分にあるだろうが、この記事ではとりあえず作業の記録を書き残す。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "NxワークスペースにRustをセットアップする",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まずはじめに、Nxのワークスペース内でRustの開発環境を整えた。Cargoにもワークスペース機能があり、複数のプロジェクトの依存関係解決を集約できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://doc.rust-jp.rs/book-ja/ch14-03-cargo-workspaces.html"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ドキュメントに従い、ワークスペースのルートディレクトリに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Cargo.toml",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を作成して ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "members",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を設定した。そしてNxワークスペースに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "libs/renderer-rust",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " プロジェクトを作成し、プロジェクトルートにも ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Cargo.toml",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を作成した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "# Cargo.toml\n[workspace]\nmembers = [\n  \"libs/renderer-rust\"\n]"
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "# libs/renderer-rust/Cargo.toml\n[package]\nedition = \"2021\"\nname = \"renderer\"\nversion = \"0.1.0\""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "その後、パッケージのエントリポイントとなる ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "libs/renderer-rust/src/lib.rs",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を作成し、最低限の環境が整った。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Nxの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "implicitDependencies",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Cargo.toml",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を追加",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Cargo.toml",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に変更があればNxのキャッシュを破棄するように ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "nx.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "implicitDependencies",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を変更した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "{\n\t\"implicitDependencies\": {\n    \"angular.json\": \"*\",\n    \"package.json\": \"*\",\n    \"tsconfig.json\": \"*\",\n    \"tslint.json\": \"*\",\n    \".eslintrc.json\": \"*\",\n    \"nx.json\": \"*\",\n    \"Cargo.toml\": \"*\"\n  }\n}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "各種タスクの定義",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Rustプロジェクトへの自動テストやLintなどのタスクをNxで実行できるターゲットとして定義した。今回は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@nrwl/workspace:run-commands",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " でシェルコマンドを実行した。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "cargo",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドは実行したカレントディレクトリを起点にして実行する思想なようで、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "tsc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "--project",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のようなスコーピングの仕組みが見当たらなかったため、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "cwd",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " オプションでカレントディレクトリを変更した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "  \"renderer-rust\": {\n    \"root\": \"libs/renderer-rust\",\n    \"sourceRoot\": \"libs/renderer-rust/src\",\n    \"projectType\": \"library\",\n    \"architect\": {\n      \"lint\": {\n        \"builder\": \"@nrwl/workspace:run-commands\",\n        \"options\": {\n          \"command\": \"cargo clippy\",\n          \"cwd\": \"libs/renderer-rust\"\n        }\n      },\n      \"test\": {\n        \"builder\": \"@nrwl/workspace:run-commands\",\n        \"options\": {\n          \"command\": \"cargo test\",\n          \"cwd\": \"libs/renderer-rust\"\n        }\n      }\n    }\n  },"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "wasm-packを使ったビルド",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回はRustプロジェクトをNode.jsのプロジェクトから読み込めるwasmパッケージにビルドしたいため、wasm-packを利用した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://rustwasm.github.io/wasm-pack/book/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "wasm-pack",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "build",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "--out-dir",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " オプションで出力先ディレクトリを変更できるが、この引数は常にパッケージルートからの相対パスで解決されるようだったため、他のプロジェクトと同じようにワークスペースルートの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "dist",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ディレクトリ内へ出力させるために一工夫した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "\n  \"build\": {\n    \"builder\": \"@nrwl/workspace:run-commands\",\n    \"outputs\": [\"dist/libs/renderer-rust\"],\n    \"options\": {\n      \"command\": \"wasm-pack build --target nodejs --out-dir ../../dist/libs/renderer-rust\",\n      \"cwd\": \"libs/renderer-rust\"\n    },\n    \"configurations\": {\n      \"production\": {}\n    }\n  }"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Rust実装",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回Rustで実装した関数は、TypeScriptでは次のようなシグニチャである。コントリビューターオブジェクトの配列を受け取り、SVG文字列を返すことを意味している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "type Renderer = (contributors: Contributor[]) => Promise<string>;"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このシグニチャはそのままで、SVG文字列を生成する内部実装だけをwasmで置換することを目標とした。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "JSから配列を受け取るRust関数",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "コントリビューターオブジェクトの配列をRustの関数へ渡すには、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Box<[JsValue]>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型の引数を定義する（この情報にたどり着くのに少し苦労した）。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "JsValue",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "wasm-bindgen",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が提供する型で、JS側から受け取れる任意のオブジェクトに対応する型のようで、このままでは使えない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://rustwasm.github.io/docs/wasm-bindgen/reference/types/boxed-jsvalue-slice.html"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://rustwasm.github.io/wasm-bindgen/api/wasm_bindgen/struct.JsValue.html#"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Rustでも ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Contributor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 構造体を定義しておいて、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "JsValue",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型から ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Contributor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型に変換するには ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "into_serde()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " メソッドを使った。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://rustwasm.github.io/docs/wasm-bindgen/reference/arbitrary-data-with-serde.html"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "詳細はよくわかっていないが、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "wasm-bindgen",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "serde-serialize",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 機能を有効にすると、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "serde",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という別のライブラリを使ったJSONと構造体の間のシリアライズ・デシリアライズができるようになるようだ。ドキュメントに従い、次のように ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Contributor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 構造体に必要なtraitを実装した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "rust",
+      "filename": "",
+      "text": "use serde::{Deserialize, Serialize};\n\n#[derive(Serialize, Deserialize, Debug)]\npub struct Contributor {\n    pub avatar_url: String,\n    pub contributions: i32,\n    pub html_url: String,\n    pub id: i32,\n    pub login: String,\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Box<[JsValue]>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "[Contributor]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に変換できるようになった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "rust",
+      "filename": "",
+      "text": "use wasm_bindgen::prelude::*;\n\n#[wasm_bindgen]\npub fn render(contributors: Box<[JsValue]>) -> String {\n    let parsed = contributors\n            .iter()\n            .map(|item| item.into_serde().unwrap())\n            .collect::<Vec<Contributor>>()\n            .as_slice();\n\t\t//...\n}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "SVG文字列の生成",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "SVGの組み立ては ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "svg",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ライブラリを利用した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://docs.rs/svg/latest/svg/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "特に癖のないAPIだったためSVG自体の知識があれば難なく使えた。逆にいままで SVG.js が暗黙的に設定していた属性に依存していたことがわかり、その調査に手間取ることになった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "パフォーマンスのベンチマーク",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "同じ入力から同等の出力が得られるようになったところで、従来の実装と新しいRust+wasm実装でSVG生成にかかる時間を計測し、パフォーマンスを比較してみた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "計測は同じ引数での関数呼び出しを十分な回数繰り返し、合計時間を回数で割った平均時間を比較することとした。入力の配列の長さによる傾向も知りたかったので、データサイズごとに計測した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "async function benchmark_js(times: number, contributors: Contributor[]) {\n  performance.mark('js:start');\n  for (let index = 0; index < times; index++) {\n    await renderer_js(contributors);\n  }\n  performance.mark('js:stop');\n  performance.measure('js', 'js:start', 'js:stop');\n}\n\nasync function benchmark_rust(times: number, contributors: Contributor[]) {\n  performance.mark('rust:start');\n  for (let index = 0; index < times; index++) {\n    await renderer_rust(contributors);\n  }\n  performance.mark('rust:stop');\n  performance.measure('rust', 'rust:start', 'rust:stop');\n}\n\nasync function main() {\n  console.log('start benchmark');\n  const times = 1000;\n\n  async function run(dataSize: number) {\n    console.log(`=== data size: ${dataSize} ===`);\n    const contributors = new Array(dataSize).fill(null).map((_, i) => createMockContributor({ login: `login${i}` }));\n    await benchmark_js(times, contributors);\n    await benchmark_rust(times, contributors);\n    for (const measure of performance.getEntriesByType('measure')) {\n      console.log(`${measure.name}: ${(measure.duration / times).toPrecision(2)}ms`);\n    }\n    performance.clearMarks();\n    performance.clearMeasures();\n  }\n\n  await run(1);\n  await run(2);\n  await run(5);\n  await run(10);\n  await run(20);\n  await run(50);\n  await run(100);\n}\n\nmain();"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "その結果、ざっくり比較してRust+wasm実装のほうがJS実装よりも10倍近く速いことがわかった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "start benchmark\n=== data size: 1 ===\njs: 0.30ms\nrust: 0.017ms\n=== data size: 2 ===\njs: 0.30ms\nrust: 0.023ms\n=== data size: 5 ===\njs: 0.61ms\nrust: 0.052ms\n=== data size: 10 ===\njs: 1.1ms\nrust: 0.094ms\n=== data size: 20 ===\njs: 2.1ms\nrust: 0.18ms\n=== data size: 50 ===\njs: 5.2ms\nrust: 0.48ms\n=== data size: 100 ===\njs: 10ms\nrust: 0.89ms"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "実際のユースケースでは100件のデータで生成することはよくあるため、1回あたり10msかかる処理が1ms以下になるとなればなかなかの恩恵といえる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "wasmパッケージをアプリケーションから読み込む",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Nxワークスペースで管理する別のアプリケーションから ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "wasm-pack",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " でビルドしたパッケージを読み込むにあたって工夫が必要なことがあった。 ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "wasm-pack",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のNode.js向けビルドは内部で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "__dirname",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使って隣接する ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".wasm",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ファイルを読み込むようになっているため、webpackなどでバンドルするアプリケーションから読み込むときにファイルが見つからなくなる。この問題は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@nrwl/node:build",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " (最新では ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@nrwl/node:webpack",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ) の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "assets",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " オプションでアプリケーションの出力ディレクトリへ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".wasm",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ファイルをコピーして解決した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "\"assets\": [\n  {\n    \"input\": \"dist/libs/renderer-rust\",\n    \"glob\": \"*.wasm\",\n    \"output\": \".\"\n  }\n]"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "wasm-pack",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のビルドターゲットを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "bundle",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " にすればいいものだが、webpack v5ではデフォルトでWebAssemblyモジュール機能が無効になっている。実験的フラグを有効にするためにwebpackコンフィグに手を入れる必要があるため、今回は上記の解決方法でよしとした。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "GitHub ActionsでのCI",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ビルドやテスト、デプロイはGitHub Actionsで実行しているため、各ジョブでNode.jsに加えてRustの環境を整える必要がある。今回ははじめてローカルアクションの機能を使ってみた。共有のステップ群を簡単に再利用可能なアクションとしてまとめるものだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://docs.github.com/en/actions/creating-actions/creating-a-composite-action"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": ".github/actions/setup-rust/action.yml",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を次のように作成し、CI/CDの各ワークフローから ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "uses: ./.github/actions/setup-rust",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のように呼び出した。Compositeローカルアクションへの切り出しは非常にシンプルで使いやすかった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "yaml",
+      "filename": "",
+      "text": "name: Setup Rust\n\nruns:\n  using: \"composite\"\n  steps:\n    - uses: actions-rs/toolchain@v1\n      with:\n        toolchain: stable\n        override: true\n        profile: minimal\n        components: clippy, rustfmt\n    - run: cargo install wasm-pack\n      shell: bash"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Rustの学習を兼ねて思いつきでやってみたが、思っていた以上の効果が得られて驚いた。JSからRust+wasmへの置き換えで高速化するという話はいろんな場所で聞いていたが、実際に自分の小さなアプリケーションでも再現したのはいい経験になった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回はSVG生成部分だけを置き換えたが、他の処理も今後置き換えを進めてみたい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+---
+import { NumberedListNode } from '@lib/post';
+import Content from './Content.astro';
+import Text from './Text.astro';
+
+type Props = NumberedListNode;
+
+const { items } = Astro.props;
+---
+
+<ol>
+  {
+    items.map(({ text, children }) => (
+      <li>
+        {text.map((t) => (
+          <Text {...t} />
+        ))}
+        <Content nodes={children} />
+      </li>
+    ))
+  }
+</ol>
+
+<style></style>

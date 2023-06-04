@@ -1,0 +1,12 @@
+---
+import { CodeNode } from '@lib/post';
+import { Code } from 'astro/components';
+
+type Props = CodeNode;
+
+const { text, language, filename } = Astro.props;
+---
+
+<Code code={text} lang={language as any} />
+
+<style></style>

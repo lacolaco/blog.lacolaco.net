@@ -1,0 +1,535 @@
+{
+  "pageId": "4518985f-136b-4811-8aef-e72b464720a4",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "angular-basic-ui-components",
+  "properties": {
+    "title": "Angular: ボタンコンポーネントの実装",
+    "date": "2022-07-20T02:25:00.000Z",
+    "tags": ["Angular", "tech", "a11y", "HTML"],
+    "updatedAt": "2022-07-20T00:00:00.000Z"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "多くのAngularアプリケーションの開発では、再利用可能なUIコンポーネントの実装が必要になるだろう。この記事では、基本的なUIコンポーネントの代表例として、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ボタンコンポーネント",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の実装において考慮すべき点を踏まえながら、典型的な実装例を示す。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "ボタンコンポーネントのよくある失敗",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "HTMLには標準の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 要素がある。そのため、わざわざボタンコンポーネントを実装する目的は、たいてい ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 要素の標準のデザインではなく、独自の装飾を加え、それをアプリケーション中で再利用するためである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "<button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 要素はユーザーが直接操作する対話型のコンテンツであり、HTMLの中でも特にアクセシビリティの保証が重要になる。また、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 要素はただクリックイベントを発火するだけでなく、多くの属性や振る舞いが複雑に絡み合っているため、カスタム要素で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 要素を再現することは難しい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://developer.mozilla.org/ja/docs/Web/HTML/Element/button"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そのため、次のように ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 要素をラップしたボタンコンポーネントはアクセシビリティの確保に苦労することになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: 'app-fancy-button',\n  template: `\n    <button class=\"fancy-button\">\n      <ng-content></ng-content>\n    </button>\n  `,\n  styleUrls: ['./fancy-button.component.css'],\n})\nexport class FancyButtonComponent {}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "たとえば、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 要素には ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 属性がある。フォームの中に組み込まれる場合は任意の指定ができなければ不便だ。また、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabled",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 属性や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "aria-hidden",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のようなARIA属性も考えると、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<app-fancy-button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コンポーネントは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " タグが受け取ることのできるすべての属性を橋渡ししなければならない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: 'app-fancy-button',\n  template: `\n    <button \n      class=\"fancy-button\" \n      [attr.type]=\"type\"\n　　　　　　　　　　　　[attr.aria-hidden]=\"ariaHidden\"\n      [disabled]=\"disabled\">\n      <ng-content></ng-content>\n    </button>\n  `,\n  styleUrls: ['./fancy-button.component.css'],\n})\nexport class FancyButtonComponent {\n  @Input() type: string = 'button';\n  @Input() disabled: boolean = false;\n  @Input('aria-hidden') ariaHidden?: string;\n  // etc...\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ボタンコンポーネントが利用されるユースケースが少なければ、ユースケースに特化した必要最小限の振る舞いだけを実装すればよいが、ライブラリとして使いやすい汎用的なコンポーネントに発展させようとするときにはこの作りは足かせになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "属性セレクタによるボタンコンポーネント",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このようなケースでよく採用されるのが、ボタンコンポーネントのセレクタを",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "属性セレクタ",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "にする方法である。Angular Material の MatButton コンポーネントがその代表例だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://material.angular.io/components/button/overview"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "コンポーネントはほとんどの場合で要素セレクタを持ち、カスタム要素としてDOM上に配置されるが、この振る舞いは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@Component",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " デコレーターの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "selector",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " プロパティが要素セレクタだからである。そして、コンポーネントのセレクタの形式を変えるとそれぞれ違った振る舞いになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "先ほどの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "FancyButtonComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を次のように書き換えよう。注目すべき点は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "selector",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " プロパティが、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "app-fancy-button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という要素セレクタから、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "button[app-fancy-button]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という要素と属性の合成セレクタになっていることだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: 'button[app-fancy-button]',\n  template: `<ng-content></ng-content>`,\n  styleUrls: ['./fancy-button.component.css'],\n})\nexport class FancyButtonComponent {}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このセレクタによって、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 要素のうち ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "app-fancy-button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 属性を持つものだけが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "FancyButtonComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " だと識別される。したがって、このコンポーネントを使うテンプレートは次のようになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<button app-fancy-button (click)=\"onClick()\">Click Me</button>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "テンプレート上には標準の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 要素がそのまま記述されているため、ボタンコンポーネントの利用者は、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 要素固有の属性や振る舞いに自由にアクセスできる。このような実装ならば、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "FancyButtonComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " はホスト要素に対するCSSスタイリングだけを担うことができる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "実装の詳細は、次の動作するサンプルを参考にしてほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-ivy-qxbz13?embed=1&file=src/app/fancy-button/fancy-button.component.ts"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "参考リンク",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "リッチかつアクセシブルなボタンコンポーネントの実装テクニックをまとめている次の記事も、汎用的なボタンコンポーネントが備えるべき振る舞いを知るためのいい資料になるだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://web.dev/building-a-button-component/"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}

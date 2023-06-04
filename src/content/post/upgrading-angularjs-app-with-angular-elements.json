@@ -1,0 +1,445 @@
+{
+  "pageId": "f19ec171-8d0c-4245-becb-ad06777044f5",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "upgrading-angularjs-app-with-angular-elements",
+  "properties": {
+    "title": "Angular ElementsによるAngularJSの段階的アップグレード戦略",
+    "date": "2019-08-18T00:00:00.000Z",
+    "tags": ["tech", "Angular", "Angular Elements", "AngularJS", "Web"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事では Angular のコンポーネントを Web 標準の Custom Elements に変換する ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Angular Elements",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 機能を使い、AngularJS アプリケーションを段階的に Angular に置き換えていく手段を解説する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "先行事例として以下の記事を参考にした。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Upgrading AngularJS to Angular using Elements",
+          "href": "https://blog.nrwl.io/upgrading-angularjs-to-angular-using-elements-f2960a98bc0e",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "How Capital One is Using Angular Elements to Upgrade from AngularJS",
+          "href": "https://medium.com/capital-one-tech/capital-one-is-using-angular-elements-to-upgrade-from-angularjs-to-angular-42f38ef7f5fd",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": [
+        {
+          "type": "text",
+          "text": "Web Components / Custom Elements",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Web 標準となったブラウザ API。 独自の HTML 要素を定義して HTML タグとして利用できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://www.webcomponents.org/",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "HTML 要素は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HTMLElement",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " クラスを継承したサブクラスとして定義する。そしてクラスを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "window.customElements.define",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " API でタグ名と共に登録する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "独自要素のタグ名は標準要素と区別するために ハイフンを 1 つ以上含むことが仕様で定められている",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "class MyElement extends HTMLElement {}\n\nwindow.customElements.define(\"my-element\", MyElement);"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "モダンブラウザでは Edge 以外で実装が終わっている。Edge や IE11、Safari に関しても Polyfill を使って擬似的に利用できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/webcomponents/webcomponentsjs#browser-support",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/upgrading-angularjs-app-with-angular-elements/c3e4c0a1-38e1-47ae-9cd5-e118e45f2840/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "image",
+      "url": "/images/upgrading-angularjs-app-with-angular-elements/c9f23fb7-4363-4ba2-8f50-e21248b20c71/Untitled_1.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": [
+        {
+          "type": "text",
+          "text": "エントリポイントとしての Custom Elements",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Custom Elements は Web 標準の機能であり、アプリケーションのフレームワークライブラリによらず使える。そして Custom Elements の内外は HTML タグとしてのプリミティブなインターフェースで分断される。つまり、ある種のシステム境界として Custom Elements を使うことができる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "端的に言えば、独自タグの外側が AngularJS で、内側で React を使ったとしても、お互いのことは関心外にできる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "const MyComp = () => <div>My Component</div>;\n\nclass MyElement extends HTMLElement {\n\n    constructor() {\n    super();\n    ReactDOM.render(<MyComp />, this);\n  }\n}\n\nwindow.customElements.define('my-element', MyElement);"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "あるいは lit-html を使って次のようにも書ける。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { html, render } from 'lit-html';\n\nconst myComp = () => html`<div>My Component</div>`;\n\nclass MyElement extends HTMLElement {\n\n    constructor() {\n    super();\n    render(myComp(), this);\n  }\n}\n\nwindow.customElements.define('my-element', MyElement);"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "属性を経由して外からデータを受け取ることも当然できるし、イベントを外に発火することもできる。ここでは割愛するが、属性の値取得は 1 回だけでなく変更を監視することもできる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "const MyComp = (props) => <button onClick={props.onClick()}>{ props.label }</button>;\n\nclass MyElement extends HTMLElement {\n\n    get label() {\n        return this.getAttribute('data-label');\n    }\n\n    constructor() {\n    super();\n    ReactDOM.render(<MyComp label={this.label} onClick={() => this.emitEvent()} />, this);\n  }\n\n    emitEvent() {\n        const event = new Event('myEvent');\n        this.dispatchEvent(event);\n  }\n}\n\nwindow.customElements.define('my-element', MyElement);"
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular Elements",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular Elements とは、Angular の Component を Custom Element に変換する機能である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://angular.jp/guide/elements",
+          "href": "https://angular.jp/guide/elements",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "上述の例では React のコンポーネントを Custom Elements で wrap するコードを書いたが、Angular Elements はそれを自動的に行なってくれる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "レンダリングだけでなく、Custom Elements の属性を Angular Component の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Input",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に接続し、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Output",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " から ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "dispatchEvent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に接続してくれる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { createCustomElement } from '@angular/elements';\nimport { MyComponent } from './my-component';\n\nconst MyElement = createCustomElement(MyComponent);\n\nwindow.customElements.define('my-element', MyElement);"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular Elements はコンポーネント自身は Custom Elements 化されることを意識しなくていい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "AngularJS から Angular への移行をコンポーネント単位で行いながら移行が終わったあとはそのまま Angular アプリケーション内でコンポーネントとして利用できる。シームレスな Angular 移行に最適なアプローチと言える。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": [
+        {
+          "type": "text",
+          "text": "Demo",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "以下のデモでは、AngularJS アプリケーション中に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<app-counter>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " タグを配置している。アップグレードしたい領域を独自タグで囲むが、Custom Elements が登録されるまではただの未知タグとしてブラウザは無視するので既存アプリケーションに影響がない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "window.enableAngular",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " フラグを有効にすると、Angular Elements で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<app-counter>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " タグに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CounterComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を適用する。すると Angular コンポーネントがレンダリングされ、タグの内側のノードを置き換えてくれる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://stackblitz.com/edit/angularjs-angular-elements-poc?embed=1&file=src/index.html",
+          "href": "https://stackblitz.com/edit/angularjs-angular-elements-poc?embed=1&file=src/index.html",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

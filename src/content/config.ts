@@ -1,3 +1,4 @@
+import { postSchema } from '@lib/post';
 import { defineCollection, z } from 'astro:content';
 
 const blog = defineCollection({
@@ -21,4 +22,9 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { blog };
+const post = defineCollection({
+  type: 'data',
+  schema: postSchema,
+});
+
+export const collections = { post };

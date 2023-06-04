@@ -1,0 +1,1141 @@
+{
+  "pageId": "c3927100-7462-4b3e-acb7-75d58b6b9652",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "state-of-angular-elements-2020-summer",
+  "properties": {
+    "title": "Angular Elementsの現在地 (2020 Summer)",
+    "date": "2020-09-22T00:00:00.000Z",
+    "tags": ["tech", "Angular", "Angular Elements"]
+  },
+  "content": [
+    {
+      "type": "image",
+      "url": "/images/state-of-angular-elements-2020-summer/17281319-b5cb-4006-8ef4-cd0295651891/2020-09-22T17-35-00.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "本稿では 2020 年夏（Angular v10.1） 時点において Angular Elements がどのような状態にあるのかを簡潔にまとめる。すでに達成されていることと、まだ達成されていないことを手早く把握できることを目的とする。Angular Elements の将来については ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "公式ロードマップ",
+          "href": "https://angular.jp/guide/roadmap",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " に書かれていないことを独自に述べることはない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular Elements の基本仕様",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular Elements に触れたことがない読者のために、Angular Elements の基本的な仕様を解説する。Angular Elements とは、Angular コンポーネントを Web 標準の Custom Elements にコンバートすることで、Angular アプリケーションの外でも利用できるポータブルなコンポーネントを作る機能のことである。（",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "公式ドキュメント",
+          "href": "https://angular.jp/guide/elements",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "）",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ライブラリとして提供される API はシンプルで、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@angular/elements",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " パッケージの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "createCustomElement()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数にコンポーネントクラスを渡すだけである。Custom Element にコンバートされたコンポーネントは元の Angular アプリケーションからは独立し、そのコンポーネントを頂点とする小さな Angular アプリケーションのように振る舞う。ただし、DI の解決に関してはコンバート時にベースとなる ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Injector",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を受け取っておく必要がある。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({...})\nexport class MyButtonComponent {}\n\nimport { createCustomElement } from '@angular/elements';\n\n@Ngmodule({})\nexport class AppModule {\n\n  constructor(injector: Injector) {\n    // Convert a component into an element\n    const MyButtonElement = createCustomElement(MyButtonComponent, { injector });\n    // Register a custom element\n    document.customElements.define('my-button', MyButtonElement);\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "つまり、Angular Elements を利用するためには、Injector を確保するために少なくともひとつのルート NgModule が bootstrap される必要がある。言い換えれば、複数のコンポーネントをひとつの NgModule 内で一気に Custom Elememts 化することもできる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "基本的にどんな Angular コンポーネントでも、それが Angular アプリケーション中で動作するならば Angular Elements によってコンバートできる",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Web 標準仕様への準拠",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まずはじめに、Angular Elements という機能が Web 標準仕様にどれほど準拠できているかをまとめる。 逆に Angular アプリケーション内で Custom Elements を利用するケースについては ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Custom Elements Everywhere",
+          "href": "https://custom-elements-everywhere.com/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " にまとめられているのでそちらを参照すること。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/state-of-angular-elements-2020-summer/b98e5ea8-a029-424f-b57b-9908b0ca19e5/2020-09-22T17-41-39.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Custom Elements",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "createCustomElement()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数の戻り値は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HTMLElement",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を継承したクラスオブジェクトになっており、そのまま ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "customElements.define()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に渡すこともできるし、 もちろん ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "new",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " でインスタンス化することもできる。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HTMLElement",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を継承している以上ほとんどの仕様には準拠しているが、特に Angular コンポーネントとの連携部分についての機能を以下にまとめる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "サポート済みの機能",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Input と HTML 属性の自動マッピング",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "コンポーネントの Input から自動的に ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "observeAttributes",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " を設定",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "attributeChangedCallback",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " から変更検知をトリガーして再描画",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Output とカスタムイベントの自動マッピング",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Output は同名のカスタムイベントとして ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "addEventListener()",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " などで購読可能",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "未サポートの機能",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "標準 HTML 要素の拡張",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "HTMLElement",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " クラス以外を継承するためには独自に ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "ElementStrategy",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " を定義する必要がある",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "https://github.com/angular/angular/issues/34607",
+                      "href": "https://github.com/angular/angular/issues/34607",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Shadow DOM",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular コンポーネントはデフォルトでカプセル化 CSS の機構を持っている。Angular Elements でコンバートされてもその機構はそのまま維持されるため、グローバルスタイルを汚染することはない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "サポート済みの機能",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ネイティブ Shadow DOM の利用",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "オプトインの機能として ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "ViewEncapsulation.ShadowDom",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " を設定できる",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "<slot>",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " サポート （",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "ViewEncapsulation.ShadowDom",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " 時のみ）",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Angular テンプレート中の ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "<slot>",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " はそのまま残り、 ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "::slotted()",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " も利用できる",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "ShadowDom",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " 以外のときには動作しない",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "未サポートの機能",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "<ng-content>",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " から ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "<slot>",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " への自動変換",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "<ng-content>",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " は ViewEncapsulation 設定によらず Angular アプリケーション中では正しく動作するが、 ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "<slot>",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " は ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "ShadowDom",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " 設定のとき、かつ Custom Elements にコンバートされたあとにしか動作しない",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Shadow Parts のエミュレーション",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Shadow Parts による外部からのスタイリングは ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "ShadowDom",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " 設定のときのみ機能する",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "::ng-deep",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " を利用せず外部からスタイリングする方法がまだ確立されていない",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "ユースケース",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "v6.0 とともに Angular Elements がリリースされてから 2 年、当初想定されたユースケースはいまでも主眼に置かれているが、それ以外のユースケースも生まれている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "静的コンテンツ中の埋め込み動的コンテンツとして",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "コンポーネントを Custom Elements として利用することで、動的なコンポーネントの挿入、更新、破棄などライフサイクルの管理を Web ブラウザに一任できるという戦略。これは Angular の動的コンポーネントが静的コンテンツと相性が悪いという問題に根ざしており、これが根本的に解決されればこのユースケースの重要度は下がるだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "具体的な用例でいえば、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "angular.io",
+          "href": "http://angular.io/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " 内のサンプルコードや StackBlitz へのリンクなどは Angular Elements で表示されている。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<code-snippet>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のような Angular Elements をあらかじめ登録しておき、Markdown のドキュメンテーション中でタグを記述すればドキュメント中にリッチなコンテンツを展開できるようになっている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/state-of-angular-elements-2020-summer/dc6b5be8-3726-4d13-8c2d-c293e9b2bdce/2020-09-22T17-30-55.png",
+      "caption": "code-exampleタグの様子"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular への段階的移行ツールとして",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "当初は想定されていなかったがコミュニティの中で醸成され、ついには Google 自らも採用するに至った AngularJS から Angular への段階的移行パスである。事実上これが AngularJS からの移行のベストプラクティスとなっている。これについては別の記事でも取り上げている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular Elements による AngularJS の段階的アップグレード戦略",
+          "href": "/2019/08/upgrading-angularjs-app-with-angular-elements/",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このユースケースの要諦は、古いコードベースを減らしながら新規実装を進めるクロスフェード式の移行ができることである。新しく作った Angular コンポーネントを Custom Elements にすることで既存の Web ページの DOM ツリーの一部を少しずつ置き換えていき、ページ全体が Angular Elements で構成されるようになったときには、すでに Angular アプリケーションとしても置き換えられるコンポーネントが揃っているという算段である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "未成熟: 汎用 Custom Elements ライブラリのコードベースとして",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "発表当初にあった、フレームワークに依存しない汎用コンポーネントライブラリのコードベースとして Angular を利用できるのではないか、という期待は今のところまだ実用段階にない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "主な理由は Custom Elements を登録するための JavaScript のサイズがいまだ大きいことにある。Angular コンポーネントそのものに加え、コンポーネントをラップして Custom Elements に変換する層、そして NgModule とそれを bootstrap する platform 層など、ひとつの Angular Elements を生成するために必要なものがまだ多い。 すでに React や Vue.js などのライブラリが存在するページにさらに Angular Elements まで追加するのは多少のパフォーマンスの犠牲が必要になるだろう。 将来的に NgModule 無しでのアプローチなどが生まれてくれば実用性は上がってくるかもしれない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ: Angular Elements に不足しているもの",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "2020 年夏現在、Angular Elements に不足していると思われるものを以下にまとめる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "標準 HTML 要素の ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "extends",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " のサポート",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "<my-button>",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " 要素を ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "extends: 'button'",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " できるようになれば ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "<button myButton>",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " のような属性セレクタ形式のコンポーネントを正しく変換できるようになる",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "<ng-content>",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " と ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "<slot>",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " の透過的なサポート",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ViewEncapsulation.Emulated",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " での Shadow Parts サポート",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ドキュメンテーションとロードマップ",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "リリース直後からドキュメンテーションはあまりアップデートされておらず、現在のユースケースに合わせたものに洗練されると良い。Slot や Shadow Parts など新しい標準仕様に関する記述も不足している",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "また Zone.js や NgModule のオプトアウト化なども絡めた将来のロードマップにも期待したい",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "世界の脱 Internet Explorer",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "ShadowDom を使わなければ基本的に polyfill で困ることはないが、信頼性やパフォーマンスなどの面で重要である",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "つまりほとんど問題なく使えるため、ぜひ活用してコミュニティから需要や期待、フィードバックを発信してほしい。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

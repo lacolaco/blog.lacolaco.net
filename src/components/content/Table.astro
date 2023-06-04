@@ -1,0 +1,43 @@
+---
+import { TableNode } from '@lib/post';
+import Text from './Text.astro';
+
+type Props = TableNode;
+
+const { header, rows } = Astro.props;
+---
+
+<table>
+  {
+    header && (
+      <thead>
+        <tr>
+          {header.map((cell) =>
+            cell.map((cell) => (
+              <th>
+                <Text {...cell} />
+              </th>
+            )),
+          )}
+        </tr>
+      </thead>
+    )
+  }
+  <tbody>
+    {
+      rows.map((r) => (
+        <tr>
+          {r.map((cell) =>
+            cell.map((t) => (
+              <td>
+                <Text {...t} />
+              </td>
+            )),
+          )}
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style></style>

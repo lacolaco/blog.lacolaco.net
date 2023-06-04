@@ -1,0 +1,891 @@
+{
+  "pageId": "6c416ea1-7a9c-4a04-8435-2c68031918af",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "perspective-of-angular-in-2020",
+  "properties": {
+    "title": "Perspective of Angular in 2020",
+    "date": "2019-12-24T00:00:00.000Z",
+    "tags": ["tech", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular Advent Calendar 2019",
+          "href": "https://qiita.com/advent-calendar/2019/angular",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "の 25 日目の記事です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事は GDG Tokyo の DevFest 2019 で発表した内容から抜粋、加筆したものです。 2019 年も終わりということで、発表では今年一年の Angular の動きを振り返り、来年以降の展望についてまとめました。 この記事では振り返り部分は割愛し、2020 年以降の Angular のロードマップについてのみ触れることにします。 全篇をご所望の場合はスライドを直接参照してください。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "bit.ly/2Y5ZfJx",
+          "href": "http://bit.ly/2Y5ZfJx",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": [
+        {
+          "type": "text",
+          "text": "Roadmap in 2020",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "2020 年の間には v9.0 から v11.x までのリリースが行われる予定です。半年に一度のメジャーバージョンアップは今後も継続されます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/9sjiaz24ylo3mkzv452h.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "v9.0 では次のような大きな変更があります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Ivy のデフォルト有効化",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "CDK Clipboard API の提供開始",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "CDK Testing Harness の提供開始",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "@angular/{youtube-player, google-maps} パッケージの提供開始",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "テンプレート型チェックの厳密化オプション提供開始",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Ivy への移行スケジュール",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "v9.0 では、すべてのアプリケーションで Ivy モードでの AoT コンパイルがデフォルト有効になります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今後 v10.x まではオプトアウトの手段が用意されますが、v11.0 を持ってオプトアウトできなくなります。11.0 がリリースされる予定の 2020 年末には、すべての Angular アプリケーションが Ivy によるコンパイルをおこなっていることを目標にしています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "CDK の新しい API",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Clipboard API は文字列をクリップボードにコピーできるものです。テンプレート内で使えるディレクティブ形式の API と、クラス内で使えるサービス形式の API の両方が提供されています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/jdzaga3nqhdcpmme3f5r.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "コンポーネントのテストをサポートするための ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ComponentHarness",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " API も新しく提供されます。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ComponentHarness",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使うことで、コンポーネントのテストをメンテナンスしやすく記述できます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "テストしたいコンポーネントに対応する Harness を定義し、その Harness に対するテストを書くことで、テストではコンポーネントの実装の詳細に依存せずに宣言的なテストを書けます。同時に Harness の実装では ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "DebugElement",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ComponentFixture",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " などの API が使いやすい形に隠蔽されています。Angular Material のソースコードでは、すべてのコンポーネントが Harness によるテストに切り替えられています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/6fwy0bik2qvk3zg7vy2w.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular official components",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 開発チームによる公式コンポーネントライブラリが新たに提供されます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "v9.0 時点では YouTube プレイヤーを表示する ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@angular/youtube-player",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " パッケージと、 Google マップを表示する ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@angular/google-maps",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " パッケージが提供されます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Strict Template Type-Checking",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Ivy コンパイルの有効化によって、テンプレートの隅々まで型チェックできるようになります。しかし後方互換性のために v9.0 においては厳密なテンプレート型チェックはオプションで提供されます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "tsconfig.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "angularCompilerOptions",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "strictTemplates",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " フラグを有効にすると、TypeScript の strict モードに近い厳密さでテンプレート型チェックがおこなわれます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "代表的なものでは、イベントハンドラーの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "$event",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 変数の型チェック、Input の型チェック、コンポーネントメソッドの呼び出し型チェックなどが厳密になります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/o9jdhu7hnehu6nilvox1.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": [
+        {
+          "type": "text",
+          "text": "Imagine the Future",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "v9.0 以降の Angular の展望は Angular の Values を軸にして予想できます。つまり、",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Apps that users ❤ to use",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Apps that developers ❤ to build",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Community where everyone feels welcome",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "の 3 つです。なかでもひとつめの “Apps that users ❤ to use”が 2020 年の大きな目標になると考えています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ng-conf 2019 の keynote からスライドを引用すると、2018 年から 2019 年にかけて、Angular の主なユースケースはエンタープライズアプリケーションでした。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "エンタープライズアプリケーションは数は多いですが、ひとつひとつのアプリケーションのユーザーはそれほど多くありません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/pdtd8uxo3ufhpor2xxov.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "エンタープライズアプリケーションの開発を支えるために Angular が提供しているのは生産性とスケーラビリティです。Angular CLI によるコード生成や事前コンパイル、ビルドやテストの自動化はチーム開発の水準を高めてくれます。HTML/CSS による UI 開発は多くの開発者の慣れ親しんだ技術スタックです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "静的型チェックや型ベースの Dependency Injection システムもスケーラビリティが重要な開発ユースケースを支えてきました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/i02nrvikd85y155h8jnh.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "2019 年の Angular が Ivy を通して取り組んだのは、まだ届いていないユースケースをカバーすることでした。まずはじめに取り組んだのはカジュアルなユースケースです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "デモやプロトタイプ、教材などユーザー数は少ないものの、何度も高速に、簡単に作る必要のあるアプリケーションです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/7u864ar7jlo5kswpmvbp.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "カジュアルなユースケースに求められるのは、開発スピードと軽量性です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Ivy コンパイラで改善した Tree-Shaking によるバンドルサイズの削減や、1 コマンドで PWA 化できる ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@angular/pwa",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ツール、さらには 1 コマンドでデプロイできる ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng deploy",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドなど、小さなアプリケーションを迅速に開発するためのツールを整えてきました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Stackblitz や UI Bakery のようなビジュアルプロトタイピングツールもサードパーティから登場しており、Angular アプリケーションをカジュアルに作り始める道具は揃ってきています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/tuv6hs4x8q3uixy5eqov.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そして 2020 年、Angular が取り組むのは未踏の領域、大衆向けのアプリケーション開発のユースケースです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "e コマースやニュースサイトのような、コンシューマー向けの巨大な流入を持つユースケースでも Angular の 3 つの Values を発揮できる仕組みを研究中です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/hszzj8cdz6iz3j4alq1r.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "コンシューマー向けアプリケーションに求められるのはなんといっても Web パフォーマンスですが、それに加えて変化し続けるニーズに対応しつづけるための柔軟性です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "SEO やアクセシビリティ、国際化やモバイル対応、オフラインなど考慮すべきことが山のようにあります。このようなユースケースではベストプラクティスに固執するだけでなくプロダクトにとって最適な方法論を選べるように、フレームワーク側も柔軟である必要があります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/e3wh8qv74vvckynk3tfi.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Ionic",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "コンシューマー向けの Angular アプリ開発としては Ionic が大きなシェアを持っています。ハイブリッドモバイルアプリを開発できる Ionic は Angular CLI に対応し、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng add",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドで簡単に Angular プロジェクトに組み込めるようになりましたが、Ionic はネイティブとのブリッジだけでなく UI コンポーネントライブラリの側面もあります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "プロダクトの UI をそのまま使い、ハイブリッドアプリに変換するインフラだけ欲しいというニーズのために、Ionic チームは Capacitor というインフラ部分だけのパッケージを提供し、これもまた ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng add",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドで Angular アプリケーションにインストールできるようにしました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、ビジュアルアプリ開発のための Ionic Studio を使えば、Angular コンポーネントのリアルタイムプレビューや、GUI でのプログラミングも可能です。モバイル向け Angular アプリケーションの開発プラットフォームとして Ionic が急速に成長しています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/25falcvn758qgrcmbs81.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Work in Progress",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 公式にも取り組んでいる Work in Progress なプロジェクトがいくつかあります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ひとつは新しい i18n API です。これまでの Angular が提供する i18n 機能はテンプレート内だけのものでしたが、現在実装中の機能は TypeScript のコードのなかでも実行時にローカライズができるようになります。国際化が必要なアプリケーションの実装を大いに助けてくれるでしょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/vfjyz3pk8rbozpr0zle9.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "バンドルサイズのさらなる改善を目的に、コンポーネント単位での遅延読み込みも進行中です。これまでは Routing のページ単位でしたが、コンポーネントごとに遅延読み込みできるような仕組みを検討中です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/c8fkyjsphy8aik96c8s1.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "最後に、Project Photon を紹介します。ng-conf 2019 で発表された研究段階のこのプロジェクトは、Angular アプリケーションに Progressive Hydration を導入することが目的です。サーバーサイドレンダリングと遅延読み込みを組み合わせ、ユーザーが本当に必要とするまで JavaScript を実行しないような仕組みを模索しています。詳しくは ng-conf 2019 の keynote を見てください。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/72w7lx7xke72jygwbpwi.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Scully: Static Site Generator",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "新しい話題として、Angular のための静的サイトジェネレーター ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Scully",
+          "href": "https://github.com/scullyio/scully",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " が公開されました。Scully は公式製ではなくコミュニティの有志で作られたサードパーティツールです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これまで Angular には GatsbyJS や Gridsome のような静的サイトジェネレーターは存在しなかったため、Scully を起爆剤として JAMstack も Angular のユースケースに加わっていくことでしょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "2020 年の Angular",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "2020 年の Angular はパフォーマンス改善を続けながら、Ivy 導入によって可能となった i18n を始めとするフレームワーク API の開発・改善を重ねていくことで、これまで弱い部分だったコンシューマー向けのユースケースに手を伸ばしていくことでしょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Values の 3 本軸、ユーザーが愛せるアプリケーション（ユーザー体験）、開発者が愛せるアプリケーション（開発者体験）、そして世界中に広がるコミュニティの力で、これまで以上に魅力的な Web 開発プラットフォームに育っていくと期待しています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "それでは良いお年を。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

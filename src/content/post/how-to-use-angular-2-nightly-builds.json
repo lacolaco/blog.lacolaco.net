@@ -1,0 +1,387 @@
+{
+  "pageId": "fce69b90-8ffc-4369-a68b-b56f02e16320",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "how-to-use-angular-2-nightly-builds",
+  "properties": {
+    "title": "How to Use Angular 2 Nightly Builds",
+    "date": "2016-08-05T00:00:00.000Z",
+    "tags": ["tech", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This post explains how to use nightly-builds of Angular 2.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 2 consists of some modules. Each module has own package and its version. And there are nightly-builds packages of these.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Nightly Builds",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Nightly-builds has its own repository. For example, ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@angular/core",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " repo corresponds to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "angular/core-builds",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "[angular/core\\-builds: @angular/core build artifacts](https://github.com/angular/core-builds)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Every ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@angular",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " packages has corresponding ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "-builds",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " repo.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "angular/core-builds",
+              "href": "https://github.com/angular/core-builds",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "angular/common-builds",
+              "href": "https://github.com/angular/common-builds",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "angular/compiler-builds",
+              "href": "https://github.com/angular/compiler-builds",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "angular/platform-browser-builds",
+              "href": "https://github.com/angular/platform-browser-builds",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "and more…",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "These repositories are updated when the main repo’s master is committed. So these help us if you want to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "use new features",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " or ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "avoid bugs",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " which not released yet.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "How to use",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Each repo has its ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "package.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". so we can install these via ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "npm install",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ npm install --save angular/core-builds"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "or ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "dependencies",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " field in ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "package.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "{\n    \"dependencies\": {\n        \"@angular/core\": \"angular/core-builds\"\n    }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "npm supports dependencies from GitHub. My dependencies are below:",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "{\n  \"dependencies\": {\n    \"@angular/common\": \"angular/common-builds\",\n    \"@angular/compiler\": \"angular/compiler-builds\",\n    \"@angular/compiler-cli\": \"angular/compiler-cli-builds\",\n    \"@angular/core\": \"angular/core-builds\",\n    \"@angular/forms\": \"angular/forms-builds\",\n    \"@angular/platform-browser\": \"angular/platform-browser-builds\",\n    \"@angular/platform-browser-dynamic\": \"angular/platform-browser-dynamic-builds\",\n    \"@angular/platform-server\": \"angular/platform-server-builds\",\n    \"@angular/router\": \"angular/router-builds\",\n    \"core-js\": \"^2.4.0\",\n    \"rxjs\": \"5.0.0-beta.6\",\n    \"zone.js\": \"^0.6.6\"\n  }\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Summary",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "All Angular 2 modules have its own nightly-builds repo",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Nightly-builds are synchronized with ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "angular/angular",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " master",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "We can use these via npm GitHub dependencies",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

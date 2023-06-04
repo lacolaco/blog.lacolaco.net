@@ -1,0 +1,856 @@
+{
+  "pageId": "e34eeccc-4c1e-4aeb-a1c4-eb3381c58440",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "ng4-feature-ngif",
+  "properties": {
+    "title": "[Angular 4.0] 新しいngIfの使い方",
+    "date": "2017-03-05T00:00:00.000Z",
+    "tags": ["tech", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 4.0にはいくつかの新しい機能が追加されます。 今回は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に追加される新しい機能について解説します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "ngIfの新機能",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "ngIfThen",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ": テンプレート分離",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これまでの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で表示を切り替えられるのは、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ディレクティブが付与された要素とその内側の要素だけでした。 Angular 4.0以降は、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "による条件付けと、その条件により制御されるテンプレートを分離できます。 次の例では、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "show",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プロパティが真のときに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "#thenBlock",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のテンプレートが描画されます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<div *ngIf=\"show; then thenBlock\">ignored</div><ng-template #thenBlock>show === true</ng-template>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "then",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "テンプレートには",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TemplateRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のインスタンスを渡せます。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "null",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のときは無視されます。 次の例では、条件によって",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "によって描画されるテンプレートを切り替えています。 それほどユースケースは多くないですが、必要になる場面があるかもしれません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: 'ng-if-then',\n  template: `\n    <button (click)=\"switchPrimary()\">Switch Template</button>\n\n    <div *ngIf=\"show; then thenBlock\"></div>\n    <ng-template #primaryBlock>Primary</ng-template>\n    <ng-template #secondaryBlock>Secondary</ng-template>\n`\n})\nclass NgIfThenElse implements OnInit {\n  thenBlock: TemplateRef<any> = null;\n  show: boolean = true;\n\n  @ViewChild('primaryBlock')\n  primaryBlock: TemplateRef<any> = null;\n  @ViewChild('secondaryBlock')\n  secondaryBlock: TemplateRef<any> = null;\n\n  switchPrimary() {\n    this.thenBlock = this.thenBlock === this.primaryBlock ? this.secondaryBlock : this.primaryBlock;\n  }\n\n  ngOnInit() { this.thenBlock = this.primaryBlock; }\n}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "ngIfElse",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ": 偽のときのテンプレート",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "先ほどの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "then",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "テンプレートはこの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "else",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "テンプレートの副産物とも言えるでしょう。 その名前のとおり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に渡された式が偽のときに描画されるテンプレートを指定する仕組みです。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "else",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "テンプレートは次のように使います。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<div *ngIf=\"show; else elseBlock\">show === true</div>\n<ng-template #elseBlock>show === false</ng-template>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "then",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "テンプレートと",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "else",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "テンプレートは併用できます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<div *ngIf=\"show; then thenBlock; else elseBlock\"></div>\n<ng-template #thenBlock>show === true</ng-template>\n<ng-template #elseBlock>show === false</ng-template>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これまでは真の場合と偽の場合にそれぞれ逆の条件の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が必要でしたが、簡単に書けるようになります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "As",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "構文: 評価結果の変数化",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これこそが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "最大の変更点です。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に渡された式の評価結果をローカル変数にアサインできるようになりました。 これは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "async",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "パイプと",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を併用するケースで絶大な効果を発揮します。 次の例を見てみましょう。 非同期にユーザー情報が得られるコンポーネントで、データ取得後に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".name",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プロパティを表示したいとき、 これまではこのように",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "async",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "パイプと",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "?.",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "構文を組み合わせていました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<p>{{ (user$ | async)?.name }}</p>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".name",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "以外にも",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".age",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "や",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".icon",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "なども使いたいとなると、テンプレートは大変なことになります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<p>{{ (user$ | async)?.name }}</p>\n<p>{{ (user$ | async)?.age }}</p>\n<img [src]=\"(user$ | async)?.icon\">"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "せめて",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "?.",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "をなくそうと",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で囲っても、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "async",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "パイプは全てのバインディングに必要です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<div *ngIf=\"user$ | async\">\n    <p>{{ (user$ | async).name }}</p>\n    <p>{{ (user$ | async).age }}</p>\n    <img [src]=\"(user$ | async).icon\">\n</div>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 4.0以降は、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "as",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使うことで評価結果を変数として保持できます。つまり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "user$ | async",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の結果であるユーザーデータを同期的に扱えるようになります。具体的には、次のように書けます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<div *ngIf=\"user$ | async as user\">\n    <p>{{ user.name }}</p>\n    <p>{{ user.age }}</p>\n    <img [src]=\"user.icon\">\n</div>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Woohoo!!!!! :tada::tada::tada::tada::tada:",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この変化は単にテンプレートがきれいになるだけでなく、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "async",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "パイプが減ることによるパフォーマンスの改善も得られます。 アプリケーションをObservableベースのリアクティブな設計したときも、テンプレートが自然に書けるようになります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "else",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "テンプレートと併用すれば、今まではとても複雑になっていたテンプレートが次のようにスッキリします。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<div *ngIf=\"user$ | async as user; else userNotFound\">\n    <p>{{ user.name }}</p>\n    <p>{{ user.age }}</p>\n    <img [src]=\"user.icon\">\n</div>\n<ng-template #userNotFound>\n    <p>not found</p>\n</ng-template>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "as",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "構文は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngFor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "でも使用できます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<div *ngFor=\"let user of (users$ | async) as users; index as i\">\n    <span>{{ i + 1 }} / users.length</span>\n    <span>{{ user.name }}</span>\n</div>"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "then",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "テンプレートでテンプレートの分離と切り替えが可能になる",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "else",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "テンプレートで偽のときのテンプレートを指定できる",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "as",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "による変数化で",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "async",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "パイプとの親和性が改善される",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 4.0 Features",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "新しいngIfの使い方",
+              "href": "/post/ng4-feature-ngif/",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Metaサービスの使い方",
+              "href": "/post/ng4-feature-meta-service/",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "formsモジュールの更新について",
+              "href": "/post/ng4-feature-forms-update/",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "core/commonモジュールの変更について",
+              "href": "/post/ng4-feature-core-update/",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "router/http/animationsモジュールの変更について",
+              "href": "/post/ng4-feature-libs-update/",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

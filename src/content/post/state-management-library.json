@@ -1,0 +1,347 @@
+{
+  "pageId": "de2f47a3-3dcc-4621-8f6c-f56dc1b57062",
+  "lastEditedAt": "2023-05-21T01:31:00.000Z",
+  "slug": "state-management-library",
+  "properties": {
+    "title": "状態管理のライブラリを作りました",
+    "date": "2018-01-12T00:00:00.000Z",
+    "tags": ["tech", "TypeScript", "状態管理"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "TypeScript/JavaScript 用に状態管理のライブラリを作りました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://www.npmjs.com/package/@lacolaco/reactive-store"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "広く使ってもらうためというよりは、自分のアプリケーションで何度も同じコードを書きたくないのがライブラリ化のモチベーションです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Inspired by repatch and ngrx/store",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "lacolaco/reactive-store の設計は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "repatch",
+          "href": "https://github.com/jaystack/repatch/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngrx/store",
+          "href": "https://github.com/ngrx/platform/blob/master/docs/store/README.md",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "に影響を受けています。Angular でアプリケーションを書くことが多いので、RxJS フレンドリーなストアとして ngrx/store を使っていましたが、2 つの不満な点がありました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "現在の状態のスナップショットが取れない（非同期 API しか存在しない）",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Action と Reducer が冗長",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "代わりになるストアのライブラリを探したところ、repatch は自分がほしいものにとても近かったのですが、RxJS の Observable と互換性がないことと、subscribe できる単位がストア全体という部分が不満で、結局自分で作ることにしました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { Store } from \"@lacolaco/reactive-store\";\n\nconst store: Store<string> = new Store(\"initialState\");\n\nstore.getValue(); //=> 'initialState';\nstore.subscribe(state => {});\nstore.patch(state => \"updated!\");"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "lacolaco/reactive-store の実装は型定義を除くと 30 行程度で、ほとんどは RxJS の BehaviorSubject の機能をそのまま使っています。追加したのは patch メソッドと select メソッドと Middleware です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "store.patch((state: T ) => T)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "現在の状態から新しい状態を作る関数を渡します。Redux 的な文脈で言えば Reducer と似ています。repatch に影響を受けています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "store.select((state: T) => any)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ストアが管理している状態のいち部分だけの Observable を作るためのメソッドです。具体的には map して distinctUntilChanged した結果を返します。ngrx/store に影響を受けています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { Store } from \"@lacolaco/reactive-store\";\n\nconst store: Store<{ count: number }> = new Store({ count: 0 });\n\nconst count$: Observable<number> = store.select(state => state.count);\ncount$.subscribe(count => {\n  console.log(count);\n});\n\nstore.patch(state => {\n  return {\n    count: state.count + 1\n  };\n});"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Middleware",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Middleware は dispatch メソッドに介入する仕組みです。lacolaco/reactive-store では dispatch された新しい状態を Observable に流す一番基本の部分も Middleware と同列に扱われています。実装の参考になったのは Angular の HttpInterceptor です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まず Middleware の前に、state を受け取り何かを返す関数として ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "StateHandler",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という型があります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "export type StateHandler = (state: any) => any;"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そして Middleware は、StateHandler を受け取り StateHandler を返す関数です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "export type Middleware = (next: StateHandler) => StateHandler;"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "何もしない Middleware は次のように書けます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "const noopMiddleware = next => state => next(state);"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "大した実装ではないので詳しくは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ソースコード",
+          "href": "https://github.com/lacolaco/reactive-store#readme",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "を読んで下さい。ユニットテストも書いてあります。具体的なユースケースとしては Logging などが考えられます。次の例ではすべての StateHandler が処理を終えたあとに、新しい state をコンソールに書き出しています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { Store } from \"@lacolaco/reactive-store\";\n\nconst loggingMiddleware = next => {\n  return state => {\n    const newState = next(state);\n    console.log(`[State]`, newState);\n    return newState;\n  };\n};\n\nconst store = new Store(0, [loggingMiddleware]);"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "利点",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "実装が薄いので RxJS さえ信用できれば安心して使える",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "RxJS のエコシステムと簡単に接続できる",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "型安全",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もし興味があれば使ってみて Issue とかツイッターでフィードバックとかもらえるとうれしいです。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

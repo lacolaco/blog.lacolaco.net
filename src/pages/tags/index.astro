@@ -2,11 +2,11 @@
 import { getCollection } from 'astro:content';
 import Tags from '../../layouts/Tags.astro';
 
-const posts = await getCollection('blog');
-const uniqueTags = [...new Set(posts.map((post) => post.data.tags ?? []).flat())];
+const posts = await getCollection('post');
+const uniqueTags = [...new Set(posts.map((post) => post.data.properties.tags).flat())];
 
 const tagWithCount = uniqueTags.map((tag) => {
-  const usedCount = posts.filter((post) => post.data.tags?.includes(tag)).length;
+  const usedCount = posts.filter((post) => post.data.properties.tags.includes(tag)).length;
   return { name: tag, usedCount };
 });
 ---

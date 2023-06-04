@@ -1,0 +1,19 @@
+---
+import { ParagraphNode } from '@lib/post';
+import Text from './Text.astro';
+
+type Props = ParagraphNode;
+
+const { text } = Astro.props;
+---
+
+{
+  (() => {
+    if (text.length === 0) return null;
+
+    const content = text.map((t) => <Text {...t} />);
+    return <p>{content}</p>;
+  })()
+}
+
+<style></style>

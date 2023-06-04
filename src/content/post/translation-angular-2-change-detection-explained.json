@@ -1,0 +1,1881 @@
+{
+  "pageId": "6a6d79b6-ae74-4c49-82a9-5804cc0b5e0f",
+  "lastEditedAt": "2023-05-21T01:18:00.000Z",
+  "slug": "translation-angular-2-change-detection-explained",
+  "properties": {
+    "title": "[日本語訳] Angular 2 Change Detection Explained",
+    "date": "2016-04-10T00:00:00.000Z",
+    "tags": ["tech", "testing", "translation"]
+  },
+  "content": [
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Original: ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "Angular 2 Change Detection Explained",
+              "href": "http://blog.thoughtram.io//angular/2016/02/22/angular-2-change-detection-explained.html",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Written by: ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "Pascal Precht",
+              "href": "http://twitter.com/PascalPrecht",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Translated at: 2/23/2016",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "NG-NL",
+          "href": "http://ng-nl.org/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "はとても素晴らしかったです! 私はAngular 2のChange Detectionについての話ができて光栄でしたし、多くの参加者に気に入っていただけて大成功だったようです。 この記事では、どのようにAngularのChange Detectionが動作しているのか、どうすればそれを高速化できるのかについて誰でも読めるようにするため、 発表の内容を文章に書き起こしたいと思います。 もしこの話に興味を持ったなら、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "こちらのスライド",
+          "href": "http://pascalprecht.github.io/slides/angular-2-change-detection-explained/#/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " を見ることができますし、発表の録画も近いうちに公開されるのでそれを見ることもできるでしょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "それでは見ていきましょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Change Detectionとは何なのか？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Change Detectionの基本的な役割は、プログラムの内部の状態を取得し、それを何らかの方法でユーザーインターフェースに可視化することです。 この状態はオブジェクトや配列、プリミティブなど、JavaScriptにおけるあらゆるデータ構造になりえます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "状態はユーザーインターフェースの中でパラグラフやフォーム、リンク、ボタンとなるかもしれません。 具体的に言えば、それはWeb上でDOMとなります。 つまり、私たちは基本的にデータを入力として取得し、DOMを生成してユーザーに見せています。 このプロセスを私たちはレンダリングと呼んでいます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/translation-angular-2-change-detection-explained/c98f63a4-b9ff-44fb-a5ed-4ffd4493ab41/cd-4.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "しかし、レンダリングは実行時に変更が起きた時、トリッキーになります。 DOMが描画されてからしばらく経ったあとのことです。 私たちはどのようにして、モデルの変更と、更新しなければならないDOMの位置を知るのでしょうか？ DOMツリーへのアクセスは常にコストが高いので、更新する位置を探すだけではなく、なるべく小さなアクセスに留めたいですね。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これには多くの異なった方法で取り組むことができます。 例えば、一つの方法は単純にHTTPのリクエストを送り、ページ全体を再描画することです。 別のアプローチはDOMの古い状態と新しい状態を比較して、違う部分だけを描画する方法で、 これはReactJSが仮想DOMを使って行っていることです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もしあなたが他のフレームワークがこの問題をどう解決しているかに興味を持っているなら、 私たちは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Tero",
+          "href": "http://twitter.com/teropa",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "が書いた素晴らしい記事 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Change and its detection in JavaScript frameworks",
+          "href": "http://teropa.info/blog/2015/03/02/change-and-its-detection-in-javascript-frameworks.html",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " をおすすめします。 この記事ではAngular 2だけに注目していきます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "基本的にChange Detectionのゴールは、データとその変更を常に投影することです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "何が変更を引き起こすのか？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "さて、私たちはChange Detectionとは何かについて知りましたが、不思議に思うかもしれません。 実際にはどんなときに変更が起こるのでしょうか？ その変更がビューを更新する必要があると、Angularはいつ知るのでしょうか？ さあ、次のコードを見てきましょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  template: `\n    <h1>{{firstname}} {{lastname}}</h1>\n    <button (click)=\"changeName()\">Change name</button>\n  `\n})\nclass MyApp {\nfirstname:string = 'Pascal';\n  lastname:string = 'Precht';\n\nchangeName() {\n    this.firstname = 'Brad';\n    this.lastname = 'Green';\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もしこれがあなたが見る初めてのAngular 2のコンポーネントであれば、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "building a tabs component",
+          "href": "http://blog.thoughtram.io/angular/2015/04/09/developing-a-tabs-component-in-angular-2.html",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " を読んだほうがいいかもしれません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "上のコンポーネントはシンプルに2つのプロパティを表示し、 テンプレート内のボタンがクリックされた時にそれらを変更するメソッドを提供しています。 ボタンがクリックされた瞬間、アプリケーションの状態が変更されます。 なぜならコンポーネントのプロパティを変更しているからです。 その瞬間が、私たちがビューを更新したい瞬間です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "こちらも見てください。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component()\nclass ContactsApp implements OnInit{\ncontacts:Contact[] = [];\n\nconstructor(private http: Http) {}\n\nngOnInit() {\n    this.http.get('/contacts')\n      .map(res => res.json())\n      .subscribe(contacts => this.contacts = contacts);\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このコンポーネントはコンタクトのリストを持ち、初期化時にHTTPリクエストを処理しています。 リクエストが返ってきたらリストが更新されます。 ここで、もう一度アプリケーションの状態が変わっています。 私たちはここでビューを更新したいです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "基本的に、アプリケーションの状態は次の3つの出来事で変わります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "イベント",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " - ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "click",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ", ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "submit",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ", …",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "XHR",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " - サーバーからデータを取得する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "タイマー",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " - ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "setTimeout()",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ", ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "setInterval()",
+              "annotations": {
+                "code": true
+              }
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これらはすべて非同期的です。 ここから導かれる結論は、 非同期的な処理が行われた後にはいつでも、アプリケーションの状態が変わっている可能性があるということです。 これがAngularにビューを更新するように教えなければいけないタイミングです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "誰がAngularに伝えるのか？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "さあ、私たちは今、何がアプリケーションの状態を変えるのかを知りました。 しかしこの特定の瞬間にビューを更新するように、Angularに伝えているのは何なのでしょうか？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angularは私たちに標準のAPIを直接使わせてくれます。 AngularにDOMを更新するように伝えるために呼び出さないといけない割り込みのメソッドはありません。 これは魔法でしょうか？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もしあなたが私たちの前回の記事を読んでいたら、 それが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Zones",
+          "href": "http://blog.thoughtram.io/angular/2016/01/22/understanding-zones.html",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "のおかげであることを知っているでしょう。 事実、Angularは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Zones in Angular 2",
+          "href": "http://blog.thoughtram.io/angular/2016/02/01/zones-in-angular-2.html",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "という記事で書いた ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgZone",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と呼ばれる自身のZoneを備えています。ぜひこれも読んでください。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "要約すると、Angularのソースコードのどこかに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ApplicationRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と呼ばれるものがあり、 それが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgZones",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "onTurnDone",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "イベントを受信しているということです。 このイベントが発火されるたびに、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AppicationRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が実際にChange Detectionを処理している",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "tick()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数を実行します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "// very simplified version of actual source\nclass ApplicationRef {\n\n  changeDetectorRefs:ChangeDetectorRef[] = [];\n\n  constructor(private zone: NgZone) {\n    this.zone.onTurnDone\n      .subscribe(() => this.zone.run(() => this.tick());\n  }\n\n  tick() {\n    this.changeDetectorRefs\n      .forEach((ref) => ref.detectChanges());\n  }\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Change Detection",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "OK、いいですね、私たちはChange Detectionがいつ実行されるのかを知りました。 ですが、どのように処理されるのでしょうか？ ええ、Angular2において、まず私たちが知る必要があることは、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "それぞれのコンポーネントがそれぞれのChange Detectorを持っている",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ということです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/translation-angular-2-change-detection-explained/b536ad26-a60d-4646-8e72-be722ebaeb30/cd-tree-2.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これは重大な事実です、なぜならそれぞれのコンポーネントについて個別に、 いつどのようにChange Detectionを処理するかをコントロールできるようにしてくれるからです。 詳しくは後で話します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "私たちのコンポーネントツリーのどこかでイベントが起きた、例えばボタンがクリックされたと仮定しましょう。 次に何が起きるでしょうか？ 私たちはちょうどZoneが与えられたハンドラーを実行し、 ターンが終了した時にAngularに伝え、 それが最終的にはAngularにChange Detectionを処理させることを学びました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/translation-angular-2-change-detection-explained/0b527e1e-3d65-4943-b6df-5a48a7b50734/cd-tree-7.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "それぞれのコンポーネントが自身のChange Detectorを持っていて、 しかもAngularアプリケーションはコンポーネントツリーで構成されているので、 当然の結果として私たちは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Change Detectorツリー",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " も持っています。 このツリーはデータが常に上から下に流れている有向グラフとしてみることもできます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "なぜデータが上から下に流れるのか、 それはルートコンポーネントから始まったChange Detectionが、 毎回ひとつひとつコンポーネントごとに上から下へ処理されるからです。 一方向のデータフローはサイクルよりも予測しやすいので素晴らしいです。 私たちは常にビューの中で使われているデータがどこから来たのかを知っています。 なぜならそれはそのコンポーネントの中からしか来ないからです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もう一つの興味深い観察点は、Change Detectionは一度通過した後は安定になるということです。 これは、もしコンポーネントのうちのひとつが Change Detectionが処理されている間に何らかの副作用を追加で引き起こした時には Angularがエラーを起こす、ということを意味します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "高速化",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "デフォルトでは、もし私たちがすべてのコンポーネントをイベントのたびに毎回チェックする必要があったとしても、 Angularはとても速いです。 Angularは数百万個のチェックを数msで実行できます。 これは主に、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AngularがVMフレンドリーなコードを生成している",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という事実に起因します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これはどういう意味でしょうか？ そうですね、私たちはそれぞれのコンポーネントが自身のChange Detectorを持っていると言いました。 それはそれぞれの個別のコンポーネントのChange Detectionを世話するための 単一の一般的なものがAngularにあるということではありません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "なぜならどんなモデル構造であってもすべてのコンポーネントをチェックできるためには、 Change Detectorはダイナミックに書かれなければならないからです。 このような種類のコードは最適化できないため、VMは好みません。 オブジェクトの形は常に同じではないため、これは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ポリモーフィック",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と考えられます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "それぞれのコンポーネントごとに、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Angularは実行時にChange Detectorのクラスを生成します",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "。 それらはそのコンポーネントの形を絶対知っているため、モノモーフィックです。 VMはこのコードを完全に最適化可能で、とても高速に実行できます。 これの良い所は、Angularが自動的にやってくれるので私たちがこのことについて考慮する必要がないことです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このことについてさらに深い説明が欲しければ、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Victor Savkin",
+          "href": "http://twitter.com/victorsavkin",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Change Detection Reinvented",
+          "href": "https://www.youtube.com/watch?v=jvKGQSFQf10",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "をチェックしてください。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "スマートなChange Detection",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "繰り返しますが、Angularはすべてのコンポーネントをイベントが起こるたびに毎回チェックする必要があります。 なぜなら…そう、アプリケーションの状態が変わっているかもしれないからです。 しかし、もしアプリケーションの状態が変わっていないとわかっている時、 アプリケーションの一部についてChange Detectionを実行",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "しない",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ようにAngularに教えられたら すばらしいと思いませんか？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そうです、その通り、それは可能です！ そこには、変更の有無を保証してくれるデータ構造、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Immutables",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Observables",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "があることがわかります。 これらの構造や型を使い、それをAngularに教えれば、 Change Detectionはもっともっと速くなります。 かっこいいですね。でもどうやるんでしょうか？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "可変性を理解する",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 例えばイミュータブルなデータ構造がなぜ、どのように、手助けできるのかを理解するために、 私たちは可変性が意味することを理解しなければなりません。 次のようなコンポーネントがあると仮定しましょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  template: '<v-card [vData]=\"vData\"></v-card>'\n})\nclass VCardApp {\n\n  constructor() {\n    this.vData = {\n      name: 'Christoph Burgdorf',\n      email: 'christoph@thoughtram.io'\n    }\n  }\n\n  changeData() {\n    this.vData.name = 'Pascal Precht';\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "VCardApp",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<v-code>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を子コンポーネントとして使い、それは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vData",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "というInputプロパティを持っています。 私たちは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "VCardApp",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が持っている自身の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vData",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使ってそのコンポーネントにデータを渡しています。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vCard",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は２つのプロパティと、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vData",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の名前を返すメソッド",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "changeData()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を持っています。 ここには何のマジックもありません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "重要な部分は、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "changeData()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vData",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "name",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プロパティを変更することで変化させていることです。 たとえそのプロパティが変わっても、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vData",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の参照は同じままです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "changeData()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を実行するなんらかのイベントが発生したと仮定すると、 Change Detectionが実行されたとき何が起こるでしょうか？ 最初に、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vData.name",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が変更され、それが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<v-card>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に渡ります。 その時",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<v-card>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のChange Detectorは与えられた",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vData",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "がまだ以前と同じかどうかをチェックし、同じになります。 参照は変わっていませんが、しかし、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "name",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プロパティは変わっているので、 AngularはChange Detectionをそのオブジェクトのために実行します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "デフォルトではJavaScriptにおいてオブジェクトは可変(プリミティブを除いて)であるため、 Angularは保守的にならざるを得ず、 イベントが起こると毎回すべてのコンポーネントでChande Detectionを走らせなければなりません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここでイミュータブルなデータ構造の出番です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "不変オブジェクト",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "イミュータブルなオブジェクトは変化しないという保証を私たちに与えてくれます。 それは、もし私たちがイミュータブルなオブジェクトを使い、それを変更したければ、 必ず新しい参照が得られ、もとのオブジェクトは不変であるということを意味します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この擬似コードで見てみましょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "var vData = someAPIForImmutables.create({\n              name: 'Pascal Precht'\n            });\n\nvar vData2 = vData.set('name', 'Christoph Burgdorf');\n\nvData === vData2 // false"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "someAPIForImmutables",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "はイミュータブルなデータ構造を使いたいときに使う任意のAPIです。 しかし、ご覧のとおり、私たちは簡単に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "name",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プロパティを変更することができません。 特定の変更と共に新しいオブジェクトが得られ、新しい参照を持っています。 単純に言えば、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "変化があれば新しい参照を得る",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ということです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "チェックの回数を減らす",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "AngularはInputプロパティに変化がないときにサブツリーのChange Detectionをスキップできます。 私たちはこの「変化」が「新しい参照」を意味することを学びました。 もしイミュータブルなオブジェクトをAngularアプリケーションの中で使えば、 入力が変わっていないとき、 私たちがやるべきはAngularにコンポーネントがChange Detectionをスキップできることを教えることだけです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "<v-card>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を見てそれがどうやって動くのか見てみましょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  template: `\n    <h2>{{vData.name}}</h2>\n    <span>{{vData.email}}</span>\n  `\n})\nclass VCardCmp {\n  @Input() vData;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ご覧のとおり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "VCardCmp",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は自身のInputプロパティだけに依存しています。素晴らしいです。 私たちはAngularに、このようにChange Detectionの戦略を",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "OnPush",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "にセットすることで、 自身のInputに変化がないときは子ツリーのChange Detectionをスキップしていいということを伝えられます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  template: `\n    <h2>{{vData.name}}</h2>\n    <span>{{vData.email}}</span>\n  `,\n  changeDetection: ChangeDetectionStrategy.OnPush\n})\nclass VCardCmp {\n  @Input() vData;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これで終わりです！ 大きなコンポーネントツリーをイメージしてください。 イミュータブルなオブジェクトが使われ、それがAngularに伝わったとき、私たちは サブツリーすべてをスキップできます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/translation-angular-2-change-detection-explained/219cb2f4-78f5-46c2-a47d-9b5655413c3e/cd-tree-8.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Jurgen Van De Moere",
+          "href": "http://twitter.com/jvandemo",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "in-depth article",
+          "href": "http://www.jvandemo.com/how-i-optimized-minesweeper-using-angular-2-and-immutable-js-to-make-it-insanely-fast/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "で 彼がどのようにAngular 2とImmutable.jsを使って驚くほど高速なマインスイーパーを作ったのかを書いています。 ぜひチェックしてください。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Observables",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "先に述べたように、Observablesも変化があったことを保証してくれます。 イミュータブルなオブジェクトと違い、 Observablesは変更があっても新しい参照は与えられません。 代わりに、変更に反応するために購読することができるイベントを発火してくれます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "さて、Observablesを使い、サブツリーのChange Detectionをスキップするために",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "OnPush",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使いたい場合、 オブジェクトの参照は絶対に変わらないのにどうするのでしょうか？ そのようなときに必要なもの、 つまり、コンポーネントツリーの中で特定のイベントをチェックするための経路を有効にする ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "とてもスマートな",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "方法をAngularが持っているということを明らかにします。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "それが意味するものを理解するために、、このコンポーネントを見てみましょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  template: '{{counter}}',\n  changeDetection: ChangeDetectionStrategy.OnPush\n})\nclass CartBadgeCmp {\n\n  @Input() addItemStream:Observable<any>;\n  counter = 0;\n\n  ngOnInit() {\n    this.addItemStream.subscribe(() => {\n      this.counter++; // application state changed\n    })\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ショッピングカートがあるeコマースアプリケーションを作るとしましょう。 ユーザーが商品をショッピングカートに入れるたびに、 小さなカウンターをUI上に出し、 ユーザーがカートの中の商品の数を見られるようにします。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "CartBadgeCmp",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "はまさにそれをやっています。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "counter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と、カートに商品が追加されるたびに発火されるイベントのStreamである、 Inputプロパティの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "addItemStream",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を持っています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "私たちはこの記事ではObservablesがどのように働くのか詳しくは触れません。 もしObservablesについて詳しく知りたいなら、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "taking advantage of Observables in Angular 2",
+          "href": "http://blog.thoughtram.io/angular/2016/01/06/taking-advantage-of-observables-in-angular2.html",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " を読んでください。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、私たちはChange Detectionのストラテジーを",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "OnPush",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "にセットし、 毎回ではなくコンポーネントのInputプロパティが変わったときだけChange Detectionが働くようにします。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "しかし、先述の通り",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "addItemStream",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の参照は変わることはなく、 このコンポーネントのサブツリーのChange Detectionは全く実行されません。 このコンポーネントは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngOnInit",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ライフサイクルフックの中でストリームを購読し、 カウンターを加算しているので、これは問題です。 これはアプリケーションの状態の変化であり、 ビューに反映させたいと思いますよね？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これが私たちの(",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "すべて",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "OnPush",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に設定した)Change Detectorツリーの見え方です。 イベントが起きてもChange Detectionは全く動作しません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/translation-angular-2-change-detection-explained/39d80ab8-39a5-4335-bb2d-eb0ef7aa58c3/cd-tree-10.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "どうすればAngularに変更を知らせることができるでしょうか？ どうすればたとえツリー全体が",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "OnPush",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "にセットされていても、 このコンポーネントはChange Detectionの実行が",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "必要",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "だとAngularに知らせることができるでしょうか？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ご心配なく、Angularはちゃんとカバーしています。 先ほど学んだように、Change Detectionは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "常に",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "上から下に動作します。 そして私たちがやらないといけないのは、 変更が起きたコンポーネントまでのツリーの経路の変化を検知する方法です。 Angularはその経路がわかりませんが、私たちにはわかります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "私たちは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "dependency injection",
+          "href": "http://blog.thoughtram.io/angular/2015/05/18/dependency-injection-in-angular-2.html",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "を通じて、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "markForCheck()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "というAPIを備えたコンポーネントの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ChangeDetectorRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "にアクセスできます。 このメソッドがまさに私たちが求めているものです！ これは次のChange Detectionでチェックされるために、ルートからコンポーネントまでの経路をマークします。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "さあコンポーネントに注入してみましょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Let’s inject it into our component:",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "constructor(private cd: ChangeDetectorRef) {}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そして、チェックされるためにこのコンポーネントからルートまでの経路をAngularに伝えます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "  ngOnInit() {\n    this.addItemStream.subscribe(() => {\n      this.counter++; // application state changed\n      this.cd.markForCheck(); // marks path\n    })\n  }"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Boom,これだけです！ これはObservableのイベントが発火されたあと、Change Detectionが始まる前です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/translation-angular-2-change-detection-explained/3981be02-4ac9-454b-949e-5082b9ffb483/cd-tree-12.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そして、Change Detectionが実行されると、シンプルに上から下へと進んでいきます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/translation-angular-2-change-detection-explained/2e40f6a4-d3e0-4ae4-9ed6-74a7a5c787e0/cd-tree-13.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "クールですよね？一度Change Detectionが走った後は、ツリー全体は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "OnPush",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "状態に戻ります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "もっと詳しく",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "実際にはこの記事ではカバーしきれないたくさんのAPIがありますが、 スライドや発表の録画を見るといいでしょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "リポジトリ",
+          "href": "https://github.com/thoughtram/angular2-change-detection-demos",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "には あなたのローカルマシンで試すためのいくつかのデモがあります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "イミュータブルなデータ構造やObservableがどのようにAngularのアプリケーションを速くできるのかについて もう少し明らかにしました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "謝辞",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この発表を準備するにあたって、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "多大な",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "助けと支援となった ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Jurgen Van De Moere",
+          "href": "http://twitter.com/jvandemo",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "に感謝したい。 彼は私の理解について議論するのに多くの時間を費やし、 このコンテンツに入っている私を助ける良い質問を沢山挙げてくれました。 また、彼はデモがよく動くように確認してくれました。 彼のCSSスキルは素晴らしいです。 Jurgen、そんな支えになるいい人であることにとてもとても感謝します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 2のChange Detectionについての質問にたくさん答えてくれた ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Victor Savkin",
+          "href": "http://twitter.com/victorsavkin",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "と彼が書いた とても参考になる記事に感謝したい。 ありがとうVictor！",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

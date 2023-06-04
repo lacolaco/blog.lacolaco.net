@@ -1,0 +1,955 @@
+{
+  "pageId": "5b8306d1-a3ce-4927-8181-888a10c958eb",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "ng-conf-2017-day-3-note",
+  "properties": {
+    "title": "ng-conf 2017 3日目 Keynoteメモ",
+    "date": "2017-04-07T00:00:00.000Z",
+    "tags": ["tech", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "アメリカ・ソルトレイクシティで4/5から開催中のng-confに参加しています。 3日目のKeynoteの内容を現地からかいつまんでまとめます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Keynote",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "スピーカー",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Brad Green",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Rob Wormald",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "GoogleにおけるAngularについて",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "GoogleはAngularの上に成り立っている",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "200以上のAngularアプリケーションが動いている",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "2017年の目標",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "JavaScript (Closure)からTypeScriptへの自動変換ツールの開発",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Material 1とMaterial 2の共存",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Google Angular Courses",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "GoogleのAngularエンジニアによるトレーニング内容の公開",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "これまでに59人のトレーナー、19のオフィスで3000人以上のGooglerが受講した",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "AngularJSからAngularに更新中のパブリックなアプリケーション",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Cloud Platform (コンソール)",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Google Analytics (管理画面)",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Firebase (コンソール)",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Google Express",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "なぜAngularをオープンソースにするのか",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "開発費の問題",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "エコシステム: ツールやIDEの拡張など",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "トレーニング: たくさんの教材が公開される。Googleでもegghead.ioを使っている",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "雇用: オープンソースにすることでAngularのエンジニアを採用しやすくなる",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "品質: Google外のユースケースで使われることで品質が高まる",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "2017年2月のGoogle",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Angularは使われ始めたが、TypeScriptとAngular CLIは使われていなかった",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "何故か？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Googleの公式採用言語",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "C/C++",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "Java",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "JavaScript (Closure)",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "Python",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "Go",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Googleでは新しい言語の採用プロセスがある",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "約2年ほどかかる",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "ついにTypeScriptが承認された！",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "2017年4月からGoogle社内でTypeScriptが使えるようになった",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "CLIはまだ採用されていない",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Google社内のツール事情",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Bazel + Closure",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Bazel",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "高速、スケーラブル、柔軟、安定、リビルド性",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "http://bazel.build",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angular with Bazel and Closure (",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "ABC",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ")",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "ソースコードはTypeScript",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Bazelでビルドし、Closureで最適化する",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "まずはAngular Coreで実験し、Angular Materialに採用されたら外部のアーリーアダプター向けに展開していく",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Angularプラットフォームについて",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "愛されるアプリケーションを作るためにどうすればいいか",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "モバイルでは初期レンダリングが遅いと離脱される",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "インタラクティブなアプリケーションでありながらモバイルで高速に起動する必要がある",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "@angular/platform-server",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "旧Angular Universal",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "App Shellによりインタラクティブで高速なアプリケーションを作る",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "App ShellはService Workerと相性がよい",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "キャッシュによるオフライン化",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Angular Service Worker",
+                      "annotations": {
+                        "bold": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "でオフラインキャッシュを簡単に実現する",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angular Coreからは特定のWebアプリケーション・サーバー向けにライブラリを出さない",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "単純にNode.jsによってHTMLをレンダリングするAPIだけを提供する",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Expressのengineなどはコミュニティ主導で開発してほしい",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "AMP + PWA",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "AMPに対応したページはGoogle検索で有利な表示をされる",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "PWAと連携させるフローを考案中",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "AMPページを高速に表示し、バックグラウンドでService Workerをインストールする",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "PWAへ誘導することでApp Shellのキャッシュなどが済んだ状態で高速にアプリケーションを起動できる",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "1日目同様に新発表などはほとんどありませんでした。キーワードは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TypeScript",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ABC",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "platform-server",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "でしょうか。 GoogleでTypeScriptが公式に採用されたのは大きなニュースかもしれません。これまで以上にAngularとTypeScriptの関係が親密になりそうな予感がします。 動画はすでに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Youtube",
+          "href": "https://www.youtube.com/watch?v=Nj9_p4qvm5U",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "に公開されているので、もっと細かくチェックしたい方は参照してください。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "それではこれから日本に帰ります。さよならソルトレイクシティ！",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,517 @@
+{
+  "pageId": "9dab9594-a41d-4af6-9f35-36e029edd915",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "migrate-angular-cli-from-1-7-to-6-0",
+  "properties": {
+    "title": "Angular CLI v1.7からv6.0へのマイグレーションについて (for v6.0.0-rc.2)",
+    "date": "2018-04-09T00:00:00.000Z",
+    "tags": ["tech", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular フレームワークの v6.0.0 リリースにあわせ、Angular CLI も v1.7 系から v6.0 へメジャーアップデートをおこなう予定です。 この記事では Angular CLI v1.7 系で作成した開発環境から v6.0 系の開発環境へマイグレーションする方法を解説します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事は安定版リリース前の RC バージョンを使用しています。",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "前提",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次のような開発環境を想定しています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "グローバルに Angular CLI v1.7 系がインストールされている状態",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "ng new",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " が可能な状態",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angular CLI v1.7 系に依存した状態のプロジェクトが存在する状態",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "package.json の",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "@angular/cli",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " が v1.7 系、かつ ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": ".angular-cli.json",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " ファイルが存在する状態",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "移行ステップ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "1. プロジェクトローカルの Angular CLI のバージョンを更新する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "グローバルではなく、プロジェクトローカルの Angular CLI を v6.0 系に更新します。 yarn であれば次のコマンドで更新します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "yarn add --dev @angular/cli@^6.0.0-rc.2"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "diff はこのようになります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/ngcli173migration/commit/b761e55f97ebd1ef1f8fe07cc7e1555c257ef6e9"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この時点ではプロジェクトローカルの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "コマンドがアップデートされただけで、プロジェクトのマイグレーションは完了していません。 次のステップで、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng build",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "などのコマンドが使用可能な状態にプロジェクトをマイグレーションします。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "2. 各種設定ファイルをマイグレーションする",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular CLI v1.7 から v6.0 へのアップデートのうち、最大の変更は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".angular-cli.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ファイルから",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "angular.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ファイルへの移行です。 これまで Angular CLI の各種設定を記述していた",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".angular-cli.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ファイルは、名前だけでなく内部の JSON 構造も互換性のない新しい",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "angular.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に変わります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "とはいえ今までの設定をすべて書き直す必要はなく、Angular CLI v6 には古い形式の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".angular-cli.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "から",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "angular.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ベースのプロジェクトに自動でマイグレーションしてくれる機能があります。 Angular CLI v1.7.3 のプロジェクトをマイグレーションするには、次のようにコマンドを実行します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "ng update @angular/cli --migrate-only --from=1.7.3"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "diff はこのようになります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/ngcli173migration/commit/9251788e5c59bbfa52b45b5b0f92278e8136a64b"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このコマンドを一度実行すれば、以降は Angular CLI v6 による開発をおこなえるようになります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "注意",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "RC.2 時点では、",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "ng update",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "後のパッケージインストールが npm になります。",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "グローバルの",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "packageManager",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "設定はマイグレーションされないため。",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "TL;DR",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "まずプロジェクトローカルの Angular CLI をアップデートする",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "yarn add --dev @angular/cli@^6.0.0-rc.2",
+                      "annotations": {
+                        "code": true
+                      }
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ng update",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "コマンドでプロジェクトを v6 用にマイグレーションする",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "ng update @angular/cli --migrate-only --from=1.7.3",
+                      "annotations": {
+                        "code": true
+                      }
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

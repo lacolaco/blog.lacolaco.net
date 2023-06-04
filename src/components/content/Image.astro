@@ -1,0 +1,19 @@
+---
+import { ImageNode } from '@lib/post';
+
+type Props = ImageNode;
+
+const { url, caption } = Astro.props;
+---
+
+<figure>
+  <img src={url} />
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  figure > figcaption {
+    text-align: center;
+    color: #666;
+  }
+</style>

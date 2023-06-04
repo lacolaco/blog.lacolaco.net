@@ -1,0 +1,629 @@
+{
+  "pageId": "4e8bcf7e-4c2c-4d31-806b-ff592edf4232",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "rethink-template-driven-forms",
+  "properties": {
+    "title": "Angular: テンプレート駆動フォーム再考",
+    "date": "2023-05-07T00:41:00.000Z",
+    "tags": ["Angular", "forms", "tech"],
+    "canonicalUrl": "https://zenn.dev/lacolaco/articles/rethink-template-driven-forms"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular のフォームAPIにはテンプレート駆動フォームとリアクティブフォームの2種類があり、リリース当初からその使い分けは常に議論の種になってきた。Angular v14から導入された Typed Forms が現状はリアクティブフォームだけに適用されることもあり、歴史的にはリアクティブフォームのほうが好まれてきたように思う。だがその評価がなんとなくの惰性によるものになっているような感覚がある。ここでは、Angular v16 を前提にしてあらためてテンプレート駆動フォームを評価してみたい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "リアクティブフォームの利点だと考えられているもの",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "公式ドキュメント",
+          "href": "https://angular.jp/guide/forms-overview#choosing-an-approach",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " では、2つのアプローチを使い分ける理由が次のようにまとめられている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "Reactive forms",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " provide direct, explicit access to the underlying forms object model. Compared to template-driven forms, they are more robust: they're more scalable, reusable, and testable. If forms are a key part of your application, or you're already using reactive patterns for building your application, use reactive forms.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "Template-driven forms",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " rely on directives in the template to create and manipulate the underlying object model. They are useful for adding a simple form to an app, such as an email list signup form. They're easy to add to an app, but they don't scale as well as reactive forms. If you have very basic form requirements and logic that can be managed solely in the template, template-driven forms could be a good fit.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "リアクティブフォームはフォームモデルを明示的に扱うことで、テンプレート駆動と比べて堅牢であり、スケーラブルで、再利用しやすく、テストしやすい。このように書かれている。一方、テンプレート駆動はその名のとおりテンプレートを通じてフォームモデルにアクセスするため、導入はしやすいがスケールしにくいとある。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "果たして、リアクティブフォームがテンプレート駆動と比べて優れているらしい点は、本当にそうなのだろうか。再考してみよう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "フォームのスケーラビリティ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そもそもフォームにおけるスケーラビリティとはどのような性質を指すのか、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "公式ドキュメント",
+          "href": "https://angular.jp/guide/forms-overview#scalability",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ではこう書かれている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "If forms are a central part of your application, scalability is very important. Being able to reuse form models across components is critical.\nReactive forms are more scalable than template-driven forms. They provide direct access to the underlying form API, and use ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "synchronous data flow",
+          "href": "https://angular.jp/guide/forms-overview#data-flow-in-reactive-forms",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " between the view and the data model, which makes creating large-scale forms easier. Reactive forms require less setup for testing, and testing does not require deep understanding of change detection to properly test form updates and validation.\nTemplate-driven forms focus on simple scenarios and are not as reusable. They abstract away the underlying form API, and use ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "asynchronous data flow",
+          "href": "https://angular.jp/guide/forms-overview#data-flow-in-template-driven-forms",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " The abstraction of template-driven forms also affects testing. Tests are deeply reliant on manual change detection execution to run properly, and require more setup.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "リアクティブフォームはテンプレートから独立したフォームモデルを TypeScript コードで直接扱うため、特定のコンポーネントに依存しない再利用性の高いモジュールに切り出すことが簡単である。これが第一のスケーラビリティであるようだ。つまり、アプリケーションが大きくなり、同じようなフォームを構築する場面が増えた時にもフォームに関する部分を再利用できるというDRYの観点である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ただし、ここで述べられているスケーラビリティはそれだけではない。もうひとつの観点として、同期的なデータフローであることが大規模なフォームを構築するのに役立つと書かれている。これはどういうことか。フォームモデルの状態を変化するためにテンプレートの変更検知を介さないことで、フォームの状態がいつどのように変更されるのかを管理しやすいということだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "加えて、テストの観点についてもリアクティブフォームの優位性が書かれている。リアクティブフォームはテンプレート駆動と比べてテストのセットアップが少なく変更検知に関する深い理解が求められない、ということらしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "だが、実際のところこれらの特徴はリアクティブフォームだけのものなのか、仮にそうだとしても、利点となりうるような特徴なのだろうか？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "フォームの再利用性",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "リアクティブフォームはテンプレートから独立してフォームモデルを構築するといっても、アプリケーションのUIと組み合わせるためには結局 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "[formGroup]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "[formControl]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " といったディレクティブで DOM 要素と接続しなければならない。また、フォームグループやフォーム配列などの構造化されたフォームは、その構造を DOM 構造と対応付けることになる。つまり、テンプレート上でフォームモデルを組み立てないというだけで、動作する基盤は当然ながらDOMを構築するテンプレート上にある。この点で、フォームモデルの再利用性という観点には疑問符が付く。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "最小単位の入力コントロールを再利用する手段は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ControlValueAccessor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " で確保されている。これはリアクティブフォームもテンプレート駆動フォームも変わらない。そうではなく ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "FormGroup",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "FormArray",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " といった構造を伴うフォームモデルを再利用するとき、それがテンプレートと切り離されることにどれだけ利点があるだろうか？フォームモデルだけを切り出したところで、同じような構造のテンプレートを再利用する場所ごとに書くことになる。DRYを重視するというのであれば、テンプレートを含めたコンポーネントの単位で再利用するのが筋ではないだろうか？この点で、フォームモデルを再利用しやすいという特徴は、そもそもの効用に疑う余地がある。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "データフロー",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "リアクティブフォームでは、明示的な ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "setValue()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "patchValue()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " によって即時に状態をまとめて変更できるが、テンプレート駆動フォームではテンプレート評価のタイミングを待たなくてはならない。これは確かに差異ではあるが、このためにリアクティブフォームを選択するほどの特徴にはならないように思う。特に、v16からはSignalsの導入によってリアクティブな値を表現するプリミティブな方法が与えられた。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngModel",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と合わせる形で Signals を使えば、これまでは同期的なクラスフィールドでしか使えなかったユースケースで、リアクティビティを確保できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "v16.0 時点ではまだ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "[(ngModel)]=\"signal\"",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という記述はできないが、Signals の RFC で提案されていたように、これも時間の問題である。現状でも getter と setter を分離すれば問題なく組み込むことができる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: 'my-app',\n  standalone: true,\n  imports: [CommonModule, FormsModule],\n  template: `\n    <h1>Signals with template-driven forms</h1>\n    \n    <form #form=\"ngForm\" (ngSubmit)=\"onSubmit()\">\n      <input name=\"message\" \n        [ngModel]=\"message()\" \n        (ngModelChange)=\"message.set($event)\" >\n\n      <button [disabled]=\"!form.valid\">submit</button>\n    </form>\n  `,\n})\nexport class App {\n  readonly message = signal('Hello');\n\n  constructor() {\n    effect(() => {\n      console.log(`message changed`, this.message());\n    });\n  }\n\n  onSubmit() {\n    console.log(this.message());\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-tck8xj?ctl=1&embed=1&file=src/main.ts"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "テスト容易性",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この観点は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TestBed",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使ったテストの変更検知に依存するテスト全てに言えるが、Signals を前提にしたリアクティビティを確保されれば課題は一気に解決する。すぐには解決しないかもしれないが、時間の問題だろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、コンポーネントをクラスインスタンスではなくDOMでテストすることを前提にすれば、そのDOMに紐付いているフォームモデルがどのように構築されているかは知らなくていい知識のはずである。テンプレート駆動であってもリアクティブフォームであっても関係なく、フォームが期待通りに振る舞うようなテストこそが必要ではないだろうか？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "バリデーターの定義",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "カスタムバリデーターの定義が関数で記述できるというのはリアクティブフォームの特徴として語られることが多い。実際に、テンプレート駆動フォームにバリデーターを適用するにはバリデーターもテンプレート上で呼び出せるようディレクティブである必要はある。だが、教科書どおりに1バリデーターにつき1ディレクティブを作らないといけない理由はどこにもない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次の例ではリアクティブフォームと同じく関数形式で作成したカスタムバリデーターを、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "WithValidators",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というディレクティブを通じて適用している。カスタムバリデーターを関数で書けさえすればいいのなら、この方法でもなんら変わらないはずだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-zr2659?ctl=1&embed=1&file=src/main.ts"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "テンプレート駆動フォームで何が困るのか？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このように見ると、リアクティブフォームでしか得られない大きな利点というのは Signals の登場によってなくなってきているように感じられる。とはいえ、ゼロではない。次の点はまだ確かにリアクティブフォームでしか得られない恩恵があるだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Typed Forms: テンプレート駆動フォームにはまだ厳密な型推論の恩恵が受けられず、テンプレート上のインターフェースには ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "any",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " が残る。",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "特に ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "nonNullable",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " の恩恵は大きい。",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "だが、Typed Forms のRFC での議論を見るに、これも時間の問題である。",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Observable パイプラインとの接続: RxJS による Observable パイプラインによってアプリケーションのデータフローを構築する場合は、 リアクティブフォームの ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "valueChanges",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " といったインターフェースに利点がある。",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "とはいえ Signals には RxJS との相互運用 API もあるため、大した違いではなさそうだ。",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このような状況でリアクティブフォームを使うなら、これまでとは違う惰性ではない理由付けが必要だ。軽い用途にはテンプレート駆動、プロダクション用途ならリアクティブフォームという安直な評価はもはやできそうにない。それぞれのアプリケーションにとって、Signalsを得てもなおリアクティブフォームを選択することで何が得られるのかをもう一度考えるべきだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}

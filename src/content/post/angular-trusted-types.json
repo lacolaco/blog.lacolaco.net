@@ -1,0 +1,704 @@
+{
+  "pageId": "a78e0e2c-f3cc-478d-ac9b-7ae6825d66c6",
+  "lastEditedAt": "2023-05-21T06:10:00.000Z",
+  "slug": "angular-trusted-types",
+  "properties": {
+    "title": "Angular: Trusted Typesサポートの概要",
+    "date": "2020-11-03T00:00:00.000Z",
+    "tags": ["tech", "Angular", "Security", "Web"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "DOM の新しいセキュリティ機構として ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Trusted Types",
+          "href": "https://web.dev/trusted-types",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " という仕様が提案されている。 現在開発中の Angular v11 は Trusted Types の仕様に準拠し、Trusted Types をサポートしたブラウザではその機能が利用できるようになる予定だ。 この記事では Angular と Trusted Types がどのように関わるのかを解説する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Trusted Types とは",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Trusted Types そのものが初見であれば、Jxck さんのブログ記事を先に読むことをおすすめする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "安全な文字列であると型で検証する Trusted Types について | blog.jxck.io",
+          "href": "https://blog.jxck.io/entries/2019-01-27/trusted-types.html",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "簡潔に言えば、文字列ベースでの DOM 操作が可能な API について、その文字列が信頼できるものであることをマークして、ブラウザに対してその DOM 操作が安全である（と開発者は信じている）ことを伝えるものだ。 具体的な API で言えば、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "element.innerHTML",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "script.src",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " などが挙げられる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "CSP",
+          "href": "https://developer.mozilla.org/ja/docs/Web/HTTP/CSP",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "と併用することで、信頼できることがマークされていない文字列はブラウザがセキュリティポリシー違反としてエラーを報告できるようになる。 検証目的であれば",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "index.html",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<head>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "タグ内に次の HTML を追加すれば簡単に Trusted Types の動作を確認できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<meta\n  http-equiv=\"Content-Security-Policy\"\n  content=\"require-trusted-types-for 'script';\"\n/>\n<script>\n  window.addEventListener(\n    'securitypolicyviolation',\n    console.error.bind(console)\n  );\n</script>"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular と Trusted Types",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "実は以前にも Angular と Trusted Types について記事を書いている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "DOM の XSS を防ぐ Trusted Types と Angular のセキュリティ機構",
+          "href": "/2019/05/trusted-types-and-angular-security/",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事では Angular がビルトインで持つ独自のセキュリティ機構と、Trusted Types がどのようにかかわる可能性があるかを少し述べた。 まず Angular の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "DomSanitizer",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " についての基本的な理解が必要となるため、理解が不安であればまずはこちらを読んでほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "DomSanitizer と Trusted Types",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "DomSanitizer",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は、任意の文字列が信頼できる HTML、スクリプト、CSS などであることを、開発者が Angular に伝えるための API だ。 たとえば ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "innerHTML",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " への文字列の挿入で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<iframe>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " タグを残してほしければ、次のように文字列が安全な HTML であるとマークする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { Component } from '@angular/core';\nimport { DomSanitizer } from '@angular/platform-browser';\n\nconst unsafeHTML = `<iframe src=\"https://example.com\" width=\"100%\" height=\"500\"></iframe>`;\n\n@Component({\n  selector: 'app-root',\n  template: ` <div [innerHTML]=\"snippet\"></div> `,\n})\nexport class AppComponent {\n  constructor(private sanitizer: DomSanitizer) {}\n\n  snippet = this.sanitizer.bypassSecurityTrustHtml(unsafeHTML);\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "DomSanitizer.bypassSecurityTrustHtml",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は引数に与えた文字列を ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SafeHtml",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型としてラップし、サニタイズ処理をバイパスする。 もし",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "innerHTML",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " にバインディングされた ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "htmlSnippet",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が単なる string であれば、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<script>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "タグや",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<iframe>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "タグのような XSS の危険性のあるタグはサニタイザーによって除去される。 一方、すでに安全であるとマークされた ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SafeHtml",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "型であれば、Angular はその値を信じてサニタイズせずにそのまま挿入する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "当然だが、バイパスする場合 HTML の安全性、XSS の回避は完全に開発者の責任となることは留意しなくてはならない。 特に user-generated な文字列を挿入するケースでは、独自のサニタイズ処理を行うことは必須だろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "callout",
+      "text": [
+        {
+          "type": "text",
+          "text": "<script>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "タグを含むHTMLをバイパスして ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "innerHTML",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に挿入されても何も動作しないように見えるが、これはサニタイズされたのではなく ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<script>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " タグの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "仕様",
+          "href": "https://www.w3.org/TR/2014/REC-html5-20141028/scripting-1.html#the-script-element",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "である。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<script>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " タグのノード自体は作成されているが、実行はされない。動的な ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<script>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " タグの挿入は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "document.createElement",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " などのAPIを使おう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "innerHTML",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " へのテンプレートバインディングから実際に DOM に挿入されるまでの流れを簡単に模式化すると次のようになる。 処理の流れはバインディングされた HTML が string か ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SafeHtml",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " かでサニタイズの有無が変わるが、 もし CSP で Trusted Types が要求されていれば、どちらにしてもブラウザからすれば信頼できない値としてエラーとなる。 つまり、これまで Angular アプリケーションでは Trusted Types を満足に利用することは難しかった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-trusted-types/8977459d-5dd8-496c-bb71-63d44f23f93a/2020-11-03T11-26-13.png",
+      "caption": "innerHTML binding and sanitization"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "“angular” Trusted Types ポリシー",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular に新しく実装される Trusted Types のサポートでは、上記のようなケースが CSP エラーとならないようにする。 Angular 側の課題はセキュリティ強度やサニタイズの中身ではなく、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Angular 側ですでに信頼済みであることをブラウザに伝えられていない",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ということであるため、 基本的なサニタイズの処理にはほとんど手は加わらない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "最終的な DOM 操作の前に、Angular は対象の文字列を Trusted HTML に変換するようになるが、このとき使用されるポリシーは、サニタイズがバイパスされているかどうかで変わる。 バイパスされず Angular が組み込みのサニタイザーを通した安全な文字列は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "angular",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ポリシーで Trusted HTML に変換される。 一方、Angular によるサニタイズをバイパスした場合は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "angular#unsafe-bypass",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ポリシーで変換される。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-trusted-types/dc65b9b4-1af8-47f1-a179-0516bad48eec/2020-11-03T11-43-43.png",
+      "caption": "innerHTML binding and sanitization with trusted types"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "現在の実装では名前以外にはポリシーの中身に違いはない。 これは Angular 標準のサニタイザーを通した操作とそうでない操作が依存するポリシーを分離し、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "angular",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ポリシーは Angular によって真に信頼されていることをソースコード上で明確にしているだけだ。 将来的には開発者が自分で Trusted Types ポリシーを設定できるカスタムサニタイザーを可能にする予定があり、そのための布石でもあるようだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "つまり、今のところは開発者が Angular の Trusted Types サポートに関して何かを行う必要はないし、逆に何か介入することも難しい。 いままで存在した Angular 内部のセキュリティ機構がブラウザとも連携するようになったというだけの話である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "v11.0 の RC バージョンが開始してリリースが近づいてきたが、Trusted Types について理解しておきたいのは以下の点だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angular のテンプレートを介した DOM 操作が Trusted Types の仕様に準拠するようになる",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "したがって、Angular のテンプレートバインディングを介した DOM 操作で Trusted Types 違反が起きなくなる",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "HTML サニタイズの振る舞いや ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "DomSanitizer",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " の使い方はこれまでと変わらない",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ユーザー独自の Trusted Types ポリシーと連携する手段はまだ無い",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "これまで同様、Angular が保護できるのはテンプレートを介したセキュリティだけであり、スクリプトによる DOM 操作はスコープ外である",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular の Trusted Types サポートの動きを追跡したければ、GitHub のイシューを購読するとよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "[tracking] Support Trusted Types in Angular by bjarkler · Pull Request #39222 · angular/angular",
+          "href": "https://github.com/angular/angular/pull/39222",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

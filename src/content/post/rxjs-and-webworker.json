@@ -1,0 +1,851 @@
+{
+  "pageId": "9e5898a6-59e0-4315-9846-fe94baa9a101",
+  "lastEditedAt": "2023-05-21T01:39:00.000Z",
+  "slug": "rxjs-and-webworker",
+  "properties": {
+    "title": "RxJSによるWeb Workerの抽象化 2つのアプローチ",
+    "date": "2019-03-26T00:00:00.000Z",
+    "tags": ["tech", "rxjs", "Web Worker"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事では、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RxJS",
+          "href": "https://rxjs.dev/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " を使った Web Worker の抽象化を試みます。 なお、記事中で Web Worker あるいは Worker と言ったときに指すのは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "new Worker()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " で作成する Dedicated Worker のみで、Shared Worker や Service Worker などは対象外です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "なぜ Web Worker？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Web Worker を使うのに 2 つの目的があります。ひとつは off-the-main-thread とよく言われる、UI メインスレッドとは別の Worker スレッドで並行処理をおこなうことによるパフォーマンス改善です。 そしてもうひとつは、仕様がドラフト段階にある ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ES Modules の Worker 対応",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を利用した ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Module Worker",
+          "annotations": {
+            "italic": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " によるコード分割です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://html.spec.whatwg.org/multipage/workers.html#module-worker-example"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ES Modules の Worker 対応は、現在 Chromium ではフラグ付きでサポートされています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://www.chromestatus.com/feature/5761300827209728"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Module Worker では次のようなコードで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type: 'module'",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を指定すると、コンストラクタに指定したパスを ES Module として読み込めます。 さらに Worker スクリプト内でも ES Module のコンテキストで他のモジュールを import/export 文を使えるようになります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "filename": "",
+      "text": "const worker = new Worker(\"./worker.mjs\", { type: \"module\" });"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もちろん Chrome ですらまだ普通には使えない機能なので、今 Module Worker を使うためには小細工が必要です。 webpack を使っている場合は、Google の Chrome チームが開発している WorkerPlugin を使うのが便利です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/GoogleChromeLabs/worker-plugin"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "WorkerPlugin は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type: 'module'",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " オプションで Module Worker を作成しているコードを発見すると、 呼び出されているファイルを webpack の Code Splitting 機能で別バンドルに分割しながら、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type: 'module'",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " オプションを除去してくれます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://webpack.js.org/guides/code-splitting"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "つまり、このプラグインさえ入れておけば、ES Module ベースで書かれたファイルを Module Worker として呼び出し、webpack のビルド後には Worker ごとにバンドルが自動で分割されている、という状態になります。 多くの場合、Worker で実行したい処理というのはページの初期化時に必要なものではないでしょう。 たいていはユーザーインタラクションや何かのイベントを受けて実行される非同期的なジョブです。 そのような処理は遅延読み込みと Worker の両方と相性がよいので、Module Worker はページの初期読み込みに必要なバンドルサイズを少なくしながらメインスレッド の負荷も下げられるまさに一石二鳥です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "RxJS による抽象化",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Worker は postMessage/ommessage によって他のスレッドとコミュニケーションします。 このイベント駆動の仕組みは、RxJS の Subject モデルとよく似ています。 Worker そのものでは拡張性に乏しいですが、Subject で抽象化することで RxJS のオペレーターを使ったデータ加工や、RxJS と連携できる他の JavaScript ライブラリなどとのコミュニケーションも容易になります。 そして RxJS は元来が非同期処理を扱うためのものですから、そのイベントの由来が同じスレッドか Worker スレッドかは気にせず同じ非同期の枠で考えられます。 このことからも、Worker による別スレッドでの処理とそのイベント購読は RxJS でうまく抽象化できるのではないかと考えています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20190326/20190326141608.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "アプローチ 1. Worker as a Subject",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まずひとつめのアプローチとして、Worker そのものが Subject のインターフェースを備えるというアプローチを試みます。 これは Worker スレッドから送られてくるイベントをメインスレッドで購読する形です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20190326/20190326142344.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次のコードは、Worker を隠蔽する ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "WorkerSubject",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の実装例です。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "WorkerSubject",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "next",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " メソッドで渡されたデータを Worker に postMessage し、 Worker の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "message",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " / ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "error",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " イベントを内部の子 Subject で購読します。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "WorkerSubject",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を購読する Subscriber は 内部の子 Subject を間接的に購読することになります。 これは実装の一例であって、もっと効率的な実装はあると思います。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "export class WorkerSubject<T> extends Subject<T> {\n  private inner = new ReplaySubject();\n  private sub = new Subscription();\n\n  constructor(public worker: Worker) {\n    super();\n    this.sub.add(\n      fromEvent<MessageEvent>(worker, \"message\").subscribe(ev =>\n        this.inner.next(ev.data)\n      )\n    );\n    this.sub.add(\n      fromEvent<ErrorEvent>(worker, \"error\").subscribe(ev =>\n        this.inner.error(ev.error)\n      )\n    );\n    this._subscribe = this.inner._subscribe.bind(this.inner);\n  }\n\n  next(value: T) {\n    this.worker.postMessage(value);\n  }\n\n  complete() {\n    this.sub.unsubscribe();\n    this.inner.complete();\n    super.complete();\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "具体的な例として、Markdown 文字列を HTML 文字列に変換する処理を Worker スレッドで実行してみます。 まずは次のように ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "./compile-markdown.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を作成します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Subject に隠蔽するためには、入力に対して出力を返す ping-pong 型の Worker であると好都合です（必ずしもそうでなくてもよいですが）。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "onmessage",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で受け取った文字列を変換し、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "postMessage",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " でレスポンスのイベントを発火しています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import * as marked from \"marked\";\n\nfunction compileMarkdown(markdownString: string) {\n  return new Promise<string>((resolve, reject) => {\n    marked(markdownString, {}, (err, result) => {\n      if (err) {\n        reject(err);\n        return;\n      }\n      return resolve(result);\n    });\n  });\n}\n\n// [tsconfig] lib: \"dom\" and \"webworker\" are exclutive.\nconst _self: Worker = self as any;\n\n_self.onmessage = ev => {\n  compileMarkdown(ev.data)\n    .then(result => {\n      _self.postMessage(result);\n    })\n    .catch(err => {\n      throw err;\n    });\n};"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "const _self: Worker = self as any;",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は TypeScript のためのハックです。同じ tsconfig で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "dom",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "webworker",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の両方をターゲットとすることができない問題があるため、手動で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "self",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の型をグローバルの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Window",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型ではなく ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Worker",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型に補正しています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "あとは Module Worker を作って、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "WorkerSubject",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " でラップすると使えるようになります。 Angular のコンポーネントで使うと、次のようなコードになります。 結果としてこのコンポーネントのテンプレートには ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "## foo",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<h2>foo</h2>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に変換された HTML 文字列が表示されます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: \"app-root\",\n  template: `\n    <div>{{ compiled$ | async }}</div>\n  `\n})\nexport class AppComponent implements OnInit {\n  compiled$: Subject<string>;\n\n  constructor() {\n    // Module Workerの作成とWorkerSubjectでのラップ\n    this.compiled$ = new WorkerSubject(\n      new Worker(\"./compile-markdown\", { type: \"module\" })\n    );\n  }\n\n  ngOnInit() {\n    // WorkerSubjectに新しいデータを送る\n    this.compiled$.next(\"## foo\");\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このアプローチのメリットは次のものが考えられます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Worker の実装に制約がなく、既存の Worker はほとんど適用可能である",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Module Worker がコード分割する境界としてわかりやすく、ES Module をそのまま Worker 化できるのが簡単",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "もともと next/subscribe で Write と Read が非同期的であることから、その内部が Worker を経由していても利用側に影響しない",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "一方で、Worker 側の実装では postMessage/onmessage を隠蔽できていないという課題もまだあります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "アプローチ 2. Worker as an Operator",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もうひとつのアプローチは、Observable に適用するオペレーターの処理を Worker スレッドに委譲するものです。 Observable の実体や購読者はメインスレッドにあるまま、データ処理の一部分だけの並行性を高められます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20190326/20190326150102.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このアプローチの実装は Worker を関数のように扱うため、Module Worker よりも greenlet によるインライン Worker 化のほうが向いています。 インライン Worker とは、 Data URI を使って作成される Worker のことを指しています。 greenlet は、Promise を返す非同期関数を実行時にインライン Worker に変換して Worker スレッドで実行するライブラリです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/developit/greenlet"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "RxJS のオペレーターで、関数を渡して処理をおこなう代表的なものは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "map",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 系のものでしょう。 どのオペレーターにも適用できますが、ここでは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "map",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " オペレーターを Worker 化した ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "mapOnWorker",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " オペレーターを実装してみます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "RxJS のオペレーターの実体は Observable を受け取って Observable を返す関数です。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "mapOnWorker",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は次のように簡単に実装できます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import gleenlet from \"greenlet\";\nimport { from, Observable } from \"rxjs\";\nimport { concatMap } from \"rxjs/operators\";\n\nexport function mapOnWorker<T, U>(fn: (arg: T) => Promise<U>) {\n  // 関数をインラインWorker化する\n  const workerized = gleenlet(fn);\n  return (source: Observable<T>): Observable<U> => {\n    // 1. `workerized`関数を呼び出す\n    // 2. 戻り値のPromiseを `from` 関数でObservableに変換する\n    // 3. `concatMap` オペレーターで元のObservableと結合する\n    return source.pipe(concatMap(v => from(workerized(v))));\n  };\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "map",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " オペレーターと同じように順序を守るために ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "concatMap",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使いましたが、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "mergeMap",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "switchMap",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のようなオペレーターを使うものも簡単に作れます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "export const mapOnWorker = concatMapOnWorker;\n\nexport function concatMapOnWorker<T, U>(fn: (arg: T) => Promise<U>) {\n  const workerized = gleenlet(fn);\n  return (source: Observable<T>): Observable<U> => {\n    return source.pipe(concatMap(v => from(workerized(v))));\n  };\n}\n\nexport function switchMapOnWorker<T, U>(fn: (arg: T) => Promise<U>) {\n  const workerized = gleenlet(fn);\n  return (source: Observable<T>): Observable<U> => {\n    return source.pipe(switchMap(v => from(workerized(v))));\n  };\n}\n\nexport function exhaustMapOnWorker<T, U>(fn: (arg: T) => Promise<U>) {\n  const workerized = gleenlet(fn);\n  return (source: Observable<T>): Observable<U> => {\n    return source.pipe(exhaustMap(v => from(workerized(v))));\n  };\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Worker への関心はオペレーターの内部に完全に閉じているので、オペレーターの利用側は他のオペレーターと同じようにただ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "pipe",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " メソッドに渡すだけです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { interval, Observable } from \"rxjs\";\nimport { mapOnWorker } from \"../lib/mapOnWorker\";\n\n@Component({\n  selector: \"app-root\",\n  template: `\n    <div>{{ calculated$ | async }}</div>\n  `\n})\nexport class AppComponent implements OnInit {\n  calculated$: Observable<any>;\n\n  constructor() {\n    // 1msごとに発火するObservable\n    this.calculated$ = interval(1).pipe(\n      // Workerで計算処理を実行する\n      mapOnWorker(async i => Math.sqrt(i))\n    );\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このアプローチのメリットは、オペレーター利用側にまったく関心を漏らさずに CPU 負荷の大きいオペレーター処理を Worker スレッドに逃がせるところです。 上記の例では非同期化するまでもない処理ですが、文字列の全文検索だったりパターンマッチだったり、メインスレッドをブロックしうる計算処理が Observable のオペレーターにあるときには有効です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "デメリットはオペレーターの呼び出しのたびにかかるインライン Worker とのコミュニケーションのコストです。 Worker スレッドで実行する処理があまり時間のかからないものであれば、オーバーヘッドが相対的に高く付くこともあるかもしれません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事では Web Worker を意識せずに Web Worker の恩恵を受けられるように RxJS を使って抽象化するアプローチを紹介しました。 Promise を使ってクラスや関数を Worker 化するアプローチは Google Chrome チームの Comlink や Cloony がとてもクールです。 しかし複数回発行するイベントを扱うにはどうしても Observable のようなモデルが必要だと思います。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/GoogleChromeLabs/comlink"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/GoogleChromeLabs/clooney"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "サンプルコードは GitHub 上で公開しています。 コード例はどれも完璧である保証はなく、もっと効率的な実装があるかもしれませんので、ご利用は自由ですが自己責任でよろしくおねがいします。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/rxjs-worker-sandbox"
+    }
+  ]
+}

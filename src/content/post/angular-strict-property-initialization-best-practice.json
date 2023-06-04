@@ -1,0 +1,763 @@
+{
+  "pageId": "f798bd04-a39e-46d2-a75a-6266c2ee468d",
+  "lastEditedAt": "2023-05-21T00:17:00.000Z",
+  "slug": "angular-strict-property-initialization-best-practice",
+  "properties": {
+    "title": "AngularにおけるstrictPropertyInitializationのベストプラクティス",
+    "date": "2018-06-27T00:00:00.000Z",
+    "tags": ["tech", "Angular", "TypeScript"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular コアチームの Stephen Fluin 氏が、こんなブログ記事をあげている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://fluin.io/blog/property-has-no-initializer-and-is-not-definitely-assigned"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "TypeScript 2.7 から導入された、クラスプロパティの初期化をチェックする",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "strictPropertyInitialization",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "オプションの話だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "tsconfig の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "strictPropertyInitialization",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " オプションを有効にすると、undefined を許容していないプロパティがプロパティ宣言時あるいはコンストラクタで初期化されていないときにコンパイルエラーになる。 これを",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "strictNullChecks",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "オプションと併用することで、明示的に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "T?",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "あるいは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "T | undefined",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "という宣言をしない限りかならず初期化を要求される。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "たとえば次のようなコードがエラーになる。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "name",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プロパティは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "string",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "型なので",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "undefined",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を許容せず、初期化漏れのコンパイルエラーになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "class Person {\n  name: string; // Property 'name' has no initializer and is not definitely assigned in the constructor.\n\n  constructor() {}\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この設定は安全な TypeScript を書くうえでかなり便利だが、Angular においては少し注意が必要である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular で strictPropertyInitialization を使う上で問題になるのは、クラスプロパティのうち Angular のデコレーターによって遅延して初期化されるものだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "たとえば、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ViewChild",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "や",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ContentChildren",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "などは、クラスの初期化時ではなくコンポーネントのビューツリーの解決時に初期化されるので、strictPropertyInitialization がうまく噛み合わなくなる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そのため、ビュー解決後は値を持っていることはほぼ確実だが、それまでは undefined になるので、プロパティを",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "?",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "としてオプショナルにするか、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "| undefined",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "として",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "undefined",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を許容することになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Stephen のベストプラクティス",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular コアチームの Stephen は、TypeScript にしたがい、ビュー解決を待つプロパティは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "?",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "でオプショナルにするのを推奨している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "理由は書かれていないが、推測するとコンポーネントのクラス実装とテンプレートは文字列あるいは別ファイルに存在した疎結合の関係であり、開発者の頭の中では確実に存在するとわかっていても、システム上は実行するまで",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ViewChild",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で取得しようとしている子のビューが存在することは不定である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次のように、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "child",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は基本的にオプショナルであり、存在が確認できるときだけ処理をするのがベストである。なぜなら ngIf によるスイッチングなど、コンポーネントの生存中に子ビューの参照が消えることは多々あるからだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "class SomeComponent {\n  @ViewChild() child?: SomeChildComponent;\n\n  ngAfterViewInit() {\n    if (this.child != null) {\n      // ...\n    }\n  }\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Input プロパティについてのプラクティス",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular で初期化が問題となるプロパティデコレーターのもうひとつは、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@Input",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "デコレーターだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "tweet",
+      "url": "https://twitter.com/laco2net/status/1011734955565576192"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "現実問題として、Input にはオプショナルなものと必須なものがある。常に特定の Input が与えられることを前提として記述されるコンポーネントだ。たとえば次のような例が考えられる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: \"user-card\"\n})\nclass UserCardComponent {\n  @Input() user: User;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このコンポーネントで、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "user",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "をオプショナルにするのは意味論的に避けたいし、契約としてそういったコンポーネントの利用は禁止したい。そのため",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "user",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の型は Non-Nullable な",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "User",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "型である。 しかし、これをこのまま放置すると、strictPropertyInitialization オプションで初期化していないとエラーになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この問題について尋ねると、別の Angular コアチームメンバーである Rado Kirov 氏からアドバイスをもらえた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "tweet",
+      "url": "https://twitter.com/radokirov/status/1011794901845962752"
+    },
+    {
+      "type": "tweet",
+      "url": "https://twitter.com/radokirov/status/1011800376289288193"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "少し乱暴ではあるが、契約として必ず値が渡されることを求めるプロパティについては、Non-null アサーションオペレータ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "!",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使ってプロパティが undefined じゃないことを明示的に示せばいいというものだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次のようなコードになる。プロパティの宣言時には必ず初期化されていることを明示し、コンポーネントの初期化後にはそれを確認する。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "?",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使ったものと違い、プロパティの型をオプショナルにしていないので、プロパティを使用するたびに if 文で型ガードを作らなくてもよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "親からの値が必須である Input プロパティについては、実行時アサーションとセットにした Non-null アサーションオペレータで解決するのが、現状のベストプラクティスになりそうだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: \"user-card\"\n})\nclass UserCardComponent {\n  @Input() user!: User;\n\n  ngOnInit() {\n    if (this.user == null) {\n      throw new Error(\"[user] is required\");\n    }\n\n    this.someFunc(this.user); // no need `if` type guard\n  }\n\n  someFunc(user: User) {}\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "将来的には codelyzer や language-service でこのへんをチェックして、undefined を許容していない Input への値渡しがテンプレート中で行われていないことを検知してもらいたい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Observable の初期化",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Store との接続や、リアルタイム DB との接続など、コンポーネントが Observable を購読する必要があるときは、コンストラクタで Observable の初期化をおこなうのがよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "よくある Redux 的な状態管理をしているアプリケーションだと、このようにコンポーネントとストアを接続する。 そしてコンポーネント内では",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "subscribe",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "せず、テンプレート内で",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "async",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "パイプを使って非同期ビューを構築する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "class UserListComponent {\n  userList$: Observable<User[]>;\n\n  constructor(store: Store) {\n    this.userList$ = this.store.select(state => state.userList);\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "コンポーネント内で",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "subscribe",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "する必要がある場合は、Observable の初期化だけをコンストラクタで行い、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "subscribe",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の開始は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngOnInit",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "以降に開始すべきである。 コンストラクタで",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "subscribe",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "してしまうと、コンポーネントの初期化より先に値の解決が始まってしまい、変更検知のタイミング制御が困難なり、デバッグしにくくなる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "@ViewChild",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "や",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "@ContentChild",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "はオプショナルプロパティとして扱うべし",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "必ず親から値を渡されないと困る",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "@Input",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "は、実行時アサーションとセットで Non-null アサーションオペレータを使うべし",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Observable のプロパティ初期化はコンストラクタで行い、",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "subscribe",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "は",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "async",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "パイプあるいは",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "ngOnInit",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "以降に Angular のライフサイクルにあわせて開始するべし",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

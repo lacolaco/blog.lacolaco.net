@@ -1,0 +1,405 @@
+{
+  "pageId": "2d15afb8-8527-4cc4-8b69-30a395588112",
+  "lastEditedAt": "2023-05-11T00:28:00.000Z",
+  "slug": "webpack-esm-import-assertions",
+  "properties": {
+    "title": "webpack と ES Module Import Assertions についての調査",
+    "date": "2022-03-09T00:18:00.000Z",
+    "tags": ["tech", "webpack", "ESModule", "Import Assertions"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ES Moduleの Import Assertions が各環境で使えるようになるのも遠くない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://v8.dev/features/import-assertions"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://sosukesuzuki.dev/posts/import-assertions/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "しかし現実のユースケースではまだまだモジュールバンドラーを使ってデプロイ前にモジュール解決を済ませることが多いだろうから、Import Assertionsを直接ブラウザ上で使用することは少ないだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "というわけでソースコードで Import Assertionsを使ったときに、webpack によるモジュール解決がどのように振る舞うかを調べてみた。なぜ調べる必要があったかというと、ドキュメンテーションが（そこそこ探した限りでは）見つからず、ブログなどのアンオフィシャルなものすら見当たらなかったからだ。だが、GitHubの履歴を見ると間違いなくImport Assertionsに対応する実装は加えられていたので、実態がどうなっているかは実際に動かして試すこととなった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/webpack/webpack/pull/12278"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "アサーションなし（ファイル拡張子による判別）",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "data.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ファイルを拡張子付きのパスでインポートする。webpackはJSONのインポートをビルトインでサポートしており、これはそのまま自動的にJSONとしてパースされる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/webpack-esm-import-assertions/bdce5bc6-e660-44c0-9d71-d070561965ff/Untitled.png",
+      "caption": "data.jsonのインポート（アサーションなし）"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "インポートのパスで拡張子を省略していても、デフォルトのwebpack設定が ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の省略を許可しているので自動的に探索され、ファイルの拡張子からJSONであることを判別する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/webpack-esm-import-assertions/43d6e83e-451d-43a2-bceb-d8bbcac815a5/Untitled.png",
+      "caption": "data.jsonのインポート（アサーションなし、拡張子省略）"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "つまり、ファイルの拡張子を削除するとwebpackはそのファイルがJSONであることがわからなくなり、モジュールのパースに失敗する。次の例では ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "./data",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ファイルをインポートしようとしてパースできずにエラーになっている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/webpack-esm-import-assertions/2d106676-7b21-44d1-b08f-00d2ee1d1b62/Untitled.png",
+      "caption": "dataのインポート（アサーションなし、拡張子なし）は失敗する"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "アサーションあり ( JSON )",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここからは Import Assertions によるファイル形式のアサーションを試みる。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "assert { type: 'json' }",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を付与し、先ほどの拡張子がないJSONファイルのインポートをすると、JSONであることを判別し、問題なくパースできていた。（エディタ上の赤線は無視してほしい）",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/webpack-esm-import-assertions/f36b6050-c102-422f-b4bf-238b814bf26a/Untitled.png",
+      "caption": "dataのインポート（JSONアサーションあり）は成功する"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "その他のファイル形式のアサーション",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "webpackといえば Loader によってさまざまな形式のファイルをモジュール解決できるのが魅力だ。webpackの Import Assertions はJSON以外にも対応しているのか一応試してみた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "JSONの拡張であるJSON5のファイル ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "data.json5",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をパースできるか試してみた。事前に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "json5-loader",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をインストールした上で、特にwebpack設定には手を入れずに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type: 'json5'",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を指定してみたが、これではモジュール解決できなかった。エラーを見るに、JSONとしてパースしようとして失敗したようだ。なぜJSONだと解釈したのだろうか？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/webpack-esm-import-assertions/11e6c8bd-1eb3-4717-aa28-3b98ca7089ef/Untitled.png",
+      "caption": "data.json5のパース（アサーションあり）は失敗"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次に、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "styles.postcss",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というファイルを用意し、さらにwebpack設定に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".css",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ファイルについてのルールを追加した（一般的な ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "style-loader",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "css-loader",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を通すもの）。そのうえで、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "styles.postcss",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ファイルを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type: 'css'",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " だとアサーションしてインポートするとどうなるかを試してみた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "結果は以下のように、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".postcss",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ファイルに対応する Loader がないためにパースできずエラーとなった。アサーションによって Loader を切り替えるようなことは（少なくとも今は）できないようだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/webpack-esm-import-assertions/5248adea-7c1c-474f-9385-53a27fc9c807/Untitled.png",
+      "caption": "cssであることをアサーションで教えることはできなかった"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "現状の結論",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "webpackのImport Assertions対応は、現状では JSON 形式のアサーションだけが可能なようだ。そもそも拡張子さえあればもともとJSONのインポートはビルトインサポートされていることから、この対応で何か新しい機能が増えているわけではない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "開発者はこれまでどおりアサーションなしにインポートしてもよいが、それはwebpackが気を利かせてくれているだけだ。そしてwebpack以外でもJSONを読み込める標準化された記法に切り替えるという選択肢も用意されている、ということだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回の調査は Stackblitz上の Node.js 環境で行った。再現したい場合はこちらを参照されたし。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://stackblitz.com/edit/node-xzb5hq?file=index.js"
+    }
+  ]
+}

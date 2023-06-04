@@ -1,0 +1,360 @@
+{
+  "pageId": "47d8a289-80af-4cd7-a943-2091d4335b30",
+  "lastEditedAt": "2023-05-11T00:29:00.000Z",
+  "slug": "notion-headless-cms-3",
+  "properties": {
+    "title": "NotionヘッドレスCMS化記録 (3) GitHub Actionsと自動デプロイ",
+    "date": "2022-02-15T23:13:00.000Z",
+    "tags": ["tech", "Notion", "GitHub Actions", "GitHub"]
+  },
+  "content": [
+    {
+      "type": "link_preview",
+      "url": "https://blog.lacolaco.net/2022/02/notion-headless-cms-2/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "前回に引き続き、今回はNotionで書いた記事をGitレポジトリへ自動的に取り込み、Hugoでビルドしてデプロイするまでの流れで躓いた点をまとめる。今回が最終回だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Notionの変更からGitHub Actionsをトリガーしたい",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まず思いつくのは Notion のデータベース更新からWebhookを受け取り、GitHub Actionsの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "repository_dispatch",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " トリガーに連携する方法だが、残念ながら今のNotionにはまだWebhook機能がない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "IFTTTやzapierのようなサービスを使うと（何故か）Notionのデータベース変更イベントからアクションできるが、この程度のために外部サービスを使うのも癪なので、愚直ではあるが GitHub Actions の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "schedule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " トリガーで変更監視を定期実行するようにした。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、最近のアップデートで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "workflow_dispatch",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " トリガーが追加され、GitHubのUI上から手動でワークフローを開始できるのでデバッグ用に追加して次のようなワークフローができた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "yaml",
+      "filename": "",
+      "text": "name: sync-with-notion\n\non:\n  schedule:\n    - cron: '0/10 * * * *'\n  workflow_dispatch:\n\njobs:\n  sync:\n    runs-on: ubuntu-latest\n\n    steps:\n      - uses: actions/checkout@v2\n      - uses: actions/setup-node@v2\n        with:\n          node-version: '16.x'\n          cache: yarn\n      - run: yarn install\n      - run: yarn notion:fetch\n        env:\n          NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "DIffが生まれたらプルリクエストを作る",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "定期実行するワークフローで Notion API からMarkdownファイルを作成した結果、メインブランチと diff が発生したら、その変更を取り込むためのプルリクエストを自動生成する。これによりNotion の内容が（ほぼ）常にGitレポジトリへ一方的に同期される。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "GitHub Actions で何らかのdiffを作ってプルリクエストを作るのは、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Create Pull Request",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " アクションが非常に便利だ。一般的なユースケースをカバーした上でいろいろカスタマイズできる。こうしたワークフローで頻発するベースブランチとのコンフリクトや outdated 化などにも自動的に対応してくれる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/peter-evans/create-pull-request",
+          "href": "https://github.com/peter-evans/create-pull-request",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "botが作ったプルリクエストは別のワークフローをトリガーしない",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ところが落とし穴がひとつあった。GitHub Actionsで提供される ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "secrets.GITHUB_TOKEN",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を認証情報としてGitHub APIを呼び出すと、作成したプルリクエストは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "別のワークフローをトリガーしない",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ことになっている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://docs.github.com/en/actions/using-workflows/triggering-a-workflow"
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "When you use the repository's ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "GITHUB_TOKEN",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " to perform tasks, events triggered by the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "GITHUB_TOKEN",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " will not create a new workflow run. This prevents you from accidentally creating recursive workflow runs.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "プルリクエストが作成されたら Firebase Hosting のプレビューチャンネルへデプロイして表示確認できるようにしていたため、 Notion 記事反映のプルリクエストからプレビューが作られないのは問題である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この問題を解決する方法も ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Create Pull Request",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の作者はフォローしていて、ドキュメントにいくつかの選択肢を載せてくれている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "結局のところ、デフォルトで提供されている ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "secrets.GITHUB_TOKEN",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " でさえなければ何でもいいので、今回はトークンのスコープを狭める観点からプライベートの GitHub Apps を使った方法を選んだ。詳細は書かないが、最終的に次のようなワークフローになった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "yaml",
+      "filename": "",
+      "text": "name: sync-with-notion\n\non:\n  schedule:\n    - cron: '0/10 * * * *'\n  workflow_dispatch:\n\njobs:\n  sync:\n    runs-on: ubuntu-latest\n\n    steps:\n      - uses: actions/checkout@v2\n      - uses: actions/setup-node@v2\n        with:\n          node-version: '16.x'\n          cache: yarn\n      # https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens\n      - uses: tibdex/github-app-token@v1\n        id: generate-token\n        with:\n          app_id: ${{ secrets.WORKER_APP_ID }}\n          private_key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}\n      - run: yarn install\n      - run: yarn notion:fetch\n        env:\n          NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}\n      - name: Create Pull Request\n        uses: peter-evans/create-pull-request@v3\n        with:\n          token: ${{ steps.generate-token.outputs.token }}\n          commit-message: 'fix: apply changes from Notion'\n          branch: sync-with-notion\n          delete-branch: true\n          title: 'fix: apply changes from Notion'\n          body: '@lacolaco Review and apply changes from Notion'"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これで、Notionで記事を書けば約10分後にはGitHubに取り込みプルリクエストが作成され、自動デプロイされたプレビュー環境で表示のチェックができるようになった。完成である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/notion-headless-cms-3/a77e6ae3-f511-4160-b81b-0582ca167cf7/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "NotionにWebhookができればもう少しスマートになるが、今のAPIの使い方でもレートリミットなどは問題なさそうなのでしばらくはこのまま運用する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://developers.notion.com/reference/request-limits"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "3回に分けて、NotionをこのブログのヘッドレスCMSとして使えるようにするにあたって苦労した点をまとめた。ほぼ自分用の備忘録と、実際にNotionで記事を書けると捗るのかどうかの実験を兼ねたものだが、もし似たようなものを作ろうとする誰かの参考になるなら幸いである。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,713 @@
+{
+  "pageId": "1247081c-70a7-4563-886a-056d3778a33f",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "enjoyable-webworkers-in-angular.ja",
+  "properties": {
+    "title": "Angular: Comlink を使った Web Worker の導入",
+    "date": "2021-05-26T00:00:00.000Z",
+    "tags": ["tech", "Angular", "Web Worker"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Web Worker",
+          "href": "https://developer.mozilla.org/ja/docs/Web/API/Web_Workers_API/Using_web_workers",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "は Web 開発の重要な要素として注目を集めている。そして",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Comlink",
+          "href": "https://github.com/GoogleChromeLabs/comlink",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "は、Web Worker を使った開発を楽しめるように GoogleChrome チームによって作成された JavaScript ライブラリだ。Comlink は Web Worker で定義された API と UI スレッドが簡単に通信できるようにする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事では、Angular CLI で作成した Angular アプリケーションに Comlink を組み込む方法を説明する。Comlink を使うことで、重い処理をメインスレッドから簡単に切り離すことができ、コードを分離することで JavaScript のバンドルを小さくすることができる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "アプリケーションの準備",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular CLI",
+          "href": "https://angular.jp/guide/quickstart#install-cli",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "を使って、サンプルアプリケーションを作成する。この記事で使用する Angular CLI のバージョンは v12 を前提としている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ ng new angular-comlink-example --defaults"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "アプリケーションのセットアップが終わったあと、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "comlink",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " パッケージをインストールする。Comlink は TypeScript 型定義も同梱しているため型定義を追加でインストールする必要はない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ cd angular-comlink-example\n$ yarn add comlink # or npm install comlink"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Worker モジュールの実装",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "例として、Markdown テキストを HTML へ変換するアプリケーションを作成する。 まずはじめに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "marked",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@types/marked",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の 2 つのパッケージをインストールする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ yarn add marked && yarn add --dev @types/marked"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次に、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng generate webworker",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドを使い、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "worker/markdown.worker.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ファイルを作成する。このコマンドは TypeScript ファイルだけでなく、Web Worker 用の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "tsconfig.worker.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " も同時に生成し、そのファイルを参照するように ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "angular.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ファイルも更新される。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ ng generate webWorker worker/markdown\n\nCREATE tsconfig.worker.json (289 bytes)\nCREATE src/app/worker/markdown.worker.ts (157 bytes)\nUPDATE angular.json (3204 bytes)"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "生成された ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "markdown.worker.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ファイルの内容はすべて削除し、次のように Markdown テキストを HTML へコンパイルする API を記述する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "// worker/markdown.worker.ts\nimport * as marked from 'marked';\n\nexport const api = {\n  compileMarkdown(source: string) {\n    return new Promise<string>((resolve, reject) => {\n      marked(source, (err, result) => {\n        if (err) {\n          reject(err);\n          return;\n        }\n        resolve(result);\n      });\n    });\n  },\n};"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "compileMmarkdown",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数をこのワーカーの API として公開するため、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Comlink.expose",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数を呼び出し、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "api",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "オブジェクトを渡す。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import * as marked from 'marked';\nimport { expose } from 'comlink';\n\nexport const api = {\n  compileMarkdown(source: string) {\n    // ...\n  },\n};\n\nexpose(api); // Expose as worker's API"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ワーカー側の作業はこれで終わりとなる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "ワーカーの公開 API を呼び出す",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "続いて、Comlink を通してワーカーの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "compileMarkdown",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数を UI スレッド側から呼び出す。 まずは Angular サービスとして ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "MarkdownService",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "クラスを作成し、コンポーネントから呼び出し可能な状態にする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ ng generate service service/markdown"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "MarkdownService",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "クラスには引数に Markdown テキストを受け取りコンパイル結果を Promise で返す ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "compile",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "メソッドを定義しておく。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { Injectable } from '@angular/core';\n\n@Injectable({\n  providedIn: 'root',\n})\nexport class MarkdownService {\n  async compile(source: string): Promise<string> {}\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "worker/markdown.worker.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を呼び出すため、Comlink をインポートして ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "wrap",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数でワーカーインスタンスをプロキシする。 ワーカーは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "new Worker(new URL('../worker/markdown.worker', import.meta.url)",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "でインスタンス化される。この記述形式は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "webpack の Web Worker サポート",
+          "href": "https://webpack.js.org/guides/web-workers/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "で定義されたものである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { wrap } from 'comlink';\n\nasync function compileMarkdown(source: string): Promise<string> {\n  const worker = wrap<typeof import('../worker/markdown.worker').api>(\n    new Worker(new URL('../worker/markdown.worker', import.meta.url)),\n  );\n  return await worker.compileMarkdown(source);\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "worker",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 変数は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Comlink.expose",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で公開された関数を持っており、その型も保持されている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "api",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の型を取り出すために、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "typeof import('../worker/markdown.worker).api",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "wrap<T>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のジェネリクスに渡している。この ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "import",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は ES モジュールのインポートではなく TypeScript の型定義だけをインポートしている。そのため TypeScript のコンパイル後には除去され、静的な参照は残らず JavaScript のバンドルを分割できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "以下は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "service/markdown.service.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の最終的な例だ。環境が ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "window.Worker",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をサポートしていない場合は、動的 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "import()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使用してメインスレッドでの処理にフォールバックする。この場合でも自動的にコードは分割され、モジュールは遅延読み込みされる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { Injectable } from '@angular/core';\nimport { wrap } from 'comlink';\n\nasync function compileMarkdown(source: string): Promise<string> {\n  if (window.Worker) {\n    const worker = wrap<typeof import('../worker/markdown.worker').api>(\n      new Worker(new URL('../worker/markdown.worker', import.meta.url)),\n    );\n    return await worker.compileMarkdown(source);\n  } else {\n    // Fallback to main thread with dynamic imports\n    const worker = await import('../worker/markdown.worker').then((m) => m.api);\n    return await worker.compileMarkdown(source);\n  }\n}\n\n@Injectable({\n  providedIn: 'root',\n})\nexport class MarkdownService {\n  async compile(source: string): Promise<string> {\n    return await compileMarkdown(source);\n  }\n}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "アプリケーションの実行",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "アプリケーションを完成させよう。ここでは、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AppComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "MarkdownService",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使用し、その結果を表示するように変更する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { MarkdownService } from './service/markdown.service';\nimport { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-root',\n  template: `\n    <button (click)=\"compileMarkdown()\">compile</button>\n\n    <div>{{ result }}</div>\n  `,\n})\nexport class AppComponent {\n  result: string = '';\n\n  constructor(private markdown: MarkdownService) {}\n\n  async compileMarkdown() {\n    this.result = await this.markdown.compile(`## Hello Comlink`);\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ng serve",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使ってアプリをサーブし、ブラウザの開発者ツールを開いてみよう。Network タブを開いて“compile”ボタンをクリックすると、メインのバンドルからは分離された JavaScript ファイルがロードされ、Web Worker として実行される。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/enjoyable-webworkers-in-angular.ja/567cff86-6f84-453e-be4d-5dd32e9a248a/0476d21164731efa00df1ffa37c4b731.gif",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このように、Comlink と Angular CLI によって、UI スレッドがブロックされることを簡単に防ぐことができる。 また、webpack 5 ベースになった Angular CLI により、Web Worker コードを遅延ロード可能なバンドルとしてビルドすることも簡単になった。 読み込みだけでなく読み込み後の実行パフォーマンスにも課題があるアプリケーションで導入すると効果を発揮するだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "サンプルコードの全体は GitHub で確認できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/lacolaco/angular-comlink-example",
+          "href": "https://github.com/lacolaco/angular-comlink-example",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

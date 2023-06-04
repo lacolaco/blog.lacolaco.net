@@ -1,0 +1,484 @@
+{
+  "pageId": "cada7ee0-19fd-4cc1-b74d-399d78d01d80",
+  "lastEditedAt": "2023-05-21T03:11:00.000Z",
+  "slug": "modular-graphql-schema-documentation",
+  "properties": {
+    "title": "GraphQL Schemaをファイル分割してドキュメンテーションする",
+    "date": "2018-02-13T00:00:00.000Z",
+    "tags": ["tech", "GraphQL"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "GraphQL の Schema から静的なドキュメンテーションページを生成するツールとして、graphdoc というものがあります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/2fd/graphdoc"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "GraphQL Schema を渡すと、こんな感じの HTML を生成してくれます。 これは GraphQL 公式のサンプルにもある Star Wars API の例。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://2fd.github.io/graphdoc/star-wars/"
+    },
+    {
+      "type": "image",
+      "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180213/20180213222120.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このドキュメンテーションを 複数の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*.gql",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ファイルからなる Schema から生成するために少し小細工が必要だったので紹介します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "GraphQL Schema Language",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回は GraphQL Schema Language を",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".gql",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "という拡張子のファイル（便宜的に以降 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "gqlファイル",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と呼びます）で管理します。 TypeScript や JavaScript ファイル中でテンプレートリテラルとして管理するよりも余計なコードがなくて見やすく、エディタによっては入力支援も得られます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "gql ファイルの欠点は、GraphQL Schema Language に外部ファイルの参照の仕様がないことです。 JSON Schema でいう",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "$ref",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に相当するものが定義されていないので、エントリポイントとなる Schema から分割された型定義などを参照できません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "graphdoc で gql ファイルをドキュメンテーションする",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "graphdoc はいくつかの方法で Schema を読み込めます。 代表的なものはエンドポイント URL を渡して HTTP 経由でドキュメンテーションを生成する機能ですが、 gql ファイルを渡すこともできます。 しかし gql ファイルを渡す場合は先述の理由により単一ファイルにすべての Schema が記述されている必要があるので、 大きな API 仕様になると管理が大変です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "複数の gql ファイルからなる Schema を graphdoc で読み込むためには、JavaScript 読み込み機能を使います。 graphdoc の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "schemaFile",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "として",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".js",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ファイルを渡すと、CommonJS として読み込まれ、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "exports.default",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の値を Schema として使用します。 そしてこのとき、エクスポートするのは Schema の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "配列",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "なので、複数の gql ファイルを読み込んで文字列として渡してあげれば目的を達成できます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "手順",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "npm パッケージを揃える",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "必要なのは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@2fd/graphdoc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "glob",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の 2 つです",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "> yarn add --dev @2fd/graphdoc glob"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "schema.js",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ファイルを記述する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "複数の gql ファイルを読み込んで文字列として渡してあげ",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "るための JavaScript ファイルを用意します。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "glob",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "fs",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使ってファイルを読み込むだけですが、同期的にエクスポートする必要があるのに注意します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "const glob = require(\"glob\");\nconst fs = require(\"fs\");\nconst path = require(\"path\");\n\nfunction loadSchemas() {\n  const files = glob.sync(\"schema/**/*.{gql,graphql}\");\n\n  return files.map(file =>\n    fs.readFileSync(path.resolve(file), { encoding: \"utf8\" })\n  );\n}\n\nconst schemas = loadSchemas();\nexports.default = schemas;"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "npm script を追加する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "graphdoc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "コマンドを実行する npm スクリプトを追加します",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "  \"scripts\": {\n    \"build\": \"graphdoc -s schema.js -o docs -f\"\n  },"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "schema",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ディレクトリに gql ファイルを配置する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "あとはひたすら Schema を書いていくだけです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "実際に Staw Wars API の Schema を分割して graphdoc にしたリポジトリを用意したので、詳細はそちらを参照してください。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/graphdoc-example"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "docs",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ディレクトリに出力しているので、GitHub Pages で簡単に API ドキュメントをホストできます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://lacolaco.github.io/graphdoc-example/"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "課題",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "gql ファイルに外部参照の仕組みがないので、分割すると参照が途切れる（リネームとかできない）",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "サーバーサイドの実装に依存しない API 仕様 Centric な開発をしたいのだけど、 Open API Specification みたいな感じで GraphQL Schema を使う文化はあまり育っていないようで、苦労しそうな感じがあります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "結局のところひとつの gql ファイルにドカドカ型定義書いていくほうが楽なのかもしれないけど、しばらく分割管理を試してみてから考えましょう。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

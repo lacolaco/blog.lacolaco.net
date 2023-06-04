@@ -1,25 +1,24 @@
 ---
-import { format as formatDate } from 'date-fns';
 import { CollectionEntry, getCollection } from 'astro:content';
+import { format as formatDate } from 'date-fns';
 import BlogPost from '../../../layouts/BlogPost.astro';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  return posts.map((post) => ({
-    params: {
-      year: formatDate(post.data.date, 'yyyy'),
-      month: formatDate(post.data.date, 'MM'),
-      slug: post.slug,
-    },
-    props: post,
-  }));
+  const posts = await getCollection('post');
+  return posts.map((post) => {
+    return {
+      params: {
+        year: formatDate(post.data.properties.date, 'yyyy'),
+        month: formatDate(post.data.properties.date, 'MM'),
+        slug: post.data.slug,
+      },
+      props: post,
+    };
+  });
 }
-type Props = CollectionEntry<'blog'>;
+type Props = CollectionEntry<'post'>;
 
 const post = Astro.props;
-const { Content } = await post.render();
 ---
 
-<BlogPost {...post.data}>
-  <Content />
-</BlogPost>
+<BlogPost post={post.data} />

@@ -1,0 +1,782 @@
+{
+  "pageId": "4cdbdec6-e74c-4ea4-86e2-6c899e5369af",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "network-aware-preloading-strategy-for-angular-lazy-loading",
+  "properties": {
+    "title": "Network-aware Preloading Strategy for Angular Lazy Loading",
+    "date": "2019-05-11T00:00:00.000Z",
+    "tags": ["tech", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This post explains how to make ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "network-aware",
+          "annotations": {
+            "italic": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " preloading strategy for lazy loading of Angular Router.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "It can improve user experience with lazy loading despite users network condition.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://thepracticaldev.s3.amazonaws.com/i/t6o2d6hv9v3jjbtx5pkl.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": [
+        {
+          "type": "text",
+          "text": "What is Preloading?",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Preloading",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is an important feature of Angular Router’s lazy loading. This is available since 2.1.0.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "By default, when the application uses lazy loading with ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "loadChildren",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", chunked lazy modules will be loaded on-demand. It can reduce initial bundle size but users have to wait for loading of chunks on transition.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Preloading changes that. By preloading, the application will start loading chunked modules ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "before needed",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". It can improve user experience with smooth transition.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Here is the best article to read at first about preloading in Angular by Victor Savkin. He is the author of the feature.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular Router: Preloading Modules",
+          "href": "https://vsavkin.com/angular-router-preloading-modules-ba3c75e424cb",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": [
+        {
+          "type": "text",
+          "text": "Preloading Strategy",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular Router supports customizing preloading behavior with ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "PreloadingStrategy",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " feature. There are two built-in strategies; ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "PreloadAllModules",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NoPreloading",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "NoPreloading",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is the default behavior that doesn’t preload any modules.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "PreloadAllModules",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " loads all lazy modules immediately after bootstrapping. In other word, this is “As soon as possible” strategy.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { RouterModule, NoPreloading, PreloadAllModules } from '@angular/router';\n\n@NgModule({\n  imports: [\n    RouterModule.forRoot(routes, {\n      preloadingStrategy: PreloadAllModules, // or NoPreloading\n    }),\n  ],\n})\nclass AppRoutingModule {}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "PreloadingStrategy",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is a simple class object implementing a ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "preload",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " method. So we can make custom preloading strategy in ease like below.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "preload",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " method takes two arguments; ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "route",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "load",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " . ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "route",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is a route object that you declare in ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "routes",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " array. ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "load",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is a function that trigger loading a module.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "// custom-preloading-strategy.ts\nimport { PreloadingStrategy, Route } from '@angular/router';\nimport { Observable, EMPTY } from 'rxjs';\n\n@Injectable({ providedIn: 'root' })\nexport class CustomPreloadingStrategy implements PreloadingStrategy {\n  preload(route: Route, load: () => Observable<any>): Observable<any> {\n    if (shouldPreload(route)) {\n      return load();\n    } else {\n      return EMPTY;\n    }\n  }\n}\n\n// app-routing.module.ts\n@NgModule({\n  imports: [\n    RouterModule.forRoot(routes, {\n      preloadingStrategy: CustomPreloadingStrategy,\n    }),\n  ],\n})\nclass AppRoutingModule {}"
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": [
+        {
+          "type": "text",
+          "text": "Preloading Problem: Cost of networking",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Preloading can improve user experience, but it is only in the case the device uses in fast network enough. Sometimes mobile devices have a narrow-band network connection. If then the application tries to preload all modules ASAP, it affects other connections like AJAX in a bad way.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Preloading is an appropriate solution for users who has a strong network. If they don’t, on-demand loading is better. But this condition can change very dynamically, so the application have to get network information in runtime and turning on/off preloading.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "I call that “",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Network-aware Preloading Strategy",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "”.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": [
+        {
+          "type": "text",
+          "text": "Using Network Information API",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Network Information API",
+          "href": "https://developer.mozilla.org/en-US/docs/Web/API/NetworkInformation",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is a new Web standard API proposal. The Network Information API provides information about the system’s connection.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "youtube",
+      "videoId": "jO8iVc4hEe8"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The entire API consists of the addition of the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NetworkInformation",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " interface and a single property to the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Navigator",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " interface: ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Navigator.connection",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " . Because this API is not a standard yet, TypeScript doesn’t have its type definition. So I’ve created that as ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "network-information-types",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " package and it is used in all example codes below.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/network-information-types"
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": [
+        {
+          "type": "text",
+          "text": "Making Network-aware PreloadingStrategy",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Let’s make network-aware preloading strategy with Network Information API! The following code defines ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "shouldPreload",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " function that is used in the above ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "CustomPreloadingStrategy",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " example.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "navigator.connection",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is landed in limited browsers. So we MUST detect the feature. In this case,",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "export function shouldPreload(route: Route): boolean {\n  // Get NetworkInformation object\n  const conn = navigator.connection;\n\n  if (conn) {\n    // With network information\n  }\n  return true;\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Detecting “Save Data” mode",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "At first, “Save Data” mode should be prioritized the best. It means the user strongly cares about payload size for their cost- or performance-constraints. Use ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NetworkInformation.saveData",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " property and return ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "false",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "export function shouldPreload(route: Route): boolean {\n  // Get NetworkInformation object\n  const conn = navigator.connection;\n\n  if (conn) {\n    // Save-Data mode\n    if (conn.saveData) {\n      return false;\n    }\n  }\n  return true;\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Detecting “2G” connection",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Network Information API can recognize the network’s effective connection type; 4G, 3G, 2G, and Slow 2G.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In this sample, the application disables preloading when the user is in 2G network.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "export function shouldPreload(route: Route): boolean {\n  // Get NetworkInformation object\n  const conn = navigator.connection;\n\n  if (conn) {\n    // Save-Data mode\n    if (conn.saveData) {\n      return false;\n    }\n    // 'slow-2g', '2g', '3g', or '4g'\n    const effectiveType = conn.effectiveType || '';\n    // 2G network\n    if (effectiveType.includes('2g')) {\n      return false;\n    }\n  }\n  return true;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Network Information API has also several other properties like ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "rtt",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " (RTT, round-trip time of the connection). You can add more checks for your application.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": [
+        {
+          "type": "text",
+          "text": "Conclusion",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angular Router is supporting ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "preloading",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " feature since 2.1.0.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "You can create your own custom preloading strategy",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Preloading is effective only for users with a fast network.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Network Information API",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " is available in several browsers.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "It’s very easy to make network-aware preloading strategy.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Thank you for reading!",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

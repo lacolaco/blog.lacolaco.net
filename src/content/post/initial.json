@@ -1,0 +1,32 @@
+{
+  "pageId": "252e8627-540a-4d33-a6f9-a3852e0c41d4",
+  "lastEditedAt": "2023-05-21T03:30:00.000Z",
+  "slug": "initial",
+  "properties": {
+    "title": "Hugoでブログを作りなおしました",
+    "date": "2016-04-10T00:00:00.000Z",
+    "tags": ["雑記"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "laco0416.github.ioをHugoで作りなおしました。 もともとAngular 2で動的なブログを作ろうとしてましたが、ブログは静的に作ったほうが百倍楽で書きやすいことがわかったので諦めました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "最近書きたい文章がたくさんあるんですがQiitaに書くべきでもないしはてなブログともちょっと違う気がするのでここを使って書いていこうと思います。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

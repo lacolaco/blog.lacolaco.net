@@ -1,0 +1,520 @@
+{
+  "pageId": "3af033c8-da56-47f1-9adf-4eef3310067f",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "event-broadcasting-in-angular-2",
+  "properties": {
+    "title": "Broadcasting events in Angular 2",
+    "date": "2016-04-24T00:00:00.000Z",
+    "tags": ["tech", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 1 has an utility for broadcasting an event, ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "$broadcast",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "$on",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". Now, Angular 2 dropped these features. Instead it has ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@Output",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " annotation and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "(event)",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " syntax. However, we can create a similar utility by using DI; ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Broadcaster",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Define ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Broadcaster",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "First, we have to define ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Broadcaster",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import {Subject} from 'rxjs/Subject';\nimport {Observable} from 'rxjs/Observable';\nimport 'rxjs/add/operator/filter';\nimport 'rxjs/add/operator/map';\n\ninterface BroadcastEvent {\n  key: any;\n  data?: any;\n}\n\nexport class Broadcaster {\n  private _eventBus: Subject<BroadcastEvent>;\n\n  constructor() {\n    this._eventBus = new Subject<BroadcastEvent>();\n  }\n\n  broadcast(key: any, data?: any) {\n    this._eventBus.next({key, data});\n  }\n\n  on<T>(key: any): Observable<T> {\n    return this._eventBus.asObservable()\n      .filter(event => event.key === key)\n      .map(event => <T>event.data);\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Broadcaster",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " has two methods; ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "broadcast",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "on",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "broadcast",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " will be used to fire an event with event-specific key. In other hand, ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "on",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " returns an observable of events which broadcasted the key.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 1’s ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "$broadcast",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is used with ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "string",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " key.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$broadcast('MyEvent', data)"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Of course, we can implement string-based propagation that uses string keys.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "// app.ts (application root component)\n@Component({\n    selector: 'app',\n    ...\n    providers: [\n        // application-shared broadcaster (similar to $rootScope)\n        Broadcaster\n    ]\n})\nclass App {}"
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "// child.ts\n@Component({\n    selector: 'child'\n})\nexport class ChildComponent {\n  constructor(private broadcaster: Broadcaster) {\n  }\n  \n  registerStringBroadcast() {\n    this.broadcaster.on<string>('MyEvent')\n      .subscribe(message => {\n        ...\n      });\n  }\n\n  emitStringBroadcast() {\n    this.broadcaster.broadcast('MyEvent', 'some message');\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Great, we regained ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "$rootScope.$broadcast",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "! But there are some problems; loosing ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "typo-safety",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type-safety",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "typo-safety",
+          "annotations": {
+            "italic": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "If we mistake the event name, event propagation will be broken, but we cannot get any ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "static errors",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "type-safety",
+          "annotations": {
+            "italic": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "We cannot know a type of the event data. Any types will be accepted to the event with same name.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$broadcast('MyEvent', '100');$broadcast('MyEvent', 100);"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Type-based event propagation",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "So, we should make a safety broadcaster, which uses ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "types",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " to specify an event type.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Let’s make ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "domain-specific",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " broadcaster, ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "MessageEvent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "!",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import {Injectable} from 'angular2/core';\nimport {Observable} from 'rxjs/Observable';\nimport {Broadcaster} from './broadcast';\n\n@Injectable()\nexport class MessageEvent {\n  constructor(private broadcaster: Broadcaster) {}\n\n  fire(data: string): void {\n    this.broadcaster.broadcast(MessageEvent, data);\n  }\n\n  on(): Observable<string> {\n    return this.broadcaster.on<string>(MessageEvent);\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Then, we can use it with perfect type-safety! Look at new ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "child.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import {Component} from 'angular2/core';\nimport {MessageEvent} from '../../services/message_event';\n\n@Component({\n  selector: 'child',\n  ...\n  providers: [ \n    MessageEvent\n  ],\n})\nexport class Child {\n  constructor(private messageEvent: MessageEvent) {\n  }\n  \n  registerTypeBroadcast() {\n    this.messageEvent.on()\n      .subscribe(message => {\n        ...\n      });\n  }\n  \n  emitTypeBroadcast() {\n    this.messageEvent.fire(`Message from ${this.boxID}`);\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Demo is ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "here",
+          "href": "http://plnkr.co/edit/aJe5SUtFlnpmGXWA5eHk",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Conclusion",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In this article, I explained a way to implement an event propagation like Angular 1’s ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "$broadcast",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". And I introduced old string-based event system and type-based safe event system.",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

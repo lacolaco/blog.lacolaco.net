@@ -1,0 +1,625 @@
+{
+  "pageId": "c4159f8a-2131-4c7a-bd1f-fc0bdec1a71b",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "for-sustainable-angular-development",
+  "properties": {
+    "title": "持続可能なAngularアプリケーション開発のために大事なこと",
+    "date": "2018-05-15T00:00:00.000Z",
+    "tags": ["tech", "Angular", "設計"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Web にかぎらず、アプリケーションというのは作って終わりではなく、その後も継続して改修・改善されていくケースが多い。受託で開発して納品して終わりというケースでも、納品した先にメンテナンスする人がいる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事では、Angular アプリケーションの開発において、いかにメンテナンス性を維持して、持続可能なプロジェクトを構成するかについての個人的な見解をまとめる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "フレームワークを邪魔しない",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular アプリケーションのメンテナンスにおいて、いちばん重要なことは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "いかに Angular のアップデートを阻害しないか",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "という点に尽きる。 これは Angular に限った話ではなくフレームワークと呼ばれるものを使うなら常に必要なことであるし、 アップデートが定期的に降ってくることが決まっている Angular であればなおさらである。 アプリケーションの一番根幹となる部分の鮮度が落ちれば、その他の部分はそれに引きづられて腐ってしまう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "なので、Angular の新しいバージョンがリリースされたときにアップデートのブロッカーとなるものはなるべく作らないのが第一のポイント。 具体的には、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngx-**",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "系のサードパーティ製の Angular 用ライブラリは、極力減らす。 とはいえすべて使わない、というのはある程度の規模になると現実的ではないので、 利用するときは、そのライブラリのメンテナンスが頻繁に行われているかどうかをしっかりチェックするべき。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "何か機能を実装するためにライブラリが必要だと思ったときには、まずフレームワークに依存しない実装の npm モジュールを探す。 その npm モジュールと Angular とのインテグレーション部分は、自分でアダプターやブリッジを実装するのがベスト。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "例: Google Analytics",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "例として、Angular アプリケーションで Google Analytics と連携したいと思った時、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "angular google analytics",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のように検索すると当然 Angular のエコシステム上には専用のライブラリが出てくる。 例えば有名所で言えば https://github.com/angulartics/angulartics2 のような。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "しかしこれは Angular のバージョンアップデートを阻害するリスクを冒してまで導入するべきものかどうか、個人的には No である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular の基本的な機能を理解さえしていれば、ルーティングで URL パスが変わるたびに pageview イベントを GA に送信するなど造作もない。たった 5 行のコードで書ける。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({...})\nexport AppComponent {\n  constructor(private router: Router) {}\n\n  ngOnInit() {\n    this.router.events.subscribe(e => {\n      if (e instanceof NavigationEnd) {\n        window.gtag('config', 'UA-*******-**', { page_path: e.urlAfterRedirects })\n      }\n    });\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "クリックイベントの送信だって、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "(click)",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " でイベントを受け取ったあとコンポーネント側で処理できる。 テンプレート上だけで簡単に済ませようと思うのは間違っていないが、Angular のバージョンアップデートを阻害するリスクと天秤にかけて考えるべき。 ディレクティブにしたって自分で書けばいい話だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular とサードパーティライブラリ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 用のサードパーティライブラリは、基本的には次の 3 種類になる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angular の API をブラックボックス化したユーティリティライブラリ",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "便利なディレクティブを提供する UI ライブラリ",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "外部ライブラリをラップしたアダプタライブラリ",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular の API をブラックボックス化したユーティリティライブラリは極力避けよう。これは数行の手間を惜しむことで数ヶ月後の自分の首を締めることになる。特にこういう小さなユーティリティ系は作者が作って公開しておしまいになるケースが多く、そうして結局あとで自分で書くことになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "UI ライブラリも要注意。たくさんのコンポーネントのテンプレート内に散らばり、ライブラリを差し替えようとなったときにも一苦労になる。Angular Material や Clarity、Ignite-UI など、企業レベルでメンテナンスされていると安心して使える。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "アダプタライブラリは、細かく分けると 2 種類ある。その違いはアダプタされた先のコア部分が Angular に依存するかどうか。 例えば、先ほどの Google Analytics をラップした Angulartics や AngularFire などは、コア部分は普通の JavaScript なのでラップするのは自分でも簡単にできる。 よくあるのは Firebase に新機能が入ったが AngularFire に反映されてなくて使えない、みたいなケースで、そういうリスクもあるので注意が必要である。 Firebase のラッパーくらいは自分で書ける範囲。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "一方で Apollo-Angular は少し毛色が違い、Apollo-Angular は Apollo Client のラッパーというよりは、Angular の HttpClient をベースに Apollo Client を初期化するためのブリッジのようなもの。 この場合は Angular HttpClient とのブリッジを自分で書くのは Apollo Client の内部ドメインに精通している必要があるので少し難しい。 とはいえ https://lacolaco.hatenablog.com/entry/2018/04/20/080000 でも述べたように、Angular HttpClient を使わなければいけない理由などどこにもないので、標準の ApolloClient を使ってしまうのもよいだろう。このあたりはそのライブラリのメンテナンス状況と信頼度に応じて考えるべきところ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 用に作られたサードパーティライブラリを採用できる条件は次のようになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "その機能は Angular に依存するか => しないなら非依存の npm パッケージを探す",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "その機能はユーティリティ（いくつかの Angular 機能のショートハンド）に過ぎないか => そうなら使わない",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "そのライブラリはこまめにメンテナンスされているか => そうでないなら使わない",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular に依存する部分と、そうでない部分を明確にする",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "アプリケーションの設計のなかで、Angular に依存すべき部分とそうでない部分を明確に分けておくことが大事。 ビュー層はどうしようもなく Angular の領域なので、コンポーネント、ディレクティブ、パイプの中にドメイン固有のロジックを持たない、ビューとしての仕事だけに専念させる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ドメインロジックをまとめたサービスクラスへの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@Injectable()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は特に内部に Angular が侵入するわけではないので、大きな問題にはならない。 ただし、ドメインロジックの中でも Angular API が必要になることがある。たとえばタイトルを変えるための",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Title",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "サービスや、現在の URL を扱うための",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Location",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "サービス、あるいは HttpClient や Router など。 そういった部分は、アプリケーションのインフラ層に逃し、やはりドメインロジックからは排除したい。下の画像の真ん中のロジック部分からは Angular を排除する。 ドメインロジックの変更を Angular に邪魔されないために、また、Angular のアップデートをドメインロジックで邪魔しないために。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180515/20180515113943.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ロジック内部の設計は自由だが、Angular に依存する部分とそうでない部分を明確にすると、自然と最低でもこの 3 層はできあがるはず。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "プリミティブに書く",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular も RxJS も、凝ろうと思えばいくらでもテクニック重視の書き方ができる。たとえば RxJS の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "pipe",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "だけでほとんどの処理を済ませてしまうとか、たくさんのパイプを繋げてテンプレート内で処理を済ませてしまうとか。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "書いてる間は気持ちがいいが、同僚や数ヶ月後の自分を困らせることになるのは誰の目にも明らか。なるべく素の TypeScript でプリミティブに書けないかどうかを考えたい。 ライブラリのコードの最適化はライブラリが頑張るしかないが、TypeScript で素直に書いておけばコンパイル時の最適化や実行時のエンジンでの最適化も受けやすい。async/await がそのいい例。 Angular や RxJS などのアップデートでよく提供されるマイグレーション CLI も、使われている箇所が複雑になると適用漏れが生まれやすい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "テンプレート自体にも要注意で、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*ngFor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngSwitch",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " などでビューの構造を操作しまくるテンプレートが大きくなると読みづらい。 こういった構造ディレクティブの内側は、ある程度スコープが切られた小さなテンプレートになるはずなので、その単位でコンポーネント分割するとけっこう見通しが良くなる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "こういったテンプレートから",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<ng-container *ngFor=\"let user of users\">\n  <div class=\"user\">\n    <div>{{user.name}}</div>\n  </div>\n</ng-container>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このように切り出すのがよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<ng-container *ngFor=\"let user of users\">\n  <user-list-item [user]=\"user\"></user-list-item>\n</ng-container>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "結果的に、構造を担うコンポーネントと、表示を担うコンポーネントが分かれていくので、コンポーネント設計としてもオススメの考え方である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "持続可能なメンテナンス性の高い Angular アプリケーションを開発するために重要なことは以下の点。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angular のバージョンアップデートを邪魔しない",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Angular の特定バージョンに依存するサードパーティライブラリは極力減らす",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Angular にない機能にはまずプレーンな npm ライブラリを探し、アダプターが必要なら自分で書くようにする",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "コードベース中で、Angular に依存する領域とそうでない領域を明確にする",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "複雑な API を使いこなすよりも、プリミティブに書く",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

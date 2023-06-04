@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import List from '../layouts/List.astro';
 
-const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const collection = await getCollection('post');
 ---
 
-<List posts={posts} />
+<List posts={collection.map((post) => post.data)} />

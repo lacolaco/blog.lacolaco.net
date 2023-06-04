@@ -1,24 +1,30 @@
 ---
+import { PostData } from '@lib/post';
 import { getCollection } from 'astro:content';
 import List from '../../../layouts/List.astro';
 import { urlize } from '../../../libs/strings';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  const uniqueTags = [...new Set(posts.map((post) => post.data.tags ?? []).flat())];
+  const posts = await getCollection('post');
+  const uniqueTags = [...new Set(posts.map((post) => post.data.properties.tags ?? []).flat())];
 
   return uniqueTags.map((tag) => {
     const urlizedName = urlize(tag);
     const filteredPosts = posts.filter((post) => {
-      const postTags = (post.data.tags ?? []).map(urlize);
+      const postTags = (post.data.properties.tags ?? []).map(urlize);
       return postTags.includes(urlizedName);
     });
     return {
       params: { tag: urlizedName },
-      props: { tag, posts: filteredPosts },
+      props: { tag, posts: filteredPosts.map((post) => post.data) },
     };
   });
 }
+
+type Props = {
+  tag: string;
+  posts: PostData[];
+};
 
 const { tag, posts } = Astro.props;
 const title = `Articles with #${tag}`;
