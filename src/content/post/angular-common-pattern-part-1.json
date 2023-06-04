@@ -1,0 +1,284 @@
+{
+  "pageId": "e3968f95-daba-42a8-88ff-f3cc92b3e661",
+  "lastEditedAt": "2023-05-21T06:01:00.000Z",
+  "slug": "angular-common-pattern-part-1",
+  "properties": {
+    "title": "Angular 頻出実装パターン その1",
+    "date": "2018-04-10T00:00:00.000Z",
+    "tags": ["tech", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "僕が Angular アプリケーションを書くときに頻出する実装パターンを紹介する記事です。続くかどうかは未定です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "onDestroy$",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ngOnDestroy",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "メソッドが呼び出されたタイミングで emit される EventEmitter を作っておき、RxJS の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "takeUntil",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "パイプなどで使う実装パターン。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngOnDestroy",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "メソッド内で",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "unsubscribe",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "メソッドを呼び出すよりも宣言的で意味が取りやすいし、忘れにくい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "実装例はこんな感じ。ReactiveFormsModule を使うときに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "valueChanges",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に引っ掛けることが多い。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import {\n  Component,\n  OnDestroy,\n  OnInit,\n  EventEmitter,\n  Output\n} from \"@angular/core\";\nimport { FormGroup, FormControl } from \"@angular/forms\";\nimport { takeUntil } from \"rxjs/operators\";\n\n@Component({\n  selector: \"app-form\",\n  template: `\n    <form [formGroup]=\"form\">\n      <input formControlName=\"name\" />\n    </form>\n  `\n})\nexport class FormComponent implements OnDestroy {\n  @Output() valueChange = new EventEmitter<any>();\n\n  readonly form = new FormGroup({\n    name: new FormControl()\n  });\n\n  private readonly onDestroy$ = new EventEmitter();\n\n  constructor() {\n    this.form.valueChanges.pipe(takeUntil(this.onDestroy$)).subscribe(value => {\n      this.valueChange.emit(value);\n    });\n  }\n\n  ngOnInit() {\n    this.form.patchValue({\n      name: \"Angular 5\"\n    });\n  }\n\n  ngOnDestroy() {\n    this.onDestroy$.emit();\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://stackblitz.com/edit/angular-vdnrbp",
+          "href": "https://stackblitz.com/edit/angular-vdnrbp",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "MaterialModule",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular Material のモジュールを束ねるための中間モジュールを作るパターン。 使っているモジュールが一箇所でわかるのと、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TestBed",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に依存モジュールとして渡すのが楽になるので有用。 DI 経由でグローバルに適用する Angular Material の設定もここにまとめられるのでわかりやすい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { NgModule } from \"@angular/core\";\nimport { MatButtonModule, MatCardModule } from \"@angular/material\";\nimport { PortalModule } from \"@angular/cdk/portal\";\nimport { OverlayModule } from \"@angular/cdk/overlay\";\n\nexport const modules = [\n  MatButtonModule,\n  MatCardModule,\n  OverlayModule,\n  PortalModule\n];\n\n@NgModule({\n  imports: [...modules],\n  exports: [...modules],\n  providers: [\n    {\n      provide: MAT_LABEL_GLOBAL_OPTIONS,\n      useValue: {\n        float: \"always\"\n      }\n    }\n  ]\n})\nexport class MaterialModule {}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "safeHtml",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "パイプ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これはみんな書くでしょ、って気がする。与えられた文字列を安全な HTML ですよ、とマーキングして Angular に渡すお仕事。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { Pipe, PipeTransform } from \"@angular/core\";\nimport { DomSanitizer } from \"@angular/platform-browser\";\n\n@Pipe({\n  name: \"safeHtml\"\n})\nexport class SafeHtmlPipe implements PipeTransform {\n  constructor(private sanitizer: DomSanitizer) {}\n\n  transform(value: string): any {\n    return this.sanitizer.bypassSecurityTrustHtml(value);\n  }\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "provideXXX",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "サービスのプロバイダを関数としてエクスポートして、モジュール側で関数を呼び出すパターン。 何を provide しているかがわかりやすい。 複数のサービスを一気にプロバイドする場合、特に順序が重要になる",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HTTP_INTERCEPTORS",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のような",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "multi",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "なプロバイダにおいて、モジュール側にそれを意識させずに済むのが気に入ってる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "export function provideHttpInterceptor() {\n  return [\n    {\n      provide: HTTP_INTERCEPTORS,\n      useClass: AuthorizationHeaderInterceptor,\n      multi: true\n    },\n    {\n      provide: HTTP_INTERCEPTORS,\n      useClass: CredentialInterceptor,\n      multi: true\n    }\n  ];\n}"
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { provideHttpInterceptor } from './config/http';\n\n@NgModule({\n  ...\n  providers: [\n    provideHttpInterceptor(),\n  ],\n})\nexport class CoreModule {}"
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "書いてみるとそれほど種類がないなという気がしてきたので、次回は未定です。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

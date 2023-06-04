@@ -1,0 +1,394 @@
+{
+  "pageId": "30d898e5-e62d-4967-a938-79622e2f9730",
+  "lastEditedAt": "2023-05-21T05:18:00.000Z",
+  "slug": "angular-ngmodule-and-directories",
+  "properties": {
+    "title": "中規模AngularアプリにおけるNgModule構成とディレクトリ構造",
+    "date": "2019-07-11T00:00:00.000Z",
+    "tags": ["tech", "Angular", "設計"]
+  },
+  "content": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "要点",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "SharedModule",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " を卒業する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "関心による分離を原則としてモジュール化する",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "性質で分離しない",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Application と Library のモジュールを分ける",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "依存関係の原則",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Root と Feature は互いに依存しない",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "プラクティス",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "関心による集約と分離",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "性質ではなく関心の領域によりモジュール化する。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SharedModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ではなく、その中の個別の機能群を個別にモジュール化する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "お手本は Angular Material の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "MatButtonModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や CDK の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "LayoutModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " など。これにより、Lazy Loading によるコード分割の効果を高められる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "アプリケーション内外の境界",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "アプリケーションの事情（アプリケーションドメイン）に依存する機能群は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "app",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 内に、依存しない機能群は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "libs",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 内に配置する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "app/shared",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ディレクトリに分離されたモジュールも、アプリケーションのコンテキストに依存しない形になったものは、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "libs",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " へ昇格できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular CLI であれば、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "libs",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng generate library",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " による multiple projects を利用するのも良い選択である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Feature Module のフラット化",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ファイルツリーが深くなりすぎることを防ぐために、 Feature Module 内にさらに Feature Module を作ることを避ける。（これは中規模におけるプラクティスである）",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Routing 管理を分散させすぎず、なるべくフラットに扱う。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Injectable なサービスは原則として root に",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "@Injectable({ providedIn: 'root' })",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " により、サービスはどこかで利用されることではじめてバンドルに含められる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "はじめは分散させるよりも root に集約するほうがよいだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Feature Module 内に完全に閉じられるものは閉じてしまっても良い。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "ディレクトリ構造の例",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "src\n├ app\n│ ├ app.module.ts\n│ ├ config\n│ ├ domain\n│ ├ store\n│ ├ queries\n│ ├ usecases\n│ ├ components\n│ │ ├ container\n│ │ ├ pages\n│ │ └ presenter\n│ ├ services\n│ │ ├ repositories\n│ │ └ ...\n│ ├ ...\n│ ├ features\n│ │ └ admin\n│ │ 　 ├ admin-routing.module.ts\n│ │ 　 ├ admin.module.ts\n│ │ 　 ├ components\n│ │ 　 ├ services\n│ │ 　 └ ...\n│ └ shared\n│ 　 └ foo\n│ 　 　 ├ index.ts\n│ 　 　 └ foo.module.ts\n└ libs\n　 └ bar\n　 　 ├ index.ts\n　 　 └ bar.module.ts"
+    }
+  ]
+}

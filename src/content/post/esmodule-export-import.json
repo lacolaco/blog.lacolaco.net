@@ -1,0 +1,568 @@
+{
+  "pageId": "4a2c1ab7-cb28-4e92-a201-925dee868227",
+  "lastEditedAt": "2023-05-21T00:03:00.000Z",
+  "slug": "esmodule-export-import",
+  "properties": {
+    "title": "ECMAScriptのimport/exportについてのメモ",
+    "date": "2018-06-26T00:00:00.000Z",
+    "tags": ["tech", "ECMAScript", "JavaScript"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "js-primer という JavaScript の本を書く上で ES2015 の import/export 構文の仕様について気になったところがあって調べたメモ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/asciidwango/js-primer/pull/505"
+    },
+    {
+      "type": "tweet",
+      "url": "https://twitter.com/laco2net/status/1011466070387904512"
+    },
+    {
+      "type": "tweet",
+      "url": "https://twitter.com/laco2net/status/1011466632210743297"
+    },
+    {
+      "type": "tweet",
+      "url": "https://twitter.com/laco2net/status/1011467526927052800"
+    },
+    {
+      "type": "tweet",
+      "url": "https://twitter.com/laco2net/status/1011467908134809600"
+    },
+    {
+      "type": "tweet",
+      "url": "https://twitter.com/laco2net/status/1011468925152870400"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "デフォルトエクスポートの扱い",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まず、デフォルトエクスポートする方法がふたつある。ひとつは専用の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "export default",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "文によってエクスポートする方法。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "filename": "",
+      "text": "export default function() {}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "default",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "という名前で名前付きエクスポートすれば、それもデフォルトエクスポートしたことになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "filename": "",
+      "text": "function foo() {}export { foo as default };"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "デフォルトエクスポートが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "default",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "という固有名がつけられることは、Spec の https://www.ecma-international.org/ecma-262/6.0/#sec-exports-static-semantics-exportentries にかかれている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "{{< figure src=“https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180626/20180626135151.png” caption=“default expor”>}}",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "デフォルトエクスポートをインポートする方法",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "デフォルトエクスポートされたものをインポートする方法もいくつかある。ひとつは一番シンプルなデフォルトインポート用の専用構文を使う。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "filename": "",
+      "text": "import otherDefault from \"other.js\";"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ところでこれは名前付きインポートで次のように書き換えられる。先程デフォルトエクスポートで書いたように、デフォルトエクスポートは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "default",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "という固有名でエクスポートされていることを利用できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "filename": "",
+      "text": "import { default as otherDefault } from \"other.js\";"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この構文、MDN の import 文のところには書かれていない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "{{< embed “https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Statements/import” >}}",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ちなみに、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "default as",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "というのは専用の構文ではなく、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "as",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "によるエイリアス付きインポートの構文が適用されており、仕様上では",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "default",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は特別なキーワードではなくただの IdentifierName として扱われているはず。 次のコードで default と foo は仕様上同じもので区別できない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "filename": "",
+      "text": "import { default as otherDefault, foo as otherFoo } from \"other.js\";"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://www.ecma-international.org/ecma-262/6.0/#sec-imports-static-semantics-boundnames",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180626/20180626135841.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "しかし、次のコードはシンタックスエラーになる。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "as",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "によるエイリアスを使わない場合には、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "default",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "foo",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は等価ではなくなる。 なぜなら",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "default",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は ECMAScript の予約語であるからだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "javascript",
+      "filename": "",
+      "text": "import { default, foo } from \"other.js\";"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://www.ecma-international.org/ecma-262/6.0/#sec-keywords",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここの肝は、Import 構文の ImportsList というもので、これは ImportSpecifier のリストだが、ImportSpecifier は ImportedBinding あるいは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "identifierName as ImportedBinding",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と定義されている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://www.ecma-international.org/ecma-262/6.0/#sec-imports",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180626/20180626140548.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "つまり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "import { default }",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と書いたときの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "default",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ImportedBinding",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "として扱われるが、これはシンボルとして参照可能なので予約語のチェックに違反する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "一方で、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "import { default as alias }",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と書いたときの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "default",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "identifierName",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "であって、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ImportedBinding",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ではなくなり、予約語のチェックから外れる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "結果的に、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "default as",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "はまるで普通のエイリアスされた名前付きインポートのように振る舞うことができる。 しかし仕様上は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "import { default as ...}",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "構文というのは存在していないが、デフォルトエクスポートや予約語の仕様が絡んだ結果、事実上の構文っぽいものになっているのがややこしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "MDN の構文例は export と import どちらも、デフォルトエクスポートが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "default",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "という名前付きエクスポートとして振る舞っている例を扱っていないが、 これは仕様が複雑で説明が難しいからされてないんだろうか。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "とりあえず自分の中で整理がついたので良し。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

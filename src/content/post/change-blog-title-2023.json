@@ -1,0 +1,36 @@
+{
+  "pageId": "bfac9356-b695-446d-b543-1bd67d943a16",
+  "lastEditedAt": "2023-05-10T02:36:00.000Z",
+  "slug": "change-blog-title-2023",
+  "properties": {
+    "title": "ブログのタイトルを変えた",
+    "date": "2023-05-09T15:39:00.000Z",
+    "tags": ["雑記"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "長らく “lacolaco/tech” という適当なタイトルだったが、技術以外のことも気軽に書く媒体としてこれまでより気合を入れて育てようと思ってようやく名前をつけた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "『遠近法』は僕が好きな哲学者ニーチェの認識論における考え方で、そこから頂戴した。いつまでこのタイトルでいくかはわからないが。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}

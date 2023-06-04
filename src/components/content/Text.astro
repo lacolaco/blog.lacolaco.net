@@ -1,0 +1,41 @@
+---
+import { TextNode } from '@lib/post';
+import Katex from './Katex.astro';
+
+type Props = TextNode;
+
+const { text, href, equation, annotations } = Astro.props;
+
+const classList = [
+  {
+    'font-bold': annotations.bold,
+    italic: annotations.italic,
+    underline: annotations.underline,
+    'line-through': annotations.strikethrough,
+  },
+];
+---
+
+{
+  (() => {
+    const content = annotations.code ? <code>{text}</code> : text;
+
+    if (href) {
+      return (
+        <a href={href} class:list={classList}>
+          {content}
+        </a>
+      );
+    } else if (equation) {
+      return (
+        <span class:list={classList}>
+          <Katex content={`$${text}$`} />
+        </span>
+      );
+    } else {
+      return <span class:list={classList}>{content}</span>;
+    }
+  })()
+}
+
+<style></style>

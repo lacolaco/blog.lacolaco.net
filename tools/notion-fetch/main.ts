@@ -3,7 +3,7 @@ import 'dotenv/config';
 import { NotionDatabase } from '@lib/notion';
 import { parseArgs } from 'node:util';
 import { FileSystem } from './file-system';
-import { renderPosts } from './renderer';
+import { toBlogPostJSON } from './blog';
 
 const { NOTION_AUTH_TOKEN, NOTION_DATABASE_ID } = process.env;
 if (NOTION_AUTH_TOKEN == null) {
@@ -12,7 +12,7 @@ if (NOTION_AUTH_TOKEN == null) {
 }
 
 const imagesDir = new URL('../../public/images', import.meta.url).pathname;
-const postsDir = new URL('../../src/content/blog', import.meta.url).pathname;
+const postJsonDir = new URL('../../src/content/post', import.meta.url).pathname;
 const manifestFilePath = new URL('./manifest.json', import.meta.url).pathname;
 
 const { values } = parseArgs({
@@ -33,14 +33,14 @@ const { force = false, 'dry-run': dryRun = false } = values;
 async function main() {
   const db = new NotionDatabase(NOTION_AUTH_TOKEN, NOTION_DATABASE_ID, manifestFilePath);
   const imagesFS = new FileSystem(imagesDir, { dryRun });
-  const postsFS = new FileSystem(postsDir, { dryRun });
+  const postJsonFS = new FileSystem(postJsonDir, { dryRun });
   // collect posts from notion
   const pages = await db.queryBlogPages();
   if (pages.length > 0) {
-    // convert page content to post markdown
-    const posts = await renderPosts(pages, imagesFS);
-    // write posts to file
-    await Promise.all(posts.map((post) => postsFS.save(post.filename, post.content, { encoding: 'utf-8' })));
+    for (const page of pages) {
+      const post = await toBlogPostJSON(page, imagesFS);
+      await postJsonFS.save(`${post.slug}.json`, JSON.stringify(post, null, 2), { encoding: 'utf-8' });
+    }
   }
   console.log('Done');
 }

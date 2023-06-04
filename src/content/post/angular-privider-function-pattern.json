@@ -1,0 +1,1036 @@
+{
+  "pageId": "613bc5dd-c46c-4c0a-8e30-b0f0dc1b8d4d",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "angular-privider-function-pattern",
+  "properties": {
+    "title": "Angular: Provider Function Pattern",
+    "date": "2022-10-16T07:08:00.000Z",
+    "tags": ["Angular", "tech", "dependency injection", "standalone component"],
+    "updatedAt": "2022-10-16T00:00:00.000Z"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular v14から導入された Standalone API に適応する形で、標準ライブラリやサードパーティライブラリが提供するAPIにある共通のパターンが表れ始めた。この記事では、私が ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "“Provider Function”",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と呼んでいるその新しいパターンについて解説する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Provider Function パターン",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Provider Function パターンとは、Standalone以前に広がっていた ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "forRoot()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " パターンに対応する形で、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使わずにDIプロバイダーをセットアップするためのAPIパターンである。おそらく具体的な例を見たほうがパターンを理解しやすいだろうから、いくつか紹介する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "1つ目は Routerパッケージが提供する ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRouter()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "APIだ。このAPIについては以前記事を書いたので、詳細はそちらを参照してほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://blog.lacolaco.net/2022/08/angular-new-provide-router-api/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "以前は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterModule.forRoot()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " でセットアップしていた ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Router",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " サービスを、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRouter()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数でセットアップするようになった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { bootstrapApplication } from '@angular/platform-browser';\nimport { AppComponent } from './app/app.component';\nimport { provideRouter } from '@angular/router';\nimport { routes } from './app/app.routing';\n\nbootstrapApplication(AppComponent, {\n  // provide Router with routes\n  providers: [provideRouter(routes)],\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "2つ目は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@angular/platform-browser",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " パッケージが提供する ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideAnimations()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIだ。以前は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "BrowserAnimationsModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をインポートしていたが、代わりにこの関数の戻り値を ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "providers",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 配列に追加するようになっている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://angular.io/api/platform-browser/animations/provideAnimations",
+          "href": "https://angular.io/api/platform-browser/animations/provideAnimations",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { bootstrapApplication } from '@angular/platform-browser';\nimport { AppComponent } from './app/app.component';\nimport { provideAnimations } from '@angular/platform-browser/animations';\n\nbootstrapApplication(AppComponent, {\n  providers: [\n    provideAnimations()\n  ]\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "3つ目は、v15より ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@angular/common/http",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " パッケージから提供される予定の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideHttpClient()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIだ。もう説明不要だと思うが、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClientModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の代わりに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を利用可能にする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://next.angular.io/api/common/http/provideHttpClient",
+          "href": "https://next.angular.io/api/common/http/provideHttpClient",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "最後に紹介するのはサードパーティライブラリの NgRx が提供する ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideStore()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " API だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "NgRx \\- provideStore",
+          "href": "https://ngrx.io/api/store/provideStore",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "provideStore()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数は従来の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "StoreModule.forRoot()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に対応したものであり、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Store",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " サービスを利用可能にする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "bootstrapApplication(AppComponent, {\n  providers: [provideStore()],\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これらのAPIに共通するパターンの特徴が見えてきただろうか？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "プロバイダー宣言と動的なパラメータ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "AngularのDIシステムにおいて、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "providers",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 配列に追加するオブジェクトは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "プロバイダーオブジェクト",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "である。これはStandalone APIに関係なくいままでもずっとそうだった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://angular.io/api/core/Provider",
+          "href": "https://angular.io/api/core/Provider",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "プロバイダーオブジェクト",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は、依存性の注入の中で、あるトークンに対応するインスタンスを提供 (provide）するような役割を指す。そのインスタンスの生成方法の違いによって、プロバイダーはクラスプロバイダー・ファクトリープロバイダー・値プロバイダーなど、いくつかのタイプに分けられる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 日本語ドキュメンテーション - 依存性プロバイダーの設定",
+          "href": "https://angular.jp/guide/dependency-injection-providers",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "多くのAngularライブラリが依存性の注入を介して提供するAPIは、シングルトンである場合が多い。その場合は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "providedIn: 'root'",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " オプションによって、自動的にプロバイダーがセットアップされる。しかしこのままでは、アプリケーションや実行環境ごとに異なる初期パラメータを渡すことができない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { Injectable } from '@angular/core';\n\n@Injectable({\n  providedIn: 'root',\n})\nexport class HeroService {}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "サービスに動的なパラメータを渡したい場合には2つの手段がある。ひとつはそのパラメータもDIで解決する方法、もうひとつはファクトリープロバイダーを使って開発者自身が ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "new",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " する方法だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "前者の方法では、パラメータに専用の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "DIトークン",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を発行し、値プロバイダーを使ってパラメータを提供する。サービス側では、そのトークンをキーにしてパラメータを注入することができる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// library side\nimport { Injectable, InjectionToken } from '@angular/core';\n\nexport type HeroServiceParams = ...;\n\nexport const HERO_SERVICE_PARAMS = new InjectionToken<HeroServiceParams>('hero params');\n\n@Injectable({\n  providedIn: 'root',\n})\nexport class HeroService {\n  constructor(@Inject(HERO_SERVICE_PARAMS) params: HeroServiceParams) {}\n}\n\n// application side\nbootstrapApplication(AppComponent, {\n  providers: [\n    { provide: HERO_SERVICE_PARAMS, useValue: { ... } },\n  ],\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "後者のファクトリープロバイダーを使う方法は単純で、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "providedIn: 'root'",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をやめてしまい、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "useFactory",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " でインスタンスを生成する。コンストラクタを開発者自身が呼び出すため、DIトークンは必要ない。ただし、この場合はサービスクラスのコンストラクタが要求するすべてのパラメータを利用側が渡さなければならないため、アプリケーション側の負担が大きい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// library side\nimport { Injectable } from '@angular/core';\n\nexport type HeroServiceParams = ...;\n\n@Injectable()\nexport class HeroService {\n  constructor(params: HeroServiceParams) {}\n}\n\n// application side\nbootstrapApplication(AppComponent, {\n  providers: [\n    { provide: HeroService, useFactory: () => new HeroService({...}) },\n  ],\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "どちらの方法にしても、ライブラリが公開するサービスクラスやDIトークンに対して、ライブラリを利用するアプリケーション側でプロバイダーを宣言することになっているのだが、ここで問題になるのはライブラリが要求する型に合致したインスタンスが正しく提供される保証がないことだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "インターフェースと実装を分離できるのが依存性の注入の利点ではあるが、ライブラリとしてはどんなオブジェクトが提供されるかわからないため、アプリケーション側でプロバイダーが宣言されるようなパラメータについては、楽観的に正常系だけを考慮するか、防御的にアサーションするかの選択を迫られることになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この問題を多くの場面でこれまで解決していたのが、NgModuleの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "forRoot()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " パターンである。これは「",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "プロバイダーオブジェクトを返す静的メソッド",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "」をライブラリの NgModule が提供することで、静的メソッドの引数として動的なパラメータを受け取りながら、プロバイダーの宣言はライブラリ側に閉じることができるパターンになっている。このとき ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "forRoot()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " メソッドの戻り値は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ModuleWithProviders",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型が使われる。NgModuleのインポートとして機能しつつ、プロバイダーも提供することができる型だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular 日本語ドキュメンテーション - for Root()の仕組み",
+          "href": "https://angular.jp/guide/singleton-services#forroot%E3%81%AE%E4%BB%95%E7%B5%84%E3%81%BF",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ちなみに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "forRoot()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という名前は、シングルトンにするためにルートモジュールで一回だけ提供してほしいことを示す慣例的なものであり、それ以上の特別な意味はない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// library side\nimport { Injectable, InjectionToken, ModuleWithProviders } from '@angular/core';\n\nexport type HeroServiceParams = ...;\n\n//// internal\nconst HERO_SERVICE_PARAMS = new InjectionToken<HeroServiceParams>('hero init');\n\n@Injectable()\nexport class HeroService {\n  constructor(@Inject(HERO_SERVICE_PARAMS) params: HeroServiceParams) {}\n}\n\n@NgModule({})\nexport class HeroModule {\n  static forRoot(params: HeroServiceParams): ModuleWithProviders {\n    return {\n      ngModule: HeroModule,\n      providers: [\n        HeroService,\n        { provide: HERO_SERVICE_PARAMS, useValue: params },\n      ],\n    }\n　　　　}\n}\n\n// application side\n@NgModule({\n  imports: [ HeroModule.forRoot({...}) ],\n})\nexport class AppModule {}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このような経緯で、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をはじめとしたさまざまなライブラリが提供する ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "forRoot()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のような静的メソッドのパターンが広まっていた。だがStandalone APIによってNgModuleがオプショナルになったことで、新しいAPIが必要になった。そこで生まれてきたのが ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Provider Function",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というパターン だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Provider Function",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Provider Function",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " とはその名の通り、プロバイダーを返す関数である。つまり ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "forRoot()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 静的メソッドがやっていたことと同じである。違っているのは、その戻り値がNgModuleとしても機能する必要がなくなり、純粋にプロバイダーだけを返せばよくなったことである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Provider Functionは慣例的に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideXXX()",
+          "annotations": {
+            "bold": true,
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という命名規則に則り、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provide",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というプレフィックスを持つ。また、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "XXX",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の部分にはそのProvider Functionによって提供されることになるサービスなどの名前が入る。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Router",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " サービスに対応する ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRouter()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " といった形だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ちなみに NgModule でも Standalone でも、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "providers",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 配列の要素には プロバイダーの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "配列",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を渡してもよい。プロバイダーの配列を渡した場合は自動的にflattenされる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// library side\nimport { Injectable, InjectionToken, Provider } from '@angular/core';\n\nexport type HeroServiceParams = ...;\n\n//// internal\nconst HERO_SERVICE_PARAMS = new InjectionToken<HeroServiceParams>('hero init');\n\n@Injectable()\nexport class HeroService {\n  constructor(@Inject(HERO_SERVICE_PARAMS) params: HeroServiceParams) {}\n}\n\nexport function provideHeroService(params: HeroServiceParams): Provider[] {\n  return [\n    HeroService,\n    { provide: HERO_SERVICE_PARAMS, useValue: params },\n  ];\n}\n\n// application side\nbootstrapApplication(AppComponent, {\n  providers: [\n    provideHeroService({...})\n  ],\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このように Provider Function という形式によって、アプリケーションから動的なパラメータを受け取りつつ、その入力値を静的に型チェックし、プロバイダーの宣言詳細をライブラリに閉じることができている。ライブラリ内部で使っているDIトークンが外部に露出していないため、ライブラリ側で実装の詳細を変更してもアプリケーション側に影響することもない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "必ずしも命名規則に従わなくてもいいし、DIトークンを露出してアプリケーション側でプロバイダーを宣言してもらう方法を選ぶことが禁止されるわけでもないが、標準ライブラリのAPIに一貫したパターンがあるということで開発者はそれを真似するようになるだろうし、現にNgRxのようなサードパーティライブラリも追従を始めている。あえてこの流れに逆らう意味は見出しにくいだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "provideRouter()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に代表される ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Provide Function パターン",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は、これまで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "forRoot()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " パターンが担ってきたプロバイダー宣言への動的なパラメータ適用のための慣例的な実装パターンが、NgModuleを使わない形で生まれ変わったものであり、特別に新しい仕組みが導入されたわけではない。だが、クラスの静的メソッドから単純な関数に変わったことで、これまでよりもシンプルに、そして柔軟に扱いやすくなっている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今後、標準ライブラリや多くのサードパーティライブラリのAPIがこの形に統一されていくだろう。このようなパターンがあると知っておくことで、新たに導入されるAPIの振る舞いや利用方法が推測しやすくなるはずだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、このProvider Functionと対になるような ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "“Injector Function”",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というパターンも新たに生まれようとしている。そしてこれらをセットにした ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "“Functional DI”",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " パターンについては、また別の記事で紹介したい。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

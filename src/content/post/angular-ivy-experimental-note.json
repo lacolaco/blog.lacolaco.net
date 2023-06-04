@@ -1,0 +1,1139 @@
+{
+  "pageId": "ecaa239c-f616-409c-80b8-26b507a161f6",
+  "lastEditedAt": "2023-05-21T05:37:00.000Z",
+  "slug": "angular-ivy-experimental-note",
+  "properties": {
+    "title": "ngIvyメモ",
+    "date": "2018-03-11T00:00:00.000Z",
+    "tags": ["tech", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "DESIGN DOC (Ivy): Separate Compilation を読む",
+          "href": "../read-ivy-design-doc-separate-compilation/",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ngIvy の Separate Compilation についてのプロポーザルを読み、実装中の Renderer3 のコードを読み、ベータ版の compiler が生成するコードを読み、毎晩毎晩考えを巡らせた結果、ngIvy についてある程度体系的な理解が得られたという錯覚があるので、ここで言語化しておきます。 単なるメモなので、何か伝えたいとかではないです。https://ng-sake.connpass.com/event/80734/ の話のネタにはなるかもしれません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、予め断っておきますが、この内容は Angular の内部処理を理解している上級者向けです。これはブラックボックスの内側です。 これがわからないからといって Angular が使えないわけではないですし、まったく自信を失わなくてよいです。 知らないほうが素直にライブラリを使える可能性のほうが高いです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "いままでの AoT コンパイル",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180310/20180310123120.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "v5 までの AoT コンパイルは、以下の流れで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "greeting.component.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "をコンパイルします。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Analysis phase",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": AoT コンパイルのエントリポイントとなる NgModule から再帰的にすべての参照をたどり、以下の操作をおこなう。",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "numbered_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "それが",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": ".ts",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "ファイルである場合は、そのファイルから export されているすべてのシンボルを",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": ".metadata.json",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "に記録し、関連付ける",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "それが",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": ".js",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "ファイルである場合は、隣接する",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": ".metadata.json",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "を関連付ける",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Codegen phase",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": 1 でコンパイルに関連付けられたすべての",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": ".metadata.json",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "について、以下の操作をおこなう",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "numbered_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": ".metadata.json",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "に",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "@Component",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "や",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "@NgModule",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "などの Angular デコレータが存在する場合は、それぞれについて NgFactory の TypeScript コードを生成する",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "生成された TypeScript コードをコンパイルし、",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": ".ngfactory.js",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "を生成するか、型チェックが通らない場合はエラーを出力する",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Compilation phase",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ": 通常の",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "tsc",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "の挙動と同じようにすべての",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": ".ts",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "ファイルをコンパイルする",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "すべての操作が正しく完了すると、AoT コンパイルが成功します。 結果として、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "GreetingComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に対して出力されるファイルは次の 3 つです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "greeting.component.js",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "greeting.component.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を JavaScript にコンパイルしたものです。 コンパイル過程で、デコレータの情報は静的フィールドに変換されることがあります。 ( ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "annotationsAs",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " オプション )",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "greeting.component.ngfactory.js",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "greeting.component.js",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "から export される",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "GreetingComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を、Angular がコンポーネントとして利用するために機械生成されたコードで、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "GreetingComponentNgFactory",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "クラスを export します。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "GreetingComponentNgFactory",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "クラスの主な役割は次の 2 つです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "GreetingComponent",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "のインスタンス生成: コンストラクタで要求する引数の解決（Dependency Injection の実行）",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "GreetingComponent",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "のビュー生成: テンプレートから生成されるビュー組み立て関数の提供",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "greeting.component.metadata.json",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "greeting.component.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を静的解析した結果得られたメタデータです。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "公式ドキュメント",
+          "href": "https://angular.io/guide/aot-compiler#phase-1-analysis",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ではある種の抽象構文木(AST)と見ることもできると書かれています。 メタデータは NgFactory の生成だけでなく、language-service によるテンプレートエラー検知にも使われています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "メタデータ中に保存される情報は、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TypeScript の型情報 + Angular デコレータ中の値情報",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " です。前者だけであれば",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".d.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ファイルで事足りますが、NgFactory の生成には",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@Component",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "などのデコレータに渡される実際の値情報が必要になるため、ngc はこれを",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*.metadata.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "という形で記録します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "で、ngIvy って何？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここからが本題で、上述のコンパイル処理は ngIvy により次のように変わります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180311/20180311131044.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ngIvy 方式の AoT コンパイルは、以下の流れで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "greeting.component.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "をコンパイルします。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "コンパイル対象の",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ".ts",
+              "annotations": {
+                "bold": true,
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "ファイル",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "について、以下の操作をおこなう",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "numbered_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Angular デコレータが存在する場合は、それぞれのデコレータに対応した Angular 定義を TypeScript コード中に生成し、対応するメタデータを",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": ".metadata.json",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "に記録する",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "TypeScript コードをコンパイルし、",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": ".js",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": "を生成するか、型チェックが通らない場合はエラーを出力する",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "それぞれのデコレータに対応する定義とメタデータについては ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "DESIGN DOC (Ivy): Separate Compilation を読む",
+          "href": "../read-ivy-design-doc-separate-compilation/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " を参照してください。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "手書き定義と脱 ngc",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ngIvy のコンパイル過程において、「Angular デコレータが存在する場合は、それぞれのデコレータに対応した Angular 定義を TypeScript コード中に生成」と書きましたが、 裏を返せば「Angular デコレータが存在しなければただ TypeScript をコンパイルするだけ」ということです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ngIvy では、本来は Angular デコレータから生成される",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngComponentDef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "や",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngInjectorRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のような定義を事前に TypeScript 中に記述しておくと、ngc におけるコード生成過程をスキップできます。 機械生成された定義と手書きの定義は区別されないため、この場合は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ではなく",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "tsc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "だけでコンパイル可能です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180311/20180311131157.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "手書きでなくとも、例えば Babel や他のシステムによってソースコードが変換されたとしても、最終的に ngIvy の期待する出力があれば、Angular の AoT コンパイル結果として受け入れられます。 プラグインさえ書けば JSX から Angular コンポーネント定義を生成することも不可能ではないでしょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このポイントは、",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ngIvy により ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "@Component",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " などの Angular デコレータは「Angular 定義を生成する手段のひとつ」となる。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "サードパーティのツールやマニュアルでの記述により、Angular デコレータを排除したピュアな JavaScript としてコンポーネントを作成できるようになる。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "実際に ngIvy によって、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "tsc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "rollup",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "だけで動作するアプリケーションのサンプルは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "こちら",
+          "href": "https://github.com/angular/angular/tree/master/integration/hello_world__render3__rollup",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この例では",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HelloWorld",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "コンポーネントは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@Component",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "デコレータを持たず、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngComponentDef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を手書きしているので、コンパイルは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "tsc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "だけで完了します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "分離コンパイル",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ngIvy では従来の AoT コンパイルの非効率性を解決することに重きをおいています。ここでいう非効率性とは、",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "NgFactory の生成はアプリケーションコンパイル時にしかおこなえない（npm ライブラリは NgFactory を含まない",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": ".js",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "ファイルと NgFactory の元になる",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": ".metadata.json",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "を提供する必要がある）",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "NgModule のスコープ内で何かしらの変更があった場合には、その NgModule ごと再コンパイルして metadata.json や NgFactory を再生成する必要がある",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "重要なポイントは、このプロポーザルにおいてはこれらを解決するために、ngIvy による AoT コンパイルは単純にデコレータをもとにコードを変換する仕組みになっていて、アプリケーション自体の整合性を担保する役割は失っていることです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "Ivy においては、ランタイムはこれまではコンパイラによって事前計算されたもののほとんどを、実行時に処理することで分離コンパイルを可能にする方法で作られています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "とあるように、アプリケーションが実行可能かどうかのチェックは事前計算ではなく JIT での処理に切り分けられると予想されます。 この場合、Language Service とどのように協調するのかは今のところ不明です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "今後",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "上記仕様はまだ実装されていない（定義の生成部分は見て取れるけど、まだ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".metadata.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の生成が古いように見える）ので、分離コンパイルが最終的にどういう形になるのかはまだ観察が必要です。とはいえ、現状では ngIvy のターゲットはライブラリとアプリケーションだけでパッケージは対象外なので、実質的に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".metadata.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は不要といえば不要なのかもしれません。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

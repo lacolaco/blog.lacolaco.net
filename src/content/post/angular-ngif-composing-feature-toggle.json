@@ -1,0 +1,346 @@
+{
+  "pageId": "c30c4744-b390-4755-8495-a126d32ad0d9",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "angular-ngif-composing-feature-toggle",
+  "properties": {
+    "title": "Angular: NgIfを合成したフィーチャートグルディレクティブ",
+    "date": "2023-02-08T06:00:00.000Z",
+    "tags": ["Angular", "tech", "standalone component"],
+    "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-ngif-composing-feature-toggle"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angularの組み込みディレクティブ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使って、ある条件を満たすときにだけビューの一部分を描画するケースは多い。たとえば、特定の権限を持つユーザーにだけ表示されるビューを実装することがある。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を直接使う場合には、その条件ロジックをテンプレートあるいはコンポーネントで持つことになる。一箇所だけならよいが、同じようなロジックを多用するならそのロジックを含めて再利用可能にしたい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回はそのようなフィーチャートグルのユースケースをAngular v15で導入された ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "hostDirectives",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 機能を使って実装してみよう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "サンプルはStackBlitzに用意した。以下、要点をかいつまんで解説するが、あくまでも概念実証的なサンプルコードなので",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "くれぐれもこのままプロダクションコードなどに転記しないように",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-ivy-nacplk?ctl=1&embed=1&file=src/app/app.component.html"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次のコードで、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AuthDirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ディレクティブを合成している。合成とはどういうことか。そのディレクティブがテンプレートで使用されるとき、あたかも合成されたディレクティブも同じ位置に使用されているかのように振る舞う、ということである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Directive({\n  selector: '[appIfHasPermissions]',\n  standalone: true,\n  hostDirectives: [NgIf],\n})\nexport class AuthDirective implements OnInit, OnDestroy {\n  private readonly ngIfDirective = inject(NgIf);"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この場合、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AuthDirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が使用されるとき、ディレクティブが付与された要素に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ディレクティブも同時に付与されているように振る舞う。そのため、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AuthDirective",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は同じ要素上に同居するディレクティブのインスタンスを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "inject()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数によって（もちろんコンストラクタでもよい）参照できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "あとは表示する条件を満たしたときに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ディレクティブの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " プロパティが ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "true",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " になるようロジックを実装すればよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "combineLatest([this.authService.user$, this._permissions]).subscribe(\n      ([user, requiredPermissions]) => {\n        const permitted = requiredPermissions.every((p) =>\n          user.permissions.includes(p)\n        );\n        this.ngIfDirective.ngIf = permitted;\n      }\n    );"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このように ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と条件ロジックを合成したディレクティブを再利用可能にすることで、ディレクティブを使う側の責務は減ってコンポーネントが簡素になり、より宣言的なテンプレートに仕上がる。そしてDOM要素の生成・破棄のロジックはAngularの組み込みディレクティブに委譲しており、アプリケーションのユースケース的な関心だけを自前実装することができた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<div *appIfHasPermissions=\"[]\">no permissions</div>\n<div *appIfHasPermissions=\"['read-all']\">read-all</div>\n<div *appIfHasPermissions=\"['read-all', 'write-all']\">read-all, write-all</div>"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "NgIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に限らず、Angularの組み込みディレクティブを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "hostDirectives",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使って自作ディレクティブに合成して実装量を減らし、クオリティが保証されたDOM操作実装に乗っかることが簡単になった。つまり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "UIライブラリ的な関心事だけを実装したディレクティブ",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "アプリケーション的な関心事をそれに上乗せするディレクティブ",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "とを分けて実装し、再利用やテストがしやすいモジュール化を実現しやすくなったということだ。ぜひさまざまな場面でこの新機能を活用してほしい。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

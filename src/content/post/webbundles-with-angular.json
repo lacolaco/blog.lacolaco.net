@@ -1,0 +1,589 @@
+{
+  "pageId": "71bd2be8-bc25-4bf6-92ae-57848af085ef",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "webbundles-with-angular",
+  "properties": {
+    "title": "AngularでWeb Bundlesを試す",
+    "date": "2019-12-25T00:00:00.000Z",
+    "tags": ["tech", "Angular", "webpackaging"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angularアドベントカレンダー #2",
+          "href": "https://qiita.com/advent-calendar/2019/angular-2",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "の24日目代打記事です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Web Bundles",
+          "href": "https://web.dev/web-bundles/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "とは、現在標準化が検討されている新しいWebの仕様です。Webページとそれに紐づくサブリソースをひとつのバンドルとしてパッケージ化することができます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事ではWeb Bundlesを手元のAngularアプリケーションで試してみたい人向けの手順を紹介します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "CLI Builderのインストール",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "lacolaco/ngx-web-bundles",
+          "href": "https://github.com/lacolaco/ngx-web-bundles",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "というパッケージで、Angular CLI向けのBuilderを作っています。 次のコマンドを実行するだけで、Web Bundleをビルドする準備が整います。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ ng add @lacolaco/ngx-web-bundle"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "インストールできたら、 任意のプロジェクトで",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "gen-bundle",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "コマンドを実行します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ ng run <project name>:gen-bundle"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ビルドが終わると",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "index.html",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が出力されるdistディレクトリと同じ階層に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "out.wbn",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というファイルが生成されているはずです。このファイルをGoogle ChromeのCanary版で Web Bundlesを有効にしてから開くと、バンドルを展開できるはずです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "How it works",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ngx-web-bundleがやっているのは２つのことです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ng add",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " されたときに ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "angular.json",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " を更新し、 ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "gen-bundle",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "コマンドを定義する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "gen-bundle",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "コマンドが実行されたときに処理する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "ng-add時の動き",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ng-add時に動くのは次の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngAdd",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/ngx-web-bundles/blob/master/schematics/ng-add/index.ts#L15"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "やっていることは次の2つです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "対象とするプロジェクトを特定する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "プロジェクトの ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "architects",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " に ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "gen-bundle",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "を追加する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "gen-bundle",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "時の動き",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "gen-bundle",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "コマンドで動くのは次の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "build",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/ngx-web-bundles/blob/master/index.ts#L51"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "やっていることは次の3つです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "executeBrowserBuilder",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " を使って、アプリケーションのビルドをおこなう（",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "ng build",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "と同じ処理を実行する）",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ビルド後の生成物を ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "wbn",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " パッケージを使ってバンドル化する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "アプリケーションの生成物を同じ場所にバンドルを出力する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "バンドル化の処理は次の関数に記述されています。特別に配慮が必要なのはindex.htmlだけで、それ以外はファイルごとに同じ処理をしています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/ngx-web-bundles/blob/master/index.ts#L24"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ひとつひとつのやっていることはシンプルです。それらを組み合わせてルールに従って配置すれば簡単にAngular CLI経由で動かせるスクリプトを作成できます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Takeaways",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "AngularでWeb Bundlesを試すなら ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "@lacolaco/ngx-web-bundle",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " をどうぞ",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "自作のスクリプトを",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "ng add",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "や",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "ng run",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "に対応させるのは意外に簡単です",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "デバッグはちょっと面倒です",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Web Bundlesについては web.dev/web-bundles/ を参照してください",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

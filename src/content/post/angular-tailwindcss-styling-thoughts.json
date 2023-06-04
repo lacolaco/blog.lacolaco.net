@@ -1,0 +1,542 @@
+{
+  "pageId": "69bb91a6-ecf3-453f-bfcd-5c2e6354033a",
+  "lastEditedAt": "2023-05-21T05:10:00.000Z",
+  "slug": "angular-tailwindcss-styling-thoughts",
+  "properties": {
+    "title": "Angular と Tailwind CSSについての所感",
+    "date": "2021-02-17T00:00:00.000Z",
+    "tags": ["tech", "Angular", "thought", "tailwindcss"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular CLI v11.2 から",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Tailwind CSS",
+          "href": "https://tailwindcss.com/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "の公式サポートが追加された。 コミュニティでは以前から",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ngneat/tailwind",
+          "href": "https://github.com/ngneat/tailwind/",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のようなサードパーティライブラリによってサポートされており、そういう意味では Angular + Tailwind CSS の組み合わせ自体は今に始まったものではない。 とはいえ公式サポートされたことによりこれまでよりも多くの Angular ユーザーが Tailwind CSS を検討するようになるだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事では Angular と組み合わせる上での Tailwind CSS の使われ方について個人的な所感をまとめる。 あくまでも所感であり、開発者コミュニティがどのようなプラクティスを支持していくかはまだこれから模索されていく段階であることを念頭に置いてもらえればと思う。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "前提として、それなりに持続的な開発を見込む（メンテナビリティが関心にある）プロジェクトにおいての話であって、作り捨てのプロトタイピングはこの記事の対象外だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "コンポーネントスタイル内での ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@apply",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は避ける",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Tailwind CSS では",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@apply",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " によってユーティリティクラスをまとめて新たなクラスを定義できるが、この機能は Angular のコンポーネントスタイル中で使うのは極力避けたほうがよい。 その理由は、複数のコンポーネントが同じクラスを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@apply",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " したときの重複を最適化することができないからだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Tailwind CSS とともに使われる",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@apply",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は、与えられたクラスのルールセットをビルド時にマージして",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "インライン化",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "する。 つまり、同じクラスを含む ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@apply",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を書くたびにその重複分だけビルド後の CSS のサイズは大きくなっていく。 グローバル CSS でも同じことは起きるが、コンポーネントスタイルは他のコンポーネントのことを気にしないため、各コンポーネントが好き勝手に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@apply",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を多用するとアプリケーション全体の CSS サイズが膨張しやすい。 CSS のサイズが大きくなればそれだけページの読み込みパフォーマンスに影響が出る。注意が必要だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "従来までの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@ngneat/tailwind",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のセットアップであれば、コンポーネントスタイル中での ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@apply",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " はオプトインになっていたが、 Angular CLI でのサポートはデフォルトでコンポーネントスタイル中でも使えてしまうため、今のところは良心による制限しかできない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "スタイルの再利用はコンポーネントの責務とする",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Tailwind CSS の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Extracting Components",
+          "href": "https://tailwindcss.com/docs/extracting-components",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "にも書かれているが、 Tailwind CSS のユーティリティクラスの組み合わせを再利用可能にしたい場合に、まず検討すべきはそのテンプレート自体の切り出しだ。 その意図は、コンポーネント境界の真実の情報源をひとつにすることにある。 CSS の中で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".card",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " クラスを宣言し、そのクラスを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<my-card>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コンポーネントに適用するというのは、コンポーネントの境界に関する関心が分裂しているといえる。 Tailwind CSS の思想としては、CSS でコンポーネントを表現するのではなく、HTML や JSX などの構造化されたテンプレート側でコンポーネントは定義され、再利用されることを推奨する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular に当てはめれば、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@apply",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使ってユーティリティクラスのセットを再利用したくなったら、それはその部分のテンプレートを切り出して新たなコンポーネントを作るタイミングということだろう。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".btn",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " クラスが欲しくなったということは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ButtonComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を作る時が来たと考える。 この考えに基づくと UI を責務とするコンポーネントの数が増えていくが、これはルーティングやアプリケーションロジックを責務とするコンポーネントとは別物として扱うべきだろう。 Angular CLI の Multiple Projects 機能を使うなら、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "projects/ui",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のようなライブラリプロジェクトとして分離してアプリケーションの関心から明確に切り離して管理できると望ましい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "コンポーネントスタイルを Tailwind CSS で書かない",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "CSS がコンポーネント単位にスコープ化される利点のひとつは、その CSS の影響範囲を明確に予測できることにある。 そのコンポーネント以外のスタイルには影響を与えないという保証があるため、変更やリファクタリングが安全になる。 逆に言えば、特定のコンポーネントのためのスタイルがグローバル CSS に書かれてしまうことは避けなければならない。 将来的にそのコンポーネントが不要になったり分割されたりしても、一度グローバルに書かれた CSS はどこに影響するか予測が困難になってしまうからだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "大前提として、Tailwind CSS はグローバル CSS 上にクラスを定義する。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@layer components",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のように Tailwind CSS を拡張して新たなクラスを追加する機能があるが、 この機能は特定の Angular コンポーネントのために使ってはならない。 それはコンポーネントに依存するスタイルがグローバル CSS に書かれてしまうことに他ならない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "アプリケーションの関心と Theming を分離する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そもそも、コンポーネントスタイルに限らず、アプリケーションの関心によるスタイルと Tailwind CSS は切り離しておきたい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Tailwind CSS は“ツール”と“デザインシステム”の 2 つの側面がある。 Tailwind CSS という“ツール”は、デザインシステムをライブラリとして実装するための汎用的な基盤と捉えられる。 設定ファイルによる制御、エディタ支援との統合、ビルドや最適化などすべてひっくるめた基盤だが、そこに具体的なデザインシステムへの依存はない。 このことはビルトインのデザインシステム（これこそが “Tailwind” の部分なのだろう）が設定無しでデフォルトで使えるために気づきにくくなっている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "実は Tailwind CSS の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "トップページ",
+          "href": "https://tailwindcss.com/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "にも “An API for your design system.” と書かれている。 つまり、開発者が自前のデザインシステムを Tailwind CSS 基盤上で実装することもはじめから意図されているのだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "// 独自のデザインシステムをTailwind CSSのpresetとして実装し、利用する例\nmodule.exports = {\n  presets: [require('@acmecorp/tailwind-base')],\n  // ...\n};"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ふつうデザインシステムが特定のアプリケーションの関心を含むことはない。 複数のアプリケーションや Web サイト、それらに一貫したいものだからこそデザインシステムとして作られているのであって、たったひとつのアプリケーションのために作るものではない。 だとすれば、Tailwind CSS の上でアプリケーション固有のスタイルを記述すること自体がその本質からズレているだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "アプリケーション固有のスタイルは Tailwind CSS に関与せず、基本的にはコンポーネントスタイルで記述したい。 一方でアプリケーションの外から制約として与えたい Theming の関心、たとえばカラーパレットや spacing などは Tailwind CSS の力を借りることができる部分だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まとまりのない文章になってしまったが、次の点は Angular と Tailwind CSS の組み合わせにおける推奨事項としてある程度妥当ではないかと考えている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "コンポーネントスタイル内での ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "@apply",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " の利用は控える",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angular コンポーネントをスタイルの再利用の単位とする",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Tailwind CSS は Theming の関心に閉じて使う",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "アプリケーション特有のスタイル、コンポーネント特有のスタイルに Tailwind CSS を関与させない",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "会社や組織のなかでデザインシステムを構築しており、それを Angular アプリケーションに適用しやすいようにライブラリ化したいというようなユースケースであれば、 Tailwind CSS を基盤として使うことで満足度の高い開発者体験が得られるだろう。 ユーティリティセットとしてビルトインのデザインシステムを借用したいという場合も、 ユーティリティの利用だけに留めて Tailwind CSS 上での拡張は避け、これまでどおり Angular のコンポーネントスタイルを中心に表現していくのがいいだろう。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

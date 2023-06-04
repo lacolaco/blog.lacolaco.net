@@ -1,0 +1,1439 @@
+{
+  "pageId": "618c54c9-8689-4e02-a3ef-4db0ac7ab530",
+  "lastEditedAt": "2023-05-21T05:03:00.000Z",
+  "slug": "async-pipe-initial-null-problem-en",
+  "properties": {
+    "title": "Initial Null Problem of AsyncPipe and async data-binding",
+    "date": "2020-02-19T00:00:00.000Z",
+    "tags": ["tech", "Angular", "rxjs"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This post is English version of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AsyncPipeの初期値null問題と非同期データバインディング",
+          "href": "https://blog.lacolaco.net/2020/02/async-pipe-initial-null-problem/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular’s ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AsyncPipe",
+          "href": "https://angular.io/api/common/AsyncPipe",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " is a useful feature for template binding of asynchronous data, but it has a big problem since the beginning. That is the “Initial Null Problem”. This article describes the Initial Null Problem of AsyncPipe and its root cause, and discusses new asynchronous data-binding to solve that.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "How AsyncPipe works",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "AsyncPipe is now always used to create general Angular applications. It is often used to subscribe to Observable data and bind its snapshot to a template. The basic usage is as follows.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: \"app-root\",\n  template: `\n    <div *ngIf=\"source$ | async as state\">\n      {{ state.count }}\n    </div>\n  `,\n  styleUrls: [\"./app.component.css\"]\n})\nexport class AppComponent {\n  source$ = interval(1000).pipe(map(i => ({ count: i })));\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "So, how does AsyncPipe bind the value that ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "source$",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " streams to a template and render it? Take a look at ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Implementation of AsyncPipe",
+          "href": "https://github.com/angular/angular/blob/9.0.1/packages/common/src/pipes/async_pipe.ts#L71",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "AsyncPipe has a lot of asynchronous data abstraction code that can handle both Promise and Observable, but the essential code is the following code. Like any other Pipe, it implements the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "transform()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " method.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "  transform(obj: Observable<any>|Promise<any>|null|undefined): any {\n    if (!this._obj) {\n      if (obj) {\n        this._subscribe(obj);\n      }\n      this._latestReturnedValue = this._latestValue;\n      return this._latestValue;\n    }\n\n    if (obj !== this._obj) {\n      this._dispose();\n      return this.transform(obj as any);\n    }\n\n    if (ɵlooseIdentical(this._latestValue, this._latestReturnedValue)) {\n      return this._latestReturnedValue;\n    }\n\n    this._latestReturnedValue = this._latestValue;\n    return WrappedValue.wrap(this._latestValue);\n  }"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Let’s look at the code from the top. The first ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "if (!this._obj)",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is the condition when Observable is passed to AsyncPipe for the first time, that is, the initialization process. If ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "this._obj",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " doesn’t exist and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "obj",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " does, the pipe subscribes ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "obj",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "obj",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " corresponds to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "source$",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " in the example. The Observable passed to AsyncPipe is executed ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "subscribe()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " here.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The next if statement is for when an Observable has changed from the one you are subscribing. It disposes the current subscription and starts resubscribing.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "And the rest of the code is for returning the latest value ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "this._latestValue",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " from the subscribed Observable. The returned value will be the value actually used to render the template.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "What you can see here is that ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AsyncPipe returns the cached ",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "this._latestValue",
+          "annotations": {
+            "bold": true,
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " when the",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "transform()",
+          "annotations": {
+            "bold": true,
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "method is called",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". This can also be seen in AsyncPipe’s ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "_subscribe()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "this._updateLatestValue()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " methods. When the value flows into the asynchronous data subscribed by the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "_subscribe()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " method, ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "markForCheck()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ChangeDetectorRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is called in the callback. It causes the next ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "transform()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " call.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "  private _subscribe(obj: Observable<any>|Promise<any>|EventEmitter<any>): void {\n    this._obj = obj;\n    this._strategy = this._selectStrategy(obj);\n    this._subscription = this._strategy.createSubscription(\n        obj, (value: Object) => this._updateLatestValue(obj, value));\n  }\n  ...\n  private _updateLatestValue(async: any, value: Object): void {\n    if (async === this._obj) {\n      this._latestValue = value;\n      this._ref.markForCheck();\n    }\n  }"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In other words, AsyncPipe renders templates using the following mechanism.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Pipe’s ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "transform()",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " is called in Change Detection",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Start subscribing to the passed Observable",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Return ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "this._latestValue",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " at the time ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "transform()",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "is called",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "When Observable flows new data, update ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "this._latestValue",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " and trigger Change Detection (back to 1)",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "transform()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " must return a synchronous value, because the template can only render synchronous values. It can only return a cached snapshot at the time ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "transform()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is called.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "A solid understanding of this should raise a question. That is, “at the start of the subscription, can’t the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "transform()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " return a value?” And that is the biggest problem that AsyncPipe has, the “Initial Null Problem”.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Initial Null Problem",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Since ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "this._latestValue",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is set by Observable’s subscription callback, the value has never been set at the time of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "transform()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " call. However, ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "transform()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " must return some value, so it returns a default value. Let’s look again at the beginning of AsyncPipe’s ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "transform()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "    if (!this._obj) {\n      if (obj) {\n        this._subscribe(obj);\n      }\n      this._latestReturnedValue = this._latestValue;\n      return this._latestValue;\n    }"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "this._latestValue",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " used in the last two lines has never been set, so the initial value of this field will be used. Its value is ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "null",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "export class AsyncPipe implements OnDestroy, PipeTransform {\n  private _latestValue: any = null;\n  private _latestReturnedValue: any = null;"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In other words, AsyncPipe always returns ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "null",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " once before flowing the first value. Even if the original Observable is ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Observable<State>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", it becomes ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "State | null",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " through AsyncPipe. This is a problem I call \" Initial Null Problem\".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "While this problem seems serious, it has been automatically avoided in many cases. This is because ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*ngFor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", which are often used with AsyncPipe, ignore the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "null",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " returned from AsyncPipe.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In the following template, the value returned by ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "source$ | async",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is evaluated by the NgIf directive, and if it is Truthy, it will be rendered, so if it is ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "null",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", it will not go inside ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<div *ngIf=\"source$ | async as state\">  {{ state.count }}</div>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Similarly, in the following template, the value returned by ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "source$ | async",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is evaluated by the NgFor directive and ignored if it is Falsey, so if it is ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "null",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", it will not be inside ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*ngFor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<div *ngFor=\"let item of source$ | async\">  {{ item }}</div>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Through null-safe directives such as ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*ngIf",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*ngFor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", the Initial Null Problem does not affect the application. The problem is otherwise, that is, passing values directly to the child component’s Input via AsyncPipe. In the following cases, the child component should define a ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "prop",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " Input type, but you have to consider the possibility of passing ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "null",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " to it. If ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "prop",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is a getter or setter, you can easily imagine a runtime error when trying to access the value.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<child [prop]=\"source$ | async\"></child>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "So far, one simple best practice can be said. ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AsyncPipe should always be used through a null-safe guard like NgIf or NgFor",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Replace AsyncPipe",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "From here, I will explore the new asynchronous data-binding that can replace AsyncPipe which has the above-mentioned problem.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Why AsyncPipe returns ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "null",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is Pipe needs to return a synchronous value. The only way to solve the Initial Null Problem is to stop using Pipe for async data.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "So I tried using a directive. I think an approach that accepts an input and a template and renders the template under the control of the directive, is the best replacement for AsyncPipe.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "So I implemented the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*rxSubscribe",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " directive. The sample that actually works is ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "here",
+          "href": "https://stackblitz.com/edit/github-zg4qep",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ". It subscribe an Observable with a structural directive as follows:",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<div *rxSubscribe=\"source$; let state\">  {{ state.count }}</div>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The directive is implemented as follows. What this directive does is",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Subscribe an Observable received by ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "rxSubscribe",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " Input.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "When the Observable value flows, embed (render) the template for the first time",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "When the value after the second time flows, update the context and call ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "markForCheck()",
+              "annotations": {
+                "code": true
+              }
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/lacolaco/ngivy-rx-subscribe-directive/blob/master/src/app/rx-subscribe.directive.ts",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Directive({\n  selector: \"[rxSubscribe]\"\n})\nexport class RxSubscribeDirective<T> implements OnInit, OnDestroy {\n  constructor(\n    private vcRef: ViewContainerRef,\n    private templateRef: TemplateRef<RxSubscribeFromContext<T>>\n  ) {}\n  @Input(\"rxSubscribe\")\n  source$: Observable<T>;\n\n  ngOnInit() {\n    let viewRef: EmbeddedViewRef<RxSubscribeFromContext<T>>;\n    this.source$.pipe(takeUntil(this.onDestroy$)).subscribe(source => {\n      if (!viewRef) {\n        viewRef = this.vcRef.createEmbeddedView(this.templateRef, {\n          $implicit: source\n        });\n      } else {\n        viewRef.context.$implicit = source;\n        viewRef.markForCheck();\n      }\n    });\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "With this approach, the template is not rendered until the value first flows, and re-rendering can be triggered only when the value flows. It solves the Initial Null Problem, and is also CPU-friendly because re-rendering is limited only when necessary.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "By the way, the type of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "state",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " in ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "let state",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "is inferred from the type of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "source$",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " exactly if Ivy and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "strictTemplates",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " flag are enabled. When you make a mistake use of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "state",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", AOT compiler throws an error.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<div *rxSubscribe=\"source$; let state\">\n  {{ state.foo }}  <!-- compile error: state doesn't have `foo` -->\n</div>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "AsyncPipe could always only infer ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "or null",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " due to the Initial Null Problem, but the structure directive approach can infer the context type exactly from ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Observable<T>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "I’ve published this ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*rxSubscribe",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " directive as the npm package ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@soundng/rx-subscribe",
+          "annotations": {
+            "bold": true,
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "GitHub ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "https://github.com/soundng/rx-subscribe",
+              "href": "https://github.com/soundng/rx-subscribe",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": " ",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "NPM ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "https://www.npmjs.com/package/@soundng/rx-subscribe",
+              "href": "https://www.npmjs.com/package/@soundng/rx-subscribe",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": " ",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Demo ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "https://stackblitz.com/edit/github-zg4qep-kq9pyw?file=src/app/app.component.html",
+              "href": "https://stackblitz.com/edit/github-zg4qep-kq9pyw?file=src/app/app.component.html",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": " ",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Conclusion",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "AsyncPipe has Initial Null Problem",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Guarding with NgIf or NgFor can avoid the initial null",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Pipe has limitations in handling asynchronous data",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Structural directive approach can solve AsyncPipe problem",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Feedback welcome to ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "@soundng/rx-subscribe",
+              "annotations": {
+                "code": true
+              }
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

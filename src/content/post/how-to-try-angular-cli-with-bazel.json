@@ -1,0 +1,902 @@
+{
+  "pageId": "b3355b6f-a9f9-4b0d-a35d-23b772427c5b",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "how-to-try-angular-cli-with-bazel",
+  "properties": {
+    "title": "How to Try Angular CLI with Bazel",
+    "date": "2019-01-01T00:00:00.000Z",
+    "tags": ["tech", "Angular", "Bazel"]
+  },
+  "content": [
+    {
+      "type": "image",
+      "url": "/images/how-to-try-angular-cli-with-bazel/7a64c893-bda0-461d-879f-f1d61be3941d/1__ReNz4DpvQrUpGduIF8RS2w.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "A Happy New Year!",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " I expect this year will be a beginning of Bazel Era!",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This post is a reminder note for someone will try Angular CLI with Bazel (referred to as ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Angular Bazel",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " in this post) at angular/bazel@7.0.0-rc.0.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This is based on Minko Gechev’s introduction post.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Introducing Bazel Schematics for Angular CLI",
+          "href": "https://blog.mgechev.com/2018/12/17/introduction-bazel-schematics-angular-cli/",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Environment Preparation",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "1. Install Bazel",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Not mentioned in Minko’s post, Angular Bazel needs global Bazel environment with its version higher than ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "v0.18.0.",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ **brew install bazel**\n$ **bazel version**\n  INFO: Invocation ID: f973b7f6-a2b8-4821-a343-3036ac99183d\n  Build label: **0.20.0-homebrew**\n  Build target: bazel-out/darwin-opt/bin/src/main/java/com/google/devtools/build/lib/bazel/BazelServer_deploy.jar\n  Build time: Fri Nov 30 20:40:12 2018 (1543610412)\n  Build timestamp: 1543610412\n  Build timestamp as int: 1543610412"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://docs.bazel.build/versions/master/install.html",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "2. Install Angular Bazel",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "To use Bazel schematics with ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng new",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " , it has to be installed in the same place to the CLI. In other words, you have to install Angular Bazel with ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "--global",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " flag. If you installed Angular CLI with yarn, execute ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "yarn add --global",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " .",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ npm -g i @angular/bazel@7.2.0-rc.0"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "3. Create Application",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Create new application with ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng new",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " .",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ ng new bzl-app --collection=@angular/bazel"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "As same as Minko’s post, you need to edit some project files like package.json or WORKSPACE.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "As far as I tried, SCSS or other AltCSS are not supported by Angular Bazel yet. You have to choose CSS in ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng new",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " prompt.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Run application with Bazel",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "To run Angular application, just execute ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng serve",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " .",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ng serve",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " command without ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "--prod",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " runs ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ts_devserver",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " target defined in ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "src/BUILD.bazel",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " .",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "ts_devserver(\n    name = \"devserver\",\n    port = 4200,\n    additional_root_paths = [\n        \"npm/node_modules/zone.js/dist\",\n        \"npm/node_modules/tslib\",\n    ],\n    entry_module = \"bzl_app/src/main.dev\",\n    serving_path = \"/bundle.min.js\",\n    static_files = [\n        \"@npm//node_modules/zone.js:dist/zone.min.js\",\n        \"@npm//node_modules/tslib:tslib.js\",\n        \"index.html\",\n    ],\n    deps = [\":src\"],\n)"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/bazelbuild/rules_typescript",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Technically, ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng serve",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is the same to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "bazel run //src:devserver",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " . And then, the below log is shown.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "Server listening on http://<Your Machine Name>.local:4200/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This is designed behavior of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ts_devserver",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " . But it is not friendly possibly. Here is an issue about it. I think it should show ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "localhost:4200",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " in the log, too.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/bazelbuild/rules_typescript/issues/339",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "With ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "--prod",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " , it uses ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "history_server",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " from Nodejs Rules.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "history_server(\n    name = \"prodserver\",\n    data = [\n        \"index.html\",\n        \":bundle\",\n        \":zonejs\",\n    ],\n)"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://bazelbuild.github.io/rules_nodejs/history-server/history_server.html",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Notable thing is ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Angular Bazel provides different servers",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " for development and production. It is more performant than ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ts_devserver",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " but not easy to debug.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Build application with Bazel",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular Bazel already supports ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng build --prod",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " . But its build output is completely different to today’s non-Bazel ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng build",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " .",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "After running",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng build --prod",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " , ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "dist",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " directory has some sub directories and many output files. In Angular Bazel, ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "dist/bzl-app",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " directory is not ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "serve-able",
+          "annotations": {
+            "bold": true,
+            "italic": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " with other simple HTTP server, because it doesn’t contain ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "index.html",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " . It is not regular structure.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "dist\n├── bin\n├── bzl-app\n├── genfiles\n├── out\n└── testlogs"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "To run application built by ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng build --prod",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " , execute ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "dist/bin/src/prodserver",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " executable file. It runs ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "history_server",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " as same as ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng serve --prod",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " . It’s a very performant web server implemented in Go.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ ./dist/bin/src/prodserver --port=4200"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "So currently, to deploy the application, you have to follow the below steps;",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Build application",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Copy ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "dist",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " to remote server",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Execute ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "prodserver",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " with Bazel environment",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "I think it is not easy, and Angular Bazel should support typical simple build output to deploy to web hosting ecosystems like GitHub Pages, Netlify, or Firebase Hosting.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Conclusion",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Install Bazel and Angular Bazel",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Create application with ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "-collection=@angular/bazel",
+              "annotations": {
+                "code": true
+              }
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ng serve",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " and ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "ng build --prod",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " are supported",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Built output is very different to today’s CLI",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular Bazel is still in RC.0. I’ll try next release.",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

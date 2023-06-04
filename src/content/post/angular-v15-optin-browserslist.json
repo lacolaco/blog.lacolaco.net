@@ -1,0 +1,124 @@
+{
+  "pageId": "5d1a14f0-328a-4165-a2e5-80e75aefe9ec",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "angular-v15-optin-browserslist",
+  "properties": {
+    "title": "Angular: browserslist設定ファイルの削除とオプトイン (v15)",
+    "date": "2022-09-15T00:09:00.000Z",
+    "tags": ["Angular", "tech", "browserslist", "commit note"],
+    "updatedAt": "2022-09-15T00:00:00.000Z"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular CLI は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng new",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng generate application",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " で生成されるアプリケーションテンプレートから ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".browserslistrc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ファイルを削除する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular-cli/commit/9beb878e2eecd32e499c8af557f22f46548248fc"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular CLIはフレームワークがデフォルトでサポートするブラウザセットを内部で管理しており、同じ設定をすべてのアプリケーションで二重に管理する必要はないとされたためだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ng update",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " では、プロジェクトの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".browserslistrc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ファイルの内容がデフォルトのままであれば削除され、変更が加えられていればそのまま残される。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Browserslistによるサポート対象ブラウザの拡張がなくなったわけではなく、アプリケーションのテンプレートから削除され、開発者がオプトインで導入するものになったということだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}

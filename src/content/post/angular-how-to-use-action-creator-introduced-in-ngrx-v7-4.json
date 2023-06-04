@@ -1,0 +1,779 @@
+{
+  "pageId": "acbf55ee-e651-42b5-8132-04835b8fdab1",
+  "lastEditedAt": "2023-05-21T05:39:00.000Z",
+  "slug": "angular-how-to-use-action-creator-introduced-in-ngrx-v7-4",
+  "properties": {
+    "title": "Angular: How to use Action Creator introduced in NgRx v7.4",
+    "date": "2019-04-03T00:00:00.000Z",
+    "tags": ["tech", "Angular", "NgRx"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This article explains the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Action Creator",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " feature introduced in NgRx v7.4 and the implementation pattern using it. Action Creator has not yet been included in the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngrx.io",
+          "href": "https://ngrx.io/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " documentation, but please refer to it after it is added in the future.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Definition of action",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Let’s review how to write NgRx so far while implementing a simple counter. This time, the counter defines ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Increment",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " which receives and adds an arbitrary number, and",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Reset",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " which resets the counter as actions.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In the previous action definition, it was common to define Enum of action type, each action class that has it, and Union Type of that class type. For example, if you define ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "counter.actions.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " with actions ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Increment",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Reset",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", it looks like the following. ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Increment",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " increment the count by a given number, and",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Reset",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is an action to reset the count back to zero.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// counter.actions.ts\nimport {Action} from '@ngrx/store';\n\nexport enum ActionTypes {\n  Increment = '[Counter] Increment',\n  Reset = '[Counter] Reset',\n}\n\nexport class Increment implements Action {\n  readonly type = ActionTypes.Increment;\n\n  constructor (public payload: number) {}\n}\n\nexport class Reset implements Action {\n  readonly type = ActionTypes.Reset;\n}\n\nexport type ActionsUnion = Increment | Reset;"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This file is rewritten by Action Creator as follows:",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// counter.actions.ts\nimport {createAction, union} from '@ngrx/store';\n\nexport const increment = createAction(\n  '[Counter] Increment',\n  (payload: number) => ({payload})\n);\n\nexport const reset = createAction(\n  '[Counter] Reset'\n);\n\nconst actions = union({\n  increment,\n  reset,\n});\n\nexport type ActionsUnion = typeof actions;"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "createAction",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " function",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "First, we will discuss the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "createAction",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " function, which replaces the class definition. This function returns an ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Action Creator",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". Action Creator is a function that returns an action object. In other words, the dispatching action changes from the instance of the new class to the return value of the function.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import * as Actions from './actions';\n\n// instance of action class\nstore.dispatch(new Actions.Increment(1));\n\n// Action Creator\n// function returns Action\nstore.dispatch(Actions.increment(1));"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "An action that takes an argument passes the function to the second argument of the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "createAction",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " function. This function takes an argument and returns a partial action object. This is the same as the constructor and class field definitions in the traditional action class.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Let’s look at the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "increment",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " action again. The second argument is a function that accepts a numeric value as the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "payload",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " argument, and the return value is an object with the",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "payload",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " property. The return value of this function is merged with the action object created with the first argument, and finally the action object ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "{type: '[Counter] Increment', payload}",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " will be created.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// Create an action\nconst action = Actions.increment(1);\n\n// action object has `type`\nconsole.log(action.type); // => '[Counter] Increment'\n// The object returned by the second argument is merged\nconsole.log(action.payload); // => 1"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "By the way, ActionTypes Enum is no longer needed. You can find out more about this in a later section of Reducer.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "union",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " function",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ActionsUnion",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " type, which is a composite of a series of action types, is required in several places such as Reducer and Effect. The conventional action class can handle the union type of the class type as it is, but in the case of a function, it is necessary to combine the return type of the function. It is NgRx’s ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "union",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " function to assist it.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Pass all Action Creators to the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "union",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " function and declare its return value ** without exporting **. The reason why you don’t want to export is that you only want that type. There is no use in the place where it was exported and made available externally. Once you have declared the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "actions",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " variable, use ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "typeof",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " to export its type as ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Union",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// do not export return value\nconst actions = union({\n  increment,\n  reset,\n});\n\n// export only type\nexport type ActionsUnion = typeof actions;"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Create Reducer",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "After defining the Action Creator, let’s make the Reducer correspond. When originally using the action class and Enum, it was the following Reducer. The type of action passed to the argument is of type ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ActionsUnion",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", which describes a switch statement that compares",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "action.type",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " with the Enum string of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ActionTypes",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import {ActionsUnion, ActionTypes} from './actions';\nimport {State, initialState} from './state';\n\nexport function reducer (state = initialState, action: ActionsUnion): State {\n  switch (action.type) {\n    case ActionTypes.Increment: {\n      return {\n        ... state,\n        count: state.count + action.payload,\n      };\n    }\n    case ActionTypes.Reset: {\n      return {\n        ... state,\n        count: 0,\n      };\n    }\n    default: {\n      return state;\n    }\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The following is the result of reflecting the previous change of the action definition in this Reducer. Only the case statement has changed. The action type specified in the case statement has been changed to the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " property possessed by Action Creator. In this way, because it can be obtained directly from Action Creator, it is not necessary to separate in Enum at the action definition side.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import {ActionsUnion, increment, reset} from './actions';\nimport {State, initialState} from './state';\n\nexport function reducer (state = initialState, action: ActionsUnion): State {\n  switch (action.type) {\n    case increment.type: {\n      return {\n        ... state,\n        count: state.count + action.payload,\n      };\n    }\n    case reset.type: {\n      return {\n        ... state,\n        count: 0,\n      };\n    }\n    default: {\n      return state;\n    }\n  }\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Create Effects",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Use NgRx Effects to define the side effect of outputting a log each time a counter is added and reset. The traditional action definition is as follows:",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import {Injectable} from '@angular/core';\nimport {Effect, Actions, ofType} from '@ngrx/effects';\nimport {tap} from 'rxjs/operators';\n\nimport {ActionsUnion, ActionTypes} from './actions';\n\n@Injectable()\nexport class CounterEffects {\n\n  constructor (private actions$: Actions<ActionsUnion>) {}\n\n  @Effect({dispatch: false})\n  logger$ = this.actions$.pipe(\n    ofType(ActionTypes.Increment, ActionTypes.Reset),\n    tap(action => {\n      console.log(action);\n    }),\n  )\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "As with Reducer, this only affects the part of the action type.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { Injectable } from '@angular/core';\nimport { Effect, Actions, ofType } from '@ngrx/effects';\nimport { tap } from 'rxjs/operators';\n\nimport { ActionsUnion, increment, reset } from './actions';\n\n@Injectable()\nexport class CounterEffects {\n\n  constructor(private actions$: Actions<ActionsUnion>) { }\n\n  @Effect({ dispatch: false })\n  logger$ = this.actions$.pipe(\n    ofType(increment.type, reset.type),\n    tap(action => {\n      console.log(action);\n    }),\n  )\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Dispatching actions",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The last part is to dispatch the action. In conventional action classes, class instances are created and dispatched as follows.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import * as CounterActions from './state/counter/actions';\n\n@Component({\n  selector: 'my-app',\n  template: `\n     <div>{{ count$ | async }}</div>\n     <button (click)=\"incrementOne()\">+1</button>\n     <button (click)=\"reset()\">Reset</button>\n  `,\n})\nexport class AppComponent {\n\n  count$ = this.store.pipe(\n    select(state => state.counter.count),\n  );\n\n  constructor(private store: Store<AppState>) { }\n\n  incrementOne() {\n    this.store.dispatch(new CounterActions.Increment(1));\n  }\n\n  reset() {\n    this.store.dispatch(new CounterActions.Reset());\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This changes to dispatch the return value that called the Action Creator function, as described above.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import * as CounterActions from './state/counter/actions';\n\n@Component({\n  selector: 'my-app',\n  template: `\n     <div>{{ count$ | async }}</div>\n     <button (click)=\"incrementOne()\">+1</button>\n     <button (click)=\"reset()\">Reset</button>\n  `,\n})\nexport class AppComponent {\n\n  count$ = this.store.pipe(\n    select(state => state.counter.count),\n  );\n\n  constructor(private store: Store<AppState>) { }\n\n  incrementOne() {\n    this.store.dispatch(CounterActions.increment(1));\n  }\n\n  reset() {\n    this.store.dispatch(CounterActions.reset());\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This completes all replacements.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Benefits of Action Creator",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The actions defined in the class were the inconvenient of not being able to access ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " until it was instantiated, and the large amount of code that had to be written formally.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In Action Creator, you can write functions as functions, so wasteful code is greatly reduced. And the features and testability are the same as before, with no particular disadvantages.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Once you have updated your project’s NgRx to v7.4, basically you should proceed with replacing it with Action Creator.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Summary",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "The ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "createAction",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " function has been introduced to create an Action Creator that defines an action as a function instead of a class",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ActionType Enum is no longer needed",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "The impact on the Reducer, Effects, and dispatch side is very minor",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Check out how the counter application covered in this article actually works.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://stackblitz.com/edit/angular-pj4f4p?file=src%2Fapp%2Fapp.component.ts",
+          "href": "https://stackblitz.com/edit/angular-pj4f4p?file=src%2Fapp%2Fapp.component.ts",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

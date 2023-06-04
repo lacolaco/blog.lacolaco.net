@@ -40,3 +40,36 @@ export type PageObjectWithContent = PageObject & {
   slug: string;
   content: BlockObject[];
 };
+
+type TextAnnotations = {
+  bold: boolean;
+  italic: boolean;
+  strikethrough: boolean;
+  underline: boolean;
+  code: boolean;
+};
+
+type TextNode = {
+  type: 'text';
+  plain_text: string;
+  href: string | null;
+  annotations: TextAnnotations;
+};
+
+type MentionNode = {
+  type: 'mention';
+  plain_text: string;
+  href: string | null;
+  annotations: TextAnnotations;
+};
+
+type EquationNode = {
+  type: 'equation';
+  plain_text: string;
+  href: string | null;
+  annotations: TextAnnotations;
+};
+
+export type RichTextNode = TextNode | MentionNode | EquationNode;
+
+export type RichTextArray = Array<RichTextNode>;

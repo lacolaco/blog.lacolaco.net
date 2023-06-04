@@ -1,0 +1,833 @@
+{
+  "pageId": "df74379c-5f80-4dff-9fb8-16ae978af4a8",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "angular-new-provide-router-api",
+  "properties": {
+    "title": "Angular: provideRouter によるルーティング設定 (v14.2)",
+    "date": "2022-08-29T12:18:00.000Z",
+    "tags": ["Angular", "tech", "router", "standalone component"],
+    "updatedAt": "2022-08-29T00:00:00.000Z"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular v14.2で追加された Routerパッケージの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRouter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIは、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterModule.forRoot",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使わずにルーティング設定を行うことができる。このAPIはアプリケーションがスタンドアロンコンポーネントを使っていなくても使用できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular/pull/47010"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "tweet",
+      "url": "https://twitter.com/angular/status/1563213226627608577"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "というわけで、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ベースの従来からのアプリケーションとスタンドアロンAPIベースのアプリケーションの両方で、この新しい ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRouter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIの使用例を紹介する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "NgModuleベースのアプリケーションでの使用例",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "従来からの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ベースのアプリケーションでは、これまで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterModule.forRoot",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "imports",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 配列に追加していたコードを、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRouter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の戻り値を ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "providers",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 配列に追加するように書き換えればよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ただし、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "routerLink",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<router-outlet>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " などのディレクティブをコンポーネントのHTMLテンプレートで使うにはそれらをエクスポートしている ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が必要なので、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "imports",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 配列には素の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が残るだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { BrowserModule } from '@angular/platform-browser';\nimport { provideRouter, RouterModule } from '@angular/router';\nimport { AppComponent } from './app.component';\nimport { routes } from './app.routing';\nimport { Page1Component } from './page1.component';\nimport { Page2Component } from './page2.component';\n\n@NgModule({\n  // import RouterModule for templates (router directives)\n  imports: [BrowserModule, RouterModule],\n  // provide Router with routes\n  providers: [provideRouter(routes)],\n  declarations: [AppComponent, Page1Component, Page2Component],\n  bootstrap: [AppComponent],\n})\nexport class AppModule {}"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-ivy-mmfp8p?ctl=1&embed=1&file=src/app/app.module.ts"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "スタンドアロンAPIベースのアプリケーションでの使用例",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "NgModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を持たないスタンドアロンAPIベースのアプリケーションでは、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "bootstrapApplication",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数のオプションで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "providers",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 配列に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRouter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の戻り値を渡せばよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { bootstrapApplication } from '@angular/platform-browser';\nimport { AppComponent } from './app/app.component';\nimport { provideRouter } from '@angular/router';\nimport { routes } from './app/app.routing';\n\nbootstrapApplication(AppComponent, {\n  // provide Router with routes\n  providers: [provideRouter(routes)],\n});"
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-ivy-5obw68?ctl=1&embed=1&file=src/main.ts"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "RouterFeaturesによるオプション設定",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これまで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterModule.forRoot",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の第2引数で設定していたオプションは、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRouter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " では可変長配列になっている第2引数以降に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterFeature",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型のオブジェクトを渡して設定する。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterFeature",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " オブジェクトの生成は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "withXXX",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という命名の関数が用意されており、その戻り値を渡す。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import {provideRouter, withDebugTracing, withRouterConfig} from '@angular/router';\n\nbootstrapApplication(AppComponent,\n  {\n    providers: [\n      provideRouter(\n\t\t\t\tappRoutes,\n        withDebugTracing(),\n        withRouterConfig({ \n\t\t\t\t\tparamsInheritanceStrategy: 'always' \n\t\t\t\t})),\n    ],\n  },\n);"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これまでは単一のオブジェクトにすべてのオプションを指定していたが、新しいAPIでは個別のオプションごとに独立した ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterFeature",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " として定義される。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterFeature",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を返す関数の一覧は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "APIレファレンス",
+          "href": "https://angular.io/api/router#functions",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "から確認できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "遅延ロード用の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRoutes",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "provideRouter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterModule.forRoot",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に対応するAPIなので、当然 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterModule.forChild",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に対応するものもある。それが ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRoutes",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "遅延読み込みさせる子モジュールの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "providers",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 配列に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRoutes",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数の戻り値を渡すことで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterModule.forChild",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と同等の設定ができる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@NgModule({\n  providers: [\n    provideRoutes([\n      {\n        path: '',\n        pathMatch: 'full',\n        component: PageLazyComponent,\n      },\n    ]),\n  ],\n  declarations: [PageLazyComponent],\n})\nexport class LazyLoadedModule {}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "あとはこのモジュールを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "loadChildren",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に指定するといい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "export const routes: Route[] = [\n  {\n    path: 'lazy',\n    loadChildren: () =>\n      import('./lazy/lazy.module').then((m) => m.LazyLoadedModule),\n  },\n  // ...\n];"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ちなみに、スタンドアロンAPIベースであればそもそも ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Route[]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 型のオブジェクトを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "loadChildren",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に渡せばいいため、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRoutes",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIは必要ない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// lazy/lazy.routing.ts\nexport const routes: Route[] = [\n  {\n    path: '',\n    pathMatch: 'full',\n    component: PageLazyComponent,\n  },\n];\n\n// app.routing.ts\nexport const routes: Route[] = [\n  {\n    path: 'lazy',\n    loadChildren: () => import('./lazy/lazy.routing').then((m) => m.routes),\n  },\n  // ...\n];"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "既存アプリを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRouter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に置き換えるべきか？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "RouterやHttpClient、Commonなど、Angularのビルトインパッケージは脱 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の対応が着々と進められているが、基本的にスタンドアロンAPIは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "NgModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と互換性が保たれているため、既存アプリがスタンドアロンAPIベースへ置き換えることを急ぐ必要はない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ただし、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRouter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に関してはスタンドアロンAPIベースであるなしにかかわらず ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterModule.forRoot",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を置き換えられるAPIとして提供されている。つまり、現在は同じ用途のAPIが2つ存在しており、これはAngularのフレームワークとしての基本的な原則に反している。これが許されているのは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRouter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIがまだデベロッパープレビュー版だからだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "したがって、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRouter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が安定APIとしてリリースされるときには、おそらく ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterModule.forRoot",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が代わりに非推奨となることが予想される（ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 自体はディレクティブのエクスポートのために残されるだろう）。置き換えを急ぐ必要はないが、1〜2年以内にあるかもしれない変更として意識しておくと驚かずに済むのではなかろうか。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,640 @@
+{
+  "pageId": "4812cf7d-681e-4a7a-a2ce-b9091267791b",
+  "lastEditedAt": "2023-05-21T03:20:00.000Z",
+  "slug": "learn-ngrx",
+  "properties": {
+    "title": "Learn NgRx",
+    "date": "2019-02-11T00:00:00.000Z",
+    "tags": ["tech", "NgRx"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Redux そのものについては理解しているため、NgRx における一般的な設計の理解と、ベストプラクティスの模索を目的とした学習をする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Basic",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ドキュメンテーション ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "https://ngrx.io",
+          "href": "https://ngrx.io/",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Install: ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "https://ngrx.io/guide/store/install",
+          "href": "https://ngrx.io/guide/store/install",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Playground",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "学習にあたり、公式チュートリアルの最後の状態から NgRx を導入して試してみた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "lacolaco/ngrx-toh-example",
+          "href": "https://github.com/lacolaco/ngrx-toh-example",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Architecture",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "RootStore / FeatureStore",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "StoreModule.forRoot()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " で登録される reducer はアプリケーショングローバルな AppState を管理するもの",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "StoreModule.forFeature()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " で Feature ごとに分割された FeatureState を管理できる",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "AppState は内部的には単一オブジェクトとして管理されるものの、FeatureState にわけることで関心の外にある状態を無視することが明示的になり、さらに Selector のメモ化もあいまって関心のある状態だけに明確に依存することができる。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "forFeature",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が呼び出されるたびに Root の State が extend される仕組みなので、 Feature 側から Root 側の状態にアクセスできる。Lazy Load されたあと Root 側の状態に依存できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "当然だが、FeatureState は Feature Module と同じスコープで語られるべきである。1 Page : 1 Feature の設計になる場合もあるが、同じ Feature に依存する複数の Pages をグループ化することで Feature Module の範囲が決まる、という State → Feature の方向での設計も可能であろう。また、Root の AppState は Route に依存しない大域の State という位置づけもわかりやすくなる。いずれにせよ、Angular のアプリケーション設計において Feature Module の粒度が重要な軸となるのは明らかだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "{\n  \"global\": {\n  },\n  \"hero\": {\n    \"heroes\": [],\n    \"selectedHero\": null\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このような State Tree を意識する場合は、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "hero",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " Feature が単位となり、 HeroDetailPage や HeroListPage はこの HeroFeature の一員になるはず。ただし HeroDetail が持つ情報が大きくなってくるなら、 HeroList Feature と HeroDetail Feature は分離されることもあり得る。State Tree のネストの深さに一定の規約を設けると良いかもしれない。基本的にネストが深くて嬉しいことはない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "RoutingModule の慣習に従い、FeatureModule と FeatureStoreModule は分離する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "HeroModule / HeroRoutingModule / HeroStoreModule が並ぶ形だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "// ducks pattern\n// src/app/hero/hero.{reducer,actions,effects,selectors}.ts\n\nimport { ActionTypes, Actions } from './hero.actions.ts';\n\nexport type State = {\n  heroes: Hero[];\n    selectedHero: Hero | null;\n}\n\nexport const initialState: State = {\n  heroes: [],\n  selectedHero : null,\n}\n\nexport function reducer(state: State = initialState, action: Actions) {\n  switch (action.type) {\n    case ActionTypes.SELECT_HERO:\n      return { ...state, selectedHero: action.payload };\n  }\n  return state;\n}\n\n// src/app/hero/hero-store.module.ts\nimport { reducer } from './hero.reducers.ts'\n\n@NgModule({\n  imports:[ StoreModule.forFeature('hero', reducer)]\n})\nexport class HeroStoreModule {}\n\n\n// src/app/hero/hero.module.ts\n@NgModule({\n  imports: [\n    HeroRoutingModule,\n    HeroStoreModule,\n  ]\n})\nexport class HeroModule {}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "AppStore に追加すべき State がどのようなものか、言語がしにくい部分があるが、 Router Store や、その他アプリケーションから少し外に関心がある状態は AppStore にあるほうが都合がいいかもしれない。ただし定数を State にしないように気をつけたい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Effects について",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://ngrx.io/guide/effects"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Effects で定義される ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Effect",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " とは Action を受け取り Action を返す Observable のことである。まれに Action を受け取らないものもあるし、まれに Action を返さないもの(",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "dispatch: false",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ) もある。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "いわゆる",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "副作用",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を記述するものだが、Effects の発表直後からそのベストプラクティスは変わってきている。第一に、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "API コールは副作用ではない。",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ということだ。主作用があって初めて副作用がある。NgRx を使った設計においては、主作用を Facade が担い、その主作用の副作用として起きる変化を Effects で定義するのがよい。 主作用とは次の流れだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Component が Facade を呼び出す",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Facade が現在の State を使い Service を呼び出す。その結果を Action として dispatch する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "reducer が State を書き換える",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Component に新しい State が届く",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここで 2 の Action が何か別の作用を生み出す必要があるとき、それは副作用と呼ばれ、 Effects を使って記述する。副作用を起こすためだけの Action をわざわざ作る必要はない。reducer から参照されていない Action がある時点で、それは副作用として主作用を書いているのだ。Action は Reducer で主作用になることを前提とする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Effects を何のために使うべきで、何のために使わざるべきかについては、次の 2 つの記事が非常に明快だった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Start using ngrx/effects for this - Angular In Depth",
+          "href": "https://blog.angularindepth.com/start-using-ngrx-effects-for-this-e0b2bd9da165",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Stop using ngrx/effects for that - Michael Pearson - Medium",
+          "href": "https://medium.com/@m3po22/stop-using-ngrx-effects-for-that-a6ccfe186399",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Effects を使うとかえって複雑度が高まるものは素の RxJS を使ったほうがよい。そして、RxJS にすることですら複雑度が高まってしまうものは、素の Promise で書いてしまうほうがよい。ライブラリは楽になるために使うべきだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Facade についての参考リンク",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "NgRx + Facades: Better State Management - Thomas Burleson - Medium",
+          "href": "https://medium.com/@thomasburleson_11450/ngrx-facades-better-state-management-82a04b9a1e39",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "NgRx Facades: Pros and Cons",
+          "href": "https://auth0.com/blog/ngrx-facades-pros-and-cons/",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これらの例では Facade は Action を投げているだけだが、僕の考えではここに Service を Inject して API コールをしてもよい。async/await で API コールを行い、その結果を Action として dispatch するとよい。Fetching の状態が必要なら、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "BEGIN_FETCHING_USERS",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " action を投げれば良い。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "GET_USERS",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " action を Effects で処理するのは複雑度を無駄に上げている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ちなみに、この Facade を Component と 1:1 になるように作ると、BLoC と呼ばれるものに近づいてくる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "RouterStore について",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://ngrx.io/guide/router-store"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "RouterStore は Effects で真価が発揮される。RouterStore を使わない場合、Angular Router の ActivatedRoute から情報を取得し、Action を発行し、コンポーネントの状態に組み込むことになる。RouterStore があれば、Router Actions の副作用として Action を発行し、その結果を State に書き込むことでコンポーネント側へデータが届く。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ActivatedRoute ⇒ Component ⇒ Action ⇒ State ⇒ Component",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Router Action ⇒ Effects ⇒ Action ⇒ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "State ⇒ Component",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Component はまったく Router や UrlTree のことを知らなくてよくなる。ActivatedRoute への依存を持つ必要がなくなり、テスタビリティも向上する。RouterStore は内部的に Router の状態を ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "router",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " Feature に更新し続けてくれる仕組みなので、テストの際は Router に依存する必要はなく、自分で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "router",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 以下の State を設定すればいい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "逆に言えば、Effects を投入しないのなら Router Store を使う意味はそれほどない気もする。しかし ActivatedRoute の少し使いづらい部分（Inject する Component の階層により得られる Route の情報が変わる（UrlTree のどこに該当するか）部分は、Router Store で常に root から読むこととすれば一貫性のあるアクセスはできるだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "参考リンク",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Sharing data between modules is peanuts. - Angular In Depth",
+          "href": "https://blog.angularindepth.com/sharing-data-between-modules-is-peanuts-3f40fcb38dd",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "NgRx Refactoring Patterns enhanced with ngrx-ducks",
+          "href": "https://speakerdeck.com/gregonnet/ngrx-refactoring-patterns-enhanced-with-ngrx-ducks",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

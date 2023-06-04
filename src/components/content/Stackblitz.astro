@@ -1,0 +1,17 @@
+---
+import { StackblitzNode } from '@lib/post';
+
+type Props = StackblitzNode;
+
+const { url } = Astro.props;
+---
+
+<iframe class="stackblitz-iframe" src={url}></iframe>
+
+<style>
+  iframe {
+    border: none;
+    width: 100%;
+    aspect-ratio: 16/9;
+  }
+</style>

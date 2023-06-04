@@ -1,0 +1,271 @@
+{
+  "pageId": "b989169b-f9a4-470a-9aae-9eb49a823e4a",
+  "lastEditedAt": "2023-05-21T03:12:00.000Z",
+  "slug": "migrate-circleci-to-github-actions",
+  "properties": {
+    "title": "CircleCIからGitHub Actionsへの移行 (Node.js)",
+    "date": "2019-09-16T00:00:00.000Z",
+    "tags": ["tech", "GitHub Actions"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "自作のライブラリのCIをCircleCIからGitHub Actionsへ移行したメモ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/reactive-store"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/reactive-store/pull/80"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "特にメリットがあるから乗り換えたとかいうわけでもないけど、GitHubだけで完結するならそれに越したことはない",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "ファイルの場所",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": ".github/workflows/<ワークフローの名前>.yml",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " だが、いまのところ複数作るユースケースが見えないので ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "main.yml",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " とした。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "実行環境",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ubuntu-latest",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を選択した。特に理由はないけど一応MacOSやWindowsも選べるっぽい？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://help.github.com/en/articles/software-in-virtual-environments-for-github-actions#ubuntu-1804-lts を見るとわかるが、 めちゃくちゃ充実したプリインのソフトウェアがある。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "yarn",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や Git、Docker、Chromeもなんの設定もなく最初から使えるのはよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回の移行ではもともと ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "circleci/node:carbon-browsers",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使っていたけど、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ubuntu-latest",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " だけで事足りた。 Node.jsのバージョン指定は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "node-version: [12.x]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のところでマトリックスにできるので、実行環境とは切り離して考えられる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "全体",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "name: Main\n\non: [push]\n\njobs:\n  build:\n\n    runs-on: ubuntu-latest\n\n    strategy:\n      matrix:\n        node-version: [12.x]\n\n    steps:\n    - uses: actions/checkout@v1\n    - name: Run tests with ${{ matrix.node-version }}\n      uses: actions/setup-node@v1\n      with:\n        node-version: ${{ matrix.node-version }}\n    - name: npm install, build, and test\n      run: |\n        yarn install\n        yarn build\n        yarn lint\n        yarn test:ci\n      env:\n        CI: true"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もともと大したことをやってないので、あっというまに置き換えが終わった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "ポイント",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "yarn",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " は最初から入ってるから気にしなくていい (現在は1.17.3っぽいが多分latest追従だろうか)",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Chromeも最初から入ってるから気にしなくていい (Headlessはまだ試してない）",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Node.jsのバージョン指定は ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "actions/setup-node",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " の引数で変えられる",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

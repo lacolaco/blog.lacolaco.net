@@ -1,0 +1,310 @@
+{
+  "pageId": "1934ffc5-baff-4477-a766-1e34e8dd45f7",
+  "lastEditedAt": "2023-05-11T00:26:00.000Z",
+  "slug": "github-actions-setup-node-engines",
+  "properties": {
+    "title": "GitHub Actions: setup-nodeのNode.jsバージョンをpackage.jsonで指定する",
+    "date": "2022-10-03T13:39:00.000Z",
+    "tags": ["tech", "GitHub Actions", "Node.js"],
+    "updatedAt": "2022-10-03T00:00:00.000Z"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "GitHub Actionsのsetup-node v3.5.0で、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "package.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "engines.node",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " フィールドがサポートされた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/actions/setup-node/releases/tag/v3.5.0",
+          "href": "https://github.com/actions/setup-node/releases/tag/v3.5.0",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/actions/setup-node/pull/485"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もともと setup-node には ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "node-version-file",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というパラメータが存在する。ワークフローのYAMLファイルの中で直接Node.jsバージョンを書くのではなく、別のファイルから読み込むことができる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "setup\\-node/advanced\\-usage\\.md at main · actions/setup\\-node",
+          "href": "https://github.com/actions/setup-node/blob/main/docs/advanced-usage.md#node-version-file",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "The ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "node-version-file",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " input accepts a path to a file containing the version of Node.js to be used by a project, for example ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".nvmrc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".node-version",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".tool-versions",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", or ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "package.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". If both the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "node-version",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "node-version-file",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " inputs are provided then the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "node-version",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " input is used. See ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "supported version syntax",
+          "href": "https://github.com/actions/setup-node#supported-version-syntax",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "v3.5.0ではここに新たに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "package.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が追加され、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "engines.node",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " プロパティを参照できるようになった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "yaml",
+      "filename": "",
+      "text": "steps:\n  - uses: actions/checkout@v3\n  - uses: actions/setup-node@v3\n    with:\n      node-version-file: 'package.json'\n      cache: yarn"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "いままでサポートされていたNode.jsバージョン管理ツール用の設定ファイルと違い、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "package.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "engines",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " はnpmやyarnなどパッケージマネージャがもれなくサポートしているため、開発ツールを厳密に標準化していないチームでも共通のバージョン制約を適用しやすいはずだ。（npmの場合は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "engine-strict=true",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 設定が必要ではあるが）",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}

@@ -1,0 +1,1616 @@
+{
+  "pageId": "8f425a78-a2da-4952-9537-29fca1cdd4ff",
+  "lastEditedAt": "2023-05-21T05:36:00.000Z",
+  "slug": "angular-ivy-library-compilation-design-in-depth-en",
+  "properties": {
+    "title": "Understanding Angular Ivy Library Compilation",
+    "date": "2021-02-24T00:00:00.000Z",
+    "tags": ["tech", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In this post, I will explain how to compile Angular libraries with Ivy, which is now possible in Angular v11.1, and its details. The intended audience is those who are developing Angular third-party libraries, or simply interested in Angular’s internal mechanism. You don’t need to know anything in this article to develop Angular applications.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The content of this article is based on the Design Doc written by the Angular team.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Ivy Library Compilation - Conceptual Design Doc",
+          "href": "https://docs.google.com/document/d/148eXrCST6TM7Uo90KxaBrMbOkwJbYrQSQgRaGMK5WRc/edit#",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "How to compile libraries with Ivy",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "When you develop an Angular library using Angular CLI or something similar, Ivy is currently disabled for production build. It is probably set in a file like ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "src/tsconfig.lib.prod.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " as follows.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "{\n  \"angularCompilerOptions\": {\n    \"enableIvy\": false\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular libraries compiled and published to NPM with this configuration are still compatible for use even if the applications are not Ivy-enabled.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Starting from Angular v11.1, you can experimentally remove compatibility for applications not yet Ivy-enabled, and compile the library optimized for Ivy-enabled applications. To use Ivy compilation for libraries to be published to NPM, configure as follows",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "{\n  \"angularCompilerOptions\": {\n    \"enableIvy\": true,\n    \"compilationMode\": \"partial\"\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "\"compilationMode\": \"partial\"",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is an important part, and I will explain what it means in the later part of this post. Of course, libraries compiled with this setting can only be used in Ivy-enabled applications, so it is still not currently recommended.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "By the way, for libraries that are only used locally in monorepo, such as Angular CLI and Nrwl/Nx, you can simply use ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "enableIvy: true",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". The ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "\"compilationMode\": \"partial\"",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is required only for the libraries that are published in NPM. This difference is also explained later in this article.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "{\n  \"angularCompilerOptions\": {\n    \"enableIvy\": true\n  }\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Terminology",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In order to make the following explanations concise, let’s first sort out the terminology.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "rows": [
+        [
+          [
+            {
+              "type": "text",
+              "text": "term",
+              "annotations": {}
+            }
+          ],
+          [
+            {
+              "type": "text",
+              "text": "meaning",
+              "annotations": {}
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "type": "text",
+              "text": "Angular decorators",
+              "annotations": {}
+            }
+          ],
+          [
+            {
+              "type": "text",
+              "text": "Decorators defined by Angular such as ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "@Component",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ", ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "@Directive",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ", and ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "@Injectable",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ".",
+              "annotations": {}
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "type": "text",
+              "text": "Compiler",
+              "annotations": {}
+            }
+          ],
+          [
+            {
+              "type": "text",
+              "text": "The Angular compiler is a tool that analyzes Angular decorators and generates executable code.",
+              "annotations": {}
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "type": "text",
+              "text": "ngc",
+              "annotations": {
+                "code": true
+              }
+            }
+          ],
+          [
+            {
+              "type": "text",
+              "text": "An executable CLI for the Angular compiler",
+              "annotations": {}
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "type": "text",
+              "text": "Ivy compiler",
+              "annotations": {}
+            }
+          ],
+          [
+            {
+              "type": "text",
+              "text": "A compiler introduced in Angular v9",
+              "annotations": {}
+            }
+          ]
+        ],
+        [
+          [
+            {
+              "type": "text",
+              "text": "View Engine (VE) compiler",
+              "annotations": {}
+            }
+          ],
+          [
+            {
+              "type": "text",
+              "text": "A deprecated compiler that was used by default until Angular v8",
+              "annotations": {}
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Ivy compilation for applications",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Before we start talking about libraries, let’s start with compiling an application with Ivy already enabled by default. The Angular decorator in the application will be analyzed by the compiler to generate the executable code based on the extracted metadata.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Let’s look at an example of compiling a simple component. Suppose we have the following component.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: 'some-comp',\n  template: `<div> Hello! </div>`\n})\nexport class SomeComponent {}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "If you compile this code with Ivy, you will get the following JavaScript output. The two points are as follows",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "The decorator does not remain in the JavaScript.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "The generated code is inserted as a static field in the component class.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "export class SomeComponent {}\n\nSomeComponent.ɵcmp = ɵɵdefineComponent({\n  selectors: [['some-comp']],\n  template: (rf) => {\n    if (rf & 1) {\n      ɵɵelementStart('div');\n      ɵɵtext(' Hello! ');\n      ɵɵelementEnd();\n    }\n  },\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The Ivy compiler generates the code to create the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "definition",
+          "annotations": {
+            "italic": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " from the metadata contained in the decorator. The HTML template, which was a string, becomes executable code as a ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Template Function",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". The ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ɵɵelementStart",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ɵɵtext",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " used in the template functions are called ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Template Instructions",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", and abstract the concrete DOM API calls and data binding update process.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-ivy-library-compilation-design-in-depth-en/72df2a65-5d47-4d4c-a7be-591a235fe8d4/ivy-app-compilation.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular compilation is internally divided into two steps; Analysis step and code generation step.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Analysis step",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In the analysis step of compilation, it integrates the metadata obtained from the decorators of the entire application and detects the dependencies between components/directives. At this point, the important part is the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@NgModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". It is used to determine the references corresponding to unknown HTML tags and attributes contained in templates. After the analysis step, the compiler gets the following information.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Which components depend on which directives/components",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "What dependencies are needed to instantiate each component/directive",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Code generation step",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In the code generation step, it generates the code for each Angular decorator based on the information obtained in the analysis step. The generated code has two requirements: ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Locality",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Runtime Compatibility",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Locality",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Locality is also expressed as ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "self-contained",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". It means that all the references needed for compiling the component are included in the component class itself. This makes differential builds more efficient. To make it easier to understand, let’s look back at the issues in the pre-Ivy View Engine days without Locality.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The VE compiler generated code as a file named ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*.ngfactory.js",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " which was independent of the original file. Angular executes this ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "*.ngfactory.js",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " at runtime, and the generated code refers to the original component class. This approach becomes problematic when a component depends on another component.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "For example, when a component ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<app-parent>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " uses a template to call a component ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<app-child>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", there is no reference from ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "parent.component.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "child.component.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " as a JavaScript module. This parent-child dependence is only visible between ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "parent.component.ngfactory.js",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "child.component.ngfactory.js",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Since the direct compilation result, ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "parent.component.js",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", does not refer to either ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "child.component.js",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " or ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "child.component.ngfactory.js",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", it cannot determine when it needs to be recompiled. Therefore, ViewEngine had to recompile the entire application at each build time.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-ivy-library-compilation-design-in-depth-en/f89daf3a-52ec-439d-9709-f0f49ca3b1dc/ngfactory-dependency-link.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "To solve this problem, the Ivy compiler generates the code as a static field of the class. In the generation code, the classes of the directives referenced in the template are included. This makes it easy to determine which files will be affected when that file is changed.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "As you can see, with code generation with Locality, it is only necessary to recompile ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ParentComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " when itself or ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ChildComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is changed.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "// parent.component.js\nimport { ChildComponent } from './child.component';\n\nParentComponent.ɵcmp = ɵɵdefineComponent({\n    ...\n    template: function ParentComponent_Template(rf, ctx) {\n        if (rf & 1) {\n            ɵɵelement(2, \"app-child\");\n        }\n    },\n    // Directives depended on by the template\n    directives: [ChildComponent]\n});"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Runtime compatibility",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Another important factor in code generation is runtime compatibility. This is not an issue when compiling an application, but it is critical for compiling a library.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In an application, the compiler version and the Angular runtime version basically match because the compilation is done at the same time in the application build. However, this is not the same for libraries.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "For libraries published to NPM, it must be considered that the Angular version that compiles the library does not match the Angular version used by the application that uses the library at runtime. A big issue here is the compatibility of the Angular APIs called in the generated code. APIs that existed in the compile-time version may not exist in the runtime version of Angular, or their signatures may have changed. So, ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "the rules for code generation must be determined by the Angular version of the runtime that executes it",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Libraries used locally within monorepo were Ivy compilable because as long as it is in monorepo, it is ensured that the library and the application have the same Angular version.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Library compilation",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Here is the main topic. First, let’s look at compiling libraries with ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "enableIvy: false",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", which is the current recommended setting for v11. Compiling a library with no Ivy is just ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "inlining the metadata",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " collected in the analysis step. The Angular decorator metadata is embedded in the static field as shown below.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-ivy-library-compilation-design-in-depth-en/4e77f914-fd0d-46df-b861-25ff71facf19/library-compilation-ivy-false-1.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The library compilation works to convert the metadata into a JavaScript representation that can be published to NPM. However, this is still a metadata and cannot be executed as a component when loaded into an application. It needs to be compiled again based on this metadata. ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Angular Compatibility Compiler",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngcc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", is the tool to do it.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "ngcc",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "As we don’t know whether the application side compiler is Ivy or VE, the only way to keep compatibility is to compile the library code on the application side. This is the reason why ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngcc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is run at application build time.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The compilation result of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngcc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is the same as that of compiling the library directly. The difference is that ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " uses decorators in TypeScript as metadata, while ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngcc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " uses ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".decorators",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " in JavaScript as metadata.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-ivy-library-compilation-design-in-depth-en/54fd4c3b-2127-4156-b25f-f7332b06ed4f/library-compilation-ivy-false-2.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Although ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngcc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " achieved its purpose to allow libraries to be released to NPM with compatibility, the frequent compilations spoiled the developer experience. Many of you may have felt the frustration of running ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngcc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " repeatedly every time you installed a library. The ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngcc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " overwrites the library code in ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "node_modules",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " installed from NPM and compiles it, so if the contents of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "node_modules",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " are changed by the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "npm install",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " command, you have to recompile it.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "But originally, ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngcc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is a temporary approach until the View Engine support is removed from applications. The Ivy library compiler, which will be explained below, is a new Ivy-native library compilation mechanism that solves the problems clarified by ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngcc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Ivy library compilation",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The biggest issue with ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngcc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " was the execution cost of the compilation on the application side. If ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngcc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " was fast enough, we could have compiled the library just-in-time when the application was compiled, without persisting the compilation results in ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "node_modules",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". The execution cost is high, so we want to reduce the number of times and save the results.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "On the other hand, if we finish compiling the library before publishing it, we can build the application faster, but we lose runtime compatibility. The code generation step really needs to be done in the application’s Angular version.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "So Ivy library compilation concept is a set of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "mechanism for running only the code generation step rapidly",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " after library installation and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "mechanism for finishing the analysis step before NPM release",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". The first mechanism is called library ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "linking",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", and the second mechanism is called ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Link-Time Optimization (LTO) compilation",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "LTO compilation (Pre-Publish compilation)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "LTO compilation, which is done before publishing to NPM, is a mechanism to complete only the analysis step of the entire compilation and embed the result in JavaScript. As mentioned in the Introduction, when the setting ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "\"compilationMode\": \"partial\"",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is set, the compiler will perform LTO compilation of the library.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "{\n  \"angularCompilerOptions\": {\n    \"enableIvy\": true,\n    \"compilationMode\": \"partial\"\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The compiled JavaScript contains the following code. It looks similar to the normal compilation result, but the important thing is that the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "template is preserved as a string",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and it has ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Locality",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-ivy-library-compilation-design-in-depth-en/3c292fa9-f275-472c-ad1a-e192d1a522b8/library-compilation-ivy-1.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The information obtained from the analysis step is inlined as a ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "declaration",
+          "annotations": {
+            "italic": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". It includes a list of directives on which it depends, and has a locality that allows it to execute the code generation step with only information in the file. And by deferring the code generation of template functions until they are linked, the library can ensure runtime compatibility.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Also, the Angular version of the LTO compilation is included. Even if the template is the same, it can be optimized at link time depending on the combination of both the version it is written in and the runtime version.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Linking libraries",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "An application that installs an LTO compiled library will link it at the building time just-in-time. The ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Linker",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", which does the linking, will generate code based on the declarations from the LTO compilation, and replace them with definitions that can be used by the application.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-ivy-library-compilation-design-in-depth-en/9c29acd5-72bc-4287-bce9-67be67e7b808/library-compilation-ivy-2.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Unlike ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngcc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", which required analysis step, the linking process can be executed independently for each file thanks to Locality of LTO compilation, so it can work as a plugin in module resolution like webpack. In the Angular CLI build, it is implemented as a Babel plugin called ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AngularLinker",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Wrap-up",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The new Ivy library compilation can be summarized as follows:",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "The library compilation is separated into two parts: before and after NPM release.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "One is the ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "LTO compile",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " process that finishes the decorator analysis before publishing to NPM.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "The other is the ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "linking",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " process, which completes the compilation of the library by generating code at application build time.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "I hope this article will help you readers understand how new Ivy library compilation is designed, based on the differences between applications and libraries in compilation, and the issues of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngcc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " used today.",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

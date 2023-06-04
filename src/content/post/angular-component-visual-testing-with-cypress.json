@@ -1,0 +1,842 @@
+{
+  "pageId": "06291552-322a-4152-9379-de518e857222",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "angular-component-visual-testing-with-cypress",
+  "properties": {
+    "title": "Angular Component Visual Testing with Cypress",
+    "date": "2022-10-08T01:26:00.000Z",
+    "tags": ["Angular", "tech", "testing", "visual testing", "cypress"],
+    "updatedAt": "2022-10-08T00:00:00.000Z"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angularコンポーネントの見た目が崩れていないことを確認する画像回帰テストを、できるだけ最小ステップで既存のAngular CLIプロジェクトに導入する手順を紹介する。\n\nいくつか検討したが、この方法が現状では比較的追加要素が少なく、導入上の困難が少ないと思われる。もっといい方法を知っている人がいたらぜひ Twitter ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@laco2net",
+          "href": "https://twitter.com/laco2net",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " などで教えてほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "サンプルレポジトリ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回の記事の内容が実際に動作するデモレポジトリはこちら",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/angular-cypress-vistest-demo"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "CLIワークスペースにCypressを導入する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この手順は基本的にCypressの公式ドキュメントに従う。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://docs.cypress.io/guides/component-testing/quickstart-angular"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まずは、Angular CLIで作成したワークスペースに、Cypress パッケージをインストールする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "shell",
+      "filename": "",
+      "text": "# npm\nnpm i -D cypress\n# yarn\nyarn add -D cypress"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "パッケージをインストールしたら、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "cypress",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " CLIで各種設定の初期化を行う。CypressのGUI操作をしていくと必要なファイルが自動で生成される。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "shell",
+      "filename": "",
+      "text": "npx cypress open"
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "テスト形式は “Component Testing” を選択する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "フレームワークは “Angular” を選択する（通常は自動検出されている）",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "コンフィグファイルはデフォルトのまま生成する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "画像回帰テスト用のプラグインを追加する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Cypress単体では画像回帰テストをサポートしていないため、サードパーティのプラグインを導入する必要がある。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://docs.cypress.io/guides/tooling/visual-testing"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://docs.cypress.io/plugins/directory#Visual%20Testing"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "いくつかプラグインはあるが、比較的新しく作られメンテナンスが活発なものの中で、コンポーネントテストに適合したものとして ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@frsource/cypress-plugin-visual-regression-diff",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を紹介する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/FRSOURCE/cypress-plugin-visual-regression-diff"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "こちらも導入方法は README.mdに書かれていることに従うだけでよい。まずはnpmパッケージをインストールする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "shell",
+      "filename": "",
+      "text": "# npm\nnpm i -D @frsource/cypress-plugin-visual-regression-diff\n# yarn\nyarn add -D @frsource/cypress-plugin-visual-regression-diff"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次に、Cypressにプラグインを導入する。2つの作業が必要で、まずはCypressのテストコードで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "cy.matchImage()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドを使用可能にするために、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "cypress/support/component.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ファイルに次のインポート文を追加する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// cypress/support/component.ts\n\nimport '@frsource/cypress-plugin-visual-regression-diff';"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次に、ルートディレクトリに追加されている ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "cypress.config.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " にもプラグインを導入する。ただし、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "v2.3.1",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の時点では ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "initPlugin",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のインポート文でTypeScriptの型定義ファイルが見つからないというエラーがエディターに表示されるが、そのままで動作する。気になる場合は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "require",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に切り替えても動作するし、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "cypress.config.js",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に拡張子を切り替えてもよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { defineConfig } from 'cypress';\n// プラグインの初期化関数をインポートする\nimport { initPlugin } from '@frsource/cypress-plugin-visual-regression-diff/plugins';\n\nexport default defineConfig({\n  component: {\n    devServer: {\n      framework: 'angular',\n      bundler: 'webpack',\n    },\n    specPattern: '**/*.cy.ts',\n    setupNodeEvents(on, config) {\n\t\t\t// プラグインを初期化する\n      initPlugin(on, config);\n    },\n  },\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これでプラグインを導入できた。あとはコンポーネントのテストを記述するだけである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "コンポーネントテストを記述する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回の例ではライブラリプロジェクト ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "projects/ui",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の中に作成した ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "MessageComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を対象に画像回帰テストを記述する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// message.component.ts\nimport { CommonModule } from '@angular/common';\nimport { Component, Input } from '@angular/core';\n\n@Component({\n  standalone: true,\n  imports: [CommonModule],\n  selector: 'ui-message',\n  template: ` <p *ngIf=\"message\">{{ message }}</p> `,\n  styles: [\n    `\n      p {\n        color: red;\n      }\n    `,\n  ],\n})\nexport class MessageComponent {\n  @Input() message: string = '';\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このコンポーネント実装に対して、同じディレクトリに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "message.component.cy.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を作成する。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "cy.mount",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドを使ってAngularコンポーネントをドキュメント上に表示（マウント）できる。第一引数にはコンポーネントクラスか、テンプレートHTMLを指定できる。この関数の使い方についてはCypressの公式ドキュメントを参考にするとよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://docs.cypress.io/guides/component-testing/mounting-angular#What-is-the-Mount-Function"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次の例では ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "MessageComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の Inputである ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "message",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " プロパティに文字列を与えた状態でマウントし、 その後に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "cy.matchImage()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドによってスクリーンショットを撮っている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// message.component.cy.ts\nimport { MessageComponent } from './message.component';\n\ndescribe('MessageComponent', () => {\n  it('mounts', () => {\n    cy.mount(MessageComponent, {\n      componentProperties: {\n        message: 'Hello World',\n      },\n    });\n    cy.matchImage();\n  });\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "MessageComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " はスタンドアロンコンポーネントとして作成しているため特別な記述をしていなが、スタンドアロンコンポーネントではない場合には ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "declarations",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "imports",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " といったようなNgModule関連のセットアップが必要になるが、今回は割愛する（ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "cy.mount",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のAPIと ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TestBed",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の経験を合わせればおそらく察しが付くはずだ）。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "画像回帰テストを実行する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "それでは実際に画像回帰テストを実行してみよう。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "cypress",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " CLI の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "open",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドでインタラクティブなCypressのGUIを起動する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "shell",
+      "filename": "",
+      "text": "npx cypress open --component"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "テストを実行するブラウザを選択するよう求められるため、任意のものを選ぶ。その後、テスト一覧から実行したい ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "message.component.cy.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を選択する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-component-visual-testing-with-cypress/e5a7a73a-33f1-4a18-9b6c-b5109340831b/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "初回は比較する対象の画像がないため、スクリーンショットを保存しただけでテストが通ることになる。実行後に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "message.component.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と同じディレクトリに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "__image_snapshots__",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ディレクトリが追加され、撮影されたスクリーンショットを確認できるだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-component-visual-testing-with-cypress/f07014ad-0179-4e7a-8977-f890595333c5/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "では、Cypressを実行したまま、テストを書き換えてみよう。コンポーネントに渡している ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "message",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " インプットを違う文字列に変えてみよう。そうするとテストが再実行されるが、画像の差分が出たことでテストが失敗するはずだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "describe('MessageComponent', () => {\n  it('mounts', () => {\n    cy.mount(MessageComponent, {\n      componentProperties: {\n        message: 'Hello Angular', // 文字列を変更する\n      },\n    });\n    cy.matchImage();\n  });\n});"
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-component-visual-testing-with-cypress/996a6475-6635-4258-8a50-2ad57b9c9be6/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "画像比較の失敗メッセージの中にある “See comparison” リンクをクリックすると、保存されている画像と現在の画像の差分をGUIで確認することができる。うまくエラーにならない場合は、差分のエラースレッショルド設定を厳しくしてみるといいだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "cy.matchImage({\n  maxDiffThreshold: 0.001, // 0.1%の差でエラーになる\n});"
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-component-visual-testing-with-cypress/f32aacac-c7af-4508-8038-64acb7a3538e/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "比較画面で “Update screenshot” ボタンをクリックすると、新しいスクリーンショットを今後のテスト基準にするようアップデートしてくれる。アップデートしたあとテストを再実行すれば、画像の差分がなくなりテストが成功するようになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-component-visual-testing-with-cypress/7ed9358a-cdb3-4c62-8b78-604e6df85c47/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "コマンドラインでの実行",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "cypress run",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドを使うと、GUIではなくコンソール上でコンポーネントテストを実行することができる。CIなどでテストを自動実行する場合に使うことになる。 ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "shell",
+      "filename": "",
+      "text": "npx cypress run --component"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "cypress run",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドではデフォルトでヘッドレスブラウザを使ってテストされる。デフォルトの振る舞いはほとんどがカスタマイズ可能なので、コマンドライン引数の詳細なリファレンスは公式ドキュメントを参照してほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://docs.cypress.io/guides/guides/command-line"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事ではAngularのコンポーネントをできるだけ少ない手順で画像回帰テストできるようにする方法を紹介した。冒頭にも書いたように、この方法が現状では追加要素が少なく、導入上の困難が少ないと思っているが、もっといい方法を知っている人がいたらぜひ Twitter ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@laco2net",
+          "href": "https://twitter.com/laco2net",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " などで教えてほしい。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

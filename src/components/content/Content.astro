@@ -1,0 +1,73 @@
+---
+import { ContentNode } from '@lib/post';
+import BulletedList from './BulletedList.astro';
+import Callout from './Callout.astro';
+import Code from './Code.astro';
+import Details from './Details.astro';
+import Embed from './Embed.astro';
+import Equation from './Equation.astro';
+import Heading from './Heading.astro';
+import Image from './Image.astro';
+import LinkPreview from './LinkPreview.astro';
+import NumberedList from './NumberedList.astro';
+import Paragraph from './Paragraph.astro';
+import Quote from './Quote.astro';
+import Stackblitz from './Stackblitz.astro';
+import Table from './Table.astro';
+import Tweet from './Tweet.astro';
+import Youtube from './Youtube.astro';
+
+type Props = {
+  nodes: ContentNode[];
+};
+
+const { nodes } = Astro.props;
+---
+
+<>
+  {
+    (() => {
+      const render = (node: ContentNode) => {
+        switch (node.type) {
+          case 'heading':
+            return <Heading {...node} />;
+          case 'paragraph':
+            return <Paragraph {...node} />;
+          case 'quote':
+            return <Quote {...node} />;
+          case 'divider':
+            return <hr />;
+          case 'link_preview':
+            return <LinkPreview {...node} />;
+          case 'embed':
+            return <Embed {...node} />;
+          case 'tweet':
+            return <Tweet {...node} />;
+          case 'stackblitz':
+            return <Stackblitz {...node} />;
+          case 'callout':
+            return <Callout {...node} />;
+          case 'image':
+            return <Image {...node} />;
+          case 'youtube':
+            return <Youtube {...node} />;
+          case 'code':
+            return <Code {...node} />;
+          case 'table':
+            return <Table {...node} />;
+          case 'equation':
+            return <Equation {...node} />;
+          case 'bulleted_list':
+            return <BulletedList {...node} />;
+          case 'numbered_list':
+            return <NumberedList {...node} />;
+          case 'details':
+            return <Details {...node} />;
+          default:
+            return JSON.stringify(node);
+        }
+      };
+      return nodes.map((node, i) => render(node));
+    })()
+  }
+</>

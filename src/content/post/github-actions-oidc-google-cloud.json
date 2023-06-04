@@ -1,0 +1,860 @@
+{
+  "pageId": "2f780bc5-4f7d-42d7-89fd-8149884d8233",
+  "lastEditedAt": "2023-05-11T00:39:00.000Z",
+  "slug": "github-actions-oidc-google-cloud",
+  "properties": {
+    "title": "Google Cloud の Workload Identity 連携でGitHub Actionsから認証する",
+    "date": "2022-07-30T12:36:00.000Z",
+    "tags": ["tech", "Google Cloud", "GitHub Actions"],
+    "updatedAt": "2022-07-30T00:00:00.000Z"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "いまさらだが、秘密鍵を共有する方法ではなく、GitHub Actions のOIDCトークンを使った方法を使ってGCPの認証を有効にしてみたので、その作業メモ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.blog/changelog/2021-10-27-github-actions-secure-cloud-deployments-with-openid-connect/"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://cloud.google.com/blog/ja/products/identity-security/enabling-keyless-authentication-from-github-actions"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "基本的には Google Cloud Blog に書いてあるとおりのことをやっただけだが、ほとんどのドキュメントが ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "gcloud",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドを使った設定手順しか説明していないので、あえてWebコンソール上で同等の操作を読み解いて作業した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "GCP: Workload Identity プロバイダの作成",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "下の図でいうところの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Cloud Provider",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を準備する。GCPではこの部分が ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "IDプロバイダ",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と、それのコンテナになる ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Workload Identity プール",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という2つのリソースからなる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/github-actions-oidc-google-cloud/bd584724-f6ec-4447-9962-b077ad4da1d5/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "手順は4つある。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Workload Identity プール",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "を作成する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "プールに ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "IDプロバイダ",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " を追加する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "IDプロバイダ と GitHub Actions の OIDCトークンとの",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "属性マッピング",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "を構成する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "属性条件",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "を設定する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まず向かう画面は “IAMと管理” のあたりにあるだろう “Workload Identity 連携” というメニュー。「使ってみる」を押すと最初の Workload Identityプール作成が始まる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "image",
+      "url": "/images/github-actions-oidc-google-cloud/d39aa217-a01f-4c2b-8a7b-7614b40034b1/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Workload Identity プールを作成する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "名前を決める",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "たぶんグローバルで一意？名前が十分にユニークならIDと同じになるが、そうでない場合はIDを別に指定することになる",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "説明は任意で、続行する。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/github-actions-oidc-google-cloud/5812de6b-2cc9-4049-b85e-b4561c0a4234/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "IDプロバイダを追加する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "プロバイダは ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "OIDC",
+              "annotations": {
+                "bold": true
+              }
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "プロバイダの名前を決める",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "これもたぶんグローバルで一意？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "発行元 (issuer）を指定する",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "このプロバイダに送られるJWTの発行元。GitHub Actions を示す識別子なのでプロジェクトによらず固定",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "https://token.actions.githubusercontent.com",
+                      "annotations": {
+                        "code": true
+                      }
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "オーディエンスはたぶんデフォルトのままでいい",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/github-actions-oidc-google-cloud/1fd23d3a-98bf-4102-8404-14e46403aab9/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "属性マッピングを構成する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "GitHub Actionsから送られてきたJWTのフィールドをIDプロバイダが定義する属性にマッピングする。左側がIDプロバイダの属性で、右側がGitHub ActionsのJWTのフィールド。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/github-actions-oidc-google-cloud/e13135aa-8a3a-4a50-a464-08baf927afab/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "マッピングが必須なのはおそらく ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "google.subject",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に対する ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "assertion.sub",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をマッピングだけ。残りは属性の条件によってトークン発行を制御するために必要なものを任意に選ぶのでいいはず。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "GitHub ActionsのJWTが含んでいるフィールドはここに説明されている。とりあえず重要なのはワークフローを実行したGitHubユーザーのIDが入る ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "actor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や、ワークフローが実行されたレポジトリ名が入る ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "repository",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " などだろうか。ここはプロジェクトのセキュリティ要求によってIDプロバイダに渡さなければならないものが変わるはず。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect",
+          "href": "https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "属性条件を設定する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "属性マッピングができたら、属性条件を設定してトークン発行できるリクエスト元を制限する。今回は自分しか触らないレポジトリでの認証なので、「ワークフローの実行者が ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "lacolaco",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " である」という条件を書いた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/github-actions-oidc-google-cloud/fa85c010-c61b-4929-b208-41cbd68a0225/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "GCP: Workload Identityプールにサービスアカウントを追加する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "IDプロバイダはGitHub Actionsからのリクエストに応えて一時的なアクセストークンを発行できるようになったが、そのアクセストークンはまだGCP内でなんの権限も持っていない。必要な権限を持ったサービスアカウントとアクセストークンを紐付けしなければならない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "サービスアカウントとアクセストークンの紐付けは、Workload Identity プールからサービスアカウントへのアクセスを許可する必要がある。プールの詳細画面を開き、「アクセスを許可」からサービスアカウントの選択画面が開く。ここでアクセストークンと紐付けたいサービスアカウントを選択する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/github-actions-oidc-google-cloud/4c99f4e5-c85f-4032-808b-c3ab0f9845d3/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "サービスアカウントはもともとあるものを使いまわすこともできるが、だいたいのケースではGitHub Actionsで行いたいスコープのために新しく作成して権限を絞るはず。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "GitHub Actions の設定",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "GCP側の作業ができたので、最後にGitHub Actions側を設定して終わりになる。といっても ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "google-github-actions/auth",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " アクションがほとんど全部やってくれるので何も難しくない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/google-github-actions/auth"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "“Usage” にドキュメンテーションされているとおり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "permissions",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "id-token: write",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を追記し、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "actions/checkout",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " アクションの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "あと",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に、次のように認証ステップを追加する。これだけで終わり。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "callout",
+      "text": [
+        {
+          "type": "text",
+          "text": "permissions",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " はひとつ設定すると設定していない権限がすべて ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "none",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " になるので注意",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "yaml",
+      "filename": "",
+      "text": "      - uses: actions/checkout@v2\n      - id: 'auth'\n        uses: google-github-actions/auth@v0.8.0\n        with:\n          workload_identity_provider: 'projects/381801417627/locations/global/workloadIdentityPools/bq-sandbox-20220730/providers/bq-sandbox-provider-20220730'\n          service_account: 'bq-sandbox-worker@lacolaco-net.iam.gserviceaccount.com'"
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "workload_identity_provider",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " に指定する値はすこしわかりにくいが、IDプロバイダの編集画面で見れるURIから取り出せる",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "image",
+              "url": "/images/github-actions-oidc-google-cloud/fd68f5dd-1859-4da2-91ed-e47ac2e70ba6/Untitled.png",
+              "caption": ""
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "service_account",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " のほうはプールにアクセスを許可したサービスアカウントの中から選んでメールアドレスの文字列を指定する",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これだけ書ければ、後続のステップではサービスアカウントの認証が済んだ状態になっている。デフォルトで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "export_environment_variables",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " フラグが ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "true",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " なので、多くのGCPのSDKなどが参照する環境変数はセット済みになる。たぶん何もしなくていい。必要があれば ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "steps.auth.outputs.access_token",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " などでトークンを参照することもできる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "サンプル",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "サンプルとしてGitHub Actionsで実行されたNode.jsのスクリプトでBigQueryのAPIを呼び出している。公開レポジトリにしても大丈夫なのはもちろん属性条件をつけているからで、逆に言えば属性条件をつけなければ他のレポジトリのワークフローでも僕のBigQueryが自由に触れることになると思う。気をつけよう",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/bq-sandbox/blob/main/.github/workflows/main.yml"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}

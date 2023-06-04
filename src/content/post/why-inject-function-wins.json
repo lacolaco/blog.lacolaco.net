@@ -1,0 +1,327 @@
+{
+  "pageId": "23c54aef-56ff-4d4c-99b0-35e052b80056",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "why-inject-function-wins",
+  "properties": {
+    "title": "Angular: 依存性の注入にコンストラクタ引数ではなくinject関数を使うべき理由",
+    "date": "2023-03-23T00:44:00.000Z",
+    "tags": ["Angular", "tech", "dependency injection", "TypeScript"],
+    "canonicalUrl": "https://zenn.dev/lacolaco/articles/why-inject-function-wins"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular v14から導入された ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "inject()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数によって、これまでコンストラクタ引数でしかできなかった依存性の注入を、単なる関数の呼び出しに置き換えることができるようになった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "link_preview",
+      "url": "https://blog.lacolaco.net/2022/09/presentation-angular-standalone-based-app/"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://netbasal.com/unleash-the-power-of-di-functions-in-angular-2eb9f2697d66"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これまでは型推論におけるちょっとした優位性を除いては基本的に互換性のある、どちらを使ってもよいAPIとして認識されていたが、TypeScript 5.0 で導入されたECMAScript Decoratorsの標準実装によって話が変わってきた。今後は、依存性の注入にコンストラクタ引数ではなくinject関数を使うべきであると言える理由をこの記事で解説する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "コンストラクタ引数の問題点",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "コンストラクタ引数を使用した依存性の注入は、TypeScriptのExperimental Decoratorsで実装されているParameter Decoratorsの機能が不可欠である。Parameter Decoratorsとは、関数の引数を修飾するデコレーターである。コンストラクタ引数による依存性の注入に使われる ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@Inject()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@Self()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@Optional()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " などはすべてParameter Decoratorsである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "class Foo {\n\tconstructor(@Inject(Bar) bar: Bar) {}\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "@Inject()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使っていないコンストラクタ引数でもインジェクションできていると思っている人もいるかもしれないが、それはAngularのデコレーターコンパイラが型パラメータを自動的にインジェクショントークンに変換して次のように書き換えているからである。これは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@Inject()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の省略記法にすぎない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "class Foo {\n\t// 型パラメータから判断して自動的に @Inject(Bar) が生成される\n\tconstructor(bar: Bar) {}\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "しかし、TypeScript 5.0で実装されたECMAScript 標準準拠のデコレーターは、いまのところParameter Decoratorsを持たない。いずれECMAScriptでサポートされるかもしれないが、ともかく現状はTypeScriptの実験的実装でしかサポートされていない構文ということになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#decorators"
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "This new decorators proposal is not compatible with --emitDecoratorMetadata, and it does not allow decorating parameters. Future ECMAScript proposals may be able to help bridge that gap.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular は TypeScript 5.0の標準デコレーター実装にも互換性を持たせるように内部で対応を進めているため、ただちにこれまでのAngularプロジェクトが壊れることはない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular/pull/49492"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "だが、なるべく安定した標準に依存したソースコードを書こうとするなら、Parameter Decoratorsからの脱却を進めなければならない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "inject関数の優位性",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "幸い、Angularの文脈でParameter Decoratorsを使っているのはコンストラクタ引数での依存性の注入だけであり、この機能は v14 から導入されている ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "inject()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数で完全に置き換え可能である。つまり、Parameter Decoratorsからの完全脱却はすでに可能である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "むしろ、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "inject()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数を使わなければ実現できないユースケースも増えつつあり、デコレーターの問題がなくても置き換えは時間の問題だっただろう。RouterのGuard/Resolverはすでにクラスベースの実装を非推奨にしているし、HttpClientのinterceptorも関数ベースのAPIをサポートした。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "依存性の注入を含むビジネスロジックの関数切り出しというリファクタリング面での恩恵があるというレベルではすでになく、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "inject()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数を使わければ新しい機能を利用できないようになってきている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "結論",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "コンストラクタ引数による依存性の注入をやめなければ、TypeScript の実験的実装に依存し続けることになる。今後しばらくはTypeScriptがサポートを切ることはないらしいが、今後さまざまなライブラリやツールが標準デコレーターを前提とした形で登場してくるだろう。そのとき、非標準のデコレーターでしかサポートされていないParameter Decoratorsの存在が足を引っ張る可能性は高い。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もはやどちらを使うか選べる段階は終わったと考えるべきだ。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "inject()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数が依存性の注入を利用するただひとつの安定APIである。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

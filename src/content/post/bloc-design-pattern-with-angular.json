@@ -1,0 +1,893 @@
+{
+  "pageId": "6bbc2bc0-5d0f-4e2e-adfb-010e6d45fa4b",
+  "lastEditedAt": "2023-05-21T04:59:00.000Z",
+  "slug": "bloc-design-pattern-with-angular",
+  "properties": {
+    "title": "FlutterのBLoCパターンをAngularで理解する",
+    "date": "2018-05-22T00:00:00.000Z",
+    "tags": ["tech", "Angular", "設計"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事では AngularDart/Flutter の文脈で新しいコンポーネント設計パターンとして広まりつつある",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "BLoC",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "パターンを、Angular の語彙で理解し、実装する方法を紹介する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "BLoC パターンとは",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "BLoC とは、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "B",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "usiness ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Lo",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "gic ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "C",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "omponent の略である。 BLoC を使ったアプリケーションの実装パターンを BLoC パターンと呼ぶ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まず誤解を招きそうなポイントとして、この“Component”は React や Angular などでいうところのビューを構築する“コンポーネント”ではない。 一般的な単語としての、アプリケーションを構成するひとかたまりの要素という意味の“Component”なので誤解しないこと。 対比するレベルとしては、“UI Component” vs “Business Logic Component”のようになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "BLoC は複数の環境向けにアプリケーションを開発するときのコードシェアカバレッジを高めるための、リファクタリング指針のようなものだ。 具体的には、以下の指針を与える。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "BLoC の入力・出力インターフェースは",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "すべて Stream/Sink",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "である",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "BLoC の依存は必ず",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "注入可能",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "で、",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "環境に依存しない",
+              "annotations": {
+                "bold": true
+              }
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "BLoC 内に環境ごとの条件分岐は持たない",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "以上のルールに従う限り実装は自由である",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "詳しくは BLoC パターンの初出であるこのセッションを見るとよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "youtube",
+      "videoId": "PLHln7wHgPE"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular における BLoC パターン",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular において BLoC パターンの恩恵がどれほどあるのかは議論の余地があるが、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "https://lacolaco.hatenablog.com/entry/2018/05/15/121514",
+          "href": "https://lacolaco.hatenablog.com/entry/2018/05/15/121514",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " でも述べたようにフレームワークに依存しない部分を明確に分ける、というのは設計指針として重要である。 サーバーサイドでの実行や NativeScript、Ionic、あるいは React/Vue などへの換装など考えても、BLoC パターンはアプリケーションの Angular 依存度を適切に保つために良いルールに思える。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "さて、さっそく Angular で BLoC を実装してみよう。 Dart には言語標準の Stream と Sink があるが、JavaScript には",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "まだ",
+          "href": "https://github.com/tc39/proposal-observable",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "存在しないため、非標準の実装が必要である。 幸運にも Angular は RxJS と相互運用可能なので、RxJS の Observable を Stream に見立てて BLoC を実装することができる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まずは UI コンポーネントがビジネスロジックを持ってしまった状態の例を以下に挙げる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://stackblitz.com/edit/angular-bloc-example-1?file=src%2Fapp%2Fapp.component.ts",
+          "href": "https://stackblitz.com/edit/angular-bloc-example-1?file=src%2Fapp%2Fapp.component.ts",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: \"my-app\",\n  template: `\n    <div cdkTrapFocus [cdkTrapFocusAutoCapture]=\"false\">\n      <mat-form-field appearance=\"outline\" style=\"width: 80%;\">\n        <input\n          matInput\n          placeholder=\"Search for...\"\n          ngModel\n          (ngModelChange)=\"onInputChange($event)\"\n        />\n      </mat-form-field>\n    </div>\n\n    <span> {{ preamble }} </span>\n\n    <ul>\n      <li *ngFor=\"let result of results\">\n        {{ result }}\n      </li>\n    </ul>\n  `\n})\nexport class AppComponent {\n  private query = \"\";\n  results: string[] = [];\n\n  get preamble() {\n    return this.query == null || this.query.length == 0\n      ? \"\"\n      : `Results for ${this.query}`;\n  }\n\n  constructor(private repository: SearchRepository) {}\n\n  onInputChange(query: string) {\n    this.query = query;\n    this.executeSearch(query);\n  }\n\n  private async executeSearch(query: string) {\n    const results = await this.repository.search(query);\n    this.results = results;\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "UI コンポーネントが API の呼び出しや状態の保持などさまざまなビジネスロジックを持っているので、もしこのアプリケーションを別プラットフォームにも展開したくなってもコードが共有できない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "BLoC の作成",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "BLoC はポータビリティを考えると、ほとんどの場合は単なるクラスとして宣言される。 ここでは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SearchBloc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "クラスを作成する。 もともと",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AppComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が持っていたビジネスロジックをすべて",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SearchBloc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に移動すると次のようになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "class SearchBloc {\n  private query = \"\";\n  results: string[] = [];\n\n  get preamble() {\n    return this.query == null || this.query.length == 0\n      ? \"\"\n      : `Results for ${this.query}`;\n  }\n\n  constructor(private repository: SearchRepository) {}\n\n  async executeSearch(query: string) {\n    this.query = query;\n    const results = await this.repository.search(query);\n    this.results = results;\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そして",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AppComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SearchBloc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に依存して次のようになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: \"my-app\",\n  template: `\n    <div cdkTrapFocus [cdkTrapFocusAutoCapture]=\"false\">\n      <mat-form-field appearance=\"outline\" style=\"width: 80%;\">\n        <input\n          matInput\n          placeholder=\"Search for...\"\n          ngModel\n          (ngModelChange)=\"bloc.executeSearch($event)\"\n        />\n      </mat-form-field>\n    </div>\n\n    <span> {{ bloc.preamble }} </span>\n\n    <ul>\n      <li *ngFor=\"let result of bloc.results\">\n        {{ result }}\n      </li>\n    </ul>\n  `\n})\nexport class AppComponent {\n  bloc: SearchBloc;\n\n  constructor(private repository: SearchRepository) {\n    this.bloc = new SearchBloc(this.repository);\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://stackblitz.com/edit/angular-bloc-example-2?file=src/app/app.component.ts",
+          "href": "https://stackblitz.com/edit/angular-bloc-example-2?file=src/app/app.component.ts",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Observable へのリファクタリング",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "先述のとおり、BLoC パターンでは BLoC のすべてのインターフェースは Stream でなければならない。 これは Flutter の StatefulWidget や AngularDart の Change Detection の間で、データの変更に対する UI のリアクションのアプローチが違うからだ。 同期的な状態の管理ではプラットフォームごとに特別な処理が必要になる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "一方 Stream であれば Flutter は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "StreamBuilder",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で Stream からデータが流れてくるたびに再描画する仕組みをもっており、AngularDart も",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "async",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "パイプにより同様の反応機構をもっている。 プラットフォームに依存せず非同期的な値を描画するために、Dart の BLoC パターンでは Stream を活用する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular の場合は RxJS が BLoC の実装を助けてくれる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Dart の Stream を",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Observable",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "、Sink を",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Observer",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に置き換えると、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SearchBloc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は次のようになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "class SearchBloc {\n  private _results$: Observable<string[]>;\n  get results$(): Observable<string[]> {\n    return this._results$;\n  }\n\n  private _preamble$: Observable<string>;\n  get preamble$(): Observable<string> {\n    return this._preamble$;\n  }\n\n  private _query$ = new BehaviorSubject<string>(\"\");\n  get query(): Observer<string> {\n    return this._query$;\n  }\n\n  constructor(private repository: SearchRepository) {\n    this._results$ = this._query$.pipe(\n      switchMap(query => observableFrom(this.repository.search(query)))\n    );\n    this._preamble$ = this.results$.pipe(\n      withLatestFrom(this._query$, (_, q) => (q ? `Results for ${q}` : \"\"))\n    );\n  }\n\n  dispose() {\n    this._query$.complete();\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "results: string[]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "results$: Observable<string[]>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "になり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "preamble: string",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "も",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "preamble$: Observable<string>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "となった。 これらは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "query",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の変更に反応して変化する非同期的な値として表現される。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "query",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Observer<string>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "インターフェースを外部に公開し、新しい値の追加を UI に許可する。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SearchBloc",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の内部では",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "_query$: BehaviorSubject<string>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を実体として持ち、コンストラクタでは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "_query$",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に反応する",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "_results$",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "_preamble$",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が宣言されている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これを",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AppComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "から使うと次のようになる。テンプレート中で",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "async",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "パイプを使い、Observable の変更に反応してビューの再描画が実行されるようになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: \"my-app\",\n  template: `\n    <div cdkTrapFocus [cdkTrapFocusAutoCapture]=\"false\">\n      <mat-form-field appearance=\"outline\" style=\"width: 80%;\">\n        <input\n          matInput\n          placeholder=\"Search for...\"\n          ngModel\n          (ngModelChange)=\"bloc.query.next($event)\"\n        />\n      </mat-form-field>\n    </div>\n\n    <span> {{ bloc.preamble$ | async }} </span>\n\n    <ul>\n      <li *ngFor=\"let result of bloc.results$ | async\">\n        {{ result }}\n      </li>\n    </ul>\n  `\n})\nexport class AppComponent {\n  bloc: SearchBloc;\n\n  constructor(private repository: SearchRepository) {\n    this.bloc = new SearchBloc(this.repository);\n  }\n\n  ngOnDestroy() {\n    this.bloc.dispose();\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://stackblitz.com/edit/angular-bloc-example-3?file=src/app/app.component.ts",
+          "href": "https://stackblitz.com/edit/angular-bloc-example-3?file=src/app/app.component.ts",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これで BLoC の実装が完了した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "考察",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angular アプリケーションを RxJS ベースで設計・実装をしていれば自然と似たような形になっているはず。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "BLoC はそのパターンに名前をつけ、ビジネスロジックのクラスにインターフェースの制約を設けたもの。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angular のコンポーネントは Angular 環境での依存性を、DI を使って供給する役割も果たすことになる。",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "BLoC を持つコンポーネントは Container, BLoC を持たないコンポーネントは Presentational、と呼べそうでもある。",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "UI コンポーネントはテストしにくいので、ビジネスロジックを BLoC に逃がすことでテスタビリティが高くなるのは目に見える恩恵のひとつ。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "BLoC はクロスプラットフォーム開発でのコードシェアリングを促進するための実装パターン",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Flutter/AngularDart でのコードシェアリングのために生まれたが、Dart だけのものではない",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angular では RxJS の Observable を使って実装できる。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angular だけの単一プラットフォームであっても、ビジネスロジックのテスタビリティを高めることができる。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

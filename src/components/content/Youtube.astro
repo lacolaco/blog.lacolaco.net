@@ -1,0 +1,15 @@
+---
+import { YoutubeNode } from '@lib/post';
+
+type Props = YoutubeNode;
+
+const { videoId } = Astro.props;
+---
+
+<iframe id="ytplayer" width="640" height="360" src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}></iframe>
+
+<style>
+  iframe {
+    border: none;
+  }
+</style>

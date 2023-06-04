@@ -1,0 +1,18 @@
+---
+import { LinkPreviewNode } from '@lib/post';
+
+type Props = LinkPreviewNode;
+
+const { url } = Astro.props;
+---
+
+<iframe class="hatenablogcard" src={`https://hatenablog-parts.com/embed?url=${url}`} width="300" height="150"></iframe>
+
+<style>
+  iframe {
+    border: none;
+    width: 100%;
+    height: 155px;
+    max-width: 680px;
+  }
+</style>

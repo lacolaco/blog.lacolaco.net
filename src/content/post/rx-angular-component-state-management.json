@@ -1,0 +1,463 @@
+{
+  "pageId": "e7898e37-3304-4482-8657-dff38ca1f349",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "rx-angular-component-state-management",
+  "properties": {
+    "title": "rx-angular/state を使ったコンポーネントローカル状態管理",
+    "date": "2022-10-26T06:46:00.000Z",
+    "tags": ["Angular", "tech", "rx-angular", "State Management", "状態管理"],
+    "updatedAt": "2022-10-26T00:00:00.000Z"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular v14からのスタンドアロンコンポーネントを中心とした新しい流れの中で、RxAngularファミリーの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@rx-angular/state",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使ったAngularコンポーネントの状態管理が個人的に気に入っているので紹介したい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "link_preview",
+      "url": "https://www.rx-angular.io/docs/state"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ちなみに、単純に機能の面だけみれば NgRx Component Store や Elf など他にも同様のライブラリはある。RxAngularを今回取り上げたのは、個人的に筋がいいと思っているのと、それらと比べて知名度がまだ低そうなので持ち上げたいのが理由である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://ngrx.io/guide/component-store/",
+          "href": "https://ngrx.io/guide/component-store/",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://ngneat.github.io/elf/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ライブラリの導入やチュートリアルについては公式ドキュメントを見てもらうべきであるので、ここではRxAngularを使った実装の例を見てもらうことにする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "RxAngularを使ったSingle State Streamパターン",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Single State Streamパターン",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "とは、私がそのように名付けて呼んでいるAngularコンポーネントの状態管理パターンのひとつである。端的に言うと、あるコンポーネントの状態を1つのStream (Observable)として扱い、テンプレートの大部分を同期的なバインディングで記述するものである。詳しくはSingle State Streamパターンについて書いた記事を読んでほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://blog.lacolaco.net/2019/07/angular-single-state-stream-pattern/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "シンプルな例として、ユーザー情報を非同期的に取得して表示するようなケースだと、このようになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { CommonModule } from '@angular/common';\nimport { Component, inject } from '@angular/core';\nimport { RxState } from '@rx-angular/state';\n\ntype State = {\n  user: User | null;\n  userFetching: boolean;\n};\n\nconst initialState: State = {\n  user: null,\n  userFetching: false,\n};\n\n@Component({\n  selector: 'my-app',\n  standalone: true,\n  imports: [CommonModule],\n  providers: [RxState],\n  template: ` \n  <ng-container *ngIf=\"state$ | async as state\">\n    <div><button (click)=\"load()\">Load</button></div>\n\n    <ng-container *ngIf=\"state.userFetching; else showUser\">\n      <span>Loading...</span>\n    </ng-container>\n\n    <ng-template #showUser>\n      <span>User Name: {{ state.user.name }} </span>\n    </ng-template>\n  </ng-container>\n`,\n})\nexport class AppComponent {\n  private readonly store = inject<RxState<State>>(RxState);\n\n  readonly state$ = this.store.select();\n\n  constructor() {\n    this.store.set(initialState);\n  }\n\n  load() {\n    this.store.set({ userFetching: true });\n    // fetch user asynchronously\n    setTimeout(() => {\n      this.store.set({\n        user: { name: 'John' },\n        userFetching: false,\n      });\n    }, 1000);\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Stackblitzで動作するサンプルはこちら。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-ivy-r34mhv?ctl=1&embed=1&file=src/app/app.component.ts"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "RxStore",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の注入を ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "inject()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数で行っているが、これはもちろんコンストラクタ引数でも構わない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "export class AppComponent {\n  readonly state$ = this.store.select();\n\n  constructor(private readonly store: RxState<State>) {\n    this.store.set(initialState);\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "rx-angular/state の特徴的な点は、状態の初期化が遅延されていることだ。多くの状態管理ライブラリや ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "BehaviorSubject",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " による素朴な状態管理では、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "initialState",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を与える初期化が一般的である。そのStateの型に合った初期値をインスタンス生成時に与える必要があるが、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RxState",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " には ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "initialState",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という概念はない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "select()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " メソッドが返すObservableは最初の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "set()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が呼び出されるまで何も値を流さない。初期値を与えたければ、利用者がコンストラクタなどの初期化にふさわしいタイミングで ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "set()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " メソッドを使って状態をセットすればいい。大抵のケースではそうすることになるだろう。だが、初期値を与えるかどうかをユーザー側で選択できるようにしていることが面白い。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "継承を使ったパターンを避けたい理由",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "rx-angular/state の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RxState",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " クラスは上記のようにサービスとしてDI経由で利用できるが、クラスの継承を使った使い方も提示されている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Setup | RxAngular ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "https://www.rx-angular.io/docs/state/setup#inherit",
+          "href": "https://www.rx-angular.io/docs/state/setup#inherit",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({})\nexport class StatefulComponent extends RxState<{ foo: number }> {\n  readonly state$ = this.select();\n\n  constructor() {\n    super();\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "コンポーネントクラスが ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RxState",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " クラスを継承することで、コンポーネント自身の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "this",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "select()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "set()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " などのAPIを持つようになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この書き方は手軽さではあるが、あまり本格的に使いたいものではない。その理由はテンプレートに対する可視性や意図しない外部へのAPIの露出によって、このライブラリへの結合が複雑になってしまうことがある。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "this",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RxState",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のAPIが継承されるということは、テンプレート内で直接 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "set()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " できてしまうということだ。うっかり参照してしまうことを避けるために、継承ではなくDIによるクラスフィールドとして ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "private",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の可視性で扱い、テンプレートから参照できるのはテンプレートで使われることを意図したフィールドだけにしたい。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

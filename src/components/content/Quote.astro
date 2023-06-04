@@ -1,0 +1,17 @@
+---
+import { QuoteNode } from '@lib/post';
+import Text from './Text.astro';
+
+type Props = QuoteNode;
+
+const { text } = Astro.props;
+---
+
+{
+  (() => {
+    const content = text.map((t) => <Text {...t} />);
+    return <blockquote>{content}</blockquote>;
+  })()
+}
+
+<style></style>

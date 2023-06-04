@@ -1,0 +1,482 @@
+{
+  "pageId": "7bdac4fe-30d9-4ae2-a780-81cbbb21b3c7",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "renovate-config-for-angular-cli",
+  "properties": {
+    "title": "AngularプロジェクトのためのRenovate設定",
+    "date": "2021-03-20T00:00:00.000Z",
+    "tags": ["tech", "Angular", "Angular CLI"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事では依存関係の更新を自動化する",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Renovate",
+          "href": "https://www.whitesourcesoftware.com/free-developer-tools/renovate",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "を使う上で、Angular CLI ベースのリポジトリに適した設定を紹介する。 またその設定を誰でも利用できるプリセットとして公開したので、その使い方も解説する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "自動化すべきでない依存パッケージ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Renovate は依存するライブラリなどの新しいバージョンが公開されると一定時間後にそのバージョンへ追従するプルリクエストを自動作成してくれる。 一般的なケースではこの機能はありがたいが、Angular CLI で管理されるリポジトリにおいては注意が必要である。なぜなら Renovate は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng update",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を実行しないからだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ng update",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドは関連するパッケージグループをまとめてバージョンアップするだけでなく、バージョンアップ時に必要なソースコードのマイグレーションを自動実行する。たとえば ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "angular.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " から非推奨の設定項目を消してくれたり、メジャーバージョンアップで削除される API を代替 API に置換してくれたりする。継続的に Angular CLI プロジェクトをメンテナンスしていく上で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng update",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " はとても重要な役割がある。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "つまり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng update",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " による自動マイグレーションが必要な場合、Renovate でバージョンアップしてはならない。 これは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@angular/",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " から始まる Angular 公式のパッケージだけでなく、一部のサードパーティ製ライブラリにも当てはまる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "だがこれらのパッケージでもすべてのバージョンに自動マイグレーションが含まれるわけではない。 Angular 公式パッケージの場合、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng update",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " による自動マイグレーションが含まれるのは基本的にマイナーバージョンアップ以上だ。 つまり、パッチバージョンアップのときは Renovate を使って更新して問題ない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、Angular はサポートする TypeScript バージョンがそれぞれ決められており、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng update",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 以外のタイミングで TypeScript のマイナーバージョンは更新すべきではない （そもそも TypeScript は SemVer に則っていないためマイナーバージョンアップに後方互換性はない）。 そのため Angular 公式パッケージだけでなく TypeScript についても Renovate を使用できるのはパッチバージョンアップに限られる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Renovate 設定",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Renovate からプルリクエストが来るたびにこのような経験則に従って取り扱うのは苦労するため、Renovate を使用するつもりのない条件をあらかじめ設定しておくことで運用を省力化できる。 上述のルールを Renovate 設定に記述すると次のようになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "{\n  \"packageRules\": [\n    {\n      \"groupName\": \"@angular/core package group (major or minor)\",\n      \"matchSourceUrlPrefixes\": [\"https://github.com/angular/angular\"],\n      \"matchUpdateTypes\": [\"major\", \"minor\"],\n      \"enabled\": false\n    },\n    {\n      \"groupName\": \"@angular/cli package group (major or minor)\",\n      \"matchPackageNames\": [\n        \"@angular/cli\",\n        \"@angular-devkit/architect\",\n        \"@angular-devkit/build-angular\",\n        \"@angular-devkit/build-webpack\",\n        \"@angular-devkit/core\",\n        \"@angular-devkit/schematics\"\n      ],\n      \"matchUpdateTypes\": [\"major\", \"minor\"],\n      \"enabled\": false\n    },\n    {\n      \"groupName\": \"@angular/material package group (major or minor)\",\n      \"matchPackageNames\": [\n        \"@angular/material\",\n        \"@angular/cdk\",\n        \"@angular/material-moment-adapter\"\n      ],\n      \"matchUpdateTypes\": [\"major\", \"minor\"],\n      \"enabled\": false\n    },\n    {\n      \"groupName\": \"typescript (major or minor)\",\n      \"matchPackageNames\": [\"typescript\"],\n      \"matchUpdateTypes\": [\"major\", \"minor\"],\n      \"enabled\": false\n    }\n  ]\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この設定により、Angular 公式パッケージと TypeScript についてはパッチバージョンアップだけが Renovate の管理下に置かれる。 もちろんこれは開発者自身が Angular のバージョンアップに追従していくことを求めるが、Angular のリリースはタイムベースなので定期的なルーチンとして毎月 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng update",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " していれば問題ないはずだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Renovate 共有可能プリセット",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Renovate は再利用可能な設定をプリセットとして公開して共有する機能がある。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Shareable Config Presets | Renovate Docs",
+          "href": "https://docs.renovatebot.com/config-presets/#preset-hosting",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この機能で参照できるように Angular CLI プロジェクト用のプリセットを公開したので、ぜひ使ってみてほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/renovate-config"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "任意のリポジトリの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "renovate.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " で次のようにプリセットを指定するだけで設定を適用できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "{\n  \"extends\": [\"config:base\", \"github>lacolaco/renovate-config:ng-update\"]\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もちろんプリセットの中に適用したくない設定があれば、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "renovate.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " で上書きすることもできる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "設定の問題点や改善できる点を見つけた方はぜひ GitHub の Issue か Twitter などで教えてほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "おまけ: ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@types",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の自動マージ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular とは関係ないが、日頃 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@types",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "パッケージのバージョンアップを自動マージする設定を書くことが多い。 型定義ファイルだけ更新されても実行には影響しないため、コンパイルに問題がないことを CI で確認できれば動作確認などは必要なく、そのままマージできると判断している。 さすがにメジャーバージョンが変わったことは開発者の目に留まるべきだと思うため、自動マージはマイナーバージョンアップまでに限っている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この設定を書くと次のようになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "{\n  \"packageRules\": [\n    {\n      \"groupName\": \"@types packages (minor or patch)\",\n      \"matchPackagePatterns\": [\"^@types/\"],\n      \"matchUpdateTypes\": [\"minor\", \"patch\"],\n      \"automerge\": true\n    }\n  ]\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この設定も再利用できるように共有可能プリセットとして公開したため、便利だと思ったら使ってみてほしい。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng-update",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と同じく次のように参照して使用できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "{\n  \"extends\": [\"config:base\", \"github>lacolaco/renovate-config:automerge-types\"]\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ただし、このプリセットを使う際には必ずリポジトリは CI を用意し、TypeScript のコンパイルをチェックしていることを前提としてほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular CLI ベースのリポジトリで一般的に適用できる Renovate 設定を共有可能プリセットとして公開した。 プリセットに含めたのは Angular 公式パッケージに関連するものに限っているが、他に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng update",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に対応しているサードパーティライブラリを使っていればそれにも同じ設定を適用することをおすすめする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もし Angular プロジェクトで Renovate の運用に困っている人がいたら参考にしてみてほしい。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

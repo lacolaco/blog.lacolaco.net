@@ -1,0 +1,839 @@
+{
+  "pageId": "d98e8a7e-9853-4346-b12b-cc4bec8a0cb7",
+  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "slug": "enjoyable-webworkers-in-angular",
+  "properties": {
+    "title": "Enjoyable WebWorkers in Angular",
+    "date": "2018-12-22T00:00:00.000Z",
+    "tags": ["tech", "Angular", "Web Worker"],
+    "updatedAt": "2021-05-26T00:00:00.000Z"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Web Workers",
+          "href": "https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " have attracted the attention as one of the most important things of web development. ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Comlink",
+          "href": "https://github.com/GoogleChromeLabs/comlink",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is a JavaScript library created by Google Chrome team to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "make WebWorkers enjoyable",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". It provides an easy way to communicate with classes defined in Worker-side.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This post explains how to integrate Comlink with your Angular application that created by Angular CLI. By using Comlink, You will be able to move away heavy processing ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "off-the-main-thread",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " easily and make JavaScript bundles smaller by ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "code separation",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". Let’s get started!",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "[Change from Angular CLI v12.0]",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Syntax for worker module was updated since webpack v5. CLI v12 can migrate automatically by executing ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "ng update @angular/cli@12",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": ".",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/enjoyable-webworkers-in-angular/4e5f39d6-ec32-48e6-bc91-fa21a9f48eb7/2021-05-26T11-16-04.png",
+      "caption": ""
+    },
+    {
+      "type": "image",
+      "url": "/images/enjoyable-webworkers-in-angular/d9b5bd3c-21db-46cb-b0e3-49dd267b228e/2021-05-26T11-20-53.png",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Setting up an application",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Create an example application by using ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Angular CLI",
+          "href": "https://angular.io/guide/quickstart#install-cli",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ ng new angular-comlink-example --defaults"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "After application setup, install Comlink as the below. Comlink has its own TypeScript definition in the package, so you don’t need additional installation.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ cd angular-comlink-example\n$ yarn add comlink # or npm install comlink"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Implement worker module",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "For example, let’s make a markdown processor which can convert markdown text to HTML. At first, install ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "marked",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@types/marked",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " to compile markdown to HTML.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "yarn add marked && yarn add --dev @types/marked"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Next, create ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "src/tsconfig.worker.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " for the application project. Its location is next to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "tsconfig.app.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "{\n  \"extends\": \"../tsconfig.json\",\n  \"compilerOptions\": {\n    \"outDir\": \"./out-tsc/worker\",\n    \"lib\": [\n      \"es2018\",\n      \"webworker\"\n    ],\n    \"types\": []\n  },\n  \"include\": [\n    \"**/*.worker.ts\"\n  ]\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Create a file named ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "markdown.worker.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " in ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "src/app/worker",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " directory and write a function as the below. This file will be the entry point of the worker module.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ touch src/app/worker/markdown.worker.ts"
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "// worker/markdown.worker.ts\nimport * as marked from 'marked';\n\nexport const api = {\n  compileMarkdown(source: string) {\n    return new Promise<string>((resolve, reject) => {\n      marked(source, (err, result) => {\n        if (err) {\n          reject(err);\n          return;\n        }\n        resolve(result);\n      });\n    });\n  },\n};"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "To expose that functions as the worker, call ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Comlink.expose",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " function and pass the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "api",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " object.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import * as marked from 'marked';\nimport { expose } from 'comlink';\n\nexport const api = {\n  compileMarkdown(source: string) {\n    // ...\n  },\n};\n\nexpose(api); // Expose as worker's API"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "That’s all to implement Worker-side code. Just write a function and expose it. Ain’t easy?",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Use the exposed worker APIs",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Next step. Let’s call the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "compileMarkdown",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " function through Comlink. At first, create ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "MarkdownService",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " as Angular service to separate business logic from component. Execute following command;",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "$ ng generate service service/markdown"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "And here is an initial implementation.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { Injectable } from '@angular/core';\n\n@Injectable({\n  providedIn: 'root',\n})\nexport class MarkdownService {\n  async compile(source: string): Promise<string> {}\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "To use ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "worker/markdown.worker.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " , import Comlink and create a proxied worker instance with ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "wrap",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " function as the below. A module worker instance is instanciated by ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "new Worker(new URL('../worker/markdown.worker', import.meta.url)",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". This syntax is defined by ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "webpack’s Web Workers support",
+          "href": "https://webpack.js.org/guides/web-workers/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { wrap } from 'comlink';\n\nasync function compileMarkdown(source: string): Promise<string> {\n  const worker = wrap<typeof import('../worker/markdown.worker').api>(\n    new Worker(new URL('../worker/markdown.worker', import.meta.url)),\n  );\n  return await worker.compileMarkdown(source);\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Now ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "worker",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " instance has functions exposed by ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Comlink.expose",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " with its types.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "To retrieve type of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "api",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", pass ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "typeof import('../worker/markdown.worker).api",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " into ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "wrap<T>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". This ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "import",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is not ES Module import but TypeScript’s feature that ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "import only type definition",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " without any JavaScript references which will be eliminated after TypeScript compilation process and it can be separated to different bundles.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The following is the final example of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "service/markdown.service.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". If the environment doesn’t support ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "window.Worker",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", it will fallback to on-the-main theaed processing with dynamic ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "import()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " to keep the initial bundle small.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { Injectable } from '@angular/core';\nimport { wrap } from 'comlink';\n\nasync function compileMarkdown(source: string): Promise<string> {\n  if (window.Worker) {\n    const worker = wrap<typeof import('../worker/markdown.worker').api>(\n      new Worker(new URL('../worker/markdown.worker', import.meta.url)),\n    );\n    return await worker.compileMarkdown(source);\n  } else {\n    // Fallback to main thread with dynamic imports\n    const worker = await import('../worker/markdown.worker').then((m) => m.api);\n    return await worker.compileMarkdown(source);\n  }\n}\n\n@Injectable({\n  providedIn: 'root',\n})\nexport class MarkdownService {\n  async compile(source: string): Promise<string> {\n    return await compileMarkdown(source);\n  }\n}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Run the app!",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Finish the application. Here is ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AppComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " modified to use ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "MarkdownService",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and show the result.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { MarkdownService } from './service/markdown.service';\nimport { Component } from '@angular/core';\n\n@Component({\n  selector: 'app-root',\n  template: `\n    <button (click)=\"compileMarkdown()\">compile</button>\n\n    <div>{{ result }}</div>\n  `,\n})\nexport class AppComponent {\n  result: string = '';\n\n  constructor(private markdown: MarkdownService) {}\n\n  async compileMarkdown() {\n    this.result = await this.markdown.compile(`## Hello Comlink`);\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Let’s serve the app by using",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng serve",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and open browser’s devtool. ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "0.worker.js",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is a chunk that is split by WorkerPlugin. It is loaded lazily after initial scripts are all loaded. It doesn’t block the initial rendering. Cool!",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/enjoyable-webworkers-in-angular/99104923-16be-4397-a67c-cb78dce9fffe/1__WghqP__ww8aX6KVZVQNzmeA.gif",
+      "caption": ""
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Summary",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Use Comlink to define worker and expose async APIs.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angular CLI supports worker code separation with zero-config.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "TypeScript support from Comlink perfectly.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "All sample code is public in GitHub.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/lacolaco/angular-comlink-example",
+          "href": "https://github.com/lacolaco/angular-comlink-example",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Any feedback is welcome. Thanks for reading!!",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
