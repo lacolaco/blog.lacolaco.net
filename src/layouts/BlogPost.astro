@@ -22,7 +22,7 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    <BaseHead title={title} description={''} />
+    <BaseHead title={title} description={''} image={`/og/${post.slug}.png`} />
 
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
   </head>
