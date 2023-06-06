@@ -512,15 +512,15 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.17.19.tgz#8cfaf2ff603e9aabb910e9c0558c26cf32744061"
   integrity sha512-lAhycmKnVOuRYNtRtatQR1LPQf2oYCkRGkSFnseDAKPl8lu5SOsK/e1sXe5a0Pc5kHIHe6P2I/ilntNv2xf3cA==
 
-"@fontsource/m-plus-2@^4.5.12":
-  version "4.5.12"
-  resolved "https://registry.yarnpkg.com/@fontsource/m-plus-2/-/m-plus-2-4.5.12.tgz#c64a5f5a956cb3c3ac873fdb985c83b57c0ced1d"
-  integrity sha512-FSFpMwQ8TQJvynMq2+qEqYxviaqv/YW6ETkODM2zddpW9as1yPa9xgDhmAD3OuF0/tPiPUdYpVtJpwdyWUp4lg==
-
 "@fontsource/source-code-pro@^4.5.14":
   version "4.5.14"
   resolved "https://registry.yarnpkg.com/@fontsource/source-code-pro/-/source-code-pro-4.5.14.tgz#97e7b889f485c56132925e3b5bd1cc114b67e163"
   integrity sha512-EWE0djE7wFCBmExWa9oT1vIp+qj5MUroVvXWb9G7Ig4t4aXDd9QDidYZzMzNemb8gQxTdOzGmhx6EZnDTFMh5Q==
+
+"@fontsource/zen-kaku-gothic-new@^5.0.2":
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/@fontsource/zen-kaku-gothic-new/-/zen-kaku-gothic-new-5.0.2.tgz#8eddedb0c760476a99587d5926bf4d37a09d30d0"
+  integrity sha512-7zs98Eon1xntbihoeePEF7UFjlu+fPiefSaRGRSiCws+NQS6wZtG+dZ+9dWcKW3UZzwyJJncnGtbi6sygzL0Sw==
 
 "@jridgewell/gen-mapping@^0.3.0", "@jridgewell/gen-mapping@^0.3.2":
   version "0.3.3"

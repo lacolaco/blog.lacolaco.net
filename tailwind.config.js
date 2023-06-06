@@ -11,7 +11,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: `"M PLUS 2",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif`,
+        sans: `"Zen Kaku Gothic New",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif`,
         mono: `"Source Code Pro",monospace`,
       },
       fontWeight: {
