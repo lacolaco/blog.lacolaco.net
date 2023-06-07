@@ -48,7 +48,7 @@ export async function getOgImage(text: string) {
             fontSize: '24px',
           }}
         >
-          <span>blog.lacolaco.net</span>
+          <span>{siteDomainName}</span>
         </div>
       </div>
     </div>,
@@ -57,13 +57,13 @@ export async function getOgImage(text: string) {
       height: 400,
       fonts: [
         {
-          name: 'Zen Kaku Gothic New',
+          name: fontFamily,
           data: fontNormal,
           weight: 400,
           style: 'normal',
         },
         {
-          name: 'Zen Kaku Gothic New',
+          name: fontFamily,
           data: fontBold,
           weight: 700,
           style: 'normal',
