@@ -1,6 +1,6 @@
 {
   "pageId": "d23a2cfd-5a46-47f6-a430-0533e00371a6",
-  "lastEditedAt": "2023-06-07T03:32:00.000Z",
+  "lastEditedAt": "2023-06-07T03:47:00.000Z",
   "slug": "astro-satori-og-image-generation",
   "properties": {
     "title": "satoriを使ったAstroのOGP画像生成メモ",
@@ -256,14 +256,14 @@
                     },
                     {
                       "type": "text",
-                      "text": "vite: optimizeDeps: { exclude: ['@resvg/resvg-js'] }",
+                      "text": "vite: { optimizeDeps: { exclude: ['@resvg/resvg-js'] } }",
                       "annotations": {
                         "code": true
                       }
                     },
                     {
                       "type": "text",
-                      "text": " を加えてViteの最適化対象から外した",
+                      "text": "  を加えてViteの最適化対象から外した",
                       "annotations": {}
                     }
                   ],
