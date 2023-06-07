@@ -1,6 +1,6 @@
 {
   "pageId": "d23a2cfd-5a46-47f6-a430-0533e00371a6",
-  "lastEditedAt": "2023-06-07T00:10:00.000Z",
+  "lastEditedAt": "2023-06-07T03:32:00.000Z",
   "slug": "astro-satori-og-image-generation",
   "properties": {
     "title": "satoriを使ったAstroのOGP画像生成メモ",
@@ -217,6 +217,53 @@
                     {
                       "type": "text",
                       "text": "satori + @resvg/resvg-js",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "@resvg/resvg-js が内部で ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": ".node",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " ファイルをロードするところで ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "astro dev",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " コマンドが死んでしまったので、Astroの設定ファイルで ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "vite: optimizeDeps: { exclude: ['@resvg/resvg-js'] }",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " を加えてViteの最適化対象から外した",
                       "annotations": {}
                     }
                   ],
