@@ -1,11 +1,285 @@
 {
   "pageId": "d23a2cfd-5a46-47f6-a430-0533e00371a6",
-  "lastEditedAt": "2023-06-06T23:50:00.000Z",
+  "lastEditedAt": "2023-06-07T00:10:00.000Z",
   "slug": "astro-satori-og-image-generation",
   "properties": {
     "title": "satoriを使ったAstroのOGP画像生成メモ",
     "date": "2023-06-06T23:35:00.000Z",
     "tags": ["Astro"]
   },
-  "content": []
+  "content": [
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "TL;DR",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "SVG to PNG の変換は shape だとビルドエラーになり、@resvg/resvg-js を使った",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Vite内部のなんらかのエラーでデバッグも難しくこれ以上の深掘りは諦めた",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "satoriに読み込ませるフォントファイルはウェイトごとにそれぞれ分ける",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Google Fontsのクエリパラメータの ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "wght@400;700",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " は最初の一つしか機能しなかった",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "やったこと",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "satori, @resvg/resvg-js のインストール",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "npx astro add react",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " ",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "satoriに食わせるJSXを書くため",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "astro.config.js への変更もやってくれるので astro add を使うのが楽でよい",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "[slug].png.ts",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " エンドポイントの作成",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "ブログ記事ごとに対応したPNG画像を返却するためのエンドポイント",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "SVGを生成してPNGに変換して返す",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "satori + @resvg/resvg-js",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "結果",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "こんな感じの画像をビルド時に生成するようになった。ところで、Twitter Cardは最近は7日間キャッシュされるらしく、しばらくは反映が遅れそうだ。OGPの動作確認はDiscordに貼り付けるのが楽でよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "https://blog.lacolaco.net/og/angular-signals-component-design-patterns.png",
+      "caption": ""
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/blog.lacolaco.net/blob/main/src/pages/og/[slug].png.ts"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/blog.lacolaco.net/blob/main/src/components/OgImage.tsx"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "参考にしたURL",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://zenn.dev/ikuma/scraps/2bd2b9dc3605d7"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://blog.70-10.net/posts/satori-og-image/"
+    }
+  ]
 }
