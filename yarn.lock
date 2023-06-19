@@ -535,6 +535,65 @@
   resolved "https://registry.yarnpkg.com/@fontsource/zen-kaku-gothic-new/-/zen-kaku-gothic-new-5.0.2.tgz#8eddedb0c760476a99587d5926bf4d37a09d30d0"
   integrity sha512-7zs98Eon1xntbihoeePEF7UFjlu+fPiefSaRGRSiCws+NQS6wZtG+dZ+9dWcKW3UZzwyJJncnGtbi6sygzL0Sw==
 
+"@github/auto-check-element@^5.2.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@github/auto-check-element/-/auto-check-element-5.4.0.tgz#7dd8d86152af031e0603152dfbfc8adbc56a62a4"
+  integrity sha512-yCAnw+3H5eyyzWeaPx8uD0P9fzSQ8SjhQ0dmSvFzPStJC6cG9kbIqu8hBlmC+TRONd9eJj+z0oIwbbeAHKpo6w==
+  dependencies:
+    "@github/mini-throttle" "^2.1.0"
+
+"@github/auto-complete-element@^3.3.4":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@github/auto-complete-element/-/auto-complete-element-3.5.0.tgz#b9dc02f8cce9e3383cb621efc5dd6fcb430e50fa"
+  integrity sha512-ZxGm9hlaK01FUlV7lP8PFxLov3HFdLIbM6zMPSTrPp0RPrub6gWXRplAPShh/MAECVYTwXKGPL9oOWhTt53mMg==
+  dependencies:
+    "@github/combobox-nav" "^2.1.7"
+
+"@github/catalyst@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@github/catalyst/-/catalyst-1.6.0.tgz#378734d1d2b6a85af169d7e66c1a2a604bf1e82c"
+  integrity sha512-u8A+DameixqpeyHzvnJWTGj+wfiskQOYHzSiJscCWVfMkIT3rxnbHMtGh3lMthaRY21nbUOK71WcsCnCrXhBJQ==
+
+"@github/clipboard-copy-element@^1.1.2":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@github/clipboard-copy-element/-/clipboard-copy-element-1.2.1.tgz#93214f451eea982915f2d3d832371eade4eddcc2"
+  integrity sha512-PLccyUCnzmOQ6zrRsH66rr67iumJyP5r7ij17ezprFQAK/oA8CXhlC8LTG+xpW3cYAvnp2zCgRNTfXS8wk09Lg==
+
+"@github/combobox-nav@^2.1.7":
+  version "2.1.7"
+  resolved "https://registry.yarnpkg.com/@github/combobox-nav/-/combobox-nav-2.1.7.tgz#ae7d895291dee847ce6218063d2c286fcfb2235e"
+  integrity sha512-Webx0W5iTpkk5Chy9dB/1BEUORQ0qrwui8HaaVBiy75W2VOJg96WTuKj1rXENAJ3XTMhdEF53bn0LYfvP0EKvg==
+
+"@github/details-menu-element@^1.0.12":
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/@github/details-menu-element/-/details-menu-element-1.0.13.tgz#d62263077b16bc7edc386e7b23f0ce41af1301b4"
+  integrity sha512-gMkii86w/oUP5dq8yOWZn1sgbgtFj3AYETxxtpsqRggZktgd8te4+npAn4Hm+936c/lxmEzXqfjARL/CzGR4+w==
+
+"@github/image-crop-element@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@github/image-crop-element/-/image-crop-element-5.0.0.tgz#6ae2c31f1e7dc355c41c3140554fb76ca7a71ef7"
+  integrity sha512-Vgm2OwWAs1ESoib/t5sjxsAYo6YTOxxAjWDRxswX7qrqoyCejTZ3hshdo4Ep5e+Mz/GVTZC3rdMtg06dk/eT4g==
+
+"@github/include-fragment-element@^6.1.1":
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/@github/include-fragment-element/-/include-fragment-element-6.3.0.tgz#c93d6252b14f7c190af4ccd9d61884185a612492"
+  integrity sha512-BJTt8ZE/arsbC9lQtTH8c1hZS0ZigiN+kzH54ffQ6MhHLT83h0OpSdS9NEVocPl2uuO6w3qxnEKTDzUGMQ5rdQ==
+
+"@github/mini-throttle@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@github/mini-throttle/-/mini-throttle-2.1.0.tgz#583a1d5e383caa21a1c067a649f15f7ab575dccf"
+  integrity sha512-iEeR2OdVCPkdIPUszL8gJnKNu4MR8ANh7y0u/LPyaatYezgaWxUZEzhFntloqQq+HE6MZkFy+cl+xzCNuljOdw==
+
+"@github/relative-time-element@^4.0.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@github/relative-time-element/-/relative-time-element-4.3.0.tgz#3cb90ffbbe9a82c7242bdd9d54f2d74d555547cf"
+  integrity sha512-+tFjX9//HRS1HnBa5cNgfEtE52arwiutYg1TOF+Trk40SPxst9Q8Rtc3BKD6aKsvfbtub68vfhipgchGjj9o7g==
+
+"@github/tab-container-element@^3.1.2":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@github/tab-container-element/-/tab-container-element-3.3.0.tgz#e7ab0e58dbd4ecca06fb1fca9b1612ac605b3ccb"
+  integrity sha512-vHlN/GXgaJFJhh4oUYRh1pc4RAqduKlQOrEjVgSxR4JhLXsQcZ/hKWfCsRZAuZbSPzUGEYvggdieamS4FRSe4g==
+
 "@jridgewell/gen-mapping@^0.3.0", "@jridgewell/gen-mapping@^0.3.2":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@jridgewell/gen-mapping/-/gen-mapping-0.3.3.tgz#7e02e6eb5df901aaedb08514203b096614024098"
@@ -629,6 +688,11 @@
     "@types/node-fetch" "^2.5.10"
     node-fetch "^2.6.1"
 
+"@oddbird/popover-polyfill@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@oddbird/popover-polyfill/-/popover-polyfill-0.1.1.tgz#2d8c11dc8f7b12ae7fce9599168984e5f2381b5c"
+  integrity sha512-X9gxiwKtN1ZumOoe9KRLpe37nshLtwHm/IJflIxgjanXz/FqKb0DQ7BlWu+iqUn/O0/jWYgkKnTLtsC9JlgwQg==
+
 "@pkgr/utils@^2.3.1":
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/@pkgr/utils/-/utils-2.4.1.tgz#adf291d0357834c410ce80af16e711b56c7b1cd3"
@@ -641,17 +705,41 @@
     picocolors "^1.0.0"
     tslib "^2.5.0"
 
-"@primer/css@19.8.2":
-  version "19.8.2"
-  resolved "https://registry.yarnpkg.com/@primer/css/-/css-19.8.2.tgz#4bdac86e9a11894a53e39c62ddfe0db0282fb367"
-  integrity sha512-Zjgk0asxDVj+QY8Ej3DLeJHEMzxlW4ejwmtUk3QzwUJG6R1FzCuGzrTuEN2hFugsvlPDVd1geeKfiskLEjkfOQ==
-  dependencies:
-    "@primer/primitives" "^7.7.0"
+"@primer/behaviors@^1.3.4":
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/@primer/behaviors/-/behaviors-1.3.5.tgz#111eb550675577790cc01b14f3cf720332a2a046"
+  integrity sha512-HWwz+6MrfK5NTWcg9GdKFpMBW/yrAV937oXiw2eDtsd88P3SRwoCt6ZO6QmKp9RP3nDU9cbqmuGZ0xBh0eIFeg==
 
-"@primer/primitives@^7.7.0":
-  version "7.8.3"
-  resolved "https://registry.yarnpkg.com/@primer/primitives/-/primitives-7.8.3.tgz#de7e03492cf977e99f2417490d76421db9715e9f"
-  integrity sha512-04ZwfJhpZ0QFwDrJfCuLX6iOh0BflWDTvuoRA80lQH9xk0RtIg16INbruwwtnbSgnKKXXRSykRRJ5BbxnqufRA==
+"@primer/css@21.0.3":
+  version "21.0.3"
+  resolved "https://registry.yarnpkg.com/@primer/css/-/css-21.0.3.tgz#efe5f0c5012b4f608d9bf35da0eaaf2e4870bdcc"
+  integrity sha512-nxednXoBedJYMlCM+oXMATswz2w3+IvBoptjF6f7zlM+D/nHmJx6U3BPeZSp6PFI3e2E9jJz7vDZqsZbFPhRtw==
+  dependencies:
+    "@primer/primitives" "^7.11.12"
+    "@primer/view-components" "^0.1.0"
+
+"@primer/primitives@^7.11.12":
+  version "7.11.12"
+  resolved "https://registry.yarnpkg.com/@primer/primitives/-/primitives-7.11.12.tgz#1a36354e789f8cc3c178b66b2d100b64d4fb209d"
+  integrity sha512-AvTiuLHvvby2KPZbwwJ7GrtRJYgWyepF6XAOMw7G7Kc2iP3E32OHmaFukwh3gY+OqwcxY7st2tHWll2brk1vfQ==
+
+"@primer/view-components@^0.1.0":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@primer/view-components/-/view-components-0.1.9.tgz#2e6c425a646601a2549dc5ed52fea4ccaadc79a5"
+  integrity sha512-LtqJBkTMS+odYXqKhOZxBvyAAlXTA+C6o3eXDQN8Nwmja48SKAlFrwb+HpXLvgpbbDg1eY2LKmypokv44dl0Uw==
+  dependencies:
+    "@github/auto-check-element" "^5.2.0"
+    "@github/auto-complete-element" "^3.3.4"
+    "@github/catalyst" "^1.6.0"
+    "@github/clipboard-copy-element" "^1.1.2"
+    "@github/details-menu-element" "^1.0.12"
+    "@github/image-crop-element" "^5.0.0"
+    "@github/include-fragment-element" "^6.1.1"
+    "@github/mini-throttle" "^2.1.0"
+    "@github/relative-time-element" "^4.0.0"
+    "@github/tab-container-element" "^3.1.2"
+    "@oddbird/popover-polyfill" "^0.1.1"
+    "@primer/behaviors" "^1.3.4"
 
 "@proload/core@^0.3.3":
   version "0.3.3"
