@@ -531,9 +531,9 @@
   integrity sha512-EWE0djE7wFCBmExWa9oT1vIp+qj5MUroVvXWb9G7Ig4t4aXDd9QDidYZzMzNemb8gQxTdOzGmhx6EZnDTFMh5Q==
 
 "@fontsource/zen-kaku-gothic-new@^5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@fontsource/zen-kaku-gothic-new/-/zen-kaku-gothic-new-5.0.2.tgz#8eddedb0c760476a99587d5926bf4d37a09d30d0"
-  integrity sha512-7zs98Eon1xntbihoeePEF7UFjlu+fPiefSaRGRSiCws+NQS6wZtG+dZ+9dWcKW3UZzwyJJncnGtbi6sygzL0Sw==
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@fontsource/zen-kaku-gothic-new/-/zen-kaku-gothic-new-5.0.3.tgz#6937c639771f8c7b93677755a026b8157cc06d3a"
+  integrity sha512-aSxfUSC9aOfg810FA0jZFlsc6nIhhV+VGogJpCIDqmcA03ZjBXpmWt+BewymIPOoma/gBD3nw0ZVwWiBkYy+rw==
 
 "@jridgewell/gen-mapping@^0.3.0", "@jridgewell/gen-mapping@^0.3.2":
   version "0.3.3"
