@@ -80,21 +80,23 @@ module.exports = {
       addComponents({
         '.markdown-body': {
           fontFamily: theme('fontFamily.sans'),
-          code: {
-            fontFamily: theme('fontFamily.mono'),
-            backgroundColor: theme('backgroundColor.muted'),
-          },
           blockquote: {
             color: theme('textColor.muted'),
           },
           pre: {
             backgroundColor: theme('backgroundColor.subtle'),
+            wordWrap: 'normal',
+            fontSize: '0.85rem',
+            padding: theme('padding.4'),
           },
           p: {
             lineHeight: '1.8',
           },
           'figcaption p': {
             textAlign: 'center',
+          },
+          'ul, ol': {
+            paddingLeft: '2em',
           },
           ul: {
             listStyle: 'disc',

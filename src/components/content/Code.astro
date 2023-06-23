@@ -7,6 +7,6 @@ type Props = CodeNode;
 const { text, language, filename } = Astro.props;
 ---
 
-<Code code={text} lang={language as any} />
-
-<style></style>
+<div class="py-2 font-mono">
+  <Code code={text} lang={language as any} />
+</div>

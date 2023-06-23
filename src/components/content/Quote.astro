@@ -10,8 +10,15 @@ const { text } = Astro.props;
 {
   (() => {
     const content = text.map((t) => <Text {...t} />);
-    return <blockquote>{content}</blockquote>;
+    return <blockquote class="my-2 px-4 text-gray-700 border-l-4 border-l-gray-300">{content}</blockquote>;
   })()
 }
 
-<style></style>
+<style>
+  blockquote > :first-child {
+    margin-top: 0;
+  }
+  blockquote > :last-child {
+    margin-bottom: 0;
+  }
+</style>
