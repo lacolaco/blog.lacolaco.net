@@ -18,7 +18,11 @@ const classList = [
 
 {
   (() => {
-    const content = annotations.code ? <code>{text}</code> : text;
+    const content = annotations.code ? (
+      <code class="px-1 py-1 rounded whitespace-break-spaces text-[0.85em] bg-muted">{text}</code>
+    ) : (
+      text
+    );
 
     if (href) {
       return (
@@ -38,4 +42,9 @@ const classList = [
   })()
 }
 
-<style></style>
+<style>
+  a:not([href]) {
+    color: inherit;
+    text-decoration: none;
+  }
+</style>

@@ -6,14 +6,7 @@ type Props = ImageNode;
 const { url, caption } = Astro.props;
 ---
 
-<figure>
-  <img src={url} />
-  {caption && <figcaption>{caption}</figcaption>}
+<figure class="flex flex-col items-center py-2">
+  <img class="object-contain w-full md:max-w-screen-md max-h-[50vh]" src={url} />
+  {caption && <figcaption class="text-center text-sm text-gray-500">{caption}</figcaption>}
 </figure>
-
-<style>
-  figure > figcaption {
-    text-align: center;
-    color: #666;
-  }
-</style>

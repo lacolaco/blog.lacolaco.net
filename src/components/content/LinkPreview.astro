@@ -6,7 +6,10 @@ type Props = LinkPreviewNode;
 const { url } = Astro.props;
 ---
 
-<iframe class="hatenablogcard" src={`https://hatenablog-parts.com/embed?url=${url}`} width="300" height="150"></iframe>
+<div class="py-2 flex justify-center">
+  <iframe class="hatenablogcard w-full max-w-screen-md" src={`https://hatenablog-parts.com/embed?url=${url}`} height="150">
+  </iframe>
+</div>
 
 <style>
   iframe {

@@ -26,7 +26,6 @@
     "@astrojs/tailwind": "^3.1.2",
     "@fontsource/source-code-pro": "^5.0.0",
     "@fontsource/zen-kaku-gothic-new": "^5.0.2",
-    "@primer/css": "19.8.2",
     "@resvg/resvg-js": "^2.4.1",
     "@types/react": "^18.0.21",
     "@types/react-dom": "^18.0.6",
@@ -49,8 +48,7 @@
     "dotenv": "16.3.1",
     "p-limit": "^4.0.0",
     "prettier": "2.8.8",
-    "rehype-autolink-headings": "^6.1.1",
-    "rehype-slug": "^5.1.0",
+    "sass": "^1.63.6",
     "tailwindcss": "3.3.2",
     "tsx": "^3.12.7",
     "undici": "5.22.1"
