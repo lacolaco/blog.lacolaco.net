@@ -6,8 +6,10 @@ type Props = TweetNode;
 const { url } = Astro.props;
 ---
 
-<blockquote class="twitter-tweet">
-  <a href={`${url}?ref_src=twsrc%5Etfw`}>{url}</a>
-</blockquote>
+<div class="flex flex-col items-center">
+  <blockquote class="twitter-tweet">
+    <a href={`${url}?ref_src=twsrc%5Etfw`}>{url}</a>
+  </blockquote>
+</div>
 
 <script is:inline async src="https://platform.twitter.com/widgets.js"></script>
