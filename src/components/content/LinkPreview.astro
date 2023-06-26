@@ -7,15 +7,6 @@ const { url } = Astro.props;
 ---
 
 <div class="py-2 flex justify-center">
-  <iframe class="hatenablogcard w-full max-w-screen-md" src={`https://hatenablog-parts.com/embed?url=${url}`} height="150">
+  <iframe class="hatenablogcard border-none w-full" src={`https://hatenablog-parts.com/embed?url=${url}`} height="155">
   </iframe>
 </div>
-
-<style>
-  iframe {
-    border: none;
-    width: 100%;
-    height: 155px;
-    max-width: 680px;
-  }
-</style>
