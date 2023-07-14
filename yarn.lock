@@ -501,14 +501,14 @@
   integrity sha512-lAhycmKnVOuRYNtRtatQR1LPQf2oYCkRGkSFnseDAKPl8lu5SOsK/e1sXe5a0Pc5kHIHe6P2I/ilntNv2xf3cA==
 
 "@fontsource/source-code-pro@^5.0.0":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@fontsource/source-code-pro/-/source-code-pro-5.0.3.tgz#73cf6169306fe037ef3ae964bfb13ddd770216c5"
-  integrity sha512-y8xlJrYGNRH2l7cDQRRE1AkO2clDqksGQDTNNCi+oGUcpKh1t4V+/ChIctx3Belp+cgKcCGYBNW3yvitlQTMmw==
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/@fontsource/source-code-pro/-/source-code-pro-5.0.5.tgz#730475552a40ef74333b690b3ad4426196f7e406"
+  integrity sha512-S56efoSrojdh3F/3CsiiD+dqwjPhpQGlraCV6YSJEFuA0v8YlIGLEesP+Wmv88aYqRn4VgHIe9dtn1TrYkW4Qg==
 
 "@fontsource/zen-kaku-gothic-new@^5.0.2":
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/@fontsource/zen-kaku-gothic-new/-/zen-kaku-gothic-new-5.0.3.tgz#6937c639771f8c7b93677755a026b8157cc06d3a"
-  integrity sha512-aSxfUSC9aOfg810FA0jZFlsc6nIhhV+VGogJpCIDqmcA03ZjBXpmWt+BewymIPOoma/gBD3nw0ZVwWiBkYy+rw==
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/@fontsource/zen-kaku-gothic-new/-/zen-kaku-gothic-new-5.0.5.tgz#0e76e61c0c6a1e0eef10b9493d493de388bbad58"
+  integrity sha512-VOKYnG1BuFoDVZv1xgZ9Cdxsl2IbR9lCmMEpnPS021mOm8KmOvYzvTFlq/AvuEX/YNo5obKgAToQvnRhgBIBdw==
 
 "@jridgewell/gen-mapping@^0.3.0", "@jridgewell/gen-mapping@^0.3.2":
   version "0.3.3"
