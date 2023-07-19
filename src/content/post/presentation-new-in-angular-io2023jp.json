@@ -1,0 +1,63 @@
+{
+  "pageId": "5d0c0a4d-96f7-4b24-8d84-a5250d5224bd",
+  "lastEditedAt": "2023-07-19T01:59:00.000Z",
+  "slug": "presentation-new-in-angular-io2023jp",
+  "properties": {
+    "title": "発表スライド『New in Angular』 #io23jp",
+    "date": "2023-07-19T01:52:00.000Z",
+    "tags": ["presentation", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "7月11日にGoogle I/O Extended 2023 Japanが開催され、GDEライトニングトークセッションでAngularの最新動向について発表しました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://developersonair.withgoogle.com/events/ioextendedjapan2023"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "スライドはこちら",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://bit.ly/io23jp-angular",
+          "href": "https://bit.ly/io23jp-angular",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "embed",
+      "url": "https://docs.google.com/presentation/d/e/2PACX-1vQkL4dh6kAocVGj-EUGDkU5_VjW_VAU-WJhuBkhuhy-cxux7IqwIC-Bzj3eFto-pbY5-Ew9QLFq2RnM/embed"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "tweet",
+      "url": "https://twitter.com/satoshoco/status/1678644934989996032"
+    }
+  ]
+}
