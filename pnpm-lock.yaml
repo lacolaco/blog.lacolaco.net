@@ -52,9 +52,6 @@ dependencies:
   satori:
     specifier: ^0.10.1
     version: 0.10.1
-  zod:
-    specifier: ^3.21.4
-    version: 3.21.4
 
 devDependencies:
   '@notionhq/client':
