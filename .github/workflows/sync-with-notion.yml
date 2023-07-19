@@ -18,15 +18,17 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version-file: package.json
-          cache: yarn
+      - uses: pnpm/action-setup@v2
+      - run: pnpm install
+      - run: pnpm run build
       # https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens
       - uses: tibdex/github-app-token@v1
         id: generate-token
         with:
           app_id: ${{ secrets.WORKER_APP_ID }}
           private_key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}
-      - run: yarn install
-      - run: yarn notion-fetch ${{ github.event.inputs.forceUpdate && '--force' || '' }}
+      - run: pnpm install
+      - run: pnpm run notion-fetch ${{ github.event.inputs.forceUpdate && '--force' || '' }}
         env:
           NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
