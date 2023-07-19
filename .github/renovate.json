@@ -3,6 +3,7 @@
   "extends": ["config:base"],
   "postUpdateOptions": ["yarnDedupeHighest"],
   "stabilityDays": 5,
+  "prConcurrentLimit": 3,
   "packageRules": [
     {
       "groupName": "@astrojs packages",
