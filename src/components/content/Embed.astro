@@ -6,7 +6,9 @@ type Props = EmbedNode;
 const { url } = Astro.props;
 ---
 
-<iframe class="common-iframe" src={url} width="100%"></iframe>
+<div class="flex justify-center py-2">
+  <iframe class="common-iframe" src={url} width="100%"></iframe>
+</div>
 
 <style>
   iframe {
