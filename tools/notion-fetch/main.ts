@@ -58,7 +58,8 @@ async function main() {
       pagesToUpdate.map(async (page) => {
         const pageWithContent = await db.getPageContents(page);
         const post = await toBlogPostJSON(pageWithContent, imagesFS);
-        await postJsonFS.save(`${post.slug}.json`, formatJSON(post), { encoding: 'utf-8' });
+        const formatted = await formatJSON(post);
+        await postJsonFS.save(`${post.slug}.json`, formatted, { encoding: 'utf-8' });
 
         progress.increment();
         return pageWithContent;
