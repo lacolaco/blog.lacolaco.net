@@ -29,7 +29,10 @@ export function newContentTransformer(page: notion.PageObjectWithContent, imageF
 }
 
 export class ContentTransformer {
-  constructor(readonly page: notion.PageObjectWithContent, readonly imageFS: FileSystem) {}
+  constructor(
+    readonly page: notion.PageObjectWithContent,
+    readonly imageFS: FileSystem,
+  ) {}
 
   async transformContent(blocks: notion.BlockObject[]): Promise<ContentNode[]> {
     const nodes: ContentNode[] = [];

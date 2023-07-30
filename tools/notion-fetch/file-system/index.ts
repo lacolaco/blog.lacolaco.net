@@ -6,7 +6,10 @@ type WriteFileOptions = Parameters<typeof writeFile>[2];
 type ReadFileResult = Awaited<ReturnType<typeof readFile>>;
 
 export class FileSystem {
-  constructor(private readonly rootDir: string, private readonly options: { dryRun?: boolean } = {}) {}
+  constructor(
+    private readonly rootDir: string,
+    private readonly options: { dryRun?: boolean } = {},
+  ) {}
 
   async save(filename: string, data: WriteFileData, writeFileOptions?: WriteFileOptions) {
     if (this.options.dryRun) {

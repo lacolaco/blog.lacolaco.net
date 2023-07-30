@@ -13,7 +13,10 @@ const limit = pLimit(2);
 export class NotionDatabase {
   private notion = new Client({ auth: this.authToken });
 
-  constructor(private authToken: string, private databaseID: string) {}
+  constructor(
+    private authToken: string,
+    private databaseID: string,
+  ) {}
 
   async queryBlogPages2(): Promise<BlogPageObject[]> {
     const pages = await queryAllPages(this.notion, this.databaseID, {
