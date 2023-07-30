@@ -1,7 +1,8 @@
-import { Readable } from 'node:stream';
-import { request } from 'undici';
-
-export async function getFile(url: string): Promise<Readable> {
-  const resp = await request(new URL(url));
-  return resp.body;
+export async function getFile(url: string): Promise<Buffer> {
+  const resp = await fetch(new URL(url));
+  if (!resp.ok) {
+    console.error(await resp.text());
+    throw new Error(`Failed to fetch file: ${resp.status} ${resp.statusText}`);
+  }
+  return Buffer.from(await resp.arrayBuffer());
 }
