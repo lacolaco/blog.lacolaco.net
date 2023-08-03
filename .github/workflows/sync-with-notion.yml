@@ -19,8 +19,6 @@ jobs:
         with:
           node-version-file: package.json
       - uses: pnpm/action-setup@v2
-      - run: pnpm install
-      - run: pnpm run build
       # https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens
       - uses: tibdex/github-app-token@v1
         id: generate-token
