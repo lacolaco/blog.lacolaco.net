@@ -1,12 +1,13 @@
 ---
 import HeaderLink from './HeaderLink.astro';
-import { SITE_TITLE } from '../consts';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 type Props = {
   class?: string;
+  showDescription?: boolean;
 };
 
-const { class: className } = Astro.props;
+const { class: className, showDescription } = Astro.props;
 ---
 
 <header class={className}>
@@ -34,6 +35,7 @@ const { class: className } = Astro.props;
       <a href="/" class="text-center text-3xl font-semibold text-default hover:text-default-muted hover:underline">
         {SITE_TITLE}
       </a>
+      {showDescription && <p class="text-center text-sm text-default-muted">{SITE_DESCRIPTION}</p>}
     </div>
   </div>
 </header>
