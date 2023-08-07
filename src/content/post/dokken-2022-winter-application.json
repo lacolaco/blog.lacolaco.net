@@ -1,0 +1,102 @@
+{
+  "pageId": "72dc7816-6db0-4536-a947-d93054f9386e",
+  "lastEditedAt": "2023-08-07T10:14:00.000Z",
+  "slug": "dokken-2022-winter-application",
+  "properties": {
+    "title": "独検2022冬の4級に出願した",
+    "date": "2022-10-22T12:38:00.000Z",
+    "tags": ["日記"]
+  },
+  "content": [
+    {
+      "type": "link_preview",
+      "url": "https://www.dokken.or.jp/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ゆる言語学ラジオのサポーターコミュニティDiscordがきっかけで始めたDuolingoでのドイツ語学習が180日くらい続いており、せっかくなので何かしら試験を受けてみようと思って独検ことドイツ語技能検定試験に出願してみた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "試験日は12/4。\nDuolingo基準だとこれまでに1500単語くらいに触れているらしいが、ReadingはともかくWritingはぜんぜんやってないので、あまり冒険せず1000語相当らしい4級からはじめてみることにした。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/dokken-2022-winter-application/252f5326-2157-4748-af23-11f3e0ed64fa/Untitled.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "文法規則はけっこうわかってきているのであとは語彙と場数という感じな気がしている。というわけで試験までの戦略は",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "numbered_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "過去問を解く",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "単語学習用のアプリで毎日語彙を増やす",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "単語学習用のアプリはなんとなくよさそうな ReWordというのを使ってみる。Duolingoと同じく英語話者向けの教材だが多分これで困らない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://reword.app/en/de"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "というわけでしばらく合格に向けて勉強していきます。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
