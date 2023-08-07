@@ -6,8 +6,9 @@ export interface Props {
 }
 
 const { tags } = Astro.props;
+const sortedTags = [...tags].sort();
 ---
 
 <div class="flex flex-row flex-wrap gap-1">
-  {tags.map((tag) => <Tag name={tag} />)}
+  {sortedTags.map((tag) => <Tag name={tag} />)}
 </div>
