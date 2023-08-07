@@ -1,6 +1,6 @@
 {
   "pageId": "e51abef4-1d47-44c9-8078-4e13059e6506",
-  "lastEditedAt": "2023-08-07T10:28:00.000Z",
+  "lastEditedAt": "2023-08-07T13:37:00.000Z",
   "slug": "output-your-experiences",
   "properties": {
     "title": "情報ではなく経験をアウトプットすること",
@@ -62,7 +62,13 @@
     {
       "type": "image",
       "url": "/images/output-your-experiences/467b2927-8250-4481-a8c7-19095557385f/Untitled.png",
-      "caption": "かけた時間に比例してその経験は独自性を増す"
+      "caption": [
+        {
+          "type": "text",
+          "text": "かけた時間に比例してその経験は独自性を増す",
+          "annotations": {}
+        }
+      ]
     },
     {
       "type": "paragraph",
@@ -117,7 +123,7 @@
     },
     {
       "type": "link_preview",
-      "url": "https://lacolaco.hatenablog.com/entry/2019/10/04/153815"
+      "url": "https://blog.lacolaco.net/2019/10/inner-speech/"
     }
   ]
 }
