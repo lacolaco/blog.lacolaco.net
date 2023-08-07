@@ -177,14 +177,14 @@ export class ContentTransformer {
 
   async #image(block: notion.BlockObject<'image'>): Promise<ImageNode> {
     if (block.image.type === 'external') {
-      return { type: 'image', url: block.image.external.url, caption: this.#plaintext(block.image.caption) };
+      return { type: 'image', url: block.image.external.url, caption: this.#richtext(block.image.caption) };
     }
     const url = block.image.file.url;
     const filename = decodeURIComponent(new URL(url).pathname).replace(/^\/secure\.notion-static\.com\//, '');
     const filepath = `${this.page.slug}/${filename}`;
     const file = await getFile(url);
     await this.imageFS.save(filepath, file);
-    return { type: 'image', url: `/images/${filepath}`, caption: this.#plaintext(block.image.caption) };
+    return { type: 'image', url: `/images/${filepath}`, caption: this.#richtext(block.image.caption) };
   }
 
   #callout(block: notion.BlockObject<'callout'>): CalloutNode {

@@ -1,5 +1,6 @@
 ---
 import { ImageNode } from '@lib/post';
+import Text from './Text.astro';
 
 type Props = ImageNode;
 
@@ -8,5 +9,9 @@ const { url, caption } = Astro.props;
 
 <figure class="flex flex-col items-center py-2">
   <img class="object-contain w-full md:max-w-screen-md max-h-[50vh]" src={url} />
-  {caption && <figcaption class="text-center text-sm text-gray-500">{caption}</figcaption>}
+  {
+    caption && <figcaption class="text-center text-sm text-gray-500">{
+      Array.isArray(caption) ? caption.map((node) => <Text {...node} />) : caption
+    }</figcaption>
+  }
 </figure>
