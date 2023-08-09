@@ -39,9 +39,10 @@ module.exports = {
         padding: {
           DEFAULT: '2rem',
           sm: '4rem',
+          md: '6rem',
           lg: '8rem',
-          xl: '12rem',
-          '2xl': '16rem',
+          xl: '16rem',
+          '2xl': '24rem',
         },
       },
     },
