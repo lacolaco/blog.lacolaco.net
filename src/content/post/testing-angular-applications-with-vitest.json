@@ -1,11 +1,11 @@
 {
   "pageId": "7b14ed47-6933-4797-8ef0-c29e83922a49",
-  "lastEditedAt": "2023-08-05T13:58:00.000Z",
+  "lastEditedAt": "2023-08-09T11:04:00.000Z",
   "slug": "testing-angular-applications-with-vitest",
   "properties": {
     "title": "AngularアプリケーションをVitestでテストする",
     "date": "2023-08-05T13:19:00.000Z",
-    "tags": ["Angular", "testing", "Vitest"]
+    "tags": ["Angular", "Testing", "Vitest"]
   },
   "content": [
     {

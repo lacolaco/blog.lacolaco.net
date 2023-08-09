@@ -1,11 +1,11 @@
 {
   "pageId": "06291552-322a-4152-9379-de518e857222",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-08-09T11:04:00.000Z",
   "slug": "angular-component-visual-testing-with-cypress",
   "properties": {
     "title": "Angular Component Visual Testing with Cypress",
     "date": "2022-10-08T01:26:00.000Z",
-    "tags": ["Angular", "tech", "testing", "visual testing", "cypress"],
+    "tags": ["Angular", "Testing", "visual testing", "cypress"],
     "updatedAt": "2022-10-08T00:00:00.000Z"
   },
   "content": [
@@ -641,7 +641,7 @@
     {
       "type": "image",
       "url": "/images/angular-component-visual-testing-with-cypress/e5a7a73a-33f1-4a18-9b6c-b5109340831b/Untitled.png",
-      "caption": ""
+      "caption": []
     },
     {
       "type": "paragraph",
@@ -680,7 +680,7 @@
     {
       "type": "image",
       "url": "/images/angular-component-visual-testing-with-cypress/f07014ad-0179-4e7a-8977-f890595333c5/Untitled.png",
-      "caption": ""
+      "caption": []
     },
     {
       "type": "paragraph",
@@ -713,7 +713,7 @@
     {
       "type": "image",
       "url": "/images/angular-component-visual-testing-with-cypress/996a6475-6635-4258-8a50-2ad57b9c9be6/Untitled.png",
-      "caption": ""
+      "caption": []
     },
     {
       "type": "paragraph",
@@ -734,7 +734,7 @@
     {
       "type": "image",
       "url": "/images/angular-component-visual-testing-with-cypress/f32aacac-c7af-4508-8038-64acb7a3538e/Untitled.png",
-      "caption": ""
+      "caption": []
     },
     {
       "type": "paragraph",
@@ -749,7 +749,7 @@
     {
       "type": "image",
       "url": "/images/angular-component-visual-testing-with-cypress/7ed9358a-cdb3-4c62-8b78-604e6df85c47/Untitled.png",
-      "caption": ""
+      "caption": []
     },
     {
       "type": "heading",
