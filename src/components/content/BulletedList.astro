@@ -8,7 +8,7 @@ type Props = BulletedListNode;
 const { items } = Astro.props;
 ---
 
-<ul>
+<ul class="py-2 space-y-2">
   {
     items.map(({ text, children }) => (
       <li>

@@ -8,7 +8,7 @@ type Props = NumberedListNode;
 const { items } = Astro.props;
 ---
 
-<ol>
+<ol class="py-2 space-y-2">
   {
     items.map(({ text, children }) => (
       <li>
