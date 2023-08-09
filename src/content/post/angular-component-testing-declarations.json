@@ -1,11 +1,11 @@
 {
   "pageId": "49b8a626-10b5-40be-869b-0a39ab002ff9",
-  "lastEditedAt": "2023-05-21T05:56:00.000Z",
+  "lastEditedAt": "2023-08-09T11:04:00.000Z",
   "slug": "angular-component-testing-declarations",
   "properties": {
     "title": "Angular Testing: TestBedにはdeclarationsではなくimportsを設定する",
     "date": "2021-07-07T00:00:00.000Z",
-    "tags": ["tech", "Angular", "testing"]
+    "tags": ["Angular", "Testing"]
   },
   "content": [
     {

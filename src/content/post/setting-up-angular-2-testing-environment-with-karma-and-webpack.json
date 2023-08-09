@@ -1,11 +1,11 @@
 {
   "pageId": "ba94cfed-9b64-41d3-862b-55c25fe0cea7",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-08-09T11:04:00.000Z",
   "slug": "setting-up-angular-2-testing-environment-with-karma-and-webpack",
   "properties": {
     "title": "Setting up Angular Testing Environment with Karma and webpack",
     "date": "2016-10-25T00:00:00.000Z",
-    "tags": ["tech", "Angular", "testing"]
+    "tags": ["Angular", "Testing"]
   },
   "content": [
     {
@@ -278,7 +278,7 @@
     {
       "type": "image",
       "url": "/images/setting-up-angular-2-testing-environment-with-karma-and-webpack/1af5e44e-a7af-45d5-abcb-db96dd153fed/npm_test.png",
-      "caption": ""
+      "caption": []
     },
     {
       "type": "paragraph",
