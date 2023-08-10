@@ -1,0 +1,141 @@
+{
+  "pageId": "012e0360-1748-49d6-bdbf-141976e33385",
+  "lastEditedAt": "2023-08-10T12:30:00.000Z",
+  "slug": "typograms",
+  "properties": {
+    "title": "google/typograms を触ってみた",
+    "date": "2023-08-10T12:11:00.000Z",
+    "tags": ["日記", "Angular", "SVG"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Googleからtypogramsというおもしろそうなライブラリが公開されていたので触ってみた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/google/typograms"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://google.github.io/typograms/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "アスキーアートをSVGに変換して描画するというものらしい。似たようなプロジェクトはいろいろあるが、typogramsは軽量であるということと、WSYWIGであるということが売りらしい。テキストで描いたものがリッチにSVG化されるという意味ではたしかにこれもWSYWIGと言えるのかもしれない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "Unlike libraries like ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "mermaid",
+          "href": "https://github.com/mermaid-js/mermaid",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ", typograms are defined typographically (WYSWYG), rather than semantically (a transformation from a high level description to graphics), which picks a different trade-off: it gives you more control over the rendering (expressivity) at the cost of making you type more (productivity).",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "触ってみた",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "typogramsはまだNPMには公開されておらず、GitHubにソースコードがあるのみだが、それでもnpmのGitレポジトリ参照でインストールできる。型定義ファイルも書いてあげればTypeScriptで呼び出せるということで、このIssueコメントを参考に触ってみた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/google/typograms/issues/3#issuecomment-1670746657"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "さくっとAngularコンポーネントに組み込んで、Inputで受け取った文字列からSVGを生成できた。HTMLと違い、JavaScriptのテンプレートリテラル中で普通にバックスラッシュを書くとエスケープだということになるので、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "String.raw",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " タグ関数を使って描いてみた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: 'app-root',\n  standalone: true,\n  imports: [CommonModule, TypogramComponent],\n  template: `\n    <app-typogram style=\"width: 300px\" [source]=\"typogram\"></app-typogram>\n  `,\n  styleUrls: ['./app.component.css'],\n})\nexport class AppComponent {\n  typogram = String.raw`\n    _   \n   / \\  \n  / △ \\ \n / ___ \\ \n/_/   \\_\\ngular\n  `;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "image",
+      "url": "/images/typograms/a11c19c9-43e5-4df4-8454-93f8c3829c36/Untitled.png",
+      "caption": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "実用性はまだわからないが、とりあえずおもしろかった。組み込んだ部分の詳細などはレポジトリを参照してほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/angular-typograms"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
