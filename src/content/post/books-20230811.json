@@ -1,0 +1,79 @@
+{
+  "pageId": "5aaa4170-7374-407f-8295-9b48fc9da5e7",
+  "lastEditedAt": "2023-08-11T13:37:00.000Z",
+  "slug": "books-20230811",
+  "properties": {
+    "title": "今日買った本",
+    "date": "2023-08-11T13:26:00.000Z",
+    "tags": ["日記", "読書"]
+  },
+  "content": [
+    {
+      "type": "image",
+      "url": "/images/books-20230811/aa3452f2-6b8a-4aeb-8a98-481cd391ce47/PXL_20230811_1325041612.jpg",
+      "caption": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今日買った本。もちろん積読行きですが。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "『問うとはどういうことか』梶谷真司（大和書房）",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "『Newton別冊 現代人のための哲学』（ニュートンプレス）",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "『言語の本質』今井むつみ・秋田喜美（中公新書）",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "なんだか書店の新刊エリアに哲学書が多く、積読がまだ増えそうな夏です",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
