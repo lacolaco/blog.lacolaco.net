@@ -1,6 +1,6 @@
 {
   "pageId": "69879d3d-0144-4aa2-9d3b-128b15689a53",
-  "lastEditedAt": "2023-08-19T12:04:00.000Z",
+  "lastEditedAt": "2023-08-19T12:21:00.000Z",
   "slug": "inside-laco-feed",
   "properties": {
     "title": "ブックマークをSNSに投稿する #laco_feed を支える仕組み",
@@ -40,14 +40,21 @@
       "text": [
         {
           "type": "text",
-          "text": "これまでは自動化に Zapier を使って完結していたのだが、SaaSを使ってTwitterに自動投稿することが難しくなってきた。今年のはじめにはZapierのプレミアムプランが必要になったが、ついに8月末で完全に機能が消えることになった。",
+          "text": "これまでは自動化に Zapier を使って完結していたのだが、SaaSを使ってTwitterに自動投稿することが難しくなってきた。今年のはじめにはZapierのプレミアムプランが必要になったが、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ついに8月末で完全に機能が消えることになった",
+          "href": "https://help.zapier.com/hc/en-us/articles/18657531069965/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "。",
           "annotations": {}
         }
       ]
-    },
-    {
-      "type": "link_preview",
-      "url": "https://help.zapier.com/hc/en-us/articles/18657531069965/"
     },
     {
       "type": "tweet",
@@ -58,7 +65,7 @@
       "text": [
         {
           "type": "text",
-          "text": "代わりのSaaSを探してみたがなかなか見つからなかったのと、Misskeyへのクロスポストを最近別の仕組みで実装していたのと統一して、ついでに Bluesky にもクロスポストしようということで、全部作ることにした。",
+          "text": "代わりのSaaSを探してみたがなかなか見つからなかったのと、Misskeyへのクロスポストを最近別の仕組みで実装していたのと統一して、ついでに Bluesky にもクロスポストしようということで、全部作ることにした。思い立ってみたら一日で出来上がったので、その記録。",
           "annotations": {}
         }
       ]
@@ -68,10 +75,22 @@
       "text": [
         {
           "type": "text",
-          "text": "作ってみたら一日で出来上がったので、その記録。",
+          "text": "↓実際にクロスポストされたもの（Blueskyはログインしないと見れない）",
           "annotations": {}
         }
       ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://twitter.com/laco2net/status/1692872915610677677"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://misskey.io/notes/9iljr6hhnh"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://bsky.app/profile/lacolaco.bsky.social/post/3k5cqgzf6hm2r"
     },
     {
       "type": "heading",
