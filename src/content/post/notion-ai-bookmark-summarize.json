@@ -1,0 +1,93 @@
+{
+  "pageId": "d857b4c4-fa8b-4086-8a78-2f2b4ab3fbf0",
+  "lastEditedAt": "2023-08-20T06:02:00.000Z",
+  "slug": "notion-ai-bookmark-summarize",
+  "properties": {
+    "title": "Notion AIでブックマークした記事を要約する",
+    "date": "2023-08-20T05:28:00.000Z",
+    "tags": ["雑記", "Notion"]
+  },
+  "content": [
+    {
+      "type": "link_preview",
+      "url": "https://blog.lacolaco.net/2023/08/inside-laco-feed/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事に関連して、Notionに保存したブックマークを要約する仕事をNotion AIにやらせてみたら、けっこういい感じに使えそうな気がした。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "実物はこんな感じ。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "summary",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " プロパティの内容は、ページの作成時に自動入力される。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/notion-ai-bookmark-summarize/8215ac4a-65ed-4425-a42d-ed63ace2369a/Untitled.png",
+      "caption": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://lacolaco.notion.site/bce0d0a9147e468ca227788ca1797d28?v=6d4b5ebf2fe349298b11c46c6397df1a&p=3c78c1ab946646d18e83541d33d52e6c&pm=s",
+          "href": "https://lacolaco.notion.site/bce0d0a9147e468ca227788ca1797d28?v=6d4b5ebf2fe349298b11c46c6397df1a&p=3c78c1ab946646d18e83541d33d52e6c&pm=s",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "NotionのWebクリップ機能はURLを保存するだけでなく、ページのHTMLもなんとなくコピーして本文に保存してくれる。なのでカスタムプロパティのAIブロックで本文を要約させれば、なんとなく機能する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/notion-ai-bookmark-summarize/5fd1e365-7e2c-41dc-82b2-680917d17253/Untitled.png",
+      "caption": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "というわけで、とりあえずさわりだけ読んで気になったページを雑にブックマークに放り込んでおけば全部読まなくても要約されるし、要約を読んだ上でちゃんとソースを読みに行くかどうかを決められるようになった。21世紀っぽい。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
