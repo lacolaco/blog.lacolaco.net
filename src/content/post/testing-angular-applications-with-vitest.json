@@ -1,6 +1,6 @@
 {
   "pageId": "7b14ed47-6933-4797-8ef0-c29e83922a49",
-  "lastEditedAt": "2023-08-09T11:04:00.000Z",
+  "lastEditedAt": "2023-08-21T23:47:00.000Z",
   "slug": "testing-angular-applications-with-vitest",
   "properties": {
     "title": "AngularアプリケーションをVitestでテストする",
@@ -140,31 +140,66 @@
       "text": [
         {
           "type": "text",
-          "text": "いろいろと試行錯誤した結果、設定は以下のようになった。vite-plugin-angularの ",
+          "text": "いろいろと試行錯誤した結果、設定は以下のようになった。",
           "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vite-plugin-angularの ",
+          "annotations": {
+            "strikethrough": true
+          }
         },
         {
           "type": "text",
           "text": "jit",
           "annotations": {
+            "strikethrough": true,
             "code": true
           }
         },
         {
           "type": "text",
           "text": " フラグをfalseにしないと、コンポーネントが ",
-          "annotations": {}
+          "annotations": {
+            "strikethrough": true
+          }
         },
         {
           "type": "text",
           "text": "templateUrl",
           "annotations": {
+            "strikethrough": true,
             "code": true
           }
         },
         {
           "type": "text",
           "text": " で外部ファイルを読み込んでいる場合にパースに失敗することがあった。",
+          "annotations": {
+            "strikethrough": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "callout",
+      "text": [
+        {
+          "type": "text",
+          "text": "Analog 0.2.0でJITコンパイルに関するエラーは修正されたので、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "jit: false",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は不要になった。",
           "annotations": {}
         }
       ]
@@ -194,7 +229,7 @@
       "type": "code",
       "language": "typescript",
       "filename": "",
-      "text": "/// <reference types=\"vitest\" />\n\nimport { defineConfig } from 'vitest/config';\nimport angular from '@analogjs/vite-plugin-angular';\n\nconst isCI = !!process.env['CI'];\n\nexport default defineConfig({\n  plugins: [\n    angular({\n      jit: false,\n      tsconfig: 'tsconfig.spec.json',\n    }),\n  ],\n  test: {\n    globals: true,\n    setupFiles: ['src/setup-vitest.ts'],\n    include: ['src/**/*.spec.ts'],\n    browser: {\n      enabled: true,\n      name: 'chromium',\n      headless: isCI,\n      provider: 'playwright',\n    },\n  },\n});"
+      "text": "/// <reference types=\"vitest\" />\n\nimport { defineConfig } from 'vitest/config';\nimport angular from '@analogjs/vite-plugin-angular';\n\nconst isCI = !!process.env['CI'];\n\nexport default defineConfig({\n  plugins: [\n    angular({\n      tsconfig: 'tsconfig.spec.json',\n    }),\n  ],\n  test: {\n    globals: true,\n    setupFiles: ['src/setup-vitest.ts'],\n    include: ['src/**/*.spec.ts'],\n    browser: {\n      enabled: true,\n      name: 'chromium',\n      headless: isCI,\n      provider: 'playwright',\n    },\n  },\n});"
     },
     {
       "type": "heading",
