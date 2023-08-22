@@ -1,0 +1,225 @@
+{
+  "pageId": "579ff1ec-a68c-4fbe-9fa6-7d7c59f1698d",
+  "lastEditedAt": "2023-08-22T10:49:00.000Z",
+  "slug": "vitest-in-source-testing",
+  "properties": {
+    "title": "VitestのIn-source Testingを試してみた",
+    "date": "2023-08-22T10:23:00.000Z",
+    "tags": ["日記", "Testing", "Vitest"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In-source Testingとは、テストコードが実装コードと同じソースファイルに書かれているものである。Rustで有名なアプローチ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://doc.rust-jp.rs/book-ja/ch11-03-test-organization.html#非公開関数をテストする"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "先日から Vitest を何かと使うようになったが、VitestもIn-source Testingをサポートしている。JavaScriptのテストツールでは珍しいのでやってみた。説明としては次の記事のほうが断然詳しい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "link_preview",
+      "url": "https://zenn.dev/azukiazusa/articles/vitest-same-test-file"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// in-source test suites\nif (import.meta.vitest) {\n  const { describe, it, expect } = import.meta.vitest;\n  describe('buildText', () => {\n    it('without note', () => {\n      const text = buildText({\n        notionBlockId: 'blockId',\n        url: 'https://example.com',\n        title: 'example',\n      });\n      expect(text).toBe('🔖 \"example\" https://example.com #laco_feed');\n    });\n\n    it('with note', () => {\n      const text = buildText({\n        notionBlockId: 'blockId',\n        url: 'https://example.com',\n        title: 'example',\n        note: 'note',\n      });\n      expect(text).toBe('note \"example\" https://example.com #laco_feed');\n    });\n  });\n}"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/feed2social/blob/466a0e8af91da40911f0ac2ca8981fa5e3cdc34e/src/social/twitter.ts#L56-L79"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "理解しておくべきポイントは以下",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "import.meta.vitest",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " の型定義は tsconfig の ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "types",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " オプションに渡した ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "vitest/importMeta",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " が持っている。",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "https://github.com/vitest-dev/vitest/blob/main/packages/vitest/importMeta.d.ts",
+                      "href": "https://github.com/vitest-dev/vitest/blob/main/packages/vitest/importMeta.d.ts",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "テスト記述用のAPIは普通の静的なインポートではなく、 ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "import.meta.vitest",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " から取得する。",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "import.meta.vitest",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " が定義されていないときにif文全体がデッドコードとなることで、アプリケーションをバンドルするときにテスト関連のコードがまるごと除去できる。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "所感",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "テストを書くためにその関数の可視性がどうだとか悩む必要がないので、とにかくまずテストを書き始めるということをやりやすい。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "テストが実装とすぐ近くにあるので、テストファーストの開発スタイルには特に向いていると思う。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "当然だがファイルが大きくなりやすいが、実装が増えたにしろテストが増えたにしろそれはつまりそのファイルの関心事が増えているということなので、関心を分離しろということになる。テストファイルがどんどん大きくなっていくのは見逃されやすいので、実装と同じファイルであることで「適切に困る」ことができそうだ。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}
