@@ -37,7 +37,17 @@ export async function getOgImage(text: string) {
           padding: '12px 24px',
         }}
       >
-        <div style={{ flexGrow: '1', textOverflow: 'ellipsis', fontSize: '48px', fontWeight: 700 }}>{text}</div>
+        <div
+          style={{
+            flexGrow: '1',
+            textOverflow: 'ellipsis',
+            fontSize: '48px',
+            fontWeight: 700,
+            wordBreak: 'keep-all',
+          }}
+        >
+          {text}
+        </div>
         <div
           style={{
             display: 'flex',
