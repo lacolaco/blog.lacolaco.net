@@ -1,6 +1,6 @@
 {
   "pageId": "e735baab-fe9f-4ecb-9944-f340b479572a",
-  "lastEditedAt": "2023-08-31T03:28:00.000Z",
+  "lastEditedAt": "2023-08-31T03:37:00.000Z",
   "slug": "button-and-link",
   "properties": {
     "title": "リンクはUI表現か？",
@@ -242,19 +242,18 @@
                   ],
                   "children": [
                     {
+                      "type": "quote",
+                      "text": [
+                        {
+                          "type": "text",
+                          "text": "現在の文書と外部のリソースとの関係を指定します。",
+                          "annotations": {}
+                        }
+                      ]
+                    },
+                    {
                       "type": "bulleted_list",
                       "items": [
-                        {
-                          "type": "bulleted_list_item",
-                          "text": [
-                            {
-                              "type": "text",
-                              "text": ">現在の文書と外部のリソースとの関係を指定します。",
-                              "annotations": {}
-                            }
-                          ],
-                          "children": []
-                        },
                         {
                           "type": "bulleted_list_item",
                           "text": [
@@ -281,19 +280,18 @@
                   ],
                   "children": [
                     {
+                      "type": "quote",
+                      "text": [
+                        {
+                          "type": "text",
+                          "text": "href属性を用いて、別のウェブページ、ファイル、メールアドレス、同一ページ内の場所、または他の URL へのハイパーリンクを作成します。",
+                          "annotations": {}
+                        }
+                      ]
+                    },
+                    {
                       "type": "bulleted_list",
                       "items": [
-                        {
-                          "type": "bulleted_list_item",
-                          "text": [
-                            {
-                              "type": "text",
-                              "text": "> href属性を用いて、別のウェブページ、ファイル、メールアドレス、同一ページ内の場所、または他の URL へのハイパーリンクを作成します。",
-                              "annotations": {}
-                            }
-                          ],
-                          "children": []
-                        },
                         {
                           "type": "bulleted_list_item",
                           "text": [
