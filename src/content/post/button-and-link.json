@@ -1,0 +1,660 @@
+{
+  "pageId": "e735baab-fe9f-4ecb-9944-f340b479572a",
+  "lastEditedAt": "2023-08-31T03:28:00.000Z",
+  "slug": "button-and-link",
+  "properties": {
+    "title": "リンクはUI表現か？",
+    "date": "2023-08-31T03:22:00.000Z",
+    "tags": ["雑記", "HTML", "UI"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ButtonとLink、どう実装する？ - Google スライド ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "https://docs.google.com/presentation/d/1rS7BeO1sqbD9-FGRPkst1TCteXkxvPFlfoQh2fWeEus/edit#slide=id.g23f0f9e1b55_0_185",
+          "href": "https://docs.google.com/presentation/d/1rS7BeO1sqbD9-FGRPkst1TCteXkxvPFlfoQh2fWeEus/edit#slide=id.g23f0f9e1b55_0_185",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これを読んでいて思ったこと",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Buttonは間違いなくUI表現（Look and Feel）の名称である",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "しかし、LinkはUI表現の名称か？",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "別の問いで言い換えれば、ButtonとLinkって同レイヤーで並べるものなのか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "語義的に考える",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Link: ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "[名][C] つながり",
+                      "annotations": {
+                        "code": true
+                      }
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "何かと何かをつなげるもの・つながりそのもの",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "機能っぽい",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "慣例的に考える",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "ところでHTMLの文脈でLinkといえば大きく2種類ある",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "https://developer.mozilla.org/ja/docs/Web/HTML/Element/link",
+                              "href": "https://developer.mozilla.org/ja/docs/Web/HTML/Element/link",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "https://developer.mozilla.org/ja/docs/Web/HTML/Element/a",
+                              "href": "https://developer.mozilla.org/ja/docs/Web/HTML/Element/a",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": [
+                            {
+                              "type": "bulleted_list",
+                              "items": [
+                                {
+                                  "type": "bulleted_list_item",
+                                  "text": [
+                                    {
+                                      "type": "text",
+                                      "text": "https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element",
+                                      "href": "https://html.spec.whatwg.org/multipage/text-level-semantics.html#the-a-element",
+                                      "annotations": {}
+                                    }
+                                  ],
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "linkタグ",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": ">現在の文書と外部のリソースとの関係を指定します。",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "headタグの中で使われて見た目を持たないので、明らかにこのLinkはUI表現ではない。",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "aタグはAnchorタグである",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "> href属性を用いて、別のウェブページ、ファイル、メールアドレス、同一ページ内の場所、または他の URL へのハイパーリンクを作成します。",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "\"アンカー\" が \"リンクを作成\" する　主語と述語",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "アンカー: 錨",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": [
+                            {
+                              "type": "bulleted_list",
+                              "items": [
+                                {
+                                  "type": "bulleted_list_item",
+                                  "text": [
+                                    {
+                                      "type": "text",
+                                      "text": "別の点（リソース）との間にリンクを形成するための点を置くのがアンカーの役割",
+                                      "annotations": {}
+                                    }
+                                  ],
+                                  "children": []
+                                },
+                                {
+                                  "type": "bulleted_list_item",
+                                  "text": [
+                                    {
+                                      "type": "text",
+                                      "text": "そうするとAnchorというのも機能であり、UI表現ではない",
+                                      "annotations": {}
+                                    }
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "bulleted_list",
+                                      "items": [
+                                        {
+                                          "type": "bulleted_list_item",
+                                          "text": [
+                                            {
+                                              "type": "text",
+                                              "text": "だって錨の形してないし",
+                                              "annotations": {}
+                                            }
+                                          ],
+                                          "children": []
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "であれば、LinkはUI表現ではなく機能としかいいようがない",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "そもそも「ボタンの見た目のリンク」が存在する以上それはそう",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "じゃあいわゆる\"Link\"って、UI表現としてはなんて呼べるんだ？",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Text Button: 文字だけでフレームを見せないボタン",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "https://m2.material.io/components/buttons#text-button",
+                              "href": "https://m2.material.io/components/buttons#text-button",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "あくまでボタン（押すUI）ということで押し通す",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "しかしこれではテキスト中にインラインで登場するLinkは表現できていなさそう",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "テキスト中にインラインで登場するLink",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "いわゆる「青文字で下線が引かれてカーソルが反応するテキスト」をUI表現上なんと呼ぶのか",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "それは文字色が変わったり下線を引いたり引かなかったりしても通用しないといけない（単にスタイリングの違いなので）",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "じゃあもうそれは Text 以上でも以下でもなくない？",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "インタラクティブなTextというのを一語でいいたい気はする。Intaractable Text（長い）",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "\"Link Text\" あるいは \"Linked Text\" と呼べばいいのか？",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "機能としてリンクを作成しているかどうかは見た目に関係ないので、\"Link Button\" も \"Link Text\" も存在していいはず",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "だとすると、レイヤーが揃った整理はこうなのでは",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "UI表現: Button / Text",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "機能（振る舞い）: Action / Link (Anchor)",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "image",
+      "url": "/images/button-and-link/02e305b8-b00c-41c6-a11f-c2cce1ce6ccc/Untitled.png",
+      "caption": []
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "つまりですね、「リンク」っていう言葉のあいまいさ（UI表現を指しているのか機能を指しているのか）が残った状態で会話するから混乱が生まれる",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "「ボタンみたいなリンク」ではなく、UI表現としてButtonであり発揮する機能がLinkである",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "いわゆる「リンク」を言いたいときは Link TextやらText Linkなどと読んでみてはどうか",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
