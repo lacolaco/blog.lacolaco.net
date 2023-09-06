@@ -1,11 +1,12 @@
 {
   "pageId": "4b13c6c0-76da-42c3-81d1-81affb15f518",
-  "lastEditedAt": "2023-09-06T04:30:00.000Z",
+  "lastEditedAt": "2023-09-06T04:35:00.000Z",
   "slug": "angular-host-element-with-tailwindcss-classes",
   "properties": {
     "title": "Angular: ホスト要素にTailwindCSSのクラスを付与する",
     "date": "2023-09-06T03:58:00.000Z",
-    "tags": ["Angular", "tailwindcss"]
+    "tags": ["Angular", "tailwindcss"],
+    "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-host-element-with-tailwindcss-classes"
   },
   "content": [
     {
