@@ -1,6 +1,6 @@
 {
   "pageId": "4b13c6c0-76da-42c3-81d1-81affb15f518",
-  "lastEditedAt": "2023-09-06T04:35:00.000Z",
+  "lastEditedAt": "2023-09-06T04:49:00.000Z",
   "slug": "angular-host-element-with-tailwindcss-classes",
   "properties": {
     "title": "Angular: ホスト要素にTailwindCSSのクラスを付与する",
@@ -37,7 +37,7 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-host-element-with-tailwindcss-classes//3c6255ea-b6c7-4055-8126-638d2819f0c3/5391c161-d5f9-4447-b38b-5ff29f5d786a/Untitled.png",
+      "url": "/images/angular-host-element-with-tailwindcss-classes/3c6255ea-b6c7-4055-8126-638d2819f0c3/5391c161-d5f9-4447-b38b-5ff29f5d786a/Untitled.png",
       "caption": [
         {
           "type": "text",
@@ -51,7 +51,7 @@
       "text": [
         {
           "type": "text",
-          "text": "TainwindCSS のユーティリティファーストは入力補完があってはじめてまともに実用性があるアプローチだと考えているので、この使いにくさはAngularアプリケーションでTailwindCSSを使う上で悩みのタネだった。",
+          "text": "TailwindCSS のユーティリティファーストは入力補完があってはじめてまともに実用性があるアプローチだと考えているので、この使いにくさはAngularアプリケーションでTailwindCSSを使う上で悩みのタネだった。",
           "annotations": {}
         }
       ]
@@ -150,7 +150,7 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-host-element-with-tailwindcss-classes//3c6255ea-b6c7-4055-8126-638d2819f0c3/b91070c2-7095-4738-b736-4c57828d7c62/Untitled.png",
+      "url": "/images/angular-host-element-with-tailwindcss-classes/3c6255ea-b6c7-4055-8126-638d2819f0c3/b91070c2-7095-4738-b736-4c57828d7c62/Untitled.png",
       "caption": [
         {
           "type": "text",
