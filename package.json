@@ -38,7 +38,7 @@
     "satori": "^0.10.3"
   },
   "devDependencies": {
-    "@notionhq/client": "2.2.11",
+    "@notionhq/client": "2.2.13",
     "@types/cli-progress": "^3.11.0",
     "@types/katex": "^0.16.0",
     "@types/node": "18.17.12",
