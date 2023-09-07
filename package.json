@@ -41,7 +41,7 @@
     "@notionhq/client": "2.2.13",
     "@types/cli-progress": "^3.11.0",
     "@types/katex": "^0.16.0",
-    "@types/node": "18.17.12",
+    "@types/node": "18.17.14",
     "@types/prettier": "2.7.3",
     "@types/tailwindcss": "3.0.11",
     "cli-progress": "^3.12.0",
