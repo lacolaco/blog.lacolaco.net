@@ -1,0 +1,269 @@
+{
+  "pageId": "3d881d0f-dcf4-4c19-ada8-6ceb05f8e874",
+  "lastEditedAt": "2023-09-08T10:57:00.000Z",
+  "slug": "angular-app-initializer-and-effect",
+  "properties": {
+    "title": "Angular: APP_INITIALIZERとEffectの用法",
+    "date": "2023-09-08T10:20:00.000Z",
+    "tags": ["Angular", "Signals"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Signal APIの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "effect",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " はSignalの値の変更に反応して副作用を実行できる機能だ。サンプルコードではコンポーネントクラスの中で使われているものが多いが、別にコンポーネントと関係ないところで呼び出すこともできるし、なんならクラスのコンストラクタやメソッドである必要もない。インジェクションコンテキストでさえあればどこでもよいことになっている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://angular.jp/guide/signals#effect",
+          "href": "https://angular.jp/guide/signals#effect",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://angular.jp/guide/dependency-injection-context",
+          "href": "https://angular.jp/guide/dependency-injection-context",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({...})\nexport class EffectiveCounterCmp {\n  readonly count = signal(0);\n  constructor() {\n    // Register a new effect.\n    effect(() => {\n      console.log(`The count is: ${this.count()})`);\n    });\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ということで今回、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "APP_INITIALIZER",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "effect",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を併用してみた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://angular.jp/api/core/APP_INITIALIZER#usage-notes",
+          "href": "https://angular.jp/api/core/APP_INITIALIZER#usage-notes",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "たとえば、アプリケーションのログインユーザー情報を外部のサービス（たとえばGoogle AnalyticsやSentryなど）に送信したいケース。一般化すれば、アプリケーション内部の状態の変化を一方的に外部サービスへ同期したいような場面では、状態の変更を購読する形で実装したい。状態がSignalであれば、次のように副作用として記述できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// Sentry.setUserのようなもののイメージ\nconst analyticsService = {\n  setUser: (user: User | null) => {\n    if (user) {\n      console.log(`set user: ${user.name}`);\n    } else {\n      console.log(`unset user`);\n    }\n  },\n};\n\n// ユーザー情報が更新されるたびにsetUserする副作用\nfunction bindUserToAnalytics($user: Signal<User | null>) {\n  effect(() => {\n    const user = $user();\n    analyticsService.setUser(user);\n  });\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ではこの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "effect",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をどう呼び出すかというと、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "APP_INITIALIZER",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のファクトリー関数で呼び出す。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "useFactory",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数のスコープはインジェクションコンテキストである。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "inject()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が呼び出せるということは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "effect()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " も呼び出せる。このようにアプリケーションの初期化のタイミングで副作用を宣言しておけば、アプリケーション側からはまったく関心を向けずにおくことができる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "bootstrapApplication(App, {\n  providers: [\n    {\n      provide: APP_INITIALIZER,\n      multi: true,\n      useFactory: () => {\n        const userAuth = inject(UserAuthService);\n        bindUserToAnalytics(userAuth.$currentUser);\n\n        return () => {};\n      },\n    },\n  ],\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "いままではこういうアプリケーション初期化時の宣言的コードは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AppComponent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に担わせがちだったが、この形のほうがうまく関心を分離できている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "何もしない関数を返しているのが気持ち悪ければ、初期化関数をインジェクションコンテキストにしてしまってもよいが、結果にほとんど違いはない。汎用的にユーティリティ関数を作れば、次のようにまとめられる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "function bindUserToAnalytics($user: Signal<User | null>) {\n  effect(() => {\n    const user = $user();\n    analyticsService.setUser(user);\n  });\n}\n\nfunction provideAppInitializer(fn: () => unknown): EnvironmentProviders {\n  return makeEnvironmentProviders([\n    {\n      provide: APP_INITIALIZER,\n      multi: true,\n      useFactory: () => {\n        const envInjector = inject(EnvironmentInjector);\n        return () => {\n          runInInjectionContext(envInjector, fn);\n        };\n      },\n    },\n  ]);\n}\n\nbootstrapApplication(App, {\n  providers: [\n    provideAppInitializer(() => {\n      const userAuth = inject(UserAuthService);\n      bindUserToAnalytics(userAuth.$currentUser);\n    }),\n  ],\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "SignalやEffectの可能性はまだまだ未知数で、サンプルコードに固定観念を植え付けられてはいけないということは間違いない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "実際に動くサンプルを貼っておく。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-f2bgnd?ctl=1&embed=1&file=src/main.ts"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
