@@ -98,8 +98,8 @@ devDependencies:
     specifier: ^3.12.7
     version: 3.12.7
   undici:
-    specifier: 5.23.0
-    version: 5.23.0
+    specifier: 5.24.0
+    version: 5.24.0
 
 packages:
 
@@ -213,7 +213,7 @@ packages:
       dset: 3.1.2
       is-docker: 3.0.0
       is-wsl: 3.0.0
-      undici: 5.23.0
+      undici: 5.24.0
       which-pm-runs: 1.1.0
     transitivePeerDependencies:
       - supports-color
@@ -1560,7 +1560,7 @@ packages:
       string-width: 6.1.0
       strip-ansi: 7.1.0
       tsconfig-resolver: 3.0.1
-      undici: 5.23.0
+      undici: 5.24.0
       unist-util-visit: 4.1.2
       vfile: 5.3.7
       vite: 4.4.9(@types/node@18.17.14)(sass@1.63.6)
@@ -4517,8 +4517,8 @@ packages:
     resolution: {integrity: sha512-2SbudS8oD4GNq4en+3ivp25JTCwP5O2soJhIBxGJrjojjLVaLcP84xVU6Xdf0wKMhZvr68rTtrXtO6uvEr2llQ==}
     dev: false
 
-  /undici@5.23.0:
-    resolution: {integrity: sha512-1D7w+fvRsqlQ9GscLBwcAJinqcZGHUKjbOmXdlE/v8BvEGXjeWAax+341q44EuTcHXXnfyKNbKRq4Lg7OzhMmg==}
+  /undici@5.24.0:
+    resolution: {integrity: sha512-OKlckxBjFl0oXxcj9FU6oB8fDAaiRUq+D8jrFWGmOfI/gIyjk/IeS75LMzgYKUaeHzLUcYvf9bbJGSrUwTfwwQ==}
     engines: {node: '>=14.0'}
     dependencies:
       busboy: 1.6.0
