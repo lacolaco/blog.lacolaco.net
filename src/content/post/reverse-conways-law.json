@@ -1,0 +1,140 @@
+{
+  "pageId": "b6a71163-583d-42c6-99e8-09fdf5b64f4e",
+  "lastEditedAt": "2023-09-23T00:21:00.000Z",
+  "slug": "reverse-conways-law",
+  "properties": {
+    "title": "コンウェイの法則の反転現象",
+    "date": "2022-08-18T00:00:00.000Z",
+    "tags": ["雑記", "言語化"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "発見したつもりだが、すでに周知のことかもしれない。が、少なくとも私には知られていなかった。全文はScrapboxに。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://scrapbox.io/lacolaco/コンウェイの法則の反転現象"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "TL;DR",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "システムの構造を変更するほうが組織の構造を変更するよりも困難である場合、組織の構造はむしろシステムの構造から優越的に影響を受ける",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "「コンウェイの法則の反転現象」と呼ぶものについて",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "システムの構造と組織の構造がミスマッチしたとき、システムの構造を変化することが容易でなければ、組織の構造のほうが適応してしまう",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "システム開発能力の養成が不十分なまま内製化を進める組織",
+              "annotations": {
+                "bold": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "においては、この反転現象が起こりやすい",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "また、",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "ソフトウェア開発現場のアジャイル化はこの現象をさらに促進するだろう",
+              "annotations": {
+                "bold": true
+              }
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "アジャイルな組織とは変更容易性の高い組織であるため、相対的に必然的に組織の構造のほうが適応しやすい",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "この現象によって、逆コンウェイ戦略を狙ってシステム構造の改善をめがけた組織構造の再編も、結局現状のシステムに引っ張られて元に戻ろうとする",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}
