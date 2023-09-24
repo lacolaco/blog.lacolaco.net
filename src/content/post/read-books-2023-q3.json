@@ -1,6 +1,6 @@
 {
   "pageId": "7b9d8d5b-6552-4cdc-96fd-3dc21a708147",
-  "lastEditedAt": "2023-09-24T12:42:00.000Z",
+  "lastEditedAt": "2023-09-24T12:58:00.000Z",
   "slug": "read-books-2023-q3",
   "properties": {
     "title": "読んだ本 2023-Q3",
@@ -13,7 +13,7 @@
       "text": [
         {
           "type": "text",
-          "text": "2023 7月〜9月に読んだ本・読み始めた本",
+          "text": "2023年 7月〜9月に読んだ本・読み始めた本",
           "annotations": {}
         }
       ]
@@ -247,11 +247,11 @@
     },
     {
       "type": "link_preview",
-      "url": "https://www.amazon.co.jp/dp/product/4334753221/"
+      "url": "https://www.kotensinyaku.jp/books/book221/"
     },
     {
       "type": "link_preview",
-      "url": "https://www.amazon.co.jp/dp/product/4334754821/"
+      "url": "https://www.kotensinyaku.jp/books/book380/"
     },
     {
       "type": "bulleted_list",
@@ -291,11 +291,7 @@
     },
     {
       "type": "link_preview",
-      "url": "https://www.amazon.co.jp/dp/product/4274224546/"
-    },
-    {
-      "type": "paragraph",
-      "text": []
+      "url": "https://www.ohmsha.co.jp/book/9784274224546/"
     }
   ]
 }
