@@ -1,0 +1,301 @@
+{
+  "pageId": "7b9d8d5b-6552-4cdc-96fd-3dc21a708147",
+  "lastEditedAt": "2023-09-24T12:42:00.000Z",
+  "slug": "read-books-2023-q3",
+  "properties": {
+    "title": "読んだ本 2023-Q3",
+    "date": "2023-09-24T11:56:00.000Z",
+    "tags": ["日記", "読書"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "2023 7月〜9月に読んだ本・読み始めた本",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/read-books-2023-q3/3c6255ea-b6c7-4055-8126-638d2819f0c3/62db096d-b717-4741-bccc-a94e3d76a0b0/Untitled.png",
+      "caption": []
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "読んだ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "プラトンの対話篇シリーズの残り『パイドン』『テアイテトス』『ゴルギアス』",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q2から読み始めたプラトン対話篇の古典新訳を読み終わった。",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "link_preview",
+              "url": "https://blog.lacolaco.net/2023/08/finish-plato-series/"
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "『はじめてのUIデザイン 改訂版』",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "今いる開発チームには専任のUIデザイナーがいないので、僕がWebフロントエンドの実装をしながらUI設計もやっているのだが、直感に任せるのではなく多少体系的に学んだ上で、いずれチーム全体の責任にしていこうということで、この本を参考書に選んだ。タイトルの通り、はじめてのUIデザインの参考書としてぴったりだった。",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ニュートン別冊『現代人のための哲学』",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "書店で新刊に並んでいたので適当に買った。中身は想像におまかせする。",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "梶谷真司『問うとはどういうことか』",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "これも書店で8月の新刊として並んでいたので買ってみたが、正直期待外れだった。",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "文章の節々に著者の世の中への怒りを感じる。問うことを忘れてしまった人々への憤りを『問うとはどういうことか』という問いのオブラートに包んであるような感じ。",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "自己啓発本としては刺さる人には刺さりそうだが、僕の趣味ではなかった。",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "アレックス・ヒダルゴ『SLO サービスレベル目標』",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "オライリーのSLO本。すでに読後メモを書いたが、総評としてはとても勉強になるいい本だった。",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "link_preview",
+              "url": "https://blog.lacolaco.net/2023/09/slo-book-review/"
+            },
+            {
+              "type": "paragraph",
+              "text": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "これから読む本",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/read-books-2023-q3/3c6255ea-b6c7-4055-8126-638d2819f0c3/df5d8d97-6b12-4807-8f77-29a46208350b/Untitled.png",
+      "caption": []
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "プラトン対話篇は一段落したということで、アリストテレスへ歩みを進める。光文社古典新訳文庫から『ニコマコス倫理学』と『政治学』が出ているので、これを読む。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://www.amazon.co.jp/dp/product/4334753221/"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://www.amazon.co.jp/dp/product/4334754821/"
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "中原淳『経営学習論』は以前から組織マネジメントの方面で読んだほうがいいとおすすめを受けていたので、読み始めたところ。「組織社会化」について学ぶ。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://www.amazon.co.jp/経営学習論-人材育成を科学する-中原-淳/dp/4130402579"
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "『リファクタリング 第2版』にようやく手を付けられそうだ。『スタッフエンジニア』とどちらから読むか迷ったがこちらを選ぶ。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://www.amazon.co.jp/dp/product/4274224546/"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
