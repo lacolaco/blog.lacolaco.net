@@ -17,6 +17,11 @@
     {
       "groupName": "postcss packages",
       "matchPackageNames": ["postcss", "postcss-cli", "postcss-import"]
+    },
+    {
+      "groupName": "types packages",
+      "matchPackagePrefixes": ["@types/"],
+      "automerge": true
     }
   ]
 }
