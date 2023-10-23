@@ -1,0 +1,110 @@
+{
+  "pageId": "8c030420-0157-4f74-9397-6b60a0814c15",
+  "lastEditedAt": "2023-10-23T11:07:00.000Z",
+  "slug": "make-icon-badge",
+  "properties": {
+    "title": "自分のアイコンの缶バッジを作ると便利",
+    "date": "2023-10-23T10:30:00.000Z",
+    "tags": ["日記"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今年になってからオフラインイベントに参加する機会が急に増え、「はじめまして」あるいは「お久しぶりです」の挨拶をする場面が多いので、SNSのアイコンを缶バッジにして装備している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "たとえ知り合いだったとしても3年リアルで会ってなければ見た目が変わってるので、やはりアイコンで認識してもらうほうが話が早い。相手からしても「多分知ってるひとなんだけど誰だったっけ…」と悩まなくていいのでやさしい。頭の上にアイコンとIDが見える時代が来るまではみんなこれ装備してくれ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "tweet",
+      "url": "https://twitter.com/laco2net/status/1707618226270773250"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "缶バッジは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "pixivFACTORY",
+          "href": "https://factory.pixiv.net/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " で制作した。一応suzuriと注文前に比較したけど、5個注文すると pixivFACTORY のほうが単価が安かった。5個くらいあると複数のバッグに常に忍ばせておけるし、失くしたときにも便利（さっそくひとつ失くしている）。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "アイコンの画像をアップロードして、ちょっとIDのテキストラベルをレイアウトするだけですぐ終わった。44mmで作ったけど、もう1サイズ大きくてもよさそう。クオリティも満足。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "image",
+      "url": "/images/make-icon-badge/3c6255ea-b6c7-4055-8126-638d2819f0c3/0da3b9b3-80e4-4582-abca-087b34b34523/Untitled.png",
+      "caption": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "缶バッジの使い方はいろいろある。普通に服につけてもいいけど、イベントだとだいたい名札みたいなやつを首から下げることになるので、これにつけておくと便利。だいたいどんなタイプの首下げでもいい感じにできる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/make-icon-badge/3c6255ea-b6c7-4055-8126-638d2819f0c3/7e57e1d9-4b60-4f8a-bb8d-7959ec543dab/1000003770.jpg",
+      "caption": []
+    },
+    {
+      "type": "image",
+      "url": "/images/make-icon-badge/3c6255ea-b6c7-4055-8126-638d2819f0c3/9a311414-de76-401e-8dfb-8562cf04b574/1000003771.jpg",
+      "caption": []
+    },
+    {
+      "type": "image",
+      "url": "/images/make-icon-badge/3c6255ea-b6c7-4055-8126-638d2819f0c3/6737e744-3f74-4037-8b05-2a763df4d41a/1000003772.jpg",
+      "caption": []
+    },
+    {
+      "type": "image",
+      "url": "/images/make-icon-badge/3c6255ea-b6c7-4055-8126-638d2819f0c3/47e4174b-bf5e-4b32-905b-9c39138e5616/1000003773.jpg",
+      "caption": []
+    }
+  ]
+}
