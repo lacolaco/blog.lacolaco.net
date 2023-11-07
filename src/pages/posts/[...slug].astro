@@ -1,15 +1,12 @@
 ---
 import { CollectionEntry, getCollection } from 'astro:content';
-import { format as formatDate } from 'date-fns';
-import BlogPost from '../../../layouts/BlogPost.astro';
+import BlogPost from '../../layouts/BlogPost.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('post');
   return posts.map((post) => {
     return {
       params: {
-        year: formatDate(post.data.properties.date, 'yyyy'),
-        month: formatDate(post.data.properties.date, 'MM'),
         slug: post.data.slug,
       },
       props: post,
@@ -17,11 +14,7 @@ export async function getStaticPaths() {
   });
 }
 type Props = CollectionEntry<'post'>;
-
-// migrate old urls to new format
 const post = Astro.props;
-const canonical = `${Astro.url.origin}/posts/${post.data.slug}`;
-post.data.properties.canonicalUrl ??= canonical;
 ---
 
 <BlogPost post={post.data} />

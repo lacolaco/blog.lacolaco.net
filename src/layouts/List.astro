@@ -28,7 +28,7 @@ const postsByYear = Array.from(
 ).sort(([a], [b]) => Number(b) - Number(a));
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
   <head>
     <BaseHead title={SITE_TITLE} description={''} />
@@ -58,7 +58,7 @@ const postsByYear = Array.from(
                   <li class="pb-4 border-solid border-transparent">
                     <div class="flex flex-col items-start leading-none">
                       <FormattedDate class="text-xs text-muted align-middle" date={post.properties.date} />
-                      <a class="no-underline" href={`/${formatDate(post.properties.date, 'yyyy/MM')}/${post.slug}/`}>
+                      <a class="no-underline" href={`/posts/${post.slug}/`}>
                         <span class="text-lg text-default font-bold underline">{post.properties.title}</span>
                       </a>
                       <div class="mt-1">

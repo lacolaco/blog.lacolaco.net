@@ -1,7 +1,7 @@
 import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
-import { compareDesc, format as formatDate } from 'date-fns';
+import { compareDesc } from 'date-fns';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 export async function get(context: APIContext) {
@@ -15,7 +15,7 @@ export async function get(context: APIContext) {
       .map((post) => ({
         title: post.data.properties.title,
         pubDate: post.data.properties.date,
-        link: `/${formatDate(post.data.properties.date, 'yyyy/MM')}/${post.data.slug}/`,
+        link: `/posts/${post.data.slug}/`,
         categories: post.data.properties.tags,
       })),
   });
