@@ -12,7 +12,7 @@ export async function getStaticPaths() {
   }));
 }
 
-export async function get({ params }: APIContext) {
+export async function GET({ params }: APIContext) {
   const { slug } = params;
   if (!slug) return { status: 404 };
 
@@ -21,5 +21,9 @@ export async function get({ params }: APIContext) {
 
   const body = await getOgImage(post.data.properties.title ?? 'No title');
 
-  return { body, encoding: 'binary' };
+  return new Response(body, {
+    headers: {
+      'content-type': 'image/png',
+    },
+  });
 }

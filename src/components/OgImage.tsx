@@ -7,15 +7,15 @@ const fontFamily = 'Zen Kaku Gothic New';
 
 export async function getOgImage(text: string) {
   const fontNormal = await fetchFont(SITE_TITLE + siteDomainName, fontFamily, 400);
-  const fontBold = await fetchFont(text, fontFamily, 700);
+  const fontBold = await fetchFont(SITE_TITLE + text, fontFamily, 700);
 
   const svg = await satori(
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
         height: '100%',
         width: '100%',
         backgroundColor: '#fff',
@@ -27,16 +27,28 @@ export async function getOgImage(text: string) {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'center',
+          rowGap: '24px',
           height: '100%',
           width: '100%',
           border: '2px solid #1e1e1e',
           borderRadius: '8px',
           color: '#333',
-          padding: '12px 24px',
+          padding: '24px 24px',
         }}
       >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            width: '100%',
+            fontSize: '16px',
+          }}
+        >
+          <span>{SITE_TITLE}</span>
+        </div>
         <div
           style={{
             flexGrow: '1',
@@ -52,8 +64,7 @@ export async function getOgImage(text: string) {
           style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            height: '64px',
+            justifyContent: 'flex-end',
             width: '100%',
             fontSize: '24px',
           }}
