@@ -48,8 +48,8 @@ dependencies:
     specifier: 18.0.0
     version: 18.0.0(react@18.0.0)
   satori:
-    specifier: 0.10.3
-    version: 0.10.3
+    specifier: 0.10.9
+    version: 0.10.9
 
 devDependencies:
   '@notionhq/client':
@@ -4094,8 +4094,8 @@ packages:
       immutable: 4.3.0
       source-map-js: 1.0.2
 
-  /satori@0.10.3:
-    resolution: {integrity: sha512-8tZPu7AGiRWimbOyja1s2HK0hEC4DacZ8cAKDITxlVI5tKQZbOuMiVgSB50CABwc0I4Imgtkq7o9Egj1WOJTKg==}
+  /satori@0.10.9:
+    resolution: {integrity: sha512-XU9EELUEZuioT4acLIpCXxHcFzrsC8muvg0MY28d+TlqwxbkTzBmWbw+3+hnCzXT7YZ0Qm8k3eXktDaEu+qmEw==}
     engines: {node: '>=16'}
     dependencies:
       '@shuding/opentype.js': 1.4.0-beta.0
