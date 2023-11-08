@@ -12,7 +12,7 @@
     "preview": "astro preview",
     "format": "prettier --cache --write 'src' 'tools'",
     "astro": "astro",
-    "notion-fetch": "tsx tools/notion-fetch/main.ts"
+    "notion-fetch": "tsx --env-file .env tools/notion-fetch/main.ts"
   },
   "engines": {
     "node": "^20.0.0"
@@ -45,7 +45,6 @@
     "@types/react-dom": "^18.0.6",
     "@types/tailwindcss": "3.0.11",
     "cli-progress": "^3.12.0",
-    "dotenv": "16.3.1",
     "p-limit": "^4.0.0",
     "prettier": "3.0.3",
     "sass": "^1.63.6",

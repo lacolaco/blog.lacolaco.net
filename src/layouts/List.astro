@@ -58,7 +58,7 @@ const postsByYear = Array.from(
                   <li class="pb-4 border-solid border-transparent">
                     <div class="flex flex-col items-start leading-none">
                       <FormattedDate class="text-xs text-muted align-middle" date={post.properties.date} />
-                      <a class="no-underline" href={`/posts/${post.slug}/`}>
+                      <a class="no-underline" href={`/posts/${post.slug}`}>
                         <span class="text-lg text-default font-bold underline">{post.properties.title}</span>
                       </a>
                       <div class="mt-1">

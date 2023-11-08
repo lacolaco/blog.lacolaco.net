@@ -1,5 +1,3 @@
-import 'dotenv/config';
-
 import { NotionDatabase } from '@lib/notion';
 import { SingleBar } from 'cli-progress';
 import { parseArgs } from 'node:util';
@@ -37,7 +35,7 @@ async function main() {
   const postJsonFS = new FileSystem(postJsonDir, { dryRun });
 
   console.log('Fetching pages...');
-  const pages = await db.queryBlogPages2();
+  const pages = await db.queryBlogPages();
   console.log(`Fetched ${pages.length} pages`);
 
   const pagesToUpdate = await Promise.all(

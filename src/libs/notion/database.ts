@@ -3,8 +3,8 @@ import { readFile } from 'node:fs/promises';
 import * as path from 'node:path';
 import pLimit from 'p-limit';
 import { PostData } from '../post/schema';
-import type { BlogPageObject, BlogPageProperties, PageObjectWithContent } from './types';
-import { fetchChildBlocks, queryAllPages } from './utils';
+import type { BlogPageObject, PageObjectWithContent } from './types';
+import { fetchChildBlocks, getSlug, queryAllPages } from './utils';
 
 const postCollectionDir = new URL('../../content/post', import.meta.url).pathname;
 
@@ -18,11 +18,10 @@ export class NotionDatabase {
     private databaseID: string,
   ) {}
 
-  async queryBlogPages2(): Promise<BlogPageObject[]> {
+  async queryBlogPages(): Promise<BlogPageObject[]> {
     const pages = await queryAllPages(this.notion, this.databaseID, {
       and: [
         { property: 'published', checkbox: { equals: true } },
-        { property: 'slug', rich_text: { is_not_empty: true } },
         { property: 'title', title: { is_not_empty: true } },
         {
           property: 'distribution',
@@ -31,8 +30,7 @@ export class NotionDatabase {
       ],
     });
     return pages.map((page) => {
-      const properties = page.properties as BlogPageProperties;
-      const slug = properties.slug.rich_text[0].plain_text;
+      const slug = getSlug(page);
       return { ...page, slug } as BlogPageObject;
     });
   }
