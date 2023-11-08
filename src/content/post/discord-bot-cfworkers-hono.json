@@ -1,11 +1,11 @@
 {
   "pageId": "41e326de-5455-488c-b731-732e45de6e0e",
-  "lastEditedAt": "2023-09-23T00:33:00.000Z",
+  "lastEditedAt": "2023-11-08T01:19:00.000Z",
   "slug": "discord-bot-cfworkers-hono",
   "properties": {
     "title": "Cloudflare Workers + HonoでDiscord botを作る際のポイント",
     "date": "2023-09-22T23:17:00.000Z",
-    "tags": ["雑記", "Discord", "Cloudflare", "Hono"]
+    "tags": ["Discord", "Cloudflare", "Hono"]
   },
   "content": [
     {

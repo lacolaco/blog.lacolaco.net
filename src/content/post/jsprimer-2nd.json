@@ -1,6 +1,6 @@
 {
   "pageId": "03ccefe8-3594-4857-a531-ae0beceb1622",
-  "lastEditedAt": "2023-06-08T10:15:00.000Z",
+  "lastEditedAt": "2023-11-08T01:19:00.000Z",
   "slug": "jsprimer-2nd",
   "properties": {
     "title": "JavaScript Primer 改訂2版が発売されます",
@@ -27,7 +27,13 @@
     {
       "type": "image",
       "url": "/images/jsprimer-2nd/2406c113-f92d-4a05-aac6-5c605fa2604c/PXL_20230606_101746407.jpg",
-      "caption": "見本紙"
+      "caption": [
+        {
+          "type": "text",
+          "text": "見本紙",
+          "annotations": {}
+        }
+      ]
     },
     {
       "type": "paragraph",

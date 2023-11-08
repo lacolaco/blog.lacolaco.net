@@ -1,6 +1,6 @@
 {
   "pageId": "6ede1797-c024-4d72-aea3-05528ed253b1",
-  "lastEditedAt": "2023-08-03T14:11:00.000Z",
+  "lastEditedAt": "2023-11-08T01:19:00.000Z",
   "slug": "two-sides-of-tailwindcss",
   "properties": {
     "title": "Tailwind CSSの二面性、デザインシステムを借りるということ",
@@ -134,7 +134,13 @@
     {
       "type": "image",
       "url": "/images/two-sides-of-tailwindcss/eb9aade5-5d38-4ffa-a7d9-1f6133f180d9/Untitled.png",
-      "caption": "“Use the tailwind.config.js” file to craft your own design system”"
+      "caption": [
+        {
+          "type": "text",
+          "text": "“Use the tailwind.config.js” file to craft your own design system”",
+          "annotations": {}
+        }
+      ]
     },
     {
       "type": "paragraph",
@@ -290,7 +296,13 @@
     {
       "type": "image",
       "url": "/images/two-sides-of-tailwindcss/e8aac7d8-328b-40e8-99ed-5c91c18e5866/Untitled.png",
-      "caption": "“An API for your design system”"
+      "caption": [
+        {
+          "type": "text",
+          "text": "“An API for your design system”",
+          "annotations": {}
+        }
+      ]
     },
     {
       "type": "paragraph",
@@ -406,7 +418,13 @@
     {
       "type": "image",
       "url": "/images/two-sides-of-tailwindcss/80fc96c9-18c7-4f83-874c-c1cab7de24f9/Untitled.png",
-      "caption": "デザインシステムを元にしたコンフィグと、そのコンフィグをCSSライブラリ化するためのビルドツール"
+      "caption": [
+        {
+          "type": "text",
+          "text": "デザインシステムを元にしたコンフィグと、そのコンフィグをCSSライブラリ化するためのビルドツール",
+          "annotations": {}
+        }
+      ]
     },
     {
       "type": "heading",
