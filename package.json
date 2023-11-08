@@ -15,40 +15,40 @@
     "notion-fetch": "tsx --env-file .env tools/notion-fetch/main.ts"
   },
   "engines": {
-    "node": "^20.0.0"
+    "node": "20.0.0"
   },
   "packageManager": "pnpm@8.10.2",
   "dependencies": {
-    "@astrojs/prism": "^3.0.0",
-    "@astrojs/react": "^3.0.0",
-    "@astrojs/rss": "^3.0.0",
-    "@astrojs/sitemap": "^3.0.0",
-    "@astrojs/tailwind": "^5.0.0",
-    "@fontsource/source-code-pro": "^5.0.0",
-    "@fontsource/zen-kaku-gothic-new": "^5.0.2",
-    "@resvg/resvg-js": "^2.4.1",
-    "astro": "^3.0.0",
+    "@astrojs/prism": "3.0.0",
+    "@astrojs/react": "3.0.0",
+    "@astrojs/rss": "3.0.0",
+    "@astrojs/sitemap": "3.0.0",
+    "@astrojs/tailwind": "5.0.0",
+    "@fontsource/source-code-pro": "5.0.0",
+    "@fontsource/zen-kaku-gothic-new": "5.0.2",
+    "@resvg/resvg-js": "2.4.1",
+    "astro": "3.0.0",
     "date-fns": "2.30.0",
     "katex": "0.16.9",
-    "mermaid": "^10.0.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "satori": "^0.10.3"
+    "mermaid": "10.0.0",
+    "react": "18.0.0",
+    "react-dom": "18.0.0",
+    "satori": "0.10.3"
   },
   "devDependencies": {
     "@notionhq/client": "2.2.13",
-    "@types/cli-progress": "^3.11.0",
-    "@types/katex": "^0.16.0",
+    "@types/cli-progress": "3.11.0",
+    "@types/katex": "0.16.0",
     "@types/node": "20.8.10",
     "@types/prettier": "2.7.3",
-    "@types/react": "^18.0.21",
-    "@types/react-dom": "^18.0.6",
+    "@types/react": "18.0.21",
+    "@types/react-dom": "18.0.6",
     "@types/tailwindcss": "3.0.11",
-    "cli-progress": "^3.12.0",
-    "p-limit": "^5.0.0",
+    "cli-progress": "3.12.0",
+    "p-limit": "5.0.0",
     "prettier": "3.0.3",
-    "sass": "^1.63.6",
+    "sass": "1.63.6",
     "tailwindcss": "3.3.5",
-    "tsx": "^3.14.0"
+    "tsx": "3.14.0"
   }
 }
