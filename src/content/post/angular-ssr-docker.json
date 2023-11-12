@@ -1,0 +1,226 @@
+{
+  "pageId": "ee8cd85b-3e4f-48dd-b84d-b63d473cc5d7",
+  "lastEditedAt": "2023-11-12T15:03:00.000Z",
+  "slug": "angular-ssr-docker",
+  "properties": {
+    "title": "Angular SSR on Docker",
+    "date": "2023-11-12T14:38:00.000Z",
+    "tags": ["Angular", "Docker"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular v17で簡単になったSSRを、Dockerでビルドしてデプロイできるようにする。やることは単純で、特に落とし穴になるようなことはない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まずは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng new",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドでアプリケーションを作成する。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "--ssr",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " フラグをつけなくても、プロンプトでSSRを有効にするかどうかは尋ねられるので、そこでYesと答えてもよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "shell",
+      "filename": "",
+      "text": "$ ng new ng17-ssr-docker --ssr"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "正しくアプリケーションを作成できていれば、この時点で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng build",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を実行すればSSR用のサーバーを立てるのに必要なファイルと設定はすべて済んでいる。ビルドを実行して出力された ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "dist/server",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ディレクトリが存在すれば問題ない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "shell",
+      "filename": "",
+      "text": "$ npm run build\n$ tree dist/\ndist/\n└── ng17-ssr-docker\n    ├── 3rdpartylicenses.txt\n    ├── browser\n    │   ├── favicon.ico\n    │   ├── index.html\n    │   ├── main-XALV5XXG.js\n    │   ├── polyfills-LZBJRJJE.js\n    │   └── styles-5INURTSO.css\n    ├── prerendered-routes.json\n    └── server\n        ├── chunk-53JWIC36.mjs\n        ├── chunk-KRLCULJA.mjs\n        ├── chunk-VP7Q5FIC.mjs\n        ├── chunk-YGUSPAT3.mjs\n        ├── index.server.html\n        ├── main.server.mjs\n        ├── polyfills.server.mjs\n        ├── render-utils.server.mjs\n        └── server.mjs"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この中の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "server/server.mjs",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をNode.jsで実行するとサーバーが起動する。試しに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "node",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドを実行して確認しよう。デフォルトではlocalhostの4000番ポートでサーバーが起動するので、ブラウザで開いてSSRされたHTMLが返却されていることがわかるはずだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "shell",
+      "filename": "",
+      "text": "$ node dist/ng17-ssr-docker/server/server.mjs\nNode Express server listening on http://localhost:4000"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "あとはこれを任意のNode.js環境にデプロイすればいい。Dockerを使う場合、最小構成は次のようになる。やることは、ビルド後の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "dist",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ディレクトリの中身をコピーし、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "server/server.mjs",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を実行するだけだ。サーバーサイドのスクリプトもAngular CLIによってバンドルされているため、実行環境で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "npm install",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をする必要はない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "docker",
+      "filename": "",
+      "text": "FROM node:20-buster-slim\nWORKDIR /app\nCOPY dist/ng17-ssr-docker/ /app\nCMD node server/server.mjs"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ビルドもDockerに任せたい場合はマルチステージビルドを使ってもよいが、個人的にはおすすめしない。昨今いろいろなCLIツールは永続キャッシュによる高速化が図られていることが多く、Dockerでビルドさせるとその恩恵が得にくいケースが多い。工夫すればできないことはないだろうが、物事をシンプルに保つうえであらかじめ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng build",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " しておいた結果をコピーするだけに留めておくほうがよかろうと思う。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "あとは適当にDockerイメージをビルドしてデプロイすれば終わりだ。いやあ簡単になったものだ。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
