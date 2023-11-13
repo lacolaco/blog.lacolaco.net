@@ -36,7 +36,7 @@ const { nodes } = Astro.props;
           case 'quote':
             return <Quote {...node} />;
           case 'divider':
-            return <hr />;
+            return <hr class="my-2" />;
           case 'link_preview':
             return <LinkPreview {...node} />;
           case 'embed':

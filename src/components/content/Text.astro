@@ -21,7 +21,7 @@ const classList = [
     const content = annotations.code ? (
       <code class="px-1 py-0.5 rounded whitespace-break-spaces text-[0.85em] bg-muted">{text}</code>
     ) : (
-      text
+      text.replace(/\n/g, `<br />`)
     );
 
     if (href) {
@@ -37,7 +37,7 @@ const classList = [
         </span>
       );
     } else {
-      return <span class:list={classList}>{content}</span>;
+      return <span class:list={classList} set:html={content} />;
     }
   })()
 }

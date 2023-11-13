@@ -1,0 +1,378 @@
+{
+  "pageId": "fd46ec62-6df1-4bdc-9f4a-050456e6d8b8",
+  "lastEditedAt": "2023-11-13T11:12:00.000Z",
+  "slug": "1e35376391fe",
+  "properties": {
+    "title": "プロジェクトはキックオフが9割",
+    "date": "2023-11-13T10:30:00.000Z",
+    "tags": ["雑記"]
+  },
+  "content": [
+    {
+      "type": "image",
+      "url": "/images/1e35376391fe/3c6255ea-b6c7-4055-8126-638d2819f0c3/dcbba909-4d4b-48c9-b3ae-8c6935310d79/Untitled.png",
+      "caption": [
+        {
+          "type": "text",
+          "text": "9割シリーズ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事は、けっこう前にClassiの社内ブログ記事として書いたものだ。一般論として通用する内容だし、社内に閉じておくのはもったいないと思ったので転載する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "プロジェクトの成功は、キックオフの成功にかかっています。なぜなら、キックオフとはプロジェクトの出発点であり、そのキックオフの準備こそがプロジェクトを始める準備であるからです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "準備に失敗することは、失敗する準備をしているようなものです。 \n",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "https://www.atlassian.com/ja/work-management/project-management/project-kickoff",
+          "href": "https://www.atlassian.com/ja/work-management/project-management/project-kickoff",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "プロジェクトのキックオフの目的",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "プロジェクトキックオフとは何ですか? それは、プロジェクト チームの...最初のミーティングです。このミーティングは、共通の目標とプロジェクトの目的を確認するための機会です。\n",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "キックオフミーティングなしでプロジェクトを開始することは、具体的な計画なしで旅行に出発するようなもの",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "です。...優れたプロジェクトキックオフミーティングでは、プロジェクトのコラボレーションを成功させて円滑に進めるための道筋を設定します。\n",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "https://www.atlassian.com/ja/work-management/project-management/project-kickoff",
+          "href": "https://www.atlassian.com/ja/work-management/project-management/project-kickoff",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "キックオフミーティングでは、プロジェクトの背景の共有やそのプロジェクトがなぜ必要なのか、何に取り組むのかなどをチームや関係者と共有し、その上で",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "全員がどのように協力するか",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を決定し、共通のプロジェクト目標などについて確認します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "しかし、キックオフミーティングで何を話して何を決めるかということ以前に、もっとも重要なことがあります。それは、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "「キックオフミーティングに誰を集めるか」",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ということ、言いかえれば ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "「全員とは誰か」",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "キックオフにいなかった人を巻き込むことになるのはプロジェクト立ち上げの失敗",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "キックオフミーティングは、これから動き始めるプロジェクトを円滑に進行するために、さまざまなことについて「全員が認識を揃えておく」ための時間です。ここでの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "「全員とは誰か」",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " がキックオフにおいてもっとも重要なポイントと言っても過言ではありません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "キックオフに呼ばなければならないのは、そのプロジェクトのスタートからゴールまでの間に協力が必要になる関係者です。したがって、「全員とは誰か」を考えるためには、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "キックオフの前に",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プロジェクトの大まかなロードマップを描いている必要があります。キックオフに呼ばれていなかった人へ後から協力を求めることになるのは、そのプロジェクトの計画に漏れがあったということであり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "明確なプロジェクト立ち上げの失敗です",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そして、その協力が重要なものであればあるほど、「なぜ最初から呼んでくれなかったんだ」というマイナスの状態からコラボレーションがスタートします。なぜなら、当初の見積もりになかった協力が必要になっているということがすでにプロジェクトの進行状況の乱れを表しているわけであり、いわばはじめから炎上気味のプロジェクトになっているわけで、そんな状況に突然巻き込まれることのストレスは間違いなく高いからです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、すでに動き出しているプロジェクトに後から参画しても、その人にとって合意できない過去の決定はもはや変えられないものとなっています。さらには、元からいるメンバーでは暗黙になってる認識を持てていないことによる不信感や疎外感、とってつけたようなコミュニケーションパスなど、プロジェクトの円滑な進行を妨げる要素はいくらでも生まれてきます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これらは「キックオフにいなかった人を巻き込むことになった」というプロジェクト立ち上げの失敗による痛みです。この失敗は巻き込む側と巻き込まれる側の両方を傷つけます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "プレキックオフという方法",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "@lacolaco からの提案は、いきなりキックオフから始めるのではなく、「キックオフに誰を呼ぶ必要があるか」を考えるための ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "プレキックオフ",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を先んじて実施することです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "プロジェクトのリーダーがひとりで考えていては、そもそもゴールまでの道筋が想像できていなかったり、観点の漏れや偏りが生まれるのは当然です。そこで、そのプロジェクトの大まかなロードマップを考え、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "誰と協力する必要が生まれるかの見積もり",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をするためのプレキックオフを実施します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このプレキックオフはその後のプロジェクトに携わることがわかっているメンバーだけではなく、会社のことをよくわかっている人、第三者の目線があるとなおよいでしょう。重要なのは偏りを減らし、多様な観点を寄せ合わせることです。(参考文献: ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "『多様性の科学』 マシュー・サイド",
+          "href": "https://www.amazon.co.jp/dp/B0957B1LD5",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ")",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、そもそもプロジェクトの規模が大きすぎることで見積もりづらくなっていることもあります。その場合は大きなプロジェクトをいくつかの小さなプロジェクトに分割し、それぞれのプロジェクトの開始時にあらためてキックオフするというのも有効でしょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "キックオフに必要な人が漏れなく集い、プロジェクトについての認識を共有して始められれば、プロジェクトの成功確率は間違いなく上がります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "準備に失敗することは、失敗する準備をしているようなものです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "キックオフを成功させて、プロジェクトを成功させる準備を整えましょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
