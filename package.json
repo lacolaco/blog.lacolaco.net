@@ -28,7 +28,7 @@
     "@fontsource/source-code-pro": "5.0.15",
     "@fontsource/zen-kaku-gothic-new": "5.0.16",
     "@resvg/resvg-js": "2.6.0",
-    "astro": "3.4.4",
+    "astro": "3.5.3",
     "date-fns": "2.30.0",
     "katex": "0.16.9",
     "mermaid": "10.6.1",
