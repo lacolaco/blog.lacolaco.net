@@ -1,0 +1,120 @@
+{
+  "pageId": "83577cc5-bb18-4442-a0af-7636350d9064",
+  "lastEditedAt": "2023-11-18T00:07:00.000Z",
+  "slug": "2af7bdf042a9",
+  "properties": {
+    "title": "『Engineers in VOYAGE ― 事業をエンジニアリングする技術者たち』を読んだ",
+    "date": "2022-07-27T00:00:00.000Z",
+    "tags": ["雑記", "読書"]
+  },
+  "content": [
+    {
+      "type": "link_preview",
+      "url": "https://amzn.asia/d/aBsRwZI"
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "text": [
+        {
+          "type": "text",
+          "text": "シビレたフレーズ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "放っておかない力",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "「技術的負債の返済に必要な腕力」について、すずけんさんとtwadaさんの一節。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "す：腕力っていったい何でしょうね。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "フルサイクル開発者の仕事はビジネス",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Zucksのフルサイクル開発思想について、河村さんとtwadaさんの一節。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "― これだけ多様な技術が使われているシステムでフルサイクル開発者であることが求められるとしたら、場合によっては「言語を学ぶ」ところからスタートすることもありそうです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "業務として向かい合うシステムへの誇り",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "レガシーな大規模システムをゼロから作り直すことに決めるまでの過程について、ねこやさんとtwadaさんの一節。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "ね：...これがもし自分たちで作ったシステムであれば、どんなに足をすくわれるような状態であったとしても、腹をくくって本気で対処できます。でも自分たちが作ったわけでもない、データベースの構造を含めて問題が多いシステムに立ち向かい続けることには、エンジニアとして辛いものがありました。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
