@@ -1,6 +1,6 @@
 {
   "pageId": "9d30853a-e23f-4fa5-921a-8a3132749585",
-  "lastEditedAt": "2023-11-18T00:08:00.000Z",
+  "lastEditedAt": "2023-11-18T00:19:00.000Z",
   "slug": "c8ad24ffd513",
   "properties": {
     "title": "改訂版『事業をエンジニアリングする技術者たち』を読んだ",
@@ -31,12 +31,23 @@
       ]
     },
     {
-      "type": "link_preview",
-      "url": "https://amzn.asia/d/exEhumV"
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "事業をエンジニアリングする技術者たち ― フルサイクル開発者がつくるCARTAの現場 \\| 株式会社CARTA HOLDINGS 監修, 和田卓人 \\|本 \\| 通販 \\| Amazon",
+          "href": "https://www.amazon.co.jp/E4-BA-8B-E6-A5-AD-E3-82-92-E3-82-A8-E3-83-B3-E3-82-B8-E3-83-8B-E3-82-A2-E3-83-AA-E3-83-B3-E3-82-B0/dp/4908686157/ref=dp_ob_title_bk",
+          "annotations": {}
+        }
+      ]
     },
     {
       "type": "paragraph",
       "text": []
+    },
+    {
+      "type": "link_preview",
+      "url": "https://blog.lacolaco.net/posts/2af7bdf042a9/"
     },
     {
       "type": "paragraph",

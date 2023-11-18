@@ -1,6 +1,6 @@
 {
   "pageId": "83577cc5-bb18-4442-a0af-7636350d9064",
-  "lastEditedAt": "2023-11-18T00:07:00.000Z",
+  "lastEditedAt": "2023-11-18T00:18:00.000Z",
   "slug": "2af7bdf042a9",
   "properties": {
     "title": "『Engineers in VOYAGE ― 事業をエンジニアリングする技術者たち』を読んだ",
@@ -9,8 +9,15 @@
   },
   "content": [
     {
-      "type": "link_preview",
-      "url": "https://amzn.asia/d/aBsRwZI"
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Engineers in VOYAGE ― 事業をエンジニアリングする技術者たち \\| 株式会社VOYAGE GROUP, 和田卓人 \\|本 \\| 通販 \\| Amazon",
+          "href": "https://www.amazon.co.jp/Engineers-VOYAGE-%E4%BA%8B%E6%A5%AD%E3%82%92%E3%82%A8%E3%83%B3%E3%82%B8%E3%83%8B%E3%82%A2%E3%83%AA%E3%83%B3%E3%82%B0%E3%81%99%E3%82%8B%E6%8A%80%E8%A1%93%E8%80%85%E3%81%9F%E3%81%A1-%E6%A0%AA%E5%BC%8F%E4%BC%9A%E7%A4%BEVOYAGE-GROUP/dp/4908686092/ref=tmm_pap_swatch_0?_encoding=UTF8&qid=&sr=",
+          "annotations": {}
+        }
+      ]
     },
     {
       "type": "heading",
