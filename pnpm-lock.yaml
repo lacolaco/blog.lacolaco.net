@@ -52,6 +52,9 @@ dependencies:
     version: 0.10.9
 
 devDependencies:
+  '@cloudflare/workers-types':
+    specifier: ^1.20231121.0
+    version: 1.20231121.0
   '@notionhq/client':
     specifier: 2.2.13
     version: 2.2.13
@@ -469,6 +472,10 @@ packages:
   /@braintree/sanitize-url@6.0.2:
     resolution: {integrity: sha512-Tbsj02wXCbqGmzdnXNk0SOF19ChhRU70BsroIi4Pm6Ehp56in6vch94mfbdQ17DozxkL3BAVjbZ4Qc1a0HFRAg==}
     dev: false
+
+  /@cloudflare/workers-types@1.20231121.0:
+    resolution: {integrity: sha512-5IOo8mTRbkW7HCQDEbX9cqHHQ3md+soLLNyZnd2OFRVMaBIpo/0VLfcxvqC4s+eSKgTgkwjaK8nTs4ARPLfEOA==}
+    dev: true
 
   /@esbuild/android-arm64@0.18.20:
     resolution: {integrity: sha512-Nz4rJcchGDtENV0eMKUNa6L12zz2zBDXuhj/Vjh18zGqB44Bi7MBMSXjgunJgjRhCmKOjnPuZp4Mb6OKqtMHLQ==}
