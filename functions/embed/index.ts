@@ -33,6 +33,8 @@ async function getPageTitle(url: string) {
   });
   const docTitle = new DocumentTitleHandler();
   const ogTitle = new OgTitleHandler();
-  new HTMLRewriter().on('title', docTitle).on('meta[property="og:title"]', ogTitle).transform(response);
+  const html = await response.text();
+  console.log(html);
+  new HTMLRewriter().on('title', docTitle).on('meta[property="og:title"]', ogTitle).transform(new Response(html));
   return ogTitle.title ?? docTitle.title ?? 'Untitled';
 }
