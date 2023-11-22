@@ -11,14 +11,19 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
 class DocumentTitleHandler {
   title: string;
-  element(element: HTMLTitleElement) {
-    this.title ??= element.text;
+  element(element: Element) {
+    console.log(element);
+  }
+  text(text: Text) {
+    console.log(text);
+    this.title ??= text.text;
   }
 }
 
 class OgTitleHandler {
   title: string;
-  element(element: HTMLMetaElement) {
+  element(element: Element) {
+    console.log(element);
     this.title ??= element.getAttribute('content');
   }
 }
