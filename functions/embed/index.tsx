@@ -103,6 +103,24 @@ function buildEmbedHtml(title: string, url: string) {
     color: 'rgba(0, 0, 0, 0.6)',
   });
 
+  const app = renderPreact(
+    <App>
+      <Link href={url} target="_blank" rel="noreferrer noopener nofollow">
+        <LinkContent>
+          <LinkTitle>{title}</LinkTitle>
+          <LinkInfo>
+            <LinkFavicon
+              src={`https://www.google.com/s2/favicons?sz=14&domain_url=${url}`}
+              alt="doc.rust-jp.rs favicon image"
+              width="14"
+              height="14"
+            />
+            <LinkHostname>{hostname}</LinkHostname>
+          </LinkInfo>
+        </LinkContent>
+      </Link>
+    </App>,
+  );
   const style = extractCss();
 
   return `<!DOCTYPE html>
@@ -119,24 +137,7 @@ function buildEmbedHtml(title: string, url: string) {
         <style id="_goober">${style}</style>
       </head>
       <body>
-        ${renderPreact(
-          <App>
-            <Link href={url} target="_blank" rel="noreferrer noopener nofollow">
-              <LinkContent>
-                <LinkTitle>{title}</LinkTitle>
-                <LinkInfo>
-                  <LinkFavicon
-                    src={`https://www.google.com/s2/favicons?sz=14&domain_url=${url}`}
-                    alt="doc.rust-jp.rs favicon image"
-                    width="14"
-                    height="14"
-                  />
-                  <LinkHostname>{hostname}</LinkHostname>
-                </LinkInfo>
-              </LinkContent>
-            </Link>
-          </App>,
-        )}
+        ${app}
       </body>
     </html>
   `;
