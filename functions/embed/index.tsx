@@ -89,7 +89,7 @@ function buildEmbedHtml(title: string, url: string) {
     columnGap: '0.5em',
   });
   const LinkFavicon = styled('img')({});
-  const LinkHostname = styled('span')({
+  const LinkURL = styled('span')({
     fontSize: '0.8em',
     color: 'rgba(0, 0, 0, 0.6)',
     wordBreak: 'break-word',
@@ -112,7 +112,7 @@ function buildEmbedHtml(title: string, url: string) {
               width="14"
               height="14"
             />
-            <LinkHostname>{url}</LinkHostname>
+            <LinkURL>{url}</LinkURL>
           </LinkInfo>
         </LinkContent>
       </Link>
