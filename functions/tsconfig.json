@@ -2,8 +2,11 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "esnext",
-    "lib": ["esnext", "dom"],
-    "types": ["@cloudflare/workers-types"]
+    "moduleResolution": "node",
+    "lib": ["esnext"],
+    "types": ["@cloudflare/workers-types"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
   },
-  "include": ["**/*"]
+  "include": ["**/*.ts", "**/*.tsx"]
 }
