@@ -12,10 +12,10 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 class DocumentTitleHandler {
   title: string;
   element(element: Element) {
-    console.log(element);
+    console.log(element.outerHTML);
   }
   text(text: Text) {
-    console.log(text);
+    console.log(JSON.stringify(text));
     this.title ??= text.text;
   }
 }
@@ -23,7 +23,7 @@ class DocumentTitleHandler {
 class OgTitleHandler {
   title: string;
   element(element: Element) {
-    console.log(element);
+    console.log(element.outerHTML);
     this.title ??= element.getAttribute('content');
   }
 }
@@ -41,5 +41,6 @@ async function getPageTitle(url: string) {
   const html = await response.text();
   console.log(html);
   new HTMLRewriter().on('title', docTitle).on('meta[property="og:title"]', ogTitle).transform(new Response(html));
+  console.log(docTitle, ogTitle);
   return ogTitle.title ?? docTitle.title ?? 'Untitled';
 }
