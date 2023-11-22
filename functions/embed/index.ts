@@ -1,7 +1,7 @@
 interface Env {}
 
 export const onRequest: PagesFunction<Env> = async (context) => {
-  const url = new URL(context.request.url).searchParams.get('url');
+  const url = new URL(decodeURIComponent(context.request.url)).searchParams.get('url');
   if (!url) {
     return new Response('Missing url parameter', { status: 400 });
   }
@@ -24,7 +24,13 @@ class OgTitleHandler {
 }
 
 async function getPageTitle(url: string) {
-  const response = await fetch(url);
+  const response = await fetch(url, {
+    headers: {
+      'user-agent': 'blog.lacolaco.net',
+      accept: 'text/html',
+      'accept-charset': 'utf-8',
+    },
+  });
   const docTitle = new DocumentTitleHandler();
   const ogTitle = new OgTitleHandler();
   new HTMLRewriter().on('title', docTitle).on('meta[property="og:title"]', ogTitle).transform(response);
