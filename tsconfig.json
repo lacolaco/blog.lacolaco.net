@@ -15,5 +15,6 @@
     "jsx": "react-jsx",
     "jsxImportSource": "react"
   },
-  "include": ["src/**/*", "tools/notion-fetch/blog"]
+  "include": ["src/**/*", "tools/notion-fetch/blog"],
+  "exclude": ["functions/**/*"],
 }
