@@ -1,6 +1,7 @@
 import { extractCss, setup, styled } from 'goober';
 import { h } from 'preact';
 import { render as renderPreact } from 'preact-render-to-string';
+import { load } from 'cheerio';
 
 setup(h);
 
@@ -18,23 +19,6 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   });
 };
 
-class DocumentTitleHandler {
-  #chunks: string[] = [];
-  get title() {
-    return this.#chunks?.join('');
-  }
-  text(text: Text) {
-    this.#chunks.push(text.text);
-  }
-}
-
-class OgTitleHandler {
-  title: string;
-  element(element: Element) {
-    this.title ??= element.getAttribute('content');
-  }
-}
-
 async function getPageTitle(url: string) {
   const response = await fetch(url, {
     headers: {
@@ -43,15 +27,18 @@ async function getPageTitle(url: string) {
       'accept-charset': 'utf-8',
     },
   });
-  const docTitle = new DocumentTitleHandler();
-  const ogTitle = new OgTitleHandler();
   const html = await response.text();
-  await new HTMLRewriter()
-    .on('head>title', docTitle)
-    .on('meta[property="og:title"]', ogTitle)
-    .transform(new Response(html))
-    .text(); // wait for handlers to finish
-  return ogTitle.title ?? docTitle.title ?? 'Untitled';
+  const $ = load(html);
+  const metaOgTitle = $('head>meta[property="og:title"]').attr('content');
+  if (metaOgTitle) {
+    return metaOgTitle;
+  }
+  const metaTitle = $('head>meta[name="title"]').attr('content');
+  if (metaTitle) {
+    return metaTitle;
+  }
+  const docTitle = $('title').text();
+  return docTitle || url;
 }
 
 function buildEmbedHtml(title: string, url: string) {
@@ -86,10 +73,14 @@ function buildEmbedHtml(title: string, url: string) {
   const LinkTitle = styled('h1')({
     margin: 0,
     fontSize: '1em',
-    '-webkit-line-clamp': 2,
-    maxHeight: '3.05em',
     userSelect: 'none',
     wordBreak: 'break-word',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    '-webkit-line-clamp': 2,
+    '-webkit-box-orient': 'vertical',
+    maxHeight: '3.05em',
   });
 
   const LinkInfo = styled('div')({
@@ -101,6 +92,12 @@ function buildEmbedHtml(title: string, url: string) {
   const LinkHostname = styled('span')({
     fontSize: '0.8em',
     color: 'rgba(0, 0, 0, 0.6)',
+    wordBreak: 'break-word',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    '-webkit-line-clamp': 1,
+    '-webkit-box-orient': 'vertical',
   });
 
   const app = renderPreact(
@@ -111,11 +108,11 @@ function buildEmbedHtml(title: string, url: string) {
           <LinkInfo>
             <LinkFavicon
               src={`https://www.google.com/s2/favicons?sz=14&domain_url=${url}`}
-              alt="doc.rust-jp.rs favicon image"
+              alt={`${hostname} favicon image`}
               width="14"
               height="14"
             />
-            <LinkHostname>{hostname}</LinkHostname>
+            <LinkHostname>{url}</LinkHostname>
           </LinkInfo>
         </LinkContent>
       </Link>

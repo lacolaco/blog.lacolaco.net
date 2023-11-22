@@ -13,7 +13,8 @@
     "preview": "astro preview",
     "format": "prettier --cache --write 'src' 'tools'",
     "astro": "astro",
-    "notion-fetch": "tsx --env-file .env tools/notion-fetch/main.ts"
+    "notion-fetch": "tsx --env-file .env tools/notion-fetch/main.ts",
+    "pages:dev": "npx wrangler pages dev dist"
   },
   "engines": {
     "node": "20.9.0"
@@ -29,6 +30,7 @@
     "@fontsource/zen-kaku-gothic-new": "5.0.16",
     "@resvg/resvg-js": "2.6.0",
     "astro": "3.5.3",
+    "cheerio": "1.0.0-rc.12",
     "date-fns": "2.30.0",
     "goober": "^2.1.13",
     "katex": "0.16.9",
@@ -54,6 +56,7 @@
     "prettier": "3.1.0",
     "sass": "1.69.5",
     "tailwindcss": "3.3.5",
-    "tsx": "4.1.1"
+    "tsx": "4.1.1",
+    "wrangler": "^3.17.0"
   }
 }
