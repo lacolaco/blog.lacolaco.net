@@ -1,0 +1,438 @@
+{
+  "pageId": "d477099b-de00-4870-ae5a-26bb66ae3f78",
+  "lastEditedAt": "2023-11-22T23:29:00.000Z",
+  "slug": "d12f0da2f01e",
+  "properties": {
+    "title": "記事中のURLプレビューを実装した (Cloudflare Pages Functions)",
+    "date": "2023-11-22T07:14:00.000Z",
+    "tags": ["雑記", "Cloudflare"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "記事中のURLプレビューをiframeで表示するためのエンドポイントをCloudflare Pages Functionsで実装した。実はこれまで長らくはてなブログのembed APIを勝手に借りていた。倫理的によろしくない面もあったり、パフォーマンスや信頼性の面でもセルフホストしたいと思っていたが、着手するのを先延ばしにしていた。別に技術的に困難なポイントがあったわけではないが、備忘録としてやったことを書く。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "/embed",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " エンドポイントの作成",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このブログはCloudflare Pagesでホスティングしている。Cloudflare PagesのFunctions機能は、デプロイするレポジトリの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "/functions",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ディレクトリの中に配置したスクリプトを動的なWorker関数として呼び出せるようにしてくれる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://developers.cloudflare.com/pages/platform/functions/get-started/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回はこの機能を使って、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "/functions/embed/index.tsx",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ファイルを配置することで、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "https://blog.lacolaco.net/embed",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というエンドポイントを作成した。特にドキュメントには書かれていないが、  ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "/functions",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ディレクトリ内に配置するエンドポイントのスクリプトは、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "index.{js,jsx,ts,tsx}",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 全部対応しているようだ。特に何も設定せずとも ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "index.tsx",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を配置すればデプロイできた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// functions/embed/index.tsx\n\nexport function onRequest(context) {\n  return new Response(\"Hello, world!\")\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "メタデータの収集",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "プレビューを表示するには埋め込まれるページの情報を収集する必要がある。今回は最小限に、ページタイトルとfaviconを表示することにした。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "URLからページタイトルを取得するには、一度HTTPリクエストを行ってページのHTMLを返却してもらう必要がある。普通にGETリクエストを送ると場合によってはJSONが返ってくるケースもあるので、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "accept",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ヘッダでHTMLを明示的に要求している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "async function getPageTitle(url: string) {\n  const response = await fetch(url, {\n    headers: {\n      'user-agent': 'blog.lacolaco.net',\n      accept: 'text/html',\n      'accept-charset': 'utf-8',\n    },\n  });\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "レスポンスのHTMLからタイトル情報を取り出すためにはHTMLをパースする必要がある。今回は使いなれている cheerio を使うことにした。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://cheerio.js.org/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "タイトル情報は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<title>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " タグにある場合と、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "meta[property=title]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " メタデータにある場合と、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "meta[prooperty=og:title]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " メタデータに設定されている場合とがありえるため、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "og:title",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を優先するようにした。本当は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "head>title",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というクエリにしたいのだが、実はAmazonの商品ページのHTMLを見ると ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<title>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " タグがBodyの中にある。仕様上は不正なのだがなぜかそれでも動いており、AmazonのURLを貼ることは少なくないので考慮する必要があった。たまにSVGの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<title>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " タグにもヒットする可能性があるが、基本的にはメタデータのほうが存在するのでエッジケースと思って妥協している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "async function getPageTitle(url: string) {\n  const response = await fetch(url, {\n    headers: {\n      'user-agent': 'blog.lacolaco.net',\n      accept: 'text/html',\n      'accept-charset': 'utf-8',\n    },\n  });\n  const html = await response.text();\n  const $ = load(html);\n  const metaOgTitle = $('head>meta[property=\"og:title\"]').attr('content');\n  if (metaOgTitle) {\n    return metaOgTitle;\n  }\n  const metaTitle = $('head>meta[name=\"title\"]').attr('content');\n  if (metaTitle) {\n    return metaTitle;\n  }\n  const docTitle = $('title').text();\n  return docTitle || url;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、faviconについては、今回初めて知ったのだが ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "https://www.google.com/s2/favicons",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というAPIを使うとGoogleがインデックスしている（？）favicon画像を返してくれる。これを使うことにしたので自前でのfavicon取得は行わなかった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "HTMLの組み立て",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "あまり真剣に選定したわけではないが、Workers環境でHTMLを組み立てるにあたって今回はPreactと ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "preact-render-to-string",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使うことにした。また、スタイリングのために Goober というライブラリを初めて使ってみた。特に難しいことはなく、普通のCSS-in-JSライブラリだった。レイアウトは Zenn のURLプレビューを真似している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://goober.js.org/"
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { extractCss, setup, styled } from 'goober';\nimport { h } from 'preact';\nimport { render as renderPreact } from 'preact-render-to-string';\n\nsetup(h);\n\nfunction buildEmbedHtml(title: string, url: string) {\n  const hostname = new URL(url).hostname;\n\n  const App = styled('div')({\n    border: '1px solid #ccc',\n    borderRadius: '8px',\n    overflow: 'hidden',\n  });\n\t\n\t//...\n\n  const app = renderPreact(\n    <App>\n      <Link href={url} target=\"_blank\" rel=\"noreferrer noopener nofollow\">\n        <LinkContent>\n          <LinkTitle>{title}</LinkTitle>\n          <LinkInfo>\n            <LinkFavicon\n              src={`https://www.google.com/s2/favicons?sz=14&domain_url=${url}`}\n              alt={`${hostname} favicon image`}\n              width=\"14\"\n              height=\"14\"\n            />\n            <LinkURL>{url}</LinkURL>\n          </LinkInfo>\n        </LinkContent>\n      </Link>\n    </App>,\n  );\n  const style = extractCss();\n\n  return `<!DOCTYPE html>\n    <html>\n      <head>\n        <meta charset=\"utf-8\" />\n        <meta name=\"viewport\" content=\"width=device-width\" />\n        <title>${title}</title>\n        <style>\n          html, body {\n            margin: 0;\n          }\n        </style>\n        <style id=\"_goober\">${style}</style>\n      </head>\n      <body>\n        ${app}\n      </body>\n    </html>\n  `;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "という感じで最後にこれらを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "onRequest",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数で返すようにして完成した。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "export const onRequest: PagesFunction<Env> = async (context) => {\n  const url = new URL(decodeURIComponent(context.request.url)).searchParams.get('url');\n  if (!url) {\n    return new Response('Missing url parameter', { status: 400 });\n  }\n  const title = await getPageTitle(url);\n  const html = buildEmbedHtml(title, url);\n  return new Response(html, {\n    headers: { 'content-type': 'text/html; charset=utf-8' },\n  });\n};"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "特別に工夫したところも、苦労したところもそれほどなく、思ってたよりも簡単で2,3時間でできてしまったので、もっと早くやっておけばよかったと反省した。あと、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "wrangler pages dev",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドでローカルでも Cloudflare Pages Functions がエミュレートできるのはとても開発者体験がよかった。今は記事のOGP画像はビルド時に全記事分生成しているが、ビルド時間が長いし読まれない記事の分も生成するのは電力の無駄なので、これもPages Functionsで動的に生成するように変えるかもしれない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "おわり。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
