@@ -1,12 +1,11 @@
 {
-  "pageId": "5ad67d6f-9feb-4970-a107-105bb88d8023",
+  "pageId": "b01d0937-931d-4a74-8ff3-1a416346feab",
   "lastEditedAt": "2023-12-04T13:41:00.000Z",
-  "slug": "angular-input-transforms-for-arrays-in-query-params-en",
+  "slug": "angular-input-transforms-for-arrays-in-query-params",
   "properties": {
-    "title": "Angular: Input Transforms For Arrays In Query Params",
-    "date": "2023-12-04T13:19:00.000Z",
-    "tags": ["Angular"],
-    "canonicalUrl": "https://blog.lacolaco.net/posts/angular-input-transforms-for-arrays-in-query-params/"
+    "title": "Angular: 配列クエリパラメータのためのInput Transforms",
+    "date": "2023-12-04T12:24:00.000Z",
+    "tags": ["Angular"]
   },
   "content": [
     {
@@ -14,14 +13,7 @@
       "text": [
         {
           "type": "text",
-          "text": "Input Transforms",
-          "annotations": {
-            "bold": true
-          }
-        },
-        {
-          "type": "text",
-          "text": ", introduced in Angular v16, allow you to declare transformation processes for input properties when values are set by passing a function using ",
+          "text": "Angular v16で導入されたInput Transformsは、 ",
           "annotations": {}
         },
         {
@@ -33,7 +25,7 @@
         },
         {
           "type": "text",
-          "text": ". A typical use case is when creating directives or components that mimic the behavior of HTML standard boolean attributes, such as ",
+          "text": " というように関数を渡すことでインプットプロパティに値がセットされるときの変換処理を宣言できる。典型的なユースケースは、 ",
           "annotations": {}
         },
         {
@@ -45,7 +37,7 @@
         },
         {
           "type": "text",
-          "text": ", and need to convert them into boolean values. Similarly, for attributes that accept numeric values like ",
+          "text": " のようにHTML標準のブール値属性の挙動を模倣したディレクティブやコンポーネントを作成するときにブール値に変換する用途だろう。また、 ",
           "annotations": {}
         },
         {
@@ -57,7 +49,7 @@
         },
         {
           "type": "text",
-          "text": ", if you want to mimic the behavior of HTML attributes, you'll need to convert them from strings.",
+          "text": " のように数値を受け取る属性も、HTML属性としての振る舞いを模倣するなら文字列から変換することになる。",
           "annotations": {}
         }
       ]
@@ -77,26 +69,14 @@
       "type": "code",
       "language": "typescript",
       "filename": "",
-      "text": "import {Component, Input, booleanAttribute, numberAttribute} from '@angular/core';\n@Component({...})\nexport class CustomSlider {\n  @Input({transform: booleanAttribute}) disabled = false;\n  @Input({transform: numberAttribute}) number = 0;\n}\n"
+      "text": "import {Component, Input, booleanAttribute, numberAttribute} from '@angular/core';\n@Component({...})\nexport class CustomSlider {\n  @Input({transform: booleanAttribute}) disabled = false;\n  @Input({transform: numberAttribute}) number = 0;\n}"
     },
     {
       "type": "paragraph",
       "text": [
         {
           "type": "text",
-          "text": "By combining this feature with ",
-          "annotations": {}
-        },
-        {
-          "type": "text",
-          "text": "Component Input Binding",
-          "annotations": {
-            "bold": true
-          }
-        },
-        {
-          "type": "text",
-          "text": " in the Angular v16 Router, handling array data as query parameters becomes easier.",
+          "text": "この機能と、同じくAngular v16で導入されたRouterのComponent Input Bindingを併用することで、配列型のデータをクエリパラメータに変換するユースケースが扱いやすくなる。",
           "annotations": {}
         }
       ]
@@ -107,7 +87,7 @@
       "text": [
         {
           "type": "text",
-          "text": "Arrays in Query Params",
+          "text": "クエリパラメータ内の配列",
           "annotations": {}
         }
       ]
@@ -117,13 +97,13 @@
       "text": [
         {
           "type": "text",
-          "text": "There are various patterns for representing arrays as query parameters",
+          "text": "配列型をクエリパラメータとして表現する形式にはさまざまなパターンがある",
           "href": "https://medium.com/raml-api/arrays-in-query-params-33189628fa68",
           "annotations": {}
         },
         {
           "type": "text",
-          "text": ", but when you specify an array value as a query parameter using the ",
+          "text": "が、Routerの ",
           "annotations": {}
         },
         {
@@ -135,7 +115,7 @@
         },
         {
           "type": "text",
-          "text": " method or ",
+          "text": " メソッドや ",
           "annotations": {}
         },
         {
@@ -147,7 +127,7 @@
         },
         {
           "type": "text",
-          "text": " in the Router, Angular converts it into the format of repeating the same key parameter multiple times, like ",
+          "text": " で配列型の値をクエリパラメータに指定すると、Angularは同じキーのパラメータを複数回繰り返す ",
           "annotations": {}
         },
         {
@@ -159,28 +139,28 @@
         },
         {
           "type": "text",
-          "text": ".",
+          "text": " という形式に変換する。",
           "annotations": {}
         }
       ]
     },
     {
       "type": "image",
-      "url": "/images/angular-input-transforms-for-arrays-in-query-params-en/3c6255ea-b6c7-4055-8126-638d2819f0c3/015dec69-c0ca-442b-b996-074e05b2c79a/Untitled.png",
+      "url": "/images/angular-input-transforms-for-arrays-in-query-params/3c6255ea-b6c7-4055-8126-638d2819f0c3/015dec69-c0ca-442b-b996-074e05b2c79a/Untitled.png",
       "caption": []
     },
     {
       "type": "code",
       "language": "typescript",
       "filename": "",
-      "text": "@Component({\n  selector: 'app-root',\n  standalone: true,\n  imports: [RouterOutlet, RouterLink],\n  template: `\n    <router-outlet />\n    <ul>\n      <li><a routerLink=\"\" [queryParams]=\"{query: null}\" >no query</a></li>\n      <li><a routerLink=\"\" [queryParams]=\"{query: 1}\" >query=1</a></li>\n      <li><a routerLink=\"\" [queryParams]=\"{query: [1]}\" >query=[1]</a></li>\n      <li><a routerLink=\"\" [queryParams]=\"{query: [1,2]}\" >query=[1,2]</a></li>\n    </ul>\n  `,\n})\nexport class App {}\n\nconst routes: Routes = [\n  {\n    path: '',\n    component: Page,\n  },\n];\n\nbootstrapApplication(App, {\n  providers: [provideRouter(routes, withComponentInputBinding())],\n});\n"
+      "text": "@Component({\n  selector: 'app-root',\n  standalone: true,\n  imports: [RouterOutlet, RouterLink],\n  template: `\n    <router-outlet />\n    <ul>\n      <li><a routerLink=\"\" [queryParams]=\"{query: null}\" >no query</a></li>\n      <li><a routerLink=\"\" [queryParams]=\"{query: 1}\" >query=1</a></li>\n      <li><a routerLink=\"\" [queryParams]=\"{query: [1]}\" >query=[1]</a></li>\n      <li><a routerLink=\"\" [queryParams]=\"{query: [1,2]}\" >query=[1,2]</a></li>\n    </ul>\n  `,\n})\nexport class App {}\n\nconst routes: Routes = [\n  {\n    path: '',\n    component: Page,\n  },\n];\n\nbootstrapApplication(App, {\n  providers: [provideRouter(routes, withComponentInputBinding())],\n});"
     },
     {
       "type": "paragraph",
       "text": [
         {
           "type": "text",
-          "text": "Writing an array type as a query parameter is easy, but reading it from the query parameter requires some consideration. The reason is that in this format, if there is only ",
+          "text": "クエリパラメータに配列型を書き込むのは簡単だが、逆にクエリパラメータから読み取るのは少し工夫が必要になる。なぜかというと、この形式では ",
           "annotations": {}
         },
         {
@@ -192,19 +172,19 @@
         },
         {
           "type": "text",
-          "text": ", the information about whether ",
+          "text": " だけが存在する場合に",
           "annotations": {}
         },
         {
           "type": "text",
-          "text": "it was originally an array or not",
+          "text": "それがもともと配列であったかどうかという情報が失われる",
           "annotations": {
             "bold": true
           }
         },
         {
           "type": "text",
-          "text": " is lost. In other words, the query parameters generated from a non-array value like ",
+          "text": "からだ。つまり、配列ではない値 ",
           "annotations": {}
         },
         {
@@ -216,7 +196,7 @@
         },
         {
           "type": "text",
-          "text": " and a length-1 array like ",
+          "text": " と長さ1の配列 ",
           "annotations": {}
         },
         {
@@ -228,14 +208,14 @@
         },
         {
           "type": "text",
-          "text": " will be the same.",
+          "text": " から出力されるクエリパラメータがどちらも同じ結果になってしまうのだ。",
           "annotations": {}
         }
       ]
     },
     {
       "type": "image",
-      "url": "/images/angular-input-transforms-for-arrays-in-query-params-en/3c6255ea-b6c7-4055-8126-638d2819f0c3/55d5cf5a-3d15-4ba9-87c3-b13dfcc64bde/Untitled.png",
+      "url": "/images/angular-input-transforms-for-arrays-in-query-params/3c6255ea-b6c7-4055-8126-638d2819f0c3/55d5cf5a-3d15-4ba9-87c3-b13dfcc64bde/Untitled.png",
       "caption": []
     },
     {
@@ -243,19 +223,7 @@
       "text": [
         {
           "type": "text",
-          "text": "If you don't keep this in mind, the following naive implementation will throw a runtime error immediately. Although the ",
-          "annotations": {}
-        },
-        {
-          "type": "text",
-          "text": "query",
-          "annotations": {
-            "code": true
-          }
-        },
-        {
-          "type": "text",
-          "text": " input property will be set with the value from the query parameter due to the ",
+          "text": "このことを念頭に入れておかないと、次のようなナイーブな実装はすぐに実行時エラーを投げるだろう。 Routerの ",
           "annotations": {}
         },
         {
@@ -267,40 +235,7 @@
         },
         {
           "type": "text",
-          "text": " option of the Router, even if it was an array when writing it to the query parameter, if the length is 1, it will become a simple string and the ",
-          "annotations": {}
-        },
-        {
-          "type": "text",
-          "text": "query.join()",
-          "annotations": {
-            "code": true
-          }
-        },
-        {
-          "type": "text",
-          "text": " method will throw an error because it doesn't exist for strings.",
-          "annotations": {}
-        }
-      ]
-    },
-    {
-      "type": "code",
-      "language": "typescript",
-      "filename": "",
-      "text": "@Component({\n  standalone: true,\n  imports: [JsonPipe],\n  template: `\n  <div>query={{ query.join(', ') }}</div>\n  `,\n})\nexport class Page {\n  @Input()\n  query: string[] = [];\n}\n"
-    },
-    {
-      "type": "image",
-      "url": "/images/angular-input-transforms-for-arrays-in-query-params-en/3c6255ea-b6c7-4055-8126-638d2819f0c3/47675ee9-41e1-42f9-bded-c27ba802b63a/Untitled.png",
-      "caption": []
-    },
-    {
-      "type": "paragraph",
-      "text": [
-        {
-          "type": "text",
-          "text": "Also, naturally, you need to consider the case where there are no query parameters, so the actual type of this ",
+          "text": " オプションによって次の ",
           "annotations": {}
         },
         {
@@ -312,7 +247,52 @@
         },
         {
           "type": "text",
-          "text": " input property should be ",
+          "text": " インプットプロパティにはクエリパラメータの値がセットされるが、クエリパラメータに書き込むときに配列だったとしても長さが1であれば単なる文字列になってしまい、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "query.join()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " メソッドは文字列に存在しないためエラーになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  standalone: true,\n  imports: [JsonPipe],\n  template: `\n  <div>query={{ query.join(', ') }}</div>\n  `,\n})\nexport class Page {\n  @Input()\n  query: string[] = [];\n}"
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-input-transforms-for-arrays-in-query-params/3c6255ea-b6c7-4055-8126-638d2819f0c3/47675ee9-41e1-42f9-bded-c27ba802b63a/Untitled.png",
+      "caption": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、当然だがクエリパラメータがない場合も想定する必要があるため、この ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "query",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " インプットプロパティの本当の型は ",
           "annotations": {}
         },
         {
@@ -324,7 +304,7 @@
         },
         {
           "type": "text",
-          "text": ". However, no one wants to deal with an input property of this type. That's where Input Transforms, mentioned at the beginning, come in handy.",
+          "text": " である。しかし誰もこんな型のインプットプロパティを扱いたくはない。そこで冒頭で触れたInput Transformsを使おう。",
           "annotations": {}
         }
       ]
@@ -334,7 +314,7 @@
       "text": [
         {
           "type": "text",
-          "text": "By the way, the behavior of converting objects and query parameters to each other can be modified by extending ",
+          "text": "ちなみに、オブジェクトとクエリパラメータを相互に変換する振る舞いは",
           "annotations": {}
         },
         {
@@ -346,7 +326,7 @@
         },
         {
           "type": "text",
-          "text": " in your way.",
+          "text": "を独自に拡張することで変更できる。",
           "annotations": {}
         }
       ]
@@ -361,7 +341,7 @@
       "text": [
         {
           "type": "text",
-          "text": "Normalization to an array",
+          "text": "配列への正規化",
           "annotations": {}
         }
       ]
@@ -371,7 +351,7 @@
       "text": [
         {
           "type": "text",
-          "text": "Using Input Transforms, you can normalize the ",
+          "text": "Input Transformsを使い、 ",
           "annotations": {}
         },
         {
@@ -383,7 +363,7 @@
         },
         {
           "type": "text",
-          "text": " input property to be treated as a ",
+          "text": " インプットプロパティを常に ",
           "annotations": {}
         },
         {
@@ -395,7 +375,7 @@
         },
         {
           "type": "text",
-          "text": " type. If we assume that the transformation process is performed by a ",
+          "text": " 型として扱えるように正規化することができる。 ",
           "annotations": {}
         },
         {
@@ -407,31 +387,7 @@
         },
         {
           "type": "text",
-          "text": " function that takes an argument of type ",
-          "annotations": {}
-        },
-        {
-          "type": "text",
-          "text": "string[] | string | undefined",
-          "annotations": {
-            "code": true
-          }
-        },
-        {
-          "type": "text",
-          "text": " and returns ",
-          "annotations": {}
-        },
-        {
-          "type": "text",
-          "text": "string[]",
-          "annotations": {
-            "code": true
-          }
-        },
-        {
-          "type": "text",
-          "text": ", the component can be written as follows. You can use any implementation for ",
+          "text": " という関数でその変換処理を行うとすると、コンポーネント側は次のように書ける。",
           "annotations": {}
         },
         {
@@ -443,7 +399,7 @@
         },
         {
           "type": "text",
-          "text": " as long as it is a function that takes an argument of type ",
+          "text": " は ",
           "annotations": {}
         },
         {
@@ -455,7 +411,7 @@
         },
         {
           "type": "text",
-          "text": " and returns ",
+          "text": " の引数を受け取って ",
           "annotations": {}
         },
         {
@@ -467,7 +423,7 @@
         },
         {
           "type": "text",
-          "text": ".",
+          "text": " を返す関数ならどんな実装でも問題ない。",
           "annotations": {}
         }
       ]
@@ -476,14 +432,14 @@
       "type": "code",
       "language": "typescript",
       "filename": "",
-      "text": "function normalizeQuery(value: string | string[] | undefined): string[] {\n  if (!value) {\n    return [];\n  }\n  if (Array.isArray(value)) {\n    return value;\n  }\n  return [value];\n}\n\n@Component({...})\nexport class Page {\n  @Input({ transform: normalizeQuery })\n  query: string[] = [];\n}\n"
+      "text": "function normalizeQuery(value: string | string[] | undefined): string[] {\n  if (!value) {\n    return [];\n  }\n  if (Array.isArray(value)) {\n    return value;\n  }\n  return [value];\n}\n\n@Component({...})\nexport class Page {\n  @Input({ transform: normalizeQuery })\n  query: string[] = [];\n}"
     },
     {
       "type": "paragraph",
       "text": [
         {
           "type": "text",
-          "text": "I have provided a working sample code on Stackblitz for you to try out.",
+          "text": "実際に動作するサンプルコードをStackblitzで公開しているので、試してみてほしい。",
           "annotations": {}
         }
       ]
@@ -498,7 +454,7 @@
       "text": [
         {
           "type": "text",
-          "text": "Takeaways",
+          "text": "まとめ",
           "annotations": {}
         }
       ]
@@ -511,7 +467,7 @@
           "text": [
             {
               "type": "text",
-              "text": "When setting a length-1 array as a query parameter, the Router cannot parse it as an array.",
+              "text": "長さ1の配列をクエリパラメータにセットすると、Routerはそれを配列としてパースできない。",
               "annotations": {}
             }
           ],
@@ -522,7 +478,7 @@
           "text": [
             {
               "type": "text",
-              "text": "Normalization is necessary to handle the case when there are no query parameters.",
+              "text": "クエリパラメータが存在しないことも考慮して正規化をする必要がある。",
               "annotations": {}
             }
           ],
@@ -533,13 +489,17 @@
           "text": [
             {
               "type": "text",
-              "text": "Using Router's Component Input Binding and Input Transforms, you can directly receive the normalized value in the input property.",
+              "text": "RouterのComponent Input BindingとInput Transformsを使うと、正規化された値を直接インプットプロパティで受け取ることができる。",
               "annotations": {}
             }
           ],
           "children": []
         }
       ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
     }
   ]
 }
