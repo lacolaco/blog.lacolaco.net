@@ -1,0 +1,544 @@
+{
+  "pageId": "5ad67d6f-9feb-4970-a107-105bb88d8023",
+  "lastEditedAt": "2023-12-04T13:34:00.000Z",
+  "slug": "angular-input-transforms-for-arrays-in-query-params-en",
+  "properties": {
+    "title": "Angular: Input Transforms For Arrays In Query Params",
+    "date": "2023-12-04T13:19:00.000Z",
+    "tags": ["Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Input Transforms",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", introduced in Angular v16, allow you to declare transformation processes for input properties when values are set by passing a function using ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@Input({ transform: transformFn })",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". A typical use case is when creating directives or components that mimic the behavior of HTML standard boolean attributes, such as ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button disable>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", and need to convert them into boolean values. Similarly, for attributes that accept numeric values like ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<img width=\"16\">",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", if you want to mimic the behavior of HTML attributes, you'll need to convert them from strings.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Accepting data with input properties • Angular",
+          "href": "https://angular.dev/guide/components/inputs#input-transforms",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import {Component, Input, booleanAttribute, numberAttribute} from '@angular/core';\n@Component({...})\nexport class CustomSlider {\n  @Input({transform: booleanAttribute}) disabled = false;\n  @Input({transform: numberAttribute}) number = 0;\n}\n"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "By combining this feature with ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Component Input Binding",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " in the Angular v16 Router, handling array data as query parameters becomes easier.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Arrays in Query Params",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "There are various patterns for representing arrays as query parameters",
+          "href": "https://medium.com/raml-api/arrays-in-query-params-33189628fa68",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ", but when you specify an array value as a query parameter using the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "navigate()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " method or ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "RouterLink",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " in the Router, Angular converts it into the format of repeating the same key parameter multiple times, like ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "key=param1&key=param2",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-input-transforms-for-arrays-in-query-params-en/3c6255ea-b6c7-4055-8126-638d2819f0c3/015dec69-c0ca-442b-b996-074e05b2c79a/Untitled.png",
+      "caption": []
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: 'app-root',\n  standalone: true,\n  imports: [RouterOutlet, RouterLink],\n  template: `\n    <router-outlet />\n    <ul>\n      <li><a routerLink=\"\" [queryParams]=\"{query: null}\" >no query</a></li>\n      <li><a routerLink=\"\" [queryParams]=\"{query: 1}\" >query=1</a></li>\n      <li><a routerLink=\"\" [queryParams]=\"{query: [1]}\" >query=[1]</a></li>\n      <li><a routerLink=\"\" [queryParams]=\"{query: [1,2]}\" >query=[1,2]</a></li>\n    </ul>\n  `,\n})\nexport class App {}\n\nconst routes: Routes = [\n  {\n    path: '',\n    component: Page,\n  },\n];\n\nbootstrapApplication(App, {\n  providers: [provideRouter(routes, withComponentInputBinding())],\n});\n"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Writing an array type as a query parameter is easy, but reading it from the query parameter requires some consideration. The reason is that in this format, if there is only ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "query=1",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", the information about whether ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "it was originally an array or not",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is lost. In other words, the query parameters generated from a non-array value like ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "{ query: 1 }",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and a length-1 array like ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "{ query: [1] }",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " will be the same.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-input-transforms-for-arrays-in-query-params-en/3c6255ea-b6c7-4055-8126-638d2819f0c3/55d5cf5a-3d15-4ba9-87c3-b13dfcc64bde/Untitled.png",
+      "caption": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "If you don't keep this in mind, the following naive implementation will throw a runtime error immediately. Although the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "query",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " input property will be set with the value from the query parameter due to the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "withComponentInputBinding()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " option of the Router, even if it was an array when writing it to the query parameter, if the length is 1, it will become a simple string and the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "query.join()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " method will throw an error because it doesn't exist for strings.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  standalone: true,\n  imports: [JsonPipe],\n  template: `\n  <div>query={{ query.join(', ') }}</div>\n  `,\n})\nexport class Page {\n  @Input()\n  query: string[] = [];\n}\n"
+    },
+    {
+      "type": "image",
+      "url": "/images/angular-input-transforms-for-arrays-in-query-params-en/3c6255ea-b6c7-4055-8126-638d2819f0c3/47675ee9-41e1-42f9-bded-c27ba802b63a/Untitled.png",
+      "caption": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Also, naturally, you need to consider the case where there are no query parameters, so the actual type of this ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "query",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " input property should be ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "string[] | string | undefined",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". However, no one wants to deal with an input property of this type. That's where Input Transforms, mentioned at the beginning, come in handy.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "By the way, the behavior of converting objects and query parameters to each other can be modified by extending ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "UrlSerializer",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " in your way.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://angular.io/api/router/UrlSerializer"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Normalization to an array",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Using Input Transforms, you can normalize the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "query",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " input property to be treated as a ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "string[]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " type. If we assume that the transformation process is performed by a ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "normalizeQuery",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " function that takes an argument of type ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "string[] | string | undefined",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and returns ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "string[]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", the component can be written as follows. You can use any implementation for ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "normalizeQuery",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " as long as it is a function that takes an argument of type ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "string[] | string | undefined",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " and returns ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "string[]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "function normalizeQuery(value: string | string[] | undefined): string[] {\n  if (!value) {\n    return [];\n  }\n  if (Array.isArray(value)) {\n    return value;\n  }\n  return [value];\n}\n\n@Component({...})\nexport class Page {\n  @Input({ transform: normalizeQuery })\n  query: string[] = [];\n}\n"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "I have provided a working sample code on Stackblitz for you to try out.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-xjw1sl?ctl=1&embed=1&file=src/main.ts"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Takeaways",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "When setting a length-1 array as a query parameter, the Router cannot parse it as an array.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Normalization is necessary to handle the case when there are no query parameters.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Using Router's Component Input Binding and Input Transforms, you can directly receive the normalized value in the input property.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}
