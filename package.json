@@ -17,7 +17,7 @@
     "pages:dev": "npx wrangler pages dev dist"
   },
   "engines": {
-    "node": "20.9.0"
+    "node": "20.10.0"
   },
   "packageManager": "pnpm@8.11.0",
   "dependencies": {
