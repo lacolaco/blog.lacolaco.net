@@ -42,7 +42,7 @@
     "satori": "0.10.11"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^1.20231121.0",
+    "@cloudflare/workers-types": "^4.0.0",
     "@notionhq/client": "2.2.13",
     "@types/cli-progress": "3.11.5",
     "@types/katex": "0.16.7",
