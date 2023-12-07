@@ -60,8 +60,8 @@ dependencies:
     specifier: 18.2.0
     version: 18.2.0(react@18.2.0)
   satori:
-    specifier: 0.10.9
-    version: 0.10.9
+    specifier: 0.10.11
+    version: 0.10.11
 
 devDependencies:
   '@cloudflare/workers-types':
@@ -4706,8 +4706,8 @@ packages:
       immutable: 4.3.0
       source-map-js: 1.0.2
 
-  /satori@0.10.9:
-    resolution: {integrity: sha512-XU9EELUEZuioT4acLIpCXxHcFzrsC8muvg0MY28d+TlqwxbkTzBmWbw+3+hnCzXT7YZ0Qm8k3eXktDaEu+qmEw==}
+  /satori@0.10.11:
+    resolution: {integrity: sha512-yLm1xPRPZUaKcBZJ6nmezoJjHB4MqV8x7Mu0PyZUJodRWRDD27UbeMwzuY9LEGG57WYLO4CQsGPlbHWV1Ex9TQ==}
     engines: {node: '>=16'}
     dependencies:
       '@shuding/opentype.js': 1.4.0-beta.0
