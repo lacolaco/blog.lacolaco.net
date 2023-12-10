@@ -65,8 +65,8 @@ dependencies:
 
 devDependencies:
   '@cloudflare/workers-types':
-    specifier: ^1.20231121.0
-    version: 1.20231121.0
+    specifier: ^4.0.0
+    version: 4.20231121.0
   '@notionhq/client':
     specifier: 2.2.13
     version: 2.2.13
@@ -539,9 +539,8 @@ packages:
     dev: true
     optional: true
 
-  /@cloudflare/workers-types@1.20231121.0:
-    resolution: {integrity: sha512-5IOo8mTRbkW7HCQDEbX9cqHHQ3md+soLLNyZnd2OFRVMaBIpo/0VLfcxvqC4s+eSKgTgkwjaK8nTs4ARPLfEOA==}
-    deprecated: This version was published by mistake. Please upgrade to `@cloudflare/workers-types@^4.20231121.0`.
+  /@cloudflare/workers-types@4.20231121.0:
+    resolution: {integrity: sha512-+kWfpCkqiepwAKXyHoE0gnkPgkLhz0/9HOBIGhHRsUvUKvhUtm3mbqqoGRWgF1qcjzrDUBbrrOq4MYHfFtc2RA==}
     dev: true
 
   /@esbuild-plugins/node-globals-polyfill@0.2.3(esbuild@0.17.19):
