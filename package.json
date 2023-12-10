@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.0.0",
-    "@notionhq/client": "2.2.13",
+    "@notionhq/client": "2.2.14",
     "@types/cli-progress": "3.11.5",
     "@types/katex": "0.16.7",
     "@types/node": "20.10.3",

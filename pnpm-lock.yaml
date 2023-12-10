@@ -68,8 +68,8 @@ devDependencies:
     specifier: ^4.0.0
     version: 4.20231121.0
   '@notionhq/client':
-    specifier: 2.2.13
-    version: 2.2.13
+    specifier: 2.2.14
+    version: 2.2.14
   '@types/cli-progress':
     specifier: 3.11.5
     version: 3.11.5
@@ -1192,8 +1192,8 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
-  /@notionhq/client@2.2.13:
-    resolution: {integrity: sha512-wJpEl30QUSy2K3/Q2c2knNiZlLXJ17JnQgaIiFbN68IMJy+2TE9fXLxvV1N/cMVs2+SpteAa6PlyrUgfGdlmDg==}
+  /@notionhq/client@2.2.14:
+    resolution: {integrity: sha512-oqUefZtCiJPCX+74A1Os9OVTef3fSnVWe2eVQtU1HJSD+nsfxfhwvDKnzJTh2Tw1ZHKLxpieHB/nzGdY+Uo12A==}
     engines: {node: '>=12'}
     dependencies:
       '@types/node-fetch': 2.5.12
