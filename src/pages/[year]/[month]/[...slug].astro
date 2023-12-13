@@ -24,4 +24,4 @@ const canonical = `${Astro.url.origin}/posts/${post.data.slug}`;
 post.data.properties.canonicalUrl ??= canonical;
 ---
 
-<BlogPost post={post.data} />
+<BlogPost post={post.data} otherLocaleUrls={{}} />

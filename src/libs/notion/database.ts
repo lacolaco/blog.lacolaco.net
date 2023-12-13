@@ -4,7 +4,7 @@ import * as path from 'node:path';
 import pLimit from 'p-limit';
 import { PostData } from '../post/schema';
 import type { BlogPageObject, PageObjectWithContent } from './types';
-import { fetchChildBlocks, getSlug, queryAllPages } from './utils';
+import { fetchChildBlocks, getLocale, getSlug, queryAllPages } from './utils';
 
 const postCollectionDir = new URL('../../content/post', import.meta.url).pathname;
 
@@ -31,7 +31,8 @@ export class NotionDatabase {
     });
     return pages.map((page) => {
       const slug = getSlug(page);
-      return { ...page, slug } as BlogPageObject;
+      const locale = getLocale(page);
+      return { ...page, slug, locale } as BlogPageObject;
     });
   }
 

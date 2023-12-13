@@ -15,6 +15,14 @@ export function getSlug(page: PageObject): string {
   return createHash('sha1').update(page.id).digest('hex').slice(0, 12);
 }
 
+export function getLocale(page: PageObject): string | undefined {
+  const { locale } = page.properties as { locale?: PageProperty<'select'> };
+  if (locale && locale.select) {
+    return locale.select.name;
+  }
+  return undefined;
+}
+
 export async function queryAllPages(
   client: Client,
   databaseId: string,

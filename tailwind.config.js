@@ -50,7 +50,12 @@ module.exports = {
   plugins: [
     plugin(({ addComponents, addBase, theme }) => {
       addBase({
-        a: { color: theme('textColor.accent') },
+        a: {
+          color: theme('textColor.accent'),
+          '&:hover': {
+            textDecoration: 'underline',
+          },
+        },
       });
       addComponents({
         '.flash': {
