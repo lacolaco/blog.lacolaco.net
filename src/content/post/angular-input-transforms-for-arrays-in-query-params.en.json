@@ -1,13 +1,12 @@
 {
   "pageId": "5ad67d6f-9feb-4970-a107-105bb88d8023",
-  "lastEditedAt": "2023-12-13T01:13:00.000Z",
+  "lastEditedAt": "2023-12-13T06:31:00.000Z",
   "slug": "angular-input-transforms-for-arrays-in-query-params",
   "locale": "en",
   "properties": {
     "title": "Angular: Input Transforms For Arrays In Query Params",
     "date": "2023-12-04T13:19:00.000Z",
-    "tags": ["Angular"],
-    "canonicalUrl": "https://blog.lacolaco.net/posts/angular-input-transforms-for-arrays-in-query-params/"
+    "tags": ["Angular"]
   },
   "content": [
     {
