@@ -57,7 +57,8 @@ async function main() {
         const pageWithContent = await db.getPageContents(page);
         const post = await toBlogPostJSON(pageWithContent, imagesFS);
         const formatted = await formatJSON(post);
-        await postJsonFS.save(`${post.slug}.json`, formatted, { encoding: 'utf-8' });
+        const filepath = (post.locale ?? 'ja') === 'ja' ? `${post.slug}.json` : `${post.slug}.${post.locale}.json`;
+        await postJsonFS.save(filepath, formatted, { encoding: 'utf-8' });
 
         progress.increment();
         return pageWithContent;

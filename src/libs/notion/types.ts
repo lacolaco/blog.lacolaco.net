@@ -12,6 +12,7 @@ export type PageProperty<T extends string> = PageProperties[string] & { type: T 
 export type BlogPageProperties = PageProperties & {
   title: PageProperty<'title'>;
   slug: PageProperty<'rich_text'>;
+  locale: PageProperty<'select'>;
   tags: PageProperty<'multi_select'>;
   published: PageProperty<'checkbox'>;
   canonical_url: PageProperty<'url'>;
@@ -22,6 +23,7 @@ export type BlogPageProperties = PageProperties & {
 export type BlogPageObject = PageObject & {
   properties: BlogPageProperties;
   slug: string;
+  locale?: string;
 };
 
 export type BlockObjectType = BlockObjectResponse['type'] | unknown;
@@ -34,6 +36,7 @@ export type BlockObject<T extends BlockObjectType = unknown> = BlockObjectRespon
 export type PageObjectWithContent = PageObject & {
   properties: BlogPageProperties;
   slug: string;
+  locale?: string;
   content: BlockObject[];
 };
 

@@ -1,10 +1,12 @@
 import { z } from 'zod';
 import { ContentNode } from './nodes';
+import { Locale } from './i18n';
 
 export const postSchema = z.object({
   pageId: z.string(),
   lastEditedAt: z.string(),
   slug: z.string(),
+  locale: Locale.optional().transform((val) => val ?? 'ja'),
   properties: z
     .object({
       title: z.string(),

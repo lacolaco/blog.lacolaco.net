@@ -10,4 +10,8 @@ export default defineConfig({
   vite: {
     optimizeDeps: { exclude: ['@resvg/resvg-js'] },
   },
+  i18n: {
+    defaultLocale: 'ja',
+    locales: ['ja', 'en'],
+  },
 });

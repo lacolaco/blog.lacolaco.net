@@ -9,20 +9,25 @@ import TagList from '../components/TagList.astro';
 import Content from '../components/content/Content.astro';
 import { SITE_TITLE } from '../consts';
 import ShareButtons from '../components/ShareButtons.astro';
+import MessageBox from 'src/components/MessageBox.astro';
 
 type Props = {
   post: PostData;
+  otherLocaleUrls: {
+    ja?: string;
+    en?: string;
+  };
 };
 
-const { post } = Astro.props;
+const { post, otherLocaleUrls: locales } = Astro.props;
 const { title, date, tags, updatedAt, canonicalUrl } = post.properties;
 
 const isUpdated = updatedAt && isAfterDate(updatedAt, date);
 const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { years: 2 }));
 ---
 
-<!DOCTYPE html>
-<html lang="ja">
+<!doctype html>
+<html lang={post.locale}>
   <head>
     <BaseHead title={`${title} | ${SITE_TITLE}`} description={''} image={`/og/${post.slug}.png`} />
 
@@ -56,10 +61,21 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
         </header>
 
         {
-          isOutdated && (
-            <div class="mb-4 flash bg-yellow-100/30 border-yellow-500">This post is possibly out of date.</div>
+          locales.en && (
+            <MessageBox type="info">
+              <a href={locales.en}>This article has an English version.</a>
+            </MessageBox>
           )
         }
+        {
+          locales.ja && (
+            <MessageBox type="info">
+              <a href={locales.ja}>この記事には日本語版があります。</a>
+            </MessageBox>
+          )
+        }
+
+        {isOutdated && <MessageBox type="warn">This post is possibly out of date.</MessageBox>}
 
         <div class="markdown-body mb-4">
           <Content nodes={post.content} />
@@ -71,6 +87,7 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
     <Footer class="container py-4" />
 
     <script async crossorigin="anonymous" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-    <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+    <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"
+    ></script>
   </body>
 </html>

@@ -4,7 +4,7 @@ import { FileSystem } from '../file-system';
 import { newContentTransformer } from './transform';
 
 export async function toBlogPostJSON(page: PageObjectWithContent, imageFS: FileSystem): Promise<PostData> {
-  const { id: pageId, last_edited_time: lastEditedAt, created_time, slug, properties } = page;
+  const { id: pageId, last_edited_time: lastEditedAt, created_time, slug, locale, properties } = page;
   const transformer = newContentTransformer(page, imageFS);
 
   const title = transformer.transformTitle(properties.title);
@@ -20,6 +20,7 @@ export async function toBlogPostJSON(page: PageObjectWithContent, imageFS: FileS
     pageId,
     lastEditedAt,
     slug,
+    locale,
     properties: { title, date, tags, updatedAt, canonicalUrl },
     content,
   };

@@ -1,0 +1,26 @@
+---
+import { CollectionEntry, getCollection } from 'astro:content';
+import { getRelativePostUrl, findLocalizedVersion } from '@lib/post';
+import BlogPost from '../../../layouts/BlogPost.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('post');
+  return posts
+    .filter((post) => post.data.locale === 'en')
+    .map((post) => {
+      return {
+        params: {
+          slug: post.data.slug,
+        },
+        props: post,
+      };
+    });
+}
+type Props = CollectionEntry<'post'>;
+const post = Astro.props;
+
+const jaVersion = await findLocalizedVersion(post.data, 'ja');
+---
+
+<BlogPost post={post.data} otherLocaleUrls={{ ja: jaVersion && getRelativePostUrl(jaVersion.data) }} />
+ ```
