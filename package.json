@@ -46,7 +46,7 @@
     "@notionhq/client": "2.2.14",
     "@types/cli-progress": "3.11.5",
     "@types/katex": "0.16.7",
-    "@types/node": "20.10.3",
+    "@types/node": "20.10.4",
     "@types/prettier": "2.7.3",
     "@types/react": "18.2.42",
     "@types/react-dom": "18.2.17",
