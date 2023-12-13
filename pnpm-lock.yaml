@@ -21,11 +21,11 @@ dependencies:
     specifier: 5.0.2
     version: 5.0.2(astro@4.0.3)(tailwindcss@3.3.6)
   '@fontsource/source-code-pro':
-    specifier: 5.0.15
-    version: 5.0.15
-  '@fontsource/zen-kaku-gothic-new':
     specifier: 5.0.16
     version: 5.0.16
+  '@fontsource/zen-kaku-gothic-new':
+    specifier: 5.0.17
+    version: 5.0.17
   '@resvg/resvg-js':
     specifier: 2.6.0
     version: 2.6.0
@@ -1138,12 +1138,12 @@ packages:
     engines: {node: '>=14'}
     dev: true
 
-  /@fontsource/source-code-pro@5.0.15:
-    resolution: {integrity: sha512-G+kD+5Ba2mgqsOpwZQetQi5aAOaMw0SiY73VpmycSeL17WKl2GmyTP6mIc95d+r+HJJazmg9yYYBp3qeHNNG1w==}
+  /@fontsource/source-code-pro@5.0.16:
+    resolution: {integrity: sha512-ErErGXjKo9/fAJE49fyU8M6DuJUpdqR5YLM8jGJOC5ZcKIDSTQ5m+R3DTa0VYHAGGFbk2qLWVWD/r5sfCLA/jQ==}
     dev: false
 
-  /@fontsource/zen-kaku-gothic-new@5.0.16:
-    resolution: {integrity: sha512-oXWt7QViB33AwyYkFRXDCE5zblQXT1IOFGRz/NtFQD15SKIS4HpIpXH7ob4nRqrEfYQ/Oa7oqVif6OuFugSBQg==}
+  /@fontsource/zen-kaku-gothic-new@5.0.17:
+    resolution: {integrity: sha512-O6Q1zWLAUZ7nJVh2eIKKzdukCV3U/JrBPuHVXGNcobaYgLBzXO5wWgisMfZV0rhhxh97ziHQHyuigHzLMAuj4w==}
     dev: false
 
   /@jridgewell/gen-mapping@0.3.3:
