@@ -53,7 +53,7 @@
     "@types/tailwindcss": "3.0.11",
     "cli-progress": "3.12.0",
     "p-limit": "5.0.0",
-    "prettier": "3.1.0",
+    "prettier": "3.1.1",
     "sass": "1.69.5",
     "tailwindcss": "3.3.6",
     "tsx": "4.6.2",
