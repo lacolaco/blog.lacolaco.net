@@ -1,7 +1,7 @@
 import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
-import { compareDesc } from 'date-fns';
+import { compareDesc, isPast } from 'date-fns';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 export async function get(context: APIContext) {
@@ -12,6 +12,7 @@ export async function get(context: APIContext) {
     site: context.site?.toString() ?? '',
     items: posts
       .sort((a, b) => compareDesc(a.data.properties.date, b.data.properties.date))
+      .filter((post) => isPast(post.data.properties.date))
       .map((post) => ({
         title: post.data.properties.title,
         pubDate: post.data.properties.date,

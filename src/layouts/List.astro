@@ -1,6 +1,6 @@
 ---
 import { PostData, getRelativePostUrl } from '@lib/post';
-import { compareDesc, format as formatDate } from 'date-fns';
+import { compareDesc, isPast, format as formatDate } from 'date-fns';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
@@ -26,6 +26,8 @@ const postsByYear = Array.from(
     }, new Map<string, PostData[]>())
     .entries(),
 ).sort(([a], [b]) => Number(b) - Number(a));
+
+const filterPastPost = (post: PostData) => isPast(post.properties.date);
 ---
 
 <!doctype html>
@@ -54,7 +56,7 @@ const postsByYear = Array.from(
             <div>
               <h2 class="mb-4 text-3xl font-bold">{year}</h2>
               <ul class="list-none">
-                {posts.map((post) => (
+                {posts.filter(filterPastPost).map((post) => (
                   <li class="pb-4 border-solid border-transparent">
                     <div class="flex flex-col items-start leading-none">
                       <FormattedDate class="text-xs text-muted align-middle" date={post.properties.date} />
