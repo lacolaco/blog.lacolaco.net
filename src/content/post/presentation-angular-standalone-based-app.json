@@ -1,11 +1,11 @@
 {
   "pageId": "48d047d8-4383-4029-a49a-35e649f01a9d",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-20T07:53:00.000Z",
   "slug": "presentation-angular-standalone-based-app",
   "properties": {
-    "title": "発表スライド: Standalone-based Angular App",
+    "title": "発表スライド『Standalone-based Angular App』",
     "date": "2022-09-28T00:00:00.000Z",
-    "tags": ["Angular", "tech", "standalone component", "presentation"],
+    "tags": ["Angular", "standalone component", "発表スライド"],
     "updatedAt": "2022-09-28T00:00:00.000Z"
   },
   "content": [
