@@ -1,4 +1,5 @@
 ---
+import { getTagByName } from '@lib/post';
 import { urlize } from '../libs/strings';
 
 export interface Props {
@@ -8,9 +9,11 @@ export interface Props {
 
 const { name, count } = Astro.props;
 const urlizedName = urlize(name);
+const color = getTagByName(name)?.color ?? 'default';
 ---
 
 <a
-  class="text-muted leading-tight text-xs inline-block border border-gray-300 bg-white hover:bg-gray-200 px-2 py-0.5 rounded-lg"
-  href={`/tags/${urlizedName}`}>#{name} {count && `(${count})`}</a
+  style={`--color-tag-bg: var(--color-tag-bg-${color}); --color-tag-text: var(--color-tag-text-${color});`}
+  class={`leading-relaxed text-xs inline-block px-2 rounded bg-[var(--color-tag-bg)] text-[var(--color-tag-text)] hover:shadow-tag`}
+  href={`/tags/${urlizedName}`}>{name}{count && ` (${count})`}</a
 >

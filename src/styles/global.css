@@ -11,6 +11,38 @@
   --color-bg-muted: rgba(175, 184, 193, 0.2);
   --color-bg-subtle: #f6f8fa;
 
+  /* Notion tag colors */
+  --color-tag-text: var(--color-text-light-gray);
+  --color-tag-text-default: rgb(50, 48, 44);
+  --color-tag-text-gray: rgb(50, 48, 44);
+  --color-tag-text-brown: rgb(68, 42, 30);
+  --color-tag-text-orange: rgb(73, 41, 14);
+  --color-tag-text-yellow: rgb(64, 44, 27);
+  --color-tag-text-green: rgb(28, 56, 41);
+  --color-tag-text-blue: rgb(24, 51, 71);
+  --color-tag-text-purple: rgb(65, 36, 84);
+  --color-tag-text-pink: rgb(76, 35, 55);
+  --color-tag-text-red: rgb(93, 23, 21);
+  --color-tag-bg: var(--color-tag-bg-default);
+  --color-tag-bg-default: rgba(227, 226, 224, 0.5);
+  --color-tag-bg-gray: rgb(227, 226, 224);
+  --color-tag-bg-brown: rgb(238, 224, 218);
+  --color-tag-bg-orange: rgb(250, 222, 201);
+  --color-tag-bg-yellow: rgb(253, 236, 200);
+  --color-tag-bg-green: rgb(219, 237, 219);
+  --color-tag-bg-blue: rgb(211, 229, 239);
+  --color-tag-bg-purple: rgb(232, 222, 238);
+  --color-tag-bg-pink: rgb(245, 224, 233);
+  --color-tag-bg-red: rgb(255, 226, 221);
+  --box-shadow-tag: rgba(15, 15, 15, 0.1) 0px 0px 0px 1px inset;
+
   --color-border-default: #d0d7de;
   --color-border-muted: hsla(210, 18%, 87%, 1);
+
+  --font-sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, 'Hiragino Sans',
+    'Hiragino Kaku Gothic ProN', 'Hiragino Sans GB', メイリオ, Meiryo, 'Apple Color Emoji', Arial, sans-serif,
+    'Segoe UI Emoji', 'Segoe UI Symbol';
+  --font-title: 'Zen Kaku Gothic New', ui-sans-serif, -apple-system, Helvetica, Arial, sans-serif;
+  --font-mono: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace, Apple Color Emoji, Segoe UI Emoji,
+    Segoe UI Symbol, Noto Color Emoji;
 }

@@ -13,7 +13,9 @@
       "@lib/post": ["src/libs/post/index.ts"]
     },
     "jsx": "react-jsx",
-    "jsxImportSource": "react"
+    "jsxImportSource": "react",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*", "tools/notion-fetch/blog"],
   "exclude": ["functions/**/*"],

@@ -6,6 +6,6 @@ type Props = LinkPreviewNode;
 const { url } = Astro.props;
 ---
 
-<div class="py-2 flex justify-center">
+<div class="my-4 flex justify-center">
   <iframe class="border-none w-full" src={`/embed?url=${url}`} height="122"></iframe>
 </div>

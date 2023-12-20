@@ -3,8 +3,8 @@ import { readFile } from 'node:fs/promises';
 import * as path from 'node:path';
 import pLimit from 'p-limit';
 import { PostData } from '../post/schema';
-import type { BlogPageObject, PageObjectWithContent } from './types';
-import { fetchChildBlocks, getLocale, getSlug, queryAllPages } from './utils';
+import type { BlogDatabaseProperties, BlogPageObject, PageObjectWithContent } from './types';
+import { fetchChildBlocks, fetchDatabaseProperties, getLocale, getSlug, queryAllPages } from './utils';
 
 const postCollectionDir = new URL('../../content/post', import.meta.url).pathname;
 
@@ -60,5 +60,10 @@ export class NotionDatabase {
       ...page,
       content,
     };
+  }
+
+  async getDatabaseProperties(): Promise<BlogDatabaseProperties> {
+    const properties = await fetchDatabaseProperties(this.notion, this.databaseID);
+    return properties as BlogDatabaseProperties;
   }
 }

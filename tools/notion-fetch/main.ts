@@ -1,7 +1,7 @@
 import { NotionDatabase } from '@lib/notion';
 import { SingleBar } from 'cli-progress';
 import { parseArgs } from 'node:util';
-import { toBlogPostJSON } from './content';
+import { toBlogPostJSON, toTagsJSON } from './content';
 import { FileSystem } from './file-system';
 import { formatJSON } from './utils/format';
 
@@ -13,6 +13,7 @@ if (NOTION_AUTH_TOKEN == null) {
 
 const imagesDir = new URL('../../public/images', import.meta.url).pathname;
 const postJsonDir = new URL('../../src/content/post', import.meta.url).pathname;
+const tagsJsonDir = new URL('../../src/content/tags', import.meta.url).pathname;
 
 const { values } = parseArgs({
   args: process.argv.slice(2),
@@ -33,6 +34,13 @@ async function main() {
   const db = new NotionDatabase(NOTION_AUTH_TOKEN, NOTION_DATABASE_ID);
   const imagesFS = new FileSystem(imagesDir, { dryRun });
   const postJsonFS = new FileSystem(postJsonDir, { dryRun });
+  const tagsJsonFS = new FileSystem(tagsJsonDir, { dryRun });
+
+  console.log('Fetching database properties...');
+  const properties = await db.getDatabaseProperties();
+  console.log("Updating 'tags.json'...");
+  const tagsJson = await formatJSON(toTagsJSON(properties.tags));
+  await tagsJsonFS.save('tags.json', tagsJson, { encoding: 'utf-8' });
 
   console.log('Fetching pages...');
   const pages = await db.queryBlogPages();

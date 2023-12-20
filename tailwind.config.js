@@ -9,11 +9,12 @@ const plugin = require('tailwindcss/plugin');
 module.exports = {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
+    fontFamily: {
+      base: `var(--font-base)`,
+      title: `var(--font-title)`,
+      mono: `var(--font-mono)`,
+    },
     extend: {
-      fontFamily: {
-        sans: `"Zen Kaku Gothic New",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif`,
-        mono: `"Source Code Pro",monospace`,
-      },
       fontWeight: {
         normal: '400',
       },
@@ -45,6 +46,10 @@ module.exports = {
           '2xl': '24rem',
         },
       },
+      boxShadow: {
+        tag: 'var(--box-shadow-tag)',
+        "tag-focus": 'var(--box-shadow-tag-focus)',
+      }
     },
   },
   plugins: [
@@ -85,18 +90,24 @@ module.exports = {
       });
       addComponents({
         '.markdown-body': {
-          fontFamily: theme('fontFamily.sans'),
+          fontFamily: theme('fontFamily.body'),
           blockquote: {
             color: theme('textColor.muted'),
           },
           pre: {
             backgroundColor: theme('backgroundColor.subtle'),
             wordWrap: 'normal',
-            fontSize: '0.85rem',
-            padding: theme('padding.4'),
+            fontSize: '85%',
+            tabSize: '2',
+            padding: `${theme('padding.8')} ${theme('padding.4')} ${theme('padding.8')} ${theme('padding.8')}`,
+            borderRadius: theme('borderRadius.lg'),
           },
           p: {
-            lineHeight: '1.8',
+            lineHeight: '1.9',
+            '&+p': {
+              marginTop: '1.5em',
+              overflowWrap: 'break-word',
+            }
           },
           'figcaption p': {
             textAlign: 'center',
