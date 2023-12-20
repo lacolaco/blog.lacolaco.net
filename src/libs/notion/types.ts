@@ -1,10 +1,30 @@
 import type { Client } from '@notionhq/client';
-import type { BlockObjectResponse, PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
+import type {
+  BlockObjectResponse,
+  PageObjectResponse,
+  DatabaseObjectResponse,
+} from '@notionhq/client/build/src/api-endpoints';
 
 export type DatabaseQueryParams = Parameters<Client['databases']['query']>[0];
 export type QueryFilterObject = DatabaseQueryParams['filter'];
 
 export type PageObject = PageObjectResponse;
+
+export type DatabasePropertyConfigs = DatabaseObjectResponse['properties'];
+export type DatabasePropertyConfig<T extends string> = DatabasePropertyConfigs[string] & { type: T };
+
+export type BlogPostLocale = 'ja' | 'en';
+
+export type BlogDatabaseProperties = DatabasePropertyConfigs & {
+  title: DatabasePropertyConfig<'title'>;
+  slug: DatabasePropertyConfig<'rich_text'>;
+  locale: DatabasePropertyConfig<'select'>;
+  tags: DatabasePropertyConfig<'multi_select'>;
+  published: DatabasePropertyConfig<'checkbox'>;
+  canonical_url: DatabasePropertyConfig<'url'>;
+  created_at_override: DatabasePropertyConfig<'date'>;
+  updated_at: DatabasePropertyConfig<'date'>;
+};
 
 export type PageProperties = PageObject['properties'];
 export type PageProperty<T extends string> = PageProperties[string] & { type: T };
@@ -23,7 +43,7 @@ export type BlogPageProperties = PageProperties & {
 export type BlogPageObject = PageObject & {
   properties: BlogPageProperties;
   slug: string;
-  locale?: string;
+  locale?: BlogPostLocale;
 };
 
 export type BlockObjectType = BlockObjectResponse['type'] | unknown;
@@ -36,7 +56,7 @@ export type BlockObject<T extends BlockObjectType = unknown> = BlockObjectRespon
 export type PageObjectWithContent = PageObject & {
   properties: BlogPageProperties;
   slug: string;
-  locale?: string;
+  locale?: BlogPostLocale;
   content: BlockObject[];
 };
 

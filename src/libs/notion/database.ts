@@ -3,8 +3,9 @@ import { readFile } from 'node:fs/promises';
 import * as path from 'node:path';
 import pLimit from 'p-limit';
 import { PostData } from '../post/schema';
-import type { BlogPageObject, PageObjectWithContent } from './types';
-import { fetchChildBlocks, getLocale, getSlug, queryAllPages } from './utils';
+import { getPostJSONFileName } from '../post/slug';
+import type { BlogDatabaseProperties, BlogPageObject, PageObjectWithContent } from './types';
+import { fetchChildBlocks, fetchDatabaseProperties, getLocale, getSlug, queryAllPages } from './utils';
 
 const postCollectionDir = new URL('../../content/post', import.meta.url).pathname;
 
@@ -37,7 +38,7 @@ export class NotionDatabase {
   }
 
   async isCached(page: BlogPageObject): Promise<boolean> {
-    const filepath = path.resolve(postCollectionDir, `${page.slug}.json`);
+    const filepath = path.resolve(postCollectionDir, getPostJSONFileName(page.slug, page.locale ?? 'ja'));
     const data = await readFile(filepath, 'utf-8')
       .then((s) => JSON.parse(s) as PostData)
       .catch(() => null);
@@ -60,5 +61,10 @@ export class NotionDatabase {
       ...page,
       content,
     };
+  }
+
+  async getDatabaseProperties(): Promise<BlogDatabaseProperties> {
+    const properties = await fetchDatabaseProperties(this.notion, this.databaseID);
+    return properties as BlogDatabaseProperties;
   }
 }

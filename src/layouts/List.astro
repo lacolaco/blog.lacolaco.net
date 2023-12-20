@@ -1,6 +1,7 @@
 ---
-import { PostData, getRelativePostUrl } from '@lib/post';
-import { compareDesc, isPast, format as formatDate } from 'date-fns';
+import { getRelativePostUrl } from '@lib/i18n';
+import { PostData } from '@lib/post';
+import { compareDesc, format as formatDate, isPast } from 'date-fns';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
@@ -36,7 +37,7 @@ const filterPastPost = (post: PostData) => isPast(post.properties.date);
     <BaseHead title={SITE_TITLE} description={''} />
   </head>
 
-  <body>
+  <body class="font-base">
     <Header class="container" showDescription />
     <main class="container py-4">
       {
@@ -61,7 +62,7 @@ const filterPastPost = (post: PostData) => isPast(post.properties.date);
                     <div class="flex flex-col items-start leading-none">
                       <FormattedDate class="text-xs text-muted align-middle" date={post.properties.date} />
                       <a class="no-underline" href={getRelativePostUrl(post)}>
-                        <span class="text-lg text-default font-bold underline">{post.properties.title}</span>
+                        <span class="text-lg text-default font-semibold underline">{post.properties.title}</span>
                       </a>
                       <div class="mt-1">
                         <TagList tags={post.properties.tags ?? []} />

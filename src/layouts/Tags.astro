@@ -5,26 +5,26 @@ import Header from '../components/Header.astro';
 import Tag from '../components/Tag.astro';
 import { SITE_TITLE } from '../consts';
 
-type Tag = {
+type TagWithCount = {
   name: string;
   usedCount: number;
 };
 
 type Props = {
-  tags: Tag[];
+  tags: TagWithCount[];
 };
 
 const { tags } = Astro.props;
 const sortedTags = tags.sort((a, b) => b.usedCount - a.usedCount);
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
   <head>
     <BaseHead title={SITE_TITLE} description={''} />
   </head>
 
-  <body>
+  <body class="font-base">
     <Header class="container" />
 
     <main class="container py-4">

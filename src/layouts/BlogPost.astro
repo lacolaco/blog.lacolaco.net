@@ -44,7 +44,7 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
   </head>
 
-  <body>
+  <body class="font-base">
     <Header class="container" />
 
     <main class="container py-4">
@@ -63,7 +63,7 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
                 )
               }
             </span>
-            <h1 class="text-2xl font-bold leading-tight mb-1">{title}</h1>
+            <h1 class="text-2xl font-semibold leading-tight mb-1">{title}</h1>
             <div class="py-1">
               <TagList tags={tags ?? []} />
             </div>
@@ -73,14 +73,18 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
         {
           locales.en && (
             <MessageBox type="info">
-              <a href={locales.en}>This article has an English version.</a>
+              <a href={locales.en} class="text-sm">
+                This article has an English version.
+              </a>
             </MessageBox>
           )
         }
         {
           locales.ja && (
             <MessageBox type="info">
-              <a href={locales.ja}>この記事には日本語版があります。</a>
+              <a href={locales.ja} class="text-sm">
+                この記事には日本語版があります。
+              </a>
             </MessageBox>
           )
         }
@@ -89,6 +93,8 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
 
         <div class="markdown-body mb-4">
           <Content nodes={post.content} />
+        </div>
+        <div class="mt-8">
           <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
         </div>
       </article>

@@ -6,7 +6,9 @@ type Props = StackblitzNode;
 const { url } = Astro.props;
 ---
 
-<iframe class="stackblitz-iframe" src={url}></iframe>
+<div class="my-4 flex justify-center">
+  <iframe class="stackblitz-iframe" src={url}></iframe>
+</div>
 
 <style>
   iframe {

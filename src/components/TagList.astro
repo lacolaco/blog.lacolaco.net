@@ -9,6 +9,6 @@ const { tags } = Astro.props;
 const sortedTags = [...tags].sort();
 ---
 
-<div class="flex flex-row flex-wrap gap-1">
+<div class="flex flex-row flex-wrap gap-2">
   {sortedTags.map((tag) => <Tag name={tag} />)}
 </div>

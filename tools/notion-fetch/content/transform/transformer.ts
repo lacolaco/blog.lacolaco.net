@@ -180,12 +180,11 @@ export class ContentTransformer {
       return { type: 'image', url: block.image.external.url, caption: this.#richtext(block.image.caption) };
     }
     const url = block.image.file.url;
-    const filename = decodeURIComponent(new URL(url).pathname)
-      // 先頭の / を削除
-      .replace(/^\//, '')
-      // ファイル名のみ抽出
-      .replace(/secure\.notion-static\.com\//, '');
-    const filepath = `${this.page.slug}/${filename}`;
+    const [fileId, ext] = new URL(url).pathname.match(/^(.+)\/.+\.(.+)$/)?.slice(1) ?? [];
+    if (fileId == null) {
+      throw new Error(`Invalid image url: ${url}`);
+    }
+    const filepath = `${this.page.slug}${fileId}.${ext}`;
     const file = await getFile(url);
     await this.imageFS.save(filepath, file);
     return { type: 'image', url: `/images/${filepath}`, caption: this.#richtext(block.image.caption) };

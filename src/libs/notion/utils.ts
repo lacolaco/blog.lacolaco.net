@@ -1,6 +1,6 @@
-import { createHash } from 'node:crypto';
 import type { Client } from '@notionhq/client';
-import type { BlockObject, PageObject, PageProperty, QueryFilterObject } from './types';
+import { createHash } from 'node:crypto';
+import type { BlockObject, DatabasePropertyConfigs, PageObject, PageProperty, QueryFilterObject } from './types';
 
 /**
  * If the page has slug property, return it.
@@ -71,4 +71,11 @@ export async function fetchChildBlocks(client: Client, parentId: string): Promis
     cursor = has_more ? next_cursor : null;
   } while (cursor !== null);
   return blocks;
+}
+
+export async function fetchDatabaseProperties(client: Client, databaseId: string): Promise<DatabasePropertyConfigs> {
+  const { properties } = await client.databases.retrieve({
+    database_id: databaseId,
+  });
+  return properties;
 }
