@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 import { compareDesc, isPast } from 'date-fns';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
-export async function get(context: APIContext) {
+export async function GET(context: APIContext) {
   const posts = await getCollection('post');
   return rss({
     title: SITE_TITLE,
