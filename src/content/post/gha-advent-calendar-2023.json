@@ -1,6 +1,6 @@
 {
   "pageId": "b28b8ef4-ebdb-495f-a2b5-1c0e89c9cded",
-  "lastEditedAt": "2023-12-19T14:41:00.000Z",
+  "lastEditedAt": "2023-12-19T23:55:00.000Z",
   "slug": "gha-advent-calendar-2023",
   "properties": {
     "title": "GitHub ActionsのJob Outputsでハマった話",
@@ -24,7 +24,18 @@
         },
         {
           "type": "text",
-          "text": " 21日目の記事です。",
+          "text": " 21日目の記事です。昨日は@eno49conanさんの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "GitHub Actions、キャッシュで時間短縮\\(とLambda更新で少し苦労\\)した話",
+          "href": "https://qiita.com/eno49conan/items/508bae516fa2ed089db9",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " でした。",
           "annotations": {}
         }
       ]
@@ -54,7 +65,7 @@
         },
         {
           "type": "text",
-          "text": " 機能の仕様を勘違いしてしばらくハマってしまったので、備忘録も兼ねてその話を。",
+          "text": " 機能のめちゃくちゃ初歩的な仕様を勘違いしてしばらくハマってしまったので、備忘録も兼ねてその話を。",
           "annotations": {}
         }
       ]
