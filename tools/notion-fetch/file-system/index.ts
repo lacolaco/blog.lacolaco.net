@@ -34,6 +34,6 @@ export class FileSystem {
       return;
     }
     const dirPath = path.resolve(this.rootDir, target);
-    await rm(dirPath, { recursive: true });
+    await rm(dirPath, { recursive: true, force: true });
   }
 }

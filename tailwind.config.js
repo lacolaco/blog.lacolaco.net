@@ -25,6 +25,7 @@ module.exports = {
         accent: 'var(--color-text-accent)',
         header: 'var(--color-header-text)',
         'header-muted': 'var(--color-header-text-muted)',
+        'code-inline': 'var(--color-text-code-inline)',
       },
       backgroundColor: {
         default: 'var(--color-bg-default)',

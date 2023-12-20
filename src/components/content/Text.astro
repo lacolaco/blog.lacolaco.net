@@ -19,7 +19,9 @@ const classList = [
 {
   (() => {
     const content = annotations.code ? (
-      <code class="px-1 py-0.5 rounded whitespace-break-spaces text-[0.85em] bg-muted">{text}</code>
+      <code class="px-[0.4em] py-[0.2em] rounded whitespace-break-spaces font-mono text-code-inline text-[0.85em] bg-muted">
+        {text}
+      </code>
     ) : (
       text.replace(/\n/g, `<br />`)
     );

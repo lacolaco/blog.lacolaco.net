@@ -1,6 +1,6 @@
 {
   "pageId": "5cd15f39-e63e-48b7-828e-af1224f8d884",
-  "lastEditedAt": "2023-12-18T12:41:00.000Z",
+  "lastEditedAt": "2023-12-20T14:26:00.000Z",
   "slug": "angular-expansion-directive",
   "locale": "ja",
   "properties": {
@@ -175,7 +175,6 @@
         {
           "type": "text",
           "text": "style.xxx",
-          "href": "http://style.xxx/",
           "annotations": {
             "code": true
           }
