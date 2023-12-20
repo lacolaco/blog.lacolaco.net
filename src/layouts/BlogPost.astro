@@ -29,7 +29,17 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
 <!doctype html>
 <html lang={post.locale}>
   <head>
-    <BaseHead title={`${title} | ${SITE_TITLE}`} description={''} image={`/og/${post.slug}.png`} />
+    <BaseHead
+      title={`${title} | ${SITE_TITLE}`}
+      description={''}
+      image={`/og/${post.slug}.png`}
+      gtagProps={{
+        post_slug: `${post.slug}`,
+        post_locale: `${post.locale}`,
+        post_title: `${post.properties.title}`,
+        post_date: `${post.properties.date.toISOString()}`,
+      }}
+    />
 
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
   </head>

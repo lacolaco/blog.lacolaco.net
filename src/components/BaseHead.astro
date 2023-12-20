@@ -14,9 +14,10 @@ export interface Props {
   title: string;
   description: string;
   image?: string;
+  gtagProps?: object;
 }
 
-const { title, description, image } = Astro.props;
+const { title, description, image, gtagProps } = Astro.props;
 ---
 
 <!-- Global Metadata -->
@@ -46,11 +47,11 @@ const { title, description, image } = Astro.props;
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script src="https://www.googletagmanager.com/gtag/js?id=G-0BEKSBSM5X"></script>
-<script is:inline>
+<script is:inline define:vars={{ gtagProps }}>
   window.dataLayer = window.dataLayer || [];
   function gtag() {
     window.dataLayer.push(arguments);
   }
   gtag('js', new Date());
-  gtag('config', 'G-0BEKSBSM5X');
+  gtag('config', 'G-0BEKSBSM5X', gtagProps ?? {});
 </script>
