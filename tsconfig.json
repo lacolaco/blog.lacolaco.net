@@ -10,7 +10,8 @@
     "typeRoots": ["node_modules/@types"],
     "paths": {
       "@lib/notion": ["src/libs/notion/index.ts"],
-      "@lib/post": ["src/libs/post/index.ts"]
+      "@lib/post": ["src/libs/post/index.ts"],
+      "@lib/i18n": ["src/libs/i18n/index.ts"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react",
@@ -18,5 +19,5 @@
     "allowSyntheticDefaultImports": true
   },
   "include": ["src/**/*", "tools/notion-fetch/blog"],
-  "exclude": ["functions/**/*"],
+  "exclude": ["functions/**/*"]
 }

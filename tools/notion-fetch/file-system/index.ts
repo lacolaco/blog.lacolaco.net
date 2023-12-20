@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import * as path from 'node:path';
 
 type WriteFileData = Parameters<typeof writeFile>[1];
@@ -27,5 +27,13 @@ export class FileSystem {
     } catch (e) {
       return null;
     }
+  }
+
+  async remove(target: string) {
+    if (this.options.dryRun) {
+      return;
+    }
+    const dirPath = path.resolve(this.rootDir, target);
+    await rm(dirPath, { recursive: true });
   }
 }

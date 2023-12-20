@@ -1,12 +1,6 @@
 import type { Client } from '@notionhq/client';
 import { createHash } from 'node:crypto';
-import type {
-  BlockObject,
-  DatabasePropertyConfigs,
-  PageObject,
-  PageProperty,
-  QueryFilterObject
-} from './types';
+import type { BlockObject, DatabasePropertyConfigs, PageObject, PageProperty, QueryFilterObject } from './types';
 
 /**
  * If the page has slug property, return it.

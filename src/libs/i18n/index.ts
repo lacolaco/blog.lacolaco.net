@@ -1,9 +1,6 @@
-import { z, getCollection } from 'astro:content';
+import { getCollection } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { PostData } from './schema';
-
-export const Locale = z.enum(['ja', 'en']);
-export type Locale = z.infer<typeof Locale>;
+import { Locale, PostData } from '../post/schema';
 
 export function getRelativePostUrl(post: PostData) {
   return getRelativeLocaleUrl(post.locale, `${post.slug}`, {

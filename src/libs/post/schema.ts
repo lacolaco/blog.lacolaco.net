@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { ContentNode } from './nodes';
-import { Locale } from './i18n';
+
+export const Locale = z.enum(['ja', 'en']);
+export type Locale = z.infer<typeof Locale>;
 
 export const TagType = z.object({
   name: z.string(),

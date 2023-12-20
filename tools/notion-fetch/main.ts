@@ -1,4 +1,5 @@
 import { NotionDatabase } from '@lib/notion';
+import { getPostJSONFileName } from '@lib/post';
 import { SingleBar } from 'cli-progress';
 import { parseArgs } from 'node:util';
 import { toBlogPostJSON, toTagsJSON } from './content';
@@ -12,6 +13,7 @@ if (NOTION_AUTH_TOKEN == null) {
 }
 
 const imagesDir = new URL('../../public/images', import.meta.url).pathname;
+const pageCacheDir = new URL('../../.cache/page', import.meta.url).pathname;
 const postJsonDir = new URL('../../src/content/post', import.meta.url).pathname;
 const tagsJsonDir = new URL('../../src/content/tags', import.meta.url).pathname;
 
@@ -26,14 +28,18 @@ const { values } = parseArgs({
       type: 'boolean',
       short: 'D',
     },
+    debug: {
+      type: 'boolean',
+    },
   },
 });
-const { force = false, 'dry-run': dryRun = false } = values;
+const { force = false, 'dry-run': dryRun = false, debug = false } = values;
 
 async function main() {
   const db = new NotionDatabase(NOTION_AUTH_TOKEN, NOTION_DATABASE_ID);
   const imagesFS = new FileSystem(imagesDir, { dryRun });
   const postJsonFS = new FileSystem(postJsonDir, { dryRun });
+  const pageCacheFS = new FileSystem(pageCacheDir, { dryRun });
   const tagsJsonFS = new FileSystem(tagsJsonDir, { dryRun });
 
   console.log('Fetching database properties...');
@@ -63,9 +69,13 @@ async function main() {
     await Promise.all(
       pagesToUpdate.map(async (page) => {
         const pageWithContent = await db.getPageContents(page);
+        if (debug) {
+          await pageCacheFS.save(`${page.id}.json`, JSON.stringify(pageWithContent, null, 2), { encoding: 'utf-8' });
+        }
+        imagesFS.remove(pageWithContent.slug);
         const post = await toBlogPostJSON(pageWithContent, imagesFS);
         const formatted = await formatJSON(post);
-        const filepath = (post.locale ?? 'ja') === 'ja' ? `${post.slug}.json` : `${post.slug}.${post.locale}.json`;
+        const filepath = getPostJSONFileName(pageWithContent.slug, pageWithContent.locale ?? 'ja');
         await postJsonFS.save(filepath, formatted, { encoding: 'utf-8' });
 
         progress.increment();

@@ -13,6 +13,8 @@ export type PageObject = PageObjectResponse;
 export type DatabasePropertyConfigs = DatabaseObjectResponse['properties'];
 export type DatabasePropertyConfig<T extends string> = DatabasePropertyConfigs[string] & { type: T };
 
+export type BlogPostLocale = 'ja' | 'en';
+
 export type BlogDatabaseProperties = DatabasePropertyConfigs & {
   title: DatabasePropertyConfig<'title'>;
   slug: DatabasePropertyConfig<'rich_text'>;
@@ -41,7 +43,7 @@ export type BlogPageProperties = PageProperties & {
 export type BlogPageObject = PageObject & {
   properties: BlogPageProperties;
   slug: string;
-  locale?: string;
+  locale?: BlogPostLocale;
 };
 
 export type BlockObjectType = BlockObjectResponse['type'] | unknown;
@@ -54,7 +56,7 @@ export type BlockObject<T extends BlockObjectType = unknown> = BlockObjectRespon
 export type PageObjectWithContent = PageObject & {
   properties: BlogPageProperties;
   slug: string;
-  locale?: string;
+  locale?: BlogPostLocale;
   content: BlockObject[];
 };
 
