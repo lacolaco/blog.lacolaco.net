@@ -37,7 +37,7 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
         post_slug: `${post.slug}`,
         post_locale: `${post.locale}`,
         post_title: `${post.properties.title}`,
-        post_date: `${post.properties.date.toISOString()}`,
+        post_timestamp: `${post.properties.date.getTime()}`,
       }}
     />
 
