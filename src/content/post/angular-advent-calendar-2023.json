@@ -1,0 +1,1287 @@
+{
+  "pageId": "119f8e2c-8fc7-40f4-aa76-755373a0b009",
+  "lastEditedAt": "2023-12-23T13:41:00.000Z",
+  "slug": "angular-advent-calendar-2023",
+  "properties": {
+    "title": "Angularでのボタンコンポーネントの作成",
+    "date": "2023-12-25T00:00:00.000Z",
+    "tags": ["Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これはAngularアドベントカレンダー 2023の25日目の記事です。昨日はAKAIさんの[xxxx]でした。無事25日間のバトンパスが繋がって、アドベントカレンダーの主催としてとても嬉しいです。参加してくださったみなさんありがとうございました！",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://qiita.com/advent-calendar/2023/angular"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "さて、この記事では ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "web.dev",
+          "href": "http://web.dev/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " に以前投稿された “Building a button component” という記事を参考にしてAngularでボタンコンポーネントを実装します。プレーンなHTMLとCSSだけで実装する例が元記事では紹介されていますが、Angularのコンポーネントとしてできるだけ自然なインターフェースで、UIコンポーネントとして再利用しやすくなるようにアレンジします。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://web.dev/articles/building/a-button-component?hl=ja"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "準備",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "スタートラインは元記事に倣い、次のようにボタンを並べ、全体をレイアウトするCSSを用意します。元記事ではbodyタグの直下にボタンを並べていましたが、こちらでは代わりに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "App",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コンポーネントのスタイルでレイアウトしています。まだボタンとしてコンポーネント分割はしていません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-t3gnpu?ctl=1&embed=1&file=src/global_styles.css&view=preview"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "ボタンコンポーネントの作成",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まずはボタンコンポーネントを作成します。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "AwesomeButton",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コンポーネントは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "awesome-button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 属性を持つ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "input",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素にマッチする",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "属性セレクタ",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を設定します。汎用的なボタンコンポーネントを実装する際に避けるべきことは、コンポーネントのセレクタを要素セレクタにして、コンポーネントの内部にHTML標準の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "タグを隠蔽してしまうことです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { Component } from '@angular/core';\n\n@Component({\n  selector: `\n  button[awesome-button],\n  input[type=button][awesome-button],\n  input[type=file][awesome-button]\n  `,\n  standalone: true,\n  template: `<ng-content />`,\n  host: {\n    class: 'awesome-button',\n  },\n})\nexport class AwesomeButton {}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "HTML標準の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素を内包した独自のボタンコンポーネントは、HTML標準の要素でサポートされているさまざまな機能を再実装しなければならなくなります。大半はコンポーネントのInputを内部の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素にバインディングし、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素のイベントを自身のOutputとして投げ直すことになり、たいていは不完全な伝言ゲームをするだけになります。アプリケーションの中で",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素に特定の属性（",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "aria-label",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "など）を付与したくなるたびにそれをinputからリレーする必要があります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ボタンコンポーネントを属性セレクタで実装すると、ボタンコンポーネントを使うテンプレート上には",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素がそのまま存在しているため、ボタンコンポーネントが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素の振る舞いを再現するためのコードはまったく不要になります。ボタンコンポーネントは標準の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素に追加したい振る舞いだけを責任範囲とできるわけです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<h4>Buttons</h4>\n<button awesome-button>&#60;button&#62;</button>\n<button awesome-button type=\"submit\">&#60;button type=submit&#62;</button>\n<button awesome-button type=\"button\">&#60;button type=button&#62;</button>\n<button awesome-button type=\"reset\">&#60;button type=reset&#62;</button>\n\n<h4>Button State</h4>\n<button awesome-button disabled>&#60;button disabled&#62;</button>\n\n<h4>Input Buttons</h4>\n<input awesome-button type=\"button\" value=\"<input type=button>\"/>\n<input awesome-button type=\"file\">"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "作成したコンポーネントに最低限のスタイルを加えます。元記事と同じく",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "open-props",
+          "href": "https://open-props.style/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "を使ってCSS変数を導入し、AwesomeButtonコンポーネントのスタイルを設定した状態で一段落です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://open-props.style/"
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-sbmebk?ctl=1&embed=1&file=src/button.component.ts"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "ホバー・フォーカス時のスタイル",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "最初に手を加えるのは、マウスでホバーしたときとキーボード操作でフォーカスしたときの強調されたスタイルです。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "元記事",
+          "href": "https://web.dev/articles/building/a-button-component?hl=en#hover_and_focus_together",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "では",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ":is",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "セレクタによって、ホバーとフォーカスに同じスタイルを与える書き方が紹介されています。同じようにコンポーネントスタイルを記述します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ホスト要素に対して特定の条件のためのセレクタを加える場合は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ":host()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "セレクタの引数を使います。SCSSを使っている場合は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ":host",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " セレクタの中で",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "&:is",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のようにネストさせてもよいでしょう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/:host_function"
+    },
+    {
+      "type": "code",
+      "language": "css",
+      "filename": "",
+      "text": ":host(:is(:hover, :focus)) {\n  cursor: pointer;\n  color: var(--blue-0);\n  background-color: var(--blue-5);\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、フォーカス時にアウトラインが少しアニメーションするCSSも加えます。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "prefers-reduced-motion",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " メディア特性が設定されていないときに限り、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "outline-offset",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "をややずらします。アニメーションを減らしたい設定をしているユーザーにはアニメーションしないようになります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://developer.mozilla.org/ja/docs/Web/CSS/@media/prefers-reduced-motion"
+    },
+    {
+      "type": "code",
+      "language": "css",
+      "filename": "",
+      "text": "@media (prefers-reduced-motion: no-preference) {\n  :host(:focus) {\n    transition: outline-offset 0.25s ease;\n  }\n  :host(:focus:not(:active)) {\n    outline-offset: 5px;\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これでフォーカスとホバーの状態が視覚的に判別しやすくなりました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-edap9x?ctl=1&embed=1&file=src/button.component.css"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "カラースキームへの対応",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次は、ブラウザのカラースキーム設定に応じてライトテーマとダークテーマが切り替わるようにします。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "元記事",
+          "href": "https://web.dev/articles/building/a-button-component?hl=en#an_adaptive_custom_property_strategy",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "と同じように、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "prefers-color-scheme",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "メディア特性に応じてCSS変数の値を切り替えることで実現します。コンポーネントスタイルでもCSS変数の宣言はできます。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ":host",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "セレクタの中で宣言すればそのコンポーネントスタイル中ではどこでも間違いなく参照できます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "css",
+      "filename": "",
+      "text": ":host {\n  --_bg-light: white;\n  --_bg-dark: black;\n  --_bg: var(--_bg-light);\n\n  background-color: var(--_bg);\n}\n\n@media (prefers-color-scheme: dark) {\n  :host {\n    --_bg: var(--_bg-dark);\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ただしコンポーネントスタイルでCSS変数を使う場合は、CSS変数が階層的なスコープを持つことに注意する必要があります。CSS変数のスコープはこのコンポーネントのテンプレート内に閉じず、DOMツリー上でこのコンポーネントの子孫にあたる要素もCSS変数を参照できます。それが便利な場面も多いですが、名前の衝突や意図せぬ上書きについての注意は必要です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、ここで今後のステップにそなえてコンポーネントのセレクタも修正します。コンポーネント側では",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "input",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type=reset",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type=submit",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "にも対応します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: `\n  button[awesome-button],\n  input[type=button][awesome-button],\n  input[type=submit][awesome-button],\n  input[type=reset][awesome-button],\n  input[type=file][awesome-button],\n  `,\n  standalone: true,\n  template: `<ng-content />`,\n  styleUrl: './button.component.css',\n  host: {\n    class: 'awesome-button',\n  },\n})\nexport class AwesomeButton {}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、ファイル選択ボタンに適切なスタイルを与えるため、いままで:hostセレクタに一律で与えていたスタイルを修正します。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "元記事",
+          "href": "https://web.dev/articles/building/a-button-component?hl=en#the_shared_selector",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "と同じように、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "input[type=file]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の場合にはホスト要素ではなくその",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "::file-selector-button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "疑似要素をボタンとしてのスタイリング対象にするため、次のようにセレクタを2つに分割します。 CSS変数の宣言については",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ":host",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素に残しています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/::file-selector-button"
+    },
+    {
+      "type": "code",
+      "language": "css",
+      "filename": "",
+      "text": ":host {\n  --_bg-light: white;\n  --_bg-dark: black;\n  --_bg: var(--_bg-light);\n}\n\n:host(:where(button, input[type='button'], input[type='submit'], input[type='reset'])),\n:host(:where(input[type='file'])::file-selector-button) {\n  ...\n}"
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-ih2w48?ctl=1&embed=1&file=src/button.component.css"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "スタイルの変更",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここまでのボタンコンポーネントのスタイルは常に同じでしたが、ボタンの種類や状態に応じて切り替わるように変更します。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "元記事",
+          "href": "https://web.dev/articles/building/a-button-component?hl=en#preparing_for_design_consistency",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "と同じように、必要なCSS変数を一通り宣言し、各種スタイルに適用します。ほぼ元記事と同じことをするだけなのでコードは割愛します。気になる方はStackblitzで確認してください。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "特筆すべき点として、ボタンが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type=submit",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "である場合には強調されたスタイルになるようにします。この際、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "form",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素の中でtype属性が指定されていない",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素も",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type=submit",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "とみなされます。このような場合、コンポーネントのホスト要素に対してその祖先側の条件を指定するために",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ":host-context",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "セレクタを使うことができます。この例では、祖先のどこかに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "form",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素があり、かつ自身が",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "属性も",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabled",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "属性も持たない",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "button",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "要素であるという条件を記述しています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/CSS/:host-context"
+    },
+    {
+      "type": "code",
+      "language": "css",
+      "filename": "",
+      "text": "/* Customizing submit buttons */\n:host(:where([type='submit'])),\n:host-context(form) :host(button:not([type], [disabled])) {\n  --_text: var(--_accent);\n}"
+    },
+    {
+      "type": "callout",
+      "text": [
+        {
+          "type": "text",
+          "text": "このセレクタは本当であれば",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ":host(:where(button:not([type],[disabled])))",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と書けなければいけないが、今のAngularのCSSコンパイラでは解釈に失敗するらしく、やむなく",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ":where",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を外している。この件については後日イシューを報告する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、ボタンコンポーネントにマウスカーソルが重なったときにはインタラクション可能であることをユーザーに伝えますが、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "元記事",
+          "href": "https://web.dev/articles/building/a-button-component?hl=en#cursor_and_touch_adjustments",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "では",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "cursor: pointer",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "だけでなく、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "touch-action: manipulation",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "もセットしています。これにより、ユーザーがダブルタップなどしたときにデバイス側でのズーム機能などが反応してしまうことを防げるようです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://developer.mozilla.org/ja/docs/Web/CSS/touch-action#manipulation"
+    },
+    {
+      "type": "code",
+      "language": "css",
+      "filename": "",
+      "text": ":host(:where(button,input[type='button'],input[type='submit'],input[type='reset'])),\n:host(:where(input[type='file'])::file-selector-button) {\n  cursor: pointer;\n  touch-action: manipulation;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次のサンプルコードは以上の作業を終えた状態です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-9m5xdt?ctl=1&embed=1&file=src/button.component.css"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "ボタンのバリアント",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "最後に、ボタンコンポーネントに特定のパラメータを与えることでバリアントを切り替えられるようにします。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "元記事",
+          "href": "https://web.dev/articles/building/a-button-component?hl=en#creating_variants",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "と同じように、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "custom",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "large",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の二種類を追加します。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まずは、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button awesome-button color=\"custom\">",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のように、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "color",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "インプットに対して",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "custom",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "という値が渡されたときにスタイルをカスタマイズします。既定値は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "default",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "とし、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "color",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プロパティの値を",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "data-color",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "属性にバインディングすることでCSSセレクタからアクセスできるようにします。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "export type AwesomeButtonColor = 'custom' | 'default';\n\n@Component({\n  selector: `\n  button[awesome-button],\n  input[type=button][awesome-button],\n  input[type=submit][awesome-button],\n  input[type=reset][awesome-button],\n  input[type=file][awesome-button],\n  `,\n  standalone: true,\n  template: `<ng-content />`,\n  styleUrl: './button.component.css',\n  host: {\n    class: 'awesome-button',\n    '[attr.data-color]': 'color',\n  },\n})\nexport class AwesomeButton {\n  @Input() color: AwesomeButtonColor = 'default';\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そしてボタンコンポーネントのスタイルで",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "data-color",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "属性の値に応じてCSS変数を切り替えます。これで完了です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "css",
+      "filename": "",
+      "text": "/* Variants */\n:host(:where([data-color='custom'])) {\n  --_bg: linear-gradient(hsl(228 94% 67%), hsl(228 81% 59%));\n  --_border: hsl(228 89% 63%);\n  --_text: hsl(228 89% 100%);\n  --_ink-shadow: 0 1px 0 hsl(228 57% 50%);\n  --_highlight: hsl(228 94% 67% / 20%);\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次に、ボタンの大きさに関するバリアントとして ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button awesome-button size=\"large\">",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という使い方ができるようにします。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "custom",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "バリアントの例と同じように、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "size",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "インプットを追加して",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "data-size",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "属性にバインディングします。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次のコードが最終的な完成形です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-uxu7uj?ctl=1&embed=1&file=src/button.component.css"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ボタンコンポーネントの実装を通して、AngularでUIパーツとしてコンポーネントを作る際のちょっとしたテクニックを紹介してみました。誰かの役に立てば幸いです。いままで使ったことのなかったCSSの機能も知れて自分の収穫もありました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回の例では",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "input[type=file]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の特殊ケースを扱うことでCSSは少し複雑になりましたが、ネスト構文などを使えばもう少し整理されたCSSにできそうに思います。ただCSS変数の数がすごく多いので、変数管理にあたりは実用的にはまだまだ改善しなければならないですね。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular Materialもそうですが、CSS変数がいよいよ本格的にUIコンポーネント設計の中で考慮すべきものとして普及してきているように感じています。来年はもっとCSS変数を活用して上手にコンポーネントのスタイリングを実装していきたいものです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}

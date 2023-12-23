@@ -15,7 +15,7 @@ type Props = {
 };
 
 const { tags } = Astro.props;
-const sortedTags = tags.sort((a, b) => b.usedCount - a.usedCount);
+const sortedTags = tags.sort((a, b) => a.name.localeCompare(b.name));
 ---
 
 <!doctype html>

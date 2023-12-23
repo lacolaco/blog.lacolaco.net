@@ -17,11 +17,11 @@
   },
   "Angular": {
     "name": "Angular",
-    "color": "pink"
+    "color": "red"
   },
   "Angular Elements": {
     "name": "Angular Elements",
-    "color": "pink"
+    "color": "red"
   },
   "Angular CLI": {
     "name": "Angular CLI",
@@ -29,19 +29,19 @@
   },
   "Angular Material": {
     "name": "Angular Material",
-    "color": "purple"
+    "color": "red"
   },
   "Angular CDK": {
     "name": "Angular CDK",
-    "color": "yellow"
+    "color": "red"
   },
   "JavaScript": {
     "name": "JavaScript",
-    "color": "gray"
+    "color": "yellow"
   },
   "TypeScript": {
     "name": "TypeScript",
-    "color": "yellow"
+    "color": "blue"
   },
   "router": {
     "name": "router",
@@ -109,10 +109,6 @@
   },
   "状態管理": {
     "name": "状態管理",
-    "color": "red"
-  },
-  "#tfcon2022": {
-    "name": "#tfcon2022",
     "color": "red"
   },
   "発表スライド": {

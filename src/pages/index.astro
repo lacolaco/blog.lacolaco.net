@@ -1,8 +1,8 @@
 ---
-import { getCollection } from 'astro:content';
+import { queryPosts } from '@lib/query';
 import List from '../layouts/List.astro';
 
-const collection = await getCollection('post');
+const posts = await queryPosts();
 ---
 
-<List posts={collection.map((post) => post.data)} />
+<List posts={posts} />

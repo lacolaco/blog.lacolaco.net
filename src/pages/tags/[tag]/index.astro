@@ -1,22 +1,19 @@
 ---
 import { PostData } from '@lib/post';
-import { getCollection } from 'astro:content';
+import { queryPosts, queryTags } from '@lib/query';
 import List from '../../../layouts/List.astro';
 import { urlize } from '../../../libs/strings';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('post');
-  const uniqueTags = [...new Set(posts.map((post) => post.data.properties.tags ?? []).flat())];
+  const posts = await queryPosts();
+  const tags = await queryTags();
 
-  return uniqueTags.map((tag) => {
-    const urlizedName = urlize(tag);
-    const filteredPosts = posts.filter((post) => {
-      const postTags = (post.data.properties.tags ?? []).map(urlize);
-      return postTags.includes(urlizedName);
-    });
+  return tags.map((tag) => {
+    const matchPosts = posts.filter((post) => (post.properties.tags ?? []).includes(tag.name));
+    const urlizedName = urlize(tag.name);
     return {
       params: { tag: urlizedName },
-      props: { tag, posts: filteredPosts.map((post) => post.data) },
+      props: { tag: tag.name, posts: matchPosts },
     };
   });
 }
