@@ -1,11 +1,11 @@
 {
   "pageId": "618c54c9-8689-4e02-a3ef-4db0ac7ab530",
-  "lastEditedAt": "2023-05-21T05:03:00.000Z",
+  "lastEditedAt": "2023-12-24T00:27:00.000Z",
   "slug": "async-pipe-initial-null-problem-en",
   "properties": {
     "title": "Initial Null Problem of AsyncPipe and async data-binding",
     "date": "2020-02-19T00:00:00.000Z",
-    "tags": ["tech", "Angular", "rxjs"]
+    "tags": ["Angular", "RxJS"]
   },
   "content": [
     {
@@ -1344,7 +1344,7 @@
             {
               "type": "text",
               "text": "https://stackblitz.com/edit/github-zg4qep-kq9pyw?file=src/app/app.component.html",
-              "href": "https://stackblitz.com/edit/github-zg4qep-kq9pyw?file=src/app/app.component.html",
+              "href": "https://stackblitz.com/edit/github-zg4qep-kq9pyw?file=src%2Fapp%2Fapp.component.html",
               "annotations": {}
             },
             {

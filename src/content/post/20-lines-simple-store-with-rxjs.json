@@ -1,11 +1,11 @@
 {
   "pageId": "ca90e008-8109-41f6-a4bb-889503419f3b",
-  "lastEditedAt": "2023-05-20T23:54:00.000Z",
+  "lastEditedAt": "2023-12-24T00:27:00.000Z",
   "slug": "20-lines-simple-store-with-rxjs",
   "properties": {
     "title": "20 Lines Simple Store with RxJS",
     "date": "2018-01-05T00:00:00.000Z",
-    "tags": ["tech", "TypeScript", "rxjs"]
+    "tags": ["TypeScript", "RxJS"]
   },
   "content": [
     {

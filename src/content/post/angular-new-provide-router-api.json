@@ -1,11 +1,11 @@
 {
   "pageId": "df74379c-5f80-4dff-9fb8-16ae978af4a8",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-24T00:09:00.000Z",
   "slug": "angular-new-provide-router-api",
   "properties": {
     "title": "Angular: provideRouter によるルーティング設定 (v14.2)",
     "date": "2022-08-29T12:18:00.000Z",
-    "tags": ["Angular", "tech", "router", "standalone component"],
+    "tags": ["Angular"],
     "updatedAt": "2022-08-29T00:00:00.000Z"
   },
   "content": [

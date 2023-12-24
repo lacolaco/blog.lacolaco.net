@@ -1,11 +1,11 @@
 {
   "pageId": "e4ec3823-e1e4-48d7-a390-0387a87e3095",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-24T00:10:00.000Z",
   "slug": "proposal-angular-partial-form-injection-pattern",
   "properties": {
     "title": "Angular Forms: Partial Form Injectionパターンの検討",
     "date": "2020-02-03T00:00:00.000Z",
-    "tags": ["tech", "Angular", "forms", "設計"],
+    "tags": ["Angular", "Forms", "設計"],
     "updatedAt": "2020-05-05T00:00:00.000Z"
   },
   "content": [

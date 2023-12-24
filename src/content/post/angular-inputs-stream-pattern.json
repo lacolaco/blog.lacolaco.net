@@ -1,11 +1,11 @@
 {
   "pageId": "02ff5a35-36af-4d69-9609-1ea3f818ad95",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-24T00:27:00.000Z",
   "slug": "angular-inputs-stream-pattern",
   "properties": {
     "title": "Angular: Input を Observable で扱えるようにする Inputs Stream パターン",
     "date": "2023-02-14T00:40:00.000Z",
-    "tags": ["Angular", "tech", "rxjs", "rx-angular"],
+    "tags": ["Angular", "RxJS", "rx-angular"],
     "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-inputs-stream-pattern"
   },
   "content": [
@@ -512,7 +512,7 @@
         {
           "type": "text",
           "text": "this.xxx",
-          "href": "http://this.xxx",
+          "href": "http://this.xxx/",
           "annotations": {
             "code": true
           }
