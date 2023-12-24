@@ -1,11 +1,11 @@
 {
   "pageId": "4e8bcf7e-4c2c-4d31-806b-ff592edf4232",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-24T00:10:00.000Z",
   "slug": "rethink-template-driven-forms",
   "properties": {
     "title": "Angular: テンプレート駆動フォーム再考",
     "date": "2023-05-07T00:41:00.000Z",
-    "tags": ["Angular", "forms", "tech"],
+    "tags": ["Angular", "Forms"],
     "canonicalUrl": "https://zenn.dev/lacolaco/articles/rethink-template-driven-forms"
   },
   "content": [

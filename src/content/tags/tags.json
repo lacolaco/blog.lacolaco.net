@@ -1,19 +1,23 @@
 {
   "雑記": {
     "name": "雑記",
-    "color": "yellow"
+    "color": "gray"
   },
   "日記": {
     "name": "日記",
     "color": "brown"
   },
+  "Idea": {
+    "name": "Idea",
+    "color": "brown"
+  },
+  "言語化": {
+    "name": "言語化",
+    "color": "brown"
+  },
   "test": {
     "name": "test",
     "color": "gray"
-  },
-  "Testing": {
-    "name": "Testing",
-    "color": "purple"
   },
   "Angular": {
     "name": "Angular",
@@ -35,29 +39,33 @@
     "name": "Angular CDK",
     "color": "red"
   },
-  "JavaScript": {
-    "name": "JavaScript",
-    "color": "yellow"
+  "components": {
+    "name": "components",
+    "color": "red"
+  },
+  "Forms": {
+    "name": "Forms",
+    "color": "red"
+  },
+  "standalone component": {
+    "name": "standalone component",
+    "color": "red"
+  },
+  "Signals": {
+    "name": "Signals",
+    "color": "red"
+  },
+  "ng-conf": {
+    "name": "ng-conf",
+    "color": "red"
   },
   "TypeScript": {
     "name": "TypeScript",
     "color": "blue"
   },
-  "router": {
-    "name": "router",
-    "color": "brown"
-  },
-  "forms": {
-    "name": "forms",
-    "color": "orange"
-  },
-  "feature": {
-    "name": "feature",
-    "color": "brown"
-  },
   "Notion": {
     "name": "Notion",
-    "color": "red"
+    "color": "gray"
   },
   "Markdown": {
     "name": "Markdown",
@@ -65,87 +73,111 @@
   },
   "GitHub": {
     "name": "GitHub",
-    "color": "green"
+    "color": "purple"
   },
   "GitHub Actions": {
     "name": "GitHub Actions",
-    "color": "orange"
+    "color": "purple"
   },
   "Rust": {
     "name": "Rust",
     "color": "blue"
   },
-  "WebAssembly": {
-    "name": "WebAssembly",
-    "color": "blue"
-  },
-  "wasm": {
-    "name": "wasm",
-    "color": "gray"
-  },
-  "SVG": {
-    "name": "SVG",
-    "color": "red"
-  },
-  "Node.js": {
-    "name": "Node.js",
-    "color": "orange"
-  },
-  "Nx": {
-    "name": "Nx",
-    "color": "purple"
-  },
-  "webpack": {
-    "name": "webpack",
-    "color": "brown"
-  },
-  "ESModule": {
-    "name": "ESModule",
-    "color": "default"
-  },
-  "Import Assertions": {
-    "name": "Import Assertions",
+  "Web": {
+    "name": "Web",
     "color": "yellow"
-  },
-  "状態管理": {
-    "name": "状態管理",
-    "color": "red"
-  },
-  "発表スライド": {
-    "name": "発表スライド",
-    "color": "green"
-  },
-  "components": {
-    "name": "components",
-    "color": "red"
-  },
-  "a11y": {
-    "name": "a11y",
-    "color": "blue"
-  },
-  "Web Components": {
-    "name": "Web Components",
-    "color": "green"
   },
   "HTML": {
     "name": "HTML",
     "color": "yellow"
   },
+  "CSS": {
+    "name": "CSS",
+    "color": "yellow"
+  },
+  "JavaScript": {
+    "name": "JavaScript",
+    "color": "yellow"
+  },
+  "SVG": {
+    "name": "SVG",
+    "color": "yellow"
+  },
+  "Web Worker": {
+    "name": "Web Worker",
+    "color": "yellow"
+  },
+  "WebAssembly": {
+    "name": "WebAssembly",
+    "color": "yellow"
+  },
+  "npm": {
+    "name": "npm",
+    "color": "yellow"
+  },
+  "Node.js": {
+    "name": "Node.js",
+    "color": "yellow"
+  },
+  "Trusted Types": {
+    "name": "Trusted Types",
+    "color": "yellow"
+  },
+  "webpack": {
+    "name": "webpack",
+    "color": "yellow"
+  },
+  "ESModule": {
+    "name": "ESModule",
+    "color": "yellow"
+  },
+  "webpackaging": {
+    "name": "webpackaging",
+    "color": "yellow"
+  },
+  "Import Assertions": {
+    "name": "Import Assertions",
+    "color": "yellow"
+  },
+  "Web Components": {
+    "name": "Web Components",
+    "color": "yellow"
+  },
+  "状態管理": {
+    "name": "状態管理",
+    "color": "brown"
+  },
+  "dependency injection": {
+    "name": "dependency injection",
+    "color": "brown"
+  },
+  "状態論": {
+    "name": "状態論",
+    "color": "brown"
+  },
+  "発表スライド": {
+    "name": "発表スライド",
+    "color": "gray"
+  },
+  "Accessibility": {
+    "name": "Accessibility",
+    "color": "green"
+  },
+  "UI": {
+    "name": "UI",
+    "color": "green"
+  },
+  "Design System": {
+    "name": "Design System",
+    "color": "green"
+  },
   "tailwindcss": {
     "name": "tailwindcss",
-    "color": "red"
-  },
-  "design system": {
-    "name": "design system",
-    "color": "orange"
+    "color": "green"
   },
   "Google Cloud": {
     "name": "Google Cloud",
-    "color": "orange"
-  },
-  "standalone component": {
-    "name": "standalone component",
-    "color": "pink"
+    "color": "blue"
   },
   "commit note": {
     "name": "commit note",
@@ -155,57 +187,45 @@
     "name": "browserslist",
     "color": "pink"
   },
-  "cypress": {
-    "name": "cypress",
+  "Testing": {
+    "name": "Testing",
     "color": "purple"
   },
-  "visual testing": {
-    "name": "visual testing",
-    "color": "gray"
+  "Cypress": {
+    "name": "Cypress",
+    "color": "purple"
   },
-  "dependency injection": {
-    "name": "dependency injection",
-    "color": "brown"
+  "Visual Testing": {
+    "name": "Visual Testing",
+    "color": "purple"
   },
-  "rxjs": {
-    "name": "rxjs",
-    "color": "blue"
+  "Vitest": {
+    "name": "Vitest",
+    "color": "purple"
+  },
+  "RxJS": {
+    "name": "RxJS",
+    "color": "purple"
   },
   "rx-angular": {
     "name": "rx-angular",
-    "color": "brown"
+    "color": "purple"
   },
-  "hostDirectives": {
-    "name": "hostDirectives",
+  "Testing Library": {
+    "name": "Testing Library",
+    "color": "purple"
+  },
+  "Jest": {
+    "name": "Jest",
     "color": "purple"
   },
   "example": {
     "name": "example",
-    "color": "green"
-  },
-  "IntersectionObserver": {
-    "name": "IntersectionObserver",
     "color": "default"
-  },
-  "状態論": {
-    "name": "状態論",
-    "color": "gray"
-  },
-  "jest": {
-    "name": "jest",
-    "color": "brown"
   },
   "Firebase": {
     "name": "Firebase",
-    "color": "green"
-  },
-  "Signals": {
-    "name": "Signals",
-    "color": "brown"
-  },
-  "thought": {
-    "name": "thought",
-    "color": "gray"
+    "color": "yellow"
   },
   "ECMAScript": {
     "name": "ECMAScript",
@@ -227,128 +247,84 @@
     "name": "AngularJS",
     "color": "purple"
   },
+  "Nx": {
+    "name": "Nx",
+    "color": "purple"
+  },
+  "GraphQL": {
+    "name": "GraphQL",
+    "color": "purple"
+  },
   "SSG": {
     "name": "SSG",
     "color": "purple"
   },
-  "webpackaging": {
-    "name": "webpackaging",
-    "color": "gray"
-  },
   "Ionic": {
     "name": "Ionic",
-    "color": "brown"
+    "color": "purple"
   },
-  "Web": {
-    "name": "Web",
-    "color": "blue"
+  "Docker": {
+    "name": "Docker",
+    "color": "purple"
   },
-  "Trusted Types": {
-    "name": "Trusted Types",
-    "color": "green"
+  "Hono": {
+    "name": "Hono",
+    "color": "purple"
+  },
+  "Astro": {
+    "name": "Astro",
+    "color": "purple"
+  },
+  "ESLint": {
+    "name": "ESLint",
+    "color": "purple"
+  },
+  "Bazel": {
+    "name": "Bazel",
+    "color": "purple"
+  },
+  "Discord": {
+    "name": "Discord",
+    "color": "purple"
   },
   "Security": {
     "name": "Security",
-    "color": "gray"
-  },
-  "translation": {
-    "name": "translation",
-    "color": "pink"
-  },
-  "Web Worker": {
-    "name": "Web Worker",
-    "color": "blue"
-  },
-  "js-primer": {
-    "name": "js-primer",
-    "color": "yellow"
-  },
-  "Book": {
-    "name": "Book",
-    "color": "brown"
-  },
-  "npm": {
-    "name": "npm",
-    "color": "gray"
-  },
-  "ng-conf": {
-    "name": "ng-conf",
-    "color": "default"
-  },
-  "GraphQL": {
-    "name": "GraphQL",
-    "color": "brown"
+    "color": "orange"
   },
   "OSS": {
     "name": "OSS",
     "color": "orange"
   },
-  "Bazel": {
-    "name": "Bazel",
-    "color": "green"
-  },
-  "ESLint": {
-    "name": "ESLint",
-    "color": "gray"
-  },
-  "Astro": {
-    "name": "Astro",
-    "color": "default"
-  },
-  "Testing Library": {
-    "name": "Testing Library",
-    "color": "gray"
-  },
-  "読書": {
-    "name": "読書",
-    "color": "blue"
-  },
-  "言語化": {
-    "name": "言語化",
-    "color": "brown"
-  },
-  "Vitest": {
-    "name": "Vitest",
-    "color": "brown"
-  },
   "Cloudflare": {
     "name": "Cloudflare",
     "color": "orange"
   },
-  "UI": {
-    "name": "UI",
-    "color": "orange"
+  "translation": {
+    "name": "translation",
+    "color": "gray"
   },
-  "Discord": {
-    "name": "Discord",
-    "color": "brown"
-  },
-  "Hono": {
-    "name": "Hono",
-    "color": "brown"
+  "js-primer": {
+    "name": "js-primer",
+    "color": "yellow"
   },
   "チーム": {
     "name": "チーム",
-    "color": "orange"
-  },
-  "Docker": {
-    "name": "Docker",
-    "color": "red"
-  },
-  "コミュニティ": {
-    "name": "コミュニティ",
-    "color": "default"
+    "color": "pink"
   },
   "ふりかえり": {
     "name": "ふりかえり",
-    "color": "default"
+    "color": "pink"
+  },
+  "コミュニティ": {
+    "name": "コミュニティ",
+    "color": "pink"
+  },
+  "読書": {
+    "name": "読書",
+    "color": "brown"
   },
   "英語史": {
     "name": "英語史",
-    "color": "purple"
-  },
-  "CSS": {
-    "name": "CSS",
-    "color": "gray"
+    "color": "brown"
   }
 }
