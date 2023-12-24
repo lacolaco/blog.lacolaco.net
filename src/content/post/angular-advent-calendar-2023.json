@@ -1,11 +1,12 @@
 {
   "pageId": "119f8e2c-8fc7-40f4-aa76-755373a0b009",
-  "lastEditedAt": "2023-12-23T14:21:00.000Z",
+  "lastEditedAt": "2023-12-24T08:04:00.000Z",
   "slug": "angular-advent-calendar-2023",
   "properties": {
     "title": "Angularでのボタンコンポーネントの作成",
-    "date": "2023-12-25T00:00:00.000Z",
-    "tags": ["Angular"]
+    "date": "2023-12-24T15:00:00.000Z",
+    "tags": ["Angular"],
+    "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-advent-calendar-2023"
   },
   "content": [
     {
@@ -13,7 +14,7 @@
       "text": [
         {
           "type": "text",
-          "text": "これはAngularアドベントカレンダー 2023の25日目の記事です。昨日はAKAIさんの[xxxx]でした。無事25日間のバトンパスが繋がって、アドベントカレンダーの主催としてとても嬉しいです。参加してくださったみなさんありがとうございました！",
+          "text": "これはAngularアドベントカレンダー 2023の25日目の記事です。無事25日間のバトンパスが繋がって、主催としてとても嬉しいです。参加してくださったみなさんありがとうございました！",
           "annotations": {}
         }
       ]
