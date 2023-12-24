@@ -1,0 +1,1371 @@
+{
+  "pageId": "4d172266-5b4b-488d-8049-bf2ac4fee642",
+  "lastEditedAt": "2023-12-24T00:37:00.000Z",
+  "slug": "deep-dive-angular-components-mat-divider",
+  "locale": "en",
+  "properties": {
+    "title": "Deep Dive into Angular Components: MatDivider",
+    "date": "2020-05-05T00:00:00.000Z",
+    "tags": ["Angular", "Angular Material"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This series explains how Angular Components are working by diving its source code deeply.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/components"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "MatDivider",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "MatDivider",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is one of the simplest component in the Angular Material library.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://material.angular.io/components/divider/overview"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "It just can display a line separator but its source code is worth to read enough.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/angular/components/blob/master/src/material/divider/divider.ts",
+          "href": "https://github.com/angular/components/blob/master/src/material/divider/divider.ts",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: 'mat-divider',\n  host: {\n    'role': 'separator',\n    '[attr.aria-orientation]': 'vertical ? \"vertical\" : \"horizontal\"',\n    '[class.mat-divider-vertical]': 'vertical',\n    '[class.mat-divider-horizontal]': '!vertical',\n    '[class.mat-divider-inset]': 'inset',\n    'class': 'mat-divider'\n  },\n  template: '',\n  styleUrls: ['divider.css'],\n  encapsulation: ViewEncapsulation.None,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})\nexport class MatDivider {\n  /** Whether the divider is vertically aligned. */\n  @Input()\n  get vertical(): boolean { return this._vertical; }\n  set vertical(value: boolean) { this._vertical = coerceBooleanProperty(value); }\n  private _vertical: boolean = false;\n\n  /** Whether the divider is an inset divider. */\n  @Input()\n  get inset(): boolean { return this._inset; }\n  set inset(value: boolean) { this._inset = coerceBooleanProperty(value); }\n  private _inset: boolean = false;\n\n  static ngAcceptInputType_vertical: BooleanInput;\n  static ngAcceptInputType_inset: BooleanInput;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "If you’ve understood every line above, you don’t need to read following parts.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Component Metadata",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "At first, look at the metadata of ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "MatDivider",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " line by line.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "@Component({\n  selector: 'mat-divider',\n  host: {\n    'role': 'separator',\n    '[attr.aria-orientation]': 'vertical ? \"vertical\" : \"horizontal\"',\n    '[class.mat-divider-vertical]': 'vertical',\n    '[class.mat-divider-horizontal]': '!vertical',\n    '[class.mat-divider-inset]': 'inset',\n    'class': 'mat-divider'\n  },\n  template: '',\n  styleUrls: ['divider.css'],\n  encapsulation: ViewEncapsulation.None,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n})"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "selector",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "selector",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " metadata is a CSS selector of the component. If you don’t know this, you may need to go back to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "getting started",
+          "href": "angular.io/start",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "host",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "host",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " metadata is a map of binding to host element. It can accept template syntax same as inner template.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://angular.io/api/core/Directive#host",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "'role': 'separator'",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "<mat-divider>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " host element has always ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "role=\"separator\"",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " attribute. This is an ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ARIA",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " role attribute. This arrtibute tells the User Agent this non-built-in HTML tag is a separator.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "The Roles Model | Accessible Rich Internet Applications (WAI-ARIA) 1.0",
+          "href": "https://www.w3.org/WAI/PF/aria/roles#separator",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "A divider that separates and distinguishes sections of content or groups of menuitems.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "'[attr.aria-orientation]': 'vertical ? \"vertical\" : \"horizontal\"'",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Above ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "separator",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " role supports ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "aria-orientation",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " which is a state of its orientation. If ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "MatDivider#vertical",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " property is true, it represents the separator is a vertical separator.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Supported States and Properties | Accessible Rich Internet Applications (WAI-ARIA) 1.0",
+          "href": "https://www.w3.org/WAI/PF/aria/states_and_properties#aria-orientation",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "'[class.mat-divider-vertical]': 'vertical'",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "It sets ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "mat-divider-vertical",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " class to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<mat-divider>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " host element by using ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "class binding",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". That class is used for styling you can see in ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "divider.scss",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/angular/components/blob/master/src/material/divider/divider.scss#L10-L14",
+          "href": "https://github.com/angular/components/blob/master/src/material/divider/divider.scss#L10-L14",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "scss",
+      "filename": "",
+      "text": "&.mat-divider-vertical {\n    border-top: 0;\n    border-right-width: $mat-divider-width;\n    border-right-style: solid;\n}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "'[class.mat-divider-horizontal]': '!vertical'",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This line is similar to the above but interestingly ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "mat-divider-horizontal",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " class is not used in the SCSS. How do you think why it is set?",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "https://github.com/angular/components/blob/master/src/material/divider/divider.scss",
+              "href": "https://github.com/angular/components/blob/master/src/material/divider/divider.scss",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": " ",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "https://github.com/angular/components/blob/master/src/material/divider/_divider-theme.scss",
+              "href": "https://github.com/angular/components/blob/master/src/material/divider/_divider-theme.scss",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": " ",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "As far I can imagine, this is set for user customization. Develoers can override horizontal-specific style by using ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".mat-divider-hotizontal",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". Angular Material supports user-customization at many points.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "scss",
+      "filename": "",
+      "text": ".my-app {\n    .mat-divider-horizontal {\n        border-top-width: 2px; // Override divider's thickness\n    }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "To know that philosophy, you can watch a talk by the Angular Material maintainer, Jeremy Elbourn.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://videos.ng-conf.org/videos/a-philosophy-for-designing-components-with-composition"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "'[class.mat-divider-inset]': 'inset'",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This sets ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".mat-divider-inset",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " class to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<mat-divider>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " host element.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "'class': 'mat-divider'",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This sets ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".mat-divider",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " class to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<mat-divider>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " host element. Most of (maybe all?) Angular Material components/directives set its own class to the host element.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "template: ''",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This component doesn’t has any children but just shows border of the host element.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "styleUrls: ['divider.css']",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This component has its own style. ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "divider.scss",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " will be compiled into ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "divider.css",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "encapsulation: ViewEncapsulation.None",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Interesting point! Angular Material components basically ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "don’t encapusulate its style",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". It means styles in ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "divider.css",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " are exposed to document global.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://angular.io/api/core/Component#encapsulation",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "encapusulation",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " metadata is set to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Emulated",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " by default so we can use safely styles in the component template scope. But scoped styles cannot be overrided from outside even developer. Angular Material explicitly turns off the mechanism to allow user customization.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "changeDetection: ChangeDetectionStrategy.OnPush",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "This component will be re-render only when its any input has been updated.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://web.dev/faster-angular-change-detection/"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "Component class",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Let’s step down into ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "MatDivider",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " class.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "export class MatDivider {\n  /** Whether the divider is vertically aligned. */\n  @Input()\n  get vertical(): boolean { return this._vertical; }\n  set vertical(value: boolean) { this._vertical = coerceBooleanProperty(value); }\n  private _vertical: boolean = false;\n\n  /** Whether the divider is an inset divider. */\n  @Input()\n  get inset(): boolean { return this._inset; }\n  set inset(value: boolean) { this._inset = coerceBooleanProperty(value); }\n  private _inset: boolean = false;\n\n  static ngAcceptInputType_vertical: BooleanInput;\n  static ngAcceptInputType_inset: BooleanInput;\n}"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "vertical",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " Input",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "MatDivider#vertical",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is a set of setter and getter. ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@Input()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " decorator can be placed on setter as well as a normal field.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular - Component interaction",
+          "href": "https://angular.io/guide/component-interaction#intercept-input-property-changes-with-a-setter",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "inset",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " Input",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Similar to ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vertical",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " . :slightly_smiling_face:",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "static ngAcceptInputType_vertical: BooleanInput;",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Interesting point again! This is a special static field for communication with Angular AoT compiler. This ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngAcceptInputType_{inputName}",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is a ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "hint",
+          "annotations": {
+            "italic": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " for type checking the input field with ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "input setter coercion",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". If you haven’t heard of input setter coercion, read the official document.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://angular.io/guide/template-typecheck#input-setter-coercion",
+          "href": "https://angular.io/guide/template-typecheck#input-setter-coercion",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "In short, sometimes an input field needs to accept a value which doesn’t match type. To allow user to write an input shorthand like ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<mat-divider vertial>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ", ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vertial",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " setter has to accept ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "''",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " in addition to boolean value.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "That is why",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "static ngAcceptInputType_vertical: BooleanInput;",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " exists. ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "BooleanInput",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " is a type provided from ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@angular/cdk/coercion",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ". ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngAcceptInputType_vertical",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " tells AoT compier that ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vertical",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " input can accept types ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "string | boolean | null | undefined",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": ".",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/angular/components/blob/master/src/cdk/coercion/boolean-property.ts",
+          "href": "https://github.com/angular/components/blob/master/src/cdk/coercion/boolean-property.ts",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "export type BooleanInput = string | boolean | null | undefined;"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "And actual coercion logic is also provided as ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "coerceBooleanProperty",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " by CDK. So every developers can use the same mechanism in any component.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "static ngAcceptInputType_inset: BooleanInput;",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Similar to the above.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Summary",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "MatDivider",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " has a ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "separator",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " role.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "MatDivider",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " provides CSS classes to allow user customization.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "MatDivider",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " displays only host element border.",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "MatDivider",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " can accept a shorthand of the boolean input like ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "<mat-divider vertical>",
+              "annotations": {
+                "code": true
+              }
+            }
+          ],
+          "children": []
+        }
+      ]
+    }
+  ]
+}

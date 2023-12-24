@@ -1,11 +1,12 @@
 {
   "pageId": "8e70c8ca-2d56-49b0-94b0-02c8332db5c5",
-  "lastEditedAt": "2023-05-21T05:08:00.000Z",
-  "slug": "angular-zoneless-router-activation-en",
+  "lastEditedAt": "2023-12-24T00:37:00.000Z",
+  "slug": "angular-zoneless-router-activation",
+  "locale": "en",
   "properties": {
     "title": "Zoneless Angular Tip: How To Detect Activated Route Change",
     "date": "2020-03-24T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "tags": ["Angular"]
   },
   "content": [
     {
@@ -73,7 +74,7 @@
     {
       "type": "image",
       "url": "https://img.esa.io/uploads/production/attachments/14362/2020/03/24/50720/db07c767-7618-4179-bba5-f6150881313b.png",
-      "caption": ""
+      "caption": []
     },
     {
       "type": "paragraph",

@@ -1,0 +1,248 @@
+{
+  "pageId": "eb942520-a359-4704-83d7-c4ba864b7ce8",
+  "lastEditedAt": "2023-12-24T00:37:00.000Z",
+  "slug": "angular-elements-composable-definition-pattern",
+  "locale": "en",
+  "properties": {
+    "title": "Angular Elements: Composable Definition Pattern",
+    "date": "2020-07-22T00:00:00.000Z",
+    "tags": ["Angular", "Angular Elements"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Assuming a situation we have…",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "An Angular component library project, ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "Lib1Module",
+              "annotations": {
+                "code": true
+              }
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "An Angular Elements library project, ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "Lib1ElementsModule",
+              "annotations": {
+                "code": true
+              }
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "An Angular Elements library project, ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "Lib2ElementsModule",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " which uses ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "Lib1ElementsModule",
+              "annotations": {
+                "code": true
+              }
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "It can be achieved with loading scripts of both Lib1 and Lib2 separately. But composing multiple Angular Elements definition brings some benefits.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Unified Angular bootstrapping (better performance)",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Single ",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "<script>",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " tag in HTML (free from loading order problem)",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Creating ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Lib1ElementsModule",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { createCustomElement } from '@angular/elements';\n\nexport function defineCustomElements(injector: Injector) {\n  customElements.define(\n    'lib1-button-element',\n    createCustomElement(Lib1ButtonComponent, { injector })\n  );\n}\n\n@NgModule({\n  imports: [Lib1Module],\n  // `entryComponents` is not needed if Ivy is enabled\n  entryComponents: [Lib1ButtonComponent],\n})\nexport class Lib1ElementsModule {\n  constructor(private readonly injector: Injector) {}\n\n  ngDoBootstrap() {\n    defineCustomElements(this.injector);\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "To use ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Lib1ElementsModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " , bootstrap it directly. Then ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngDoBootstrap()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " method will be called.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "// main.elements.ts\nplatformBrowserDynamic().bootstrapModule(Lib1ElementsModule);"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Creating ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Lib2ElementsModule",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Lib2ElementsModule",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " enables both Lib1 and Lib2 Angular Elements by composition.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "import { createCustomElement } from '@angular/elements';\nimport {\n  Lib1ElementsModule,\n  defineCustomElements as defineLib1Elements,\n} from 'lib1';\n\nexport function defineCustomElements(injector: Injector) {\n  customElements.define(\n    'lib2-card-element',\n    createCustomElement(Lib2CardComponent, { injector })\n  );\n}\n\n@NgModule({\n  imports: [Lib2Module, Lib1ElementsModule],\n  // `entryComponents` is not needed if Ivy is enabled\n  entryComponents: [Lib2CardComponent],\n})\nexport class Lib2ElementsModule {\n  constructor(private readonly injector: Injector) {}\n\n  ngDoBootstrap() {\n    // Compose definition\n    defineLib1Elements(this.injector);\n    defineCustomElements(this.injector);\n  }\n}"
+    }
+  ]
+}
