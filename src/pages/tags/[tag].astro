@@ -1,8 +1,8 @@
 ---
 import { PostData } from '@lib/post';
 import { queryPosts, queryTags } from '@lib/query';
-import List from '../../../layouts/List.astro';
-import { urlize } from '../../../libs/strings';
+import List from '../../layouts/List.astro';
+import { urlize } from '../../libs/strings';
 
 export async function getStaticPaths() {
   const posts = await queryPosts();
@@ -24,7 +24,6 @@ type Props = {
 };
 
 const { tag, posts } = Astro.props;
-const title = `Articles with #${tag}`;
 ---
 
-<List posts={posts} groupName={title} />
+<List posts={posts} tag={tag} />

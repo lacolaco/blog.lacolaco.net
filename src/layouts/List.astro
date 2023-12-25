@@ -2,6 +2,7 @@
 import { getRelativePostUrl } from '@lib/i18n';
 import { PostData } from '@lib/post';
 import { format as formatDate } from 'date-fns';
+import { urlize } from 'src/libs/strings';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
@@ -11,10 +12,10 @@ import { SITE_TITLE } from '../consts';
 
 type Props = {
   posts: PostData[];
-  groupName?: string;
+  tag?: string;
 };
 
-const { posts, groupName } = Astro.props;
+const { posts, tag } = Astro.props;
 const postsByYear = Array.from(
   posts
     .reduce((acc, post) => {
@@ -38,9 +39,17 @@ const postsByYear = Array.from(
     <Header class="container" showDescription />
     <main class="container py-4">
       {
-        groupName ? (
-          <div class="mb-4">
-            <h1 class="leading-none text-xl font-semibold">{groupName}</h1>
+        tag ? (
+          <div class="flex flex-row items-center justify-between mb-4">
+            <h1 class="leading-none text-xl font-semibold">{`Articles with #${tag}`}</h1>
+            <a
+              href={urlize(`${Astro.url.origin}/tags/${tag}.xml`)}
+              target="_blank"
+              class="flex flex-row items-center text-black text-sm border border-solid border-gray-300 rounded leading-relaxed px-2 hover:ring-2 hover:ring-gray-300"
+            >
+              <span class="icon-[ic--baseline-rss-feed]" />
+              <span class="">RSS</span>
+            </a>
           </div>
         ) : (
           <div class="mb-4 google-search-box h-[64px]">

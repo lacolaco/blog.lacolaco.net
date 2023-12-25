@@ -43,6 +43,8 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.0.0",
+    "@iconify/json": "^2.2.161",
+    "@iconify/tailwind": "^0.1.4",
     "@notionhq/client": "2.2.14",
     "@types/cli-progress": "3.11.5",
     "@types/gtag.js": "^0.0.18",

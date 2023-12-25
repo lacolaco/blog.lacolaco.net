@@ -2,6 +2,7 @@
  * @type { import('tailwindcss/plugin').TailwindPluginCreator }
  */
 const plugin = require('tailwindcss/plugin');
+const { addDynamicIconSelectors } = require('@iconify/tailwind');
 
 /**
  * @type { import('tailwindcss/tailwind-config').TailwindConfig }
@@ -49,8 +50,8 @@ module.exports = {
       },
       boxShadow: {
         tag: 'var(--box-shadow-tag)',
-        "tag-focus": 'var(--box-shadow-tag-focus)',
-      }
+        'tag-focus': 'var(--box-shadow-tag-focus)',
+      },
     },
   },
   plugins: [
@@ -108,7 +109,7 @@ module.exports = {
             '&+p': {
               marginTop: '1.5em',
               overflowWrap: 'break-word',
-            }
+            },
           },
           'figcaption p': {
             textAlign: 'center',
@@ -131,6 +132,7 @@ module.exports = {
         },
       });
     }),
+    addDynamicIconSelectors({}),
   ],
   corePlugins: {
     preflight: true,
