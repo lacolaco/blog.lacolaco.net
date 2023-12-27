@@ -7,7 +7,7 @@ const { videoId } = Astro.props;
 ---
 
 <div class="flex justify-center py-2">
-  <iframe id="ytplayer" width="640" height="360" src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}></iframe>
+  <iframe id="ytplayer" width="640" height="360" src={`https://www.youtube.com/embed/${videoId}?autoplay=1`} loading="lazy"></iframe>
 </div>
 
 <style>

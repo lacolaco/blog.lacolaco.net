@@ -7,7 +7,7 @@ const { url } = Astro.props;
 ---
 
 <div class="my-4 flex justify-center">
-  <iframe class="stackblitz-iframe" src={url}></iframe>
+  <iframe class="stackblitz-iframe" src={url} loading="lazy"></iframe>
 </div>
 
 <style>

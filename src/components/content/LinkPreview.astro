@@ -7,5 +7,5 @@ const { url } = Astro.props;
 ---
 
 <div class="my-4 flex justify-center">
-  <iframe class="border-none w-full" src={`/embed?url=${url}`} height="122"></iframe>
+  <iframe class="border-none w-full" src={`/embed?url=${url}`} height="122" loading="lazy"></iframe>
 </div>
