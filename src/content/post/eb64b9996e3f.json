@@ -1,0 +1,101 @@
+{
+  "pageId": "86b6e95a-21b6-49e0-b865-871a62030d47",
+  "lastEditedAt": "2023-12-27T00:21:00.000Z",
+  "slug": "eb64b9996e3f",
+  "properties": {
+    "title": "ブログ記事中のiframeに遅延読み込みを有効にした",
+    "date": "2023-12-27T00:12:00.000Z",
+    "tags": ["日記", "Web"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "先週の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "JSer.info",
+          "href": "http://jser.info/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " を読んでいたら、Firefoxがiframeの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "loading",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "属性に対応したという変更点を知った。そういえばiframeの遅延読み込みについて完全に忘れていたので、ブログ記事中のiframeに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "loading",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "属性をつけるようにした。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://jser.info/2023/12/23/date-fns-3.0.0-firefox-121-react-aria-components-1.0.0-catalyst/"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Releases/121"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://developer.mozilla.org/ja/docs/Web/HTML/Element/iframe#loading"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "作業はただ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "loading=\"lazy\"",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をつけるだけなので特に書くことはない。ブログ記事上のiframeはすべて幅と高さを固定しているので、遅延読み込みにしたことによるレイアウトシフトの心配もなかった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "iframeはたくさん属性があるが正直覚えていないので、他にもつけるべき属性を忘れていそうだ。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}

@@ -71,6 +71,7 @@ export type LinkPreviewNode = Node<'link_preview'> & {
 
 export type ImageNode = Node<'image'> & {
   readonly url: string;
+  readonly external?: boolean;
   readonly caption: TextNodeArray | string;
 };
 

@@ -177,7 +177,12 @@ export class ContentTransformer {
 
   async #image(block: notion.BlockObject<'image'>): Promise<ImageNode> {
     if (block.image.type === 'external') {
-      return { type: 'image', url: block.image.external.url, caption: this.#richtext(block.image.caption) };
+      return {
+        type: 'image',
+        external: true,
+        url: block.image.external.url,
+        caption: this.#richtext(block.image.caption),
+      };
     }
     const url = block.image.file.url;
     const [fileId, ext] = new URL(url).pathname.match(/^(.+)\/.+\.(.+)$/)?.slice(1) ?? [];
@@ -187,7 +192,12 @@ export class ContentTransformer {
     const filepath = `${this.page.slug}${fileId}.${ext}`;
     const file = await getFile(url);
     await this.imageFS.save(filepath, file);
-    return { type: 'image', url: `/images/${filepath}`, caption: this.#richtext(block.image.caption) };
+    return {
+      type: 'image',
+      external: false,
+      url: this.imageFS.resolveAbsolutePath(filepath),
+      caption: this.#richtext(block.image.caption),
+    };
   }
 
   #callout(block: notion.BlockObject<'callout'>): CalloutNode {

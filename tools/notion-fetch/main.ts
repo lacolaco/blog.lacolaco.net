@@ -12,7 +12,7 @@ if (NOTION_AUTH_TOKEN == null) {
   process.exit(1);
 }
 
-const imagesDir = new URL('../../public/images', import.meta.url).pathname;
+const imagesDir = new URL('../../src/content/images', import.meta.url).pathname;
 const pageCacheDir = new URL('../../.cache/page', import.meta.url).pathname;
 const postJsonDir = new URL('../../src/content/post', import.meta.url).pathname;
 const tagsJsonDir = new URL('../../src/content/tags', import.meta.url).pathname;

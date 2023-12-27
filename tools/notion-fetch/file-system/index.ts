@@ -36,4 +36,8 @@ export class FileSystem {
     const dirPath = path.resolve(this.rootDir, target);
     await rm(dirPath, { recursive: true, force: true });
   }
+
+  resolveAbsolutePath(filename: string): string {
+    return path.resolve(this.rootDir, filename);
+  }
 }
