@@ -7,6 +7,10 @@ type Props = ImageNode;
 
 // external=true by default
 const { url, caption, external = true } = Astro.props;
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/images/**/*.{jpg,jpeg,png,gif,svg}');
+if (!external && !images[url]) {
+  throw new Error(`"${url}" does not exist in glob: "src/content/images/**/*"`);
+}
 ---
 
 <figure class="flex flex-col items-center py-2">
@@ -16,7 +20,7 @@ const { url, caption, external = true } = Astro.props;
     ) : (
       <AstroImage
         class:list="object-contain w-full md:max-w-screen-md max-h-[50vh]"
-        src={import(url)}
+        src={images[url]()}
         alt={caption ? (Array.isArray(caption) ? caption.map((node) => node.text).join('') : caption) : ''}
       />
     )

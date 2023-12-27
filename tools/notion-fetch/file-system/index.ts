@@ -7,21 +7,26 @@ type ReadFileResult = Awaited<ReturnType<typeof readFile>>;
 
 export class FileSystem {
   constructor(
-    private readonly rootDir: string,
+    private readonly root: string,
+    private readonly base: string,
     private readonly options: { dryRun?: boolean } = {},
   ) {}
+
+  private get dir() {
+    return path.resolve(this.root, this.base);
+  }
 
   async save(filename: string, data: WriteFileData, writeFileOptions?: WriteFileOptions) {
     if (this.options.dryRun) {
       return;
     }
-    const filePath = path.resolve(this.rootDir, filename);
+    const filePath = path.resolve(this.dir, filename);
     await mkdir(path.dirname(filePath), { recursive: true });
     await writeFile(filePath, data, writeFileOptions);
   }
 
   async load(filename: string): Promise<ReadFileResult | null> {
-    const filePath = path.resolve(this.rootDir, filename);
+    const filePath = path.resolve(this.dir, filename);
     try {
       return await readFile(filePath);
     } catch (e) {
@@ -33,11 +38,11 @@ export class FileSystem {
     if (this.options.dryRun) {
       return;
     }
-    const dirPath = path.resolve(this.rootDir, target);
+    const dirPath = path.resolve(this.dir, target);
     await rm(dirPath, { recursive: true, force: true });
   }
 
-  resolveAbsolutePath(filename: string): string {
-    return path.resolve(this.rootDir, filename);
+  resolveLocalPathFromRoot(filename: string): string {
+    return `/${path.relative(this.root, path.resolve(this.dir, filename))}`;
   }
 }

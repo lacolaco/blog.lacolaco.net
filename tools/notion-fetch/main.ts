@@ -12,10 +12,7 @@ if (NOTION_AUTH_TOKEN == null) {
   process.exit(1);
 }
 
-const imagesDir = new URL('../../src/content/images', import.meta.url).pathname;
-const pageCacheDir = new URL('../../.cache/page', import.meta.url).pathname;
-const postJsonDir = new URL('../../src/content/post', import.meta.url).pathname;
-const tagsJsonDir = new URL('../../src/content/tags', import.meta.url).pathname;
+const root = new URL('../..', import.meta.url).pathname;
 
 const { values } = parseArgs({
   args: process.argv.slice(2),
@@ -37,10 +34,10 @@ const { force = false, 'dry-run': dryRun = false, debug = false } = values;
 
 async function main() {
   const db = new NotionDatabase(NOTION_AUTH_TOKEN, NOTION_DATABASE_ID);
-  const imagesFS = new FileSystem(imagesDir, { dryRun });
-  const postJsonFS = new FileSystem(postJsonDir, { dryRun });
-  const pageCacheFS = new FileSystem(pageCacheDir, { dryRun });
-  const tagsJsonFS = new FileSystem(tagsJsonDir, { dryRun });
+  const imagesFS = new FileSystem(root, 'src/content/images', { dryRun });
+  const postJsonFS = new FileSystem(root, 'src/content/post', { dryRun });
+  const pageCacheFS = new FileSystem(root, 'cache/page', { dryRun });
+  const tagsJsonFS = new FileSystem(root, 'src/content/tags', { dryRun });
 
   console.log('Fetching database properties...');
   const properties = await db.getDatabaseProperties();
