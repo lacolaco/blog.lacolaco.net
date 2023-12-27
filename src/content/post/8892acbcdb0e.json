@@ -1,11 +1,11 @@
 {
   "pageId": "a1bb976f-7cd0-4fd0-a892-7a6ada485f97",
-  "lastEditedAt": "2023-12-27T06:06:00.000Z",
+  "lastEditedAt": "2023-12-27T07:19:00.000Z",
   "slug": "8892acbcdb0e",
   "properties": {
     "title": "Astroの画像最適化を利用する",
     "date": "2023-12-27T05:34:00.000Z",
-    "tags": ["日記", "Astro"]
+    "tags": ["日記", "Astro", "Blog Dev"]
   },
   "content": [
     {
@@ -228,7 +228,7 @@
       "type": "image",
       "external": false,
       "url": "/src/content/images/8892acbcdb0e/3c6255ea-b6c7-4055-8126-638d2819f0c3/2fc9b104-20e3-45fc-96eb-7b1b896aed99.png",
-      "caption": []
+      "caption": ""
     }
   ]
 }

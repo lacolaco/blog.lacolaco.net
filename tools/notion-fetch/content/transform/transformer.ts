@@ -181,7 +181,7 @@ export class ContentTransformer {
         type: 'image',
         external: true,
         url: block.image.external.url,
-        caption: this.#richtext(block.image.caption),
+        caption: this.#plaintext(block.image.caption),
       };
     }
     const url = block.image.file.url;
@@ -196,7 +196,7 @@ export class ContentTransformer {
       type: 'image',
       external: false,
       url: this.imageFS.resolveLocalPathFromRoot(filepath),
-      caption: this.#richtext(block.image.caption),
+      caption: this.#plaintext(block.image.caption),
     };
   }
 

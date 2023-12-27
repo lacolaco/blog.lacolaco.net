@@ -104,6 +104,10 @@ module.exports = {
             padding: `${theme('padding.8')} ${theme('padding.4')} ${theme('padding.8')} ${theme('padding.8')}`,
             borderRadius: theme('borderRadius.lg'),
           },
+          '[data-code-filename] + pre': {
+            position: 'relative',
+            'border-top-left-radius': '0',
+          },
           p: {
             lineHeight: '1.9',
             '&+p': {

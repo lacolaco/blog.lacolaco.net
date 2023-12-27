@@ -1,11 +1,11 @@
 {
   "pageId": "47d8a289-80af-4cd7-a943-2091d4335b30",
-  "lastEditedAt": "2023-05-11T00:29:00.000Z",
+  "lastEditedAt": "2023-12-27T07:22:00.000Z",
   "slug": "notion-headless-cms-3",
   "properties": {
     "title": "NotionヘッドレスCMS化記録 (3) GitHub Actionsと自動デプロイ",
     "date": "2022-02-15T23:13:00.000Z",
-    "tags": ["tech", "Notion", "GitHub Actions", "GitHub"]
+    "tags": ["Notion", "GitHub Actions", "GitHub", "Blog Dev"]
   },
   "content": [
     {
@@ -318,7 +318,8 @@
     },
     {
       "type": "image",
-      "url": "/images/notion-headless-cms-3/a77e6ae3-f511-4160-b81b-0582ca167cf7/Untitled.png",
+      "external": false,
+      "url": "/src/content/images/notion-headless-cms-3/3c6255ea-b6c7-4055-8126-638d2819f0c3/a77e6ae3-f511-4160-b81b-0582ca167cf7.png",
       "caption": ""
     },
     {

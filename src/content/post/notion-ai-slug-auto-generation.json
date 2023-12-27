@@ -1,11 +1,11 @@
 {
   "pageId": "b32d2012-806c-4c34-8ecc-004f9385e1c0",
-  "lastEditedAt": "2023-11-08T01:19:00.000Z",
+  "lastEditedAt": "2023-12-27T07:21:00.000Z",
   "slug": "notion-ai-slug-auto-generation",
   "properties": {
     "title": "Notion AIがslugを作ってくれるらしい",
     "date": "2023-06-23T00:29:00.000Z",
-    "tags": ["雑記", "Notion"]
+    "tags": ["雑記", "Notion", "Blog Dev"]
   },
   "content": [
     {
@@ -20,8 +20,9 @@
     },
     {
       "type": "image",
-      "url": "/images/notion-ai-slug-auto-generation/aee76647-b158-4262-b191-f76497adb6fb/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/notion-ai-slug-auto-generation/3c6255ea-b6c7-4055-8126-638d2819f0c3/aee76647-b158-4262-b191-f76497adb6fb.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -53,8 +54,9 @@
     },
     {
       "type": "image",
-      "url": "/images/notion-ai-slug-auto-generation/bf92cb5e-6ffa-493e-a2c2-a2a4f7041669/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/notion-ai-slug-auto-generation/3c6255ea-b6c7-4055-8126-638d2819f0c3/bf92cb5e-6ffa-493e-a2c2-a2a4f7041669.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
