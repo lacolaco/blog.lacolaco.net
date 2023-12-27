@@ -1,6 +1,6 @@
 {
   "pageId": "119f8e2c-8fc7-40f4-aa76-755373a0b009",
-  "lastEditedAt": "2023-12-24T15:01:00.000Z",
+  "lastEditedAt": "2023-12-27T07:26:00.000Z",
   "slug": "angular-advent-calendar-2023",
   "properties": {
     "title": "Angularでのボタンコンポーネントの作成",
@@ -193,7 +193,7 @@
     {
       "type": "code",
       "language": "typescript",
-      "filename": "",
+      "filename": "awesome-button.component.ts",
       "text": "import { Component } from '@angular/core';\n\n@Component({\n  selector: `\n  button[awesome-button],\n  input[type=button][awesome-button],\n  input[type=file][awesome-button]\n  `,\n  standalone: true,\n  template: `<ng-content />`,\n  host: {\n    class: 'awesome-button',\n  },\n})\nexport class AwesomeButton {}"
     },
     {

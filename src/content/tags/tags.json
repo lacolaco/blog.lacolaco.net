@@ -326,5 +326,9 @@
   "英語史": {
     "name": "英語史",
     "color": "brown"
+  },
+  "Blog Dev": {
+    "name": "Blog Dev",
+    "color": "gray"
   }
 }

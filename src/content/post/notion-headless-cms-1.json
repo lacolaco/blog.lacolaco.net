@@ -1,11 +1,11 @@
 {
   "pageId": "0d887003-a8d1-457f-a6be-c484dfcb2346",
-  "lastEditedAt": "2023-05-11T00:29:00.000Z",
+  "lastEditedAt": "2023-12-27T07:21:00.000Z",
   "slug": "notion-headless-cms-1",
   "properties": {
     "title": "NotionヘッドレスCMS化記録 (1) Notion APIとTypeScript",
     "date": "2022-02-13T10:22:00.000Z",
-    "tags": ["tech", "Notion", "TypeScript"]
+    "tags": ["Notion", "TypeScript", "Blog Dev"]
   },
   "content": [
     {
@@ -19,7 +19,7 @@
         {
           "type": "text",
           "text": "https://blog.lacolaco.net",
-          "href": "https://blog.lacolaco.net",
+          "href": "https://blog.lacolaco.net/",
           "annotations": {}
         },
         {
@@ -30,7 +30,7 @@
         {
           "type": "text",
           "text": "Hugo",
-          "href": "https://gohugo.io",
+          "href": "https://gohugo.io/",
           "annotations": {}
         },
         {
@@ -41,7 +41,7 @@
         {
           "type": "text",
           "text": "Notion",
-          "href": "https://notion.so",
+          "href": "https://notion.so/",
           "annotations": {}
         },
         {

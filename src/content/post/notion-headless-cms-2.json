@@ -1,11 +1,11 @@
 {
   "pageId": "4047b3f1-3e88-4bca-b275-7dd81a6eef99",
-  "lastEditedAt": "2023-05-11T00:29:00.000Z",
+  "lastEditedAt": "2023-12-27T07:22:00.000Z",
   "slug": "notion-headless-cms-2",
   "properties": {
     "title": "NotionヘッドレスCMS化記録 (2) ページプロパティの読み取りとMarkdown生成",
     "date": "2022-02-13T23:59:00.000Z",
-    "tags": ["tech", "Notion", "Markdown"]
+    "tags": ["Notion", "Markdown", "Blog Dev"]
   },
   "content": [
     {
@@ -143,8 +143,15 @@
     },
     {
       "type": "image",
-      "url": "/images/notion-headless-cms-2/a91ff2bf-6fba-4f51-a2f8-780243849007/Untitled.png",
-      "caption": "ページプロパティ"
+      "external": false,
+      "url": "/src/content/images/notion-headless-cms-2/3c6255ea-b6c7-4055-8126-638d2819f0c3/a91ff2bf-6fba-4f51-a2f8-780243849007.png",
+      "caption": [
+        {
+          "type": "text",
+          "text": "ページプロパティ",
+          "annotations": {}
+        }
+      ]
     },
     {
       "type": "paragraph",
