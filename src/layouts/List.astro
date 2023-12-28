@@ -9,6 +9,7 @@ import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import TagList from '../components/TagList.astro';
 import { SITE_TITLE } from '../consts';
+import MainContainer from 'src/components/MainContainer.astro';
 
 type Props = {
   posts: PostData[];
@@ -35,9 +36,10 @@ const postsByYear = Array.from(
     <BaseHead title={SITE_TITLE} description={''} />
   </head>
 
-  <body class="font-base">
-    <Header class="container" showDescription />
-    <main class="container py-4">
+  <body class="font-base bg-default">
+    <Header class="mb-4" showDescription />
+
+    <MainContainer class="py-6">
       {
         tag ? (
           <div class="flex flex-row items-center justify-between mb-4">
@@ -52,7 +54,7 @@ const postsByYear = Array.from(
             </a>
           </div>
         ) : (
-          <div class="mb-4 google-search-box h-[64px]">
+          <div class="google-search-box h-[64px]">
             <div class="gcse-search" />
           </div>
         )
@@ -64,7 +66,7 @@ const postsByYear = Array.from(
               <h2 class="mb-4 text-3xl font-bold">{year}</h2>
               <ul class="list-none">
                 {posts.map((post) => (
-                  <li class="pb-4 border-solid border-transparent">
+                  <li class="my-2 p-1 has-[:focus]:shadow-md has-[:hover]:shadow-md ring-gray-200 has-[:hover]:ring-1">
                     <div class="flex flex-col items-start leading-none">
                       <FormattedDate class="text-xs text-muted align-middle" date={post.properties.date} />
                       <a class="no-underline" href={getRelativePostUrl(post)}>
@@ -81,8 +83,9 @@ const postsByYear = Array.from(
           ))
         }
       </div>
-    </main>
-    <Footer class="container py-4" />
+    </MainContainer>
+
+    <Footer class="py-4" />
 
     <script async src="https://cse.google.com/cse.js?cx=016749829816792588257:vx30glhznqb"></script>
   </body>

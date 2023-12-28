@@ -10,6 +10,7 @@ import Content from '../components/content/Content.astro';
 import { SITE_TITLE } from '../consts';
 import ShareButtons from '../components/ShareButtons.astro';
 import MessageBox from 'src/components/MessageBox.astro';
+import MainContainer from 'src/components/MainContainer.astro';
 
 type Props = {
   post: PostData;
@@ -44,12 +45,12 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
   </head>
 
-  <body class="font-base">
-    <Header class="container" />
+  <body class="font-base bg-default">
+    <Header class="mb-4" />
 
-    <main class="container py-4">
+    <MainContainer class="py-6">
       <article>
-        <header class="mb-4">
+        <header class="mb-6">
           <div class="leading-none">
             <span class="text-sm text-muted">
               <FormattedDate date={date} />
@@ -98,9 +99,9 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
           <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
         </div>
       </article>
-    </main>
+    </MainContainer>
 
-    <Footer class="container py-4" />
+    <Footer class="py-4" />
 
     <script async crossorigin="anonymous" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"

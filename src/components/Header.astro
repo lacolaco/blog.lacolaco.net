@@ -9,7 +9,7 @@ type Props = {
 const { class: className, showDescription } = Astro.props;
 ---
 
-<header class={className}>
+<header class="max-w-screen-lg mx-[2rem] lg:mx-auto" class:list={className}>
   <div class="relative">
     <div class="flex flex-row items-center justify-end gap-x-4 py-2 text-sm font-semibold">
       <div class="flex items-center">
@@ -30,7 +30,7 @@ const { class: className, showDescription } = Astro.props;
       </div>
     </div>
 
-    <div class="font-title flex flex-col items-center pt-2 gap-y-1">
+    <div class="font-title flex flex-col items-center py-2 gap-y-1">
       <a href="/" class="text-center text-3xl font-semibold text-default hover:text-default-muted hover:underline">
         {SITE_TITLE}
       </a>

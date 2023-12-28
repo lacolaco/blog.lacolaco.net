@@ -40,12 +40,7 @@ module.exports = {
       container: {
         center: true,
         padding: {
-          DEFAULT: '2rem',
-          sm: '4rem',
-          md: '6rem',
-          lg: '8rem',
-          xl: '16rem',
-          '2xl': '24rem',
+          DEFAULT: '3rem',
         },
       },
       boxShadow: {

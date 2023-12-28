@@ -1,4 +1,5 @@
 ---
+import MainContainer from 'src/components/MainContainer.astro';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
@@ -24,24 +25,25 @@ const sortedTags = tags.sort((a, b) => a.name.localeCompare(b.name));
     <BaseHead title={SITE_TITLE} description={''} />
   </head>
 
-  <body class="font-base">
-    <Header class="container" />
+  <body class="font-base bg-default">
+    <Header class="mb-4" />
 
-    <main class="container py-4">
+    <MainContainer class="py-6">
       <div class="mb-4">
         <h1 class="text-2xl font-bold">Tags</h1>
       </div>
 
-      <ul class="list-none flex flex-wrap">
+      <ul class="list-none grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
         {
           sortedTags.map((tag) => (
-            <li class="mr-2 mb-2">
+            <li class="">
               <Tag name={tag.name} count={tag.usedCount} />
             </li>
           ))
         }
       </ul>
-    </main>
-    <Footer class="container py-4" />
+    </MainContainer>
+
+    <Footer class="py-4" />
   </body>
 </html>

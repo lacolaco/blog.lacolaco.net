@@ -8,7 +8,7 @@
   --color-text-accent: #0969da;
   --color-text-code-inline: #eb5757;
 
-  --color-bg-default: rgba(255, 255, 255, 0.9);
+  --color-bg-default: theme('colors.gray.100');
   --color-bg-muted: rgba(175, 184, 193, 0.2);
   --color-bg-subtle: #f6f8fa;
 
