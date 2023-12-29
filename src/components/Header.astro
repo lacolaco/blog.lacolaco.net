@@ -9,9 +9,21 @@ type Props = {
 const { class: className, showDescription } = Astro.props;
 ---
 
-<header class="max-w-screen-lg mx-[2rem] lg:mx-auto" class:list={className}>
-  <div class="relative">
-    <div class="flex flex-row items-center justify-end gap-x-4 py-2 text-sm font-semibold">
+<header
+  class="max-w-screen-lg mx-[2rem] lg:mx-auto flex flex-col gap-y-3 pt-3 pb-3 has-[[data-description]]:pb-6"
+  class:list={className}
+>
+  <div class="w-full grid grid-cols-[1fr_auto_1fr] items-center">
+    <div></div>
+    <div>
+      <a
+        href="/"
+        class="font-title text-center text-2xl font-semibold text-default hover:text-default-muted hover:underline"
+      >
+        {SITE_TITLE}
+      </a>
+    </div>
+    <div class="flex flex-row items-center justify-end gap-x-4 text-sm font-semibold">
       <div class="flex items-center">
         <a href="/tags/" class="text-default hover:text-default-muted hover:no-underline" title="tags">Tags</a>
       </div>
@@ -29,12 +41,14 @@ const { class: className, showDescription } = Astro.props;
         </a>
       </div>
     </div>
-
-    <div class="font-title flex flex-col items-center py-2 gap-y-1">
-      <a href="/" class="text-center text-3xl font-semibold text-default hover:text-default-muted hover:underline">
-        {SITE_TITLE}
-      </a>
-      {showDescription && <p class="text-center text-sm text-default-muted">{SITE_DESCRIPTION}</p>}
-    </div>
   </div>
+  {
+    showDescription && (
+      <div class="w-full font-title flex flex-col items-center">
+        <p data-description class="text-center text-xs text-default-muted">
+          {SITE_DESCRIPTION}
+        </p>
+      </div>
+    )
+  }
 </header>
