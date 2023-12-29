@@ -62,9 +62,13 @@ const postsByYear = Array.from(
         }
         <div>
           {
-            postsByYear.map(([year, posts]) => (
+            postsByYear.map(([year, posts], index) => (
               <div>
-                <h2 class="mb-4 text-3xl font-bold">{year}</h2>
+                {index > 0 && (
+                  <div class="my-2 text-center text-sm leading-none before:block before:h-[1px] before:bg-gray-300 before:translate-y-[0.5em]">
+                    <span class="inline-block font-semibold text-muted bg-white px-2 relative z-10">{year}</span>
+                  </div>
+                )}
                 <ul class="list-none">
                   {posts.map((post) => (
                     <li class="my-2 p-1 has-[:focus]:shadow-md has-[:hover]:shadow-md ring-gray-200 has-[:hover]:ring-1">
