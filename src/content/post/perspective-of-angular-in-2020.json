@@ -1,11 +1,11 @@
 {
   "pageId": "6c416ea1-7a9c-4a04-8435-2c68031918af",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "perspective-of-angular-in-2020",
   "properties": {
     "title": "Perspective of Angular in 2020",
     "date": "2019-12-24T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "tags": ["Angular"]
   },
   "content": [
     {
@@ -68,6 +68,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/9sjiaz24ylo3mkzv452h.png",
       "caption": ""
     },
@@ -195,6 +196,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/jdzaga3nqhdcpmme3f5r.png",
       "caption": ""
     },
@@ -268,6 +270,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/6fwy0bik2qvk3zg7vy2w.png",
       "caption": ""
     },
@@ -412,6 +415,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/o9jdhu7hnehu6nilvox1.png",
       "caption": ""
     },
@@ -506,6 +510,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/pdtd8uxo3ufhpor2xxov.png",
       "caption": ""
     },
@@ -531,6 +536,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/i02nrvikd85y155h8jnh.png",
       "caption": ""
     },
@@ -556,6 +562,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/7u864ar7jlo5kswpmvbp.png",
       "caption": ""
     },
@@ -615,6 +622,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/tuv6hs4x8q3uixy5eqov.png",
       "caption": ""
     },
@@ -640,6 +648,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/hszzj8cdz6iz3j4alq1r.png",
       "caption": ""
     },
@@ -665,6 +674,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/e3wh8qv74vvckynk3tfi.png",
       "caption": ""
     },
@@ -735,6 +745,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/25falcvn758qgrcmbs81.png",
       "caption": ""
     },
@@ -771,6 +782,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/vfjyz3pk8rbozpr0zle9.png",
       "caption": ""
     },
@@ -786,6 +798,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/c8fkyjsphy8aik96c8s1.png",
       "caption": ""
     },
@@ -801,6 +814,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/72w7lx7xke72jygwbpwi.png",
       "caption": ""
     },

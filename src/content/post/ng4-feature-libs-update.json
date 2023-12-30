@@ -1,11 +1,11 @@
 {
   "pageId": "aa3078a5-d0bb-4538-aa41-5008ca903a52",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "ng4-feature-libs-update",
   "properties": {
     "title": "[Angular 4.0] router/http/animationsモジュールの更新について",
     "date": "2017-03-13T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "tags": ["Angular"]
   },
   "content": [
     {

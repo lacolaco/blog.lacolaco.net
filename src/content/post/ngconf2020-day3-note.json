@@ -1,15 +1,16 @@
 {
   "pageId": "696576eb-42b4-4c26-8344-2a1ef14f2515",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "ngconf2020-day3-note",
   "properties": {
     "title": "ng-conf 2020 Day3 Note",
     "date": "2020-04-04T00:00:00.000Z",
-    "tags": ["tech", "Angular", "ng-conf"]
+    "tags": ["Angular", "ng-conf"]
   },
   "content": [
     {
       "type": "image",
+      "external": true,
       "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/02/50720/aec1ce9a-d11f-4e26-a5ee-f7761f54d7a3.png",
       "caption": ""
     },

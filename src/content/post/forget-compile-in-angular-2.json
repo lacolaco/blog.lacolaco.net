@@ -1,11 +1,11 @@
 {
   "pageId": "b423a3ed-d0c9-4e59-9e12-35e08c72bc64",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "forget-compile-in-angular-2",
   "properties": {
     "title": "Forget $compile in Angular 2",
     "date": "2016-10-02T00:00:00.000Z",
-    "tags": ["tech", "Angular", "AngularJS"]
+    "tags": ["Angular", "AngularJS"]
   },
   "content": [
     {

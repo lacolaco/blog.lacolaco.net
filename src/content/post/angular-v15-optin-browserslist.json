@@ -1,11 +1,11 @@
 {
   "pageId": "5d1a14f0-328a-4165-a2e5-80e75aefe9ec",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "angular-v15-optin-browserslist",
   "properties": {
     "title": "Angular: browserslist設定ファイルの削除とオプトイン (v15)",
     "date": "2022-09-15T00:09:00.000Z",
-    "tags": ["Angular", "tech", "browserslist", "commit note"],
+    "tags": ["Angular", "browserslist", "commit note"],
     "updatedAt": "2022-09-15T00:00:00.000Z"
   },
   "content": [

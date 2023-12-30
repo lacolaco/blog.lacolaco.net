@@ -1,11 +1,11 @@
 {
   "pageId": "73231349-3482-40fc-a317-e3cd68e612a3",
-  "lastEditedAt": "2023-05-21T06:36:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "angular-v6-tree-shakable-di",
   "properties": {
     "title": "Angular v6で導入されるTree-Shakable DIの紹介",
     "date": "2018-03-01T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "tags": ["Angular"]
   },
   "content": [
     {
@@ -132,6 +132,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180301/20180301145501.png",
       "caption": ""
     },
@@ -240,6 +241,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180301/20180301145857.png",
       "caption": ""
     },
@@ -255,6 +257,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180301/20180301150137.png",
       "caption": ""
     },

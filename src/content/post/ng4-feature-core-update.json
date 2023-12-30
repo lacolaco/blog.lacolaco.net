@@ -1,11 +1,11 @@
 {
   "pageId": "de7ff9bc-e847-4322-bc47-d3f686b88db6",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "ng4-feature-core-update",
   "properties": {
     "title": "[Angular 4.0] core/commonモジュールの変更について",
     "date": "2017-03-09T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "tags": ["Angular"]
   },
   "content": [
     {

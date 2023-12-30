@@ -1,16 +1,17 @@
 {
   "pageId": "c3927100-7462-4b3e-acb7-75d58b6b9652",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:07:00.000Z",
   "slug": "state-of-angular-elements-2020-summer",
   "properties": {
     "title": "Angular Elementsの現在地 (2020 Summer)",
     "date": "2020-09-22T00:00:00.000Z",
-    "tags": ["tech", "Angular", "Angular Elements"]
+    "tags": ["Angular", "Angular Elements"]
   },
   "content": [
     {
       "type": "image",
-      "url": "/images/state-of-angular-elements-2020-summer/17281319-b5cb-4006-8ef4-cd0295651891/2020-09-22T17-35-00.png",
+      "external": false,
+      "url": "/src/content/images/state-of-angular-elements-2020-summer/3c6255ea-b6c7-4055-8126-638d2819f0c3/17281319-b5cb-4006-8ef4-cd0295651891.png",
       "caption": ""
     },
     {
@@ -172,7 +173,8 @@
     },
     {
       "type": "image",
-      "url": "/images/state-of-angular-elements-2020-summer/b98e5ea8-a029-424f-b57b-9908b0ca19e5/2020-09-22T17-41-39.png",
+      "external": false,
+      "url": "/src/content/images/state-of-angular-elements-2020-summer/3c6255ea-b6c7-4055-8126-638d2819f0c3/b98e5ea8-a029-424f-b57b-9908b0ca19e5.png",
       "caption": ""
     },
     {
@@ -839,7 +841,8 @@
     },
     {
       "type": "image",
-      "url": "/images/state-of-angular-elements-2020-summer/dc6b5be8-3726-4d13-8c2d-c293e9b2bdce/2020-09-22T17-30-55.png",
+      "external": false,
+      "url": "/src/content/images/state-of-angular-elements-2020-summer/3c6255ea-b6c7-4055-8126-638d2819f0c3/dc6b5be8-3726-4d13-8c2d-c293e9b2bdce.png",
       "caption": "code-exampleタグの様子"
     },
     {

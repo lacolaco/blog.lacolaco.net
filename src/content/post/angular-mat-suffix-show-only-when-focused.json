@@ -1,6 +1,6 @@
 {
   "pageId": "40f4e1df-5de5-45b9-b837-f96a36605ba9",
-  "lastEditedAt": "2023-10-18T04:04:00.000Z",
+  "lastEditedAt": "2023-12-30T10:00:00.000Z",
   "slug": "angular-mat-suffix-show-only-when-focused",
   "properties": {
     "title": "Angular MatSuffixをフォーカス中だけ表示する",
@@ -21,14 +21,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-mat-suffix-show-only-when-focused/3c6255ea-b6c7-4055-8126-638d2819f0c3/1f8c90ee-66fa-4cc6-a4b3-268d3e7c5431/capture.gif",
-      "caption": [
-        {
-          "type": "text",
-          "text": "テキストフィールドにフォーカスがあるときだけMatSuffix要素が可視化される",
-          "annotations": {}
-        }
-      ]
+      "external": false,
+      "url": "/src/content/images/angular-mat-suffix-show-only-when-focused/3c6255ea-b6c7-4055-8126-638d2819f0c3/1f8c90ee-66fa-4cc6-a4b3-268d3e7c5431.gif",
+      "caption": "テキストフィールドにフォーカスがあるときだけMatSuffix要素が可視化される"
     },
     {
       "type": "paragraph",

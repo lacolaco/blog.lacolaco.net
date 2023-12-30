@@ -1,11 +1,11 @@
 {
   "pageId": "387ce9b4-8670-4771-9be1-dbcc920250f6",
-  "lastEditedAt": "2023-05-21T04:35:00.000Z",
+  "lastEditedAt": "2023-12-30T10:07:00.000Z",
   "slug": "github-actions-yarn-cache",
   "properties": {
     "title": "GitHub Actions: Yarn キャッシュをシンプルに使う",
     "date": "2021-06-01T00:00:00.000Z",
-    "tags": ["tech", "GitHub Actions"],
+    "tags": ["GitHub Actions"],
     "updatedAt": "2021-07-03T00:00:00.000Z"
   },
   "content": [

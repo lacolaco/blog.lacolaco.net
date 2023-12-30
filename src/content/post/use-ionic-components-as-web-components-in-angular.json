@@ -1,16 +1,17 @@
 {
   "pageId": "5abcd25b-9466-4e91-a124-bb3a3026bc78",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "use-ionic-components-as-web-components-in-angular",
   "properties": {
     "title": "Use Ionic components as Web Components in Angular",
     "date": "2019-03-07T00:00:00.000Z",
-    "tags": ["tech", "Angular", "Ionic"]
+    "tags": ["Angular", "Ionic"]
   },
   "content": [
     {
       "type": "image",
-      "url": "/images/use-ionic-components-as-web-components-in-angular/ad5bdd09-9f5e-4116-ae79-fc20cfcdd3ca/1__Y2FNLwDY1sJ39QlfpLqAaQ.png",
+      "external": false,
+      "url": "/src/content/images/use-ionic-components-as-web-components-in-angular/3c6255ea-b6c7-4055-8126-638d2819f0c3/ad5bdd09-9f5e-4116-ae79-fc20cfcdd3ca.png",
       "caption": ""
     },
     {
@@ -274,7 +275,8 @@
     },
     {
       "type": "image",
-      "url": "/images/use-ionic-components-as-web-components-in-angular/e46d564f-adc8-43b9-bf85-750210caa671/0__v60Dp5pS0YJXAGDt.gif",
+      "external": false,
+      "url": "/src/content/images/use-ionic-components-as-web-components-in-angular/3c6255ea-b6c7-4055-8126-638d2819f0c3/e46d564f-adc8-43b9-bf85-750210caa671.gif",
       "caption": ""
     },
     {
@@ -375,7 +377,8 @@
     },
     {
       "type": "image",
-      "url": "/images/use-ionic-components-as-web-components-in-angular/f51e7f8e-90be-4345-9d4c-6029f93582b2/1__XgAC86CfaTipJ9__37Jg5mg.gif",
+      "external": false,
+      "url": "/src/content/images/use-ionic-components-as-web-components-in-angular/3c6255ea-b6c7-4055-8126-638d2819f0c3/f51e7f8e-90be-4345-9d4c-6029f93582b2.gif",
       "caption": ""
     },
     {

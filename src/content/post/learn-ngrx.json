@@ -1,11 +1,11 @@
 {
   "pageId": "4812cf7d-681e-4a7a-a2ce-b9091267791b",
-  "lastEditedAt": "2023-05-21T03:20:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "learn-ngrx",
   "properties": {
     "title": "Learn NgRx",
     "date": "2019-02-11T00:00:00.000Z",
-    "tags": ["tech", "NgRx"]
+    "tags": ["NgRx"]
   },
   "content": [
     {

@@ -1,11 +1,11 @@
 {
   "pageId": "86b6e95a-21b6-49e0-b865-871a62030d47",
-  "lastEditedAt": "2023-12-27T07:20:00.000Z",
+  "lastEditedAt": "2023-12-30T10:12:00.000Z",
   "slug": "eb64b9996e3f",
   "properties": {
     "title": "ブログ記事中のiframeに遅延読み込みを有効にした",
     "date": "2023-12-27T00:12:00.000Z",
-    "tags": ["日記", "Web", "Blog Dev"]
+    "tags": ["Web", "Blog Dev"]
   },
   "content": [
     {

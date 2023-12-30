@@ -1,11 +1,11 @@
 {
   "pageId": "bc3234bd-380a-4b3b-9f5a-d78c9b784cbe",
-  "lastEditedAt": "2023-05-21T03:14:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "merge-graphql-schemas",
   "properties": {
     "title": "merge-graphql-schemasを使ってGraphQLのスキーマファイルを結合する",
     "date": "2018-02-18T00:00:00.000Z",
-    "tags": ["tech", "GraphQL"]
+    "tags": ["GraphQL"]
   },
   "content": [
     {

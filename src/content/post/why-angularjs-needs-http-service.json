@@ -1,11 +1,11 @@
 {
   "pageId": "b5de8f33-06b2-4e58-bb12-009345948aa7",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "why-angularjs-needs-http-service",
   "properties": {
     "title": "なぜAngularJSに$httpが必要だったのか（あるいはAngular HttpClientの価値について）",
     "date": "2018-04-20T00:00:00.000Z",
-    "tags": ["tech", "Angular", "AngularJS"]
+    "tags": ["Angular", "AngularJS"]
   },
   "content": [
     {

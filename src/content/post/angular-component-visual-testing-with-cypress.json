@@ -1,6 +1,6 @@
 {
   "pageId": "06291552-322a-4152-9379-de518e857222",
-  "lastEditedAt": "2023-12-24T00:27:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "angular-component-visual-testing-with-cypress",
   "properties": {
     "title": "Angular Component Visual Testing with Cypress",
@@ -640,8 +640,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-component-visual-testing-with-cypress/3c6255ea-b6c7-4055-8126-638d2819f0c3/e5a7a73a-33f1-4a18-9b6c-b5109340831b.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/angular-component-visual-testing-with-cypress/3c6255ea-b6c7-4055-8126-638d2819f0c3/e5a7a73a-33f1-4a18-9b6c-b5109340831b.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -679,8 +680,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-component-visual-testing-with-cypress/3c6255ea-b6c7-4055-8126-638d2819f0c3/f07014ad-0179-4e7a-8977-f890595333c5.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/angular-component-visual-testing-with-cypress/3c6255ea-b6c7-4055-8126-638d2819f0c3/f07014ad-0179-4e7a-8977-f890595333c5.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -712,8 +714,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-component-visual-testing-with-cypress/3c6255ea-b6c7-4055-8126-638d2819f0c3/996a6475-6635-4258-8a50-2ad57b9c9be6.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/angular-component-visual-testing-with-cypress/3c6255ea-b6c7-4055-8126-638d2819f0c3/996a6475-6635-4258-8a50-2ad57b9c9be6.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -733,8 +736,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-component-visual-testing-with-cypress/3c6255ea-b6c7-4055-8126-638d2819f0c3/f32aacac-c7af-4508-8038-64acb7a3538e.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/angular-component-visual-testing-with-cypress/3c6255ea-b6c7-4055-8126-638d2819f0c3/f32aacac-c7af-4508-8038-64acb7a3538e.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -748,8 +752,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-component-visual-testing-with-cypress/3c6255ea-b6c7-4055-8126-638d2819f0c3/7ed9358a-cdb3-4c62-8b78-604e6df85c47.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/angular-component-visual-testing-with-cypress/3c6255ea-b6c7-4055-8126-638d2819f0c3/7ed9358a-cdb3-4c62-8b78-604e6df85c47.png",
+      "caption": ""
     },
     {
       "type": "heading",

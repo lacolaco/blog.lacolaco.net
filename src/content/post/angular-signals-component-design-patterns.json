@@ -1,11 +1,11 @@
 {
   "pageId": "c0a2a317-2b8f-47ef-821d-9ef5e602c5f9",
-  "lastEditedAt": "2023-06-04T14:00:00.000Z",
+  "lastEditedAt": "2023-12-30T10:04:00.000Z",
   "slug": "angular-signals-component-design-patterns",
   "properties": {
     "title": "SignalベースのAngularコンポーネント設計パターン",
     "date": "2023-06-03T00:00:00.000Z",
-    "tags": ["tech", "Angular", "状態管理", "Signals", "設計"],
+    "tags": ["Angular", "状態管理", "Signals", "設計"],
     "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-signals-component-design-patterns"
   },
   "content": [
@@ -431,7 +431,8 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-signals-component-design-patterns/4b8207c2-8347-4723-a9f3-7508c872c062/simple-pds.png",
+      "external": false,
+      "url": "/src/content/images/angular-signals-component-design-patterns/3c6255ea-b6c7-4055-8126-638d2819f0c3/4b8207c2-8347-4723-a9f3-7508c872c062.png",
       "caption": "Simple PDS Component"
     },
     {
@@ -641,7 +642,8 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-signals-component-design-patterns/36d4d687-5e55-4d2d-809d-0c5e006b2159/pds-cqs.png",
+      "external": false,
+      "url": "/src/content/images/angular-signals-component-design-patterns/3c6255ea-b6c7-4055-8126-638d2819f0c3/36d4d687-5e55-4d2d-809d-0c5e006b2159.png",
       "caption": "PDS+CQS Component"
     },
     {

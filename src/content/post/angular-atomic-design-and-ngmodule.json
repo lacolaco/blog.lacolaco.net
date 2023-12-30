@@ -1,11 +1,11 @@
 {
   "pageId": "544a0dd6-6f0b-4c7d-ae3e-7f5ba21a6320",
-  "lastEditedAt": "2023-05-21T06:01:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "angular-atomic-design-and-ngmodule",
   "properties": {
     "title": "AngularにおけるAtomic DesignとNgModule",
     "date": "2019-07-11T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "tags": ["Angular"]
   },
   "content": [
     {

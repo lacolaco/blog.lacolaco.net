@@ -1,6 +1,6 @@
 {
   "pageId": "6a6d79b6-ae74-4c49-82a9-5804cc0b5e0f",
-  "lastEditedAt": "2023-08-09T11:04:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "translation-angular-2-change-detection-explained",
   "properties": {
     "title": "[日本語訳] Angular 2 Change Detection Explained",
@@ -131,8 +131,9 @@
     },
     {
       "type": "image",
-      "url": "/images/translation-angular-2-change-detection-explained/c98f63a4-b9ff-44fb-a5ed-4ffd4493ab41/cd-4.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/translation-angular-2-change-detection-explained/3c6255ea-b6c7-4055-8126-638d2819f0c3/c98f63a4-b9ff-44fb-a5ed-4ffd4493ab41.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -588,8 +589,9 @@
     },
     {
       "type": "image",
-      "url": "/images/translation-angular-2-change-detection-explained/b536ad26-a60d-4646-8e72-be722ebaeb30/cd-tree-2.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/translation-angular-2-change-detection-explained/3c6255ea-b6c7-4055-8126-638d2819f0c3/b536ad26-a60d-4646-8e72-be722ebaeb30.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -613,8 +615,9 @@
     },
     {
       "type": "image",
-      "url": "/images/translation-angular-2-change-detection-explained/0b527e1e-3d65-4943-b6df-5a48a7b50734/cd-tree-7.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/translation-angular-2-change-detection-explained/3c6255ea-b6c7-4055-8126-638d2819f0c3/0b527e1e-3d65-4943-b6df-5a48a7b50734.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -1297,8 +1300,9 @@
     },
     {
       "type": "image",
-      "url": "/images/translation-angular-2-change-detection-explained/219cb2f4-78f5-46c2-a47d-9b5655413c3e/cd-tree-8.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/translation-angular-2-change-detection-explained/3c6255ea-b6c7-4055-8126-638d2819f0c3/219cb2f4-78f5-46c2-a47d-9b5655413c3e.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -1562,8 +1566,9 @@
     },
     {
       "type": "image",
-      "url": "/images/translation-angular-2-change-detection-explained/39d80ab8-39a5-4335-bb2d-eb0ef7aa58c3/cd-tree-10.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/translation-angular-2-change-detection-explained/3c6255ea-b6c7-4055-8126-638d2819f0c3/39d80ab8-39a5-4335-bb2d-eb0ef7aa58c3.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -1720,8 +1725,9 @@
     },
     {
       "type": "image",
-      "url": "/images/translation-angular-2-change-detection-explained/3981be02-4ac9-454b-949e-5082b9ffb483/cd-tree-12.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/translation-angular-2-change-detection-explained/3c6255ea-b6c7-4055-8126-638d2819f0c3/3981be02-4ac9-454b-949e-5082b9ffb483.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -1735,8 +1741,9 @@
     },
     {
       "type": "image",
-      "url": "/images/translation-angular-2-change-detection-explained/2e40f6a4-d3e0-4ae4-9ed6-74a7a5c787e0/cd-tree-13.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/translation-angular-2-change-detection-explained/3c6255ea-b6c7-4055-8126-638d2819f0c3/2e40f6a4-d3e0-4ae4-9ed6-74a7a5c787e0.png",
+      "caption": ""
     },
     {
       "type": "paragraph",

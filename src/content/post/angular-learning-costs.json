@@ -1,6 +1,6 @@
 {
   "pageId": "9ab0d5bb-9796-4cd8-bd90-0d06170682ff",
-  "lastEditedAt": "2023-12-24T00:18:00.000Z",
+  "lastEditedAt": "2023-12-30T10:14:00.000Z",
   "slug": "angular-learning-costs",
   "properties": {
     "title": "Angularの学習コストは本当に高いのか？",
@@ -262,8 +262,9 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20190219/20190219000741.png",
-      "caption": []
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -392,8 +393,9 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20190219/20190219000754.png",
-      "caption": []
+      "caption": ""
     },
     {
       "type": "paragraph",

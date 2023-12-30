@@ -1,11 +1,11 @@
 {
   "pageId": "e87dce04-7a32-43d2-b14b-e546a741e9d9",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "ng4-feature-forms-update",
   "properties": {
     "title": "[Angular 4.0] formsモジュールの更新について",
     "date": "2017-03-08T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "tags": ["Angular"]
   },
   "content": [
     {

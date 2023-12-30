@@ -1,11 +1,11 @@
 {
   "pageId": "1934ffc5-baff-4477-a766-1e34e8dd45f7",
-  "lastEditedAt": "2023-05-11T00:26:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "github-actions-setup-node-engines",
   "properties": {
     "title": "GitHub Actions: setup-nodeのNode.jsバージョンをpackage.jsonで指定する",
     "date": "2022-10-03T13:39:00.000Z",
-    "tags": ["tech", "GitHub Actions", "Node.js"],
+    "tags": ["GitHub Actions", "Node.js"],
     "updatedAt": "2022-10-03T00:00:00.000Z"
   },
   "content": [

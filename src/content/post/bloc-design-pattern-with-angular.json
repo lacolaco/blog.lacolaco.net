@@ -1,11 +1,11 @@
 {
   "pageId": "6bbc2bc0-5d0f-4e2e-adfb-010e6d45fa4b",
-  "lastEditedAt": "2023-05-21T04:59:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "bloc-design-pattern-with-angular",
   "properties": {
     "title": "FlutterのBLoCパターンをAngularで理解する",
     "date": "2018-05-22T00:00:00.000Z",
-    "tags": ["tech", "Angular", "設計"]
+    "tags": ["Angular", "設計"]
   },
   "content": [
     {
@@ -405,7 +405,7 @@
         {
           "type": "text",
           "text": "https://stackblitz.com/edit/angular-bloc-example-2?file=src/app/app.component.ts",
-          "href": "https://stackblitz.com/edit/angular-bloc-example-2?file=src/app/app.component.ts",
+          "href": "https://stackblitz.com/edit/angular-bloc-example-2?file=src%2Fapp%2Fapp.component.ts",
           "annotations": {}
         },
         {
@@ -732,7 +732,7 @@
         {
           "type": "text",
           "text": "https://stackblitz.com/edit/angular-bloc-example-3?file=src/app/app.component.ts",
-          "href": "https://stackblitz.com/edit/angular-bloc-example-3?file=src/app/app.component.ts",
+          "href": "https://stackblitz.com/edit/angular-bloc-example-3?file=src%2Fapp%2Fapp.component.ts",
           "annotations": {}
         },
         {

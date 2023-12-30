@@ -1,6 +1,6 @@
 {
   "pageId": "be0af076-3ae9-4a80-9531-f1dafbaeb541",
-  "lastEditedAt": "2023-08-13T03:06:00.000Z",
+  "lastEditedAt": "2023-12-30T10:01:00.000Z",
   "slug": "finish-plato-series",
   "properties": {
     "title": "光文社古典新訳文庫のプラトンシリーズを読み終えた",
@@ -20,8 +20,9 @@
     },
     {
       "type": "image",
-      "url": "/images/finish-plato-series/bbc287b1-b9da-4809-96e4-b65bfd934b45/PXL_20230813_025609785.jpg",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/finish-plato-series/3c6255ea-b6c7-4055-8126-638d2819f0c3/bbc287b1-b9da-4809-96e4-b65bfd934b45.jpg",
+      "caption": ""
     },
     {
       "type": "paragraph",

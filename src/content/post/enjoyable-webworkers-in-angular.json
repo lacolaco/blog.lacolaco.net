@@ -1,11 +1,11 @@
 {
   "pageId": "d98e8a7e-9853-4346-b12b-cc4bec8a0cb7",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "enjoyable-webworkers-in-angular",
   "properties": {
     "title": "Enjoyable WebWorkers in Angular",
     "date": "2018-12-22T00:00:00.000Z",
-    "tags": ["tech", "Angular", "Web Worker"],
+    "tags": ["Angular", "Web Worker"],
     "updatedAt": "2021-05-26T00:00:00.000Z"
   },
   "content": [
@@ -125,12 +125,14 @@
     },
     {
       "type": "image",
-      "url": "/images/enjoyable-webworkers-in-angular/4e5f39d6-ec32-48e6-bc91-fa21a9f48eb7/2021-05-26T11-16-04.png",
+      "external": false,
+      "url": "/src/content/images/enjoyable-webworkers-in-angular/3c6255ea-b6c7-4055-8126-638d2819f0c3/4e5f39d6-ec32-48e6-bc91-fa21a9f48eb7.png",
       "caption": ""
     },
     {
       "type": "image",
-      "url": "/images/enjoyable-webworkers-in-angular/d9b5bd3c-21db-46cb-b0e3-49dd267b228e/2021-05-26T11-20-53.png",
+      "external": false,
+      "url": "/src/content/images/enjoyable-webworkers-in-angular/3c6255ea-b6c7-4055-8126-638d2819f0c3/d9b5bd3c-21db-46cb-b0e3-49dd267b228e.png",
       "caption": ""
     },
     {
@@ -747,7 +749,8 @@
     },
     {
       "type": "image",
-      "url": "/images/enjoyable-webworkers-in-angular/99104923-16be-4397-a67c-cb78dce9fffe/1__WghqP__ww8aX6KVZVQNzmeA.gif",
+      "external": false,
+      "url": "/src/content/images/enjoyable-webworkers-in-angular/3c6255ea-b6c7-4055-8126-638d2819f0c3/99104923-16be-4397-a67c-cb78dce9fffe.gif",
       "caption": ""
     },
     {

@@ -1,11 +1,11 @@
 {
   "pageId": "66159df0-e348-42f1-9a27-5319c346cdc3",
-  "lastEditedAt": "2023-05-21T05:22:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "angular-lightweight-injection-token-overview",
   "properties": {
     "title": "Angular: Lightweight Injection Tokenという新しいテクニック",
     "date": "2020-07-29T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "tags": ["Angular"]
   },
   "content": [
     {

@@ -1,6 +1,6 @@
 {
   "pageId": "4cdbdec6-e74c-4ea4-86e2-6c899e5369af",
-  "lastEditedAt": "2023-12-24T00:38:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "network-aware-preloading-strategy-for-angular-lazy-loading",
   "locale": "en",
   "properties": {
@@ -43,8 +43,9 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/t6o2d6hv9v3jjbtx5pkl.png",
-      "caption": []
+      "caption": ""
     },
     {
       "type": "heading",

@@ -1,11 +1,11 @@
 {
   "pageId": "b989169b-f9a4-470a-9aae-9eb49a823e4a",
-  "lastEditedAt": "2023-05-21T03:12:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "migrate-circleci-to-github-actions",
   "properties": {
     "title": "CircleCIからGitHub Actionsへの移行 (Node.js)",
     "date": "2019-09-16T00:00:00.000Z",
-    "tags": ["tech", "GitHub Actions"]
+    "tags": ["GitHub Actions"]
   },
   "content": [
     {

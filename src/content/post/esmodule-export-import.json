@@ -1,11 +1,11 @@
 {
   "pageId": "4a2c1ab7-cb28-4e92-a201-925dee868227",
-  "lastEditedAt": "2023-05-21T00:03:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "esmodule-export-import",
   "properties": {
     "title": "ECMAScriptのimport/exportについてのメモ",
     "date": "2018-06-26T00:00:00.000Z",
-    "tags": ["tech", "ECMAScript", "JavaScript"]
+    "tags": ["ECMAScript", "JavaScript"]
   },
   "content": [
     {
@@ -280,6 +280,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180626/20180626135841.png",
       "caption": ""
     },
@@ -391,6 +392,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180626/20180626140548.png",
       "caption": ""
     },

@@ -1,6 +1,6 @@
 {
   "pageId": "93f70a4b-f638-4352-93b2-376076d9a62c",
-  "lastEditedAt": "2023-08-08T14:26:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "dokken-2022-winter-success",
   "properties": {
     "title": "ドイツ語技能検定の4級に合格した",
@@ -10,8 +10,9 @@
   "content": [
     {
       "type": "image",
-      "url": "/images/dokken-2022-winter-success/8874ec08-d3c5-435d-a7c1-759a7e073671/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/dokken-2022-winter-success/3c6255ea-b6c7-4055-8126-638d2819f0c3/8874ec08-d3c5-435d-a7c1-759a7e073671.png",
+      "caption": ""
     },
     {
       "type": "link_preview",

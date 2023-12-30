@@ -1,6 +1,6 @@
 {
   "pageId": "83efd4c0-a070-498b-add9-149d96ab564f",
-  "lastEditedAt": "2023-11-08T01:19:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "business-and-engineering-3-way-handshake",
   "properties": {
     "title": "ビジネスとエンジニアリングの3wayハンドシェイク",
@@ -77,8 +77,9 @@
     },
     {
       "type": "image",
-      "url": "/images/business-and-engineering-3-way-handshake/3c6255ea-b6c7-4055-8126-638d2819f0c3/51238634-219b-4c0b-a0a2-58f16d7fa650/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/business-and-engineering-3-way-handshake/3c6255ea-b6c7-4055-8126-638d2819f0c3/51238634-219b-4c0b-a0a2-58f16d7fa650.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -229,8 +230,9 @@
     },
     {
       "type": "image",
-      "url": "/images/business-and-engineering-3-way-handshake/3c6255ea-b6c7-4055-8126-638d2819f0c3/4e557b56-1c94-4f3d-b83a-02d89cc39ec0/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/business-and-engineering-3-way-handshake/3c6255ea-b6c7-4055-8126-638d2819f0c3/4e557b56-1c94-4f3d-b83a-02d89cc39ec0.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -389,8 +391,9 @@
     },
     {
       "type": "image",
-      "url": "/images/business-and-engineering-3-way-handshake/3c6255ea-b6c7-4055-8126-638d2819f0c3/e0ffd2e4-ea09-4eeb-af31-8f5791a44797/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/business-and-engineering-3-way-handshake/3c6255ea-b6c7-4055-8126-638d2819f0c3/e0ffd2e4-ea09-4eeb-af31-8f5791a44797.png",
+      "caption": ""
     },
     {
       "type": "heading",

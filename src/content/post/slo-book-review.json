@@ -1,6 +1,6 @@
 {
   "pageId": "636cb161-ad90-4d9b-acf1-aab96a58416d",
-  "lastEditedAt": "2023-11-08T01:19:00.000Z",
+  "lastEditedAt": "2023-12-30T10:00:00.000Z",
   "slug": "slo-book-review",
   "properties": {
     "title": "『SLO サービスレベル目標』読後メモ",
@@ -56,8 +56,9 @@
     },
     {
       "type": "image",
-      "url": "/images/slo-book-review/3c6255ea-b6c7-4055-8126-638d2819f0c3/a9eef965-e8d6-44e9-94fc-64ee3c11dc7f/部別ページ数.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/slo-book-review/3c6255ea-b6c7-4055-8126-638d2819f0c3/a9eef965-e8d6-44e9-94fc-64ee3c11dc7f.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -141,8 +142,9 @@
     },
     {
       "type": "image",
-      "url": "/images/slo-book-review/3c6255ea-b6c7-4055-8126-638d2819f0c3/576bb0cf-f802-47f4-9795-6106ee02e306/章別ページ数.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/slo-book-review/3c6255ea-b6c7-4055-8126-638d2819f0c3/576bb0cf-f802-47f4-9795-6106ee02e306.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -204,8 +206,9 @@
     },
     {
       "type": "image",
-      "url": "/images/slo-book-review/3c6255ea-b6c7-4055-8126-638d2819f0c3/a91bebd0-d332-4466-adce-154b16759f42/著者別ページ数.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/slo-book-review/3c6255ea-b6c7-4055-8126-638d2819f0c3/a91bebd0-d332-4466-adce-154b16759f42.png",
+      "caption": ""
     },
     {
       "type": "heading",

@@ -1,6 +1,6 @@
 {
   "pageId": "8c030420-0157-4f74-9397-6b60a0814c15",
-  "lastEditedAt": "2023-12-27T02:31:00.000Z",
+  "lastEditedAt": "2023-12-30T09:59:00.000Z",
   "slug": "make-icon-badge",
   "properties": {
     "title": "自分のアイコンの缶バッジを作ると便利",
@@ -75,7 +75,7 @@
       "type": "image",
       "external": false,
       "url": "/src/content/images/make-icon-badge/3c6255ea-b6c7-4055-8126-638d2819f0c3/0da3b9b3-80e4-4582-abca-087b34b34523.png",
-      "caption": []
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -91,25 +91,25 @@
       "type": "image",
       "external": false,
       "url": "/src/content/images/make-icon-badge/3c6255ea-b6c7-4055-8126-638d2819f0c3/7e57e1d9-4b60-4f8a-bb8d-7959ec543dab.jpg",
-      "caption": []
+      "caption": ""
     },
     {
       "type": "image",
       "external": false,
       "url": "/src/content/images/make-icon-badge/3c6255ea-b6c7-4055-8126-638d2819f0c3/9a311414-de76-401e-8dfb-8562cf04b574.jpg",
-      "caption": []
+      "caption": ""
     },
     {
       "type": "image",
       "external": false,
       "url": "/src/content/images/make-icon-badge/3c6255ea-b6c7-4055-8126-638d2819f0c3/6737e744-3f74-4037-8b05-2a763df4d41a.jpg",
-      "caption": []
+      "caption": ""
     },
     {
       "type": "image",
       "external": false,
       "url": "/src/content/images/make-icon-badge/3c6255ea-b6c7-4055-8126-638d2819f0c3/47e4174b-bf5e-4b32-905b-9c39138e5616.jpg",
-      "caption": []
+      "caption": ""
     }
   ]
 }

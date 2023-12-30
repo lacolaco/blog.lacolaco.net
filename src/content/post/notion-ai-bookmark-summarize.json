@@ -1,6 +1,6 @@
 {
   "pageId": "d857b4c4-fa8b-4086-8a78-2f2b4ab3fbf0",
-  "lastEditedAt": "2023-11-08T01:19:00.000Z",
+  "lastEditedAt": "2023-12-30T10:01:00.000Z",
   "slug": "notion-ai-bookmark-summarize",
   "properties": {
     "title": "Notion AIでブックマークした記事を要約する",
@@ -46,8 +46,9 @@
     },
     {
       "type": "image",
-      "url": "/images/notion-ai-bookmark-summarize/8215ac4a-65ed-4425-a42d-ed63ace2369a/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/notion-ai-bookmark-summarize/3c6255ea-b6c7-4055-8126-638d2819f0c3/8215ac4a-65ed-4425-a42d-ed63ace2369a.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -76,8 +77,9 @@
     },
     {
       "type": "image",
-      "url": "/images/notion-ai-bookmark-summarize/5fd1e365-7e2c-41dc-82b2-680917d17253/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/notion-ai-bookmark-summarize/3c6255ea-b6c7-4055-8126-638d2819f0c3/5fd1e365-7e2c-41dc-82b2-680917d17253.png",
+      "caption": ""
     },
     {
       "type": "paragraph",

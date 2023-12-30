@@ -1,11 +1,11 @@
 {
   "pageId": "7de35a8f-b66b-43c2-ac9a-f009f211efd1",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "trusted-types-and-angular-security",
   "properties": {
     "title": "DOMのXSSを防ぐTrusted TypesとAngularのセキュリティ機構",
     "date": "2019-05-13T00:00:00.000Z",
-    "tags": ["tech", "Angular", "Trusted Types", "Web", "Security"]
+    "tags": ["Angular", "Trusted Types", "Web", "Security"]
   },
   "content": [
     {
@@ -348,7 +348,8 @@
     },
     {
       "type": "image",
-      "url": "/images/trusted-types-and-angular-security/f2555a54-a6f2-412d-b094-e2e4479e086b/Untitled.png",
+      "external": false,
+      "url": "/src/content/images/trusted-types-and-angular-security/3c6255ea-b6c7-4055-8126-638d2819f0c3/f2555a54-a6f2-412d-b094-e2e4479e086b.png",
       "caption": ""
     },
     {

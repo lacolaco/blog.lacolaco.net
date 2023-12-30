@@ -1,11 +1,11 @@
 {
   "pageId": "aa9c6eae-0193-468f-8855-ea5a38f72e0d",
-  "lastEditedAt": "2023-05-21T03:16:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "managing-key-value-constants-in-typescript",
   "properties": {
     "title": "Managing Key-Value Constants in TypeScript",
     "date": "2019-08-20T00:00:00.000Z",
-    "tags": ["tech", "TypeScript"]
+    "tags": ["TypeScript"]
   },
   "content": [
     {
@@ -20,6 +20,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/l1s38h340la686epz47u.gif",
       "caption": ""
     },
@@ -594,6 +595,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/kl5wx6dfejnfmiicr7ck.png",
       "caption": "Compiler Error"
     },

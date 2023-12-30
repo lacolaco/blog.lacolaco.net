@@ -1,11 +1,11 @@
 {
   "pageId": "ecaa239c-f616-409c-80b8-26b507a161f6",
-  "lastEditedAt": "2023-05-21T05:37:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "angular-ivy-experimental-note",
   "properties": {
     "title": "ngIvyメモ",
     "date": "2018-03-11T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "tags": ["Angular"]
   },
   "content": [
     {
@@ -52,6 +52,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180310/20180310123120.png",
       "caption": ""
     },
@@ -606,6 +607,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180311/20180311131044.png",
       "caption": ""
     },
@@ -823,6 +825,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180311/20180311131157.png",
       "caption": ""
     },

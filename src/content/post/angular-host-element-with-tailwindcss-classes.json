@@ -1,6 +1,6 @@
 {
   "pageId": "4b13c6c0-76da-42c3-81d1-81affb15f518",
-  "lastEditedAt": "2023-09-06T04:49:00.000Z",
+  "lastEditedAt": "2023-12-30T10:01:00.000Z",
   "slug": "angular-host-element-with-tailwindcss-classes",
   "properties": {
     "title": "Angular: ホスト要素にTailwindCSSのクラスを付与する",
@@ -37,14 +37,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-host-element-with-tailwindcss-classes/3c6255ea-b6c7-4055-8126-638d2819f0c3/5391c161-d5f9-4447-b38b-5ff29f5d786a/Untitled.png",
-      "caption": [
-        {
-          "type": "text",
-          "text": "hostメタデータのclassプロパティはTailwindCSS Extensionにクラスを記述する場所だと認識されていない",
-          "annotations": {}
-        }
-      ]
+      "external": false,
+      "url": "/src/content/images/angular-host-element-with-tailwindcss-classes/3c6255ea-b6c7-4055-8126-638d2819f0c3/5391c161-d5f9-4447-b38b-5ff29f5d786a.png",
+      "caption": "hostメタデータのclassプロパティはTailwindCSS Extensionにクラスを記述する場所だと認識されていない"
     },
     {
       "type": "paragraph",
@@ -150,14 +145,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-host-element-with-tailwindcss-classes/3c6255ea-b6c7-4055-8126-638d2819f0c3/b91070c2-7095-4738-b736-4c57828d7c62/Untitled.png",
-      "caption": [
-        {
-          "type": "text",
-          "text": "classプロパティの中で TailwildCSS の入力補完が効くようになった",
-          "annotations": {}
-        }
-      ]
+      "external": false,
+      "url": "/src/content/images/angular-host-element-with-tailwindcss-classes/3c6255ea-b6c7-4055-8126-638d2819f0c3/b91070c2-7095-4738-b736-4c57828d7c62.png",
+      "caption": "classプロパティの中で TailwildCSS の入力補完が効くようになった"
     },
     {
       "type": "paragraph",

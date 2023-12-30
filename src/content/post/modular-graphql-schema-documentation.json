@@ -1,11 +1,11 @@
 {
   "pageId": "cada7ee0-19fd-4cc1-b74d-399d78d01d80",
-  "lastEditedAt": "2023-05-21T03:11:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "modular-graphql-schema-documentation",
   "properties": {
     "title": "GraphQL Schemaをファイル分割してドキュメンテーションする",
     "date": "2018-02-13T00:00:00.000Z",
-    "tags": ["tech", "GraphQL"]
+    "tags": ["GraphQL"]
   },
   "content": [
     {
@@ -38,6 +38,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180213/20180213222120.png",
       "caption": ""
     },

@@ -1,11 +1,11 @@
 {
   "pageId": "7c05b97b-52b2-4509-a119-9c3f5fedd229",
-  "lastEditedAt": "2023-05-21T03:24:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "introducing-contributors-img-keep-contributors-in-readme-md",
   "properties": {
     "title": "Introducing contributors-img: Keep contributors in README.md",
     "date": "2019-03-29T00:00:00.000Z",
-    "tags": ["tech", "GitHub", "OSS"]
+    "tags": ["GitHub", "OSS"]
   },
   "content": [
     {
@@ -32,6 +32,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/2by6h6z64d79gka4ncsd.png",
       "caption": ""
     },

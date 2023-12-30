@@ -1,11 +1,11 @@
 {
   "pageId": "2d15afb8-8527-4cc4-8b69-30a395588112",
-  "lastEditedAt": "2023-05-11T00:28:00.000Z",
+  "lastEditedAt": "2023-12-30T10:06:00.000Z",
   "slug": "webpack-esm-import-assertions",
   "properties": {
     "title": "webpack と ES Module Import Assertions についての調査",
     "date": "2022-03-09T00:18:00.000Z",
-    "tags": ["tech", "webpack", "ESModule", "Import Assertions"]
+    "tags": ["webpack", "ESModule", "Import Assertions"]
   },
   "content": [
     {
@@ -80,7 +80,8 @@
     },
     {
       "type": "image",
-      "url": "/images/webpack-esm-import-assertions/bdce5bc6-e660-44c0-9d71-d070561965ff/Untitled.png",
+      "external": false,
+      "url": "/src/content/images/webpack-esm-import-assertions/3c6255ea-b6c7-4055-8126-638d2819f0c3/bdce5bc6-e660-44c0-9d71-d070561965ff.png",
       "caption": "data.jsonのインポート（アサーションなし）"
     },
     {
@@ -107,7 +108,8 @@
     },
     {
       "type": "image",
-      "url": "/images/webpack-esm-import-assertions/43d6e83e-451d-43a2-bceb-d8bbcac815a5/Untitled.png",
+      "external": false,
+      "url": "/src/content/images/webpack-esm-import-assertions/3c6255ea-b6c7-4055-8126-638d2819f0c3/43d6e83e-451d-43a2-bceb-d8bbcac815a5.png",
       "caption": "data.jsonのインポート（アサーションなし、拡張子省略）"
     },
     {
@@ -134,7 +136,8 @@
     },
     {
       "type": "image",
-      "url": "/images/webpack-esm-import-assertions/2d106676-7b21-44d1-b08f-00d2ee1d1b62/Untitled.png",
+      "external": false,
+      "url": "/src/content/images/webpack-esm-import-assertions/3c6255ea-b6c7-4055-8126-638d2819f0c3/2d106676-7b21-44d1-b08f-00d2ee1d1b62.png",
       "caption": "dataのインポート（アサーションなし、拡張子なし）は失敗する"
     },
     {
@@ -172,7 +175,8 @@
     },
     {
       "type": "image",
-      "url": "/images/webpack-esm-import-assertions/f36b6050-c102-422f-b4bf-238b814bf26a/Untitled.png",
+      "external": false,
+      "url": "/src/content/images/webpack-esm-import-assertions/3c6255ea-b6c7-4055-8126-638d2819f0c3/f36b6050-c102-422f-b4bf-238b814bf26a.png",
       "caption": "dataのインポート（JSONアサーションあり）は成功する"
     },
     {
@@ -244,7 +248,8 @@
     },
     {
       "type": "image",
-      "url": "/images/webpack-esm-import-assertions/11e6c8bd-1eb3-4717-aa28-3b98ca7089ef/Untitled.png",
+      "external": false,
+      "url": "/src/content/images/webpack-esm-import-assertions/3c6255ea-b6c7-4055-8126-638d2819f0c3/11e6c8bd-1eb3-4717-aa28-3b98ca7089ef.png",
       "caption": "data.json5のパース（アサーションあり）は失敗"
     },
     {
@@ -353,7 +358,8 @@
     },
     {
       "type": "image",
-      "url": "/images/webpack-esm-import-assertions/5248adea-7c1c-474f-9385-53a27fc9c807/Untitled.png",
+      "external": false,
+      "url": "/src/content/images/webpack-esm-import-assertions/3c6255ea-b6c7-4055-8126-638d2819f0c3/5248adea-7c1c-474f-9385-53a27fc9c807.png",
       "caption": "cssであることをアサーションで教えることはできなかった"
     },
     {

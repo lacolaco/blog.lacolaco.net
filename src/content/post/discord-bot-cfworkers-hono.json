@@ -1,6 +1,6 @@
 {
   "pageId": "41e326de-5455-488c-b731-732e45de6e0e",
-  "lastEditedAt": "2023-11-08T01:19:00.000Z",
+  "lastEditedAt": "2023-12-30T10:00:00.000Z",
   "slug": "discord-bot-cfworkers-hono",
   "properties": {
     "title": "Cloudflare Workers + HonoでDiscord botを作る際のポイント",
@@ -104,8 +104,9 @@
     },
     {
       "type": "image",
-      "url": "/images/discord-bot-cfworkers-hono/3c6255ea-b6c7-4055-8126-638d2819f0c3/324b15fd-2388-45cb-80f6-2114b409c009/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/discord-bot-cfworkers-hono/3c6255ea-b6c7-4055-8126-638d2819f0c3/324b15fd-2388-45cb-80f6-2114b409c009.png",
+      "caption": ""
     },
     {
       "type": "paragraph",

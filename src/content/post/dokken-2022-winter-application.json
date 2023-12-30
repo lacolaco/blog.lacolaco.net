@@ -1,6 +1,6 @@
 {
   "pageId": "72dc7816-6db0-4536-a947-d93054f9386e",
-  "lastEditedAt": "2023-08-07T10:14:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "dokken-2022-winter-application",
   "properties": {
     "title": "独検2022冬の4級に出願した",
@@ -34,7 +34,8 @@
     },
     {
       "type": "image",
-      "url": "/images/dokken-2022-winter-application/252f5326-2157-4748-af23-11f3e0ed64fa/Untitled.png",
+      "external": false,
+      "url": "/src/content/images/dokken-2022-winter-application/3c6255ea-b6c7-4055-8126-638d2819f0c3/252f5326-2157-4748-af23-11f3e0ed64fa.png",
       "caption": ""
     },
     {

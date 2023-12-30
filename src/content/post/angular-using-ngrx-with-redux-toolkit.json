@@ -1,11 +1,11 @@
 {
   "pageId": "0bbe31d5-b26e-4cc9-802d-80dd2ff17ecb",
-  "lastEditedAt": "2023-05-21T00:15:00.000Z",
+  "lastEditedAt": "2023-12-30T10:07:00.000Z",
   "slug": "angular-using-ngrx-with-redux-toolkit",
   "properties": {
     "title": "Angular: Using NgRx Store with Redux Toolkit 🚀",
     "date": "2020-12-16T00:00:00.000Z",
-    "tags": ["tech", "Angular", "NgRx", "状態管理"]
+    "tags": ["Angular", "NgRx", "状態管理"]
   },
   "content": [
     {
@@ -311,7 +311,8 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-using-ngrx-with-redux-toolkit/bb5e869b-eaa7-40bc-b04f-877e764e9ebe/slices.png",
+      "external": false,
+      "url": "/src/content/images/angular-using-ngrx-with-redux-toolkit/3c6255ea-b6c7-4055-8126-638d2819f0c3/bb5e869b-eaa7-40bc-b04f-877e764e9ebe.png",
       "caption": ""
     },
     {

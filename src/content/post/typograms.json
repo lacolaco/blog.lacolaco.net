@@ -1,6 +1,6 @@
 {
   "pageId": "012e0360-1748-49d6-bdbf-141976e33385",
-  "lastEditedAt": "2023-08-10T12:30:00.000Z",
+  "lastEditedAt": "2023-12-30T10:01:00.000Z",
   "slug": "typograms",
   "properties": {
     "title": "google/typograms を触ってみた",
@@ -116,8 +116,9 @@
     },
     {
       "type": "image",
-      "url": "/images/typograms/a11c19c9-43e5-4df4-8454-93f8c3829c36/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/typograms/3c6255ea-b6c7-4055-8126-638d2819f0c3/a11c19c9-43e5-4df4-8454-93f8c3829c36.png",
+      "caption": ""
     },
     {
       "type": "paragraph",

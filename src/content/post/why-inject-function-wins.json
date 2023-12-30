@@ -1,11 +1,11 @@
 {
   "pageId": "23c54aef-56ff-4d4c-99b0-35e052b80056",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "why-inject-function-wins",
   "properties": {
     "title": "Angular: 依存性の注入にコンストラクタ引数ではなくinject関数を使うべき理由",
     "date": "2023-03-23T00:44:00.000Z",
-    "tags": ["Angular", "tech", "dependency injection", "TypeScript"],
+    "tags": ["Angular", "dependency injection", "TypeScript"],
     "canonicalUrl": "https://zenn.dev/lacolaco/articles/why-inject-function-wins"
   },
   "content": [

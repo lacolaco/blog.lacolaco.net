@@ -1,11 +1,11 @@
 {
   "pageId": "56463883-d920-4375-a2f4-f76b6fcf3c88",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "why-entrycomponents-will-be-deprecated",
   "properties": {
     "title": "なぜentryComponentsは非推奨になるのか",
     "date": "2019-11-04T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "tags": ["Angular"]
   },
   "content": [
     {
@@ -460,6 +460,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/y832ijip6kq9xmouhvvg.png",
       "caption": ""
     },
@@ -590,6 +591,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/ksacrf6s6j49dn18iofg.png",
       "caption": ""
     },
@@ -732,6 +734,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/936ej8535g3gtybmoxnz.png",
       "caption": ""
     },
@@ -837,6 +840,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/db6vv7ojx2mqk7mo55uu.png",
       "caption": ""
     },
@@ -958,6 +962,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/bszkaslhwu3bai9vtceg.png",
       "caption": ""
     },
@@ -1145,6 +1150,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/bj6x27pj91vgbvu6h3jm.png",
       "caption": ""
     },
@@ -1191,6 +1197,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/p2q707m1e3rtd5xobkf1.png",
       "caption": ""
     },
@@ -1300,6 +1307,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/4bdke2arab01ajubqkxb.png",
       "caption": ""
     },

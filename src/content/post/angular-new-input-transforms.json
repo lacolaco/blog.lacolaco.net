@@ -1,11 +1,11 @@
 {
   "pageId": "2131694e-dc7e-4221-ad63-e13b749d4fc0",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:04:00.000Z",
   "slug": "angular-new-input-transforms",
   "properties": {
     "title": "Angular: 属性値からの型変換が書きやすくなるinput transforms",
     "date": "2023-05-10T15:31:00.000Z",
-    "tags": ["Angular", "tech", "commit note"]
+    "tags": ["Angular", "commit note"]
   },
   "content": [
     {

@@ -1,6 +1,6 @@
 {
   "pageId": "02ff5a35-36af-4d69-9609-1ea3f818ad95",
-  "lastEditedAt": "2023-12-24T00:27:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "angular-inputs-stream-pattern",
   "properties": {
     "title": "Angular: Input を Observable で扱えるようにする Inputs Stream パターン",

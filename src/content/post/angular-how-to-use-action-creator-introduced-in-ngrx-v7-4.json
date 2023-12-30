@@ -1,11 +1,11 @@
 {
   "pageId": "acbf55ee-e651-42b5-8132-04835b8fdab1",
-  "lastEditedAt": "2023-05-21T05:39:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "angular-how-to-use-action-creator-introduced-in-ngrx-v7-4",
   "properties": {
     "title": "Angular: How to use Action Creator introduced in NgRx v7.4",
     "date": "2019-04-03T00:00:00.000Z",
-    "tags": ["tech", "Angular", "NgRx"]
+    "tags": ["Angular", "NgRx"]
   },
   "content": [
     {
