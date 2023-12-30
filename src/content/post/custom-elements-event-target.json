@@ -1,11 +1,13 @@
 {
   "pageId": "5a42f600-d919-4260-a6a8-94cfdc3fbe3d",
-  "lastEditedAt": "2023-05-21T04:57:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "custom-elements-event-target",
+  "locale": "ja",
   "properties": {
     "title": "Custom ElementsとEventTargetの話",
     "date": "2018-04-25T00:00:00.000Z",
-    "tags": ["tech", "Web Components"]
+    "category": "Tech",
+    "tags": ["Web Components"]
   },
   "content": [
     {
@@ -80,6 +82,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180425/20180425101709.png",
       "caption": ""
     },
@@ -95,6 +98,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180425/20180425101949.png",
       "caption": ""
     },
@@ -221,6 +225,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180425/20180425104452.png",
       "caption": ""
     },
@@ -381,6 +386,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180425/20180425103928.png",
       "caption": ""
     },

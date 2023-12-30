@@ -1,10 +1,12 @@
 {
   "pageId": "e735baab-fe9f-4ecb-9944-f340b479572a",
-  "lastEditedAt": "2023-11-08T01:19:00.000Z",
+  "lastEditedAt": "2023-12-30T10:01:00.000Z",
   "slug": "button-and-link",
+  "locale": "ja",
   "properties": {
     "title": "リンクはUI表現か？",
     "date": "2023-08-31T03:22:00.000Z",
+    "category": "Tech",
     "tags": ["雑記", "HTML", "UI"]
   },
   "content": [
@@ -605,8 +607,9 @@
     },
     {
       "type": "image",
-      "url": "/images/button-and-link/02e305b8-b00c-41c6-a11f-c2cce1ce6ccc/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/button-and-link/3c6255ea-b6c7-4055-8126-638d2819f0c3/02e305b8-b00c-41c6-a11f-c2cce1ce6ccc.png",
+      "caption": ""
     },
     {
       "type": "paragraph",

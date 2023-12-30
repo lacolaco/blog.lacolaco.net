@@ -1,10 +1,12 @@
 {
   "pageId": "98e52895-d1b5-4fb1-8efb-80a8b35ce940",
-  "lastEditedAt": "2023-12-24T00:20:00.000Z",
+  "lastEditedAt": "2023-12-30T10:01:00.000Z",
   "slug": "what-is-a-small-release",
+  "locale": "ja",
   "properties": {
     "title": "「小さくリリースする」以前に、リリースが小さいとはどういうことか",
     "date": "2023-08-08T09:15:00.000Z",
+    "category": "Idea",
     "tags": ["言語化", "雑記", "Idea"]
   },
   "content": [

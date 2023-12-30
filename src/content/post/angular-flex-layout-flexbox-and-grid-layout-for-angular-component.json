@@ -1,11 +1,13 @@
 {
   "pageId": "20719d16-1ba0-45e9-8926-4d36f993b77e",
-  "lastEditedAt": "2023-05-21T05:46:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "angular-flex-layout-flexbox-and-grid-layout-for-angular-component",
+  "locale": "ja",
   "properties": {
     "title": "Angular Flex-Layout: Flexbox and Grid Layout for Angular Component",
     "date": "2018-09-28T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {
@@ -287,7 +289,8 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/e4a97ab4-0789-4625-8736-4400de17cb5f/1__lB4R1qGsbAESz4HHsPXhZg.png",
+      "external": false,
+      "url": "/src/content/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/e4a97ab4-0789-4625-8736-4400de17cb5f.png",
       "caption": ""
     },
     {
@@ -341,7 +344,8 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3f8ba4fc-99ba-4ef5-b422-d47b45762c57/1__pmiPyK8wZzXZzApAWsINVw.png",
+      "external": false,
+      "url": "/src/content/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/3f8ba4fc-99ba-4ef5-b422-d47b45762c57.png",
       "caption": "Column-based card list"
     },
     {
@@ -545,7 +549,8 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/d1027398-b212-4f65-88a1-42bc2d6d67ea/1__JDttyhBkw7wRmEHVpjTrAA.png",
+      "external": false,
+      "url": "/src/content/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/d1027398-b212-4f65-88a1-42bc2d6d67ea.png",
       "caption": "Row-based card list"
     },
     {
@@ -736,7 +741,8 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/5cf6ea19-aa26-4f30-a390-1b13318410a4/1__knG2YsFXSoCTPMFqQgDLLw.gif",
+      "external": false,
+      "url": "/src/content/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/5cf6ea19-aa26-4f30-a390-1b13318410a4.gif",
       "caption": "Responsive Columns"
     },
     {
@@ -913,7 +919,8 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/802441fa-b336-4037-8295-b37f2aed4c72/1__rduM7quXn__SJiMCNoJJeRw.png",
+      "external": false,
+      "url": "/src/content/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/802441fa-b336-4037-8295-b37f2aed4c72.png",
       "caption": "Grid Layout in the card"
     },
     {
@@ -1076,7 +1083,8 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/f94cfb3e-399a-403f-a06a-d8b28c708de8/1__hCCjDLFyC6kW0We20WubzQ.gif",
+      "external": false,
+      "url": "/src/content/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/f94cfb3e-399a-403f-a06a-d8b28c708de8.gif",
       "caption": "Responsive Grid layout"
     },
     {

@@ -1,11 +1,13 @@
 {
   "pageId": "a2178d0a-2210-4f9b-9dfc-7fca9a317c9a",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "translation-view-children-and-content-children-in-angular-2",
+  "locale": "ja",
   "properties": {
     "title": "[日本語訳] ViewChildren and ContentChildren in Angular 2",
     "date": "2016-04-16T00:00:00.000Z",
-    "tags": ["tech", "Angular", "translation"]
+    "category": "Tech",
+    "tags": ["Angular", "translation"]
   },
   "content": [
     {
@@ -270,6 +272,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "http://blog.mgechev.com/images/component-directive-angular2.png",
       "caption": ""
     },
@@ -322,6 +325,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "http://blog.mgechev.com/images/component-tree-angular2.png",
       "caption": ""
     },
@@ -613,6 +617,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "http://blog.mgechev.com/images/todo-app-sample.gif",
       "caption": ""
     },

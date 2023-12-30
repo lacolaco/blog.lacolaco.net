@@ -1,0 +1,14 @@
+{
+  "Tech": {
+    "name": "Tech",
+    "color": "blue"
+  },
+  "Idea": {
+    "name": "Idea",
+    "color": "yellow"
+  },
+  "Diary": {
+    "name": "Diary",
+    "color": "purple"
+  }
+}

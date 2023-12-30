@@ -1,10 +1,12 @@
 {
   "pageId": "331292ed-743a-41ca-a3d7-5e039b9af412",
-  "lastEditedAt": "2023-11-08T01:19:00.000Z",
+  "lastEditedAt": "2023-12-30T10:00:00.000Z",
   "slug": "why-angular-is-not-popular",
+  "locale": "ja",
   "properties": {
     "title": "「どうしてAngularは流行らないのか」と言われて思うこと",
     "date": "2023-09-24T01:36:00.000Z",
+    "category": "Diary",
     "tags": ["雑記", "Angular"]
   },
   "content": [
@@ -93,8 +95,9 @@
     },
     {
       "type": "image",
-      "url": "/images/why-angular-is-not-popular/3c6255ea-b6c7-4055-8126-638d2819f0c3/c380a66e-f74d-4073-ac84-be880fa988ec/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/why-angular-is-not-popular/3c6255ea-b6c7-4055-8126-638d2819f0c3/c380a66e-f74d-4073-ac84-be880fa988ec.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -114,8 +117,9 @@
     },
     {
       "type": "image",
-      "url": "/images/why-angular-is-not-popular/3c6255ea-b6c7-4055-8126-638d2819f0c3/6d269e8f-17be-47f7-9d98-e32d23003c55/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/why-angular-is-not-popular/3c6255ea-b6c7-4055-8126-638d2819f0c3/6d269e8f-17be-47f7-9d98-e32d23003c55.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -135,8 +139,9 @@
     },
     {
       "type": "image",
-      "url": "/images/why-angular-is-not-popular/3c6255ea-b6c7-4055-8126-638d2819f0c3/52f7e889-a152-4402-9bbc-7446a9a9b950/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/why-angular-is-not-popular/3c6255ea-b6c7-4055-8126-638d2819f0c3/52f7e889-a152-4402-9bbc-7446a9a9b950.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -209,8 +214,9 @@
     },
     {
       "type": "image",
-      "url": "/images/why-angular-is-not-popular/3c6255ea-b6c7-4055-8126-638d2819f0c3/67071f9c-97a4-4b24-b3fa-8eecbb0fc591/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/why-angular-is-not-popular/3c6255ea-b6c7-4055-8126-638d2819f0c3/67071f9c-97a4-4b24-b3fa-8eecbb0fc591.png",
+      "caption": ""
     },
     {
       "type": "paragraph",

@@ -1,11 +1,13 @@
 {
   "pageId": "44848909-3c08-4dc8-986a-050b8741eaff",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "translation-angular-2-component-styles",
+  "locale": "ja",
   "properties": {
     "title": "[日本語訳] Angular 2 Component Styles",
     "date": "2016-04-16T00:00:00.000Z",
-    "tags": ["tech", "Angular", "translation"]
+    "category": "Tech",
+    "tags": ["Angular", "translation"]
   },
   "content": [
     {

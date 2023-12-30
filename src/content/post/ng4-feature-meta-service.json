@@ -1,11 +1,13 @@
 {
   "pageId": "fe6eb6f9-2534-4204-b31c-a32dbec371ba",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "ng4-feature-meta-service",
+  "locale": "ja",
   "properties": {
     "title": "[Angular 4.0] Metaサービスの使い方",
     "date": "2017-03-07T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {

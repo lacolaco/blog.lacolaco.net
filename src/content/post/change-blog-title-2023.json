@@ -1,10 +1,12 @@
 {
   "pageId": "bfac9356-b695-446d-b543-1bd67d943a16",
-  "lastEditedAt": "2023-11-08T01:19:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "change-blog-title-2023",
+  "locale": "ja",
   "properties": {
     "title": "ブログのタイトルを変えた",
     "date": "2023-05-09T15:39:00.000Z",
+    "category": "Diary",
     "tags": ["雑記"]
   },
   "content": [

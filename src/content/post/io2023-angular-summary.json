@@ -1,11 +1,13 @@
 {
   "pageId": "09878dcc-7052-432c-ad3f-89c3b30ced25",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:04:00.000Z",
   "slug": "io2023-angular-summary",
+  "locale": "ja",
   "properties": {
     "title": "Google I/O 2023 Angular関連セッションまとめ",
     "date": "2023-05-15T12:09:00.000Z",
-    "tags": ["tech", "Angular", "Firebase", "Signals"]
+    "category": "Tech",
+    "tags": ["Angular", "Firebase", "Signals"]
   },
   "content": [
     {
@@ -55,7 +57,8 @@
     },
     {
       "type": "image",
-      "url": "/images/io2023-angular-summary/c1850246-5e0a-4d66-a5ba-7b3fa070931a/Developer_keynote_(Google_I_O_23)_36-38_screenshot.png",
+      "external": false,
+      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/c1850246-5e0a-4d66-a5ba-7b3fa070931a.png",
       "caption": ""
     },
     {
@@ -88,12 +91,14 @@
     },
     {
       "type": "image",
-      "url": "/images/io2023-angular-summary/0773a716-34ba-40e7-85f9-5c904a62e8b5/Developer_keynote_(Google_I_O_23)_37-2_screenshot.png",
+      "external": false,
+      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/0773a716-34ba-40e7-85f9-5c904a62e8b5.png",
       "caption": "エラースタックトレースの改善"
     },
     {
       "type": "image",
-      "url": "/images/io2023-angular-summary/6fb41ad4-82a5-47ed-b98d-9aae983621ff/Developer_keynote_(Google_I_O_23)_37-4_screenshot.png",
+      "external": false,
+      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/6fb41ad4-82a5-47ed-b98d-9aae983621ff.png",
       "caption": "ソースマップとデバッグ機能の改善"
     },
     {
@@ -108,7 +113,8 @@
     },
     {
       "type": "image",
-      "url": "/images/io2023-angular-summary/157d00d8-a82d-4872-9e35-aa4af651fbc9/Developer_keynote_(Google_I_O_23)_38-38_screenshot.png",
+      "external": false,
+      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/157d00d8-a82d-4872-9e35-aa4af651fbc9.png",
       "caption": "Angular v16 のパフォーマンス改善"
     },
     {
@@ -170,7 +176,8 @@
     },
     {
       "type": "image",
-      "url": "/images/io2023-angular-summary/e5323a30-25c4-4357-9c18-59716eb71ae3/Whats_new_in_Angular_15-38_screenshot.png",
+      "external": false,
+      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/e5323a30-25c4-4357-9c18-59716eb71ae3.png",
       "caption": "Angular の最近のアップデートの3本柱 Reactivity, SSR改善, QoL改善"
     },
     {
@@ -200,12 +207,14 @@
     },
     {
       "type": "image",
-      "url": "/images/io2023-angular-summary/8425e6a4-2e0f-4b0f-b6cd-a778389b6430/Rethinking_reactivity_with_Angular_Signals_9-33_screenshot.png",
+      "external": false,
+      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/8425e6a4-2e0f-4b0f-b6cd-a778389b6430.png",
       "caption": "v16移行のSignalsの計画について"
     },
     {
       "type": "image",
-      "url": "/images/io2023-angular-summary/c569a7ca-ec24-457d-9ae5-7a1a072240a7/Rethinking_reactivity_with_Angular_Signals_9-49_screenshot.png",
+      "external": false,
+      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/c569a7ca-ec24-457d-9ae5-7a1a072240a7.png",
       "caption": "Signals をひとことで。"
     },
     {
@@ -304,7 +313,8 @@
     },
     {
       "type": "image",
-      "url": "/images/io2023-angular-summary/cc0a3d63-7015-467d-bfd7-8403466dc764/How_to_run_dynamic_web_apps_on_Firebase_8-22_screenshot.png",
+      "external": false,
+      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/cc0a3d63-7015-467d-bfd7-8403466dc764.png",
       "caption": "Angular Universal への投資を今後も続けていく"
     },
     {

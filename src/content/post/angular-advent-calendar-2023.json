@@ -1,10 +1,12 @@
 {
   "pageId": "119f8e2c-8fc7-40f4-aa76-755373a0b009",
-  "lastEditedAt": "2023-12-27T07:26:00.000Z",
+  "lastEditedAt": "2023-12-30T09:58:00.000Z",
   "slug": "angular-advent-calendar-2023",
+  "locale": "ja",
   "properties": {
     "title": "Angularでのボタンコンポーネントの作成",
     "date": "2023-12-24T15:00:00.000Z",
+    "category": "Tech",
     "tags": ["Angular"],
     "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-advent-calendar-2023"
   },

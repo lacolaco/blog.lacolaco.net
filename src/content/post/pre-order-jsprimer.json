@@ -1,10 +1,12 @@
 {
   "pageId": "7908eb7e-5234-42c7-a940-b1615464cdfe",
-  "lastEditedAt": "2023-12-24T00:21:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "pre-order-jsprimer",
+  "locale": "ja",
   "properties": {
     "title": "JavaScriptの入門本 JavaScript Primerの予約販売がはじまりました",
     "date": "2020-04-15T00:00:00.000Z",
+    "category": "Tech",
     "tags": ["雑記", "js-primer", "日記"]
   },
   "content": [

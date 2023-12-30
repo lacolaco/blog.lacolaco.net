@@ -1,11 +1,13 @@
 {
   "pageId": "09047f7d-f09e-48ec-b004-a98745ede141",
-  "lastEditedAt": "2023-05-21T05:55:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "angular-content-projection-101",
+  "locale": "ja",
   "properties": {
     "title": "AngularのContent Projectionの基本",
     "date": "2020-02-10T00:00:00.000Z",
-    "tags": ["tech", "Angular", "Web Components"]
+    "category": "Tech",
+    "tags": ["Angular", "Web Components"]
   },
   "content": [
     {
@@ -1179,7 +1181,7 @@
         {
           "type": "text",
           "text": "https://stackblitz.com/edit/ivy-rr1pwi?file=src/app/hello.component.ts",
-          "href": "https://stackblitz.com/edit/ivy-rr1pwi?file=src/app/hello.component.ts",
+          "href": "https://stackblitz.com/edit/ivy-rr1pwi?file=src%2Fapp%2Fhello.component.ts",
           "annotations": {}
         },
         {

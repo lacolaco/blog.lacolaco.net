@@ -1,16 +1,19 @@
 {
   "pageId": "b3355b6f-a9f9-4b0d-a35d-23b772427c5b",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "how-to-try-angular-cli-with-bazel",
+  "locale": "ja",
   "properties": {
     "title": "How to Try Angular CLI with Bazel",
     "date": "2019-01-01T00:00:00.000Z",
-    "tags": ["tech", "Angular", "Bazel"]
+    "category": "Tech",
+    "tags": ["Angular", "Bazel"]
   },
   "content": [
     {
       "type": "image",
-      "url": "/images/how-to-try-angular-cli-with-bazel/7a64c893-bda0-461d-879f-f1d61be3941d/1__ReNz4DpvQrUpGduIF8RS2w.png",
+      "external": false,
+      "url": "/src/content/images/how-to-try-angular-cli-with-bazel/3c6255ea-b6c7-4055-8126-638d2819f0c3/7a64c893-bda0-461d-879f-f1d61be3941d.png",
       "caption": ""
     },
     {

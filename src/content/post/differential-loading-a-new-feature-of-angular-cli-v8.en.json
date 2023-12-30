@@ -1,11 +1,12 @@
 {
   "pageId": "d4fdf732-3192-45b8-b5d9-1ed9f6c4c062",
-  "lastEditedAt": "2023-12-24T00:38:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "differential-loading-a-new-feature-of-angular-cli-v8",
   "locale": "en",
   "properties": {
     "title": "\"Differential Loading\" - A New Feature of Angular CLI v8",
     "date": "2019-04-17T00:00:00.000Z",
+    "category": "Tech",
     "tags": ["Angular", "Angular CLI"]
   },
   "content": [
@@ -467,8 +468,9 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://thepracticaldev.s3.amazonaws.com/i/7hbyinyypnhlfmrvemnc.png",
-      "caption": []
+      "caption": ""
     },
     {
       "type": "heading",

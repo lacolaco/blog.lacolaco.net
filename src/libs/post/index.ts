@@ -1,4 +1,4 @@
 export * from './nodes';
 export * from './schema';
-export * from './tags';
+export * from './properties';
 export * from './slug';

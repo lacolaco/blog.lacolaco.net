@@ -1,11 +1,13 @@
 {
   "pageId": "9dab9594-a41d-4af6-9f35-36e029edd915",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "migrate-angular-cli-from-1-7-to-6-0",
+  "locale": "ja",
   "properties": {
     "title": "Angular CLI v1.7からv6.0へのマイグレーションについて (for v6.0.0-rc.2)",
     "date": "2018-04-09T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {

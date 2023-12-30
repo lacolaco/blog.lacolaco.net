@@ -4,15 +4,24 @@ import { ContentNode } from './nodes';
 export const Locale = z.enum(['ja', 'en']);
 export type Locale = z.infer<typeof Locale>;
 
-export const TagType = z.object({
+export const Tag = z.object({
   name: z.string(),
   color: z.string(),
 });
 
-export type TagType = z.infer<typeof TagType>;
+export type Tag = z.infer<typeof Tag>;
 
-export const Tags = z.record(TagType);
+export const Tags = z.record(Tag);
 export type Tags = z.infer<typeof Tags>;
+
+export const Category = z.object({
+  name: z.string(),
+  color: z.string(),
+});
+export type Category = z.infer<typeof Category>;
+
+export const Categories = z.record(Category);
+export type Categories = z.infer<typeof Categories>;
 
 export const postSchema = z.object({
   pageId: z.string(),
@@ -26,6 +35,7 @@ export const postSchema = z.object({
         .string()
         .or(z.date())
         .transform((val) => new Date(val)),
+      category: z.string().optional(),
       tags: z.array(z.string()),
       updatedAt: z
         .string()

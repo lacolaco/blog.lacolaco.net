@@ -1,10 +1,12 @@
 {
   "pageId": "3d881d0f-dcf4-4c19-ada8-6ceb05f8e874",
-  "lastEditedAt": "2023-09-08T10:57:00.000Z",
+  "lastEditedAt": "2023-12-30T10:01:00.000Z",
   "slug": "angular-app-initializer-and-effect",
+  "locale": "ja",
   "properties": {
     "title": "Angular: APP_INITIALIZERとEffectの用法",
     "date": "2023-09-08T10:20:00.000Z",
+    "category": "Tech",
     "tags": ["Angular", "Signals"]
   },
   "content": [

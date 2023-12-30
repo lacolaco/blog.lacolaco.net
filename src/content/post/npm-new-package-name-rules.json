@@ -1,11 +1,13 @@
 {
   "pageId": "281f136b-6bbe-4581-b7da-ae8db0af3c61",
-  "lastEditedAt": "2023-05-21T02:20:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "npm-new-package-name-rules",
+  "locale": "ja",
   "properties": {
     "title": "npmの新しいパッケージ名ルールについて",
     "date": "2018-01-04T00:00:00.000Z",
-    "tags": ["tech", "npm"]
+    "category": "Tech",
+    "tags": ["npm"]
   },
   "content": [
     {

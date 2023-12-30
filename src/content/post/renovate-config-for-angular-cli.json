@@ -1,11 +1,13 @@
 {
   "pageId": "7bdac4fe-30d9-4ae2-a780-81cbbb21b3c7",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:07:00.000Z",
   "slug": "renovate-config-for-angular-cli",
+  "locale": "ja",
   "properties": {
     "title": "AngularプロジェクトのためのRenovate設定",
     "date": "2021-03-20T00:00:00.000Z",
-    "tags": ["tech", "Angular", "Angular CLI"]
+    "category": "Tech",
+    "tags": ["Angular", "Angular CLI"]
   },
   "content": [
     {

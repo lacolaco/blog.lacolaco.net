@@ -1,11 +1,13 @@
 {
   "pageId": "1247081c-70a7-4563-886a-056d3778a33f",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:07:00.000Z",
   "slug": "enjoyable-webworkers-in-angular.ja",
+  "locale": "ja",
   "properties": {
     "title": "Angular: Comlink を使った Web Worker の導入",
     "date": "2021-05-26T00:00:00.000Z",
-    "tags": ["tech", "Angular", "Web Worker"]
+    "category": "Tech",
+    "tags": ["Angular", "Web Worker"]
   },
   "content": [
     {
@@ -659,7 +661,8 @@
     },
     {
       "type": "image",
-      "url": "/images/enjoyable-webworkers-in-angular.ja/567cff86-6f84-453e-be4d-5dd32e9a248a/0476d21164731efa00df1ffa37c4b731.gif",
+      "external": false,
+      "url": "/src/content/images/enjoyable-webworkers-in-angular.ja/3c6255ea-b6c7-4055-8126-638d2819f0c3/567cff86-6f84-453e-be4d-5dd32e9a248a.gif",
       "caption": ""
     },
     {

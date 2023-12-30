@@ -1,11 +1,13 @@
 {
   "pageId": "f6287c72-68f9-4adc-be24-70f401207886",
-  "lastEditedAt": "2023-05-21T04:39:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "firebase-hosting-production-staging-with-targets",
+  "locale": "ja",
   "properties": {
     "title": "Firebase HostingのDeploy Targetsを使ってproduction/staging環境を分ける",
     "date": "2020-08-17T00:00:00.000Z",
-    "tags": ["tech", "Firebase"]
+    "category": "Tech",
+    "tags": ["Firebase"]
   },
   "content": [
     {
@@ -212,7 +214,8 @@
     },
     {
       "type": "image",
-      "url": "/images/firebase-hosting-production-staging-with-targets/4908aaaf-fc91-44a9-a495-a424997d807e/Untitled.png",
+      "external": false,
+      "url": "/src/content/images/firebase-hosting-production-staging-with-targets/3c6255ea-b6c7-4055-8126-638d2819f0c3/4908aaaf-fc91-44a9-a495-a424997d807e.png",
       "caption": ""
     },
     {

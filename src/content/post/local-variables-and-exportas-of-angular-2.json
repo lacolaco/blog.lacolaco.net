@@ -1,11 +1,13 @@
 {
   "pageId": "5d985bb5-3b53-41d8-b097-d2f5cf8ddb57",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "local-variables-and-exportas-of-angular-2",
+  "locale": "ja",
   "properties": {
     "title": "Angular 2のローカル変数とexportAs",
     "date": "2016-04-11T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {

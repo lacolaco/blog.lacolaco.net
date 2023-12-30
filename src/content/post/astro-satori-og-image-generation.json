@@ -1,10 +1,12 @@
 {
   "pageId": "d23a2cfd-5a46-47f6-a430-0533e00371a6",
-  "lastEditedAt": "2023-12-27T07:21:00.000Z",
+  "lastEditedAt": "2023-12-30T10:04:00.000Z",
   "slug": "astro-satori-og-image-generation",
+  "locale": "ja",
   "properties": {
     "title": "satoriを使ったAstroのOGP画像生成メモ",
     "date": "2023-06-06T23:35:00.000Z",
+    "category": "Tech",
     "tags": ["Astro", "Blog Dev"]
   },
   "content": [

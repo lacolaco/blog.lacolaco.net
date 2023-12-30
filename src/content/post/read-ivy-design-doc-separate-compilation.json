@@ -1,11 +1,13 @@
 {
   "pageId": "f6bcdb70-96ae-42f1-84bf-94651422e9b7",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "read-ivy-design-doc-separate-compilation",
+  "locale": "ja",
   "properties": {
     "title": "DESIGN DOC (Ivy): Separate Compilationを読む",
     "date": "2018-03-03T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {

@@ -1,11 +1,13 @@
 {
   "pageId": "30d898e5-e62d-4967-a938-79622e2f9730",
-  "lastEditedAt": "2023-05-21T05:18:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "angular-ngmodule-and-directories",
+  "locale": "ja",
   "properties": {
     "title": "中規模AngularアプリにおけるNgModule構成とディレクトリ構造",
     "date": "2019-07-11T00:00:00.000Z",
-    "tags": ["tech", "Angular", "設計"]
+    "category": "Tech",
+    "tags": ["Angular", "設計"]
   },
   "content": [
     {

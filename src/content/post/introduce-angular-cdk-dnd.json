@@ -1,11 +1,13 @@
 {
   "pageId": "a3993f7d-b21f-4b38-a87e-6c15cb98c825",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "introduce-angular-cdk-dnd",
+  "locale": "ja",
   "properties": {
     "title": "Angular CDK drag-and-drop の紹介",
     "date": "2018-08-29T00:00:00.000Z",
-    "tags": ["tech", "Angular", "Angular CDK"]
+    "category": "Tech",
+    "tags": ["Angular", "Angular CDK"]
   },
   "content": [
     {
@@ -197,6 +199,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180829/20180829200010.gif",
       "caption": ""
     },
@@ -335,6 +338,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180829/20180829200735.gif",
       "caption": ""
     },
@@ -653,6 +657,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180829/20180829210528.gif",
       "caption": ""
     },
@@ -921,6 +926,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180829/20180829212028.gif",
       "caption": ""
     },
@@ -993,6 +999,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180829/20180829212513.gif",
       "caption": ""
     },
@@ -1034,6 +1041,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180829/20180829212904.gif",
       "caption": ""
     },

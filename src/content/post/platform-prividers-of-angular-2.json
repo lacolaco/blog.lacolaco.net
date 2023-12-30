@@ -1,11 +1,13 @@
 {
   "pageId": "5ae80d32-0b24-4a6b-b01b-7ffa6feb932a",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "platform-prividers-of-angular-2",
+  "locale": "ja",
   "properties": {
     "title": "Angular 2のPlatform Provider",
     "date": "2016-04-22T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {

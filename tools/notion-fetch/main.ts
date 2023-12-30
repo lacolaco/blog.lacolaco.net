@@ -2,7 +2,7 @@ import { NotionDatabase } from '@lib/notion';
 import { getPostJSONFileName } from '@lib/post';
 import { SingleBar } from 'cli-progress';
 import { parseArgs } from 'node:util';
-import { toBlogPostJSON, toTagsJSON } from './content';
+import { toBlogPostJSON, toCategoriesJSON, toTagsJSON } from './content';
 import { FileSystem } from './file-system';
 import { formatJSON } from './utils/format';
 
@@ -38,12 +38,17 @@ async function main() {
   const postJsonFS = new FileSystem(root, 'src/content/post', { dryRun });
   const pageCacheFS = new FileSystem(root, 'cache/page', { dryRun });
   const tagsJsonFS = new FileSystem(root, 'src/content/tags', { dryRun });
+  const categoriesJsonFS = new FileSystem(root, 'src/content/categories', { dryRun });
 
   console.log('Fetching database properties...');
   const properties = await db.getDatabaseProperties();
   console.log("Updating 'tags.json'...");
   const tagsJson = await formatJSON(toTagsJSON(properties.tags));
   await tagsJsonFS.save('tags.json', tagsJson, { encoding: 'utf-8' });
+
+  console.log("Updating 'categories.json'...");
+  const categoriesJson = await formatJSON(toCategoriesJSON(properties.category));
+  await categoriesJsonFS.save('categories.json', categoriesJson, { encoding: 'utf-8' });
 
   console.log('Fetching pages...');
   const pages = await db.queryBlogPages();

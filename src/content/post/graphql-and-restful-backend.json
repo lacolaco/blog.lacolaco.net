@@ -1,10 +1,12 @@
 {
   "pageId": "d55bc2a7-4dc7-4431-9924-7ff1d5610666",
-  "lastEditedAt": "2023-12-24T00:18:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "graphql-and-restful-backend",
+  "locale": "ja",
   "properties": {
     "title": "GraphQLとRESTfulについて今日考えてたこと　Backend for Usecase/Resourceについて",
     "date": "2018-07-13T00:00:00.000Z",
+    "category": "Tech",
     "tags": ["雑記", "GraphQL", "設計", "Idea"]
   },
   "content": [
@@ -132,8 +134,9 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180712/20180712230727.png",
-      "caption": []
+      "caption": ""
     },
     {
       "type": "heading",
@@ -229,8 +232,9 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180713/20180713000156.png",
-      "caption": []
+      "caption": ""
     },
     {
       "type": "paragraph",

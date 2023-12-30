@@ -1,11 +1,13 @@
 {
   "pageId": "e6735cdf-159e-4c34-be00-a20927cdb7a1",
-  "lastEditedAt": "2023-05-21T05:38:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "angular-http-with-axios",
+  "locale": "ja",
   "properties": {
     "title": "Angularとaxiosを使ったHTTP通信",
     "date": "2018-04-20T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {

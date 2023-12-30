@@ -1,11 +1,13 @@
 {
   "pageId": "ab8e4521-25df-4704-bcc7-aa3da401391d",
-  "lastEditedAt": "2023-05-21T05:48:00.000Z",
+  "lastEditedAt": "2023-12-30T10:07:00.000Z",
   "slug": "angular-eliminate-render-blocking-requests",
+  "locale": "ja",
   "properties": {
     "title": "Angular: Eliminate Render Blocking Requests の概要",
     "date": "2020-10-01T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {

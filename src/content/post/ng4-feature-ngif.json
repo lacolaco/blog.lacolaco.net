@@ -1,11 +1,13 @@
 {
   "pageId": "e34eeccc-4c1e-4aeb-a1c4-eb3381c58440",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "ng4-feature-ngif",
+  "locale": "ja",
   "properties": {
     "title": "[Angular 4.0] 新しいngIfの使い方",
     "date": "2017-03-05T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {

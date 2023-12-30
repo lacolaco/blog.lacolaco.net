@@ -1,11 +1,13 @@
 {
   "pageId": "71bd2be8-bc25-4bf6-92ae-57848af085ef",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "webbundles-with-angular",
+  "locale": "ja",
   "properties": {
     "title": "AngularでWeb Bundlesを試す",
     "date": "2019-12-25T00:00:00.000Z",
-    "tags": ["tech", "Angular", "webpackaging"]
+    "category": "Tech",
+    "tags": ["Angular", "webpackaging"]
   },
   "content": [
     {

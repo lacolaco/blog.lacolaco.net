@@ -1,11 +1,13 @@
 {
   "pageId": "b0f5f2b3-0601-4805-b6f3-32feed870c3c",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "ng-conf-2017-day-1-note",
+  "locale": "ja",
   "properties": {
     "title": "ng-conf 2017 1日目 Keynoteメモ",
     "date": "2017-04-05T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {

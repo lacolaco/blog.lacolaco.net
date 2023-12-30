@@ -1,11 +1,13 @@
 {
   "pageId": "8db2b4c6-9abe-4f39-94f1-e1bf70d145ed",
-  "lastEditedAt": "2023-05-21T05:59:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "angular-component-style-with-emotion",
+  "locale": "ja",
   "properties": {
     "title": "Angularコンポーネントのスタイルにemotionを使う",
     "date": "2018-07-28T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {
@@ -58,6 +60,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180728/20180728090201.png",
       "caption": ""
     },
@@ -112,6 +115,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180728/20180728002419.png",
       "caption": ""
     },
@@ -148,6 +152,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://media.giphy.com/media/3IFE4ooosgtRPJbih9/giphy.gif",
       "caption": ""
     },

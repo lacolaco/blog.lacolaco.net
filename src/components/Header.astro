@@ -13,7 +13,7 @@ const { class: className, showDescription } = Astro.props;
   class="group max-w-screen-lg mx-[2rem] lg:mx-auto flex flex-col pt-3 pb-3 has-[[data-description]]:pb-6"
   class:list={className}
 >
-  <div class="w-full grid grid-cols-[1fr_auto_1fr] items-center">
+  <div class="w-full grid grid-rows-[34px] grid-cols-[1fr_auto_1fr] items-center">
     <div></div>
     <div>
       <a
@@ -33,9 +33,6 @@ const { class: className, showDescription } = Astro.props;
       </div>
       <div class="flex items-center">
         <a href="/tags/" class="text-default hover:text-default-muted hover:no-underline" title="tags">Tags</a>
-      </div>
-      <div class="flex items-center">
-        <a href="/index.xml" class="text-default hover:text-default-muted hover:no-underline" title="RSS feed">RSS</a>
       </div>
       <div class="flex items-center">
         <a href="https://lacolaco.net" target="_blank" rel="noopener" title="profile">

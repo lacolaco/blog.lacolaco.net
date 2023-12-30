@@ -1,10 +1,12 @@
 {
   "pageId": "7b9d8d5b-6552-4cdc-96fd-3dc21a708147",
-  "lastEditedAt": "2023-11-08T01:19:00.000Z",
+  "lastEditedAt": "2023-12-30T10:00:00.000Z",
   "slug": "read-books-2023-q3",
+  "locale": "ja",
   "properties": {
     "title": "読んだ本 2023-Q3",
     "date": "2023-09-24T11:56:00.000Z",
+    "category": "Diary",
     "tags": ["読書"]
   },
   "content": [
@@ -20,8 +22,9 @@
     },
     {
       "type": "image",
-      "url": "/images/read-books-2023-q3/3c6255ea-b6c7-4055-8126-638d2819f0c3/62db096d-b717-4741-bccc-a94e3d76a0b0/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/read-books-2023-q3/3c6255ea-b6c7-4055-8126-638d2819f0c3/62db096d-b717-4741-bccc-a94e3d76a0b0.png",
+      "caption": ""
     },
     {
       "type": "heading",
@@ -226,8 +229,9 @@
     },
     {
       "type": "image",
-      "url": "/images/read-books-2023-q3/3c6255ea-b6c7-4055-8126-638d2819f0c3/df5d8d97-6b12-4807-8f77-29a46208350b/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/read-books-2023-q3/3c6255ea-b6c7-4055-8126-638d2819f0c3/df5d8d97-6b12-4807-8f77-29a46208350b.png",
+      "caption": ""
     },
     {
       "type": "bulleted_list",

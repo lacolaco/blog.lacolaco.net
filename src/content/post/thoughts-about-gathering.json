@@ -1,10 +1,12 @@
 {
   "pageId": "1f3c7b97-cba3-4bbd-9d57-3b53c9b5aa4f",
-  "lastEditedAt": "2023-08-03T14:14:00.000Z",
+  "lastEditedAt": "2023-12-30T10:02:00.000Z",
   "slug": "thoughts-about-gathering",
+  "locale": "ja",
   "properties": {
     "title": "IT系勉強会のいまと、集うということについて",
     "date": "2023-08-02T12:43:00.000Z",
+    "category": "Idea",
     "tags": ["言語化"]
   },
   "content": [

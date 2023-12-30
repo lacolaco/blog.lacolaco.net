@@ -1,10 +1,12 @@
 {
   "pageId": "52c3af16-edb2-431f-9cc6-bba494864a53",
-  "lastEditedAt": "2023-06-25T12:17:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "yapc-kyoto-2023",
+  "locale": "ja",
   "properties": {
     "title": "YAPC::Kyoto 2023 に参加した ",
     "date": "2023-03-19T15:14:00.000Z",
+    "category": "Diary",
     "tags": ["日記"]
   },
   "content": [

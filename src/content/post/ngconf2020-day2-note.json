@@ -1,11 +1,13 @@
 {
   "pageId": "35867cc9-ff22-4107-88d8-cafe3e17f010",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "ngconf2020-day2-note",
+  "locale": "ja",
   "properties": {
     "title": "ng-conf 2020 Day 2 Note",
     "date": "2020-04-03T00:00:00.000Z",
-    "tags": ["tech", "Angular", "ng-conf"]
+    "category": "Tech",
+    "tags": ["Angular", "ng-conf"]
   },
   "content": [
     {
@@ -197,6 +199,7 @@
                           "children": [
                             {
                               "type": "image",
+                              "external": true,
                               "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/73779e17-4b01-4213-b9cf-9a4326b1bef9.png",
                               "caption": ""
                             }
@@ -229,6 +232,7 @@
                   "children": [
                     {
                       "type": "image",
+                      "external": true,
                       "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/d3d39d4b-3046-46f5-b97b-d45e09cfd47e.png",
                       "caption": ""
                     }
@@ -354,6 +358,7 @@
                           "children": [
                             {
                               "type": "image",
+                              "external": true,
                               "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/25173b6f-8f18-448e-9e71-6ca01773594a.png",
                               "caption": ""
                             }
@@ -476,6 +481,7 @@
                   "children": [
                     {
                       "type": "image",
+                      "external": true,
                       "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/b4e3676a-0f9e-4c62-8c77-313b2114869f.png",
                       "caption": ""
                     }
@@ -769,6 +775,7 @@
                           "children": [
                             {
                               "type": "image",
+                              "external": true,
                               "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/162dd03c-3d81-4125-87c7-2b1aa4d1b86b.png",
                               "caption": ""
                             }
@@ -825,6 +832,7 @@
                           "children": [
                             {
                               "type": "image",
+                              "external": true,
                               "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/cf98e123-ebb9-4aa3-9c6c-cad3046a40b5.png",
                               "caption": ""
                             }
@@ -892,6 +900,7 @@
                           "children": [
                             {
                               "type": "image",
+                              "external": true,
                               "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/e1d9bdc6-d1a8-409f-8765-b702c0ed2167.png",
                               "caption": ""
                             }
@@ -1067,6 +1076,7 @@
                           "children": [
                             {
                               "type": "image",
+                              "external": true,
                               "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/4027df59-45f6-4645-a140-f5ed866393b0.png",
                               "caption": ""
                             }
@@ -1113,6 +1123,7 @@
                           "children": [
                             {
                               "type": "image",
+                              "external": true,
                               "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/c03e1c94-58b2-4578-b1fa-a827e2cdf5c6.png",
                               "caption": ""
                             }
@@ -1171,6 +1182,7 @@
                                   "children": [
                                     {
                                       "type": "image",
+                                      "external": true,
                                       "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/a327ed29-9c1d-4f22-88ca-216342b3206f.png",
                                       "caption": ""
                                     }
@@ -1224,6 +1236,7 @@
                                   "children": [
                                     {
                                       "type": "image",
+                                      "external": true,
                                       "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/156a6fd4-2eec-486f-89c8-c5289b600e61.png",
                                       "caption": ""
                                     }
@@ -1269,6 +1282,7 @@
                                   "children": [
                                     {
                                       "type": "image",
+                                      "external": true,
                                       "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/06257608-1520-400c-96fd-aad509ac0cbd.png",
                                       "caption": ""
                                     },
@@ -1338,6 +1352,7 @@
                                   "children": [
                                     {
                                       "type": "image",
+                                      "external": true,
                                       "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/5a67a308-c26e-483f-9bf7-a5c89e7ab948.png",
                                       "caption": ""
                                     }
@@ -1374,6 +1389,7 @@
                   "children": [
                     {
                       "type": "image",
+                      "external": true,
                       "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/2c5fb689-0d96-4993-8aad-7a9ef44450e6.png",
                       "caption": ""
                     }
@@ -1433,6 +1449,7 @@
                           "children": [
                             {
                               "type": "image",
+                              "external": true,
                               "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/8ce42bf7-3856-443b-bd04-64d7c86a542b.png",
                               "caption": ""
                             }
@@ -1472,6 +1489,7 @@
                           "children": [
                             {
                               "type": "image",
+                              "external": true,
                               "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/400e47d6-0702-4052-95fc-f3353b11fe8f.png",
                               "caption": ""
                             }
@@ -1569,6 +1587,7 @@
                           "children": [
                             {
                               "type": "image",
+                              "external": true,
                               "url": "https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/43a20712-334d-4441-b119-340cd2166cc5.png",
                               "caption": ""
                             }

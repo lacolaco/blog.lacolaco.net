@@ -1,11 +1,13 @@
 {
   "pageId": "a78e0e2c-f3cc-478d-ac9b-7ae6825d66c6",
-  "lastEditedAt": "2023-05-21T06:10:00.000Z",
+  "lastEditedAt": "2023-12-30T10:07:00.000Z",
   "slug": "angular-trusted-types",
+  "locale": "ja",
   "properties": {
     "title": "Angular: Trusted Typesサポートの概要",
     "date": "2020-11-03T00:00:00.000Z",
-    "tags": ["tech", "Angular", "Security", "Web"]
+    "category": "Tech",
+    "tags": ["Angular", "Security", "Web"]
   },
   "content": [
     {
@@ -471,7 +473,8 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-trusted-types/8977459d-5dd8-496c-bb71-63d44f23f93a/2020-11-03T11-26-13.png",
+      "external": false,
+      "url": "/src/content/images/angular-trusted-types/3c6255ea-b6c7-4055-8126-638d2819f0c3/8977459d-5dd8-496c-bb71-63d44f23f93a.png",
       "caption": "innerHTML binding and sanitization"
     },
     {
@@ -547,7 +550,8 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-trusted-types/dc65b9b4-1af8-47f1-a179-0516bad48eec/2020-11-03T11-43-43.png",
+      "external": false,
+      "url": "/src/content/images/angular-trusted-types/3c6255ea-b6c7-4055-8126-638d2819f0c3/dc65b9b4-1af8-47f1-a179-0516bad48eec.png",
       "caption": "innerHTML binding and sanitization with trusted types"
     },
     {

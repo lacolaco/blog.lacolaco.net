@@ -1,10 +1,12 @@
 {
   "pageId": "7513b1f4-e7e6-4b10-ba15-e54411a3deb6",
-  "lastEditedAt": "2023-07-30T00:15:00.000Z",
+  "lastEditedAt": "2023-12-30T10:06:00.000Z",
   "slug": "read-books-2022-q2",
+  "locale": "ja",
   "properties": {
     "title": "読んだ本 2022-Q2",
     "date": "2022-07-02T00:20:00.000Z",
+    "category": "Diary",
     "tags": ["日記", "読書"]
   },
   "content": [
@@ -24,7 +26,8 @@
     },
     {
       "type": "image",
-      "url": "/images/read-books-2022-q2/757bdd97-3d43-4f16-a99e-0960c722c7a7/Untitled.png",
+      "external": false,
+      "url": "/src/content/images/read-books-2022-q2/3c6255ea-b6c7-4055-8126-638d2819f0c3/757bdd97-3d43-4f16-a99e-0960c722c7a7.png",
       "caption": ""
     },
     {
@@ -413,7 +416,8 @@
     },
     {
       "type": "image",
-      "url": "/images/read-books-2022-q2/451832ae-021e-4e7e-a738-a686f8a6cb23/Untitled.png",
+      "external": false,
+      "url": "/src/content/images/read-books-2022-q2/3c6255ea-b6c7-4055-8126-638d2819f0c3/451832ae-021e-4e7e-a738-a686f8a6cb23.png",
       "caption": ""
     },
     {

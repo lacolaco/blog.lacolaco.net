@@ -1,11 +1,13 @@
 {
   "pageId": "c30c4744-b390-4755-8495-a126d32ad0d9",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "angular-ngif-composing-feature-toggle",
+  "locale": "ja",
   "properties": {
     "title": "Angular: NgIfを合成したフィーチャートグルディレクティブ",
     "date": "2023-02-08T06:00:00.000Z",
-    "tags": ["Angular", "tech", "standalone component"],
+    "category": "Tech",
+    "tags": ["Angular", "standalone component"],
     "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-ngif-composing-feature-toggle"
   },
   "content": [

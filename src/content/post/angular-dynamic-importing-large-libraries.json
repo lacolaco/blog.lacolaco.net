@@ -1,11 +1,13 @@
 {
   "pageId": "d3b13513-d4e3-4d4a-bccf-1f286f55a32b",
-  "lastEditedAt": "2023-05-21T05:52:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "angular-dynamic-importing-large-libraries",
+  "locale": "ja",
   "properties": {
     "title": "Angular: Dynamic Importing Large Libraries",
     "date": "2019-03-06T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {
@@ -97,12 +99,14 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-dynamic-importing-large-libraries/0c061a9d-975c-4166-95c4-1686e2d5ae3c/1__P7kR4JOftK2sOO43PCSLdw.png",
+      "external": false,
+      "url": "/src/content/images/angular-dynamic-importing-large-libraries/3c6255ea-b6c7-4055-8126-638d2819f0c3/0c061a9d-975c-4166-95c4-1686e2d5ae3c.png",
       "caption": "Build result"
     },
     {
       "type": "image",
-      "url": "/images/angular-dynamic-importing-large-libraries/bc9c7a7a-9f04-405c-9d9d-07fee950a580/1__bdvPHFVhblVx3JsiGjxTwQ.png",
+      "external": false,
+      "url": "/src/content/images/angular-dynamic-importing-large-libraries/3c6255ea-b6c7-4055-8126-638d2819f0c3/bc9c7a7a-9f04-405c-9d9d-07fee950a580.png",
       "caption": "Chart.js: ~500KB"
     },
     {
@@ -542,12 +546,14 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-dynamic-importing-large-libraries/e5553826-ec93-46b5-b80a-4fca0c793500/1__FY__MPUG__xp4BXeWVfZaTXg.png",
+      "external": false,
+      "url": "/src/content/images/angular-dynamic-importing-large-libraries/3c6255ea-b6c7-4055-8126-638d2819f0c3/e5553826-ec93-46b5-b80a-4fca0c793500.png",
       "caption": "Build result"
     },
     {
       "type": "image",
-      "url": "/images/angular-dynamic-importing-large-libraries/d04b613a-9c51-4298-8d27-55ef3e2f57df/1__aKkqoplA1K2wEBuhfBCBpQ.png",
+      "external": false,
+      "url": "/src/content/images/angular-dynamic-importing-large-libraries/3c6255ea-b6c7-4055-8126-638d2819f0c3/d04b613a-9c51-4298-8d27-55ef3e2f57df.png",
       "caption": "Dynamic loading in the browser"
     },
     {

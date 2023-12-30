@@ -1,10 +1,12 @@
 {
   "pageId": "77445eb2-1395-4715-a3c2-d8ee7888b4bb",
-  "lastEditedAt": "2023-11-18T01:01:00.000Z",
+  "lastEditedAt": "2023-12-30T10:06:00.000Z",
   "slug": "344dd234430d",
+  "locale": "ja",
   "properties": {
     "title": "ふりかえりの本質・事象評価の4象限・KPTの矯正効果",
     "date": "2022-03-14T00:00:00.000Z",
+    "category": "Idea",
     "tags": ["雑記", "ふりかえり"]
   },
   "content": [
@@ -114,8 +116,9 @@
     },
     {
       "type": "image",
-      "url": "/images/344dd234430d/3c6255ea-b6c7-4055-8126-638d2819f0c3/5f91d6a8-6f51-4953-8b58-c4030209749d/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/344dd234430d/3c6255ea-b6c7-4055-8126-638d2819f0c3/5f91d6a8-6f51-4953-8b58-c4030209749d.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -183,8 +186,9 @@
     },
     {
       "type": "image",
-      "url": "/images/344dd234430d/3c6255ea-b6c7-4055-8126-638d2819f0c3/c3d09eb9-5971-47a0-9421-f205ddd4d714/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/344dd234430d/3c6255ea-b6c7-4055-8126-638d2819f0c3/c3d09eb9-5971-47a0-9421-f205ddd4d714.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -248,8 +252,9 @@
     },
     {
       "type": "image",
-      "url": "/images/344dd234430d/3c6255ea-b6c7-4055-8126-638d2819f0c3/72eae548-9457-4cc9-9fed-08c4697819e4/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/344dd234430d/3c6255ea-b6c7-4055-8126-638d2819f0c3/72eae548-9457-4cc9-9fed-08c4697819e4.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -263,8 +268,9 @@
     },
     {
       "type": "image",
-      "url": "/images/344dd234430d/3c6255ea-b6c7-4055-8126-638d2819f0c3/88a5e601-e585-42cd-82f3-b1949a1253cc/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/344dd234430d/3c6255ea-b6c7-4055-8126-638d2819f0c3/88a5e601-e585-42cd-82f3-b1949a1253cc.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -547,8 +553,9 @@
     },
     {
       "type": "image",
-      "url": "/images/344dd234430d/3c6255ea-b6c7-4055-8126-638d2819f0c3/6cb581f9-18e6-473a-877f-4e78b9c30c9e/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/344dd234430d/3c6255ea-b6c7-4055-8126-638d2819f0c3/6cb581f9-18e6-473a-877f-4e78b9c30c9e.png",
+      "caption": ""
     },
     {
       "type": "heading",
@@ -687,8 +694,9 @@
     },
     {
       "type": "image",
-      "url": "/images/344dd234430d/3c6255ea-b6c7-4055-8126-638d2819f0c3/1bd92a44-49f3-47ca-a9fb-15d4a882e751/Untitled.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/344dd234430d/3c6255ea-b6c7-4055-8126-638d2819f0c3/1bd92a44-49f3-47ca-a9fb-15d4a882e751.png",
+      "caption": ""
     },
     {
       "type": "heading",

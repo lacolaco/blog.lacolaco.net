@@ -1,11 +1,13 @@
 {
   "pageId": "48a52b05-59eb-43a5-b904-6e66f64550ce",
-  "lastEditedAt": "2023-05-11T00:28:00.000Z",
+  "lastEditedAt": "2023-12-30T10:06:00.000Z",
   "slug": "rust-wasm-svg-rendering",
+  "locale": "ja",
   "properties": {
     "title": "Rust+wasmでSVGを生成したら10倍速くなった",
     "date": "2022-02-26T03:29:00.000Z",
-    "tags": ["tech", "Rust", "WebAssembly", "wasm"]
+    "category": "Tech",
+    "tags": ["Rust", "WebAssembly"]
   },
   "content": [
     {
@@ -14,7 +16,7 @@
         {
           "type": "text",
           "text": "https://contrib.rocks",
-          "href": "https://contrib.rocks",
+          "href": "https://contrib.rocks/",
           "annotations": {}
         },
         {

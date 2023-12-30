@@ -1,11 +1,13 @@
 {
   "pageId": "655c55b5-69cc-4063-8608-44d8f10ec88b",
-  "lastEditedAt": "2023-05-21T05:06:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "aot-compilation-with-webpack",
+  "locale": "ja",
   "properties": {
     "title": "Angular AoT Compilation with webpack",
     "date": "2016-10-23T00:00:00.000Z",
-    "tags": ["tech", "Angular", "webpack"]
+    "category": "Tech",
+    "tags": ["Angular", "webpack"]
   },
   "content": [
     {

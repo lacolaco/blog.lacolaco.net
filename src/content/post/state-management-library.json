@@ -1,11 +1,13 @@
 {
   "pageId": "de2f47a3-3dcc-4621-8f6c-f56dc1b57062",
-  "lastEditedAt": "2023-05-21T01:31:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "state-management-library",
+  "locale": "ja",
   "properties": {
     "title": "状態管理のライブラリを作りました",
     "date": "2018-01-12T00:00:00.000Z",
-    "tags": ["tech", "TypeScript", "状態管理"]
+    "category": "Tech",
+    "tags": ["TypeScript", "状態管理"]
   },
   "content": [
     {

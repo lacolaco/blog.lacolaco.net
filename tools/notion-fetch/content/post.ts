@@ -1,5 +1,5 @@
 import { PageObjectWithContent } from '@lib/notion';
-import { PostData } from '@lib/post';
+import { PostData, postSchema } from '@lib/post';
 import { FileSystem } from '../file-system';
 import { newContentTransformer } from './transform';
 
@@ -10,18 +10,19 @@ export async function toBlogPostJSON(page: PageObjectWithContent, imageFS: FileS
   const title = transformer.transformTitle(properties.title);
   const createdAtOverride = properties.created_at_override?.date?.start ?? null;
   const date = new Date(createdAtOverride ?? created_time);
+  const category = properties.category.select?.name;
   const tags = properties.tags.multi_select.map((tag) => tag.name);
   const updatedAtOverride = properties.updated_at?.date?.start ?? undefined;
   const updatedAt = updatedAtOverride ? new Date(updatedAtOverride) : undefined;
   const canonicalUrl = properties.canonical_url?.url ?? undefined;
   const content = await transformer.transformContent(page.content);
 
-  return {
+  return postSchema.parse({
     pageId,
     lastEditedAt,
     slug,
     locale,
-    properties: { title, date, tags, updatedAt, canonicalUrl },
+    properties: { title, date, category, tags, updatedAt, canonicalUrl },
     content,
-  };
+  });
 }
