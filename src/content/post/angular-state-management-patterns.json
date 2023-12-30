@@ -1,11 +1,13 @@
 {
   "pageId": "49cd00ee-40f0-44ec-a73c-43f946510dff",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:06:00.000Z",
   "slug": "angular-state-management-patterns",
+  "locale": "ja",
   "properties": {
     "title": "Angularアプリケーションの状態管理パターン",
     "date": "2022-05-11T02:10:00.000Z",
-    "tags": ["Angular", "tech", "State Management", "状態管理"]
+    "category": "Tech",
+    "tags": ["Angular", "状態管理"]
   },
   "content": [
     {

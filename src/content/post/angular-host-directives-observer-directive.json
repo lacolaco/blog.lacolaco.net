@@ -1,11 +1,13 @@
 {
   "pageId": "8921bbca-9dc2-4312-8119-845110ae380e",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "angular-host-directives-observer-directive",
+  "locale": "ja",
   "properties": {
     "title": "Angular v15 hostDirectivesのユースケース検討: 状態監視系ディレクティブの合成",
     "date": "2022-10-30T09:53:00.000Z",
-    "tags": ["Angular", "tech", "standalone component", "IntersectionObserver"],
+    "category": "Tech",
+    "tags": ["Angular", "standalone component"],
     "updatedAt": "2022-10-30T00:00:00.000Z"
   },
   "content": [

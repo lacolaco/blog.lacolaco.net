@@ -1,11 +1,13 @@
 {
   "pageId": "e7898e37-3304-4482-8657-dff38ca1f349",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "rx-angular-component-state-management",
+  "locale": "ja",
   "properties": {
     "title": "rx-angular/state を使ったコンポーネントローカル状態管理",
     "date": "2022-10-26T06:46:00.000Z",
-    "tags": ["Angular", "tech", "rx-angular", "State Management", "状態管理"],
+    "category": "Tech",
+    "tags": ["Angular", "rx-angular", "状態管理"],
     "updatedAt": "2022-10-26T00:00:00.000Z"
   },
   "content": [

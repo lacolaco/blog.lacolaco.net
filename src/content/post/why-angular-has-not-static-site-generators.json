@@ -1,11 +1,13 @@
 {
   "pageId": "dd51c920-26ab-47ba-8982-23ae64a2a1f0",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "why-angular-has-not-static-site-generators",
+  "locale": "ja",
   "properties": {
     "title": "Angular Elementsの野望と、Angularに静的サイト用フレームワークがない理由",
     "date": "2019-01-13T00:00:00.000Z",
-    "tags": ["tech", "Angular", "SSG", "Angular Elements"]
+    "category": "Tech",
+    "tags": ["Angular", "SSG", "Angular Elements"]
   },
   "content": [
     {
@@ -122,6 +124,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20190113/20190113000151.png",
       "caption": "code-example 要素はAngular Elementsで作られたCustom Element"
     },

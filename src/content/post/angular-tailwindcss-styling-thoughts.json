@@ -1,10 +1,12 @@
 {
   "pageId": "69bb91a6-ecf3-453f-bfcd-5c2e6354033a",
-  "lastEditedAt": "2023-12-24T00:12:00.000Z",
+  "lastEditedAt": "2023-12-30T10:07:00.000Z",
   "slug": "angular-tailwindcss-styling-thoughts",
+  "locale": "ja",
   "properties": {
     "title": "Angular と Tailwind CSSについての所感",
     "date": "2021-02-17T00:00:00.000Z",
+    "category": "Tech",
     "tags": ["Angular", "tailwindcss", "言語化"]
   },
   "content": [

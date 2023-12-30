@@ -19,6 +19,7 @@ export type BlogDatabaseProperties = DatabasePropertyConfigs & {
   title: DatabasePropertyConfig<'title'>;
   slug: DatabasePropertyConfig<'rich_text'>;
   locale: DatabasePropertyConfig<'select'>;
+  category: DatabasePropertyConfig<'select'>;
   tags: DatabasePropertyConfig<'multi_select'>;
   published: DatabasePropertyConfig<'checkbox'>;
   canonical_url: DatabasePropertyConfig<'url'>;
@@ -33,6 +34,7 @@ export type BlogPageProperties = PageProperties & {
   title: PageProperty<'title'>;
   slug: PageProperty<'rich_text'>;
   locale: PageProperty<'select'>;
+  category: PageProperty<'select'>;
   tags: PageProperty<'multi_select'>;
   published: PageProperty<'checkbox'>;
   canonical_url: PageProperty<'url'>;

@@ -1,11 +1,13 @@
 {
   "pageId": "8d9ba74a-f57a-443d-b493-69454c9916c8",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "template-syntax-in-angular-2",
+  "locale": "ja",
   "properties": {
     "title": "Angular 2の * シンタックス",
     "date": "2016-04-11T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {
@@ -285,6 +287,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://qiita-image-store.s3.amazonaws.com/0/20253/92d3ae19-886f-7b1b-5a1e-9d175a4e1cf0.png",
       "caption": ""
     },
@@ -330,6 +333,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://qiita-image-store.s3.amazonaws.com/0/20253/59e3f444-d704-800d-0162-977c07daaa3a.png",
       "caption": ""
     },
@@ -876,6 +880,7 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://qiita-image-store.s3.amazonaws.com/0/20253/99459f2b-907a-678f-b2ef-3c4846579283.png",
       "caption": ""
     },

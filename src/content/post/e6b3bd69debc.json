@@ -1,10 +1,12 @@
 {
   "pageId": "d0a077fb-608b-42d7-ad52-32bbb9c37d0d",
-  "lastEditedAt": "2023-12-07T12:38:00.000Z",
+  "lastEditedAt": "2023-12-30T09:58:00.000Z",
   "slug": "e6b3bd69debc",
+  "locale": "ja",
   "properties": {
     "title": "【Angular個別コミット解説】feat(router): Add info property to NavigationExtras",
     "date": "2023-12-06T23:53:00.000Z",
+    "category": "Tech",
     "tags": ["Angular"]
   },
   "content": [

@@ -1,0 +1,42 @@
+---
+import { queryCategories } from '@lib/query';
+import { urlize } from 'src/libs/strings';
+
+export interface Props {
+  class?: string;
+  activePath: string;
+}
+
+const { class: className, activePath } = Astro.props;
+
+const categories = await queryCategories();
+const items = [
+  { name: 'すべて', path: '/' },
+  ...categories.map((category) => ({
+    name: category.name,
+    path: `/categories/${urlize(category.name)}`,
+  })),
+];
+---
+
+<div
+  class:list={className}
+  class="flex flex-row gap-x-2 h-[34px] text-xs font-semibold *:flex *:items-center *:px-3 *:py-2 *:rounded-2xl *:border *:border-solid *:border-gray-300 *:leading-none"
+>
+  {
+    items.map((item) => {
+      if (item.path === activePath) {
+        return (
+          <a href={item.path} class="bg-gray-500 text-white">
+            {item.name}
+          </a>
+        );
+      }
+      return (
+        <a href={item.path} class="text-default bg-transparent hover:bg-gray-100">
+          {item.name}
+        </a>
+      );
+    })
+  }
+</div>

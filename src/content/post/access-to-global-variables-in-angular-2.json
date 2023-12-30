@@ -1,11 +1,13 @@
 {
   "pageId": "5fa5bd2c-24b5-494a-984c-d234f8fab462",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "access-to-global-variables-in-angular-2",
+  "locale": "ja",
   "properties": {
     "title": "Access to global variables in Angular 2",
     "date": "2016-10-04T01:24:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {

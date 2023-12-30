@@ -1,11 +1,12 @@
 {
   "pageId": "289a7964-b989-4c20-818f-45f429907bd1",
-  "lastEditedAt": "2023-12-24T00:36:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "async-pipe-initial-null-problem",
   "locale": "ja",
   "properties": {
     "title": "AsyncPipeの初期値null問題と非同期データバインディング",
     "date": "2020-02-18T00:00:00.000Z",
+    "category": "Tech",
     "tags": ["Angular", "RxJS"]
   },
   "content": [

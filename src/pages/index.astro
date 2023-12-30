@@ -1,8 +1,11 @@
 ---
 import { queryPosts } from '@lib/query';
+import CategoryNav from 'src/components/CategoryNav.astro';
 import List from '../layouts/List.astro';
 
 const posts = await queryPosts();
 ---
 
-<List posts={posts} />
+<List posts={posts} feedUrl="/index.xml">
+  <CategoryNav slot="title" activePath="/" />
+</List>

@@ -1,10 +1,12 @@
 {
   "pageId": "03ccefe8-3594-4857-a531-ae0beceb1622",
-  "lastEditedAt": "2023-11-08T01:19:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "jsprimer-2nd",
+  "locale": "ja",
   "properties": {
     "title": "JavaScript Primer 改訂2版が発売されます",
     "date": "2023-06-06T09:42:00.000Z",
+    "category": "Diary",
     "tags": ["js-primer", "雑記"]
   },
   "content": [
@@ -26,14 +28,9 @@
     },
     {
       "type": "image",
-      "url": "/images/jsprimer-2nd/2406c113-f92d-4a05-aac6-5c605fa2604c/PXL_20230606_101746407.jpg",
-      "caption": [
-        {
-          "type": "text",
-          "text": "見本紙",
-          "annotations": {}
-        }
-      ]
+      "external": false,
+      "url": "/src/content/images/jsprimer-2nd/3c6255ea-b6c7-4055-8126-638d2819f0c3/2406c113-f92d-4a05-aac6-5c605fa2604c.jpg",
+      "caption": "見本紙"
     },
     {
       "type": "paragraph",

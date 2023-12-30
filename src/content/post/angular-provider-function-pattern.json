@@ -1,10 +1,12 @@
 {
   "pageId": "613bc5dd-c46c-4c0a-8e30-b0f0dc1b8d4d",
-  "lastEditedAt": "2023-12-24T00:38:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "angular-provider-function-pattern",
+  "locale": "ja",
   "properties": {
     "title": "Angular: Provider Function Pattern",
     "date": "2022-10-16T07:08:00.000Z",
+    "category": "Tech",
     "tags": ["Angular", "dependency injection", "standalone component"],
     "updatedAt": "2022-10-16T00:00:00.000Z"
   },

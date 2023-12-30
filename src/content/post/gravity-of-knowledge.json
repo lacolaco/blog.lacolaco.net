@@ -1,10 +1,12 @@
 {
   "pageId": "f73568f5-3267-474d-bbe8-410a46000a9c",
-  "lastEditedAt": "2023-12-24T00:25:00.000Z",
+  "lastEditedAt": "2023-12-30T10:07:00.000Z",
   "slug": "gravity-of-knowledge",
+  "locale": "ja",
   "properties": {
     "title": "知識の引力",
     "date": "2022-01-14T09:20:00.000Z",
+    "category": "Idea",
     "tags": ["雑記", "言語化", "Idea"]
   },
   "content": [
@@ -30,20 +32,9 @@
     },
     {
       "type": "image",
-      "url": "/images/gravity-of-knowledge/3c6255ea-b6c7-4055-8126-638d2819f0c3/fedf9e94-8afa-4534-b405-d8b6c89dad6d.png",
-      "caption": [
-        {
-          "type": "text",
-          "text": "国立科学博物館-宇宙の質問箱-宇宙論編",
-          "href": "https://www.kahaku.go.jp/exhibitions/vm/resource/tenmon/space/theory/theory06.html",
-          "annotations": {}
-        },
-        {
-          "type": "text",
-          "text": "より",
-          "annotations": {}
-        }
-      ]
+      "external": false,
+      "url": "/src/content/images/gravity-of-knowledge/3c6255ea-b6c7-4055-8126-638d2819f0c3/fedf9e94-8afa-4534-b405-d8b6c89dad6d.png",
+      "caption": "国立科学博物館-宇宙の質問箱-宇宙論編より"
     },
     {
       "type": "paragraph",

@@ -1,10 +1,12 @@
 {
   "pageId": "9e5898a6-59e0-4315-9846-fe94baa9a101",
-  "lastEditedAt": "2023-12-24T00:27:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "rxjs-and-webworker",
+  "locale": "ja",
   "properties": {
     "title": "RxJSによるWeb Workerの抽象化 2つのアプローチ",
     "date": "2019-03-26T00:00:00.000Z",
+    "category": "Tech",
     "tags": ["RxJS", "Web Worker"]
   },
   "content": [
@@ -217,8 +219,9 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20190326/20190326141608.png",
-      "caption": []
+      "caption": ""
     },
     {
       "type": "heading",
@@ -243,8 +246,9 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20190326/20190326142344.png",
-      "caption": []
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -606,8 +610,9 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20190326/20190326150102.png",
-      "caption": []
+      "caption": ""
     },
     {
       "type": "paragraph",

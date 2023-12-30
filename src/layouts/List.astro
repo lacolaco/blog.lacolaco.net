@@ -13,10 +13,10 @@ import MainContainer from 'src/components/MainContainer.astro';
 
 type Props = {
   posts: PostData[];
-  tag?: string;
+  feedUrl: string;
 };
 
-const { posts, tag } = Astro.props;
+const { posts, feedUrl } = Astro.props;
 const postsByYear = Array.from(
   posts
     .reduce((acc, post) => {
@@ -40,22 +40,21 @@ const postsByYear = Array.from(
     <Header showDescription />
 
     <MainContainer>
-      <div class="py-4">
-        {
-          tag && (
-            <div class="flex flex-row items-center justify-between mb-4">
-              <h1 class="leading-none text-xl font-semibold">{`Articles with #${tag}`}</h1>
-              <a
-                href={urlize(`${Astro.url.origin}/tags/${tag}.xml`)}
-                target="_blank"
-                class="flex flex-row items-center text-black text-sm border border-solid border-gray-300 rounded leading-relaxed px-2 hover:ring-2 hover:ring-gray-300"
-              >
-                <span class="icon-[ic--baseline-rss-feed]" />
-                <span class="">RSS</span>
-              </a>
-            </div>
-          )
-        }
+      <div class="py-8">
+        <div class="flex flex-row items-center justify-between mb-6">
+          <div>
+            <slot name="title" />
+          </div>
+          <a
+            href={urlize(feedUrl)}
+            title="RSS Feed"
+            target="_blank"
+            class="flex flex-row items-center text-default rounded leading-0 p-1 hover:ring-2 hover:ring-gray-300 hover:text-muted"
+          >
+            <span class="text-[24px] icon-[material-symbols--rss-feed-rounded]"></span>
+          </a>
+        </div>
+
         <div>
           {
             postsByYear.map(([year, posts], index) => (
@@ -67,11 +66,13 @@ const postsByYear = Array.from(
                 )}
                 <ul class="list-none">
                   {posts.map((post) => (
-                    <li class="my-2 p-1 has-[:focus]:shadow-md has-[:hover]:shadow-md ring-gray-200 has-[:hover]:ring-1">
+                    <li class="my-4">
                       <div class="flex flex-col items-start leading-none">
                         <FormattedDate class="text-xs text-muted align-middle" date={post.properties.date} />
                         <a class="no-underline" href={getRelativePostUrl(post)}>
-                          <span class="text-lg text-default font-semibold underline">{post.properties.title}</span>
+                          <span class="text-lg text-default font-semibold underline hover:text-gray-500">
+                            {post.properties.title}
+                          </span>
                         </a>
                         <div class="mt-1">
                           <TagList tags={post.properties.tags ?? []} />

@@ -1,17 +1,20 @@
 {
   "pageId": "5aaa4170-7374-407f-8295-9b48fc9da5e7",
-  "lastEditedAt": "2023-08-11T15:20:00.000Z",
+  "lastEditedAt": "2023-12-30T10:01:00.000Z",
   "slug": "books-20230811",
+  "locale": "ja",
   "properties": {
     "title": "今日買った本",
     "date": "2023-08-11T13:26:00.000Z",
+    "category": "Diary",
     "tags": ["日記", "読書"]
   },
   "content": [
     {
       "type": "image",
-      "url": "/images/books-20230811/aa3452f2-6b8a-4aeb-8a98-481cd391ce47/PXL_20230811_1325041612.jpg",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/books-20230811/3c6255ea-b6c7-4055-8126-638d2819f0c3/aa3452f2-6b8a-4aeb-8a98-481cd391ce47.jpg",
+      "caption": ""
     },
     {
       "type": "paragraph",

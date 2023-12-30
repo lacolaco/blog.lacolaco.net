@@ -1,11 +1,13 @@
 {
   "pageId": "af9e064d-fecb-4dd3-98dc-268f54ef4089",
-  "lastEditedAt": "2023-05-21T06:11:00.000Z",
+  "lastEditedAt": "2023-12-30T10:06:00.000Z",
   "slug": "angular-router-title-strategy",
+  "locale": "ja",
   "properties": {
     "title": "Angular: Router に追加されるドキュメントタイトル更新機能について",
     "date": "2022-01-29T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {

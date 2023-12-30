@@ -1,11 +1,13 @@
 {
   "pageId": "fce69b90-8ffc-4369-a68b-b56f02e16320",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:11:00.000Z",
   "slug": "how-to-use-angular-2-nightly-builds",
+  "locale": "ja",
   "properties": {
     "title": "How to Use Angular 2 Nightly Builds",
     "date": "2016-08-05T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {

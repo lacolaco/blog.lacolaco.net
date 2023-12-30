@@ -1,11 +1,12 @@
 {
   "pageId": "8f425a78-a2da-4952-9537-29fca1cdd4ff",
-  "lastEditedAt": "2023-12-24T00:38:00.000Z",
+  "lastEditedAt": "2023-12-30T10:07:00.000Z",
   "slug": "angular-ivy-library-compilation-design-in-depth",
   "locale": "en",
   "properties": {
     "title": "Understanding Angular Ivy Library Compilation",
     "date": "2021-02-24T00:00:00.000Z",
+    "category": "Tech",
     "tags": ["Angular"]
   },
   "content": [
@@ -474,8 +475,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-ivy-library-compilation-design-in-depth/3c6255ea-b6c7-4055-8126-638d2819f0c3/72df2a65-5d47-4d4c-a7be-591a235fe8d4.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/angular-ivy-library-compilation-design-in-depth/3c6255ea-b6c7-4055-8126-638d2819f0c3/72df2a65-5d47-4d4c-a7be-591a235fe8d4.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -789,8 +791,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-ivy-library-compilation-design-in-depth/3c6255ea-b6c7-4055-8126-638d2819f0c3/f89daf3a-52ec-439d-9709-f0f49ca3b1dc.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/angular-ivy-library-compilation-design-in-depth/3c6255ea-b6c7-4055-8126-638d2819f0c3/f89daf3a-52ec-439d-9709-f0f49ca3b1dc.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -952,8 +955,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-ivy-library-compilation-design-in-depth/3c6255ea-b6c7-4055-8126-638d2819f0c3/4e77f914-fd0d-46df-b861-25ff71facf19.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/angular-ivy-library-compilation-design-in-depth/3c6255ea-b6c7-4055-8126-638d2819f0c3/4e77f914-fd0d-46df-b861-25ff71facf19.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -1082,8 +1086,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-ivy-library-compilation-design-in-depth/3c6255ea-b6c7-4055-8126-638d2819f0c3/54fd4c3b-2127-4156-b25f-f7332b06ed4f.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/angular-ivy-library-compilation-design-in-depth/3c6255ea-b6c7-4055-8126-638d2819f0c3/54fd4c3b-2127-4156-b25f-f7332b06ed4f.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -1401,8 +1406,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-ivy-library-compilation-design-in-depth/3c6255ea-b6c7-4055-8126-638d2819f0c3/3c292fa9-f275-472c-ad1a-e192d1a522b8.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/angular-ivy-library-compilation-design-in-depth/3c6255ea-b6c7-4055-8126-638d2819f0c3/3c292fa9-f275-472c-ad1a-e192d1a522b8.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -1471,8 +1477,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-ivy-library-compilation-design-in-depth/3c6255ea-b6c7-4055-8126-638d2819f0c3/9c29acd5-72bc-4287-bce9-67be67e7b808.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/angular-ivy-library-compilation-design-in-depth/3c6255ea-b6c7-4055-8126-638d2819f0c3/9c29acd5-72bc-4287-bce9-67be67e7b808.png",
+      "caption": ""
     },
     {
       "type": "paragraph",

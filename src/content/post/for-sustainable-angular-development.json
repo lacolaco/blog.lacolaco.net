@@ -1,10 +1,12 @@
 {
   "pageId": "c4159f8a-2131-4c7a-bd1f-fc0bdec1a71b",
-  "lastEditedAt": "2023-12-24T00:18:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "for-sustainable-angular-development",
+  "locale": "ja",
   "properties": {
     "title": "持続可能なAngularアプリケーション開発のために大事なこと",
     "date": "2018-05-15T00:00:00.000Z",
+    "category": "Tech",
     "tags": ["Angular", "設計", "Idea"]
   },
   "content": [
@@ -390,8 +392,9 @@
     },
     {
       "type": "image",
+      "external": true,
       "url": "https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180515/20180515113943.png",
-      "caption": []
+      "caption": ""
     },
     {
       "type": "paragraph",

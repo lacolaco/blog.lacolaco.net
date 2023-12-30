@@ -1,10 +1,12 @@
 {
   "pageId": "71059486-37d1-4723-b844-5a3349f49a11",
-  "lastEditedAt": "2023-12-24T00:26:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "system-design-and-philosophical-thinking",
+  "locale": "ja",
   "properties": {
     "title": "システム設計と哲学的思考",
     "date": "2019-09-24T12:27:00.000Z",
+    "category": "Idea",
     "tags": ["雑記", "言語化", "哲学", "Idea"]
   },
   "content": [

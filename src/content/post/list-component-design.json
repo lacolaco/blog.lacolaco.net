@@ -1,11 +1,13 @@
 {
   "pageId": "b0a11245-2091-4ae6-a17a-7291930e0970",
-  "lastEditedAt": "2023-06-03T11:23:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "list-component-design",
+  "locale": "ja",
   "properties": {
     "title": "AngularにおけるListComponent/ListItemComponentの設計",
     "date": "2019-02-18T00:00:00.000Z",
-    "tags": ["tech", "Angular", "設計"]
+    "category": "Tech",
+    "tags": ["Angular", "設計"]
   },
   "content": [
     {

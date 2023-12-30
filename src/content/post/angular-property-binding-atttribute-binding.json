@@ -1,11 +1,13 @@
 {
   "pageId": "bdddec22-7b87-4801-80bd-0660353509c9",
-  "lastEditedAt": "2023-05-21T05:17:00.000Z",
+  "lastEditedAt": "2023-12-30T10:07:00.000Z",
   "slug": "angular-property-binding-atttribute-binding",
+  "locale": "ja",
   "properties": {
     "title": "Angular: なぜプロパティバインディングと属性バインディングは分かれているのか",
     "date": "2021-09-03T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {

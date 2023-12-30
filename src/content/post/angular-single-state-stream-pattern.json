@@ -1,11 +1,13 @@
 {
   "pageId": "f1218e5c-5190-4cf5-b6e1-c27896a9862a",
-  "lastEditedAt": "2023-05-21T05:16:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "angular-single-state-stream-pattern",
+  "locale": "ja",
   "properties": {
     "title": "AngularコンポーネントにおけるSingle State Streamパターン",
     "date": "2019-07-11T00:00:00.000Z",
-    "tags": ["tech", "Angular", "設計"]
+    "category": "Tech",
+    "tags": ["Angular", "設計"]
   },
   "content": [
     {

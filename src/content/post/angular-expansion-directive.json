@@ -1,11 +1,12 @@
 {
   "pageId": "5cd15f39-e63e-48b7-828e-af1224f8d884",
-  "lastEditedAt": "2023-12-20T14:26:00.000Z",
+  "lastEditedAt": "2023-12-30T09:58:00.000Z",
   "slug": "angular-expansion-directive",
   "locale": "ja",
   "properties": {
     "title": "Angular: CSS Gridを使ったExpansionディレクティブの実装",
     "date": "2023-12-18T12:24:00.000Z",
+    "category": "Tech",
     "tags": ["Angular", "CSS"]
   },
   "content": [

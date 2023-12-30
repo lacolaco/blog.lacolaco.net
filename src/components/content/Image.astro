@@ -9,14 +9,21 @@ type Props = ImageNode;
 const { url, caption, external = true } = Astro.props;
 const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/images/**/*.{jpg,jpeg,png,gif,svg}');
 if (!external && !images[url]) {
+  console.log(images);
   throw new Error(`"${url}" does not exist in glob: "src/content/images/**/*"`);
 }
 ---
 
 <figure class="flex flex-col items-center py-2">
   {
-    external ? (
-      <img class:list="object-contain w-full md:max-w-screen-md max-h-[50vh]" src={url} decoding="async" />
+    // gif throws an error when using astro-image
+    external || url.endsWith('.gif') ? (
+      <img
+        class:list="object-contain w-full md:max-w-screen-md max-h-[50vh]"
+        src={url}
+        decoding="async"
+        loading="lazy"
+      />
     ) : (
       <AstroImage
         class:list="object-contain w-full md:max-w-screen-md max-h-[50vh]"

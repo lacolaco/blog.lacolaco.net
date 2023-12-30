@@ -1,10 +1,12 @@
 {
   "pageId": "e2d773ef-b710-4713-96b4-0f35e263f0f6",
-  "lastEditedAt": "2023-12-24T00:25:00.000Z",
+  "lastEditedAt": "2023-12-30T10:07:00.000Z",
   "slug": "there-is-no-problem",
+  "locale": "ja",
   "properties": {
     "title": "問題はどこにもない",
     "date": "2021-09-16T02:59:00.000Z",
+    "category": "Idea",
     "tags": ["言語化", "哲学", "Idea"],
     "canonicalUrl": "https://lacolaco.hatenablog.com/entry/2021/09/16/115912"
   },

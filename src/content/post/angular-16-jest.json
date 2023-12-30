@@ -1,10 +1,12 @@
 {
   "pageId": "aa5b1283-87fb-4b2f-bc91-6ec77c9f5d2a",
-  "lastEditedAt": "2023-12-24T00:27:00.000Z",
+  "lastEditedAt": "2023-12-30T10:05:00.000Z",
   "slug": "angular-16-jest",
+  "locale": "ja",
   "properties": {
     "title": "Angular: Angular CLI の Jest サポートを試す",
     "date": "2023-05-06T01:37:00.000Z",
+    "category": "Tech",
     "tags": ["Angular", "Testing", "Jest"],
     "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-16-jest"
   },
@@ -281,14 +283,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-16-jest/3c6255ea-b6c7-4055-8126-638d2819f0c3/2841ccc5-5f5b-48ec-aa66-bbc200023f4a.png",
-      "caption": [
-        {
-          "type": "text",
-          "text": "ng testの実行結果",
-          "annotations": {}
-        }
-      ]
+      "external": false,
+      "url": "/src/content/images/angular-16-jest/3c6255ea-b6c7-4055-8126-638d2819f0c3/2841ccc5-5f5b-48ec-aa66-bbc200023f4a.png",
+      "caption": "ng testの実行結果"
     },
     {
       "type": "heading",

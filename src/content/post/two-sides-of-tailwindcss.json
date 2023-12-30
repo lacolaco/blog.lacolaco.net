@@ -1,10 +1,12 @@
 {
   "pageId": "6ede1797-c024-4d72-aea3-05528ed253b1",
-  "lastEditedAt": "2023-11-08T01:19:00.000Z",
+  "lastEditedAt": "2023-12-30T10:06:00.000Z",
   "slug": "two-sides-of-tailwindcss",
+  "locale": "ja",
   "properties": {
     "title": "Tailwind CSSの二面性、デザインシステムを借りるということ",
     "date": "2022-07-24T00:52:00.000Z",
+    "category": "Tech",
     "tags": ["tailwindcss", "雑記", "言語化"],
     "updatedAt": "2022-07-24T00:00:00.000Z"
   },
@@ -133,14 +135,9 @@
     },
     {
       "type": "image",
-      "url": "/images/two-sides-of-tailwindcss/eb9aade5-5d38-4ffa-a7d9-1f6133f180d9/Untitled.png",
-      "caption": [
-        {
-          "type": "text",
-          "text": "“Use the tailwind.config.js” file to craft your own design system”",
-          "annotations": {}
-        }
-      ]
+      "external": false,
+      "url": "/src/content/images/two-sides-of-tailwindcss/3c6255ea-b6c7-4055-8126-638d2819f0c3/eb9aade5-5d38-4ffa-a7d9-1f6133f180d9.png",
+      "caption": "“Use the tailwind.config.js” file to craft your own design system”"
     },
     {
       "type": "paragraph",
@@ -295,14 +292,9 @@
     },
     {
       "type": "image",
-      "url": "/images/two-sides-of-tailwindcss/e8aac7d8-328b-40e8-99ed-5c91c18e5866/Untitled.png",
-      "caption": [
-        {
-          "type": "text",
-          "text": "“An API for your design system”",
-          "annotations": {}
-        }
-      ]
+      "external": false,
+      "url": "/src/content/images/two-sides-of-tailwindcss/3c6255ea-b6c7-4055-8126-638d2819f0c3/e8aac7d8-328b-40e8-99ed-5c91c18e5866.png",
+      "caption": "“An API for your design system”"
     },
     {
       "type": "paragraph",
@@ -417,14 +409,9 @@
     },
     {
       "type": "image",
-      "url": "/images/two-sides-of-tailwindcss/80fc96c9-18c7-4f83-874c-c1cab7de24f9/Untitled.png",
-      "caption": [
-        {
-          "type": "text",
-          "text": "デザインシステムを元にしたコンフィグと、そのコンフィグをCSSライブラリ化するためのビルドツール",
-          "annotations": {}
-        }
-      ]
+      "external": false,
+      "url": "/src/content/images/two-sides-of-tailwindcss/3c6255ea-b6c7-4055-8126-638d2819f0c3/80fc96c9-18c7-4f83-874c-c1cab7de24f9.png",
+      "caption": "デザインシステムを元にしたコンフィグと、そのコンフィグをCSSライブラリ化するためのビルドツール"
     },
     {
       "type": "heading",

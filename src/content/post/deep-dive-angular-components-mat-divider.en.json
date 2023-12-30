@@ -1,11 +1,12 @@
 {
   "pageId": "4d172266-5b4b-488d-8049-bf2ac4fee642",
-  "lastEditedAt": "2023-12-24T00:37:00.000Z",
+  "lastEditedAt": "2023-12-30T10:09:00.000Z",
   "slug": "deep-dive-angular-components-mat-divider",
   "locale": "en",
   "properties": {
     "title": "Deep Dive into Angular Components: MatDivider",
     "date": "2020-05-05T00:00:00.000Z",
+    "category": "Tech",
     "tags": ["Angular", "Angular Material"]
   },
   "content": [

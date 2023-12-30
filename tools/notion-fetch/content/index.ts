@@ -1,2 +1,2 @@
 export * from './post';
-export * from './tags';
+export * from './properties';

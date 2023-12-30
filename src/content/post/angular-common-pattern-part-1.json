@@ -1,11 +1,13 @@
 {
   "pageId": "e3968f95-daba-42a8-88ff-f3cc92b3e661",
-  "lastEditedAt": "2023-05-21T06:01:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "angular-common-pattern-part-1",
+  "locale": "ja",
   "properties": {
     "title": "Angular 頻出実装パターン その1",
     "date": "2018-04-10T00:00:00.000Z",
-    "tags": ["tech", "Angular"]
+    "category": "Tech",
+    "tags": ["Angular"]
   },
   "content": [
     {

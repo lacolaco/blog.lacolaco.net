@@ -1,11 +1,12 @@
 {
   "pageId": "5ad67d6f-9feb-4970-a107-105bb88d8023",
-  "lastEditedAt": "2023-12-13T06:31:00.000Z",
+  "lastEditedAt": "2023-12-30T09:58:00.000Z",
   "slug": "angular-input-transforms-for-arrays-in-query-params",
   "locale": "en",
   "properties": {
     "title": "Angular: Input Transforms For Arrays In Query Params",
     "date": "2023-12-04T13:19:00.000Z",
+    "category": "Tech",
     "tags": ["Angular"]
   },
   "content": [
@@ -166,8 +167,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-input-transforms-for-arrays-in-query-params/3c6255ea-b6c7-4055-8126-638d2819f0c3/015dec69-c0ca-442b-b996-074e05b2c79a.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/angular-input-transforms-for-arrays-in-query-params/3c6255ea-b6c7-4055-8126-638d2819f0c3/015dec69-c0ca-442b-b996-074e05b2c79a.png",
+      "caption": ""
     },
     {
       "type": "code",
@@ -235,8 +237,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-input-transforms-for-arrays-in-query-params/3c6255ea-b6c7-4055-8126-638d2819f0c3/55d5cf5a-3d15-4ba9-87c3-b13dfcc64bde.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/angular-input-transforms-for-arrays-in-query-params/3c6255ea-b6c7-4055-8126-638d2819f0c3/55d5cf5a-3d15-4ba9-87c3-b13dfcc64bde.png",
+      "caption": ""
     },
     {
       "type": "paragraph",
@@ -292,8 +295,9 @@
     },
     {
       "type": "image",
-      "url": "/images/angular-input-transforms-for-arrays-in-query-params/3c6255ea-b6c7-4055-8126-638d2819f0c3/47675ee9-41e1-42f9-bded-c27ba802b63a.png",
-      "caption": []
+      "external": false,
+      "url": "/src/content/images/angular-input-transforms-for-arrays-in-query-params/3c6255ea-b6c7-4055-8126-638d2819f0c3/47675ee9-41e1-42f9-bded-c27ba802b63a.png",
+      "caption": ""
     },
     {
       "type": "paragraph",

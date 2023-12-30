@@ -1,10 +1,12 @@
 {
   "pageId": "b28b8ef4-ebdb-495f-a2b5-1c0e89c9cded",
-  "lastEditedAt": "2023-12-20T15:27:00.000Z",
+  "lastEditedAt": "2023-12-30T09:58:00.000Z",
   "slug": "gha-advent-calendar-2023",
+  "locale": "ja",
   "properties": {
     "title": "GitHub ActionsのJob Outputsでハマった話",
     "date": "2023-12-20T15:00:00.000Z",
+    "category": "Tech",
     "tags": ["GitHub Actions"]
   },
   "content": [

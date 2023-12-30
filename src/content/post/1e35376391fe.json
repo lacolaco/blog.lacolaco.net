@@ -1,23 +1,20 @@
 {
   "pageId": "fd46ec62-6df1-4bdc-9f4a-050456e6d8b8",
-  "lastEditedAt": "2023-12-24T00:50:00.000Z",
+  "lastEditedAt": "2023-12-30T09:59:00.000Z",
   "slug": "1e35376391fe",
+  "locale": "ja",
   "properties": {
     "title": "プロジェクトはキックオフが9割",
     "date": "2023-11-13T10:30:00.000Z",
+    "category": "Idea",
     "tags": ["雑記", "Idea"]
   },
   "content": [
     {
       "type": "image",
-      "url": "/images/1e35376391fe/3c6255ea-b6c7-4055-8126-638d2819f0c3/dcbba909-4d4b-48c9-b3ae-8c6935310d79.png",
-      "caption": [
-        {
-          "type": "text",
-          "text": "9割シリーズ",
-          "annotations": {}
-        }
-      ]
+      "external": false,
+      "url": "/src/content/images/1e35376391fe/3c6255ea-b6c7-4055-8126-638d2819f0c3/dcbba909-4d4b-48c9-b3ae-8c6935310d79.png",
+      "caption": "9割シリーズ"
     },
     {
       "type": "paragraph",

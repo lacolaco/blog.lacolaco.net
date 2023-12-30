@@ -1,10 +1,12 @@
 {
   "pageId": "4a9df5fd-86fa-43de-838c-f962af587ebe",
-  "lastEditedAt": "2023-09-06T08:41:00.000Z",
+  "lastEditedAt": "2023-12-30T10:01:00.000Z",
   "slug": "angular-signal-as-a-dependency",
+  "locale": "ja",
   "properties": {
     "title": "Angular: Signal as a Dependency（依存オブジェクトのシグナル化）",
     "date": "2023-09-06T07:30:00.000Z",
+    "category": "Tech",
     "tags": ["Angular", "Signals"]
   },
   "content": [

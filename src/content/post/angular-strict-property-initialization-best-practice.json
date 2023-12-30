@@ -1,11 +1,13 @@
 {
   "pageId": "f798bd04-a39e-46d2-a75a-6266c2ee468d",
-  "lastEditedAt": "2023-05-21T00:17:00.000Z",
+  "lastEditedAt": "2023-12-30T10:10:00.000Z",
   "slug": "angular-strict-property-initialization-best-practice",
+  "locale": "ja",
   "properties": {
     "title": "AngularにおけるstrictPropertyInitializationのベストプラクティス",
     "date": "2018-06-27T00:00:00.000Z",
-    "tags": ["tech", "Angular", "TypeScript"]
+    "category": "Tech",
+    "tags": ["Angular", "TypeScript"]
   },
   "content": [
     {
