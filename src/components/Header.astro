@@ -10,7 +10,7 @@ const { class: className, showDescription } = Astro.props;
 ---
 
 <header
-  class="max-w-screen-lg mx-[2rem] lg:mx-auto flex flex-col gap-y-3 pt-3 pb-3 has-[[data-description]]:pb-6"
+  class="group max-w-screen-lg mx-[2rem] lg:mx-auto flex flex-col pt-3 pb-3 has-[[data-description]]:pb-6"
   class:list={className}
 >
   <div class="w-full grid grid-cols-[1fr_auto_1fr] items-center">
@@ -24,6 +24,13 @@ const { class: className, showDescription } = Astro.props;
       </a>
     </div>
     <div class="flex flex-row items-center justify-end gap-x-4 text-sm font-semibold">
+      <div class="flex items-center">
+        <search-toggle-button>
+          <button class="text-default leading-0 rounded-full p-1" title="tags">
+            <span class="icon-[material-symbols--search] text-[20px]"></span>
+          </button>
+        </search-toggle-button>
+      </div>
       <div class="flex items-center">
         <a href="/tags/" class="text-default hover:text-default-muted hover:no-underline" title="tags">Tags</a>
       </div>
@@ -44,11 +51,40 @@ const { class: className, showDescription } = Astro.props;
   </div>
   {
     showDescription && (
-      <div class="w-full font-title flex flex-col items-center">
+      <div class="w-full font-title flex flex-col items-center mt-3">
         <p data-description class="text-center text-xs text-default-muted">
           {SITE_DESCRIPTION}
         </p>
       </div>
     )
   }
+  <div
+    class="grid grid-rows-[0fr] group-[[data-search-open]]:grid-rows-[1fr] transition-[grid-template-rows] ease-in-out duration-200"
+  >
+    <div class="overflow-hidden">
+      <div class="p-2 mt-3 bg-white border border-solid border-gray-200 rounded">
+        <div class="gcse-search"></div>
+      </div>
+    </div>
+  </div>
 </header>
+
+<script>
+  class SearchToggleButton extends HTMLElement {
+    header = this.closest('header')!;
+    button = this.querySelector('button')!;
+
+    constructor() {
+      super();
+      this.button.addEventListener('click', () => {
+        this.toggle();
+      });
+    }
+
+    toggle() {
+      this.header.toggleAttribute('data-search-open');
+    }
+  }
+
+  customElements.define('search-toggle-button', SearchToggleButton);
+</script>

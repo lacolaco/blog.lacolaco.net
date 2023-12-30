@@ -42,7 +42,7 @@ const postsByYear = Array.from(
     <MainContainer>
       <div class="py-4">
         {
-          tag ? (
+          tag && (
             <div class="flex flex-row items-center justify-between mb-4">
               <h1 class="leading-none text-xl font-semibold">{`Articles with #${tag}`}</h1>
               <a
@@ -53,10 +53,6 @@ const postsByYear = Array.from(
                 <span class="icon-[ic--baseline-rss-feed]" />
                 <span class="">RSS</span>
               </a>
-            </div>
-          ) : (
-            <div class="google-search-box h-[64px]">
-              <div class="gcse-search" />
             </div>
           )
         }
@@ -92,7 +88,5 @@ const postsByYear = Array.from(
     </MainContainer>
 
     <Footer class="py-4" />
-
-    <script async src="https://cse.google.com/cse.js?cx=016749829816792588257:vx30glhznqb"></script>
   </body>
 </html>

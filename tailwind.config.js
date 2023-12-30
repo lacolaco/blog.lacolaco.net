@@ -47,6 +47,9 @@ module.exports = {
         tag: 'var(--box-shadow-tag)',
         'tag-focus': 'var(--box-shadow-tag-focus)',
       },
+      lineHeight: {
+        0: '0',
+      },
     },
   },
   plugins: [
