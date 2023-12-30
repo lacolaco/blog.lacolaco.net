@@ -1,6 +1,6 @@
 ---
 import { ImageNode } from '@lib/post';
-import { Image as AstroImage } from 'astro:assets';
+import { Picture as AstroPicture } from 'astro:assets';
 import Text from './Text.astro';
 
 type Props = ImageNode;
@@ -15,10 +15,16 @@ if (!external && !images[url]) {
 
 <figure class="flex flex-col items-center py-2">
   {
-    external ? (
-      <img class:list="object-contain w-full md:max-w-screen-md max-h-[50vh]" src={url} decoding="async" />
+    // gif throws an error when using astro-image
+    external || url.endsWith('.gif') ? (
+      <img
+        class:list="object-contain w-full md:max-w-screen-md max-h-[50vh]"
+        src={url}
+        decoding="async"
+        loading="lazy"
+      />
     ) : (
-      <AstroImage
+      <AstroPicture
         class:list="object-contain w-full md:max-w-screen-md max-h-[50vh]"
         src={images[url]()}
         alt={caption ? (Array.isArray(caption) ? caption.map((node) => node.text).join('') : caption) : ''}
