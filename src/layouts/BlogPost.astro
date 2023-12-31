@@ -5,12 +5,13 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import MainContainer from '../components/MainContainer.astro';
+import MessageBox from '../components/MessageBox.astro';
+import ShareButtons from '../components/ShareButtons.astro';
+import Tag from '../components/Tag.astro';
 import TagList from '../components/TagList.astro';
 import Content from '../components/content/Content.astro';
 import { SITE_TITLE } from '../consts';
-import ShareButtons from '../components/ShareButtons.astro';
-import MessageBox from 'src/components/MessageBox.astro';
-import MainContainer from 'src/components/MainContainer.astro';
 
 type Props = {
   post: PostData;
@@ -21,7 +22,7 @@ type Props = {
 };
 
 const { post, otherLocaleUrls: locales } = Astro.props;
-const { title, date, tags, updatedAt, canonicalUrl } = post.properties;
+const { title, date, category, tags, updatedAt, canonicalUrl } = post.properties;
 
 const isUpdated = updatedAt && isAfterDate(updatedAt, date);
 const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { years: 2 }));
@@ -66,7 +67,10 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
             </span>
             <h1 class="text-2xl font-semibold leading-tight mb-1">{title}</h1>
             <div class="py-1">
-              <TagList tags={tags ?? []} />
+              <TagList>
+                {category && <Tag name={category} isCategory />}
+                {tags && tags.map((tag) => <Tag name={tag} />)}
+              </TagList>
             </div>
           </div>
         </header>

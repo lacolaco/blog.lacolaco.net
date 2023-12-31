@@ -27,5 +27,5 @@ const { tag, posts } = Astro.props;
 ---
 
 <List posts={posts} feedUrl={`/tags/${tag}.xml`}>
-  <h1 slot="title" class="leading-none text-2xl font-semibold">Articles with #{tag}</h1>
+  <h1 slot="title" class="leading-none text-2xl font-semibold">#{tag}</h1>
 </List>
