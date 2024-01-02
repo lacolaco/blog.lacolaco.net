@@ -51,7 +51,7 @@
     "@types/katex": "0.16.7",
     "@types/node": "20.10.5",
     "@types/prettier": "2.7.3",
-    "@types/react": "18.2.45",
+    "@types/react": "18.2.46",
     "@types/react-dom": "18.2.18",
     "@types/tailwindcss": "3.0.11",
     "cli-progress": "3.12.0",
