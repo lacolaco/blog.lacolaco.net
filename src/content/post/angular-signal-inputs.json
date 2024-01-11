@@ -1,0 +1,443 @@
+{
+  "pageId": "190478da-4fdf-4db6-a71f-4942d2011d2a",
+  "lastEditedAt": "2024-01-11T06:50:00.000Z",
+  "slug": "angular-signal-inputs",
+  "locale": "ja",
+  "properties": {
+    "title": "Angular: Signal Inputsで何が変わるのか",
+    "date": "2024-01-11T05:48:00.000Z",
+    "category": "Tech",
+    "tags": ["Angular", "Signals"],
+    "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-signal-inputs"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular v17.1.0にて、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Signal Inputs",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "という機能がリリースされる見込みだ。Signals APIのRFC段階から提案されていたものだが、ついに実際に使えるAPIになる。この記事ではSignal Inputsによって何が変わるのかをかいつまんで解説する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Signal Inputsとは",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Signal InputsはSignals RFCの中でもSignal-based Componentsのセクションで提案されている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular/discussions/49682"
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "In signal-based components, all component inputs are signals. ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここで書かれているように、コンポーネントのインプットプロパティをSignalとして宣言できる。従来のSignalではないオブジェクトでは、インプットの変更に反応して処理をおこなうために ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngOnChanges",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ライフサイクルフックや、setterによる代入処理への割り込みが必要だったが、Signal Inputsでは通常のSignalと同様に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "computed",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "や",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "effect",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "によってリアクティブな処理ができる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "例",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "以下は実際に動作するサンプルコードだ。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "input()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " によってインプットプロパティを宣言している。親コンポーネントから値を必ず受け取りたい場合は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "input.required()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で指定できる。コンポーネント内ではSignalとして扱えるため、インプットの値が変わったときに行いたい処理は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "effect",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使う。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/angular-k9ltgo?ctl=1&embed=1&file=src/main.ts"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Signal Inputsで何が変わるのか",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Signal Inputsへの移行により、特に以下の3つの点が大きく変わると考えられる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "ngOnChanges",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が不要になる",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これまではどのインプットが更新されても単一の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ngOnChanges",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ライフサイクルフックで待ち受けるか、あるいはsetterを使うしかなかったが、それらはSignal Inputsと",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "effect",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で一切不要になる。setterで入力された値の前処理をしていたようなケースも、今はすでにInput Transformもあるため、インプットプロパティのsetterが必要なケースは皆無だろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "TypeScriptの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "strictPropertyInitialization",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を常に有効化できる",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "TypeScriptのstrictモードに含まれている",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "strictPropertyInitialization",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は、クラスプロパティが必ず初期化されていることをチェックする設定だが、親から値を受け取ることを前提にしたコンポーネントではインプットプロパティに初期値を入れられず、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "strictPropertyInitialization",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " フラグをオフにしなければならないケースがあった。このことについては以前に記事を書いている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://blog.lacolaco.net/posts/angular-strict-property-initialization-best-practice/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Signal InputsによってすべてのインプットプロパティはSignal型のオブジェクトで初期化されることになるため、この記事で書いたベストプラクティスはすべて過去のものとなる。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "strictPropertyInitialization",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は常に有効化できるようになるはずだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "インプットがイミュータブルになる",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "input()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "によって作成される",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "InputSignal",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "オブジェクトは、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "computed",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と同じく読み取り専用のSignalである。これまではプリミティブ型ではないミュータブルなオブジェクトがインプットプロパティに渡された場合、子コンポーネントから親コンポーネントへ変更が逆流することがありえた。Signal Inputsであればそのようなことはなくなり、バグが起きにくくなる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "参考リンク",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "https://justangular.com/blog/signal-inputs-are-here-to-change-the-game",
+              "href": "https://justangular.com/blog/signal-inputs-are-here-to-change-the-game",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "https://netbasal.com/revolutionizing-angular-introducing-the-new-signal-input-api-d0fc3c8777f2",
+              "href": "https://netbasal.com/revolutionizing-angular-introducing-the-new-signal-input-api-d0fc3c8777f2",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "https://github.com/angular/angular/pull/53872",
+              "href": "https://github.com/angular/angular/pull/53872",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
