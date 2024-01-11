@@ -60,6 +60,6 @@
     "sass": "1.69.7",
     "tailwindcss": "3.4.1",
     "tsx": "4.7.0",
-    "wrangler": "^3.17.0"
+    "wrangler": "^3.19.0"
   }
 }
