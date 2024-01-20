@@ -326,5 +326,9 @@
   "Blog Dev": {
     "name": "Blog Dev",
     "color": "gray"
+  },
+  "GDE": {
+    "name": "GDE",
+    "color": "yellow"
   }
 }

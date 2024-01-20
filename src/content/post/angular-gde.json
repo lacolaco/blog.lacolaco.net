@@ -1,0 +1,130 @@
+{
+  "pageId": "ff3c7f84-3d40-43a5-8696-b65f32a068bd",
+  "lastEditedAt": "2024-01-20T04:02:00.000Z",
+  "slug": "angular-gde",
+  "locale": "ja",
+  "properties": {
+    "title": "Google Developers Expert (Angular) になりました",
+    "date": "2018-10-05T00:00:00.000Z",
+    "category": "Diary",
+    "tags": ["GDE", "Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "タイトルのとおり、Angularの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Google Developers Experts",
+          "href": "https://developers.google.com/experts/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "になりました！",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://developers.google.com/profile/u/104879793431822816276"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular GDEは世界では82人目になるようですが、日本では僕が初めてです。やったぜ！",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular/commit/35936864bc842a197aa71bfb686d055961ad77e3"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まだ高専生だったころ、2013年にGDGの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Google I/O 報告会",
+          "href": "https://sites.google.com/site/devfestjapan2013/home",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "九州会場に参加して、そこではじめてGDEを知りました。それからずっとGDEに憧れていたので、5年越しにひとつ夢が叶いました。大好きなAngularでGDEになれて本当に嬉しいです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "プログラムの進行をサポートしてくれたGoogleのえーじさんやたくおさん、面接に協力してくれたGDEのFilipさんとAngular TeamのStephenには大感謝です。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Angular GDEはWeb GDEのグループにも含まれるようなので、",
+          "annotations": {
+            "strikethrough": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "Angularに限らずWeb技術のオープンコミュニティへも微力ながら貢献していくつもりです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "callout",
+      "text": [
+        {
+          "type": "text",
+          "text": "[追記] GDEのカテゴリとしてAngularはWebと分割されたため、現在（2024年時点）ではAngularカテゴリだけの認定です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "GDEになったからといってこれまでの活動が変わることはほとんどないと思いますが、マウンテンビューから遠く離れた日本でAngularのコミュニティを発展させていくための旗印として、この新しい立場を有効活用していく、あるいはコミュニティが僕を利用するとよいと考えています。そして、自分がそうだったように、僕を含めた日本のGDEというモデルが、学生たちがエキスパートを目指すモチベーションとなれるように頑張ります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "というわけで、ただのAngular好きからGoogle Developer Expertにランクアップしたlacolacoを今後ともよろしくおねがいします。Angularのエキスパートが必要なときには気軽にお声がけください！",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
