@@ -1,6 +1,6 @@
-import { NotionDatabase } from '@lib/notion';
+import { fetchBlogPostPages } from '@lacolaco/notion-fetch';
+import { NotionDatabase, getLocale, getSlug } from '@lib/notion';
 import { getPostJSONFileName } from '@lib/post';
-import { SingleBar } from 'cli-progress';
 import { parseArgs } from 'node:util';
 import { toBlogPostJSON, toCategoriesJSON, toTagsJSON } from './content';
 import { FileSystem } from './file-system';
@@ -36,7 +36,6 @@ async function main() {
   const db = new NotionDatabase(NOTION_AUTH_TOKEN, NOTION_DATABASE_ID);
   const imagesFS = new FileSystem(root, 'src/content/images', { dryRun });
   const postJsonFS = new FileSystem(root, 'src/content/post', { dryRun });
-  const pageCacheFS = new FileSystem(root, 'cache/page', { dryRun });
   const tagsJsonFS = new FileSystem(root, 'src/content/tags', { dryRun });
   const categoriesJsonFS = new FileSystem(root, 'src/content/categories', { dryRun });
 
@@ -51,40 +50,26 @@ async function main() {
   await categoriesJsonFS.save('categories.json', categoriesJson, { encoding: 'utf-8' });
 
   console.log('Fetching pages...');
-  const pages = await db.queryBlogPages();
+  const pages = await fetchBlogPostPages(NOTION_AUTH_TOKEN, dryRun);
   console.log(`Fetched ${pages.length} pages`);
 
-  const pagesToUpdate = await Promise.all(
-    pages.map(async (page) => {
-      const isCached = await db.isCached(page);
-      return { page, isCached };
-    }),
-  ).then((arr) => arr.filter(({ isCached }) => !isCached).map(({ page }) => page));
+  const pagesToUpdate = pages.filter((page) => force || page.changed);
 
   if (pagesToUpdate.length === 0) {
     console.log('No pages to update');
   } else {
     console.log(`Updating ${pagesToUpdate.length} pages...`);
-
-    const progress = new SingleBar({});
-    progress.start(pagesToUpdate.length, 0);
     await Promise.all(
       pagesToUpdate.map(async (page) => {
-        const pageWithContent = await db.getPageContents(page);
-        if (debug) {
-          await pageCacheFS.save(`${page.id}.json`, JSON.stringify(pageWithContent, null, 2), { encoding: 'utf-8' });
-        }
-        imagesFS.remove(pageWithContent.slug);
-        const post = await toBlogPostJSON(pageWithContent, imagesFS);
+        const slug = getSlug(page);
+        const locale = getLocale(page) ?? 'ja';
+        imagesFS.remove(slug);
+        const post = await toBlogPostJSON({...page, slug, locale}, imagesFS);
         const formatted = await formatJSON(post);
-        const filepath = getPostJSONFileName(pageWithContent.slug, pageWithContent.locale ?? 'ja');
+        const filepath = getPostJSONFileName(slug, locale);
         await postJsonFS.save(filepath, formatted, { encoding: 'utf-8' });
-
-        progress.increment();
-        return pageWithContent;
       }),
     );
-    progress.stop();
   }
   console.log('Done');
 }
