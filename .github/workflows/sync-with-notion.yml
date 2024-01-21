@@ -18,6 +18,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: package.json
+          cache: 'pnpm'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@lacolaco'
       - uses: pnpm/action-setup@v2
       # https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens
       - uses: tibdex/github-app-token@v2
