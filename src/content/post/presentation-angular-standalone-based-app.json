@@ -10,26 +10,5 @@
     "tags": ["Angular", "standalone component", "発表スライド"],
     "updatedAt": "2022-09-28T00:00:00.000Z"
   },
-  "content": [
-    {
-      "type": "paragraph",
-      "text": [
-        {
-          "type": "text",
-          "text": "Startup Angular #4",
-          "href": "https://voicy.connpass.com/event/258261/",
-          "annotations": {}
-        },
-        {
-          "type": "text",
-          "text": " で使用した発表スライド",
-          "annotations": {}
-        }
-      ]
-    },
-    {
-      "type": "embed",
-      "url": "https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/embed"
-    }
-  ]
+  "content": []
 }
