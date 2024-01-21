@@ -18,6 +18,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version-file: package.json
+          cache: 'pnpm'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@lacolaco'
       - uses: pnpm/action-setup@v2
       # https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens
       - uses: tibdex/github-app-token@v2
@@ -26,6 +29,13 @@ jobs:
           app_id: ${{ secrets.WORKER_APP_ID }}
           private_key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}
       - run: pnpm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: use cache for notion-db
+        uses: actions/cache@v4
+        with:
+          path: node_modules/.cache/lacolaco-notion-db
+          key: ${{ runner.os }}-lacolaco-notion-db
       - run: touch .env # create empty .env file
       - run: pnpm run notion-fetch ${{ github.event.inputs.forceUpdate && '--force' || '' }}
         env:
