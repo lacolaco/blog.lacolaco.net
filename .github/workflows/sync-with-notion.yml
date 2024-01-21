@@ -26,6 +26,8 @@ jobs:
           app_id: ${{ secrets.WORKER_APP_ID }}
           private_key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}
       - run: pnpm install
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: touch .env # create empty .env file
       - run: pnpm run notion-fetch ${{ github.event.inputs.forceUpdate && '--force' || '' }}
         env:
