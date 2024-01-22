@@ -34,7 +34,7 @@ jobs:
       - name: use cache for notion-db
         uses: actions/cache@v4
         with:
-          path: node_modules/.cache/lacolaco-notion-db
+          path: .cache/lacolaco-notion-db
           key: ${{ runner.os }}-lacolaco-notion-db
       - run: touch .env # create empty .env file
       - run: pnpm run notion-fetch ${{ github.event.inputs.forceUpdate && '--force' || '' }}
