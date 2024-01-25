@@ -13,6 +13,7 @@
       }
     }
   ],
+  "npmrc": "@lacolaco:registry=https://npm.pkg.github.com/",
   "packageRules": [
     {
       "groupName": "@astrojs packages",
