@@ -37,7 +37,7 @@
     "preact-render-to-string": "^6.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "satori": "0.10.11"
+    "satori": "0.10.13"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.0.0",
