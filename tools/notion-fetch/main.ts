@@ -64,7 +64,7 @@ async function main() {
         const slug = getSlug(page);
         const locale = getLocale(page) ?? 'ja';
         imagesFS.remove(slug);
-        const post = await toBlogPostJSON({...page, slug, locale}, imagesFS);
+        const post = await toBlogPostJSON({ ...page, slug, locale }, imagesFS);
         const formatted = await formatJSON(post);
         const filepath = getPostJSONFileName(slug, locale);
         await postJsonFS.save(filepath, formatted, { encoding: 'utf-8' });

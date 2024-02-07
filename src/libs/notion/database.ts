@@ -2,7 +2,6 @@ import { Client } from '@notionhq/client';
 import type { BlogDatabaseProperties } from './types';
 import { fetchDatabaseProperties } from './utils';
 
-
 export class NotionDatabase {
   private notion = new Client({ auth: this.authToken });
 
