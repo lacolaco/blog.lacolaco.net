@@ -125,6 +125,7 @@ function buildEmbedHtml(title: string, url: string) {
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
+        <meta name="robots" content="noindex" />
         <title>${title}</title>
         <style>
           html, body {
