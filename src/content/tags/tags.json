@@ -330,5 +330,9 @@
   "GDE": {
     "name": "GDE",
     "color": "yellow"
+  },
+  "パターン": {
+    "name": "パターン",
+    "color": "pink"
   }
 }
