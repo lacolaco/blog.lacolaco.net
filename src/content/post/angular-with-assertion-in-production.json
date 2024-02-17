@@ -1,0 +1,412 @@
+{
+  "pageId": "94d2bdf2-cdf7-42f3-b988-539639f95d27",
+  "lastEditedAt": "2024-02-17T14:03:00.000Z",
+  "slug": "angular-with-assertion-in-production",
+  "locale": "ja",
+  "properties": {
+    "title": "AngularアプリケーションでのAssertion in Production",
+    "date": "2024-02-17T13:29:00.000Z",
+    "category": "Tech",
+    "tags": ["Angular"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これはAngularアプリケーションの開発においても",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "表明 (Assertion)",
+          "href": "https://ja.wikipedia.org/wiki/%E8%A1%A8%E6%98%8E_(%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0)",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を取り入れてみようという実験である。簡単なサンプルはGitHubで公開しているので、興味があればそちらも見てもらえるといい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/angular-with-assertions-example"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Assertion in Browsers",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Node.jsと違い、ブラウザ環境にはランタイム標準の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "assert",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数はないので、自前でどうにかする必要がある。その実装詳細はここではどうでもよいので素朴に実装する。関数は2種類あり、ひとつは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "unsafeAssert",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で、表明した事前条件が満たされなければ例外を投げる。もうひとつの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "safeAssert",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " はコンソールログでアサーションエラーが表示されるのみで例外は投げない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "/**\n * This function is an assert function.\n * If the condition is false, it throws an error with the given message.\n */\nfunction unsafeAssert(condition: boolean, message: string) {\n  if (!condition) {\n    const error = new Error(message);\n    error.name = 'AssertionError';\n    throw error;\n  }\n}\n\n/**\n * This function is a safe version of the assert function.\n * It never throws an error, but instead logs the error message to the console.\n */\nfunction safeAssert(condition: boolean, message: string) {\n  console.assert(condition, message);\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Toggle Assertion Strategy",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "上記の2つの関数を、実行モードにより切り替えたい。具体的には、ローカルでの開発時やステージング環境などでは例外を投げる ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "unsafeAssert",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使いたいが、プロダクション環境では ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "safeAssert",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " にしたい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この戦略のトグルを実装するために、Angular v17.2で導入されたAngular CLIの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "define",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 機能を使ってみよう。 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "THROW_ASSERTION_ERROR",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "というグローバル変数が ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "true",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " であるときに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "unsafeAssert",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使うようにするセットアップ関数を実装する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "/**\n * This function sets up the global `assert` function.\n * If `THROW_ASSERTION_ERROR` is true, it sets the global `assert` function to `unsafeAssert`, which throws an error when the condition is false.\n * Otherwise, it sets the global `assert` function to `safeAssert`, which logs the error message to the console.\n */\nexport function setupGlobalAssert() {\n  if (THROW_ASSERTION_ERROR) {\n    window.assert = unsafeAssert;\n  } else {\n    window.assert = safeAssert;\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このコードが型チェックを通過できるように、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "global.d.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のようなファイルで型定義をしておくのも必要だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// src/global.d.ts\ndeclare const THROW_ASSERTION_ERROR: boolean;\ndeclare var assert: (condition: boolean, message: string) => void;"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そして",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "setupGlobalAssert",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "main.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で呼び出せば準備完了だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { bootstrapApplication } from '@angular/platform-browser';\nimport { AppComponent } from './app/app.component';\nimport { appConfig } from './app/app.config';\nimport { setupGlobalAssert } from './lib/assert';\n\nsetupGlobalAssert();\n\nbootstrapApplication(AppComponent, appConfig).catch((err) =>\n  console.error(err)\n);"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "あとは、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "angular.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を開いてビルドオプションのデフォルト設定と ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "development",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のときの切り替えをそれぞれ行うといい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "      \"architect\": {\n        \"build\": {\n          \"builder\": \"@angular-devkit/build-angular:application\",\n          \"options\": {\n            ...\n            \"define\": {\n              \"THROW_ASSERTION_ERROR\": \"false\"\n            }\n          },\n          \"configurations\": {\n            \"production\": {...},\n            \"development\": {\n              ...\n              \"define\": {\n                \"THROW_ASSERTION_ERROR\": \"true\"\n              }\n            }\n          },\n          \"defaultConfiguration\": \"production\"\n        },"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "こうすることで、コード中の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "THROW_ASSERTION_ERROR",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "はビルド時に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "false",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "か",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "true",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に置換される。条件分岐のどちらを通るかがビルドのタイミングで決定できるため、Angular CLIはTree Shakingによって使わない方のassert関数をデッドコードとして削除できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Assertion in Production",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このように準備を整えると、次のように（この例の条件は適当だが）コンポーネントで気軽に表明ができる。もちろんコンポーネントじゃなくてもアプリケーションのどこででもできる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { Component } from '@angular/core';\n\n@Component({\n  ...\n})\nexport class AppComponent {\n  title = 'ng-assertion';\n\n  ngOnInit() {\n    assert(this.title === 'ng-assertion', 'Title is not ng-assertion');\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "assert関数が十分に軽量であれば、テストコードではなくアプリケーションコードの側にこのような表明を書いていくことで、ユーザーへの悪影響を最小限にして契約による設計を取り入れていけるのではなかろうか。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
