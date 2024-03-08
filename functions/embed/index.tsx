@@ -14,8 +14,12 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   }
   const title = await getPageTitle(url);
   const html = buildEmbedHtml(title, url);
+  const maxAge = 60 * 60 * 24; // 1 day
   return new Response(html, {
-    headers: { 'content-type': 'text/html; charset=utf-8' },
+    headers: {
+      'content-type': 'text/html; charset=utf-8',
+      'cache-control': `public, max-age=${maxAge}`,
+    },
   });
 };
 
