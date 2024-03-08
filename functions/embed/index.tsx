@@ -5,6 +5,11 @@ import { load } from 'cheerio';
 
 setup(h);
 
+declare global {
+  interface CacheStorage {
+    default: Cache; // https://developers.cloudflare.com/workers/runtime-apis/cache/#accessing-cache
+  }
+}
 interface Env {}
 
 export const onRequest: PagesFunction<Env> = async (context) => {
@@ -12,15 +17,25 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   if (!url) {
     return new Response('Missing url parameter', { status: 400 });
   }
+
+  const cacheKey = context.request;
+  const cache = caches.default;
+  const cachedResponse = await cache.match(cacheKey);
+  if (cachedResponse) {
+    return cachedResponse;
+  }
+
   const title = await getPageTitle(url);
   const html = buildEmbedHtml(title, url);
   const maxAge = 60 * 60 * 24; // 1 day
-  return new Response(html, {
+  const response = new Response(html, {
     headers: {
       'content-type': 'text/html; charset=utf-8',
-      'cache-control': `public, max-age=${maxAge}`,
+      'cache-control': `max-age=${maxAge}`,
     },
   });
+  context.waitUntil(cache.put(cacheKey, response.clone()));
+  return response;
 };
 
 async function getPageTitle(url: string) {
