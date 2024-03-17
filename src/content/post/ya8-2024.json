@@ -1,0 +1,70 @@
+{
+  "pageId": "6b94501f-9bf4-457b-8080-ee4e007b2f55",
+  "lastEditedAt": "2024-03-17T02:40:00.000Z",
+  "slug": "ya8-2024",
+  "locale": "ja",
+  "properties": {
+    "title": "Ya8 2024 への参加と登壇",
+    "date": "2024-03-17T01:32:00.000Z",
+    "category": "Diary",
+    "tags": []
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "一昨日・昨日の2日間はYa8 2024に参加していた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://hachiojipm.connpass.com/event/304403/"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "いままで参加したことはなかったので初参加だったが、非常に楽しかった。他の参加者たちとは去年の YAPC::Kyoto や PHPカンファレンス福岡などで顔見知りになった人も多く、それで話す相手もいたし、Ya8で初めて挨拶できた人もいた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "トークプロポーザルを出していたので、土曜日には『人よりちょっと読書好きだと思う私の、2024年にエンジニアへおすすめしたい本n選』と題して、気に入った本の布教をする機会がもらえた。案の定、参加者の中でも特に本好きな人たちと濃い話ができるきっかけになったので、やってよかった。次回があれば今度は複数人でビブリオバトルをやりたい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/hachiojipm/ya8-2024-cfp/issues/17"
+    },
+    {
+      "type": "embed",
+      "url": "https://docs.google.com/presentation/d/e/2PACX-1vRCs3pJ1HAiuvK2xYR9pALlozmJ9eu5RyHPttVs6dQ4VHEIHN-VJZG6L-Q3g0K3zYJfEq9xGzNDyLBG/embed?start=false&loop=false&delayms=3000"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "金曜日はいろいろためになる話が聞けたが、土曜日はだいたいスト6観戦と麻雀交流会で遊んでいた。また打ちたいですね。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
