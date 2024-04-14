@@ -1,0 +1,761 @@
+{
+  "pageId": "1a5a4c7e-a784-4aca-8cf5-ef394fe0564c",
+  "lastEditedAt": "2024-04-14T03:45:00.000Z",
+  "slug": "opentelemetry-js-repository-walkthrough",
+  "locale": "ja",
+  "properties": {
+    "title": "opentelemetry-js レポジトリの歩き方",
+    "date": "2024-04-14T00:37:00.000Z",
+    "category": "Tech",
+    "tags": ["OpenTelemetry"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "去年からOpenTelemetry関連のことを調べたり触ったりすることが多くなった。しかしOpenTelemetryの公式JavaScript SDKの使い方は、お世辞にも誰にとっても簡単だとは言いにくい。ドキュメントも豊富ではないので、だいたいはソースコードを読んで試行錯誤しながら探ることになる。この記事ではだいたいどういう用途に使うにせよ必要になるレポジトリの基本的な歩き方をまとめておく。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まず混乱するのはopentelemetry-jsの関連パッケージの数の多さである。実装を追うにあたってはどのパッケージがどのように配置されているのか、パッケージごとの役割と命名規則を知っておかないと話が始まらない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/open-telemetry/opentelemetry-js"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "api: 計装用API",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/open-telemetry/opentelemetry-js/tree/main/api",
+          "href": "https://github.com/open-telemetry/opentelemetry-js/tree/main/api",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "api",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ディレクトリは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@opentelemetry/api",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " パッケージに対応している。このパッケージはアプリケーション中での計装に使われる ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "trace",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "context",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "propagation",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "といったAPIを提供する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これらのAPIは後述の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TraceProvider",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "がセットアップされていることを前提とする。ソースコードを読むうえでも結局このパッケージだけでは完結せず他のパッケージを読みに行くことになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "packages: 安定パッケージ群",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/open-telemetry/opentelemetry-js/tree/main/packages",
+          "href": "https://github.com/open-telemetry/opentelemetry-js/tree/main/packages",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "packages",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ディレクトリにはSDKを構成する主要なパッケージ群が入っている。主要というか、このレポジトリの区分で言えば安定APIとして使われることを想定したパッケージ群である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このパッケージ群はアプリケーションでの計装に直接使われるものではなく、主に ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TraceProvider",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をセットアップするためのAPIを提供している。（",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "semantic-conventions",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "だけはやや例外か）",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このディレクトリの中の命名規則は単純である。先頭の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "opentelemetry-",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は共通のものとして、大きく次の分類ができる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "opentelemetry-context-*",
+              "annotations": {
+                "bold": true,
+                "code": true
+              }
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "TraceProvider",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " に登録する ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "ContextManager",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " として使える個別の実装を提供する",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "opentelemetry-exporter-*",
+              "annotations": {
+                "bold": true,
+                "code": true
+              }
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "SpanExporter",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " として使える個別の実装を提供する。あまり数は多くない",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "new BatchSpanProcessor(exporter)",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " のように ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "SpanProcessor",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " に渡すことになる",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "opentelemetry-propagator-*",
+              "annotations": {
+                "bold": true,
+                "code": true
+              }
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "TraceProvider",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " に登録する ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "TextMapPropagator",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " として使える個別の実装を提供する",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "opentelemetry-sdk-trace-*",
+              "annotations": {
+                "bold": true,
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " ",
+              "annotations": {
+                "bold": true
+              }
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "上述のパッケージなどが組み合わされたBattery-includedな ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "TraceProvider",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " 実装を提供する",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Node.jsやBrowserのようなプラットフォームごとのSDKになっている",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "その他",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "core, resources, semantic-conventions など、他のパッケージから依存される共通部分が該当する",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "TypeScriptの型情報や定数などはこのあたりから提供される",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "experimental/packages: 実験的パッケージ群",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/open-telemetry/opentelemetry-js/tree/main/experimental",
+          "href": "https://github.com/open-telemetry/opentelemetry-js/tree/main/experimental",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このディレクトリには（おそらく）まだ安定しているとは言えない新しいパッケージ群が含まれている。頻繁に破壊的変更が入ることを想定して使うべきだが、けっこう便利なものが多く使わざるを得ない場面がある。数が多いので個別には解説できないが、ここでもパッケージの命名規則でだいたいの役割を掴むことができる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "api-logs",
+              "annotations": {
+                "bold": true,
+                "code": true
+              }
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "ログ収集のための計装API。トレースの計装APIは安定版になっているがログはまだ実験的なのでここにある。",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "同様に ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "api-events",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " というものも開発中",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "exporter-*",
+              "annotations": {
+                "bold": true,
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " ",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "テレメトリのExporter実装を提供している。ログのExporterもあるが、トレースのものもある。それぞれ各OTLPのプロトコルに対応してパッケージが分けられている",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "opentelemetry-exporter-metrics-*",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " もあるが、命名規則が違う理由はわからない。",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "基底パッケージとして ",
+                      "annotations": {}
+                    },
+                    {
+                      "type": "text",
+                      "text": "otlp-*-exporter-base",
+                      "annotations": {
+                        "code": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " というものもあり、このあたりは自分がほしいAPIがどこにあるかひとつひとつ探して見つけるしかない",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "opentelemetry-instrumentation-*",
+              "annotations": {
+                "bold": true,
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " ",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "自動計装を提供するパッケージ群",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "自動計装のパッチを当てる対象ごとにパッケージが分けられている",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "paragraph",
+              "text": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このあたりを抑えておけばひととおり欲しいAPIは見つけられるだろう。実験的パッケージ群は命名規則も一貫性がない気がしており、名前もいつ変わるかわからないと思って構えておくのがいいと思われる。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
