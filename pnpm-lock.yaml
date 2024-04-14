@@ -27,8 +27,8 @@ dependencies:
     specifier: 5.0.17
     version: 5.0.17
   '@lacolaco/notion-fetch':
-    specifier: 1.0.10
-    version: 1.0.10
+    specifier: 1.1.0
+    version: 1.1.0
   '@resvg/resvg-js':
     specifier: 2.6.0
     version: 2.6.0
@@ -1005,8 +1005,8 @@ packages:
       '@jridgewell/resolve-uri': 3.1.0
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  /@lacolaco/notion-fetch@1.0.10:
-    resolution: {integrity: sha512-DkDIe9Ziw5SqeSbsqD9wX+PphgjeoTRKPYsoy83dkwC4rRljZCcRhDdMdG3FChJNz8rfHvJS9C9y3SjW659enw==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-fetch/1.0.10/bf143132302cd7943a0c3219ef4c1f936e83c8a6}
+  /@lacolaco/notion-fetch@1.1.0:
+    resolution: {integrity: sha512-pQqUKuvYNnhpg/cM7RuLWoTrQRXKbqg2RqBZEm/OhoAh2NzIUQg7XkXuVZZCrA20Gx26N+ORAjTkNDj74DfTyA==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-fetch/1.1.0/d06092e2c7336f613096d830bcab99ed85143acf}
     hasBin: true
     dependencies:
       '@notionhq/client': 2.2.14
