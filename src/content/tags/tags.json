@@ -346,5 +346,9 @@
   "経営学習論": {
     "name": "経営学習論",
     "color": "gray"
+  },
+  "OpenTelemetry": {
+    "name": "OpenTelemetry",
+    "color": "green"
   }
 }
