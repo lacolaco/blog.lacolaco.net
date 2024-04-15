@@ -72,7 +72,7 @@ devDependencies:
     version: 4.20231121.0
   '@iconify/json':
     specifier: ^2.2.161
-    version: 2.2.198
+    version: 2.2.199
   '@iconify/tailwind':
     specifier: ^0.1.4
     version: 0.1.4
@@ -1170,8 +1170,8 @@ packages:
     resolution: {integrity: sha512-O6Q1zWLAUZ7nJVh2eIKKzdukCV3U/JrBPuHVXGNcobaYgLBzXO5wWgisMfZV0rhhxh97ziHQHyuigHzLMAuj4w==}
     dev: false
 
-  /@iconify/json@2.2.198:
-    resolution: {integrity: sha512-z4cvKDXBK6priTJhRppWQSV2ljYhuonArN6ugTM8axDcJFHZ6x75a1YDxd1HVON+c86RspvcjZ1mhOXA3qheaQ==}
+  /@iconify/json@2.2.199:
+    resolution: {integrity: sha512-dmdbHES8HmvGYwdbse8g7ZO4Grvi35NGuaVA8+R5alkf1Ky6Y6atlzQJPhj7a6UN/+gM5qOzQ3Tcc6Fna7Rv5A==}
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.2
