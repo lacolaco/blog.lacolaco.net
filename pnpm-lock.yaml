@@ -77,8 +77,8 @@ devDependencies:
     specifier: ^0.1.4
     version: 0.1.4
   '@notionhq/client':
-    specifier: 2.2.14
-    version: 2.2.14
+    specifier: 2.2.15
+    version: 2.2.15
   '@types/cli-progress':
     specifier: 3.11.5
     version: 3.11.5
@@ -1216,7 +1216,7 @@ packages:
     resolution: {integrity: sha512-pQqUKuvYNnhpg/cM7RuLWoTrQRXKbqg2RqBZEm/OhoAh2NzIUQg7XkXuVZZCrA20Gx26N+ORAjTkNDj74DfTyA==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-fetch/1.1.0/d06092e2c7336f613096d830bcab99ed85143acf}
     hasBin: true
     dependencies:
-      '@notionhq/client': 2.2.14
+      '@notionhq/client': 2.2.15
       cli-progress: 3.12.0
       p-limit: 5.0.0
       pkg-dir: 8.0.0
@@ -1243,8 +1243,8 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
 
-  /@notionhq/client@2.2.14:
-    resolution: {integrity: sha512-oqUefZtCiJPCX+74A1Os9OVTef3fSnVWe2eVQtU1HJSD+nsfxfhwvDKnzJTh2Tw1ZHKLxpieHB/nzGdY+Uo12A==}
+  /@notionhq/client@2.2.15:
+    resolution: {integrity: sha512-XhdSY/4B1D34tSco/GION+23GMjaS9S2zszcqYkMHo8RcWInymF6L1x+Gk7EmHdrSxNFva2WM8orhC4BwQCwgw==}
     engines: {node: '>=12'}
     dependencies:
       '@types/node-fetch': 2.5.12
