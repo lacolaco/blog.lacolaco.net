@@ -1,0 +1,271 @@
+{
+  "pageId": "a2c74ee0-85a2-4950-90f5-f4a968192faf",
+  "lastEditedAt": "2024-05-15T08:18:00.000Z",
+  "slug": "firebase-app-hosting-angular-ssr-tryout",
+  "locale": "ja",
+  "properties": {
+    "title": "Firebase App HostingでAngularのSSRを試す",
+    "date": "2024-05-15T07:52:00.000Z",
+    "category": "Tech",
+    "tags": ["Angular", "Firebase"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Google I/O 2024で発表されたFirebaseの新機能 “App Hosting” をさっそく試してみた。AngularとNext.jsをサポートした、SSR（サーバーサイドレンダリング）重視のWebアプリケーションホスティング環境ということである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://firebase.google.com/docs/app-hosting"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "実際に試してみると何にも特別なことをしないままGoogle Cloudのインフラ上でサーバーサイドレンダリングされるホスティング環境が手に入ってしまったので、今までの苦労はなんだったんだという感じである。ぜひ試してみてほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular アプリケーションの準備",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "App HostingへのデプロイはGitHubレポジトリとの連携を前提としている。なのでまずはAngularアプリケーションのレポジトリを作成する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ng new",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドでAngular v17.x系のプロジェクトを作成し、作成時のプロンプトで忘れずにSSRを有効にするか、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "—ssr",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " フラグを付けておく。これがないとただのSPAのホスティングと変わらない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そのままでもデプロイはできるがSSRされていることの確認が困難なので、アプリケーションに動的な部分を追加する。AngularのSSRではサーバーサイドで実行されたときに組み込みの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を介してフェッチされたレスポンスがキャッシュされてクライアントサイドに渡され、それにより同じリクエストを再送することを回避できる機能がある。これを利用しよう。雑にAppComponentで外部APIを呼び出した結果を表示するように変更する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// app.config.ts\nimport { ApplicationConfig } from \"@angular/core\";\nimport { provideRouter } from \"@angular/router\";\n\nimport { routes } from \"./app.routes\";\nimport { provideClientHydration } from \"@angular/platform-browser\";\nimport { provideHttpClient, withFetch } from \"@angular/common/http\";\n\nexport const appConfig: ApplicationConfig = {\n  providers: [\n    provideRouter(routes),\n    provideClientHydration(),\n    provideHttpClient(withFetch()), // <--- HttpClientの追加\n  ],\n};\n\n// app.component.ts\nimport { HttpClient } from \"@angular/common/http\";\nimport { Component, inject, signal } from \"@angular/core\";\nimport { RouterOutlet } from \"@angular/router\";\n\n@Component({\n  selector: \"app-root\",\n  standalone: true,\n  template: `\n    <h1>Welcome to {{ title }}!</h1>\n    <p>User: {{ user().name }}</p>\n  `,\n})\nexport class AppComponent {\n  title = \"apphosting-sandbox\";\n  user = signal({ name: \"John Doe\" });\n  #httpClient = inject(HttpClient);\n\n  ngOnInit() {\n    this.#httpClient\n      .get<{ name: string }>(\"https://jsonplaceholder.typicode.com/users/1\")\n      .subscribe((user) => {\n        this.user.set(user);\n      });\n  }\n}\n"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この状態でmainブランチにプッシュしておけば準備完了である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "App Hostingのセットアップ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "任意のFirebaseプロジェクトを作成した後、メニューの「構築」カテゴリにあるApp Hostingを選択し、「始める」をクリックする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "external": false,
+      "url": "/src/content/images/firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/6f0aa3d8-a3d8-467b-ad44-1d7127acc445.png",
+      "caption": "App Hosting画面の初期状態にある「始める」ボタンをクリックする"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "プロジェクトに最初のApp Hosting環境を作成する場合、まずはGitHubとの連携などやることがあるが、画面のウィザードに従えば何も難しいことはない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "external": false,
+      "url": "/src/content/images/firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/8f3758f0-49d0-4f64-bae4-1ac9d595f7db.png",
+      "caption": "GitHubアカウントを連携してレポジトリを選択する"
+    },
+    {
+      "type": "image",
+      "external": false,
+      "url": "/src/content/images/firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/3ab28e7e-f85c-40d8-b3f7-992d723e3ac2.png",
+      "caption": "デプロイの設定を行う。今回はライブブランチ（本番環境に対応するブランチ）をmainに設定する"
+    },
+    {
+      "type": "image",
+      "external": false,
+      "url": "/src/content/images/firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/cd775a46-a9fa-4a71-98a7-1f264b23e8c5.png",
+      "caption": "（おそらく）プロジェクト内でユニークなIDを設定する。自動生成されるホスティング用URLのドメインに含められる"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ボタンを押していき、「終了してデプロイ」を押せば完了となる。mainブランチのHEADのソースコードからアプリケーションが自動的にビルドされ、デプロイされる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "external": false,
+      "url": "/src/content/images/firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/2736e3ed-d7d2-4a93-82fa-13be14282cf6.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "「ドメイン」に表示されているURLを開くと、自動的に構築されたCloud Run上でSSRされたHTMLと、必要な静的ファイルが配信され、アプリケーションが動作することを確認できる。ブラウザの開発者ツールでネットワーク情報を確認すれば、クライアントサイドで外部APIへのリクエストが発生しておらず、画面に表示されたユーザー名はSSRで埋め込まれたものだとわかる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "external": false,
+      "url": "/src/content/images/firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/f441a2ef-4d0b-4fac-aaf4-a1cfe7589e15.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "というわけで、アプリケーションコードには何も手を加えず、それどころか設定ファイルの1行も触ることなくAngularのSSRホスティング環境が手に入る時代になった。まだパブリックベータだが、プロダクションではないホビーユースには十分な機能があるように見える。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ちなみにFirebase App Hostingを使うのにAngularアプリケーションにAngularFireやFirebaseのランタイムSDKを導入する必要はない。もちろんFirebaseの機能を組み込みたいなら使えるが、App Hostingへのデプロイはそれらに依存してない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "いままでFirebase HostingとFirebase Cloud Functionsを組み合わせてあれこれ苦労しないと実用的なSSR環境を構築するのが難しかったが、完全に過去のものとなった。Firebase公式によれば、従来のHostingからは「卒業」してほしいとのことだ。ぜひともそうさせてもらおう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "external": false,
+      "url": "/src/content/images/firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/6f3ca489-06bc-4459-8574-ab551d2b7a72.png",
+      "caption": "“If you're already using the frameworks experiment in the Firebase CLI, we recommend \"graduating\" to App Hosting.”"
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "For developers creating a full-stack Angular app, we strongly recommend Firebase App Hosting. If you're already using the frameworks experiment in the Firebase CLI, we recommend \"graduating\" to App Hosting. With App Hosting, you'll have a unified solution to manage everything from CDN to server-side rendering, along with improved GitHub integration.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
