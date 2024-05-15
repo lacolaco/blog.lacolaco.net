@@ -1,6 +1,8 @@
 import { fetchBlogPostPages } from '@lacolaco/notion-fetch';
 import { NotionDatabase, getLocale, getSlug } from '@lib/notion';
 import { getPostJSONFileName } from '@lib/post';
+import { mkdir } from 'node:fs/promises';
+import { resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { toBlogPostJSON, toCategoriesJSON, toTagsJSON } from './content';
 import { FileSystem } from './file-system';
@@ -12,7 +14,8 @@ if (NOTION_AUTH_TOKEN == null) {
   process.exit(1);
 }
 
-const root = new URL('../..', import.meta.url).pathname;
+const rootDir = new URL('../..', import.meta.url).pathname;
+const cacheDir = resolve(rootDir, 'notion-db-cache');
 
 const { values } = parseArgs({
   args: process.argv.slice(2),
@@ -34,10 +37,13 @@ const { force = false, 'dry-run': dryRun = false, debug = false } = values;
 
 async function main() {
   const db = new NotionDatabase(NOTION_AUTH_TOKEN, NOTION_DATABASE_ID);
-  const imagesFS = new FileSystem(root, 'src/content/images', { dryRun });
-  const postJsonFS = new FileSystem(root, 'src/content/post', { dryRun });
-  const tagsJsonFS = new FileSystem(root, 'src/content/tags', { dryRun });
-  const categoriesJsonFS = new FileSystem(root, 'src/content/categories', { dryRun });
+  const imagesFS = new FileSystem(rootDir, 'src/content/images', { dryRun });
+  const postJsonFS = new FileSystem(rootDir, 'src/content/post', { dryRun });
+  const tagsJsonFS = new FileSystem(rootDir, 'src/content/tags', { dryRun });
+  const categoriesJsonFS = new FileSystem(rootDir, 'src/content/categories', { dryRun });
+
+  // prepare directories
+  await mkdir(cacheDir, { recursive: true });
 
   console.log('Fetching database properties...');
   const properties = await db.getDatabaseProperties();
@@ -50,7 +56,7 @@ async function main() {
   await categoriesJsonFS.save('categories.json', categoriesJson, { encoding: 'utf-8' });
 
   console.log('Fetching pages...');
-  const pages = await fetchBlogPostPages(NOTION_AUTH_TOKEN, dryRun);
+  const pages = await fetchBlogPostPages(NOTION_AUTH_TOKEN, cacheDir, dryRun);
   console.log(`Fetched ${pages.length} pages`);
 
   const pagesToUpdate = pages.filter((page) => force || page.changed);
