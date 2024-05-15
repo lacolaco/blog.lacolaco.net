@@ -55,10 +55,10 @@ importers:
         version: 10.7.0
       preact:
         specifier: ^10.19.2
-        version: 10.19.2
+        version: 10.21.0
       preact-render-to-string:
         specifier: ^6.3.1
-        version: 6.3.1(preact@10.19.2)
+        version: 6.4.2(preact@10.21.0)
       react:
         specifier: 18.2.0
         version: 18.2.0
@@ -2556,13 +2556,13 @@ packages:
     resolution: {integrity: sha512-Wglpdk03BSfXkHoQa3b/oulrotAkwrlLDRSOb9D0bN86FdRyE9lppSp33aHNPgBa0JKCoB+drFLZkQoRRYae5A==}
     engines: {node: ^10 || ^12 || >=14}
 
-  preact-render-to-string@6.3.1:
-    resolution: {integrity: sha512-NQ28WrjLtWY6lKDlTxnFpKHZdpjfF+oE6V4tZ0rTrunHrtZp6Dm0oFrcJalt/5PNeqJz4j1DuZDS0Y6rCBoqDA==}
+  preact-render-to-string@6.4.2:
+    resolution: {integrity: sha512-Sio5SvlyZSAXHuvnMgYzVQd67lNIuQe4uSjJ+2gfpJNC6L8zoHQR5xV7B/EjIqrAYWVyJ2eACkTCxVrIzZi6Vw==}
     peerDependencies:
       preact: '>=10'
 
-  preact@10.19.2:
-    resolution: {integrity: sha512-UA9DX/OJwv6YwP9Vn7Ti/vF80XL+YA5H2l7BpCtUr3ya8LWHFzpiO5R+N7dN16ujpIxhekRFuOOF82bXX7K/lg==}
+  preact@10.21.0:
+    resolution: {integrity: sha512-aQAIxtzWEwH8ou+OovWVSVNlFImL7xUCwJX3YMqA3U8iKCNC34999fFOnWjYNsylgfPgMexpbk7WYOLtKr/mxg==}
 
   prebuild-install@7.1.1:
     resolution: {integrity: sha512-jAXscXWMcCK8GgCoHOfIr0ODh5ai8mj63L2nWrjuAgXE6tDyYGnx4/8o/rCgU+B4JSyZBKbeZqzhtwtC3ovxjw==}
@@ -5871,12 +5871,12 @@ snapshots:
       picocolors: 1.0.0
       source-map-js: 1.2.0
 
-  preact-render-to-string@6.3.1(preact@10.19.2):
+  preact-render-to-string@6.4.2(preact@10.21.0):
     dependencies:
-      preact: 10.19.2
+      preact: 10.21.0
       pretty-format: 3.8.0
 
-  preact@10.19.2: {}
+  preact@10.21.0: {}
 
   prebuild-install@7.1.1:
     dependencies:
