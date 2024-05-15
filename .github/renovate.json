@@ -30,8 +30,15 @@
     },
     {
       "groupName": "types packages",
-      "matchPackagePrefixes": ["@types/"],
-      "automerge": false
+      "matchPackagePrefixes": ["@types/"]
+    },
+    {
+      "groupName": "iconify packages",
+      "matchPackagePrefixes": ["@iconify/"]
+    },
+    {
+      "groupName": "preact packages",
+      "matchPackagePrefixes": ["preact", "preact-render-to-string"]
     }
   ]
 }
