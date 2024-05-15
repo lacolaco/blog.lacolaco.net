@@ -24,11 +24,11 @@ importers:
         specifier: 5.1.0
         version: 5.1.0(astro@4.5.16(@types/node@20.11.17)(sass@1.70.0))(tailwindcss@3.4.3)
       '@fontsource/source-code-pro':
-        specifier: 5.0.16
-        version: 5.0.16
+        specifier: 5.0.18
+        version: 5.0.18
       '@fontsource/zen-kaku-gothic-new':
-        specifier: 5.0.17
-        version: 5.0.17
+        specifier: 5.0.19
+        version: 5.0.19
       '@lacolaco/notion-fetch':
         specifier: 1.1.3
         version: 1.1.3
@@ -755,11 +755,11 @@ packages:
     resolution: {integrity: sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==}
     engines: {node: '>=14'}
 
-  '@fontsource/source-code-pro@5.0.16':
-    resolution: {integrity: sha512-ErErGXjKo9/fAJE49fyU8M6DuJUpdqR5YLM8jGJOC5ZcKIDSTQ5m+R3DTa0VYHAGGFbk2qLWVWD/r5sfCLA/jQ==}
+  '@fontsource/source-code-pro@5.0.18':
+    resolution: {integrity: sha512-5z+MFKaj+qs0PGAzv+WpMBTd8wEvAJEqATj6cGFVFJmFk6A6liJB07F2HAzLe/83FYikGeE4okh1sHM2JDVV+Q==}
 
-  '@fontsource/zen-kaku-gothic-new@5.0.17':
-    resolution: {integrity: sha512-O6Q1zWLAUZ7nJVh2eIKKzdukCV3U/JrBPuHVXGNcobaYgLBzXO5wWgisMfZV0rhhxh97ziHQHyuigHzLMAuj4w==}
+  '@fontsource/zen-kaku-gothic-new@5.0.19':
+    resolution: {integrity: sha512-Dp27ZFZmimmU02OHxXDfXwPDLxQHfFy4lIwG1L/WeU7/dhvIJE3+7AogtgZH7Ya86DIK1GdvWf3ts9lzJZ7beQ==}
 
   '@iconify/json@2.2.199':
     resolution: {integrity: sha512-dmdbHES8HmvGYwdbse8g7ZO4Grvi35NGuaVA8+R5alkf1Ky6Y6atlzQJPhj7a6UN/+gM5qOzQ3Tcc6Fna7Rv5A==}
@@ -3689,9 +3689,9 @@ snapshots:
 
   '@fastify/busboy@2.1.0': {}
 
-  '@fontsource/source-code-pro@5.0.16': {}
+  '@fontsource/source-code-pro@5.0.18': {}
 
-  '@fontsource/zen-kaku-gothic-new@5.0.17': {}
+  '@fontsource/zen-kaku-gothic-new@5.0.19': {}
 
   '@iconify/json@2.2.199':
     dependencies:
