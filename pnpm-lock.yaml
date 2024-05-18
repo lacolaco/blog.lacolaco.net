@@ -125,7 +125,7 @@ importers:
         version: 3.19.0
       zod:
         specifier: ^3.22.4
-        version: 3.22.4
+        version: 3.23.8
 
 packages:
 
@@ -3204,8 +3204,8 @@ packages:
     peerDependencies:
       zod: ^3.22.4
 
-  zod@3.22.4:
-    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+  zod@3.23.8:
+    resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -3270,7 +3270,7 @@ snapshots:
   '@astrojs/sitemap@3.1.2':
     dependencies:
       sitemap: 7.1.1
-      zod: 3.22.4
+      zod: 3.23.8
 
   '@astrojs/tailwind@5.1.0(astro@4.5.16(@types/node@20.11.17)(sass@1.77.1))(tailwindcss@3.4.3)':
     dependencies:
@@ -3727,7 +3727,7 @@ snapshots:
       cli-progress: 3.12.0
       p-limit: 5.0.0
       pkg-dir: 8.0.0
-      zod: 3.22.4
+      zod: 3.23.8
     transitivePeerDependencies:
       - encoding
 
@@ -4073,8 +4073,8 @@ snapshots:
       vitefu: 0.2.5(vite@5.2.8(@types/node@20.11.17)(sass@1.77.1))
       which-pm: 2.1.1
       yargs-parser: 21.1.1
-      zod: 3.22.4
-      zod-to-json-schema: 3.22.5(zod@3.22.4)
+      zod: 3.23.8
+      zod-to-json-schema: 3.22.5(zod@3.23.8)
     optionalDependencies:
       sharp: 0.32.6
     transitivePeerDependencies:
@@ -5656,7 +5656,7 @@ snapshots:
       workerd: 1.20231030.0
       ws: 8.14.2
       youch: 3.3.3
-      zod: 3.22.4
+      zod: 3.23.8
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -6667,10 +6667,10 @@ snapshots:
       mustache: 4.2.0
       stacktracey: 2.1.8
 
-  zod-to-json-schema@3.22.5(zod@3.22.4):
+  zod-to-json-schema@3.22.5(zod@3.23.8):
     dependencies:
-      zod: 3.22.4
+      zod: 3.23.8
 
-  zod@3.22.4: {}
+  zod@3.23.8: {}
 
   zwitch@2.0.4: {}
