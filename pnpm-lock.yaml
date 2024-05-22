@@ -118,8 +118,8 @@ importers:
         specifier: 3.4.3
         version: 3.4.3
       tsx:
-        specifier: 4.10.1
-        version: 4.10.1
+        specifier: 4.10.4
+        version: 4.10.4
       wrangler:
         specifier: ^3.19.0
         version: 3.55.0(@cloudflare/workers-types@4.20240512.0)
@@ -2966,8 +2966,8 @@ packages:
   tslib@2.6.2:
     resolution: {integrity: sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==}
 
-  tsx@4.10.1:
-    resolution: {integrity: sha512-G+CcyTOopwhuI81FU+KpzGN5UBhHgGEDlGt8mHAXKxv8pDGr6WI7hI7aRjTRol5WzFVsSNuzl3ekCZ0eLIJlEQ==}
+  tsx@4.10.4:
+    resolution: {integrity: sha512-Gtg9qnZWNqC/OtcgiXfoAUdAKx3/cgKOYvEocAsv+m21MV/eKpV/WUjRXe6/sDCaGBl2/v8S6v29BpUnGMCX5A==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -6413,7 +6413,7 @@ snapshots:
 
   tslib@2.6.2: {}
 
-  tsx@4.10.1:
+  tsx@4.10.4:
     dependencies:
       esbuild: 0.20.2
       get-tsconfig: 4.7.5
