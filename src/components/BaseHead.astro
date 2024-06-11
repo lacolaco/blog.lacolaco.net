@@ -45,6 +45,9 @@ const { title, description, image, gtagProps } = Astro.props;
 <meta property="twitter:description" content={description} />
 {image && <meta property="twitter:image" content={new URL(image, Astro.url)} />}
 
+<!-- https://b.hatena.ne.jp/help/entry/nocomment -->
+<meta name="Hatena::Bookmark" content="nocomment" />
+
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script src="https://www.googletagmanager.com/gtag/js?id=G-0BEKSBSM5X"></script>
 <script is:inline define:vars={{ gtagProps }}>
