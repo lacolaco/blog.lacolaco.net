@@ -1,6 +1,6 @@
 {
   "pageId": "3a28e81c-63c8-4670-af97-d9e6218e2db8",
-  "lastEditedAt": "2024-06-13T14:56:00.000Z",
+  "lastEditedAt": "2024-06-14T01:04:00.000Z",
   "slug": "angular-cva-signals",
   "locale": "ja",
   "properties": {
@@ -104,7 +104,7 @@
       "type": "code",
       "language": "typescript",
       "filename": "",
-      "text": "@Component({\n  selector: 'app-time-input',\n  standalone: true,\n  imports: [DecimalPipe],\n  template: `\n    <div>\n      <select>\n        @for(i of hourOptions; track i) {\n          <option [value]=\"i\">{{ i | number : '2.0' }}</option>\n        }\n      </select>\n      <span>:</span>\n      <select>\n        @for(i of minuteOptions; track i) {\n          <option [value]=\"i\">{{ i | number : '2.0' }}</option>\n        }\n      </select>\n    </div>\n  `,\n  styles: `:host { display: inline-block; }`,\n})\nexport class TimeInputComponent {\n  readonly hourOptions = getRange(0, 23);\n 　　readonly minuteOptions = getRange(0, 59);\n}\n"
+      "text": "@Component({\n  selector: 'app-time-input',\n  standalone: true,\n  imports: [DecimalPipe],\n  template: `\n    <div>\n      <select>\n        @for(i of hourOptions; track i) {\n          <option [value]=\"i\">{{ i | number : '2.0' }}</option>\n        }\n      </select>\n      <span>:</span>\n      <select>\n        @for(i of minuteOptions; track i) {\n          <option [value]=\"i\">{{ i | number : '2.0' }}</option>\n        }\n      </select>\n    </div>\n  `,\n  styles: `:host { display: inline-block; }`,\n})\nexport class TimeInputComponent {\n  readonly hourOptions = getRange(0, 23);\n  readonly minuteOptions = getRange(0, 59);\n}\n"
     },
     {
       "type": "image",
