@@ -1,0 +1,134 @@
+{
+  "pageId": "cef457cd-75d5-4eaa-a22d-7824fd3cbfdb",
+  "lastEditedAt": "2024-06-14T01:59:00.000Z",
+  "slug": "order-by-objective",
+  "locale": "ja",
+  "properties": {
+    "title": "計画の優先順位ではなく目標の優先順位を決める",
+    "date": "2024-06-14T01:24:00.000Z",
+    "category": "Idea",
+    "tags": ["雑記", "言語化"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "プロジェクトやタスクなどなんらかの計画が並んだリストの中で、それら個別の計画について",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "直接的に",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "優先順位を考えてはいけないのではなかろうか。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "むしろ、考えて決めなければならないのは、それらの計画を立てた理由になっている",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "目標の優先順位",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ではなかろうか。それが決まっていれば、それに紐づく個々の計画の優先順位は自動的に決まるだろう。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SELECT * FROM 計画 ORDER BY 計画.目標の優先順位",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というわけである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そもそも、優先順位というものをあらかじめ決めておくのは、それを関係者との間で約束として機能させるためである。自分一人なら好きなものを好きな順にやるのと変わりない。集団が優先順位を決めることで結ぶのは、「われわれはこの優先順位に従って選択し、行動する」という約束であり、「優先されたものがあるうちは、劣後されたものを選択しない」という約束でもある。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://blog.lacolaco.net/posts/2b66719bbf39/"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "であれば、優先順位について合意をとることで「なぜこの計画がほかよりも優先されるのか」という問いに関係者全員が答えられるようになるはずである。そしてその「なぜ」は自ずと、それらの計画を立てた理由になっている目標の優先順位を確認しているのと同じになるのではなかろうか。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "計画を並べ替える作業とはソートであり、ソートにはなんらかのアルゴリズム（評価ロジック）が必要なはずである。そうでなければ実行者は常に「なぜこれが優先されているのだろう」と意図がわからず戸惑うことになる。上位の目標の優先順位が決まっており、それに従って計画の優先順位が（設定ではなく）",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "導出",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "されていることがわかっていれば、そのような戸惑いは減る。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "翻って、計画の優先順位がうまく決められないと頭を悩ませているときは、そもそもその上位にある目標の優先順位が決まっていない・知らされていない・共通認識になっていないのではないか、ということを疑ってみるとよさそうだ。アルゴリズムが決まらないのにソートできるはずもないのだから。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
