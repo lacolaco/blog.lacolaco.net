@@ -31,7 +31,7 @@
     "date-fns": "3.3.1",
     "goober": "^2.1.13",
     "katex": "0.16.10",
-    "mermaid": "10.7.0",
+    "mermaid": "10.9.1",
     "preact": "^10.19.2",
     "preact-render-to-string": "^6.3.1",
     "react": "18.2.0",
