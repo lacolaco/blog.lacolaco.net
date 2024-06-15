@@ -105,6 +105,9 @@ importers:
       cli-progress:
         specifier: 3.12.0
         version: 3.12.0
+      p-limit:
+        specifier: ^5.0.0
+        version: 5.0.0
       pkg-dir:
         specifier: ^8.0.0
         version: 8.0.0
