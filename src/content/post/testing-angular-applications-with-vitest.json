@@ -1,13 +1,14 @@
 {
   "pageId": "7b14ed47-6933-4797-8ef0-c29e83922a49",
-  "lastEditedAt": "2023-12-30T10:01:00.000Z",
+  "lastEditedAt": "2024-06-15T00:45:00.000Z",
   "slug": "testing-angular-applications-with-vitest",
   "locale": "ja",
   "properties": {
     "title": "AngularアプリケーションをVitestでテストする",
     "date": "2023-08-05T13:19:00.000Z",
     "category": "Tech",
-    "tags": ["Angular", "Testing", "Vitest"]
+    "tags": ["Angular", "Testing", "Vitest"],
+    "updatedAt": "2024-06-15T00:00:00.000Z"
   },
   "content": [
     {
@@ -15,7 +16,24 @@
       "text": [
         {
           "type": "text",
-          "text": "Angular v16系現在、Angular CLIの ",
+          "text": "[2024-06-15] Angular v18時点での内容に更新 ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular v18系現在、Angular CLIの ",
           "annotations": {}
         },
         {
@@ -144,65 +162,6 @@
           "type": "text",
           "text": "いろいろと試行錯誤した結果、設定は以下のようになった。",
           "annotations": {}
-        },
-        {
-          "type": "text",
-          "text": "vite-plugin-angularの ",
-          "annotations": {
-            "strikethrough": true
-          }
-        },
-        {
-          "type": "text",
-          "text": "jit",
-          "annotations": {
-            "strikethrough": true,
-            "code": true
-          }
-        },
-        {
-          "type": "text",
-          "text": " フラグをfalseにしないと、コンポーネントが ",
-          "annotations": {
-            "strikethrough": true
-          }
-        },
-        {
-          "type": "text",
-          "text": "templateUrl",
-          "annotations": {
-            "strikethrough": true,
-            "code": true
-          }
-        },
-        {
-          "type": "text",
-          "text": " で外部ファイルを読み込んでいる場合にパースに失敗することがあった。",
-          "annotations": {
-            "strikethrough": true
-          }
-        }
-      ]
-    },
-    {
-      "type": "callout",
-      "text": [
-        {
-          "type": "text",
-          "text": "Analog 0.2.0でJITコンパイルに関するエラーは修正されたので、 ",
-          "annotations": {}
-        },
-        {
-          "type": "text",
-          "text": "jit: false",
-          "annotations": {
-            "code": true
-          }
-        },
-        {
-          "type": "text",
-          "text": " は不要になった。",
-          "annotations": {}
         }
       ]
     },
@@ -222,7 +181,7 @@
         },
         {
           "type": "text",
-          "text": "を有効化している。これによって、JSDOMによるエミュレーションではなく、Karmaと同じように実際のブラウザ上でDOMのテストができる。ブラウザ制御のためのプロバイダーはWebDriverIOがデフォルトだったが、GitHub Actions上でうまくヘッドレス実行ができなかったため、playwrightに変更している。",
+          "text": "を有効化している。これによって、JSDOMによるエミュレーションではなく、Karmaと同じように実際のブラウザ上でDOMのテストができる。",
           "annotations": {}
         }
       ]
@@ -231,7 +190,7 @@
       "type": "code",
       "language": "typescript",
       "filename": "",
-      "text": "/// <reference types=\"vitest\" />\n\nimport { defineConfig } from 'vitest/config';\nimport angular from '@analogjs/vite-plugin-angular';\n\nconst isCI = !!process.env['CI'];\n\nexport default defineConfig({\n  plugins: [\n    angular({\n      tsconfig: 'tsconfig.spec.json',\n    }),\n  ],\n  test: {\n    globals: true,\n    setupFiles: ['src/setup-vitest.ts'],\n    include: ['src/**/*.spec.ts'],\n    browser: {\n      enabled: true,\n      name: 'chromium',\n      headless: isCI,\n      provider: 'playwright',\n    },\n  },\n});"
+      "text": "/// <reference types=\"vitest\" />\n\nimport { defineConfig } from 'vitest/config';\nimport angular from '@analogjs/vite-plugin-angular';\n\nconst isCI = !!process.env['CI'];\n\nexport default defineConfig({\n  plugins: [\n    angular({ tsconfig: 'tsconfig.spec.json' }),\n  ],\n  test: {\n    globals: true,\n    setupFiles: ['src/setup-vitest.ts'],\n    include: ['src/**/*.spec.ts'],\n    browser: {\n      enabled: true,\n      name: 'chrome',\n      headless: isCI,\n    },\n  },\n});"
     },
     {
       "type": "heading",
@@ -256,7 +215,19 @@
       "text": [
         {
           "type": "text",
-          "text": "最後に、テスト実行環境を初期化するためのセットアップコードを記述する。最初にvite-plugin-angularのセットアップモジュールを読み込む以外は、普通のAngularのTestBed初期化と変わらない。",
+          "text": "最後に、テスト実行環境を初期化するためのセットアップコードを記述する。最初に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vite-plugin-angular",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のセットアップモジュールを読み込む以外は、普通のAngularのTestBed初期化と変わらない。",
           "annotations": {}
         }
       ]
@@ -273,6 +244,156 @@
         {
           "type": "text",
           "text": "これでAngularアプリケーションのテストをVitestで実行する準備が整った。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "テストの実行",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "package.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "test",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " スクリプトを ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vitest",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を実行するように編集する。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng test",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を実行するための設定は不要なため、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "angular.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 内の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "archtect.test",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 設定は消してしまってよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "callout",
+      "text": [
+        {
+          "type": "text",
+          "text": "テストを実行して",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@analogjs/vite-plugin-angular",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のESM読み込みに失敗するようなエラーが出る場合は、VitestのコンフィグファイルがESMとして読み込まれていない。\nこれを解決するには、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "package.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "type: “module”",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を指定するか、Vitestの設定ファイル名を",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "vitest.config.mts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に変更してESMであることを示すとよい。",
           "annotations": {}
         }
       ]
@@ -307,7 +428,14 @@
           "text": [
             {
               "type": "text",
-              "text": "@analogjs/vite-plugin-angular はまだまだ安定していないため、覚悟が必要",
+              "text": "@analogjs/vite-plugin-angular",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " はv1.xになり以前よりは安定したが、未知のトラブルを踏む覚悟は必要",
               "annotations": {}
             }
           ],
