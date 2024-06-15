@@ -1,10 +1,10 @@
-import { fetchBlogPostPages } from '@lacolaco/notion-fetch';
 import { NotionDatabase, getLocale, getSlug } from '@lib/notion';
 import { getPostJSONFileName } from '@lib/post';
 import { mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { toBlogPostJSON, toCategoriesJSON, toTagsJSON } from './content';
+import { fetchBlogPostPages } from './fetch';
 import { FileSystem } from './file-system';
 import { formatJSON } from './utils/format';
 
