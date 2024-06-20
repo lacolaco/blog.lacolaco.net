@@ -1,0 +1,269 @@
+{
+  "pageId": "9be76b98-4879-43be-8422-fa29fd0a884a",
+  "lastEditedAt": "2024-06-20T15:01:00.000Z",
+  "slug": "angular-rendering-effects-and-business-effects",
+  "locale": "ja",
+  "properties": {
+    "title": "Angular: Rendering EffectsとBusiness Effects",
+    "date": "2024-06-21T00:00:00.000Z",
+    "category": "Tech",
+    "tags": ["Angular", "Signals"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular SignalsのEffectに関する話題でGitHub上の議論が盛り上がっている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular/issues/56155"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このIssueに投稿されたAngularチームのテクニカルリードのAlexのコメントが、現状のEffectsにまつわる問題をうまく整理している。Effectsの使われ方を”",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "rendering effects",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "”と”",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "business effects",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "”に二分して考えるというものだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/angular/angular/issues/56155#issuecomment-2177202036",
+          "href": "https://github.com/angular/angular/issues/56155#issuecomment-2177202036",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そして、まだDeveloper Previewである ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "effect()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIのデザインは、コンポーネントで呼び出され “",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "rendering effects",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "” を実装するために使われることを狙ったものであるということ、一方で開発者たちは “business effects” を実装するための要素として活用方法を模索・開拓しており、ここで摩擦が起こっているというわけだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "AlexいわくSignals APIは “bottom up” ならぬ “component up” で設計を始めており、コンポーネントの実装をシンプルにするためのAPIとしてデザインされている。それ以外の用途に適用しようとしてうまくハマらないのは仕方ないということだが、そのことはこれまであまりコミュニティの開発者たちには認識されていなかったようだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "というわけで、現状の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "effects()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "APIはコンポーネントから切り離された文脈で使うことは、非推奨とは言わないまでも、そのようにデザインされたものではないと認識したうえで注意深く利用すべきだ。そうでなくてもDeveloper Previewなのでいつでも仕様が変わることを受け入れられる状態にしておかなくてはならない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "それはそれとして、この “rendering effects”と”business effects”という切り口は面白く、これを使うとAngularのコンポーネントが持つ責任について整理がつけやすい。コンポーネントを中心に、その状態 (state) と結果 (view) がどのように関係するか、改めて図示すると次のようになるだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "external": false,
+      "url": "/src/content/images/angular-rendering-effects-and-business-effects/3c6255ea-b6c7-4055-8126-638d2819f0c3/33bff63a-2041-4ae3-9e8a-ac6e43bfa29d.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "コンポーネントは状態をクエリ（読み取り）し、テンプレートを介してビューを構築する。ビューをからコンポーネントはユーザーイベントを受け取り、状態に対してコマンド（書き込み）を行う。これが単純な関係だが、これだけでは表現できない関係をEffectsが担っている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Rendering Effects",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は状態に応じて",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "テンプレートでは記述できないビューの構築",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を行うための経路である。そして、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Business Effects",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "はたいていの場合、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "状態の変化を起点に別の状態の変化を引き起こす",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "経路を表現する。たとえば検索パラメータの変更をきっかけに検索を行い、その結果リストを格納するようなものだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "上述の通り、現状の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "effect()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "APIはコンポーネントで使われること、特にRendering Effectsの実装のことを念頭において設計されている。そのことを踏まえると、Effectsを宣言するのはコンポーネントの関心事であるとしておいたほうがよさそうだ。Business Effectsの扱いはフレームワークでも未知数であるし、ライブラリ作者たちも当然未知数な状態の上で模索している。たとえばNgRxのSignalStoreでもEffectsに関しては特に踏み込まず、メソッドコールによるPromiseベースの非同期処理と状態の更新手段を素朴に提供するに留めている。賢明な判断だと思う。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://ngrx.io/guide/signals/signal-store"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "アプリケーションを実装するうえでも、これらの状況を理解したうえで、あまりがっつりと作り込まないようにしておくのがよいだろう。Developer Previewというのは無意味なラベルではなく、このような不確実性の高いものであることを意味している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
