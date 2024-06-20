@@ -1,11 +1,11 @@
 {
   "pageId": "9be76b98-4879-43be-8422-fa29fd0a884a",
-  "lastEditedAt": "2024-06-20T15:01:00.000Z",
+  "lastEditedAt": "2024-06-20T23:52:00.000Z",
   "slug": "angular-rendering-effects-and-business-effects",
   "locale": "ja",
   "properties": {
     "title": "Angular: Rendering EffectsとBusiness Effects",
-    "date": "2024-06-21T00:00:00.000Z",
+    "date": "2024-06-20T15:00:00.000Z",
     "category": "Tech",
     "tags": ["Angular", "Signals"]
   },
