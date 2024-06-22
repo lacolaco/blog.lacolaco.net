@@ -1,15 +1,11 @@
 ---
 import { ImageNode } from '@lib/post';
+import CloudflareImage from './CloudflareImage';
 import Text from './Text.astro';
 
 type Props = ImageNode;
 
 const image = Astro.props;
-
-function imageLoader(src: string, options: { width: number }): string {
-  const { width } = options;
-  return `/image?w=${width}&src=${src}`;
-}
 ---
 
 <figure class="flex flex-col items-center py-2">
@@ -22,23 +18,17 @@ function imageLoader(src: string, options: { width: number }): string {
         loading="lazy"
       />
     ) : (
-      <picture>
-        <source srcset={imageLoader(`/images/${image.path}`, { width: 1024 })} media="(min-width: 1024px)" />
-        <source srcset={imageLoader(`/images/${image.path}`, { width: 768 })} media="(min-width: 768px)" />
-        <source srcset={imageLoader(`/images/${image.path}`, { width: 640 })} media="(min-width: 640px)" />
-        <img
-          class:list="object-contain w-full md:max-w-screen-md max-h-[50vh]"
-          src={`/images/${image.path}`}
-          alt={
-            image.caption
-              ? Array.isArray(image.caption)
-                ? image.caption.map((node) => node.text).join('')
-                : image.caption
-              : ''
-          }
-          loading="lazy"
-        />
-      </picture>
+      <CloudflareImage
+        client:only="react"
+        src={`/images/${image.path}`}
+        alt={
+          image.caption
+            ? Array.isArray(image.caption)
+              ? image.caption.map((node) => node.text).join('')
+              : image.caption
+            : ''
+        }
+      />
     )
   }
   {
