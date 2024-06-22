@@ -32,7 +32,7 @@ export const onRequest: PagesFunction<{}> = async (context) => {
   // use cf image transformation
   // https://developers.cloudflare.com/images/transform-images/transform-via-workers/
   try {
-    return fetch(imageUrl, {
+    return context.env.ASSETS.fetch(imageUrl, {
       cf: {
         image: {
           fit: 'scale-down',
