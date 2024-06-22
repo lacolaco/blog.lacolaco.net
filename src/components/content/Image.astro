@@ -11,7 +11,7 @@ function imageLoader(src: string, options: { width: number }): string {
   if (Astro.url.hostname === 'localhost') {
     return src;
   }
-  const originUrl = new URL(src, Astro.site);
+  const originUrl = new URL(src, Astro.url);
   return `https://lacolaco.net/cdn-cgi/image/f=auto,fit=scale-down,w=${width}/${originUrl.toString()}`;
 }
 ---
