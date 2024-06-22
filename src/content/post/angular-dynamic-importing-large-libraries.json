@@ -100,13 +100,13 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-dynamic-importing-large-libraries/3c6255ea-b6c7-4055-8126-638d2819f0c3/0c061a9d-975c-4166-95c4-1686e2d5ae3c.png",
+      "path": "angular-dynamic-importing-large-libraries/3c6255ea-b6c7-4055-8126-638d2819f0c3/0c061a9d-975c-4166-95c4-1686e2d5ae3c.png",
       "caption": "Build result"
     },
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-dynamic-importing-large-libraries/3c6255ea-b6c7-4055-8126-638d2819f0c3/bc9c7a7a-9f04-405c-9d9d-07fee950a580.png",
+      "path": "angular-dynamic-importing-large-libraries/3c6255ea-b6c7-4055-8126-638d2819f0c3/bc9c7a7a-9f04-405c-9d9d-07fee950a580.png",
       "caption": "Chart.js: ~500KB"
     },
     {
@@ -547,13 +547,13 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-dynamic-importing-large-libraries/3c6255ea-b6c7-4055-8126-638d2819f0c3/e5553826-ec93-46b5-b80a-4fca0c793500.png",
+      "path": "angular-dynamic-importing-large-libraries/3c6255ea-b6c7-4055-8126-638d2819f0c3/e5553826-ec93-46b5-b80a-4fca0c793500.png",
       "caption": "Build result"
     },
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-dynamic-importing-large-libraries/3c6255ea-b6c7-4055-8126-638d2819f0c3/d04b613a-9c51-4298-8d27-55ef3e2f57df.png",
+      "path": "angular-dynamic-importing-large-libraries/3c6255ea-b6c7-4055-8126-638d2819f0c3/d04b613a-9c51-4298-8d27-55ef3e2f57df.png",
       "caption": "Dynamic loading in the browser"
     },
     {

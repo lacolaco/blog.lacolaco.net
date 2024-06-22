@@ -195,7 +195,7 @@ export class ContentTransformer {
     return {
       type: 'image',
       external: false,
-      url: this.imageFS.resolveLocalPathFromRoot(filepath),
+      path: filepath,
       caption: this.#plaintext(block.image.caption),
     };
   }

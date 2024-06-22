@@ -284,7 +284,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-16-jest/3c6255ea-b6c7-4055-8126-638d2819f0c3/2841ccc5-5f5b-48ec-aa66-bbc200023f4a.png",
+      "path": "angular-16-jest/3c6255ea-b6c7-4055-8126-638d2819f0c3/2841ccc5-5f5b-48ec-aa66-bbc200023f4a.png",
       "caption": "ng testの実行結果"
     },
     {

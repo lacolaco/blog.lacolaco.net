@@ -5,7 +5,7 @@ import { findCacheDir } from './db/cache';
 export async function fetchBlogPostPages(
   notionAuthToken: string,
   cacheDir: string | null,
-  dryRun = false,
+  options: { force?: boolean; dryRun?: boolean } = {},
 ): Promise<(PageObjectWithContent & { changed: boolean })[]> {
   if (!cacheDir) {
     cacheDir = await findCacheDir('lacolaco-notion-db');
@@ -19,6 +19,9 @@ export async function fetchBlogPostPages(
       progress.start(pages.length, 0);
       return Promise.all(
         pages.map(async (page) => {
+          if (options.force) {
+            page.changed = true;
+          }
           const content = await db.getPageContent(page).finally(() => {
             progress.increment();
           });

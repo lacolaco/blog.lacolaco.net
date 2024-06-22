@@ -56,7 +56,7 @@ async function main() {
   await categoriesJsonFS.save('categories.json', categoriesJson, { encoding: 'utf-8' });
 
   console.log('Fetching pages...');
-  const pages = await fetchBlogPostPages(NOTION_AUTH_TOKEN, cacheDir, dryRun);
+  const pages = await fetchBlogPostPages(NOTION_AUTH_TOKEN, cacheDir, {force, dryRun});
   console.log(`Fetched ${pages.length} pages`);
 
   const pagesToUpdate = pages.filter((page) => force || page.changed);

@@ -109,7 +109,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-cva-signals/3c6255ea-b6c7-4055-8126-638d2819f0c3/f016cf07-271e-4deb-8177-87946c26eb5a.png",
+      "path": "angular-cva-signals/3c6255ea-b6c7-4055-8126-638d2819f0c3/f016cf07-271e-4deb-8177-87946c26eb5a.png",
       "caption": "時と分をセレクトボックスで選択できる素朴な時刻入力コンポーネント"
     },
     {

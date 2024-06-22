@@ -58,7 +58,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/c1850246-5e0a-4d66-a5ba-7b3fa070931a.png",
+      "path": "io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/c1850246-5e0a-4d66-a5ba-7b3fa070931a.png",
       "caption": ""
     },
     {
@@ -92,13 +92,13 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/0773a716-34ba-40e7-85f9-5c904a62e8b5.png",
+      "path": "io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/0773a716-34ba-40e7-85f9-5c904a62e8b5.png",
       "caption": "エラースタックトレースの改善"
     },
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/6fb41ad4-82a5-47ed-b98d-9aae983621ff.png",
+      "path": "io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/6fb41ad4-82a5-47ed-b98d-9aae983621ff.png",
       "caption": "ソースマップとデバッグ機能の改善"
     },
     {
@@ -114,7 +114,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/157d00d8-a82d-4872-9e35-aa4af651fbc9.png",
+      "path": "io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/157d00d8-a82d-4872-9e35-aa4af651fbc9.png",
       "caption": "Angular v16 のパフォーマンス改善"
     },
     {
@@ -177,7 +177,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/e5323a30-25c4-4357-9c18-59716eb71ae3.png",
+      "path": "io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/e5323a30-25c4-4357-9c18-59716eb71ae3.png",
       "caption": "Angular の最近のアップデートの3本柱 Reactivity, SSR改善, QoL改善"
     },
     {
@@ -208,13 +208,13 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/8425e6a4-2e0f-4b0f-b6cd-a778389b6430.png",
+      "path": "io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/8425e6a4-2e0f-4b0f-b6cd-a778389b6430.png",
       "caption": "v16移行のSignalsの計画について"
     },
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/c569a7ca-ec24-457d-9ae5-7a1a072240a7.png",
+      "path": "io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/c569a7ca-ec24-457d-9ae5-7a1a072240a7.png",
       "caption": "Signals をひとことで。"
     },
     {
@@ -314,7 +314,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/cc0a3d63-7015-467d-bfd7-8403466dc764.png",
+      "path": "io2023-angular-summary/3c6255ea-b6c7-4055-8126-638d2819f0c3/cc0a3d63-7015-467d-bfd7-8403466dc764.png",
       "caption": "Angular Universal への投資を今後も続けていく"
     },
     {

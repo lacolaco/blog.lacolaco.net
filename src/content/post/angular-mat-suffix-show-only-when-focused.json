@@ -24,7 +24,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-mat-suffix-show-only-when-focused/3c6255ea-b6c7-4055-8126-638d2819f0c3/1f8c90ee-66fa-4cc6-a4b3-268d3e7c5431.gif",
+      "path": "angular-mat-suffix-show-only-when-focused/3c6255ea-b6c7-4055-8126-638d2819f0c3/1f8c90ee-66fa-4cc6-a4b3-268d3e7c5431.gif",
       "caption": "テキストフィールドにフォーカスがあるときだけMatSuffix要素が可視化される"
     },
     {
