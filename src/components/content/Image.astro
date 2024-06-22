@@ -1,11 +1,24 @@
 ---
 import { ImageNode } from '@lib/post';
-import CloudflareImage from './CloudflareImage';
 import Text from './Text.astro';
 
 type Props = ImageNode;
 
 const image = Astro.props;
+
+function imageLoader(config: { src: string; width: number }): string {
+  const { src, width } = config;
+  if (!import.meta.env.PRODUCTION) {
+    return src;
+  }
+
+  const params = ['format=auto'];
+  if (width) {
+    params.push(`w=${width}`);
+  }
+
+  return `https://blog.lacolaco.net/cdn-cgi/image/${params.join(',')}/${src}`;
+}
 ---
 
 <figure class="flex flex-col items-center py-2">
@@ -18,9 +31,14 @@ const image = Astro.props;
         loading="lazy"
       />
     ) : (
-      <CloudflareImage
-        client:only="react"
+      <img
+        class:list="object-contain w-full md:max-w-screen-md max-h-[50vh]"
         src={`/images/${image.path}`}
+        srcset={[
+          `${imageLoader({ src: `/images/${image.path}`, width: 640 })} 640w`,
+          `${imageLoader({ src: `/images/${image.path}`, width: 768 })} 768w`,
+          `${imageLoader({ src: `/images/${image.path}`, width: 1024 })} 1024w`,
+        ].join(',')}
         alt={
           image.caption
             ? Array.isArray(image.caption)
@@ -28,6 +46,8 @@ const image = Astro.props;
               : image.caption
             : ''
         }
+        loading="lazy"
+        decoding="async"
       />
     )
   }
