@@ -1,42 +1,53 @@
 ---
 import { ImageNode } from '@lib/post';
-import { Image as AstroImage } from 'astro:assets';
 import Text from './Text.astro';
 
 type Props = ImageNode;
 
-// external=true by default
-const { url, caption, external = true } = Astro.props;
-const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/images/**/*.{jpg,jpeg,png,gif,svg}');
-if (!external && !images[url]) {
-  console.log(images);
-  throw new Error(`"${url}" does not exist in glob: "src/content/images/**/*"`);
+const image = Astro.props;
+
+function imageLoader(path: string, options: { width: number }): string {
+  const { width } = options;
+  if (Astro.url.hostname === 'localhost') {
+    return `/images/${path}`;
+  }
+  const originUrl = new URL(`/images/${path}`, Astro.url.origin).toString();
+  return `https://lacolaco.net/cdn-cgi/image/f=auto,fit=scale-down,w=${width}/${originUrl}`;
 }
 ---
 
 <figure class="flex flex-col items-center py-2">
   {
-    // gif throws an error when using astro-image
-    external ? (
+    image.external ? (
       <img
         class:list="object-contain w-full md:max-w-screen-md max-h-[50vh]"
-        src={url}
+        src={image.url}
         decoding="async"
         loading="lazy"
       />
     ) : (
-      <AstroImage
-        class:list="object-contain w-full md:max-w-screen-md max-h-[50vh]"
-        src={images[url]()}
-        alt={caption ? (Array.isArray(caption) ? caption.map((node) => node.text).join('') : caption) : ''}
-        widths={[640, 768, 1024]}
-      />
+      <picture>
+        <img
+          class:list="object-contain w-full md:max-w-screen-md max-h-[50vh]"
+          src={`/images/${image.path}`}
+          alt={
+            image.caption
+              ? Array.isArray(image.caption)
+                ? image.caption.map((node) => node.text).join('')
+                : image.caption
+              : ''
+          }
+        />
+        <source srcset={imageLoader(image.path, { width: 1024 })} media="(min-width: 1024px)" />
+        <source srcset={imageLoader(image.path, { width: 768 })} media="(min-width: 768px)" />
+        <source srcset={imageLoader(image.path, { width: 640 })} media="(min-width: 640px)" />
+      </picture>
     )
   }
   {
-    caption && (
+    image.caption && (
       <figcaption class="text-center text-sm text-gray-500">
-        {Array.isArray(caption) ? caption.map((node) => <Text {...node} />) : caption}
+        {Array.isArray(image.caption) ? image.caption.map((node) => <Text {...node} />) : image.caption}
       </figcaption>
     )
   }

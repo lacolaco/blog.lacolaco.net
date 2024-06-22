@@ -474,7 +474,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-trusted-types/3c6255ea-b6c7-4055-8126-638d2819f0c3/8977459d-5dd8-496c-bb71-63d44f23f93a.png",
+      "path": "angular-trusted-types/3c6255ea-b6c7-4055-8126-638d2819f0c3/8977459d-5dd8-496c-bb71-63d44f23f93a.png",
       "caption": "innerHTML binding and sanitization"
     },
     {
@@ -551,7 +551,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-trusted-types/3c6255ea-b6c7-4055-8126-638d2819f0c3/dc65b9b4-1af8-47f1-a179-0516bad48eec.png",
+      "path": "angular-trusted-types/3c6255ea-b6c7-4055-8126-638d2819f0c3/dc65b9b4-1af8-47f1-a179-0516bad48eec.png",
       "caption": "innerHTML binding and sanitization with trusted types"
     },
     {

@@ -136,7 +136,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/two-sides-of-tailwindcss/3c6255ea-b6c7-4055-8126-638d2819f0c3/eb9aade5-5d38-4ffa-a7d9-1f6133f180d9.png",
+      "path": "two-sides-of-tailwindcss/3c6255ea-b6c7-4055-8126-638d2819f0c3/eb9aade5-5d38-4ffa-a7d9-1f6133f180d9.png",
       "caption": "“Use the tailwind.config.js” file to craft your own design system”"
     },
     {
@@ -293,7 +293,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/two-sides-of-tailwindcss/3c6255ea-b6c7-4055-8126-638d2819f0c3/e8aac7d8-328b-40e8-99ed-5c91c18e5866.png",
+      "path": "two-sides-of-tailwindcss/3c6255ea-b6c7-4055-8126-638d2819f0c3/e8aac7d8-328b-40e8-99ed-5c91c18e5866.png",
       "caption": "“An API for your design system”"
     },
     {
@@ -410,7 +410,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/two-sides-of-tailwindcss/3c6255ea-b6c7-4055-8126-638d2819f0c3/80fc96c9-18c7-4f83-874c-c1cab7de24f9.png",
+      "path": "two-sides-of-tailwindcss/3c6255ea-b6c7-4055-8126-638d2819f0c3/80fc96c9-18c7-4f83-874c-c1cab7de24f9.png",
       "caption": "デザインシステムを元にしたコンフィグと、そのコンフィグをCSSライブラリ化するためのビルドツール"
     },
     {

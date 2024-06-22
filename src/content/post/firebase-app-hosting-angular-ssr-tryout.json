@@ -146,7 +146,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/6f0aa3d8-a3d8-467b-ad44-1d7127acc445.png",
+      "path": "firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/6f0aa3d8-a3d8-467b-ad44-1d7127acc445.png",
       "caption": "App Hosting画面の初期状態にある「始める」ボタンをクリックする"
     },
     {
@@ -162,19 +162,19 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/8f3758f0-49d0-4f64-bae4-1ac9d595f7db.png",
+      "path": "firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/8f3758f0-49d0-4f64-bae4-1ac9d595f7db.png",
       "caption": "GitHubアカウントを連携してレポジトリを選択する"
     },
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/3ab28e7e-f85c-40d8-b3f7-992d723e3ac2.png",
+      "path": "firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/3ab28e7e-f85c-40d8-b3f7-992d723e3ac2.png",
       "caption": "デプロイの設定を行う。今回はライブブランチ（本番環境に対応するブランチ）をmainに設定する"
     },
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/cd775a46-a9fa-4a71-98a7-1f264b23e8c5.png",
+      "path": "firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/cd775a46-a9fa-4a71-98a7-1f264b23e8c5.png",
       "caption": "（おそらく）プロジェクト内でユニークなIDを設定する。自動生成されるホスティング用URLのドメインに含められる"
     },
     {
@@ -190,7 +190,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/2736e3ed-d7d2-4a93-82fa-13be14282cf6.png",
+      "path": "firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/2736e3ed-d7d2-4a93-82fa-13be14282cf6.png",
       "caption": ""
     },
     {
@@ -210,7 +210,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/f441a2ef-4d0b-4fac-aaf4-a1cfe7589e15.png",
+      "path": "firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/f441a2ef-4d0b-4fac-aaf4-a1cfe7589e15.png",
       "caption": ""
     },
     {
@@ -250,7 +250,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/6f3ca489-06bc-4459-8574-ab551d2b7a72.png",
+      "path": "firebase-app-hosting-angular-ssr-tryout/3c6255ea-b6c7-4055-8126-638d2819f0c3/6f3ca489-06bc-4459-8574-ab551d2b7a72.png",
       "caption": "“If you're already using the frameworks experiment in the Firebase CLI, we recommend \"graduating\" to App Hosting.”"
     },
     {

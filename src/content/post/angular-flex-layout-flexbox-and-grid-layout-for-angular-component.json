@@ -290,7 +290,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/e4a97ab4-0789-4625-8736-4400de17cb5f.png",
+      "path": "angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/e4a97ab4-0789-4625-8736-4400de17cb5f.png",
       "caption": ""
     },
     {
@@ -345,7 +345,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/3f8ba4fc-99ba-4ef5-b422-d47b45762c57.png",
+      "path": "angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/3f8ba4fc-99ba-4ef5-b422-d47b45762c57.png",
       "caption": "Column-based card list"
     },
     {
@@ -550,7 +550,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/d1027398-b212-4f65-88a1-42bc2d6d67ea.png",
+      "path": "angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/d1027398-b212-4f65-88a1-42bc2d6d67ea.png",
       "caption": "Row-based card list"
     },
     {
@@ -742,7 +742,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/5cf6ea19-aa26-4f30-a390-1b13318410a4.gif",
+      "path": "angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/5cf6ea19-aa26-4f30-a390-1b13318410a4.gif",
       "caption": "Responsive Columns"
     },
     {
@@ -920,7 +920,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/802441fa-b336-4037-8295-b37f2aed4c72.png",
+      "path": "angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/802441fa-b336-4037-8295-b37f2aed4c72.png",
       "caption": "Grid Layout in the card"
     },
     {
@@ -1084,7 +1084,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/f94cfb3e-399a-403f-a06a-d8b28c708de8.gif",
+      "path": "angular-flex-layout-flexbox-and-grid-layout-for-angular-component/3c6255ea-b6c7-4055-8126-638d2819f0c3/f94cfb3e-399a-403f-a06a-d8b28c708de8.gif",
       "caption": "Responsive Grid layout"
     },
     {

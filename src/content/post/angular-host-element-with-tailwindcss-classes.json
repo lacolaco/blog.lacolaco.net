@@ -40,7 +40,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-host-element-with-tailwindcss-classes/3c6255ea-b6c7-4055-8126-638d2819f0c3/5391c161-d5f9-4447-b38b-5ff29f5d786a.png",
+      "path": "angular-host-element-with-tailwindcss-classes/3c6255ea-b6c7-4055-8126-638d2819f0c3/5391c161-d5f9-4447-b38b-5ff29f5d786a.png",
       "caption": "hostメタデータのclassプロパティはTailwindCSS Extensionにクラスを記述する場所だと認識されていない"
     },
     {
@@ -148,7 +148,7 @@
     {
       "type": "image",
       "external": false,
-      "url": "/src/content/images/angular-host-element-with-tailwindcss-classes/3c6255ea-b6c7-4055-8126-638d2819f0c3/b91070c2-7095-4738-b736-4c57828d7c62.png",
+      "path": "angular-host-element-with-tailwindcss-classes/3c6255ea-b6c7-4055-8126-638d2819f0c3/b91070c2-7095-4738-b736-4c57828d7c62.png",
       "caption": "classプロパティの中で TailwildCSS の入力補完が効くようになった"
     },
     {

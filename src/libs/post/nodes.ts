@@ -69,9 +69,17 @@ export type LinkPreviewNode = Node<'link_preview'> & {
   readonly url: string;
 };
 
-export type ImageNode = Node<'image'> & {
+export type ImageNode = ExternalImageNode | LocalImageNode;
+
+export type ExternalImageNode = Node<'image'> & {
   readonly url: string;
-  readonly external?: boolean;
+  readonly external: true;
+  readonly caption: TextNodeArray | string;
+};
+
+export type LocalImageNode = Node<'image'> & {
+  readonly path: string;
+  readonly external: false;
   readonly caption: TextNodeArray | string;
 };
 
