@@ -29,17 +29,22 @@ export const onRequest: PagesFunction<{}> = async (context) => {
     });
   }
 
+  const imageOptions = {
+    fit: 'scale-down',
+    width: width ? parseInt(width) : 1024,
+  };
+
   // use cf image transformation
   // https://developers.cloudflare.com/images/transform-images/transform-via-workers/
   try {
-    return context.env.ASSETS.fetch(imageUrl, {
-      cf: {
-        image: {
-          fit: 'scale-down',
-          width: width ? parseInt(width) : 1024,
-          format: optimizeImageFormat(context.request),
-        },
-      },
+    return fetch(`https://blog.lacolaco.net/cdn-cgi/image/format=auto,w=${imageOptions.width},onerror=redirect/${imageUrl}`, {
+      // cf: {
+      //   image: {
+      //     fit: 'scale-down',
+      //     width: width ? parseInt(width) : 1024,
+      //     format: optimizeImageFormat(context.request),
+      //   },
+      // },
     });
   } catch (error) {
     console.error(error);
