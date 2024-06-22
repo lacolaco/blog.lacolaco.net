@@ -33,6 +33,7 @@ export const onRequest: PagesFunction<{}> = async (context) => {
     return fetch(imageUrl, {
       cf: {
         image: {
+          fit: 'scale-down',
           width: width ? parseInt(width) : 1024,
           format: optimizeImageFormat(context.request),
         },
