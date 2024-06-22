@@ -13,11 +13,13 @@ export const onRequest: PagesFunction<{}> = async (context) => {
   const req = new URL(context.request.url);
   const src = req.searchParams.get('src');
   const width = req.searchParams.get('w');
-  const imageUrl = new URL(src, req.origin).toString();
 
   if (!src) {
     return new Response('Missing src parameter', { status: 400 });
   }
+
+  const imageUrl = new URL(src, req.origin).toString();
+  console.log('imageUrl', imageUrl);
 
   // paththrough except production origin
   if (req.origin !== 'https://blog.lacolaco.net') {
@@ -40,6 +42,7 @@ export const onRequest: PagesFunction<{}> = async (context) => {
       },
     });
   } catch (error) {
+    console.error(error);
     // fallback to original image
     return new Response(null, {
       status: 302,
