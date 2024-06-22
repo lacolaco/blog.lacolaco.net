@@ -8,11 +8,7 @@ const image = Astro.props;
 
 function imageLoader(src: string, options: { width: number }): string {
   const { width } = options;
-  if (Astro.url.hostname === 'localhost') {
-    return src;
-  }
-  const originUrl = new URL(src, Astro.url);
-  return `https://lacolaco.net/cdn-cgi/image/f=auto,fit=scale-down,w=${width}/${originUrl.toString()}`;
+  return `/image?w=${width}&src=${encodeURIComponent(src)}`;
 }
 ---
 
@@ -40,6 +36,7 @@ function imageLoader(src: string, options: { width: number }): string {
                 : image.caption
               : ''
           }
+          loading="lazy"
         />
       </picture>
     )
