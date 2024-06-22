@@ -6,13 +6,12 @@ type Props = ImageNode;
 
 const image = Astro.props;
 
-function imageLoader(path: string, options: { width: number }): string {
+function imageLoader(src: string, options: { width: number }): string {
   const { width } = options;
   if (Astro.url.hostname === 'localhost') {
-    return `/images/${path}`;
+    return src;
   }
-  const originUrl = new URL(`/images/${path}`, Astro.url.origin).toString();
-  return `https://lacolaco.net/cdn-cgi/image/f=auto,fit=scale-down,w=${width}/${originUrl}`;
+  return `https://lacolaco.net/cdn-cgi/image/f=auto,fit=scale-down,w=${width}/${src}`;
 }
 ---
 
@@ -38,9 +37,18 @@ function imageLoader(path: string, options: { width: number }): string {
               : ''
           }
         />
-        <source srcset={imageLoader(image.path, { width: 1024 })} media="(min-width: 1024px)" />
-        <source srcset={imageLoader(image.path, { width: 768 })} media="(min-width: 768px)" />
-        <source srcset={imageLoader(image.path, { width: 640 })} media="(min-width: 640px)" />
+        <source
+          srcset={imageLoader(Astro.url.origin + `/images/${image.path}`, { width: 1024 })}
+          media="(min-width: 1024px)"
+        />
+        <source
+          srcset={imageLoader(Astro.url.origin + `/images/${image.path}`, { width: 768 })}
+          media="(min-width: 768px)"
+        />
+        <source
+          srcset={imageLoader(Astro.url.origin + `/images/${image.path}`, { width: 640 })}
+          media="(min-width: 640px)"
+        />
       </picture>
     )
   }
