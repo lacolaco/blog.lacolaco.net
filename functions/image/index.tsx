@@ -1,6 +1,15 @@
-interface Env {}
+function optimizeImageFormat(req: Request): RequestInitCfPropertiesImage['format'] {
+  const accept = req.headers.get('accept');
 
-export const onRequest: PagesFunction<Env> = async (context) => {
+  if (/image\/avif/.test(accept)) {
+    return 'avif';
+  } else if (/image\/webp/.test(accept)) {
+    return 'webp';
+  }
+  return 'png';
+}
+
+export const onRequest: PagesFunction<{}> = async (context) => {
   const req = new URL(context.request.url);
   const src = decodeURIComponent(req.searchParams.get('src'));
   const width = req.searchParams.get('w');
@@ -25,6 +34,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
       cf: {
         image: {
           width: width ? parseInt(width) : 1024,
+          format: optimizeImageFormat(context.request),
         },
       },
     });
