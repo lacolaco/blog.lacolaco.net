@@ -1,5 +1,6 @@
 ---
 import { ImageNode } from '@lib/post';
+import { imageSize } from 'image-size';
 import Text from './Text.astro';
 
 type Props = ImageNode;
@@ -19,6 +20,14 @@ function imageLoader(config: { src: string; width: number }): string {
 
   return `https://blog.lacolaco.net/cdn-cgi/image/${params.join(',')}/${src}`;
 }
+
+function getLocalImageSize(src: string): { width: number; height: number } {
+  const { width, height } = imageSize(`${import.meta.dirname}/../../../public/images/${src}`);
+  if (!width || !height) {
+    throw new Error('Failed to get image size');
+  }
+  return { width, height };
+}
 ---
 
 <figure class="flex flex-col items-center py-2">
@@ -34,6 +43,7 @@ function imageLoader(config: { src: string; width: number }): string {
       <img
         class:list="object-contain w-full md:max-w-screen-md max-h-[50vh]"
         src={`/images/${image.path}`}
+        {...getLocalImageSize(image.path)}
         srcset={[
           `${imageLoader({ src: `/images/${image.path}`, width: 640 })} 640w`,
           `${imageLoader({ src: `/images/${image.path}`, width: 768 })} 768w`,
