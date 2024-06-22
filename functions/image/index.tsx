@@ -1,8 +1,8 @@
 interface Env {}
 
 export const onRequest: PagesFunction<Env> = async (context) => {
-  const req = new URL(decodeURIComponent(context.request.url));
-  const src = req.searchParams.get('src');
+  const req = new URL(context.request.url);
+  const src = decodeURIComponent(req.searchParams.get('src'));
   const width = req.searchParams.get('w');
   const imageUrl = new URL(src, req.origin).toString();
 
