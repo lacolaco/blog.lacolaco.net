@@ -1,14 +1,17 @@
 interface Env {}
 
-export const onRequest: PagesFunction<Env, 'path'> = async (context) => {
-  console.log('Request', context.request.url);
+export const onRequest: PagesFunction<Env> = async (context) => {
   const req = new URL(decodeURIComponent(context.request.url));
   const src = req.searchParams.get('src');
   const width = req.searchParams.get('w');
   const imageUrl = new URL(src, req.origin).toString();
 
-  // paththrough on localhost
-  if (req.hostname === 'localhost') {
+  if (!src) {
+    return new Response('Missing src parameter', { status: 400 });
+  }
+
+  // paththrough except production origin
+  if (req.origin !== 'https://blog.lacolaco.net') {
     return fetch(imageUrl);
   }
 
@@ -19,7 +22,6 @@ export const onRequest: PagesFunction<Env, 'path'> = async (context) => {
       cf: {
         image: {
           width: width ? parseInt(width) : 1024,
-          'origin-auth': 'share-publicly',
         },
       },
     });
