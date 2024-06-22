@@ -12,7 +12,10 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
   // paththrough except production origin
   if (req.origin !== 'https://blog.lacolaco.net') {
-    return fetch(imageUrl);
+    return new Response(null, {
+      status: 302,
+      headers: { location: imageUrl },
+    });
   }
 
   // use cf image transformation
@@ -27,6 +30,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     });
   } catch (error) {
     // fallback to original image
-    return fetch(imageUrl);
+    return new Response(null, {
+      status: 302,
+      headers: { location: imageUrl },
+    });
   }
 };
