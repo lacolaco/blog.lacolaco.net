@@ -8,7 +8,7 @@ const image = Astro.props;
 
 function imageLoader(src: string, options: { width: number }): string {
   const { width } = options;
-  return `/image?w=${width}&src=${encodeURIComponent(src)}`;
+  return `/image?w=${width}&src=${src}`;
 }
 ---
 

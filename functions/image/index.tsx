@@ -11,7 +11,7 @@ function optimizeImageFormat(req: Request): RequestInitCfPropertiesImage['format
 
 export const onRequest: PagesFunction<{}> = async (context) => {
   const req = new URL(context.request.url);
-  const src = decodeURIComponent(req.searchParams.get('src'));
+  const src = req.searchParams.get('src');
   const width = req.searchParams.get('w');
   const imageUrl = new URL(src, req.origin).toString();
 
