@@ -9,42 +9,38 @@ function optimizeImageFormat(req: Request): RequestInitCfPropertiesImage['format
   return 'png';
 }
 
-export const onRequest: PagesFunction<{}> = async (context) => {
-  const req = new URL(context.request.url);
-  const src = req.searchParams.get('src');
-  const width = req.searchParams.get('w');
+export const onRequest: PagesFunction<{}> = async ({ request }) => {
+  const reqUrl = new URL(request.url);
+  const src = reqUrl.searchParams.get('src');
+  const width = reqUrl.searchParams.get('w');
 
   if (!src) {
     return new Response('Missing src parameter', { status: 400 });
   }
 
-  const imageUrl = new URL(src, req.origin).toString();
+  const imageUrl = new URL(src, reqUrl.origin).toString();
   console.log('imageUrl', imageUrl);
 
   // paththrough except production origin
-  if (req.origin !== 'https://blog.lacolaco.net') {
+  if (reqUrl.origin !== 'https://blog.lacolaco.net') {
     return new Response(null, {
       status: 302,
       headers: { location: imageUrl },
     });
   }
 
-  const imageOptions = {
-    fit: 'scale-down',
-    width: width ? parseInt(width) : 1024,
-  };
-
   // use cf image transformation
   // https://developers.cloudflare.com/images/transform-images/transform-via-workers/
   try {
-    return fetch(`https://blog.lacolaco.net/cdn-cgi/image/format=auto,w=${imageOptions.width},onerror=redirect/${imageUrl}`, {
-      // cf: {
-      //   image: {
-      //     fit: 'scale-down',
-      //     width: width ? parseInt(width) : 1024,
-      //     format: optimizeImageFormat(context.request),
-      //   },
-      // },
+    const imageReq = new Request(imageUrl, { headers: request.headers });
+    return fetch(imageReq, {
+      cf: {
+        image: {
+          fit: 'scale-down',
+          width: width ? parseInt(width) : 1024,
+          format: optimizeImageFormat(request),
+        },
+      },
     });
   } catch (error) {
     console.error(error);
