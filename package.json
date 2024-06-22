@@ -30,7 +30,6 @@
     "cheerio": "1.0.0-rc.12",
     "date-fns": "3.6.0",
     "goober": "^2.1.13",
-    "image-size": "^1.1.1",
     "katex": "0.16.10",
     "mermaid": "10.9.1",
     "preact": "^10.19.2",
