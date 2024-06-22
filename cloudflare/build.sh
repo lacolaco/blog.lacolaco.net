@@ -1,8 +1,7 @@
 # !/bin/bash
 
 if [ "$CF_PAGES_BRANCH" == "main" ]; then
-  PRODUCTION=true npm run buiid
-
+  PRODUCTION=true pnpm run buiid
 else
-  npm run build
+  pnpm run build
 fi
