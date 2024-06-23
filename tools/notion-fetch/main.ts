@@ -37,7 +37,7 @@ const { force = false, 'dry-run': dryRun = false, debug = false } = values;
 
 async function main() {
   const db = new NotionDatabase(NOTION_AUTH_TOKEN, NOTION_DATABASE_ID);
-  const imagesFS = new FileSystem(rootDir, 'src/content/images', { dryRun });
+  const imagesFS = new FileSystem(rootDir, 'public/images', { dryRun });
   const postJsonFS = new FileSystem(rootDir, 'src/content/post', { dryRun });
   const tagsJsonFS = new FileSystem(rootDir, 'src/content/tags', { dryRun });
   const categoriesJsonFS = new FileSystem(rootDir, 'src/content/categories', { dryRun });
