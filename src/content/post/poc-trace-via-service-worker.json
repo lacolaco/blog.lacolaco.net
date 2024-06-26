@@ -1,0 +1,1568 @@
+{
+  "pageId": "1add2e31-b222-4912-bd32-2faab675cc5d",
+  "lastEditedAt": "2024-06-26T06:11:00.000Z",
+  "slug": "poc-trace-via-service-worker",
+  "locale": "ja",
+  "properties": {
+    "title": "WebブラウザにおけるOpenTelemetryの自動計装PoC: Trace via Service Worker",
+    "date": "2024-06-26T05:56:00.000Z",
+    "category": "Tech",
+    "tags": ["Web", "OpenTelemetry", "Service Worker"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "2024/06/25のOpenTelemetry Meetupで発表した『opentelemetry-js 探訪 Webフロントエンドでも自動計装したい！編』の中で、Service Workerを使った非破壊的な自動計装のPoCを紹介した。この記事では発表の中では割愛した詳細部分を含めて解説する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://opentelemetry.connpass.com/event/317170/"
+    },
+    {
+      "type": "embed",
+      "url": "https://docs.google.com/presentation/d/e/2PACX-1vTofqAssUECvL19frdSwtW6AG03Hyr0VXyhLSHq7R8AE0oK6TQKfLjDYipEyrPT4_ZFXaFuwiDDe3HO/embed"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://www.youtube.com/live/ATlbJnc4d3o?si=V97dld8w92wiLqxw&t=5804"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "FetchTraceExporter",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回のPoCの本質ではないが、技術的な制約のために自作せざるを得なかった ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "FetchTraceExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " について解説する。まずはコードの全文を見てもらおう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "FetchTraceExporterの実装",
+      "text": "import {\n  OTLPExporterBrowserBase,\n  OTLPExporterConfigBase,\n  OTLPExporterError,\n} from \"@opentelemetry/otlp-exporter-base\";\nimport {\n  IExportTraceServiceResponse,\n  JsonTraceSerializer,\n} from \"@opentelemetry/otlp-transformer\";\nimport { ReadableSpan } from \"@opentelemetry/sdk-trace-base\";\n\n/**\n * Custom OTLPTraceExporter implementation for Fetch API\n */\nexport class FetchTraceExporter extends OTLPExporterBrowserBase<\n  ReadableSpan,\n  IExportTraceServiceResponse\n> {\n  constructor(config: OTLPExporterConfigBase) {\n    // same as OTLPTraceExporter in @opentelemetry/exporter-trace-otlp-http\n    super(config, JsonTraceSerializer, \"application/json\");\n  }\n\n  override send(\n    items: ReadableSpan[],\n    onSuccess: () => void,\n    onError: (error: OTLPExporterError) => void\n  ): void {\n    const body =\n      JsonTraceSerializer.serializeRequest(items) ?? new Uint8Array();\n    const request = new Request(this.url, {\n      method: \"POST\",\n      body,\n      headers: {\n        Accept: \"application/json\",\n        \"Content-Type\": \"application/json\",\n        ...this._headers,\n      },\n    });\n    const promise = fetch(request).then(onSuccess).catch(onError);\n    // for managing the sending promises concurrency\n    this._sendingPromises.push(promise);\n    promise.finally(() => {\n      const index = this._sendingPromises.indexOf(promise);\n      this._sendingPromises.splice(index, 1);\n    });\n  }\n\n  override getDefaultUrl(config: OTLPExporterConfigBase): string {\n    if (typeof config.url !== \"string\") {\n      throw new OTLPExporterError(\"config.url is not a string\");\n    }\n    return config.url;\n  }\n}\n"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここで実装している内容に入る前に、まずはこのクラスのインターフェースと継承関係について説明しておこう。もっとも基本的なインターフェースとして",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SpanProcessor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "というものがある。これはトレーサーがスパンを開始・終了したときのフック処理を行うためのインターフェースで、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TracerProvider",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "addSpanProcessor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "メソッドで登録できる。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SpanProcessor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のインターフェース定義は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "sdk-trace-base",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に含まれている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/SpanProcessor.ts",
+          "href": "https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/SpanProcessor.ts",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "/**\n * SpanProcessor is the interface Tracer SDK uses to allow synchronous hooks\n * for when a {@link Span} is started or when a {@link Span} is ended.\n */\nexport interface SpanProcessor {\n  /**\n   * Forces to export all finished spans\n   */\n  forceFlush(): Promise<void>;\n\n  /**\n   * Called when a {@link Span} is started, if the `span.isRecording()`\n   * returns true.\n   * @param span the Span that just started.\n   */\n  onStart(span: Span, parentContext: Context): void;\n\n  /**\n   * Called when a {@link ReadableSpan} is ended, if the `span.isRecording()`\n   * returns true.\n   * @param span the Span that just ended.\n   */\n  onEnd(span: ReadableSpan): void;\n\n  /**\n   * Shuts down the processor. Called when SDK is shut down. This is an\n   * opportunity for processor to do any cleanup required.\n   */\n  shutdown(): Promise<void>;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "見て分かるとおり",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SpanProcessor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の用途は自由だが、その用途のひとつがスパンの外部送信（",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "エクスポート",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "）であり、もっともシンプルな実装として提供されているのが ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "sdk-trace-base",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SimpleSpanProcessor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "である。長いので詳細は割愛するが、ここで重要なのはコンストラクタ引数に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SpanExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "というインターフェースを要求することである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/export/SimpleSpanProcessor.ts",
+          "href": "https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/export/SimpleSpanProcessor.ts",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "/**\n * An implementation of the {@link SpanProcessor} that converts the {@link Span}\n * to {@link ReadableSpan} and passes it to the configured exporter.\n *\n * Only spans that are sampled are converted.\n *\n * NOTE: This {@link SpanProcessor} exports every ended span individually instead of batching spans together, which causes significant performance overhead with most exporters. For production use, please consider using the {@link BatchSpanProcessor} instead.\n */\nexport class SimpleSpanProcessor implements SpanProcessor {\n\n  constructor(private readonly _exporter: SpanExporter) {\n\t\t...\n\t}\n\t...\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "SimpleSpanProcessor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の役割は、記録されたスパンがEndするたびにひとつずつ逐次的にエクスポート処理をすることである。今回は深く触れないが、対置されるものとして複数のスパンをまとめて送信する",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "BatchSpanProcessor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "も",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "sdk-trace-base",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "から提供されている。共通するのは、どちらもエクスポート処理そのものは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SpanExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に移譲しており、エクスポートのタイミングだけを責任範囲としている点である。スパンをエクスポートするトリガーは引くが、具体的にどのように、どこにエクスポートするかはすべて",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SpanExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に委ねられている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "というわけで",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SpanExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の実装が必要になるわけだが、これもインターフェースは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "sdk-trace-base",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で定義されている。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SpanExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "には",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "export",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "メソッドが要求され、このメソッドで実際にスパンを外部送信する方法を記述することになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/export/SpanExporter.ts",
+          "href": "https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/export/SpanExporter.ts",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "/**\n * An interface that allows different tracing services to export recorded data\n * for sampled spans in their own format.\n *\n * To export data this MUST be register to the Tracer SDK using a optional\n * config.\n */\nexport interface SpanExporter {\n  /**\n   * Called to export sampled {@link ReadableSpan}s.\n   * @param spans the list of sampled Spans to be exported.\n   */\n  export(\n    spans: ReadableSpan[],\n    resultCallback: (result: ExportResult) => void\n  ): void;\n\n  /** Stops the exporter. */\n  shutdown(): Promise<void>;\n\n  /** Immediately export all spans */\n  forceFlush?(): Promise<void>;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ところで、この",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SpanExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "インターフェースの具体的な実装でotel-jsの安定版パッケージから提供されているのは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "sdk-trace-base",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ConsoleSpanExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "InMemorySpanExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "しかなく、ほかは非推奨である。packagesディレクトリには",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@opentelemetry/exporter-jaeger",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@opentelemetry/exporter-zipkin",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "があるように見えるが、どちらも非推奨になっている。READMEには以下の新しいパッケージを使うよう書かれているが、これらは今のところすべてexperimentalである。つまり2024/06現在、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ブラウザからスパンを外部送信する安定版の実装は皆無",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "@opentelemetry/exporter-trace-otlp-proto",
+              "annotations": {
+                "code": true
+              }
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "@opentelemetry/exporter-trace-otlp-grpc",
+              "annotations": {
+                "code": true
+              }
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "@opentelemetry/exporter-trace-otlp-http",
+              "annotations": {
+                "code": true
+              }
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "とはいえ実験的とはいえ実装があるにはあるので使うことはできる。今回はHTTP通信でJSON形式のエクスポートをするために",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@opentelemetry/exporter-trace-otlp-http",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を参考にする。このパッケージはブラウザとNode.jsの両方向けの実装を含んでおり",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "package.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で読み込むモジュールを分岐させているがそこは今回のテーマではないので割愛する。重要なのは、このパッケージからは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "OTLPTraceExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "というクラスが提供されることである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/open-telemetry/opentelemetry-js/blob/main/experimental/packages/exporter-trace-otlp-http/src/platform/browser/OTLPTraceExporter.ts",
+          "href": "https://github.com/open-telemetry/opentelemetry-js/blob/main/experimental/packages/exporter-trace-otlp-http/src/platform/browser/OTLPTraceExporter.ts",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "export class OTLPTraceExporter\n  extends OTLPExporterBrowserBase<ReadableSpan, IExportTraceServiceResponse>\n  implements SpanExporter\n{\n  constructor(config: OTLPExporterConfigBase = {}) {\n    super(config, JsonTraceSerializer, 'application/json');\n    //...\n  }\n  /// ...\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "OTLPTraceExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SpanExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を実装しているが、コードを見ればわかるようにその具体的な実装はこのクラスではなく継承元の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "OTLPExporterBrowserBase",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に移譲している。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "OTLPExporterBrowserBase",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@opentelemetry/otlp-exporter-base",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "から提供されているのでそちらを読みに行くと、ようやくスパンを送信している処理にたどりつく。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "https://github.com/open-telemetry/opentelemetry-js/blob/main/experimental/packages/otlp-exporter-base/src/platform/browser/OTLPExporterBrowserBase.ts",
+          "href": "https://github.com/open-telemetry/opentelemetry-js/blob/main/experimental/packages/otlp-exporter-base/src/platform/browser/OTLPExporterBrowserBase.ts",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "/**\n * Collector Metric Exporter abstract base class\n */\nexport abstract class OTLPExporterBrowserBase<ExportItem, ServiceResponse> \n  extends OTLPExporterBase<OTLPExporterConfigBase, ExportItem> {\n  //...\n  constructor(\n    config: OTLPExporterConfigBase = {},\n    serializer: ISerializer<ExportItem[], ServiceResponse>,\n    contentType: string\n  ) {\n    super(config);\n    this._serializer = serializer;\n    this._contentType = contentType;\n    this._useXHR =\n      !!config.headers || typeof navigator.sendBeacon !== 'function';\n    if (this._useXHR) {\n      this._headers = Object.assign(\n        {},\n        parseHeaders(config.headers),\n        baggageUtils.parseKeyPairsIntoRecord(\n          getEnv().OTEL_EXPORTER_OTLP_HEADERS\n        )\n      );\n    } else {\n      this._headers = {};\n    }\n  }\n\n  //...\n\n  send(\n    items: ExportItem[],\n    onSuccess: () => void,\n    onError: (error: otlpTypes.OTLPExporterError) => void\n  ): void {\n    //...\n    const body = this._serializer.serializeRequest(items) ?? new Uint8Array();\n\n    const promise = new Promise<void>((resolve, reject) => {\n      if (this._useXHR) {\n        sendWithXhr(\n          body,\n          this.url,\n          {\n            ...this._headers,\n            'Content-Type': this._contentType,\n          },\n          this.timeoutMillis,\n          resolve,\n          reject\n        );\n      } else {\n        sendWithBeacon(\n          body,\n          this.url,\n          { type: this._contentType },\n          resolve,\n          reject\n        );\n      }\n    }).then(onSuccess, onError);\n\n    this._sendingPromises.push(promise);\n    const popPromise = () => {\n      const index = this._sendingPromises.indexOf(promise);\n      this._sendingPromises.splice(index, 1);\n    };\n    promise.then(popPromise, popPromise);\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このクラスではコンフィグによってスパンの送信にXHRを使うか",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "sendBeacon",
+          "href": "https://developer.mozilla.org/ja/docs/Web/API/Navigator/sendBeacon",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "を使うかを切り替えている。当初の目的を思い出すと、今回は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "fetch",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数しか使えない環境でスパンを外部送信したいのだった。つまり、やるべきことはこの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "OTLPExporterBrowserBase",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の処理の代替品を作らなければならないことだとわかる。ここまでを踏まえたうえで改めて今回自作した",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "FetchTraceExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を見てもらおう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まずクラス宣言は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "OTLPExporterBrowserBase",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を継承する形にしているが、実際は無駄な実装を多く含むので真面目に作るならゼロから作ったほうがいい。コンストラクタで",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "super",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "コンストラクタを呼び出しているところの引数は実際にはまったく意味がないが、コンパイルを通すためだけに渡している。本質的なのは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "send",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "メソッドで行っているスパン配列のシリアライズと",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "fetch",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数でのPOSTリクエスト送信である。ここまでの流れを踏まえたうえでならこのコードの意味がわかってもらえるだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import {\n  OTLPExporterBrowserBase,\n  OTLPExporterConfigBase,\n  OTLPExporterError,\n} from \"@opentelemetry/otlp-exporter-base\";\nimport {\n  IExportTraceServiceResponse,\n  JsonTraceSerializer,\n} from \"@opentelemetry/otlp-transformer\";\nimport { ReadableSpan } from \"@opentelemetry/sdk-trace-base\";\n\n/**\n * Custom OTLPTraceExporter implementation for Fetch API\n */\nexport class FetchTraceExporter extends OTLPExporterBrowserBase<\n  ReadableSpan,\n  IExportTraceServiceResponse\n> {\n  constructor(config: OTLPExporterConfigBase) {\n    // same as OTLPTraceExporter in @opentelemetry/exporter-trace-otlp-http\n    super(config, JsonTraceSerializer, \"application/json\");\n  }\n\n  override send(\n    items: ReadableSpan[],\n    onSuccess: () => void,\n    onError: (error: OTLPExporterError) => void\n  ): void {\n    const body =\n      JsonTraceSerializer.serializeRequest(items) ?? new Uint8Array();\n    const request = new Request(this.url, {\n      method: \"POST\",\n      body,\n      headers: {\n        Accept: \"application/json\",\n        \"Content-Type\": \"application/json\",\n        ...this._headers,\n      },\n    });\n    const promise = fetch(request).then(onSuccess).catch(onError);\n    // for managing the sending promises concurrency\n    this._sendingPromises.push(promise);\n    promise.finally(() => {\n      const index = this._sendingPromises.indexOf(promise);\n      this._sendingPromises.splice(index, 1);\n    });\n  }\n\n  override getDefaultUrl(config: OTLPExporterConfigBase): string {\n    if (typeof config.url !== \"string\") {\n      throw new OTLPExporterError(\"config.url is not a string\");\n    }\n    return config.url;\n  }\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このように実装した",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "FetchTraceExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TracerProvider",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のセットアップに組み込むのは簡単で、引数に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SpanExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を受け取る",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SpanProcessor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "クラスに渡せばよい。今回はデモなので雑にhoneycombに送信する作りにしており、そのエンドポイントと認証ヘッダ設定を加えた",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "honeycombExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " としてインスタンス化し、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SimpleSpanProcessor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に渡している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import { W3CTraceContextPropagator } from \"@opentelemetry/core\";\nimport { Resource } from \"@opentelemetry/resources\";\nimport {\n  BasicTracerProvider,\n  SimpleSpanProcessor,\n} from \"@opentelemetry/sdk-trace-base\";\nimport { StackContextManager } from \"@opentelemetry/sdk-trace-web\";\nimport { SEMRESATTRS_SERVICE_NAME } from \"@opentelemetry/semantic-conventions\";\nimport { FetchTraceExporter } from \"./exporter\";\n\nconst honeycombExporter = new FetchTraceExporter({\n  url: \"https://api.honeycomb.io/v1/traces\",\n  headers: {\n    \"X-Honeycomb-Team\": \"...\",\n  },\n});\n\nexport function registerTraceProvider(serviceName: string) {\n  const provider = new BasicTracerProvider({\n    resource: new Resource({\n      [SEMRESATTRS_SERVICE_NAME]: serviceName,\n    }),\n  });\n  // export traces to honeycomb.io\n  provider.addSpanProcessor(new SimpleSpanProcessor(honeycombExporter));\n  // extract|inject w3c trace context\n  provider.register({\n    propagator: new W3CTraceContextPropagator(),\n    contextManager: new StackContextManager(),\n  });\n  return provider;\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "FetchTraceExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に関しては以上で解説は十分だろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Trace on Service Worker",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次に、Service Worker上でトレースの計装を行う上で考慮した点を解説する。PoCでのserviceWorker.tsの実装全文は以下のとおりである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "serviceWorker.ts",
+      "text": "/// <reference lib=\"WebWorker\" />\nimport {\n  SpanKind,\n  SpanOptions,\n  context,\n  propagation,\n  trace,\n} from \"@opentelemetry/api\";\n\nimport * as SemanticAttributes from \"@opentelemetry/semantic-conventions\";\nimport { registerTraceProvider } from \"../opentelemetry/trace-provider\";\n\ndeclare const self: ServiceWorkerGlobalScope;\n\n/**\n * Setup Otel tracer for fetch events\n */\nfunction setupTracer() {\n  registerTraceProvider(\"browser-service-worker\");\n}\n\nfunction getRequestSpanOptions(request: Request): SpanOptions {\n  return {\n    attributes: {\n      [SemanticAttributes.SEMATTRS_HTTP_URL]: request.url,\n      [SemanticAttributes.SEMATTRS_HTTP_METHOD]: request.method.toUpperCase(),\n    },\n    kind: SpanKind.CLIENT,\n  };\n}\n\n// setup tracer on activate\nself.addEventListener(\"activate\", (event) => {\n  console.log(\"Service worker activated\");\n  setupTracer();\n});\n\nself.addEventListener(\"fetch\", (event) => {\n  const { request } = event;\n  // trace only requests from the same origin APIs\n  const reqURL = new URL(request.url);\n  const isApiRequest =\n    reqURL.origin === self.location.origin &&\n    reqURL.pathname.startsWith(\"/api\");\n  if (!isApiRequest) {\n    return;\n  }\n\n  // extract context from main thread\n  const traceContext = propagation.extract<Headers>(\n    context.active(),\n    request.headers,\n    {\n      keys: (carrier) => Object.keys(carrier),\n      get: (carrier, key) => carrier.get(key) ?? undefined,\n    }\n  );\n\n  // start fetch span\n  const tracer = trace.getTracer(\"sw-fetch\");\n  const spanOptions = getRequestSpanOptions(request);\n  const promise = tracer.startActiveSpan(\n    \"fetch\",\n    spanOptions,\n    traceContext,\n    async (span) => {\n      // propagate trace context to the server\n      const headers = new Headers(request.headers);\n      propagation.inject<Headers>(context.active(), headers, {\n        set: (carrier, key, value) => carrier.set(key, value),\n      });\n\n      return fetch(new Request(request, { headers }))\n        .then((resp) => {\n          span.setAttribute(\n            SemanticAttributes.SEMATTRS_HTTP_STATUS_CODE,\n            resp.status\n          );\n          return resp;\n        })\n        .finally(() => {\n          span.end();\n        });\n    }\n  );\n  event.respondWith(promise);\n});\n"
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "setupTracer関数",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この関数は上述の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "FetchTraceExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を組み込んだ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TracerProvider",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を初期化し、グローバルトレーサーとして登録するものである。Service Workerがアクティブな間は一回だけ実行すればよいので、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "activate",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "イベントで呼び出している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "fetchイベントハンドラ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここが本丸だが、いくつかのステップに分けて考えられる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "リクエストのフィルタリング",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "メインスレッドからのトレースコンテキストの抽出",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "スパンの作成とトレースコンテキストの注入",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "オリジンサーバーへのfetchリクエスト",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "レスポンス情報のスパン属性書き込み",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "スパンの完了",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "メインスレッドへのレスポンス返却",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まずリクエストのフィルタリングについては、このfetchイベントにはあらゆるHTTPリクエストが渡されてくるので、計装対象とすべきものを仕分ける必要がある。今回はバックエンドAPIだけを対象としたが別に静的ファイルも含めてよいし、ここは自由である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "メインスレッドからのトレースコンテキストの抽出は、Service Workerだけでなくフロントエンド実装にもOTelの計装があることを考慮して分散トレースが可能となるようにしている。メインスレッドがOTLPに準拠していれば、HTTPヘッダにトレースコンテキストが含まれている。それを取り出すのに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@open-telemetry/api",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "propagation",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIを使う。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "propagation.extract",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "メソッドは、引数に渡したコンテキストにヘッダから取り出したトレースコンテキストをマージした新しいコンテキストを返してくれる。第2引数に渡したオブジェクトから第3引数に渡した関数を使って値を取り出してくれるのだが、この処理で具体的にどのヘッダをどう解釈するのかについては、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "TracerProvider",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の定義で",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Propagator",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を設定しておく必要がある。今回は標準的な",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "traceparent",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ヘッダをW3Cの仕様通りに解釈したいので、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@opentelemetry/core",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "から提供される",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "W3CTraceContextPropagator",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を利用している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "HTTPリクエストヘッダからトレースコンテキストを抽出する",
+      "text": "  const traceContext = propagation.extract<Headers>(\n    context.active(),\n    request.headers,\n    {\n      keys: (carrier) => Object.keys(carrier),\n      get: (carrier, key) => carrier.get(key) ?? undefined,\n    }\n  );"
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "TracerProviderにW3CTraceContextPropagatorを設定する",
+      "text": "provider.register({\n  propagator: new W3CTraceContextPropagator(),\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここまで準備ができたら、Service Worker内でスパンを開始する。先ほど抽出したコンテキストをもとに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "startActiveSpan",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "すれば、親が存在すれば子スパンとなるし、なければここがルートスパンとなる。また、バックエンドへ送るリクエストヘッダにはこのスパンを作成したあとのアクティブコンテキスト ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "context.active()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を注入することで、バックエンド側のスパンとの間に親子関係を指定できる。大事なのはかならずスパンを完了させることで、リクエストの成功・失敗にかかわらず",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "finally",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "メソッドで",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "span.end()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を呼び出している。また、メインスレッドにレスポンスを返すのも忘れないようにしよう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "スパンの作成とリクエストの送信処理",
+      "text": "const promise = tracer.startActiveSpan(\n  \"fetch\",\n  spanOptions,\n  traceContext,\n  async (span) => {\n    // propagate trace context to the server\n    const headers = new Headers(request.headers);\n    propagation.inject<Headers>(context.active(), headers, {\n      set: (carrier, key, value) => carrier.set(key, value),\n    });\n\n    return fetch(new Request(request, { headers }))\n      .then((resp) => {\n        span.setAttribute(\n          SemanticAttributes.SEMATTRS_HTTP_STATUS_CODE,\n          resp.status\n        );\n        return resp;\n      })\n      .finally(() => {\n        span.end();\n      });\n  }\n);\nevent.respondWith(promise);"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "やることは多いが、それぞれはOpenTelemetryの基本的な計装のステップなので、それほど難しくない。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "propagation",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "や",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "context",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "などの概念を理解していれば自然と読み解けるだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "おまけ: Cloudflare Workerでの計装",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回のPoCの本質ではないが、分散トレースのサンプルとしてバックエンドAPIをCloudflare Workerで用意した。この環境もブラウザでもNode.jsでもない特殊な環境で、結果的にはService Workerのために作った",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "FetchTraceExporter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が役立つ結果になった。PoCで使った",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "echo",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "エンドポイントのコード全文は以下のとおりである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "functions/api/echo.ts",
+      "text": "import {\n  SpanKind,\n  SpanOptions,\n  context,\n  propagation,\n  trace,\n} from \"@opentelemetry/api\";\nimport * as SemanticAttributes from \"@opentelemetry/semantic-conventions\";\nimport { registerTraceProvider } from \"../../opentelemetry/trace-provider\";\n\n/**\n * Setup Otel tracer for fetch events\n */\nfunction setupTracer() {\n  registerTraceProvider(\"worker-api\");\n}\n\nfunction getTracer() {\n  return trace.getTracer(\"worker-api\");\n}\n\nfunction getRequestSpanOptions(request: Request): SpanOptions {\n  return {\n    attributes: {\n      [SemanticAttributes.SEMATTRS_HTTP_URL]: request.url,\n      [SemanticAttributes.SEMATTRS_HTTP_METHOD]: request.method,\n    },\n    kind: SpanKind.SERVER,\n  };\n}\n\n/**\n * Echo handler: returns the request body\n */\nexport const onRequest: PagesFunction = async (event) => {\n  setupTracer();\n\n  const { request } = event;\n  console.log(\"headers\", request.headers);\n  // extract context from client\n  const traceContext = propagation.extract<Headers>(\n    context.active(),\n    request.headers,\n    {\n      keys: (carrier) => Array.from(carrier.keys()),\n      get: (carrier, key) => carrier.get(key) ?? undefined,\n    }\n  );\n\n  // start onRequest span\n  const tracer = trace.getTracer(\"worker-api\");\n  const spanOptions = getRequestSpanOptions(request);\n  return tracer.startActiveSpan(\n    \"onRequest\",\n    spanOptions,\n    traceContext,\n    async (span) => {\n      try {\n        const message = await generateMessage();\n        const respBody = { message };\n        span.setAttribute(SemanticAttributes.SEMATTRS_HTTP_STATUS_CODE, 200);\n        return new Response(JSON.stringify(respBody), {\n          headers: { \"content-type\": \"application/json\" },\n        });\n      } catch (error) {\n        span.setAttribute(SemanticAttributes.SEMATTRS_HTTP_STATUS_CODE, 500);\n        return new Response(\"Internal Server Error\", { status: 500 });\n      } finally {\n        span.end();\n      }\n    }\n  );\n};\n\nasync function generateMessage(): Promise<string> {\n  return getTracer().startActiveSpan(\"generateMessage\", (span) => {\n    // simulate async operation\n    return new Promise<string>((resolve) => {\n      setTimeout(() => {\n        resolve(\"Hello, world!\");\n        span.end();\n      }, 100);\n    });\n  });\n}\n"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "やっていることはService Workerの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "fetch",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ハンドラとほとんど同じで、リクエストからトレースコンテキストを抽出し、そのコンテキストを使って新たなスパンを作成し、処理が終わったらスパンを完了しているだけである。やってることは難しくないがやはり冗長ではあるので、このあたり汎用的なインターフェースで抽象化したレイヤーが欲しくなる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "課題: BatchSpanProcessor対応",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、実はPoCのために手抜きをした部分があり、それはこの実装は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "BatchSpanProcessor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ではうまくいかないということだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "BatchSpanProcessor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は一定時間おきにストックしたスパンを非同期的にまとめて処理するわけだが、タイムサイクルが短いランタイムだと一定時間が経過する前にシャットダウンしてしまうことがある。そうするとスパンが送られずに虚空に消えてしまうので、いわゆるgraceful shutdownを行い、強制的にすべて送信してからシャットダウンされるようにしなければならない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この強制的な送信は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "SpanProcessor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "forceFlush",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "メソッドを呼び出すことでトリガーできるのだが、問題はこのメソッドをどうやって呼び出すかである。Service Workerには",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "install",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "や",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "activate",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "といった開始イベントはあるが、逆に登録が解除されるときに発火される",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "deactivate",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "イベントは存在しない。そうなるとflushできるタイミングは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "fetch",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "イベントの処理の終わりくらいである。それでは結局逐次送信しているのと変わらない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "どうすればService Worker上で",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "BatchSpanProcessor",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使えるだろうか。この問題については誰かしらが解決してくれるとうれしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "divider"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "20分の発表では説明しきれなかった詳細を解説したが、もし追加で質問などがあればTwitterやMisskeyのほうでリプライをいただければ加筆するので遠慮なく声をかけてほしい。また、このPoCのアイデアはそれほど独創的でもないし、自分のアイデアだと主張するつもりももちろんないので、開発の参考にするのは自由にしてほしい。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
