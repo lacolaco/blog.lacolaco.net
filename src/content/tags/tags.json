@@ -103,6 +103,10 @@
     "name": "Web Worker",
     "color": "yellow"
   },
+  "Service Worker": {
+    "name": "Service Worker",
+    "color": "yellow"
+  },
   "WebAssembly": {
     "name": "WebAssembly",
     "color": "yellow"
