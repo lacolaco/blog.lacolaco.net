@@ -1,11 +1,11 @@
 {
   "pageId": "1add2e31-b222-4912-bd32-2faab675cc5d",
-  "lastEditedAt": "2024-06-26T06:11:00.000Z",
+  "lastEditedAt": "2024-06-26T08:39:00.000Z",
   "slug": "poc-trace-via-service-worker",
   "locale": "ja",
   "properties": {
     "title": "WebブラウザにおけるOpenTelemetryの自動計装PoC: Trace via Service Worker",
-    "date": "2024-06-26T05:56:00.000Z",
+    "date": "2024-06-26T06:21:00.000Z",
     "category": "Tech",
     "tags": ["Web", "OpenTelemetry", "Service Worker"]
   },
@@ -31,6 +31,37 @@
     {
       "type": "link_preview",
       "url": "https://www.youtube.com/live/ATlbJnc4d3o?si=V97dld8w92wiLqxw&t=5804"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "otel-jsのバージョン",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回のPoCのコードで利用しているopentelemetry-jsのパッケージバージョンは以下のとおりである。experimentalだらけなので時間が経てばいろいろと壊れるだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "",
+      "filename": "",
+      "text": "\"@opentelemetry/api\": \"^1.9.0\",\n\"@opentelemetry/core\": \"^1.25.1\",\n\"@opentelemetry/exporter-trace-otlp-http\": \"^0.52.1\",\n\"@opentelemetry/otlp-transformer\": \"^0.52.1\",\n\"@opentelemetry/resources\": \"^1.25.1\",\n\"@opentelemetry/sdk-trace-base\": \"^1.25.1\",\n\"@opentelemetry/sdk-trace-web\": \"^1.25.1\",\n\"@opentelemetry/semantic-conventions\": \"^1.25.1\","
     },
     {
       "type": "heading",
