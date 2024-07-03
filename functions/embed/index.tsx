@@ -38,10 +38,20 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   return response;
 };
 
+const amazonUrlPrefixes = ['https://www.amazon.co.jp/', 'https://amzn.asia/'];
+
 async function getPageTitle(url: string) {
+  const isAmazonRequest = amazonUrlPrefixes.some((domain) => url.startsWith(domain));
+  const userAgent = isAmazonRequest
+    ? // use Googlebot UA for Amazon to get server-side-rendered HTML
+      // https://developers.google.com/search/docs/crawling-indexing/overview-google-crawlers
+      'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/W.X.Y.Z Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
+    : // use custom UA by default
+      'blog.lacolaco.net';
+
   const response = await fetch(url, {
     headers: {
-      'user-agent': 'blog.lacolaco.net',
+      'user-agent': userAgent,
       accept: 'text/html',
       'accept-charset': 'utf-8',
     },
