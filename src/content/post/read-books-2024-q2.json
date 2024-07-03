@@ -1,0 +1,298 @@
+{
+  "pageId": "23ca8249-09bf-4218-879b-45f6cdcd9ca9",
+  "lastEditedAt": "2024-07-03T09:01:00.000Z",
+  "slug": "read-books-2024-q2",
+  "locale": "ja",
+  "properties": {
+    "title": "読んだ本 2024-Q2",
+    "date": "2024-07-03T08:41:00.000Z",
+    "category": "Diary",
+    "tags": ["読書"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "2024年 4月〜6月に読んだ本・読み始めた本",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "external": false,
+      "path": "read-books-2024-q2/3c6255ea-b6c7-4055-8126-638d2819f0c3/e0ca932a-a007-45fb-a3e6-c4b321f6bc9c.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "数学嫌いな人のための数学",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://www.amazon.co.jp/dp/B0CJDVVVYD"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "正直に言うとあまり刺さらなかった。とことん「数学」が嫌いな人を想定読者とした本であり、そもそも僕は数学がそこまで嫌いなわけではないからかもしれない。（苦手ではあるが）",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "数学の根底にある論理学、とくに形式論理についてのカジュアルな本だと思う。文化による「論理」の質の違いについての部分は興味深かった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "エンジニアのためのドキュメントライティング",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://www.amazon.co.jp/dp/B0BXSYF2N4"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "革新的なことが書かれているわけではないが、あらためてドキュメントの価値、押さえるべきポイントを理解できた。 ドキュメントもプロダクトの一部、なんならプロダクトそのものであるということがこの本のエッセンスだと思う。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "業界でもテクニカルライティングへの注目が高まっている気がするので、この本ももっと読まれていいと思う。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "話し合いの作法",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://www.amazon.co.jp/dp/4569851843"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この本はハウツー本としての色が濃いが、内容は『はじめての哲学的思考』や『あなたのチームは、機能してますか？』と通底するものがあり、これらの抽象的な理念をより実践的に取り組める「作法」のレベルに噛み砕いたものと言える。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "著者の中原淳さんは会社組織における人材開発・組織開発についての研究者で、この本も多くの日本企業で「話し合い」が機能していないことの原因に迫ることが根幹の問題意識にある。なぜ話し合いが機能していないのか、それは話し合いの作法を大人になるまでに学んでいないからだ、というところからスタートする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この本はボリュームも少なく読みやすいが、チームマネジメントやメンバーの育成などに関心がある方には『経営学習論』など他の厚めの著作もおすすめだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "訂正可能性の哲学",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://amzn.asia/d/03wBHnoi"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "想像してた倍はおもしろかった。「訂正可能性」という切り口でかなり広範な話題を扱っているが、核にあるテーマは社会契約論、ルソーの一般意志だと思う。けれども単なる哲学の解説書では決してなく、著者自身の哲学が結実しているように感じる。これはいずれ東浩紀の主著と呼ばれるようになるのではないか。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "かなり射程が広く、今後何度も参照したくなる本になった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "明朝体の教室",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://amzn.asia/d/02qNwaA7"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "好奇心で買ってみたが、普段見ている明朝体がどのようにデザインされているのか、考えたこともなかった世界があった。だがその名の通り「教室」で、今後フォントデザインを生業にしていく人のための本ではあり、途中からはけっこう読み飛ばした。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "言語の本質-ことばはどう生まれ、進化したか",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://amzn.asia/d/0g9HvDJJ"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ゆる言語学ラジオリスナーにはおなじみの一冊だが、だいぶ発売から遅れて読んだ。ぶっちゃけると、ゆる言語学ラジオの今井むつみ先生ゲスト回の内容を全部聞いていると、「聞いたことあるなあ」という感想が強く新鮮味が薄かった。それだけラジオで濃い話をしてくれているということだが。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "別冊NHK100分de名著 読書の学校 苫野一徳 特別授業『社会契約論』",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://amzn.asia/d/0gBGYNBB"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "前々から積んでいた一冊。とてもよかった。ルソーの『社会契約論』は民主主義について考えるうえで不可避の哲学だが、そのエッセンスを中高生向けに落とし込んだ名講義だと思う。どんなルソーの入門書よりもこれを真っ先におすすめしたい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "エンジニアのための図解思考再入門講座",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://amzn.asia/d/03KIrvDw"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もうすぐ読み終わる。Amazonのレコメンドに出てきたので読んでみたが、「エンジニアのための」というのは不要そうな内容だった。出典に基づいた記述が少なく、著者本人の経験に基づく意見が強いが、その内容には全体的に同意できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これは「図解」の入門ではなく「図解思考」の入門であり、この本に書かれているのは図解の方法論ではない。レクチャーされているのは概念とラベリング、構造理解、具体と抽象についての思考法であり、そのスキルを磨きたいが鍛え方がわからない人にとっては実践しやすいトレーニング本として機能しそうだ。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
