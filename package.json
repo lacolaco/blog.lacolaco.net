@@ -41,7 +41,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.0.0",
     "@iconify/json": "^2.2.161",
-    "@iconify/tailwind": "^0.1.4",
+    "@iconify/tailwind": "^1.0.0",
     "@notionhq/client": "2.2.15",
     "@types/cli-progress": "3.11.5",
     "@types/gtag.js": "^0.0.20",
