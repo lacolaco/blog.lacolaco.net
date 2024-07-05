@@ -71,7 +71,7 @@ importers:
         version: 4.20240620.0
       '@iconify/json':
         specifier: ^2.2.161
-        version: 2.2.219
+        version: 2.2.223
       '@iconify/tailwind':
         specifier: ^0.1.4
         version: 0.1.4
@@ -90,18 +90,12 @@ importers:
       '@types/node':
         specifier: 20.14.9
         version: 20.14.9
-      '@types/prettier':
-        specifier: 2.7.3
-        version: 2.7.3
       '@types/react':
         specifier: 18.3.3
         version: 18.3.3
       '@types/react-dom':
         specifier: 18.3.0
         version: 18.3.0
-      '@types/tailwindcss':
-        specifier: 3.1.0
-        version: 3.1.0
       cli-progress:
         specifier: 3.12.0
         version: 3.12.0
@@ -634,8 +628,8 @@ packages:
   '@fontsource/zen-kaku-gothic-new@5.0.19':
     resolution: {integrity: sha512-Dp27ZFZmimmU02OHxXDfXwPDLxQHfFy4lIwG1L/WeU7/dhvIJE3+7AogtgZH7Ya86DIK1GdvWf3ts9lzJZ7beQ==}
 
-  '@iconify/json@2.2.219':
-    resolution: {integrity: sha512-q8asqbM61woVZ9rJGm/gvW46i5vdeHrq4TqZQ/5wF5ypk4pAZU9+4qVa5NQE2MZngYkMPeO68PDGGl7WaEV8jQ==}
+  '@iconify/json@2.2.223':
+    resolution: {integrity: sha512-SKQnMyKVehUEYrKDEu/MIochMNFLAdNNGQOez0l6OEyVD6IDyM1vc8vGQFFFXcjHHadaRemxBScWqlimPuYyGA==}
 
   '@iconify/tailwind@0.1.4':
     resolution: {integrity: sha512-U7RzcU2fkwOfMDsGQ3mtpLIaApSnqb+vgcJJknPPbg8/NF5s7tI1o5otEMfcpnLGk4PbYB8bxmKTz7IJVUlU2Q==}
@@ -1018,9 +1012,6 @@ packages:
   '@types/node@20.14.9':
     resolution: {integrity: sha512-06OCtnTXtWOZBJlRApleWndH4JsRVs1pDCc8dLSQp+7PpUpX3ePdHyeNSFTeSe7FtKyQkrlPvHwJOW3SLd8Oyg==}
 
-  '@types/prettier@2.7.3':
-    resolution: {integrity: sha512-+68kP9yzs4LMp7VNh8gdzMSPZFL44MLGqiHWvttYJe+6qnuVr4Ek9wSBQoveqY/r+LwjCcU29kNVkidwim+kYA==}
-
   '@types/prop-types@15.7.5':
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
 
@@ -1032,10 +1023,6 @@ packages:
 
   '@types/sax@1.2.4':
     resolution: {integrity: sha512-pSAff4IAxJjfAXUG6tFkO7dsSbTmf8CtUpfhhZ5VhkRpC4628tJhh3+V6H1E+/Gs9piSzYKT5yzHO5M4GG9jkw==}
-
-  '@types/tailwindcss@3.1.0':
-    resolution: {integrity: sha512-JxPzrm609hzvF4nmOI3StLjbBEP3WWQxDDJESqR1nh94h7gyyy3XSl0hn5RBMJ9mPudlLjtaXs5YEBtLw7CnPA==}
-    deprecated: This is a stub types definition. tailwindcss provides its own type definitions, so you do not need this installed.
 
   '@types/unist@2.0.7':
     resolution: {integrity: sha512-cputDpIbFgLUaGQn6Vqg3/YsJwxUwHLO13v3i5ouxT4lat0khip9AEWxtERujXV9wxIB1EyF97BSJFt6vpdI8g==}
@@ -3475,7 +3462,7 @@ snapshots:
 
   '@fontsource/zen-kaku-gothic-new@5.0.19': {}
 
-  '@iconify/json@2.2.219':
+  '@iconify/json@2.2.223':
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.2
@@ -3783,8 +3770,6 @@ snapshots:
     dependencies:
       undici-types: 5.26.5
 
-  '@types/prettier@2.7.3': {}
-
   '@types/prop-types@15.7.5': {}
 
   '@types/react-dom@18.3.0':
@@ -3799,12 +3784,6 @@ snapshots:
   '@types/sax@1.2.4':
     dependencies:
       '@types/node': 20.14.9
-
-  '@types/tailwindcss@3.1.0':
-    dependencies:
-      tailwindcss: 3.4.4
-    transitivePeerDependencies:
-      - ts-node
 
   '@types/unist@2.0.7': {}
 
