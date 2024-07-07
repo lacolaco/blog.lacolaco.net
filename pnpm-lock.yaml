@@ -73,8 +73,8 @@ importers:
         specifier: ^2.2.161
         version: 2.2.223
       '@iconify/tailwind':
-        specifier: ^0.1.4
-        version: 0.1.4
+        specifier: ^1.0.0
+        version: 1.1.1
       '@notionhq/client':
         specifier: 2.2.15
         version: 2.2.15
@@ -631,8 +631,8 @@ packages:
   '@iconify/json@2.2.223':
     resolution: {integrity: sha512-SKQnMyKVehUEYrKDEu/MIochMNFLAdNNGQOez0l6OEyVD6IDyM1vc8vGQFFFXcjHHadaRemxBScWqlimPuYyGA==}
 
-  '@iconify/tailwind@0.1.4':
-    resolution: {integrity: sha512-U7RzcU2fkwOfMDsGQ3mtpLIaApSnqb+vgcJJknPPbg8/NF5s7tI1o5otEMfcpnLGk4PbYB8bxmKTz7IJVUlU2Q==}
+  '@iconify/tailwind@1.1.1':
+    resolution: {integrity: sha512-4mmA//qjZigv7D4KlqcVSYTqfRIJzyts2/lSCAJfCL0rVMIE76+ifJnaE5jxCo1+nYGBF8FsFo0qFOs+sX4EnA==}
 
   '@iconify/types@2.0.0':
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -3459,7 +3459,7 @@ snapshots:
       '@iconify/types': 2.0.0
       pathe: 1.1.2
 
-  '@iconify/tailwind@0.1.4':
+  '@iconify/tailwind@1.1.1':
     dependencies:
       '@iconify/types': 2.0.0
 
