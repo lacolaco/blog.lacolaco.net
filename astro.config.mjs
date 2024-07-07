@@ -14,12 +14,4 @@ export default defineConfig({
     defaultLocale: 'ja',
     locales: ['ja', 'en'],
   },
-  image: {
-    service: {
-      entrypoint: 'astro/assets/services/sharp',
-      config: {
-        limitInputPixels: false,
-      },
-    },
-  },
 });
