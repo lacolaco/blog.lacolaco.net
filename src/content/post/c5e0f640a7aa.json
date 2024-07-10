@@ -1,13 +1,13 @@
 {
   "pageId": "c70e219e-1959-4986-8de8-b7d2b68e8907",
-  "lastEditedAt": "2024-07-10T09:34:00.000Z",
+  "lastEditedAt": "2024-07-10T10:21:00.000Z",
   "slug": "c5e0f640a7aa",
   "locale": "ja",
   "properties": {
     "title": ".tsファイルを直接実行するのにtsxで特に困っていない",
     "date": "2024-07-10T09:29:00.000Z",
     "category": "Tech",
-    "tags": ["TypeScript", "雑記"]
+    "tags": ["TypeScript", "雑記", "Node.js"]
   },
   "content": [
     {
@@ -52,7 +52,7 @@
     },
     {
       "type": "link_preview",
-      "url": "https://www.npmjs.com/package/tsx"
+      "url": "https://tsx.is/"
     },
     {
       "type": "link_preview",
@@ -60,7 +60,7 @@
     },
     {
       "type": "link_preview",
-      "url": "https://tsx.is/"
+      "url": "https://www.npmjs.com/package/tsx"
     },
     {
       "type": "paragraph",
@@ -102,6 +102,35 @@
         {
           "type": "text",
           "text": "構造的にはNode.jsの中でswcでJavaScriptに変換されるか、外でesbuildで変換されるかの違いしかない。strip-type方式と違って使えるTypeScriptの構文にも制約はないし、解決できる問題が変わらないのであれば、Node.jsにはそのままでいてもらうほうがやりやすいなあと思っている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "追記: 依存関係とサプライチェーンについてのやりとり",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "embed",
+      "url": "https://x.com/laco2net/status/1810980074122035405"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "見えないところで依存しているものが知らぬ間に増えているよりは、自分でコントロールしている範囲で依存するほうがまだマシという立場。Node.jsが自前で実装するのでなければ、内部でサプライチェーンが伸びるより自分で管理できる外部のローダーのほうを僕は選びたい。",
           "annotations": {}
         }
       ]
