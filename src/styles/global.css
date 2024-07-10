@@ -6,7 +6,7 @@
   --color-text-default: #24292f;
   --color-text-muted: #57606a;
   --color-text-accent: #0969da;
-  --color-text-code-inline: #eb5757;
+  --color-text-code-inline: var(--color-text-default);
 
   --color-bg-default: theme('colors.gray.100');
   --color-bg-muted: rgba(175, 184, 193, 0.2);
