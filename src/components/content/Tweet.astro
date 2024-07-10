@@ -4,12 +4,14 @@ import { TweetNode } from '@lib/post';
 type Props = TweetNode;
 
 const { url } = Astro.props;
+// widgets.js が x.com に対応していない。
+const tweetUrl = `${url.replace('x.com', 'twitter.com')}?ref_src=twsrc%5Etfw`;
 ---
 
 <div class="flex flex-col items-center">
   <blockquote class="twitter-tweet">
-    <a href={`${url}?ref_src=twsrc%5Etfw`}>{url}</a>
+    <a href={tweetUrl}>{url}</a>
   </blockquote>
 </div>
 
-<script is:inline async src="https://platform.twitter.com/widgets.js"></script>
+<script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>

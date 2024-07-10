@@ -164,7 +164,7 @@ export class ContentTransformer {
       return { type: 'stackblitz', url: url.toString() };
     }
     // Twitter status
-    if (url.host === 'twitter.com' && url.pathname.includes('/status/')) {
+    if ((url.host === 'twitter.com' || url.host === 'x.com') && url.pathname.includes('/status/')) {
       return { type: 'tweet', url: url.toString() };
     }
 
