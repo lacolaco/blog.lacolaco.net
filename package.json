@@ -50,7 +50,7 @@
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "cli-progress": "3.12.0",
-    "p-limit": "^5.0.0",
+    "p-limit": "^6.0.0",
     "pkg-dir": "^8.0.0",
     "prettier": "3.3.2",
     "sass": "1.77.6",
