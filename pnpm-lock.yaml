@@ -13,7 +13,7 @@ importers:
         version: 3.1.0
       '@astrojs/react':
         specifier: 3.6.0
-        version: 3.6.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.3(@types/node@20.16.1)(sass@1.77.6))
+        version: 3.6.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.3(@types/node@20.16.1)(sass@1.77.8))
       '@astrojs/rss':
         specifier: 4.0.7
         version: 4.0.7
@@ -22,7 +22,7 @@ importers:
         version: 3.1.6
       '@astrojs/tailwind':
         specifier: 5.1.0
-        version: 5.1.0(astro@4.11.5(@types/node@20.16.1)(sass@1.77.6))(tailwindcss@3.4.10)
+        version: 5.1.0(astro@4.11.5(@types/node@20.16.1)(sass@1.77.8))(tailwindcss@3.4.10)
       '@fontsource/source-code-pro':
         specifier: 5.0.18
         version: 5.0.18
@@ -34,7 +34,7 @@ importers:
         version: 2.6.2
       astro:
         specifier: 4.11.5
-        version: 4.11.5(@types/node@20.16.1)(sass@1.77.6)
+        version: 4.11.5(@types/node@20.16.1)(sass@1.77.8)
       cheerio:
         specifier: 1.0.0-rc.12
         version: 1.0.0-rc.12
@@ -109,8 +109,8 @@ importers:
         specifier: 3.3.3
         version: 3.3.3
       sass:
-        specifier: 1.77.6
-        version: 1.77.6
+        specifier: 1.77.8
+        version: 1.77.8
       tailwindcss:
         specifier: 3.4.10
         version: 3.4.10
@@ -2585,8 +2585,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  sass@1.77.6:
-    resolution: {integrity: sha512-ByXE1oLD79GVq9Ht1PeHWCPMPB8XHpBuz1r85oByKHjZY6qV6rWnQovQzXJXuQ/XyE1Oj3iPk3lo28uzaRA2/Q==}
+  sass@1.77.8:
+    resolution: {integrity: sha512-4UHg6prsrycW20fqLGPShtEvo/WyHRVRHwOP4DzkUrObWoWI05QBSfzU71TVB7PFaL104TwNaHpjlWXAZbQiNQ==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -3061,11 +3061,11 @@ snapshots:
     dependencies:
       prismjs: 1.29.0
 
-  '@astrojs/react@3.6.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.3(@types/node@20.16.1)(sass@1.77.6))':
+  '@astrojs/react@3.6.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vite@5.3.3(@types/node@20.16.1)(sass@1.77.8))':
     dependencies:
       '@types/react': 18.3.4
       '@types/react-dom': 18.3.0
-      '@vitejs/plugin-react': 4.3.1(vite@5.3.3(@types/node@20.16.1)(sass@1.77.6))
+      '@vitejs/plugin-react': 4.3.1(vite@5.3.3(@types/node@20.16.1)(sass@1.77.8))
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       ultrahtml: 1.5.3
@@ -3084,9 +3084,9 @@ snapshots:
       stream-replace-string: 2.0.0
       zod: 3.23.8
 
-  '@astrojs/tailwind@5.1.0(astro@4.11.5(@types/node@20.16.1)(sass@1.77.6))(tailwindcss@3.4.10)':
+  '@astrojs/tailwind@5.1.0(astro@4.11.5(@types/node@20.16.1)(sass@1.77.8))(tailwindcss@3.4.10)':
     dependencies:
-      astro: 4.11.5(@types/node@20.16.1)(sass@1.77.6)
+      astro: 4.11.5(@types/node@20.16.1)(sass@1.77.8)
       autoprefixer: 10.4.15(postcss@8.4.39)
       postcss: 8.4.39
       postcss-load-config: 4.0.2(postcss@8.4.39)
@@ -3783,14 +3783,14 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-react@4.3.1(vite@5.3.3(@types/node@20.16.1)(sass@1.77.6))':
+  '@vitejs/plugin-react@4.3.1(vite@5.3.3(@types/node@20.16.1)(sass@1.77.8))':
     dependencies:
       '@babel/core': 7.24.7
       '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.24.7)
       '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.24.7)
       '@types/babel__core': 7.20.5
       react-refresh: 0.14.2
-      vite: 5.3.3(@types/node@20.16.1)(sass@1.77.6)
+      vite: 5.3.3(@types/node@20.16.1)(sass@1.77.8)
     transitivePeerDependencies:
       - supports-color
 
@@ -3839,7 +3839,7 @@ snapshots:
     dependencies:
       printable-characters: 1.0.42
 
-  astro@4.11.5(@types/node@20.16.1)(sass@1.77.6):
+  astro@4.11.5(@types/node@20.16.1)(sass@1.77.8):
     dependencies:
       '@astrojs/compiler': 2.8.1
       '@astrojs/internal-helpers': 0.4.1
@@ -3897,8 +3897,8 @@ snapshots:
       tsconfck: 3.1.1
       unist-util-visit: 5.0.0
       vfile: 6.0.1
-      vite: 5.3.3(@types/node@20.16.1)(sass@1.77.6)
-      vitefu: 0.2.5(vite@5.3.3(@types/node@20.16.1)(sass@1.77.6))
+      vite: 5.3.3(@types/node@20.16.1)(sass@1.77.8)
+      vitefu: 0.2.5(vite@5.3.3(@types/node@20.16.1)(sass@1.77.8))
       which-pm: 2.2.0
       yargs-parser: 21.1.1
       zod: 3.23.8
@@ -5781,7 +5781,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  sass@1.77.6:
+  sass@1.77.8:
     dependencies:
       chokidar: 3.6.0
       immutable: 4.3.0
@@ -6134,7 +6134,7 @@ snapshots:
       unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
 
-  vite@5.3.3(@types/node@20.16.1)(sass@1.77.6):
+  vite@5.3.3(@types/node@20.16.1)(sass@1.77.8):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.39
@@ -6142,11 +6142,11 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.16.1
       fsevents: 2.3.3
-      sass: 1.77.6
+      sass: 1.77.8
 
-  vitefu@0.2.5(vite@5.3.3(@types/node@20.16.1)(sass@1.77.6)):
+  vitefu@0.2.5(vite@5.3.3(@types/node@20.16.1)(sass@1.77.8)):
     optionalDependencies:
-      vite: 5.3.3(@types/node@20.16.1)(sass@1.77.6)
+      vite: 5.3.3(@types/node@20.16.1)(sass@1.77.8)
 
   web-namespaces@2.0.1: {}
 
