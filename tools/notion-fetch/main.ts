@@ -1,10 +1,9 @@
+import { BlogRepository } from '@lacolaco/notion-fetch';
 import { NotionDatabase, getLocale, getSlug } from '@lib/notion';
 import { getPostJSONFileName } from '@lib/post';
-import { mkdir } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { readFile, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
 import { toBlogPostJSON, toCategoriesJSON, toTagsJSON } from './content';
-import { fetchBlogPostPages } from './fetch';
 import { FileSystem } from './file-system';
 import { formatJSON } from './utils/format';
 
@@ -15,7 +14,6 @@ if (NOTION_AUTH_TOKEN == null) {
 }
 
 const rootDir = new URL('../..', import.meta.url).pathname;
-const cacheDir = resolve(rootDir, 'notion-db-cache');
 
 const { values } = parseArgs({
   args: process.argv.slice(2),
@@ -42,9 +40,6 @@ async function main() {
   const tagsJsonFS = new FileSystem(rootDir, 'src/content/tags', { dryRun });
   const categoriesJsonFS = new FileSystem(rootDir, 'src/content/categories', { dryRun });
 
-  // prepare directories
-  await mkdir(cacheDir, { recursive: true });
-
   console.log('Fetching database properties...');
   const properties = await db.getDatabaseProperties();
   console.log("Updating 'tags.json'...");
@@ -56,17 +51,17 @@ async function main() {
   await categoriesJsonFS.save('categories.json', categoriesJson, { encoding: 'utf-8' });
 
   console.log('Fetching pages...');
-  const pages = await fetchBlogPostPages(NOTION_AUTH_TOKEN, cacheDir, { force, dryRun });
+  const blogRepo = new BlogRepository(NOTION_AUTH_TOKEN);
+  const { lastNotionFetch } = await readManifest();
+  const pages = await blogRepo.fetchPages('blog.lacolaco.net', { newerThan: new Date(lastNotionFetch) });
   console.log(`Fetched ${pages.length} pages`);
 
-  const pagesToUpdate = pages.filter((page) => force || page.changed);
-
-  if (pagesToUpdate.length === 0) {
+  if (pages.length === 0) {
     console.log('No pages to update');
   } else {
-    console.log(`Updating ${pagesToUpdate.length} pages...`);
+    console.log(`Updating ${pages.length} pages...`);
     await Promise.all(
-      pagesToUpdate.map(async (page) => {
+      pages.map(async (page) => {
         const slug = getSlug(page);
         const locale = getLocale(page) ?? 'ja';
         imagesFS.remove(slug);
@@ -76,7 +71,12 @@ async function main() {
         await postJsonFS.save(filepath, formatted, { encoding: 'utf-8' });
       }),
     );
+
+    if (!dryRun) {
+      await writeManifest({ lastNotionFetch: new Date().toISOString() });
+    }
   }
+
   console.log('Done');
 }
 
@@ -84,3 +84,12 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+async function readManifest() {
+  const file = await readFile(new URL('../../notion-fetch-manifest.json', import.meta.url), 'utf-8');
+  return JSON.parse(file) as { lastNotionFetch: string };
+}
+
+async function writeManifest(manifest: { lastNotionFetch: string }) {
+  await writeFile(new URL('../../notion-fetch-manifest.json', import.meta.url), JSON.stringify(manifest, null, 2));
+}
