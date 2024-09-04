@@ -1,6 +1,6 @@
 {
   "pageId": "50321da1-64af-4987-8a8f-24041e7761af",
-  "lastEditedAt": "2024-08-27T12:13:00.000Z",
+  "lastEditedAt": "2024-09-04T09:48:00.000Z",
   "slug": "angular-defer-scheduled-view",
   "locale": "ja",
   "properties": {
@@ -146,7 +146,7 @@
         },
         {
           "type": "text",
-          "text": " トリガーには評価するとブール値が返されるような式を渡せばよく、はじめて評価結果がTrueになったときに遅延読み込みが開始される。評価結果がFalseの間は ",
+          "text": " トリガーには評価するとブール値が返されるような式を渡せばよく、はじめて評価結果が True になったときに遅延読み込みが開始される。評価結果が False の間は ",
           "annotations": {}
         },
         {
