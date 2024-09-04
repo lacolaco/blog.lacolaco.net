@@ -4,15 +4,6 @@
   "postUpdateOptions": ["pnpmDedupe"],
   "stabilityDays": 5,
   "prConcurrentLimit": 3,
-  "hostRules": [
-    {
-      "matchHost": "https://npm.pkg.github.com/",
-      "hostType": "npm",
-      "encrypted": {
-        "token": "wcFMA/xDdHCJBTolARAAjNdgjRTkZqYhFDCoBEpA8CgYevisv4WLo/q/lg4Sr3tUXK+frE2ixOPyoCKo/uL4Jv3dfurCJhXPoGMlqUjowy1EXoL/pQHzTePVun2qynnG7VPq98/pegF42q4AbFRGOnBD3cNnXnD32r6LaVr5UZtKUEIGKHzsi9CtifPRaHDOUEPlBw7yfGJOsJlRmwMVS61KII7rvN+f97dVKBI7fTq3Ej/eUSWnpQQ2Ylx6HoDYDgYTrhueuN5Kt4ebMrKqfDxL8j/Y8tKqq7UaS2leC5XrT4EAWwwHJKqoNzQIfsW1NdT1bc7/Ff/l3tIIDm5OrHEjaatYdQAeBIBRMCeGebVy1NdNKww7MsNWoPZl13GxqoofOF+ADlSNoMiCtH1hBa3x8U72dQCGjwWE0Mo7Ot0ri6XqOnARPYAouFFBjtF1iRabPlJm3E1cJpwyYWxCSz4p8GHxtnqRqFqvfnbj/yFsHOPgdhfU5k0iGQC1Ttbo4FZoDYWGN36wX+D3lqschKbrCOISUYzgLMzG6eASbPsdjO3dOLLI+jipbjlfKbz+hl4LfigkQI+Qd9O1XZSdfUl3YAuifCOH35FR24GmDwiJyOtRspHnyAsmyjH+at8bU3+zcwj/xAKwRgEZMW2yGzYwMWBM809ULCQGi7WKIW0G6tdbyDKmewJQRKYMyOLSiAGsMz/rDSch9lpjdpP8Wq/2SDiqTbqXS4MxtaYUdI55ijirSqOU25YuEcxPpDeAUdR6ixvqHZ5Y25N9cX0NEecCcTypxRn4Cd6KyL9mOIJoXrG3FGQTT0LwqzoUyd/NchQghs8+kYtz6g2PSe3HCCEH2Qbn+AbW+EX8ijVGUWMtLy340NSKTq0"
-      }
-    }
-  ],
   "npmrc": "@lacolaco:registry=https://npm.pkg.github.com/",
   "packageRules": [
     {
