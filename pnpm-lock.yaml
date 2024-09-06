@@ -76,8 +76,8 @@ importers:
         specifier: ^1.0.0
         version: 1.1.3
       '@lacolaco/notion-fetch':
-        specifier: ^1.2.0
-        version: 1.2.0
+        specifier: ^1.3.2
+        version: 1.3.2
       '@notionhq/client':
         specifier: 2.2.15
         version: 2.2.15
@@ -746,9 +746,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@lacolaco/notion-fetch@1.2.0':
-    resolution: {integrity: sha512-c5U9E0ROH5yQhteXIklkm5ZTMGp0s6+n29I38oCzP5wLNny2Pi2TvhUzy1yuyw78R/OkoPOCr8fXuCD5dHZI2A==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-fetch/1.2.0/9f6175715d96e2d11cb648def45bd145e36f6bbf}
-    hasBin: true
+  '@lacolaco/notion-fetch@1.3.2':
+    resolution: {integrity: sha512-CtcGrdFC8jjMLNNMo+4SwuWQE7zGcL9RpXk8G/Nl88XlB8U3EZSO9N9Hc4uAhjzKgZffYqG6MHYyXytfqtnyNg==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-fetch/1.3.2/0a7c57afe9920116581ab849fa7c65f2d7398294}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1205,10 +1204,6 @@ packages:
   cli-cursor@5.0.0:
     resolution: {integrity: sha512-aCj4O5wKyszjMmDT4tZj93kxyydN/K5zPWSCe6/0AV/AA1pqe5ZBIw0a2ZfPQV7lL5/yb5HsUreJ6UFAF1tEQw==}
     engines: {node: '>=18'}
-
-  cli-progress@3.12.0:
-    resolution: {integrity: sha512-tRkV3HJ1ASwm19THiiLIXLO7Im7wlTuKnvkYaTkyoAPefqjNg7W7DHKUlGRxy9vxDvbyCYQkQozvptuMkGCg8A==}
-    engines: {node: '>=4'}
 
   cli-spinners@2.9.2:
     resolution: {integrity: sha512-ywqV+5MmyL4E7ybXgKys4DugZbX0FC6LnwrhjuykIjnK9k8OQacQ7axGKnjDXWNhns0xot3bZI5h55H8yo9cJg==}
@@ -3475,10 +3470,9 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@lacolaco/notion-fetch@1.2.0':
+  '@lacolaco/notion-fetch@1.3.2':
     dependencies:
       '@notionhq/client': 2.2.15
-      cli-progress: 3.12.0
       p-limit: 6.1.0
       pkg-dir: 8.0.0
       tslib: 2.7.0
@@ -3984,10 +3978,6 @@ snapshots:
   cli-cursor@5.0.0:
     dependencies:
       restore-cursor: 5.1.0
-
-  cli-progress@3.12.0:
-    dependencies:
-      string-width: 4.2.3
 
   cli-spinners@2.9.2: {}
 

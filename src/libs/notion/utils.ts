@@ -1,6 +1,5 @@
-import type { Client } from '@notionhq/client';
 import { createHash } from 'node:crypto';
-import type { BlogPostLocale, DatabasePropertyConfigs, PageObject, PageProperty } from './types';
+import type { BlogPostLocale, PageObject, PageProperty } from './types';
 
 /**
  * If the page has slug property, return it.
@@ -21,11 +20,4 @@ export function getLocale(page: PageObject): BlogPostLocale | undefined {
     return locale.select.name as BlogPostLocale;
   }
   return undefined;
-}
-
-export async function fetchDatabaseProperties(client: Client, databaseId: string): Promise<DatabasePropertyConfigs> {
-  const { properties } = await client.databases.retrieve({
-    database_id: databaseId,
-  });
-  return properties;
 }

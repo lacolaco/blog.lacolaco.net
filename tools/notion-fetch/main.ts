@@ -1,5 +1,5 @@
-import { BlogRepository } from '@lacolaco/notion-fetch';
-import { NotionDatabase, getLocale, getSlug } from '@lib/notion';
+import { BlogDatabase } from '@lacolaco/notion-fetch';
+import { getLocale, getSlug } from '@lib/notion';
 import { getPostJSONFileName } from '@lib/post';
 import { readFile, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
@@ -7,7 +7,7 @@ import { toBlogPostJSON, toCategoriesJSON, toTagsJSON } from './content';
 import { FileSystem } from './file-system';
 import { formatJSON } from './utils/format';
 
-const { NOTION_AUTH_TOKEN, NOTION_DATABASE_ID } = process.env;
+const { NOTION_AUTH_TOKEN } = process.env;
 if (NOTION_AUTH_TOKEN == null) {
   console.error('Please set NOTION_AUTH_TOKEN');
   process.exit(1);
@@ -34,7 +34,7 @@ const { values } = parseArgs({
 const { force = false, 'dry-run': dryRun = false, debug = false } = values;
 
 async function main() {
-  const db = new NotionDatabase(NOTION_AUTH_TOKEN, NOTION_DATABASE_ID);
+  const db = new BlogDatabase(NOTION_AUTH_TOKEN);
   const imagesFS = new FileSystem(rootDir, 'public/images', { dryRun });
   const postJsonFS = new FileSystem(rootDir, 'src/content/post', { dryRun });
   const tagsJsonFS = new FileSystem(rootDir, 'src/content/tags', { dryRun });
@@ -51,9 +51,9 @@ async function main() {
   await categoriesJsonFS.save('categories.json', categoriesJson, { encoding: 'utf-8' });
 
   console.log('Fetching pages...');
-  const blogRepo = new BlogRepository(NOTION_AUTH_TOKEN);
+
   const { lastNotionFetch } = await readManifest();
-  const pages = await blogRepo.fetchPages('blog.lacolaco.net', { newerThan: new Date(lastNotionFetch) });
+  const pages = await db.query('blog.lacolaco.net', { newerThan: new Date(lastNotionFetch) });
   console.log(`Fetched ${pages.length} pages`);
 
   if (pages.length === 0) {
