@@ -1,4 +1,4 @@
-import { BlogDatabase } from '@lacolaco/notion-fetch';
+import { BlogDatabase } from '@lacolaco/notion-db';
 import { getLocale, getSlug } from '@lib/notion';
 import { getPostJSONFileName } from '@lib/post';
 import { parseArgs } from 'node:util';
