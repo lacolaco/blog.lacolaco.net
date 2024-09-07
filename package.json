@@ -42,7 +42,7 @@
     "@cloudflare/workers-types": "^4.0.0",
     "@iconify/json": "^2.2.161",
     "@iconify/tailwind": "^1.0.0",
-    "@lacolaco/notion-fetch": "^1.3.2",
+    "@lacolaco/notion-fetch": "^1.4.1",
     "@notionhq/client": "2.2.15",
     "@types/gtag.js": "^0.0.20",
     "@types/katex": "0.16.7",

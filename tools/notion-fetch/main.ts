@@ -1,7 +1,6 @@
 import { BlogDatabase } from '@lacolaco/notion-fetch';
 import { getLocale, getSlug } from '@lib/notion';
 import { getPostJSONFileName } from '@lib/post';
-import { readFile, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
 import { toBlogPostJSON, toCategoriesJSON, toTagsJSON } from './content';
 import { FileSystem } from './file-system';
@@ -18,17 +17,9 @@ const rootDir = new URL('../..', import.meta.url).pathname;
 const { values } = parseArgs({
   args: process.argv.slice(2),
   options: {
-    force: {
-      type: 'boolean',
-      short: 'f',
-    },
-    'dry-run': {
-      type: 'boolean',
-      short: 'D',
-    },
-    debug: {
-      type: 'boolean',
-    },
+    force: { type: 'boolean', short: 'f' },
+    'dry-run': { type: 'boolean', short: 'D' },
+    debug: { type: 'boolean' },
   },
 });
 const { force = false, 'dry-run': dryRun = false, debug = false } = values;
@@ -52,8 +43,7 @@ async function main() {
 
   console.log('Fetching pages...');
 
-  const { lastNotionFetch } = await readManifest();
-  const pages = await db.query('blog.lacolaco.net', { newerThan: new Date(lastNotionFetch) });
+  const pages = await db.query('blog.lacolaco.net', { dryRun });
   console.log(`Fetched ${pages.length} pages`);
 
   if (pages.length === 0) {
@@ -71,10 +61,6 @@ async function main() {
         await postJsonFS.save(filepath, formatted, { encoding: 'utf-8' });
       }),
     );
-
-    if (!dryRun) {
-      await writeManifest({ lastNotionFetch: new Date().toISOString() });
-    }
   }
 
   console.log('Done');
@@ -84,12 +70,3 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
-
-async function readManifest() {
-  const file = await readFile(new URL('../../notion-fetch-manifest.json', import.meta.url), 'utf-8');
-  return JSON.parse(file) as { lastNotionFetch: string };
-}
-
-async function writeManifest(manifest: { lastNotionFetch: string }) {
-  await writeFile(new URL('../../notion-fetch-manifest.json', import.meta.url), JSON.stringify(manifest, null, 2));
-}
