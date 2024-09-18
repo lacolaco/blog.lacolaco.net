@@ -159,16 +159,16 @@
     "name": "発表スライド",
     "color": "gray"
   },
-  "Accessibility": {
-    "name": "Accessibility",
+  "アクセシビリティ": {
+    "name": "アクセシビリティ",
     "color": "green"
   },
   "UI": {
     "name": "UI",
     "color": "green"
   },
-  "Design System": {
-    "name": "Design System",
+  "デザインシステム": {
+    "name": "デザインシステム",
     "color": "green"
   },
   "tailwindcss": {
