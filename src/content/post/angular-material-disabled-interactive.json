@@ -1,0 +1,482 @@
+{
+  "pageId": "52edeabe-72e3-44cc-9edd-d2ccf9148002",
+  "lastEditedAt": "2024-09-18T02:59:00.000Z",
+  "slug": "angular-material-disabled-interactive",
+  "locale": "ja",
+  "properties": {
+    "title": "Angular MaterialのdisabledInteractive",
+    "date": "2024-09-18T02:30:00.000Z",
+    "category": "Tech",
+    "tags": ["Angular Material", "Accessibility", "Angular"],
+    "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-material-disabled-interactive"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "近頃、HTMLの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " タグの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabled",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 属性と ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "aria-disabled",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 属性、Webアクセシビリティを絡めた発信や言説を見ることが増えているように感じる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "link_preview",
+      "url": "https://azukiazusa.dev/blog/use-aria-disabled-to-give-focus-to-disabled-button/"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://zenn.dev/tor_inc/articles/aae4a896bbab9e"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://qiita.com/ymrl/items/0bfb691e98e153e90fc5"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://design.digital.go.jp/components/button/#h4-ボタンの無効化（disabled）における注意点"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "個別のケースにおいて ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabled",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使うべきか ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "aria-disabled",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使うべきかという是非についてはここでは扱わないが、どちらの方法も選択可能な技術的オプションとして持っておきたい。その点で、今回の記事では2023年あたりから Angular Material のコンポーネントに実装されはじめた ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabledInteractive",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 機能について解説をする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular Materialの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabledInteractive",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular MaterialのMatButtonコンポーネントには ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabledInteractive",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " プロパティがある。このプロパティを追加したプルリクエストには次のように説明が書かれている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "Native disabled buttons don't allow focus and prevent the button from dispatching events. In some cases this can be problematic, because it prevents the app from showing to the user why the button is disabled.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/components/pull/28242"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここで解決すべき問題とされているのは、ネイティブのボタン要素が非活性状態だとフォーカスを受け付けないことと、イベントを発火できないことである。それによって「なぜボタンが非活性なのか」を表示することを阻害してしまうことがある。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "オプトインで追加された ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabledInteractive",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " プロパティは、非活性状態のスタイルを適用しつつ、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "aria-disabled=”true”",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 属性を有効にするが、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabled",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 属性はセットしない。これにより、ボタンに対してユーザーがインタラクト可能である状態を保つ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "公式ドキュメントのサンプルコードを見てみよう。この例では、ひとつめのボタンは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabled",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 属性が指定された上で ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabledInteractive",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " も併用されている。コンポーネントのテンプレートHTML上では",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabled",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 属性がついているが、レンダリングされたDOM上では",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabled",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "属性はなく",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "aria-disabled=”true”",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " だけになっており、開発者に直接WAI-ARIA属性を扱わせることなく実装の詳細を隠蔽してある。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://material.angular.io/components/button/examples#button-disabled-interactive"
+    },
+    {
+      "type": "code",
+      "language": "html",
+      "filename": "",
+      "text": "<button\n  mat-raised-button\n  disabled\n  disabledInteractive\n  matTooltip=\"This is a tooltip!\">Disabled button allowing interactivity</button>\n\n<button\n  mat-raised-button\n  disabled\n  matTooltip=\"This is a tooltip!\">Default disabled button</button>"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "disabledInteractive",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " プロパティは、そのMatButtonの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabled",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " プロパティが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "true",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のときにインタラクト可能にするかどうかを制御する。インタラクト可能な状態では、あらゆるイベントは通常状態と同じく発火される。この例では",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabledInteractive",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "がついているボタンの方だけマウスオーバーによりツールチップを表示できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "当然、この状態では非活性状態でもクリック可能なので、フォームの送信などに使う場合はボタンの状態と同期してアプリケーション側でのバリデーション機構が必要になる。公式ドキュメントでも使用上の注意が書かれている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "Note:",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " Using the ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabledInteractive",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " input can result in buttons that previously prevented actions to no longer do so, for example a submit button in a form. When using this input, you should guard against such cases in your component.",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://material.angular.io/components/button/overview#interactive-disabled-buttons"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ともあれ、開発者の間でのニーズが高まっていることを受けてAngular Materialではこのような機能が実装されている。MatButtonに限らず、フォームコントロール系の要素では徐々に実装が広がっており、チェックボックスやラジオボタン、テキストインプットなどいくつかのコンポーネントで同様の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "disabledInteractive",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " プロパティを使えるようになっている。バージョンアップを重ねるごとに少しずつ増えており、今後も拡充されるだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/components/pulls"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "あくまでもオプトインであり、この機能は「使うべきベストプラクティス」として用意されているわけではない。システムの要件次第ではこういった対応が必要になるケースがあり、そういうときにAngular Materialでは実現できないと判断されることを避けるためのものだろう。必要だと思えば使えばよいし、そうでないなら使わなくてよい。しかし存在は知っておくことで実装の幅は広がるはずだ。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
