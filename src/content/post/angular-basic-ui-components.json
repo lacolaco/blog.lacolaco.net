@@ -1,13 +1,13 @@
 {
   "pageId": "4518985f-136b-4811-8aef-e72b464720a4",
-  "lastEditedAt": "2023-12-30T10:06:00.000Z",
+  "lastEditedAt": "2024-09-18T14:36:00.000Z",
   "slug": "angular-basic-ui-components",
   "locale": "ja",
   "properties": {
     "title": "Angular: ボタンコンポーネントの実装",
     "date": "2022-07-20T02:25:00.000Z",
     "category": "Tech",
-    "tags": ["Angular", "Accessibility", "HTML"],
+    "tags": ["Angular", "アクセシビリティ", "HTML"],
     "updatedAt": "2022-07-20T00:00:00.000Z"
   },
   "content": [

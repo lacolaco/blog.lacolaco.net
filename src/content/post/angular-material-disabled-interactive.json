@@ -1,13 +1,13 @@
 {
   "pageId": "52edeabe-72e3-44cc-9edd-d2ccf9148002",
-  "lastEditedAt": "2024-09-18T02:59:00.000Z",
+  "lastEditedAt": "2024-09-18T14:55:00.000Z",
   "slug": "angular-material-disabled-interactive",
   "locale": "ja",
   "properties": {
     "title": "Angular MaterialのdisabledInteractive",
     "date": "2024-09-18T02:30:00.000Z",
     "category": "Tech",
-    "tags": ["Angular Material", "Accessibility", "Angular"],
+    "tags": ["Angular Material", "アクセシビリティ", "Angular"],
     "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-material-disabled-interactive"
   },
   "content": [
