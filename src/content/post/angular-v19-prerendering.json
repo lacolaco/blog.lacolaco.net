@@ -1,0 +1,437 @@
+{
+  "pageId": "d98c0b65-806e-4a10-a239-b329958ab674",
+  "lastEditedAt": "2024-09-25T06:02:00.000Z",
+  "slug": "angular-v19-prerendering",
+  "locale": "ja",
+  "properties": {
+    "title": "Angular v19のプリレンダリングと静的サイト構築",
+    "date": "2024-09-25T03:01:00.000Z",
+    "category": "Tech",
+    "tags": ["Angular", "SSG"],
+    "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-v19-prerendering"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "11月にリリース予定のAngular v19ではサーバーサイドレンダリングの強化がてんこ盛りだが、関連してプリレンダリング機能も強化されている。シングルページアプリケーションのパフォーマンス最適化の域を超えて、静的サイトの構築にも十分使えるほどに拡張されたので、その要点をまとめておく。なお、今回はプリレンダリングに焦点を当て、サーバーサイドレンダリングについてはあらためて書くつもりなのであまり触れない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事はAngular v19の最新ビルド（next.7相当）を前提としており、正式バージョンでは変更されている部分があるかもしれないことには留意されたし。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "outputMode",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " : ビルド出力のモード切り替え",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular v19で大きく変わる点は、Angular CLIのビルドに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "outputMode",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "という設定が導入され、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "static",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ビルドと",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "server",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ビルドが選べるようになることだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular-cli/commit/3b00fc908d4f07282e89677928e00665c8578ab5"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "@angular/build:application",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ビルダーに追加されたこの設定は、ビルド出力を静的なHTML/JS/CSSだけで構成するWebサイトにするか、サーバーサイドレンダリングを組み込んだWebアプリケーションとするかを選べるようにする。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "static",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "モードでビルドした場合はデプロイ先はWebサイトのホスティングサービスやCDNなどになり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "server",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " モードでビルドした場合のデプロイ先はNode.js環境やエッジワーカー環境などになるだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "静的サイト構築を考えた場合はもちろん",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "static",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ビルドを使うことになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "サーバーサイドルート",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "outputMode",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " がどちらであっても、ビルド時にプリレンダリングを行うかどうかを決定するのはこのサーバーサイドルートの設定である。これまでAngularのルーティングはクライアントサイドだけのものだったが、Angular v19ではサーバーサイドレンダリングやプリレンダリングのためのルーティング設定を与えられるようになった。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "サーバーサイドレンダリング用のアプリケーション設定に、あらたに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideServerSideRoutesConfig(routes)",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を加えるようになる。このプロバイダー関数の引数にサーバーサイドルートの設定を渡している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "app.config.server.ts",
+      "text": "import { ApplicationConfig, mergeApplicationConfig } from '@angular/core';\nimport { provideServerRendering } from '@angular/platform-server';\nimport { provideServerRoutesConfig } from '@angular/ssr';\nimport { appConfig } from './app.config';\nimport { routes } from './app.routes.server';\n\nconst serverConfig: ApplicationConfig = {\n  providers: [provideServerRendering(), provideServerRoutesConfig(routes)],\n};\n\nexport const config = mergeApplicationConfig(appConfig, serverConfig);"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "provideServerRoutesConfig",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 関数の引数の型は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ServerRoute[]",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で、クライアントサイドで",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideRouter",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数に渡す",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Route",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "型とは異なる。このオブジェクトはサーバーサイドレンダリングにおいてURLパスとそのパスのレンダリング戦略をマッピングするためのものである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次の例のアプリケーションでプリレンダリングするのは、空文字列のルートパスと、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "users/:id",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で指定されたユーザー詳細ページのパスの2種類である。サーバーサイドルートでは、この",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ":id",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のようなパスパラメータに具体的な値を指定してプリレンダリングするように指示できる。そのためのプロパティが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "getPrerenderParams",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "である。バックエンドAPIに問い合わせて取得したユーザーのリストをもとに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "id",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "として使う文字列を返せば、ビルド時に実際の値が入って個別のページがプリレンダリングされる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "app.routes.server.ts",
+      "text": "import { inject } from '@angular/core';\nimport { RenderMode, ServerRoute } from '@angular/ssr';\nimport { UserApi } from './user-api.service';\n\nexport const routes: ServerRoute[] = [\n  {\n    path: '',\n    renderMode: RenderMode.Prerender,\n  },\n  {\n    path: 'users/:id',\n    renderMode: RenderMode.Prerender,\n    async getPrerenderParams() {\n      const userApi = inject(UserApi);\n      const users = await userApi.getUsers();\n      return users.map((user) => ({ id: String(user.id) }));\n    },\n  },\n];"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "たとえばブログサイトであればCMSから取得した記事一覧データをもとにすべての記事をあらかじめビルドしておける。コンテンツに更新があれば再ビルドしてデプロイするだけでいいため、いわゆるJamstack的な運用が可能になる。長らくAngularの弱点であったSEOの観点でも、プリレンダリング時にページのメタデータを書き込んでおけばJavaScriptの実行なしにクローラに情報を提供できるため、克服したといっていいだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "開発者がやることはこれだけである。あとはいつもどおり ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng build",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドでビルドをすれば、生成物のディレクトリにはルートの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "index.html",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "users/:id",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に対応した個別IDごとの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "index.html",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が出力されている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "angular.jsonのbuild設定",
+      "text": "  \"build\": {\n    \"builder\": \"@angular/build:application\",\n    \"options\": {\n      \"outputPath\": \"dist/ng19-ssr-playground\",\n      \"index\": \"src/index.html\",\n      \"browser\": \"src/main.ts\",\n      \"polyfills\": [\"zone.js\"],\n      \"tsConfig\": \"tsconfig.app.json\",\n      \"assets\": [{ \"glob\": \"**/*\", \"input\": \"public\" }],\n      \"styles\": [\"src/styles.css\"],\n      \"server\": \"src/main.server.ts\",\n      \"outputMode\": \"static\"\n    },"
+    },
+    {
+      "type": "image",
+      "external": false,
+      "path": "angular-v19-prerendering/3c6255ea-b6c7-4055-8126-638d2819f0c3/35d626a0-d116-4044-91e5-ad59848b0325.png",
+      "caption": "ng buildの結果。プリレンダリングされたHTMLファイルが確認できる。"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これまでのAngularはクライアントサイドのリッチなシングルページアプリケーションの構築に重心が置かれたフレームワークだったが、v18、v19とサーバーサイドレンダリング方面の強化を強めることでより幅広いWebサイト構築に使えるようになってきた。v19の正式リリースが楽しみだ。ぜひ今まではAngularが向いていないと思われていたユースケースでもいろいろ試してみて欲しい。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
