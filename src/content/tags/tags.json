@@ -354,5 +354,9 @@
   "OpenTelemetry": {
     "name": "OpenTelemetry",
     "color": "green"
+  },
+  "SRE": {
+    "name": "SRE",
+    "color": "red"
   }
 }
