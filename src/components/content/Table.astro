@@ -7,37 +7,39 @@ type Props = TableNode;
 const { header, rows } = Astro.props;
 ---
 
-<table>
-  {
-    header && (
-      <thead>
-        <tr>
-          {header.map((cell) =>
-            cell.map((cell) => (
-              <th>
-                <Text {...cell} />
-              </th>
-            )),
-          )}
-        </tr>
-      </thead>
-    )
-  }
-  <tbody>
+<div class="py-4 flex justify-center">
+  <table class="border-collapse border border-slate-600">
     {
-      rows.map((r) => (
-        <tr>
-          {r.map((cell) =>
-            cell.map((t) => (
-              <td>
-                <Text {...t} />
-              </td>
-            )),
-          )}
-        </tr>
-      ))
+      header && (
+        <thead>
+          <tr>
+            {header.map((cell) =>
+              cell.map((cell) => (
+                <th class="border border-slate-600">
+                  <Text {...cell} />
+                </th>
+              )),
+            )}
+          </tr>
+        </thead>
+      )
     }
-  </tbody>
-</table>
+    <tbody>
+      {
+        rows.map((r) => (
+          <tr>
+            {r.map((cell) =>
+              cell.map((t) => (
+                <td class="border border-slate-600 p-2">
+                  <Text {...t} />
+                </td>
+              )),
+            )}
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</div>
 
 <style></style>
