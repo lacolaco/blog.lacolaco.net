@@ -10,7 +10,7 @@ const { text } = Astro.props;
 {
   (() => {
     const content = text.map((t) => <Text {...t} />);
-    return <blockquote class="my-2 px-4 text-gray-700 border-l-4 border-l-gray-300">{content}</blockquote>;
+    return <blockquote class="my-2 px-4 text-gray-700 border-l-4 border-l-gray-300 leading-loose">{content}</blockquote>;
   })()
 }
 

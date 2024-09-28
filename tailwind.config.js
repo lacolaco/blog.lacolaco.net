@@ -49,6 +49,7 @@ module.exports = {
       },
       lineHeight: {
         0: '0',
+        loose: 1.9,
       },
     },
   },
@@ -107,7 +108,7 @@ module.exports = {
             'border-top-left-radius': '0',
           },
           p: {
-            lineHeight: '1.9',
+            lineHeight: theme('lineHeight.loose'),
             '&+p': {
               marginTop: '1.5em',
               overflowWrap: 'break-word',
