@@ -27,7 +27,7 @@
     "@fontsource/zen-kaku-gothic-new": "5.0.20",
     "@resvg/resvg-js": "2.6.2",
     "astro": "4.15.1",
-    "cheerio": "1.0.0-rc.12",
+    "cheerio": "1.0.0",
     "date-fns": "3.6.0",
     "goober": "^2.1.13",
     "katex": "0.16.11",
