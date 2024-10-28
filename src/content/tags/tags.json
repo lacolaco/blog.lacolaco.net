@@ -358,5 +358,9 @@
   "SRE": {
     "name": "SRE",
     "color": "red"
+  },
+  "本屋": {
+    "name": "本屋",
+    "color": "brown"
   }
 }
