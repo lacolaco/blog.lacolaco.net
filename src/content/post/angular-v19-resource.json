@@ -1,0 +1,986 @@
+{
+  "pageId": "12e3521b-014a-80da-a5a9-ed157e6bc9b1",
+  "lastEditedAt": "2024-10-29T14:06:00.000Z",
+  "slug": "angular-v19-resource",
+  "locale": "ja",
+  "properties": {
+    "title": "Angular v19: resource() の解説",
+    "date": "2024-10-29T13:38:00.000Z",
+    "category": "Tech",
+    "tags": ["Angular", "Signals"],
+    "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-v19-resource"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事ではAngular v19で新たに追加されるSignal関連の実験的API ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " について解説する。なお、書いている時点で最新の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "v19.0.0-next.11",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " をベースにしているため、正式リリースまでに変更される可能性はある。また、そもそも実験的APIなのでリリース後にも変更されている可能性はあることに注意してほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular v19についての他の記事",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://zenn.dev/lacolaco/articles/angular-v19-linked-signal"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://zenn.dev/lacolaco/articles/angular-v19-effect-changes"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://zenn.dev/lacolaco/articles/angular-v19-prerendering"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "resource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " とは何か？",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "resource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は、非同期的に読み込まれるデータをシグナルとして扱えるようにするAPIである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "tweet",
+      "url": "https://twitter.com/Jean__Meche/status/1847074532689170437"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "具体的なコードを見ればわかりやすい。次のコードは、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使ってHTTP通信を行い、サーバーAPIから製品情報を取得している。リクエストのパラメータには親コンポーネントから受け取った",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "productId",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が使われている。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "productId",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の値が変更されたらデータの再取得を行う。非同期データの値と取得状態がカプセル化されているのが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ResourceRef",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "型の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "productResource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "フィールドである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: 'app-product-viewer',\n  template: `\n  @if (productResource.value(); as product) {\n    <p> Title: {{ product.title }} </p>\n  } @else if (productResource.error(); ) {\n    <p> load failed </p>\n  } @else if(productResource.isLoading()) {\n    <p> loading... </p>\n  }\n  `,\n})\nexport class ProductViewer {\n  productId = input.required<number>();\n\n  productResource: ResourceRef<Product> = resource({\n    request: () => this.productId(), // load on productId change\n    loader: async ({ request: productId, abortSignal }) => {\n      const resp = await fetch(`https://dummyjson.com/products/${productId}`, {\n        signal: abortSignal,\n      });\n      return resp.json() as Promise<Product>;\n    },\n  });\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "resource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が引数に取るオブジェクトの中身を詳しく見てみよう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "request",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プロパティは、非同期データの取得をトリガーするリクエストパラメータを返す関数である。この関数は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "computed()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と同等に、他のシグナルのgetterを呼び出すことで派生値を生み出し、依存したシグナルの更新により再計算される。つまり、上述の例では、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "this.productId()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の値が更新されるたびにリクエストも更新され、データ取得がトリガーされる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "loader",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プロパティはデータの取得手続きを記述する関数である。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "request",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "プロパティの関数が返した値を引数から取り出して、実際のデータ読み込みに利用できる。最終的にこの関数が返したオブジェクトは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ResourceRef.value()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "シグナルに格納されることになる。返り値がPromiseであれば解決後の中身だけがシグナルに格納されるため、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Signal<Promise<T>>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " にはならない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "loader",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数の引数には",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "abortSignal",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "も含まれており、Angular側のスケジューリングやライフサイクル管理によってコンポーネントが破棄されるときには進行中のリクエストも中断できるように、データ取得ロジックの中で利用できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これが",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の基本的なインターフェースと使い方である。ここで例に挙げたのはFetch APIを使ったHTTP通信によるデータ取得だが、パラメータを引数にとって",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "T",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "または",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Promise<T>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で値を返すインターフェースに合致するならば、どのようなデータソースでもいいし、どのような取得方法でもよい。Local StorageやIndexedDBへのアクセスをラップしてもよいし、Web Workerを使って別スレッドで計算した結果を取得するというのもありえるだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "従来はこのようなユースケースは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "signal()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "effect()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "によって解決されていたが、副作用として何でもできてしまう",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "effect()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使わずに済み、なおかつ意図が明確な",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ひとつで完結するのは嬉しい改善だ。上述の例を",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "なしでやろうとすると次のようになるが、やることに対してコードが多く複雑すぎる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// resource() がない場合\nexport class ProductViewer {\n  productId = input.required<number>();\n  productData = signal<Product | null>(null);\n  isProductLoading = signal<boolean>(false);\n\n\tconstructor() {\n\t  effect(async (onCleanup) => {\n\t\t  const productId = this.productId();\n\t\t  this.isProductLoading.set(true);\n\t\t  const abortCtrl = new AbortController();\n      onCleanup(() => abortCtrl.abort())\n\t\t  \n\t\t  const resp = await fetch(`https://dummyjson.com/products/${productId}`, {\n        signal: abortCtrl.signal,\n      });\n      const data = await resp.json() as Promise<Product>;\n      this.productData.set(data);\n      this.isProductLoading.set(false);\n\t  });\n\t}\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "rxResource",
+          "annotations": {
+            "code": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ところで、Angularで非同期データの取得といえば",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIが代表的な機能だが、ここまでの例に登場していない。上述のサンプルコードでは意図的にWeb標準のFetch APIを使っている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "なぜかというと、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "loader",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数はPromiseからシグナルへの変換を行うが、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Obervable",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "型の値からシグナルへの変換をしないからだ。HttpClientのメソッドが返す値は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Observable",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "なので、リターンする前に自前で変換する必要がある。RxJSが提供している",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "firstValueFrom",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数を使えば変換はできるが、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "というAngularのコアAPI（候補）の中で、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Observable",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は第一級サポートされないインターフェースである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "export class ProductViewer {\n  productId = input.required<number>();\n  http = inject(HttpClient);\n\n  productResource: ResourceRef<Product> = resource({\n    request: () => this.productId(), // load on productId change\n    loader: ({ request: productId, abortSignal }) => {\n      const destroy$ = fromEvent(abortSignal, \"abort\");\n      return firstValueFrom(\n        this.http.get<Product>(`https://dummyjson.com/products/${productId}`)\n          .pipe(takeUntil(destroy$))\n      );\n    },\n  });\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "とはいえ実際には多くのアプリケーションで",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "が使われており、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "との併用が望まれるのも当然わかりきっているので、RxJSとの相互運用性のためのサブパッケージ ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@angular/core/rxjs-interop",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " から",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "rxResource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "というAPIも提供される。これは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "とほぼ同じインターフェースを持っているが、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "loader",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数が",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Observable",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "型にも対応している。次のサンプルコードのように、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のメソッドの戻り値を返すだけで、コンポーネントの破棄によるリクエストの中断も含めてすべてやってくれる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "export class ProductViewer {\n  productId = input.required<number>();\n  http = inject(HttpClient);\n\n  productResource: ResourceRef<Product> = rxResource({\n    request: () => this.productId(), // load on productId change\n    loader: ({ request: productId }) => {\n      return this.http.get<Product>(`https://dummyjson.com/products/${productId}`);\n    },\n  });\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angularのフレームワークコアからだんだんと",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Observable",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の第一級サポートが消えていっているが、一方でHTTPクライアントやフォームAPIなどにはまだまだ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Observable",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ベースのAPIが残っている。それらがまだ必要な間は無理に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のようなコアAPIにこだわらなくても、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "rxResource()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "などの相互運用性パッケージを利用して何も問題ないだろう。待っていれば公式に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Observable",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "非依存のHTTPクライアントも来るだろうから、そのときに乗り換えればいい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "resource()",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "は、Angular v19で導入される新しいSignal関連の実験的APIである。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "非同期データの取得と管理を簡潔に行うことができ、従来の",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "signal()",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "と",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "effect()",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "の組み合わせよりも意図が明確になる。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "request",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "と",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "loader",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "関数を指定することで、データの取得条件とロジックを定義できる。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Promiseベースのインターフェースで、Fetch API、IndexedDB、Web Workerなど、様々なデータソースに対応可能。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "HttpClient",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "との併用には",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "rxResource()",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "が提供され、",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "Observable",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "との相互運用性を確保している。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "将来的に",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "Observable",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": "非依存のHTTPクライアントが登場する可能性があるが、それまでは相互運用性パッケージを利用することで問題なく開発を進められる。",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回のサンプルコードもStackblitzに置いているので好きに使ってほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "stackblitz",
+      "url": "https://stackblitz.com/edit/stackblitz-starters-fb3yue?ctl=1&embed=1&file=src%2Fmain.ts"
+    }
+  ]
+}
