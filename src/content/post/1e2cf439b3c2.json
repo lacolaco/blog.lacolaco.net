@@ -1,0 +1,577 @@
+{
+  "pageId": "1373521b-014a-808e-9d87-ee16aa5e6c6d",
+  "lastEditedAt": "2024-11-07T08:32:00.000Z",
+  "slug": "1e2cf439b3c2",
+  "locale": "ja",
+  "properties": {
+    "title": "コトに向かうコードレビュー",
+    "date": "2024-11-07T08:30:00.000Z",
+    "category": "Idea",
+    "tags": ["コードレビュー", "チーム"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "他人や自分など「ヒト」ではなく「コト」に向かうコードレビューについて考えてみる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "参考:「コトに向かう」について => ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "DeNA南場智子さんの講演「ことに向かう力」がいい話だった｜narumi",
+          "href": "https://note.com/narumi/n/n1aeb76bbbe4e",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "（本来の「コトに向かう」話とそれほど親和性のある話ではない気はしつつも、響きがいいので借用しています）",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "このコードは良くないなと思ったとき",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "「ヒト」に向かうコードレビュー",
+              "annotations": {
+                "bold": true
+              }
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "「なんであなたはこんなコードを書いたの？」",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "原因の中心を個人のスキル不足に置く見方",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "わかっていないあなた vs わかっている私たち",
+                      "annotations": {
+                        "bold": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " の構図になる",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "「コト」に向かうコードレビュー",
+              "annotations": {
+                "bold": true
+              }
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "「なんでわれわれのコードベースはこんなコードが書けてしまうんだ？」",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "原因の中心を環境（コードベース）のサポート不足に置く見方",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "問題 vs 私たち",
+                      "href": "https://scrapbox.io/june29/%E5%95%8F%E9%A1%8C_vs_%E7%A7%81%E3%81%9F%E3%81%A1",
+                      "annotations": {
+                        "bold": true
+                      }
+                    },
+                    {
+                      "type": "text",
+                      "text": " の構図になる",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "コードレビューが「ヒト」に向かわないために",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "レビュイーができること",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "全力を尽くす",
+              "annotations": {
+                "bold": true
+              }
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "コードレビューは頭と時間を使う大変な仕事",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "大変な仕事を自分のためにやってくれる同僚の時間を、せめて有意義にできることは全部やる",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "やる気の感じられない手抜きのコードに真剣に向き合うほどレビュアーも暇ではない",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "見直したらすぐ気づくようなミスを残さない",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "今の自分が出せる最高傑作だと思えるまでリファクタリングする",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "成長（変化）を見せる",
+              "annotations": {
+                "bold": true
+              }
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "指摘されたことはただ直すだけじゃなく、理由を理解する",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "同じことを繰り返さないよう、本やドキュメントを調べるなどして勉強する",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "それでもわからなかったらメンバーに聞いて教えてもらう",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "前回からの成長が感じられれば、レビュアーの苦労が報われる",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "レビューしやすく工夫する",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "レビュアーも疲れてイライラしていると「ヒト」に向かいやすいので、レビューしやすいプルリクエストにする",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "粒度を小さくするとか",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "タイトルで意図を明確にするとか",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "調べればいろんなノウハウは出てくるので、これも全力を尽くす",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "レビュアーができること",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "全力を尽くしていることを疑わない",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "ハンロンの剃刀",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "「確かにこういうコードも書けうるな」と考えてみる",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "「確かに、真似してほしくなかったが似たようなコードがすでにあるな」とか",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "「確かに、既存のコードの再利用性が低くて自前で書きたくなるな」とか",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "発生しうることは発生する（マーフィーの法則）",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": [
+                    {
+                      "type": "bulleted_list",
+                      "items": [
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "起きてほしくないことは、起こりえないようにするしか防ぐ方法はない",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "先を見通して先手を打つのは、先が見えている人の役目",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        },
+                        {
+                          "type": "bulleted_list_item",
+                          "text": [
+                            {
+                              "type": "text",
+                              "text": "そのためのアーキテクチャ、設計、制約",
+                              "annotations": {}
+                            }
+                          ],
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "tweet",
+      "url": "https://x.com/laco2net/status/1207205575802490880"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事はClassiの社内ブログに書いたものの転記です。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
