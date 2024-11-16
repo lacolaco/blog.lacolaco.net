@@ -20,6 +20,15 @@ const encodedTitle = encodeURIComponent(title);
   </a>
 
   <a
+    href={`https://bsky.app/intent/compose?text=${encodedTitle + " "+ url}`}
+    target="_blank"
+    class="inline-flex items-center gap-x-1 px-2 py-1 text-xs leading-tight font-bold text-lime-100 bg-[#1084fd] rounded-md hover:bg-blue-600"
+  >
+    <span class="icon-[simple-icons--bluesky] inline-block"></span>
+    share to bluesky
+  </a>
+
+  <a
     href={`https://misskey-hub.net/share/?text=${encodedTitle}&url=${url}&visibility=public&localOnly=0`}
     target="_blank"
     class="inline-flex items-center gap-x-1 px-2 py-1 text-xs leading-tight font-bold text-lime-100 bg-lime-700 rounded-md hover:bg-lime-600"
