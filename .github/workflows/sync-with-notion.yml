@@ -8,6 +8,8 @@ on:
       forceUpdate:
         type: boolean
         default: false
+  repository_dispatch:
+    types: [notion-sync]
 
 jobs:
   sync:
