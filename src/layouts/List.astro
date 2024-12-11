@@ -70,7 +70,7 @@ const postsByYear = Array.from(
                     <li class="my-4">
                       <div class="flex flex-col items-start leading-none">
                         <FormattedDate
-                          client:visible
+                          client:only="react"
                           className="text-xs text-muted align-middle"
                           date={post.properties.date}
                         />

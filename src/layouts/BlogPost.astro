@@ -54,12 +54,12 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
         <header class="mb-6">
           <div class="leading-none">
             <span class="text-sm text-muted">
-              <FormattedDate client:visible date={date} />
+              <FormattedDate client:only="react" date={date} />
               {
                 isUpdated && (
                   <span class="text-sm text-muted">
                     {'(Updated at: '}
-                    <FormattedDate client:visible date={updatedAt} />
+                    <FormattedDate client:only="react" date={updatedAt} />
                     {')'}
                   </span>
                 )
