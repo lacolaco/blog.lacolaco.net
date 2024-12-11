@@ -69,11 +69,7 @@ const postsByYear = Array.from(
                   {posts.map((post) => (
                     <li class="my-4">
                       <div class="flex flex-col items-start leading-none">
-                        <FormattedDate
-                          client:only="react"
-                          className="text-xs text-muted align-middle"
-                          date={post.properties.date}
-                        />
+                        <FormattedDate className="text-xs text-muted align-middle" date={post.properties.date} />
                         <a class="no-underline" href={getRelativePostUrl(post)}>
                           <span class="text-lg text-default font-semibold underline hover:text-gray-500">
                             {post.properties.title}

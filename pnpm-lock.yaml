@@ -23,6 +23,9 @@ importers:
       '@astrojs/tailwind':
         specifier: 5.1.3
         version: 5.1.3(astro@4.16.17(@types/node@20.17.9)(rollup@4.21.2)(sass@1.77.8)(typescript@5.5.4))(tailwindcss@3.4.16)
+      '@date-fns/tz':
+        specifier: ^1.2.0
+        version: 1.2.0
       '@fontsource/source-code-pro':
         specifier: 5.0.19
         version: 5.0.19
@@ -305,6 +308,9 @@ packages:
   '@cspotcode/source-map-support@0.8.1':
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
+
+  '@date-fns/tz@1.2.0':
+    resolution: {integrity: sha512-LBrd7MiJZ9McsOgxqWX7AaxrDjcFVjWH/tIKJd7pnR7McaslGYOP1QmmiBXdJH/H/yLCT+rcQ7FaPBUxRGUtrg==}
 
   '@emnapi/runtime@1.2.0':
     resolution: {integrity: sha512-bV21/9LQmcQeCPEg3BDFtvwL6cwiTMksYNWQQ4KOxCZikEGalWtenoZ0wCiukJINlGCIi2KXx01g4FoH/LxpzQ==}
@@ -3255,6 +3261,8 @@ snapshots:
   '@cspotcode/source-map-support@0.8.1':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
+
+  '@date-fns/tz@1.2.0': {}
 
   '@emnapi/runtime@1.2.0':
     dependencies:

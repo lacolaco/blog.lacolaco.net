@@ -23,6 +23,7 @@
     "@astrojs/rss": "4.0.10",
     "@astrojs/sitemap": "3.2.1",
     "@astrojs/tailwind": "5.1.3",
+    "@date-fns/tz": "^1.2.0",
     "@fontsource/source-code-pro": "5.0.19",
     "@fontsource/zen-kaku-gothic-new": "5.0.20",
     "@resvg/resvg-js": "2.6.2",
