@@ -29,7 +29,7 @@
     "@resvg/resvg-js": "2.6.2",
     "astro": "4.16.17",
     "cheerio": "1.0.0",
-    "date-fns": "3.6.0",
+    "date-fns": "4.1.0",
     "goober": "^2.1.13",
     "katex": "0.16.11",
     "mermaid": "10.9.3",
