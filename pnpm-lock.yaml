@@ -27,11 +27,11 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
       '@fontsource/source-code-pro':
-        specifier: 5.0.19
-        version: 5.0.19
+        specifier: 5.1.0
+        version: 5.1.0
       '@fontsource/zen-kaku-gothic-new':
-        specifier: 5.0.20
-        version: 5.0.20
+        specifier: 5.1.0
+        version: 5.1.0
       '@resvg/resvg-js':
         specifier: 2.6.2
         version: 2.6.2
@@ -747,11 +747,11 @@ packages:
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
     engines: {node: '>=14'}
 
-  '@fontsource/source-code-pro@5.0.19':
-    resolution: {integrity: sha512-0KZEkcqOfHPBfz9cbyx1eObJxa5Z6gyWk3Bs8Clgg5b/cYlvc08mRmL1eD9Rzdz+sLRfC5rxAPZUTbeD25BomA==}
+  '@fontsource/source-code-pro@5.1.0':
+    resolution: {integrity: sha512-aT6pQbwEM/oGyK4Q8XOOknFcrXTAnP+GLVuEADBnB4avOYAOa4U5BG/D5JrTobwckuWyKrbMZ8EdcXPsqizfSw==}
 
-  '@fontsource/zen-kaku-gothic-new@5.0.20':
-    resolution: {integrity: sha512-T299Op2R22BKpSE7Ejagvn82pO+Es87wgp0MwBJ1CH+QMmUfjbltghZLPEUKRo4SVdIA29JayLbPp+Ac13ZvzA==}
+  '@fontsource/zen-kaku-gothic-new@5.1.0':
+    resolution: {integrity: sha512-Iadu+wXoLs320Qy7Ihxz69A565PunVTi8ha8swxaMsdbJf8tkcGx/PfRL7uba/1DZdkA/mii/DQKgRxbYoZDVw==}
 
   '@iconify/json@2.2.280':
     resolution: {integrity: sha512-3N1lTn6XBPQ+wMTiYkBAx+GE4yBD8B3l9/OGzs2sEy4FDsYoq7lLoiSo7S0XA6NN/dK9rv6bup8NPCIwIkOPOw==}
@@ -3735,9 +3735,9 @@ snapshots:
 
   '@fastify/busboy@2.1.1': {}
 
-  '@fontsource/source-code-pro@5.0.19': {}
+  '@fontsource/source-code-pro@5.1.0': {}
 
-  '@fontsource/zen-kaku-gothic-new@5.0.20': {}
+  '@fontsource/zen-kaku-gothic-new@5.1.0': {}
 
   '@iconify/json@2.2.280':
     dependencies:
