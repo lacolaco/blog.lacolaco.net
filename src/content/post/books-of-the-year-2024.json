@@ -1,6 +1,6 @@
 {
   "pageId": "1603521b-014a-8027-8694-dcc8096690a8",
-  "lastEditedAt": "2024-12-18T13:13:00.000Z",
+  "lastEditedAt": "2024-12-19T15:03:00.000Z",
   "slug": "books-of-the-year-2024",
   "locale": "ja",
   "properties": {
@@ -496,7 +496,7 @@
       "url": "https://blog.lacolaco.net/posts/the-rules-of-programming-book-review/"
     },
     {
-      "type": "embed",
+      "type": "link_preview",
       "url": "https://creators.spotify.com/pod/show/refactoradio/episodes/19-e2htgp2"
     },
     {
