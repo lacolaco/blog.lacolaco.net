@@ -27,7 +27,7 @@
     "@fontsource/source-code-pro": "5.1.0",
     "@fontsource/zen-kaku-gothic-new": "5.1.0",
     "@resvg/resvg-js": "2.6.2",
-    "astro": "4.16.17",
+    "astro": "4.16.18",
     "cheerio": "1.0.0",
     "date-fns": "4.1.0",
     "goober": "^2.1.13",
