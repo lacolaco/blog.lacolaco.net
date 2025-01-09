@@ -1,0 +1,225 @@
+{
+  "pageId": "1763521b-014a-80ca-916d-d87cfc630eca",
+  "lastEditedAt": "2025-01-09T13:27:00.000Z",
+  "slug": "angular-let-tailwindcss-intellisense",
+  "locale": "ja",
+  "properties": {
+    "title": "Angular: テンプレート内変数でTailwind CSS IntelliSenseの入力補完を有効にする",
+    "date": "2025-01-09T13:01:00.000Z",
+    "category": "Tech",
+    "tags": ["Angular", "tailwindcss"],
+    "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-let-tailwindcss-intellisense"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angularの ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@let",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 構文によるテンプレート内変数でTailwind CSSのユーティリティクラスを記述できるようにしてみよう。（テンプレート内変数でクラス文字列を再利用できるようにするアイデアはClassiの同僚である ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "koki-develop",
+          "href": "https://zenn.dev/kou_pg_0131",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": " さんが提案してくれた）",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次の画像のように、Tailwind CSS IntelliSense によってクラス文字列であると認識され、入力補完が効くし、入力後には色のプレビューアイコンも表示される。完璧である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "external": false,
+      "path": "angular-let-tailwindcss-intellisense/3c6255ea-b6c7-4055-8126-638d2819f0c3/010c5b82-5a02-4646-86ad-2fb2907d46a2.png",
+      "caption": "VS Code上でTailwind CSSのユーティリティクラスの入力補完が動作している様子を示したスクリーンショット"
+    },
+    {
+      "type": "image",
+      "external": false,
+      "path": "angular-let-tailwindcss-intellisense/3c6255ea-b6c7-4055-8126-638d2819f0c3/4b3c0dc8-7718-4cbf-95ed-6a25fd9053f9.png",
+      "caption": "テンプレート内変数の文字列がTailwind CSSのユーティリティクラスだと認識されている様子を示したスクリーンショット"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "classAttributes",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "やったことは簡単で、Tailwind CSS IntelliSense の ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "classAttributes",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " 設定を変更しただけである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/tailwindlabs/tailwindcss-intellisense?tab=readme-ov-file#tailwindcssclassattributes"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この設定は本来、Tailwind CSS IntelliSense がクラス文字列を期待するHTML属性を列挙したものだが、HTML属性じゃなくてもざっくり ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "key=value",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の形で記述されるものはなんでも対象にしてくれるようだ（実装を詳細に見たわけじゃないが）。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "classAttributes",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " には左辺のキーを正規表現で設定する。今回は ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "linkItemClassName",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のように ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".*ClassName",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というパターンにマッチするとき、右辺にあたる部分では Tailwind CSS IntelliSense の入力補完が有効になる。パターンは好みに合わせて変えればよい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "code",
+      "language": "json",
+      "filename": "",
+      "text": "{\n    \"tailwindCSS.classAttributes\": [\n        \"class\",\n        \"className\",\n        \"ngClass\",\n        \"class:list\",\n        \".*ClassName\" <-- 追加\n    ]\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この設定を ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".vscode/settings.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " に加えるなりユーザー設定を変更するなりして、VS Code拡張を再起動すると冒頭のスクリーンショットのように機能する。再起動しないと反映されないので注意。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
