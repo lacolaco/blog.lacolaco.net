@@ -1,0 +1,216 @@
+{
+  "pageId": "18e3521b-014a-80d9-af62-f945ecfa18f3",
+  "lastEditedAt": "2025-02-02T06:49:00.000Z",
+  "slug": "angular-tailwind-css-4-setup",
+  "locale": "ja",
+  "properties": {
+    "title": "Angular: Tailwind CSS 4.0のセットアップ",
+    "date": "2025-02-02T05:54:00.000Z",
+    "category": "Tech",
+    "tags": ["Angular", "tailwindcss"],
+    "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-tailwind-css-4-setup"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Tailwind CSS 4.0がリリースされたが、Angular CLIはもともとTailwind CSSとの連携に正式対応している。あらためて最新バージョンでのセットアップ方法を確認しておこう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "PostCSS経由でのセットアップ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Tailwind CSS の公式ドキュメントでは、Angularプロジェクトの導入方法が説明されている。この方法では ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".postcssrc.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を作成して PostCSS 経由でTailwind CSSを組み込んでいる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://tailwindcss.com/docs/installation/framework-guides/angular"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ドキュメントには書かれていないが、Angular CLIはもともとプロジェクトに PostCSS の設定ファイルがあればそれを利用する仕組みがある。ワークスペースかプロジェクトのルートディレクトリに設定ファイルを置いておくだけでビルド時に読み込まれる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular-cli/blob/main/packages/angular/build/src/utils/postcss-configuration.ts#L20"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回はこのおかげで、特にTailwind CSSのために何かをしなくても単なるPostCSSプラグインとして機能するようだ。新規のプロジェクトを作成する場合はこの方法を取ればよいだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Tailwind CSS 3系からのアップグレード",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Tailwind CSS 3系からAngularアプリケーションに組み込んで使っている場合、おそらく ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "tailwind.config.js",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のようなJavaScript形式の設定ファイルをAngular CLIに読み込ませる形がほとんどだろう。以前のドキュメントではそのやり方で説明されていた。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://v3.tailwindcss.com/docs/guides/angular"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "そのままでも動きはすると思うが、設定ファイルのCSS化は Tailwind CSS 4.0 の目玉でもあるので、既存アプリにおいても上記のPostCSSを使ったセットアップにアップグレードしたい。一度 PostCSS 経由でのセットアップにしておけば Angular CLI 内部での Tailwind CSS 統合に依存せず、Angular と Tailwind CSS 両方の継続的なアップグレードがしやすくなるだろう。そこで、既存のJavaScript設定ファイルを併用して段階的に移行しよう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "公式ドキュメントではアップグレードガイドに書かれているとおり、 ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "@config",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ディレクティブを使うことで、Tailwind CSSをインポートしているCSSファイルから、JavaScript設定ファイルの読み込みを指示できる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://tailwindcss.com/docs/upgrade-guide#using-a-javascript-config-file"
+    },
+    {
+      "type": "code",
+      "language": "css",
+      "filename": "",
+      "text": "@import \"tailwindcss\";\n\n@config \"../tailwind.config.js\";"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この手順を踏めば、Tailwind CSS 3系を組み込んでいるAngular アプリケーションも簡単にアップグレードできそうだ。ただし、Tailwind CSS 4.0 にはユーティリティクラスそのものにもいろいろと破壊的変更があるため、アップグレードガイドをよく読もう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Angular プロジェクトでのTailwind CSS 4.0の組み込みは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".postcssrc.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使用したPostCSS経由のセットアップがシンプルで推奨される方法だ。既存プロジェクトでは@configディレクティブを使用してJavaScript設定ファイルからの段階的な移行が可能で、Angular CLIとの統合に依存せず、将来的なアップグレードも容易になる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
