@@ -80,7 +80,7 @@ importers:
         version: 1.2.0
       '@lacolaco/notion-db':
         specifier: ^1.4.4
-        version: 1.4.4
+        version: 1.4.5
       '@notionhq/client':
         specifier: 2.2.15
         version: 2.2.15
@@ -900,8 +900,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@lacolaco/notion-db@1.4.4':
-    resolution: {integrity: sha512-K8oecC+aezWUmubHZQSW6A5JgfBOJhBCZukg1a0A4gcOgfGmSyhThB7ntz1xCAPm9PS9i7nzWtjTT244X9HnUw==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-db/1.4.4/a462926f53ddf2d0137cd4283782f12fd1160fdc}
+  '@lacolaco/notion-db@1.4.5':
+    resolution: {integrity: sha512-F2/YyF19ToXTLwF/m3EUQvBZxzUPXYTdrrdHrh0IVxRS0JbqnEVtj2p8ciI18DWbbRNV2Pv7FrkPYSLaMOpYWw==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-db/1.4.5/051dca164edb5d4ae9948e469c3db5c84ae04dc4}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -2519,8 +2519,8 @@ packages:
     resolution: {integrity: sha512-//88mFWSJx8lxCzwdAABTJL2MyWB12+eIY7MDL2SqLmAkeKU9qxRvWuSyTjm3FUmpBEMuFfckAIqEaVGUDxb6w==}
     engines: {node: '>=6'}
 
-  p-limit@6.1.0:
-    resolution: {integrity: sha512-H0jc0q1vOzlEk0TqAKXKZxdl7kX3OFUzCnNVUnq5Pc3DGo0kpeaMuPqxQn235HibwBEb0/pm9dgKTjXy66fBkg==}
+  p-limit@6.2.0:
+    resolution: {integrity: sha512-kuUqqHNUqoIWp/c467RI4X6mmyuojY5jGutNU0wVTmEOOfcuwLqyMVoAi9MKi2Ak+5i9+nhmrK4ufZE8069kHA==}
     engines: {node: '>=18'}
 
   p-locate@4.1.0:
@@ -3859,10 +3859,10 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@lacolaco/notion-db@1.4.4':
+  '@lacolaco/notion-db@1.4.5':
     dependencies:
       '@notionhq/client': 2.2.15
-      p-limit: 6.1.0
+      p-limit: 6.2.0
       pkg-dir: 8.0.0
       tslib: 2.8.1
       zod: 3.24.1
@@ -4284,7 +4284,7 @@ snapshots:
       mrmime: 2.0.0
       neotraverse: 0.6.18
       ora: 8.1.1
-      p-limit: 6.1.0
+      p-limit: 6.2.0
       p-queue: 8.0.1
       preferred-pm: 4.0.0
       prompts: 2.4.2
@@ -5857,7 +5857,7 @@ snapshots:
     dependencies:
       p-try: 2.2.0
 
-  p-limit@6.1.0:
+  p-limit@6.2.0:
     dependencies:
       yocto-queue: 1.1.1
 
