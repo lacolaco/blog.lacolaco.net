@@ -1,0 +1,853 @@
+{
+  "pageId": "1983521b-014a-80d0-8a7c-c09020dd3420",
+  "lastEditedAt": "2025-02-12T01:55:00.000Z",
+  "slug": "angular-http-resource-quick-overview",
+  "locale": "ja",
+  "properties": {
+    "title": "Angular: httpResource Quick Overview ",
+    "date": "2025-02-12T01:42:00.000Z",
+    "category": "Tech",
+    "tags": ["Angular", "Signals"],
+    "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-http-resource-quick-overview"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "現在、Angularの新しい実験的API ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "httpResource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " が開発されている。これはv19.0でリリースされた実験的API ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と関連する機能で、早ければ2月のv19.2、あるいは3月のv19.3で搭載されるだろう。まだリリース前だが、現時点での要点をかいつまんで紹介する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular/pull/59876"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Usage",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "httpResource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "はひとことで言えば、「",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " + ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の一般的なユースケースを簡略化するヘルパー関数」である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "使い方は次のようになるだろう。すでに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使っている人からすればそれほど目新しくはない。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "httpResource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数の戻り値は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpResponseResource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "型であり、これは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "型のサブタイプである。なので",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数の戻り値と同じように、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "isLoading",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "や",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "value",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "といったシグナルを返すフィールドを持っている。シグナルなので、状態が変われば自動的にコンポーネントは再描画される。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({ \n  template: `\n  @if (data.isLoading()) {\n    <p>Loading</p>\n  } \n  @else {\n    {{ data.value() }}\n  }\n  `\n})\nexport class App {\n  readonly data = httpResource<Data>('/api/data');\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Request on Signal changes",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "第一引数にはHTTPリクエストを生成するための情報を渡す。文字列を渡せばURLとして扱われ、GETメソッドのリクエストが一度だけ送られる。関数を渡せば、その戻り値の文字列をURLとしてGETメソッドのリクエストが送られる。この関数はシグナルに対応しており、内包するシグナルの変更に反応してリクエストを再送信する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "たとえば、コンポーネントが親コンポーネントから受け取ったインプット値に対応したHTTPリクエストを送るなら次のようになる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({ \n  template: `\n  @if (userData.isLoading()) {\n    <p>Loading</p>\n  } \n  @else {\n    {{ userData.value() }}\n  }\n  `\n})\nexport class App {\n  readonly userId = input.required<number>();\n  readonly userData = httpResource<UserData>(\n    // this.userId が変わるたびにリクエストが送られて値が更新される\n    () => `/api/user/${this.userId()}`,\n  );\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "request",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と同じように、この第一引数の関数が",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "undefined",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を返せばリクエストを送らずにキャンセルできる。初期状態ではリクエストせず追加のイベントを待つ場合に使われるだろう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({ \n  template: `\n  @if (userData.isLoading()) {\n    <p>Loading</p>\n  } \n  @else {\n    {{ userData.value() }}\n  }\n  `\n})\nexport class App {\n  readonly userId = signal<number>(-1);\n\n  readonly userData = httpResource<UserData>(\n    // undefinedを返すとリクエストが送信されない\n    () => this.userId() < 0 ? undefiend : `/api/user/${this.userId()}`,\n  );\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "HttpResourceRequest",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "あまり使わないと思われるが、GET以外のメソッドでHTTPリクエストを送ることもできる。文字列ではなく",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpResourceRequest",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "型のオブジェクトを第一引数に渡すことでリクエストの内容を細かく制御できる。このオプションは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "request",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "メソッドの引数とほとんど同じである。オブジェクトを渡す場合も静的な値と関数の両方をサポートしている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component(...)\nexport class App {\n  // POST /data?fast=yes + headers + body + credentials\n  readonly data = httpResource(\n    () => ({\n      url: '/data',\n      method: 'POST',\n      body: {message: 'Hello, backend!'},\n      headers: {\n        'X-Special': 'true',\n      },\n      params: {\n        'fast': 'yes',\n      },\n      withCredentials: true,\n    }),\n  );\n}"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Response Value Mapping",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "第二引数の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "map",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "オプションでは、HTTPレスポンスボディに簡単な加工を加えてから",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "value",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "シグナルに格納するよう変換関数を渡すことができる。たとえばJSONオブジェクトからなんらかのクラスインスタンスへの変換をしたり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "zod",
+          "href": "https://zod.dev/",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "のようなバリデーション関数を挟んだりできる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component(...)\nexport class App {\n  readonly data = httpResource(`/api/user/${this.userId()}`, {\n    map: (data) => User.parse(data),\n  });\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "How it works",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ソースコードを読めばわかるが、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "httpResource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は既存の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を組み合わせただけのヘルパーだ。そのため",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のインターセプターも変わらず動作するし、逆に言えば ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideHttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " で",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "自体を利用可能にしていないと使えない。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "また、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と同様に内部的には",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "effect",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に依存している。つまり、依存性の注入が行えるコンテキストでなければ呼び出せない。コンポーネントのフィールド初期化、コンストラクタであれば普通に使えるが、それ以外の場所では工夫が必要になる。ちなみに、第2引数の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "injector",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "オプションに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Injector",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "オブジェクトを渡せばそのコンテキストで動作するようになっている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "// 任意の注入コンテキストでhttpResourceを呼び出す\nconst res = httpResource('/data', { injector: TestBed.inject(Injector) });"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Use-cases",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここまで見たように、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "httpResource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は結局",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "でデータを解決する",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を作成するため、まさにそのようなコードを書いていた部分ではボイラープレートを削減する助けになるだろう。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "のメソッドは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Observable",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を返すため、これまでは純粋な",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ではなく",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "rxResource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使うか、いちいち",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Promise",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に変換する必要があったが、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "httpResource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "であればそのあたりを気にする必要はなくなる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "一方、これまで",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と関係なく",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を使っていた処理を",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "httpResource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に書きける必要があるかといえば、今のところは無いといっていいだろう。多くの場合はサービスクラスのメソッドでリクエストを送っていると思うが、そのような手続き的なコードからシグナルベースのリアクティブなコードに書き換えるのはなかなか骨が折れる大工事になる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "アプリケーション全体をリアクティブに書き換えていくことがあれば、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "や",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "httpResource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を取り入れていくくらいの構えでいいだろう。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の活用には前提としてアプリケーションのシグナルベース化、リアクティブ化が必要である。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Conclusion",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "以上見てきたように、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "httpResource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "HttpClient",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の組み合わせを簡略化する実験的APIだ。アプリケーションのリアクティブ化を進める中で、HTTPリクエストをシグナルベースで扱いたい場合に有用なツールとなるだろう。現時点では実験的な機能であるため、今後のAPIの変更には注意が必要だ。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
