@@ -1,0 +1,58 @@
+{
+  "pageId": "1ab3521b-014a-80fb-b2b3-edfd08438071",
+  "lastEditedAt": "2025-03-03T23:40:00.000Z",
+  "slug": "v-tokyo-22-pre",
+  "locale": "ja",
+  "properties": {
+    "title": "v-tokyo#22 でAngularのSignalsについて話します",
+    "date": "2025-03-03T23:40:00.000Z",
+    "category": "Diary",
+    "tags": ["日記", "登壇"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "タイトルのとおりですが、3/28金曜日のv-tokyo#22で、AngularのSignalsについてお話させていただけることになりました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://vuejs-meetup.connpass.com/event/343338/"
+    },
+    {
+      "type": "tweet",
+      "url": "https://x.com/vuefes/status/1896411400115007511"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "メインはVue.jsやalien-signalsのセッションですが、PreactやSvelteなどそれぞれのSignalsについてのセッションもあり、バリエーション豊かでなかなか賑やかな会になりそうです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "external": false,
+      "path": "v-tokyo-22-pre/3c6255ea-b6c7-4055-8126-638d2819f0c3/ec55646f-1109-4eb2-87e5-0a8dc9604374.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "当日はオフライン参加している予定なので、何か聞きたいことなどあればぜひ現地で気軽に話しかけてください。",
+          "annotations": {}
+        }
+      ]
+    }
+  ]
+}
