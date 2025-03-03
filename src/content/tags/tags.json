@@ -362,5 +362,9 @@
   "本屋": {
     "name": "本屋",
     "color": "brown"
+  },
+  "登壇": {
+    "name": "登壇",
+    "color": "green"
   }
 }
