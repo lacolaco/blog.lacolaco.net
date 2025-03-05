@@ -1,6 +1,6 @@
 {
   "pageId": "1ad3521b-014a-80e5-bde2-e61a84634c57",
-  "lastEditedAt": "2025-03-05T09:25:00.000Z",
+  "lastEditedAt": "2025-03-05T15:04:00.000Z",
   "slug": "weekly-commits-on-angular-2025-03-05",
   "locale": "ja",
   "properties": {
@@ -462,7 +462,7 @@
       "text": [
         {
           "type": "text",
-          "text": "provideSercierRoutesConfig",
+          "text": "provideServerRoutesConfig",
           "annotations": {
             "code": true
           }
@@ -488,7 +488,7 @@
         },
         {
           "type": "text",
-          "text": "provideSercierRoutesConfig",
+          "text": "provideServerRoutesConfig",
           "annotations": {
             "code": true
           }
@@ -500,7 +500,7 @@
         },
         {
           "type": "text",
-          "text": "provideSercierRouting",
+          "text": "provideServerRouting",
           "annotations": {
             "code": true
           }
