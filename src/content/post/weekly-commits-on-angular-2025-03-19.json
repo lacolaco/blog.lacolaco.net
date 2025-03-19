@@ -1,0 +1,777 @@
+{
+  "pageId": "1bb3521b-014a-80de-aa71-c45e578737b9",
+  "lastEditedAt": "2025-03-19T06:09:00.000Z",
+  "slug": "weekly-commits-on-angular-2025-03-19",
+  "locale": "ja",
+  "properties": {
+    "title": "Weekly Commits on Angular 2025-03-19",
+    "date": "2025-03-19T06:08:00.000Z",
+    "category": "Tech",
+    "tags": ["Angular"],
+    "canonicalUrl": "https://zenn.dev/lacolaco/articles/weekly-commits-on-angular-2025-03-19"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "一週間の間にAngular関連レポジトリへ取り込まれたコミットについて見ていきます。フレームワーク・ツールの利用者にあまり関係のないものは省略しています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "angular/angular",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Commits: ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "https://github.com/angular/angular/commits/main/?since=2025-03-13&until=2025-03-19",
+          "href": "https://github.com/angular/angular/commits/main/?since=2025-03-13&until=2025-03-19",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "docs: added short explanation about event reply (#60349) ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular/commit/55ba1ededdbd0799830ae37048ac4402bc0dc2b2"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ハイドレーションのガイドドキュメントにEvent Replayについてのセクションが追加されました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://angular.dev/guide/hydration#event-replay"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "feat(compiler-cli): support type checking of host bindings (#60267) ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "コンパイラーが、コンポーネントやディレクティブのホストバインディングに対する型チェックをサポートするようになりました。これにより、ホストバインディング内の型エラーが早期に発見されるため、安全に利用できます。この改善により Language Serviceで型エラーを検出できている様子がプルリクエストの説明文で確認できます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular/pull/60267"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "feat(core): add support for two-way bindings on dynamically-created components (#60342)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular/commit/1971e57a457ff9fd4dc8a353b59b51364e08b443"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "動的に生成されたコンポーネントで双方向バインディングがサポートされるようになりました。先週実装された動的コンポーネントへの宣言的バインディング機能の拡張です。次のような書き方でSignalを介した双方向バインディングを宣言できます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "import {createComponent, signal, twoWayBinding} from '@angular/core';\n\nconst value = signal('');\n\ncreateComponent(MyCheckbox, {\n  bindings: [\n    twoWayBinding('value', value),\n  ],\n});"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "fix(core): remove rejectErrors option encourages uncaught exceptions (#60397)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular/commit/48974c3cf88ab1a70411bea4950823f975994087"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "toSignal()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " ユーティリティ関数から",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "rejectErrors",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "オプションが削除されます。詳しい背景はコミットメッセージに書いてありますが、現在このフラグに依存しているコードは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "toSignal(myStream.pipe(catchError(() => EMPTY)))",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のような形で、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "toSignal",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数に渡すObservableの段階でエラーハンドリングについての振る舞いを制御するように変更する必要があります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "破壊的変更ではありますが、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "toSignal",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数はまだ開発者プレビューであるため、非推奨段階を踏まずにv20でリリースされます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "angular/angular-cli",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Commits: ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "https://github.com/angular/angular-cli/commits/main/?since=2025-03-13&until=2025-03-19",
+          "href": "https://github.com/angular/angular-cli/commits/main/?since=2025-03-13&until=2025-03-19",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "@angular/ssr APIの安定化",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular-cli/commit/cdfc50c29a2aa6f32d172b505a0ef09e563dfc59"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular-cli/commit/33b9de3eb1fa596a4d5a975d05275739f2f7b8ae"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "サーバーサイドレンダリングのための新しいAPIが開発者プレビューから安定APIに昇格しました。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideServerRouting",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は一時的に安定版となりましたが、すぐ後に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "provideServerRendering",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という包括的なAPIに置き換わる形で消えています。開発者プレビュー版で利用していた場合は移行が必要です。（ng updateでの自動マイグレーションがあります）",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular-cli/commit/26fd4ea73ad2a0148ae587d582134c68a0bf4b86"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "feat(@angular/build): Support Sass package importers",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular-cli/commit/f4be831197010a17394264bc74b1eb385ba95028"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Sassに新たに実装されたパッケージインポート機能に対応しました。Sassファイルから",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "node_modules",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "で管理されたパッケージを参照する時、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "pkg:library",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というフォーマットを使うことができます。これまでは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "load_paths",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "に",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "node_modules",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を含めたり、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "~",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " プレフィックスをつけたりと使うバンドラーやビルドツールによってバラバラでしたが、統一された仕組みが提供されることでSassコードのポータビリティが改善されます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "link_preview",
+      "url": "https://sass-lang.com/blog/announcing-pkg-importers/"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "fix(@schematics/angular): generate components without a .component extension/type ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular-cli/commit/23fc8e1e176f23442876b086bff52dd5f35abbc0"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ng generate",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドなどで生成されるコンポーネントがデフォルトで",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "Component",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "サフィックスを持たなくなります。またファイル名からも",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".component",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "という部分がなくなります。この変更は先週の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": ".ng.html",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " への変更と同じく、Angular Style Guideの改訂に対応するものです。これまでと同じようにサフィックスをつけたい場合は、明示的な",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "—type=Component",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " というオプションが利用できます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular/discussions/59522"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "同様の変更がServiceファイルについても行われています。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/angular-cli/commit/bc0f07b484300848ee81c5719c58909b40f99deb"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "angular/components",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Commits: ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "https://github.com/angular/components/commits/main/?since=2025-03-13&until=2025-03-19",
+          "href": "https://github.com/angular/components/commits/main/?since=2025-03-13&until=2025-03-19",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "feat(material/button): allow appearance to be set dynamically ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/components/commit/e79f60558fec6055c78dddc9d6e291a600778bc5"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "MatButton",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "コンポーネントの表示種別をバインディングにより動的に変更できるようになりました。これまでは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button mat-flat-button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " や ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button mat-outlined-button>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のように属性セレクターと一体となっており、動的に変更することはできませんでした。今回新たに ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button matButton=”outlined”>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " のような指定が可能となり、右辺にセットされる値によって動的に表示を変えられるようになりました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "既存の属性セレクターはv20時点では互換性があり、破壊的変更にはなっていませんが、いずれ非推奨となることは予想されるため移行推奨と言えるでしょう。今後ng updateによる自動マイグレーションが用意されるかもしれません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "feat(material/button): add support for tonal button (#30638)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/components/commit/fb81ab4f234498acd5b9925087bb712a7db039f6"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "MatButton",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "にもう一つの機能追加があり、こちらは新たな表示種別の追加です。Material Design v3 (Material 3) で定義されている “Filled Tonal Button” の表示に対応しました。OutlinedとFilledの中間にあたる強調レベルのボタンです。上述の新しいAPIにのみ対応しており、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "<button matButton=”tonal”>",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " という指定で利用可能です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "link_preview",
+      "url": "https://m3.material.io/components/buttons/guidelines#07a1577b-aaf5-4824-a698-03526421058b"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "text": [
+        {
+          "type": "text",
+          "text": "fix(material/autocomplete): allow overlay backdrop by setting hasBackdrop option (#30631)",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/angular/components/commit/097f49d90f5fe079a0399fd499202a8bdd1542cf"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "MatAutocomplete",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ディレクティブがバックドロップを持てるようになりました。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "link_preview",
+      "url": "https://material.angular.io/components/autocomplete/overview"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "これまではインラインでオートコンプリート用のドロップダウンリストが表示されるだけでしたが、バックドロップを使うことでどれかの候補を選択するまで他の操作を防ぐようなモーダル表示ができるようになります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
