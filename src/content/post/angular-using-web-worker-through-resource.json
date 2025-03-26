@@ -1,0 +1,602 @@
+{
+  "pageId": "1c23521b-014a-8006-826d-f570a3e9e91c",
+  "lastEditedAt": "2025-03-26T01:55:00.000Z",
+  "slug": "angular-using-web-worker-through-resource",
+  "locale": "ja",
+  "properties": {
+    "title": "Angular: Using Web Worker through Resource",
+    "date": "2025-03-26T01:33:00.000Z",
+    "category": "Tech",
+    "tags": ["Angular", "Web Worker", "Signals"],
+    "canonicalUrl": "https://zenn.dev/lacolaco/articles/angular-using-web-worker-through-resource"
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この記事では、Angularの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIを通じてWeb Workerを使うアプローチの実装例を紹介する。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " はそのユースケースがHTTP通信をSignalと接続するものだというイメージが強いが、値の解決が非同期であるならどこにでも",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の出番はある。HTTP通信には専用の",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "httpResource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIが登場したことも踏まえて、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "にはそれ以外の道での活躍を考えたほうがいい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "Web Worker",
+          "href": "https://developer.mozilla.org/ja/docs/Web/API/Web_Workers_API",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "は言わずとしれたJavaScriptにおけるマルチスレッドプログラミングのための機能だ。別スレッドで処理をしてその結果を受け取るというのは、必然的に非同期的な処理になる。そして、Promiseで表現できる非同期処理はなんでも",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "でラップできる。負荷の高い計算処理をメインスレッドから逃がすというシナリオで簡単なサンプルを実装してみよう。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Using Web Worker",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まずはAngularアプリケーションにWeb Workerを導入しよう。Angular CLIは ",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "ng generate",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " コマンドでWeb Workerを使うためのファイルを生成してくれる。適当に生成した新規プロジェクトで、次のコマンドを実行する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "shell",
+      "filename": "",
+      "text": "$ ng generate web-worker echo"
+    },
+    {
+      "type": "link_preview",
+      "url": "https://angular.jp/ecosystem/web-workers"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "このコマンドを実行すると、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "echo.worker.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " と",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "tsconfig.worker.json",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " の2つのファイルが生成され、angular.jsonファイルの中にwebWorkerTsConfig設定が追加される。これでAngular CLIは",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "echo.worker.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "をWeb Workerとして実行できるようにビルドする。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "echo.worker.ts",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " は受け取ったメッセージをそのまま返却するが、負荷の高い計算処理をシミュレートする目的で1秒の遅延を加えることにする。これでWeb Worker側の実装は終わりである。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "/// <reference lib=\"webworker\" />\n\naddEventListener('message', ({ data }) => {\n  const response = data || 'No Message';\n  // delay for 1 second to simulate a slow calculation\n  setTimeout(() => postMessage(response), 1000);\n});\n"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "Web Worker over Resource",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次に、AngularアプリケーションからWeb Workerを呼び出すための実装を追加する。まずはecho関数を作成し、Web Workerでの処理をPromiseにラップしておく。やることは単純で、Workerに対して",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "postMessage",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "でメッセージを送り、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "onmessage",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "でPromiseを解決するだけだ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回はサンプルなので、関数呼び出しのたびに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "new Worker()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "を呼び出している。現実的には一度作成したWorkerインスタンスは再利用しないとオーバーヘッドが大きいことに注意してほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "function echo(message: string): Promise<string> {\n  return new Promise((resolve) => {\n    const worker = new Worker(new URL('./echo.worker', import.meta.url));\n    worker.onmessage = ({ data }) => {\n      worker.terminate();\n      resolve(data);\n    };\n    worker.postMessage(message);\n  });\n}"
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "echo",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数をAngularの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIと接続する。ユーザーがテキストフィールドで文字列を入力したら、それをWorkerに送ってレスポンスを表示するようにしてみよう。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "message",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "フィールドは入力されたテキストの値を保持するSignalで、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "workerMessage",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "はWorkerから返されたメッセージを保持するResourceである。",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "workerMessage",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "は",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "message",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "の値が変わるたびに",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "echo",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "関数を呼び出して値を解決する。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "code",
+      "language": "typescript",
+      "filename": "",
+      "text": "@Component({\n  selector: 'app-root',\n  imports: [FormsModule],\n  template: `\n  <div>\n    <input type=\"text\" [(ngModel)]=\"message\" />\n    <p> Worker: {{ \n      workerMessage.isLoading() ? 'Waiting...' : workerMessage.value() \n    }}</p>\n  </div>\n  `,\n})\nexport class AppComponent {\n  readonly message = signal('hello');\n\n  readonly workerMessage = resource({\n    request: () => ({ message: this.message() }),\n    loader: ({ request }) => echo(request.message),\n  });\n}\n"
+    },
+    {
+      "type": "image",
+      "external": false,
+      "path": "angular-using-web-worker-through-resource/3c6255ea-b6c7-4055-8126-638d2819f0c3/b4c6abe2-5bb0-41d4-a5c8-4578a74260f3.gif",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "キャプチャから実際に動いている様子が確認できる。同様のことはもちろん",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " を使わなくても実現できるが、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "でラップすることによる利点もある。もちろんResourceインターフェースの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "isLoading()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "や",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "error()",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "などのSignalが使いやすいのはもちろんだが、特に大きいのは、RxJSでいうところの",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "switchMap",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "的な効果、つまり同時に複数の解決が走って値の更新がコンフリクトするということが起きない点だ。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "キャプチャでも実はその様子がわかるが、テキストを変更してから値が返ってくるまでの1秒間にさらにテキストが変更されると、Resourceの読み込みは再度トリガーされる。このとき、すでに先行する読み込みが走っていた場合はそれをキャンセルし、常に最新のリクエストでのみ値が解決されるようになっている。素のPromiseやObservableでラップしただけではこの点で工夫が必要になるが、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "resource",
+          "annotations": {
+            "code": true
+          }
+        },
+        {
+          "type": "text",
+          "text": " APIでは何もしなくてもコンフリクトを回避してくれる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Angularの",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "resource",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " APIをWeb Workerと組み合わせることで、非同期処理の実装を簡素化できる",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "HTTP通信以外の非同期処理でも",
+              "annotations": {}
+            },
+            {
+              "type": "text",
+              "text": "resource",
+              "annotations": {
+                "code": true
+              }
+            },
+            {
+              "type": "text",
+              "text": " APIは有用なツールとなる",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "値の解決の競合を自動的に回避してくれる機能は、Web Worker利用時に特に有効",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "ローディング状態の管理が容易になり、実装が簡潔になる",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "今回のコードの全体はGitHubで公開している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://github.com/lacolaco/angular-webworker-resource-example"
+    }
+  ]
+}
