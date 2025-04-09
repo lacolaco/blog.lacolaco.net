@@ -1,6 +1,6 @@
 {
   "pageId": "1d03521b-014a-8070-af87-dfbe63ce9c9a",
-  "lastEditedAt": "2025-04-09T14:27:00.000Z",
+  "lastEditedAt": "2025-04-09T14:43:00.000Z",
   "slug": "angular-selectorless-is-coming",
   "locale": "ja",
   "properties": {
@@ -126,19 +126,7 @@
       "text": [
         {
           "type": "text",
-          "text": "Selectorless",
-          "annotations": {}
-        },
-        {
-          "type": "text",
-          "text": "\n",
-          "annotations": {
-            "bold": true
-          }
-        },
-        {
-          "type": "text",
-          "text": "\nTo reduce boilerplate and improve the ergonomics of standalone components we are now designing a solution that will make selectors optional. To use a component or directive you'll be able to import it and directly use it in a component's template.\nWe're still in early stages of planning selectorless. We'll share a request for comments when we have an early design and we're ready for next steps.",
+          "text": "Selectorless\nTo reduce boilerplate and improve the ergonomics of standalone components we are now designing a solution that will make selectors optional. To use a component or directive you'll be able to import it and directly use it in a component's template.\nWe're still in early stages of planning selectorless. We'll share a request for comments when we have an early design and we're ready for next steps.",
           "annotations": {}
         }
       ]
