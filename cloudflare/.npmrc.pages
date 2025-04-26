@@ -1,4 +1,0 @@
-# npmrc for Cloudflare Pages
-shamefully-hoist=true
-@lacolaco:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}
