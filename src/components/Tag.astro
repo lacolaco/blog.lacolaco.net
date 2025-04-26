@@ -15,6 +15,6 @@ const color = getCategoryByName(name)?.color ?? getTagByName(name)?.color ?? 'de
 
 <a
   style={`--color-tag-bg: var(--color-tag-bg-${color}); --color-tag-text: var(--color-tag-text-${color});`}
-  class={`leading-relaxed text-xs inline-block px-2 rounded bg-[var(--color-tag-bg)] text-[var(--color-tag-text)] hover:shadow-tag`}
+  class={`leading-relaxed text-xs inline-block px-2 rounded-sm bg-[var(--color-tag-bg)] text-[var(--color-tag-text)] hover:shadow-tag`}
   href={isCategory ? `/categories/${urlizedName}` : `/tags/${urlizedName}`}>{name}{count && ` (${count})`}</a
 >
