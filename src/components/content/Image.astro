@@ -41,14 +41,14 @@ async function getLocalImageSize(src: string): Promise<{ width: number; height: 
   {
     image.external ? (
       <img
-        class="object-contain w-full md:max-w-screen-md max-h-[75vh]"
+        class="object-contain w-full md:max-w-(--breakpoint-md) max-h-[75vh]"
         src={image.url}
         decoding="async"
         loading="lazy"
       />
     ) : (
       <img
-        class="object-contain w-full md:max-w-screen-md max-h-[75vh]"
+        class="object-contain w-full md:max-w-(--breakpoint-md) max-h-[75vh]"
         src={`/images/${image.path}`}
         {...await getLocalImageSize(image.path)}
         srcset={[

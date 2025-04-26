@@ -10,7 +10,7 @@ const { class: className, showDescription } = Astro.props;
 ---
 
 <header
-  class="group max-w-screen-lg mx-[2rem] lg:mx-auto flex flex-col py-4"
+  class="group max-w-(--breakpoint-lg) mx-[2rem] lg:mx-auto flex flex-col py-4"
   class:list={className}
 >
   <div class="w-full grid grid-rows-[34px] grid-cols-[1fr_auto_1fr] items-center">
@@ -56,10 +56,10 @@ const { class: className, showDescription } = Astro.props;
     )
   }
   <div
-    class="grid grid-rows-[0fr] group-[[data-search-open]]:grid-rows-[1fr] transition-[grid-template-rows] ease-in-out duration-200"
+    class="grid grid-rows-[0fr] group-data-search-open:grid-rows-[1fr] transition-[grid-template-rows] ease-in-out duration-200"
   >
     <div class="overflow-hidden">
-      <div class="p-2 mt-3 bg-white border border-solid border-gray-200 rounded">
+      <div class="p-2 mt-3 bg-white border border-solid border-gray-200 rounded-sm">
         <div class="gcse-search"></div>
       </div>
     </div>
