@@ -71,7 +71,7 @@ importers:
         version: 4.20250422.0
       '@iconify/json':
         specifier: ^2.2.161
-        version: 2.2.329
+        version: 2.2.330
       '@iconify/tailwind':
         specifier: ^1.0.0
         version: 1.2.0
@@ -599,8 +599,8 @@ packages:
   '@fontsource/zen-kaku-gothic-new@5.1.0':
     resolution: {integrity: sha512-Iadu+wXoLs320Qy7Ihxz69A565PunVTi8ha8swxaMsdbJf8tkcGx/PfRL7uba/1DZdkA/mii/DQKgRxbYoZDVw==}
 
-  '@iconify/json@2.2.329':
-    resolution: {integrity: sha512-t8h9fj+u5Fjre4jifYaC1SPqzIxZ8OIJefzSlLpjX0+2ejrcXKiYl+slIQ1uv2Eco28c+gzkvrwO7cXr3sELMw==}
+  '@iconify/json@2.2.330':
+    resolution: {integrity: sha512-pBG1L+Oz2vnN+qEotNip2Mz2w0hND6WMvgw3+bQ51nu2XiwMwW7gyuzlHdIcUN61AtqfVRG7izyhsxX/edLT2g==}
 
   '@iconify/tailwind@1.2.0':
     resolution: {integrity: sha512-KgpIHWOTcRYw1XcoUqyNSrmYyfLLqZYu3AmP8zdfLk0F5TqRO8YerhlvlQmGfn7rJXgPeZN569xPAJnJ53zZxA==}
@@ -3433,7 +3433,7 @@ snapshots:
 
   '@fontsource/zen-kaku-gothic-new@5.1.0': {}
 
-  '@iconify/json@2.2.329':
+  '@iconify/json@2.2.330':
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.2
