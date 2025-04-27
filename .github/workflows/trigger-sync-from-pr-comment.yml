@@ -18,6 +18,7 @@ jobs:
           command: '.sync'
           allowed_contexts: pull_request
           reaction: 'eyes'
+          skip_ci: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Trigger Workflow
         if: ${{ steps.command.outputs.continue == 'true' }}
