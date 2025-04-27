@@ -16,7 +16,7 @@
     "notion-fetch": "tsx --env-file .env tools/notion-fetch/main.ts",
     "pages:dev": "npx wrangler pages dev dist"
   },
-  "packageManager": "pnpm@10.8.1",
+  "packageManager": "pnpm@10.9.0",
   "dependencies": {
     "@astrojs/prism": "3.2.0",
     "@astrojs/react": "4.2.5",
