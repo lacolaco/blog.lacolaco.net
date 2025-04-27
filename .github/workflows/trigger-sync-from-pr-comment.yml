@@ -11,6 +11,7 @@ jobs:
       pull-requests: write
       issues: write
       checks: read
+      actions: write
     steps:
       - uses: github/command@c6920ac0ecbac4544f6f6234d8a02299db570773 # v2.0.0
         id: command
