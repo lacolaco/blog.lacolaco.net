@@ -91,7 +91,6 @@ module.exports = {
       });
       addComponents({
         '.markdown-body': {
-          fontFamily: theme('fontFamily.base'),
           blockquote: {
             color: theme('textColor.muted'),
           },
@@ -106,16 +105,6 @@ module.exports = {
           '[data-code-filename] + pre': {
             position: 'relative',
             'border-top-left-radius': '0',
-          },
-          p: {
-            lineHeight: theme('lineHeight.loose'),
-            '&+p': {
-              marginTop: '1.5em',
-              overflowWrap: 'break-word',
-            },
-          },
-          'figcaption p': {
-            textAlign: 'center',
           },
           'ul, ol': {
             paddingLeft: '2em',

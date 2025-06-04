@@ -1,0 +1,35 @@
+---
+import BaseHead from 'src/components/BaseHead.astro';
+import Footer from 'src/components/Footer.astro';
+import Header from 'src/components/Header.astro';
+import MainContainer from 'src/components/MainContainer.astro';
+import ShareButtons from 'src/components/ShareButtons.astro';
+import { SITE_TITLE } from 'src/consts';
+import { Content, frontmatter } from '../content/kitchen-sink.md';
+
+const { title } = frontmatter;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <BaseHead title={`${title} | ${SITE_TITLE}`} description={''} />
+  </head>
+
+  <body class="font-base bg-default">
+    <Header class="" />
+
+    <MainContainer>
+      <article class="py-8 lg:py-16">
+        <div class="markdown-body mb-4">
+          <Content />
+        </div>
+        <div class="mt-8">
+          <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
+        </div>
+      </article>
+    </MainContainer>
+
+    <Footer class="py-4" />
+  </body>
+</html>

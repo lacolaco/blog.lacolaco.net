@@ -1,5 +1,5 @@
 ---
-import { ImageNode } from '@lib/post';
+import { type ImageNode } from '@lib/post';
 import Text from './Text.astro';
 
 type Props = ImageNode;
@@ -37,42 +37,44 @@ async function getLocalImageSize(src: string): Promise<{ width: number; height: 
 }
 ---
 
-<figure class="flex flex-col items-center py-2">
-  {
-    image.external ? (
-      <img
-        class="object-contain w-full md:max-w-(--breakpoint-md) max-h-[75vh]"
-        src={image.url}
-        decoding="async"
-        loading="lazy"
-      />
-    ) : (
-      <img
-        class="object-contain w-full md:max-w-(--breakpoint-md) max-h-[75vh]"
-        src={`/images/${image.path}`}
-        {...await getLocalImageSize(image.path)}
-        srcset={[
-          `${imageLoader({ src: `/images/${image.path}`, width: 640 })} 640w`,
-          `${imageLoader({ src: `/images/${image.path}`, width: 768 })} 768w`,
-          `${imageLoader({ src: `/images/${image.path}`, width: 1024 })} 1024w`,
-        ].join(',')}
-        alt={
-          image.caption
-            ? Array.isArray(image.caption)
-              ? image.caption.map((node) => node.text).join('')
-              : image.caption
-            : ''
-        }
-        loading="lazy"
-        decoding="async"
-      />
-    )
-  }
-  {
-    image.caption && (
-      <figcaption class="text-center text-sm text-gray-500">
-        {Array.isArray(image.caption) ? image.caption.map((node) => <Text {...node} />) : image.caption}
-      </figcaption>
-    )
-  }
-</figure>
+<p>
+  <figure class="flex flex-col items-center py-2">
+    {
+      image.external ? (
+        <img
+          class="object-contain w-full md:max-w-(--breakpoint-md) max-h-[75vh]"
+          src={image.url}
+          decoding="async"
+          loading="lazy"
+        />
+      ) : (
+        <img
+          class="object-contain w-full md:max-w-(--breakpoint-md) max-h-[75vh]"
+          src={`/images/${image.path}`}
+          {...await getLocalImageSize(image.path)}
+          srcset={[
+            `${imageLoader({ src: `/images/${image.path}`, width: 640 })} 640w`,
+            `${imageLoader({ src: `/images/${image.path}`, width: 768 })} 768w`,
+            `${imageLoader({ src: `/images/${image.path}`, width: 1024 })} 1024w`,
+          ].join(',')}
+          alt={
+            image.caption
+              ? Array.isArray(image.caption)
+                ? image.caption.map((node) => node.text).join('')
+                : image.caption
+              : ''
+          }
+          loading="lazy"
+          decoding="async"
+        />
+      )
+    }
+    {
+      image.caption && (
+        <figcaption class="text-center text-sm text-gray-500">
+          {Array.isArray(image.caption) ? image.caption.map((node) => <Text {...node} />) : image.caption}
+        </figcaption>
+      )
+    }
+  </figure>
+</p>

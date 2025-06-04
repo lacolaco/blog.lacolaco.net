@@ -2,6 +2,10 @@
 
 @config '../../tailwind.config.js';
 
+@theme {
+  --text-3xl: 2rem;
+}
+
 /*
   The default border color has changed to `currentcolor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
@@ -58,12 +62,77 @@
   --color-border-default: #d0d7de;
   --color-border-muted: hsla(210, 18%, 87%, 1);
 
+  /* Copy from GitHub */
   --font-sans:
-    ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, 'Hiragino Sans',
-    'Hiragino Kaku Gothic ProN', 'Hiragino Sans GB', メイリオ, Meiryo, 'Apple Color Emoji', Arial, sans-serif,
-    'Segoe UI Emoji', 'Segoe UI Symbol';
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji';
   --font-title: 'Zen Kaku Gothic New', ui-sans-serif, -apple-system, Helvetica, Arial, sans-serif;
   --font-mono:
     SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol,
     Noto Color Emoji;
+}
+
+@layer components {
+  .markdown-body {
+    @apply font-base;
+
+    & > *:first-child {
+      @apply mt-0;
+    }
+    & > *:last-child {
+      @apply mb-0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      @apply mt-6 mb-4 font-semibold leading-tight;
+    }
+    h1 {
+      @apply text-3xl pb-[.3em] border-b border-solid border-b-gray-200;
+    }
+    h2 {
+      @apply text-2xl pb-[.3em] border-b border-solid border-b-gray-200;
+    }
+    h3 {
+      @apply text-xl;
+    }
+    h4 {
+      @apply text-lg;
+    }
+
+    p,
+    blockquote,
+    ul,
+    ol,
+    dl,
+    table,
+    pre,
+    details {
+      @apply mt-0 mb-4;
+    }
+
+    details {
+      @apply block;
+    }
+
+    p {
+      @apply leading-normal break-words;
+    }
+
+    img {
+      @apply max-w-full box-content place-self-center;
+    }
+
+    figure {
+      @apply flex flex-col items-center;
+    }
+
+    figcaption {
+      @apply text-center text-sm text-gray-500;
+    }
+  }
 }
