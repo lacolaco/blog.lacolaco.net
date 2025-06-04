@@ -1,5 +1,5 @@
 ---
-import { CollectionEntry, getCollection } from 'astro:content';
+import { type CollectionEntry, getCollection } from 'astro:content';
 import { getRelativePostUrl, findLocalizedVersion } from '@lib/i18n';
 import BlogPost from '../../../layouts/BlogPost.astro';
 
@@ -23,4 +23,4 @@ const jaVersion = await findLocalizedVersion(post.data, 'ja');
 ---
 
 <BlogPost post={post.data} otherLocaleUrls={{ ja: jaVersion && getRelativePostUrl(jaVersion.data) }} />
- ```
+```
