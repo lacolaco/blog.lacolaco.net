@@ -1,5 +1,5 @@
-import { PageObjectWithContent } from '@lib/notion';
-import { PostData, postSchema } from '@lib/post';
+import type { PageObjectWithContent } from '@lib/notion';
+import { type PostData, postSchema } from '@lib/post';
 import { FileSystem } from '../file-system';
 import { newContentTransformer } from './transform';
 

@@ -1,5 +1,5 @@
 import * as notion from '@lib/notion';
-import {
+import type {
   BulletedListNode,
   CalloutNode,
   CodeNode,

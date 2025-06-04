@@ -1,4 +1,4 @@
-import { BlogDatabaseProperties } from '@lib/notion';
+import { type BlogDatabaseProperties } from '@lib/notion';
 import { Categories, Tags } from '@lib/post';
 
 export function toTagsJSON(config: BlogDatabaseProperties['tags']): Tags {
