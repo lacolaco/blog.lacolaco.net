@@ -1,0 +1,1233 @@
+{
+  "pageId": "2083521b-014a-8078-b103-c38f323bef11",
+  "lastEditedAt": "2025-06-04T11:09:00.000Z",
+  "slug": "book-review-looks-good-to-me",
+  "locale": "ja",
+  "properties": {
+    "title": "秀和システム『Looks Good To Me』を読んだ  #lgtm本",
+    "date": "2025-06-04T10:45:00.000Z",
+    "category": "Diary",
+    "tags": ["日記", "読書", "コードレビュー"]
+  },
+  "content": [
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "2025年5月30日に発売された秀和システムの『Looks Good To Me』を読み終わったので、読後の感想を書く。実はTwitterで募集されていた読者レビュアーに応募して選ばれたので、自分で買ったわけではないことは明記しておく（ステルスマーケティング回避）。金を払っていないのでレビューとしては信頼性に欠けるかもしれないが、忖度なくめっちゃいい本だったので普通に紹介したい。アフィリエイトリンクは無い。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://www.shuwasystem.co.jp/book/9784798071442.html"
+    },
+    {
+      "type": "tweet",
+      "url": "https://x.com/shuwasystem_inf/status/1922109543338631239"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "量的構成",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "まずは量的構成について。この本は4つの部と付録から成り、そのページ数は下図のような配分になっている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Part 1 コードレビューの基本",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Part 2 高度なコードレビューに必須の要素",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Part 3 ジレンマへの対処",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Part 4 コードレビューとその他の開発プラクティスを組み合わせる",
+              "annotations": {}
+            }
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "external": false,
+      "path": "book-review-looks-good-to-me/3c6255ea-b6c7-4055-8126-638d2819f0c3/577fca66-53d1-4962-af3c-a0df825f87a4.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "もっとも文量が多いのはPart 1「コードレビューの基本」で、次いで Part 2「高度なコードレビューに必須の要素」も同じくらいある。付録を除けば3分の2くらいがこの2つの部で占められる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "次に章の単位で見てみると、下図のような配分になっている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Part 1",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Chapter 1 コードレビューの重要性",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Chapter 2 コードレビュー徹底解剖",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Chapter 3 チームの最初のコードレビュープロセスの構築",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Part 2",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Chapter 4 チームワーキングアグリーメント",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Chapter 5 自動化のメリット",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Chapter 6 効果的なコードレビューコメントの作成",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Part 3",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Chapter 7 コードレビューがダメになる理由",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Chapter 8 コードレビューの遅延を減らす",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Chapter 9 プロセスの抜け穴を取り除く",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Chapter 10 緊急時対応プレイブック",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Part 4",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Chapter 11 コードレビューとペアプログラミング",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Chapter 12 コードレビューとモブプログラミング",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Chapter 13 コードレビューとAI",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "image",
+      "external": false,
+      "path": "book-review-looks-good-to-me/3c6255ea-b6c7-4055-8126-638d2819f0c3/edda17d2-43da-4f70-969b-be6ce2f6317a.png",
+      "caption": ""
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "明らかに紙幅が割かれているのはChapter 2「コードレビュー徹底解剖」、次いでChapter 3 「チームの最初のコードレビュープロセスの構築」とChapter 5「自動化のメリット」だ。これは「はじめに」で書かれている対象読者像とマッチしている。まだチームにコードレビュープロセスを構築できていない人、構築されているがうまくいっていないと感じている人、もっとコードレビュープロセスを改善したい人のための本だ。そのために、まずはコードレビューとはいったい何なのか、何が目的なのかという根幹について",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "徹底解剖",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "している。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "あなたは、コードを書いてレビューしていますか？そうであれば、あなたこそ本書を読むべきです。 もう少し具体的に言えば、「Looks Good To Me」は、現在のコードレビュープロセスを改善したい開発者、チームの新しいコードレビュープロセスを確立したい開発者、 非効率的なレビューに疲れ果てて、それを変える方法についてのインスピレーションを必要としている開発者にとって価値があります。特に、「人的ボトルネック」によってコードレビュープロセスに不満を持ち、それを解決してプロセスに対する考えを変えたいと思っている人のためのものです！また、チームの最適なコードレビュープロセスの構築を支援し、実現したいと考えているテックリードやソフトウェア開発マネージャーにとっても、本書は価値があります。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "またこの本の特徴は、そのような概念的・理念的なことばかりではなく具体的なコードレビュープロセスの構築方法についてのハウツー的な要素もたっぷり書かれていることだ。Part 2以降はチームですぐに使えそうなドキュメントテンプレートや、役立つツールの紹介、うまくいかないときの対処方法など、読者のアクションにつながる内容が多い。理念と実践の両方を学べる本だ（それだけ分厚くはあるが）。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "質的構成",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "この本の質的構成を、各章の主題となる問いから整理する。全部読み終わったうえで、各章は次のような問いに対する答えが書かれているように感じられた。特に著者の主張・問題意識が強く出ていた問いは太字にしている。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "bulleted_list",
+      "items": [
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Chapter 1 コードレビューの重要性",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビューとは何か？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビューはなぜ重要なのか？",
+                      "annotations": {
+                        "bold": true
+                      }
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Chapter 2 コードレビュー徹底解剖",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビューには何が必要か？",
+                      "annotations": {
+                        "bold": true
+                      }
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビュー参加者には何が求められるのか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Chapter 3 チームの最初のコードレビュープロセスの構築",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. チームがコードレビューを始めるにはどうすればいいのか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビューのガイドラインはどのように設定されるべきか？",
+                      "annotations": {
+                        "bold": true
+                      }
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Chapter 4 チームワーキングアグリーメント",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. チームワーキングアグリーメントとは何か？",
+                      "annotations": {
+                        "bold": true
+                      }
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. プロセスに関する明確な期待がないとどのような問題が起こるのか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Chapter 5 自動化のメリット",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビュー作業をできる限り自動化すべきなのはなぜか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビューはどのように自動化できるのか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Chapter 6 効果的なコードレビューコメントの作成",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビューコメントがなぜ重要なのか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. 効果的なコードレビューコメントとはどのようなものか？",
+                      "annotations": {
+                        "bold": true
+                      }
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. 有害なコードレビューコメントとはどのようなものか？",
+                      "annotations": {
+                        "bold": true
+                      }
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Chapter 7 コードレビューがダメになる理由",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビュープロセスはなぜ機能しなくなるのか？",
+                      "annotations": {
+                        "bold": true
+                      }
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Chapter 8 コードレビューの遅延を減らす",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビューはなぜ長引くのか？",
+                      "annotations": {
+                        "bold": true
+                      }
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビューが長引かないようにするにはどうすればいいのか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Chapter 9 プロセスの抜け穴を取り除く",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビュープロセスの抜け穴はどのように発生するのか？",
+                      "annotations": {
+                        "bold": true
+                      }
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. 抜け穴を取り除くにはどうすればいいのか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Chapter 10 緊急時対応プレイブック",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. 通常のプロセスでは対応できない緊急事態にはどうすればいいのか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Chapter 11 コードレビューとペアプログラミング",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. ペアプログラミングによりコードレビューは不要になるのか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. どのようなペアプログラミングが効果的なのか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Chapter 12 コードレビューとモブプログラミング",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. モブプログラミングによりコードレビューは不要になるのか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. どのようなモブプログラミングが効果的なのか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "bulleted_list_item",
+          "text": [
+            {
+              "type": "text",
+              "text": "Chapter 13 コードレビューとAI",
+              "annotations": {}
+            }
+          ],
+          "children": [
+            {
+              "type": "bulleted_list",
+              "items": [
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビューにAIを使うメリットは何か？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビューにおけるAIの（現状の）限界は何か？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                },
+                {
+                  "type": "bulleted_list_item",
+                  "text": [
+                    {
+                      "type": "text",
+                      "text": "Q. コードレビューはこれからどのように変わっていくか？",
+                      "annotations": {}
+                    }
+                  ],
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "全体を通じて著者のエイドリアン氏が強調しているのは、「",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "プロセスを形骸化させない",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "」ということだと感じた。コードレビュープロセスをチームが「良いもの」と実感しながら実践し続けられるためにはどうすればいいのか？ということが書かれている。逆に言えば、",
+          "annotations": {}
+        },
+        {
+          "type": "text",
+          "text": "コードレビューは一般的に「良いもの」とされているのに、現場では悩みの種になってしまう",
+          "annotations": {
+            "bold": true
+          }
+        },
+        {
+          "type": "text",
+          "text": "ことが多いということだ。なぜそうなってしまうのか、どうすれば落とし穴に入りこまずコードレビュープロセスの恩恵を受けられるのか。そのあたりが本書の中心的なテーマだと思う。この問題設定に共感できた人、思い当たる節がある人はぜひ読んでほしい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "本筋とは関係ないが、翻訳本あるあるとして著者のジョークや比喩がよくわからんというのがあるが、本書もその点は多分にある。特にエイドリアン氏は音楽が好きそうで、よく洋楽の歌詞に引っ掛けた例え話が出てくるが、読み飛ばして何の問題もない（苦労したであろう翻訳者には申し訳ない）。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "気に入ったフレーズ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここからは本書の中で気に入ったフレーズをいくつか引用したい。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "p53 Chapter 2 コードレビュー徹底解剖",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "理由が何であれ、レビューを流し読みすべきではありません。 状況に関係なく、適切なレビューを確実に行うことは、 レビュー担当者としての責務です。多くのレビュー担当者は都合よく忘れてしまいがちですが、自分がレビューを通過させたものは、 その後も自分の責任なのです。PRを手短に済ませて承認した後に本番環境が停止した場合、反射的に、コードの作者や「十分にテストをしなかった」QAチームのせいにしてしまいます。 実際には、問題のあるコードを承認したレビュー担当者は、「なぜ見逃してしまったのか?」と自問するべきです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "p136 Chapter 4 チームワーキングアグリーメント",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "設定するべき最も馬鹿馬鹿しいけれども必要なガイドラインは、「互いに礼儀正しく接 する」ことです。「公式ドキュメントに「意地悪するな！」と明記する必要は本当にあるのか？」と思うかもしれません。私は自信を持って「はい！」と答えます。コードレビューが、時として人々の否定的な面を引き出すことがあるのは周知の事実です。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "p187 Chapter 6 効果的なコードレビューコメントの作成",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "妥協点を見つけることは、どちらのコードが「優れている」かを議論して選ぶことではなく、互いに、そして、実際は、将来の全ての開発者にとって、明確でメンテナンスしやすい解決策を見つけることです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "p229 Chapter 8 コードレビューの遅延を減らす",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "あまり知られていませんが、 PR作成者は、 PRの準備に少し努力する必要があります！結局、そこに行き着くのです。変更の背景や正当性を追加することから、作業を管理しやすい単位に整理すること、そして、コミット履歴やドキュメントで明確なストーリーを伝えることまで、全てはPR作成者次第なのです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "これは大変なように思えるかもしれませんが、そうではないと私は考えます。これは、 「適切なPRを準備する労力を費やすことは負担だ」というソフトウェア開発に長年根付 いた思い込みの1つです。ユニットテストやドキュメントの作成と同様に、一部の開発者 は、こうした必須項目がもたらす不便さを嘲笑います。しかし、この態度は、「ただコードを書くだけ」の人の考え方のように聞こえます。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "（中略）私たちははるかに多くのことをしており、その「より多くのこと」こそが最も価値をもたらすことを知っている開発者です。 私たちの役割の大部分を占め、かつ、重要で価値ある要素は、コードを取り巻く知識の集約、整理、伝達です。それは、思いや りの部分であり、気配りの部分です。それこそが、私たちをよりよいソフトウェア開発者にするのです。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "（中略）プロのソフトウェア開発者と名乗りたいのであれば、プロのソフトウェア開発に内在する当然の責務を果たさなければなりません。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "ここはかなり痺れる書きっぷり。エイドリアン氏の魂を感じる。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "p242 Chapter 8 コードレビューの遅延を減らす",
+          "annotations": {
+            "bold": true
+          }
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "• よいコードレビューは時間がかかるが、かかりすぎることはない。コードレビュープロセスにおける不要な遅延を排除することで、コードレビューに対する恐怖を軽減できる",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "quote",
+      "text": [
+        {
+          "type": "text",
+          "text": "• ほとんどの遅延は、明確さの欠如や当然の責務を果たしていないことに起因する",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "text": [
+        {
+          "type": "text",
+          "text": "まとめ",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "text": [
+        {
+          "type": "text",
+          "text": "『Looks Good To Me』は間違いなく良書。あらゆるソフトウェア開発者にとって、コードレビューで困ったらまず読むべき一冊と言っていいと思う。",
+          "annotations": {}
+        }
+      ]
+    },
+    {
+      "type": "link_preview",
+      "url": "https://www.shuwasystem.co.jp/book/9784798071442.html"
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    },
+    {
+      "type": "paragraph",
+      "text": []
+    }
+  ]
+}
