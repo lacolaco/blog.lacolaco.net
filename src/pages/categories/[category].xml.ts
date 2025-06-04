@@ -1,5 +1,5 @@
 import rss from '@astrojs/rss';
-import { PostData } from '@lib/post';
+import { type PostData } from '@lib/post';
 import { queryPosts, queryCategories } from '@lib/query';
 import type { APIContext } from 'astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';

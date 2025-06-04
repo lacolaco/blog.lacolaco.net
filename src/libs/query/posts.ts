@@ -1,6 +1,6 @@
 import { getCollection } from 'astro:content';
 import { compareDesc, isPast } from 'date-fns';
-import { PostData } from '../post/schema';
+import { type PostData } from '../post/schema';
 
 const isDevMode = import.meta.env.MODE === 'development';
 

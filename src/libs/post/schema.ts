@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ContentNode } from './nodes';
+import { type ContentNode } from './nodes';
 
 export const Locale = z.enum(['ja', 'en']);
 export type Locale = z.infer<typeof Locale>;

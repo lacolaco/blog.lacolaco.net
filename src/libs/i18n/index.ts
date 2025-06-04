@@ -1,6 +1,6 @@
 import { getCollection } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { Locale, PostData } from '../post/schema';
+import { Locale, type PostData } from '../post/schema';
 
 export function getRelativePostUrl(post: PostData) {
   return getRelativeLocaleUrl(post.locale, `${post.slug}`, {
