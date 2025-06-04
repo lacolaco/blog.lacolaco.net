@@ -11,7 +11,7 @@ module.exports = {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     fontFamily: {
-      base: `var(--font-base)`,
+      base: `var(--font-sans)`,
       title: `var(--font-title)`,
       mono: `var(--font-mono)`,
     },
@@ -91,7 +91,7 @@ module.exports = {
       });
       addComponents({
         '.markdown-body': {
-          fontFamily: theme('fontFamily.body'),
+          fontFamily: theme('fontFamily.base'),
           blockquote: {
             color: theme('textColor.muted'),
           },
