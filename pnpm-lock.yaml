@@ -106,8 +106,8 @@ importers:
         specifier: 1.89.0
         version: 1.89.0
       tailwindcss:
-        specifier: 4.1.4
-        version: 4.1.4
+        specifier: 4.1.8
+        version: 4.1.8
       tsx:
         specifier: 4.19.4
         version: 4.19.4
@@ -2624,9 +2624,6 @@ packages:
 
   stylis@4.3.6:
     resolution: {integrity: sha512-yQ3rwFWRfwNUY7H5vpU0wfdkNSnvnJinhF9830Swlaxl03zsOjCfmX0ugac+3LtK0lYSgwL/KXc8oYL3mG4YFQ==}
-
-  tailwindcss@4.1.4:
-    resolution: {integrity: sha512-1ZIUqtPITFbv/DxRmDr5/agPqJwF69d24m9qmM1939TJehgY539CtzeZRjbLt5G6fSy/7YqqYsfvoTEw9xUI2A==}
 
   tailwindcss@4.1.8:
     resolution: {integrity: sha512-kjeW8gjdxasbmFKpVGrGd5T4i40mV5J2Rasw48QARfYeQ8YS9x02ON9SFWax3Qf616rt4Cp3nVNIj6Hd1mP3og==}
@@ -5848,8 +5845,6 @@ snapshots:
   strnum@2.1.1: {}
 
   stylis@4.3.6: {}
-
-  tailwindcss@4.1.4: {}
 
   tailwindcss@4.1.8: {}
 
