@@ -33,6 +33,7 @@ _Multi-line_ ~~paragraph2~~
 - List item 2
   - List item 2-1
   - List item 2-2
+  - List item with **bold** text
 - List item 3
   - List item 3-1
 
@@ -47,7 +48,29 @@ ParagraphParagraphParagraphParagraphParagraph
 
 > This is a quote. In quote **annotated text**.
 
-```tsx
+> This is a multi-line quote.
+>
+> - List item in quote
+> - List item in quote
+>
+> ParagraphParagraphParagraphParagraphParagraph
+> ParagraphParagraphParagraphParagraphParagraph
+
+### Code
+
+This is an `inline code` in a paragraph.
+
+without language
+
+```
+function hello() {
+  console.log('hello');
+}
+```
+
+with language
+
+```ts
 @Component({
   template: '<div>hello</div>',
 })
@@ -58,8 +81,21 @@ export class Comp {}
 
 <div class="callout">
 
-👉 This is callout.
-Multiline callout.
+> [!NOTE]
+> :+1: This is callout.
+> Multiline callout.
+
+> [!TIP]
+> Helpful advice for doing things better or more easily.
+
+> [!IMPORTANT]
+> Key information users need to know to achieve their goal.
+
+> [!WARNING]
+> Urgent info that needs immediate user attention to avoid problems.
+
+> [!CAUTION]
+> Advises about risks or negative outcomes of certain actions.
 
 </div>
 
@@ -67,11 +103,13 @@ Multiline callout.
 
 <details>
 
-<summary> This is a **toggle summary** </summary>
+<summary> This is a toggle summary </summary>
 
-  Here is the _inner toggle._
-  Image in toggle
-  ![](https://placehold.co/600x400)
+### Inner toggle
+
+Here is the _inner toggle._
+Image in toggle
+![](https://placehold.co/600x400)
 
 </details>
 
@@ -99,7 +137,6 @@ graph TD;
 | --- | --- |
 | 1,0 | 1,1 |
 | 2,0 | 2,1 |
-
 
 ### Links
 
