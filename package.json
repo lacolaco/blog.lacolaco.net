@@ -52,7 +52,7 @@
     "@types/react-dom": "19.1.5",
     "prettier": "3.5.3",
     "remark-breaks": "^4.0.0",
-    "sass": "1.89.0",
+    "sass": "1.89.1",
     "tailwindcss": "4.1.8",
     "tsx": "4.19.4",
     "wrangler": "^4.0.0",
