@@ -10,16 +10,22 @@ title: Kitchen Sink
 
 ### Heading 3
 
-lorem ipsum [link in paragraph](https://www.google.com) test
+#### Heading 4
+
+##### Heading 5
+
+###### Heading 6
+
+Paragraph [link in paragraph](https://www.google.com) Paragraph
 
 Multi-line **paragraph1**
 _Multi-line_ ~~paragraph2~~
 `Multi-line` **_paragraph3_**
 
-![angular (1).png](/images/kitchen-sink/angular.png)
+![angular (1).png](https://placehold.co/600x400)
 
 <figure>
-  <img src="/images/kitchen-sink/angular.png">
+  <img src="https://placehold.co/600x400">
   <figcaption>This is a caption text</figcaption>
 </figure>
 
@@ -48,6 +54,8 @@ ParagraphParagraphParagraphParagraphParagraph
 export class Comp {}
 ```
 
+### Callout
+
 <div class="callout">
 
 👉 This is callout.
@@ -55,22 +63,27 @@ Multiline callout.
 
 </div>
 
-[NotionヘッドレスCMS化記録 (1) Notion APIとTypeScript](https://blog.lacolaco.net/2022/02/notion-headless-cms-1/)
+### Details
 
-- This is a **toggle summary**
+<details>
+
+<summary> This is a **toggle summary** </summary>
+
   Here is the _inner toggle._
   Image in toggle
-  ![](https://images.unsplash.com/photo-1619546813926-a78fa6372cd2?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb)
+  ![](https://placehold.co/600x400)
 
-https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw
+</details>
 
-https://www.youtube.com/watch?v=TmWIrBPE6Bc
+### Math
 
 $$
 e=mc^2
 $$
 
 This is inline equation: $e=mc^2$
+
+### Mermaid
 
 ```mermaid
 graph TD;
@@ -80,17 +93,36 @@ graph TD;
   C-->D;
 ```
 
+### Table
+
 | 0,0 | 0,1 |
 | --- | --- |
 | 1,0 | 1,1 |
 | 2,0 | 2,1 |
 
+
+### Links
+
+Link with text
+
+[NotionヘッドレスCMS化記録 (1) Notion APIとTypeScript](https://blog.lacolaco.net/2022/02/notion-headless-cms-1/)
+
+Twitter Link (auto embedding)
+
+https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw
+
+YouTube Link (auto embedding)
+
+https://www.youtube.com/watch?v=TmWIrBPE6Bc
+
+GitHub Link (preview)
+
 https://github.com/makenotion/notion-sdk-js
 
-## Stackblitz embed
+Stackblitz (auto embedding)
 
 https://stackblitz.com/edit/angular-ivy-qxbz13?embed=1&file=src/app/fancy-button/fancy-button.component.ts
 
-embed: Google Slide (auto iframe)
+Google Slide (auto embedding)
 
 [2022-09-28 Standalone-based Angular App (Startup Angular #4)](https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/pub)
