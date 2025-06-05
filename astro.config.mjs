@@ -3,6 +3,8 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 import remarkBreaks from 'remark-breaks';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
 import rehypeGithubEmoji from 'rehype-github-emoji';
 import rehypeGithubAlert from 'rehype-github-alert';
 
@@ -19,8 +21,8 @@ export default defineConfig({
     locales: ['ja', 'en'],
   },
   markdown: {
-    remarkPlugins: [remarkBreaks],
-    rehypePlugins: [rehypeGithubEmoji, rehypeGithubAlert],
+    remarkPlugins: [remarkBreaks, remarkMath],
+    rehypePlugins: [rehypeGithubEmoji, rehypeGithubAlert, rehypeKatex],
     syntaxHighlight: 'shiki',
     shikiConfig: {
       theme: 'github-light',
