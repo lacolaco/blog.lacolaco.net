@@ -31,7 +31,7 @@
   --color-text-code-inline: var(--color-text-default);
 
   --color-bg-default: var(--color-gray-100);
-  --color-bg-muted: rgba(175, 184, 193, 0.2);
+  --color-bg-muted: #f6f8fa;
   --color-bg-subtle: #f6f8fa;
 
   /* Notion tag colors */
@@ -103,6 +103,12 @@
     h4 {
       @apply text-lg;
     }
+    h5 {
+      @apply text-base;
+    }
+    h6 {
+      @apply text-sm text-gray-600;
+    }
 
     p,
     blockquote,
@@ -111,7 +117,8 @@
     dl,
     table,
     pre,
-    details {
+    details,
+    figure {
       @apply mt-0 mb-4;
     }
 
@@ -133,6 +140,34 @@
 
     figcaption {
       @apply text-center text-sm text-gray-500;
+    }
+
+    ul,
+    ol {
+      @apply pl-8;
+      list-style: revert;
+
+      ul,
+      ol {
+        @apply mt-0 mb-0;
+      }
+    }
+
+    ol ol,
+    ul ol {
+      list-style-type: lower-roman;
+    }
+
+    hr {
+      @apply h-1 bg-gray-200 border-0 p-0 my-6;
+    }
+
+    blockquote {
+      @apply px-4 border-l-4 border-gray-200 text-gray-600;
+    }
+
+    pre.astro-code {
+      @apply flex justify-between mb-4 !bg-[var(--color-bg-muted)] p-4 overflow-auto text-sm/normal rounded;
     }
   }
 }

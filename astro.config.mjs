@@ -18,5 +18,9 @@ export default defineConfig({
   },
   markdown: {
     remarkPlugins: [remarkBreaks],
+    syntaxHighlight: 'shiki',
+    shikiConfig: {
+      theme: 'github-light',
+    },
   },
 });
