@@ -1,5 +1,5 @@
 ---
-import { BulletedListNode } from '@lib/post';
+import { type BulletedListNode } from '@lib/post';
 import Content from './Content.astro';
 import Text from './Text.astro';
 
@@ -8,7 +8,7 @@ type Props = BulletedListNode;
 const { items } = Astro.props;
 ---
 
-<ul class="py-2 space-y-2">
+<ul class="">
   {
     items.map(({ text, children }) => (
       <li>

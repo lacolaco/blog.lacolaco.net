@@ -158,6 +158,10 @@
       list-style-type: lower-roman;
     }
 
+    li + li {
+      @apply mt-1;
+    }
+
     hr {
       @apply h-1 bg-gray-200 border-0 p-0 my-6;
     }

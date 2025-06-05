@@ -1,5 +1,5 @@
 ---
-import { NumberedListNode } from '@lib/post';
+import { type NumberedListNode } from '@lib/post';
 import Content from './Content.astro';
 import Text from './Text.astro';
 
@@ -8,7 +8,7 @@ type Props = NumberedListNode;
 const { items } = Astro.props;
 ---
 
-<ol class="py-2 space-y-2">
+<ol class="">
   {
     items.map(({ text, children }) => (
       <li>
