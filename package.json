@@ -14,7 +14,8 @@
     "format": "prettier --cache --write 'src' 'tools'",
     "astro": "astro",
     "notion-fetch": "tsx --env-file .env tools/notion-fetch/main.ts",
-    "pages:dev": "npx wrangler pages dev dist"
+    "pages:dev": "npx wrangler pages dev dist",
+    "postinstall": "playwright install --with-deps chromium"
   },
   "packageManager": "pnpm@10.11.0",
   "dependencies": {
@@ -50,10 +51,12 @@
     "@types/node": "22.15.27",
     "@types/react": "19.1.6",
     "@types/react-dom": "19.1.5",
+    "playwright": "^1.52.0",
     "prettier": "3.5.3",
     "rehype-github-alert": "^1.0.0",
     "rehype-github-emoji": "^1.0.0",
     "rehype-katex": "^7.0.1",
+    "rehype-mermaid": "^3.0.0",
     "remark-breaks": "^4.0.0",
     "remark-math": "^6.0.0",
     "sass": "1.89.1",

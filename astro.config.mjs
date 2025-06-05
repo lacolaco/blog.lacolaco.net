@@ -5,6 +5,7 @@ import { defineConfig } from 'astro/config';
 import remarkBreaks from 'remark-breaks';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import rehypeMermaid from 'rehype-mermaid';
 import rehypeGithubEmoji from 'rehype-github-emoji';
 import rehypeGithubAlert from 'rehype-github-alert';
 
@@ -21,9 +22,13 @@ export default defineConfig({
     locales: ['ja', 'en'],
   },
   markdown: {
+    gfm: true,
     remarkPlugins: [remarkBreaks, remarkMath],
-    rehypePlugins: [rehypeGithubEmoji, rehypeGithubAlert, rehypeKatex],
-    syntaxHighlight: 'shiki',
+    rehypePlugins: [rehypeGithubEmoji, rehypeGithubAlert, rehypeKatex, [rehypeMermaid, { strategy: 'img-svg' }]],
+    syntaxHighlight: {
+      type: 'shiki',
+      excludeLangs: ['mermaid', 'math'],
+    },
     shikiConfig: {
       theme: 'github-light',
     },
