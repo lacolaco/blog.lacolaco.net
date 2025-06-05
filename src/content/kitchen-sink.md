@@ -77,11 +77,11 @@ with language
 export class Comp {}
 ```
 
-### Callout
+### Alerts
 
 > [!NOTE]
-> :+1: This is callout.
-> Multiline callout.
+> :+1: This is an alert.
+> Multiline alert.
 
 > [!TIP]
 > Helpful advice for doing things better or more easily.

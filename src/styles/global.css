@@ -173,5 +173,51 @@
     pre.astro-code {
       @apply flex justify-between mb-4 !bg-[var(--color-bg-muted)] p-4 overflow-auto text-sm/normal rounded;
     }
+
+    .markdown-alert {
+      --_markdown-alert-color: var(--color-gray-300);
+
+      @apply py-2 px-4 mb-4 text-inherit border-l-4 border-(--_markdown-alert-color);
+
+      .markdown-alert-title {
+        @apply text-(--_markdown-alert-color);
+      }
+
+      & > :first-child {
+        @apply mt-0;
+      }
+
+      & > :last-child {
+        @apply mb-0;
+      }
+
+      & .markdown-alert-title {
+        @apply flex gap-x-2 font-medium items-center leading-1;
+
+        & > svg {
+          @apply fill-current;
+        }
+      }
+
+      &.markdown-alert-note {
+        --_markdown-alert-color: #0969da;
+      }
+
+      &.markdown-alert-important {
+        --_markdown-alert-color: #8250df;
+      }
+
+      &.markdown-alert-warning {
+        --_markdown-alert-color: #9a6700;
+      }
+
+      &.markdown-alert-tip {
+        --_markdown-alert-color: #1a7f37;
+      }
+
+      &.markdown-alert-caution {
+        --_markdown-alert-color: #d1242f;
+      }
+    }
   }
 }

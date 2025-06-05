@@ -91,14 +91,6 @@ module.exports = {
       });
       addComponents({
         '.markdown-body': {
-          // pre: {
-          //   backgroundColor: theme('backgroundColor.subtle'),
-          //   wordWrap: 'normal',
-          //   fontSize: '85%',
-          //   tabSize: '2',
-          //   padding: `${theme('padding.8')} ${theme('padding.4')} ${theme('padding.8')} ${theme('padding.8')}`,
-          //   borderRadius: theme('borderRadius.lg'),
-          // },
           '[data-code-filename] + pre': {
             position: 'relative',
             'border-top-left-radius': '0',

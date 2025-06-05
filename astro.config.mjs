@@ -3,6 +3,8 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 import remarkBreaks from 'remark-breaks';
+import rehypeGithubEmoji from 'rehype-github-emoji';
+import rehypeGithubAlert from 'rehype-github-alert';
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,6 +20,7 @@ export default defineConfig({
   },
   markdown: {
     remarkPlugins: [remarkBreaks],
+    rehypePlugins: [rehypeGithubEmoji, rehypeGithubAlert],
     syntaxHighlight: 'shiki',
     shikiConfig: {
       theme: 'github-light',
