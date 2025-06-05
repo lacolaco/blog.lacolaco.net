@@ -79,8 +79,6 @@ export class Comp {}
 
 ### Callout
 
-<div class="callout">
-
 > [!NOTE]
 > :+1: This is callout.
 > Multiline callout.
@@ -96,8 +94,6 @@ export class Comp {}
 
 > [!CAUTION]
 > Advises about risks or negative outcomes of certain actions.
-
-</div>
 
 ### Details
 
