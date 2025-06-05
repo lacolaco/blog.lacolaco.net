@@ -1,5 +1,5 @@
 ---
-import { CodeNode } from '@lib/post';
+import { type CodeNode } from '@lib/post';
 import { Code as AstroCode } from 'astro/components';
 
 type Props = CodeNode;
@@ -12,11 +12,11 @@ const { text, language, filename } = Astro.props;
     filename && (
       <span
         data-code-filename
-        class="text-xs px-3 rounded-t-md bg-gray-100 border border-solid border-gray-500 shadow-2xl mb-[-16px] pt-1 pb-3"
+        class="text-xs px-3 rounded-t-md bg-gray-100  border-gray-500 shadow-2xl mb-[-16px] pt-1 pb-3"
       >
         {filename}
       </span>
     )
   }
-  <AstroCode code={text} lang={language as any} />
+  <AstroCode code={text} lang={language as any} theme={'github-light'} />
 </div>
