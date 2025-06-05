@@ -1,6 +1,6 @@
 import { postSchema } from './libs/post/schema';
 import { defineCollection, z } from 'astro:content';
-import { file, glob } from 'astro/loaders';
+import { glob } from 'astro/loaders';
 
 const post = defineCollection({
   loader: glob({ pattern: '**/*.json', base: 'src/content/post' }),
@@ -8,7 +8,8 @@ const post = defineCollection({
 });
 
 const kitchenSink = defineCollection({
-  loader: file('./content/kitchen-sink.md'),
+  loader: glob({ pattern: 'src/content/kitchen-sink.md' }),
+
   schema: z.object({
     title: z.string(),
   }),
