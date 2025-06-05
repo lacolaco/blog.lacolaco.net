@@ -8,6 +8,7 @@ import rehypeKatex from 'rehype-katex';
 import rehypeMermaid from 'rehype-mermaid';
 import rehypeGithubEmoji from 'rehype-github-emoji';
 import rehypeGithubAlert from 'rehype-github-alert';
+import remarkEmbed from './tools/remark-embed/index.ts';
 
 // https://astro.build/config
 export default defineConfig({
@@ -24,7 +25,7 @@ export default defineConfig({
   },
   markdown: {
     gfm: true,
-    remarkPlugins: [remarkBreaks, remarkMath],
+    remarkPlugins: [remarkBreaks, remarkMath, remarkEmbed],
     rehypePlugins: [rehypeGithubEmoji, rehypeGithubAlert, rehypeKatex, [rehypeMermaid, { strategy: 'img-svg' }]],
     syntaxHighlight: {
       type: 'shiki',

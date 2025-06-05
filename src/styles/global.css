@@ -240,5 +240,19 @@
         --_markdown-alert-color: #d1242f;
       }
     }
+
+    .block-link {
+      @apply flex mt-0 mb-4;
+
+      .block-link-tweet {
+        blockquote {
+          @apply border-0 p-0 m-0;
+        }
+
+        .twitter-tweet-rendered {
+          @apply !my-0;
+        }
+      }
+    }
   }
 }
