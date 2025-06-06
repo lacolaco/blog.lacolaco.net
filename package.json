@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && wrangler pages functions build --outdir=./dist/worker/",
     "preview": "astro preview",
     "format": "prettier --cache --write 'src' 'tools'",
     "astro": "astro",
