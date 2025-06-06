@@ -1,0 +1,7 @@
+name = "blog-lacolaco-net"
+
+compatibility_date = "2025-06-04"
+main = "./dist/worker/index.js"
+
+[assets]
+directory = "./dist/client"

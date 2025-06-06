@@ -12,6 +12,7 @@ import rehypeGithubAlert from 'rehype-github-alert';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://blog.lacolaco.net',
+  outDir: 'dist/client',
   integrations: [sitemap(), react()],
   vite: {
     plugins: [tailwindcss()],
