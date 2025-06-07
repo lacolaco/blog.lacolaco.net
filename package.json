@@ -17,7 +17,8 @@
     "pages:dev": "npx wrangler pages dev dist",
     "postinstall": "playwright install --with-deps chromium",
     "test:notion-fetch": "tsx --test --test-reporter spec tools/notion-fetch/**/*.spec.ts",
-    "test:remark-embed": "tsx --test --test-reporter spec tools/remark-embed/**/*.spec.ts"
+    "test:remark-embed": "tsx --test --test-reporter spec tools/remark-embed/**/*.spec.ts",
+    "lint": "eslint ."
   },
   "packageManager": "pnpm@10.11.0",
   "dependencies": {
@@ -54,6 +55,7 @@
     "@types/node": "22.15.29",
     "@types/react": "19.1.6",
     "@types/react-dom": "19.1.5",
+    "eslint": "^9.28.0",
     "playwright": "^1.52.0",
     "prettier": "3.5.3",
     "rehype-github-alert": "^1.0.0",
@@ -70,6 +72,7 @@
     "sass": "1.89.1",
     "tailwindcss": "4.1.8",
     "tsx": "4.19.4",
+    "typescript-eslint": "^8.33.1",
     "wrangler": "^4.0.0",
     "zod": "^3.22.4"
   }
