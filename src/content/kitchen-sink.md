@@ -158,4 +158,4 @@ https://stackblitz.com/edit/angular-ivy-qxbz13?embed=1&file=src/app/fancy-button
 
 Google Slide (auto embedding)
 
-[2022-09-28 Standalone-based Angular App (Startup Angular #4)](https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/pub)
+https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/pub

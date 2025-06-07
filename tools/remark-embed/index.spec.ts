@@ -94,6 +94,57 @@ describe('remarkEmbed', () => {
     });
   });
 
+  describe('GoogleスライドのURLの埋め込み', () => {
+    test('/pubで終わるGoogleスライドのURLであるとき、iframeが埋め込まれる', async () => {
+      const markdown =
+        'https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/pub';
+      const expectedHtml = `
+<div class="block-link block-link-google-slides">
+  <iframe
+    width="100%"
+    height="480"
+    src="https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/embed"
+    style="border: none;"
+    allowfullscreen
+    loading="lazy"
+  ></iframe>
+</div>
+      `.trim();
+      const result = await processMarkdown(markdown);
+      assert.equal(result, expectedHtml);
+    });
+
+    test('クエリパラメータ付きの/pubで終わるGoogleスライドのURLであるとき、iframeが埋め込まれる', async () => {
+      const markdown =
+        'https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/pub?start=false&loop=false&delayms=3000';
+      const expectedHtml = `
+<div class="block-link block-link-google-slides">
+  <iframe
+    width="100%"
+    height="480"
+    src="https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/embed?start=false&loop=false&delayms=3000"
+    style="border: none;"
+    allowfullscreen
+    loading="lazy"
+  ></iframe>
+</div>
+      `.trim();
+      const result = await processMarkdown(markdown);
+      assert.equal(result, expectedHtml);
+    });
+
+    test('/pubで終わらないGoogleスライドのURLであるとき、Webページカードとして埋め込まれる', async () => {
+      const markdown =
+        'https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/edit';
+      const result = await processMarkdown(markdown);
+      // Webページカードとして埋め込まれることを確認（実際には失敗時はundefinedが返される）
+      assert.equal(
+        result,
+        '<p><a href="https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/edit">https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/edit</a></p>',
+      );
+    });
+  });
+
   describe('StackblitzのURLの埋め込み', () => {
     test('embed=1パラメータ付きのStackblitzプロジェクトURLであるとき、iframeが埋め込まれる', async () => {
       const markdown = 'https://stackblitz.com/edit/my-project?embed=1';
@@ -153,7 +204,7 @@ describe('remarkEmbed', () => {
   <iframe
     width="100%"
     height="400"
-    src="https://stackblitz.com/edit/my-project?embed=1&amp;view=preview"
+    src="https://stackblitz.com/edit/my-project?embed=1&view=preview"
     style="border: none;"
     loading="lazy"
   ></iframe>

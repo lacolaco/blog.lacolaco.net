@@ -2,18 +2,7 @@ import type { Root, Paragraph, Link, Html, Parent } from 'mdast';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
 import * as cheerio from 'cheerio';
-
-// HTMLエスケープ処理
-function escapeHtml(text: string): string {
-  const htmlEscapeMap: Record<string, string> = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;',
-  };
-  return text.replace(/[&<>"']/g, (match) => htmlEscapeMap[match]);
-}
+import { escapeHtml } from './escape-html.ts';
 
 // 設定インターフェース
 interface EmbedConfig {
@@ -30,6 +19,10 @@ interface EmbedConfig {
     fallbackText: string;
   };
   stackblitz: {
+    width: string;
+    height: number;
+  };
+  googleSlides: {
     width: string;
     height: number;
   };
@@ -50,11 +43,11 @@ function createTweetHandler(): EmbedHandler {
       return url.startsWith('https://twitter.com/') || url.startsWith('https://x.com/');
     },
     transform: (url: string) => {
-      const escapedUrl = escapeHtml(url);
+      const safeUrl = new URL(url);
       return `
 <div class="block-link block-link-tweet">
   <blockquote class="twitter-tweet">
-    <a href="${escapedUrl}">${escapedUrl}</a>
+    <a href="${safeUrl.toString()}">${safeUrl.toString()}</a>
   </blockquote>
 </div>
       `.trim();
@@ -98,16 +91,18 @@ function createYouTubeHandler(config: EmbedConfig): EmbedHandler {
         throw new Error(`Invalid YouTube URL: ${url}`);
       }
 
-      const escapedVideoId = escapeHtml(videoId);
       const { width, height, allowAttributes } = youtubeConfig;
       const allowAttributesStr = allowAttributes.join('; ');
+
+      const embedUrl = new URL('https://www.youtube.com/embed/');
+      embedUrl.pathname += videoId;
 
       return `
 <div class="block-link block-link-youtube">
   <iframe
     width="${width}"
     height="${height}"
-    src="https://www.youtube.com/embed/${escapedVideoId}"
+    src="${embedUrl.toString()}"
     style="border: none;"
     allow="${allowAttributesStr}"
     allowfullscreen
@@ -137,15 +132,58 @@ function createStackblitzHandler(config: EmbedConfig): EmbedHandler {
       const stackblitzConfig = { ...defaultStackblitzConfig, ...config.stackblitz };
 
       const { width, height } = stackblitzConfig;
-      const escapedUrl = escapeHtml(url);
+      const safeUrl = new URL(url);
 
       return `
 <div class="block-link block-link-stackblitz">
   <iframe
     width="${width}"
     height="${height}"
-    src="${escapedUrl}"
+    src="${safeUrl.toString()}"
     style="border: none;"
+    loading="lazy"
+  ></iframe>
+</div>
+      `.trim();
+    },
+  };
+}
+
+function createGoogleSlidesHandler(config: EmbedConfig): EmbedHandler {
+  return {
+    name: 'googleSlides',
+    test: (url: string) => {
+      if (!url.includes('docs.google.com/presentation')) {
+        return false;
+      }
+      try {
+        const urlObj = new URL(url);
+        return urlObj.pathname.endsWith('/pub');
+      } catch {
+        return false;
+      }
+    },
+    transform: (url: string) => {
+      const defaultGoogleSlidesConfig = {
+        width: '100%',
+        height: 480,
+      };
+      const googleSlidesConfig = { ...defaultGoogleSlidesConfig, ...config.googleSlides };
+
+      const { width, height } = googleSlidesConfig;
+      // パス末尾の/pubを/embedに変換（クエリパラメータは保持）
+      const urlObj = new URL(url);
+      urlObj.pathname = urlObj.pathname.replace(/\/pub$/, '/embed');
+      const embedUrl = urlObj.toString();
+
+      return `
+<div class="block-link block-link-google-slides">
+  <iframe
+    width="${width}"
+    height="${height}"
+    src="${embedUrl}"
+    style="border: none;"
+    allowfullscreen
     loading="lazy"
   ></iframe>
 </div>
@@ -189,19 +227,19 @@ function createDefaultHandler(config: EmbedConfig): EmbedHandler {
           $('meta[property="og:description"]').attr('content') || $('meta[name="description"]').attr('content');
         const imageUrl = $('meta[property="og:image"]').attr('content');
         const canonicalUrl = $('meta[property="og:url"]').attr('content') || url;
+        const safeCanonicalUrl = new URL(canonicalUrl);
+        const safeImageUrl = imageUrl ? new URL(imageUrl) : null;
 
-        const escapedUrl = escapeHtml(canonicalUrl);
         const escapedTitle = escapeHtml(title || fallbackTitle);
         const escapedDescription = description ? escapeHtml(description) : '';
-        const escapedImageUrl = imageUrl ? escapeHtml(imageUrl) : '';
 
         return `
-<a href="${escapedUrl}" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">
+<a href="${safeCanonicalUrl.toString()}" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">
   <div class="webpage-card-content">
     <h3 class="webpage-card-title">${escapedTitle}</h3>
     ${escapedDescription ? `<p class="webpage-card-description">${escapedDescription}</p>` : ''}
   </div>
-  ${escapedImageUrl ? `<img src="${escapedImageUrl}" alt="Page image" class="webpage-card-image">` : ''}
+  ${safeImageUrl ? `<img src="${safeImageUrl.toString()}" alt="Page image" class="webpage-card-image">` : ''}
 </a>
         `.trim();
       } catch (error) {
@@ -222,6 +260,7 @@ function createEmbedHandlers(config: EmbedConfig): EmbedHandler[] {
     createTweetHandler(),
     createYouTubeHandler(config),
     createStackblitzHandler(config),
+    createGoogleSlidesHandler(config),
     createDefaultHandler(config), // 最も広範囲なので最後に配置
   ];
 }
@@ -238,6 +277,7 @@ const remarkEmbed: Plugin<[RemarkEmbedOptions?], Root> = (options = {}) => {
     webpage: options.config?.webpage || {},
     tweet: options.config?.tweet || {},
     stackblitz: options.config?.stackblitz || {},
+    googleSlides: options.config?.googleSlides || {},
   } as EmbedConfig;
 
   // 設定に基づいてハンドラーを生成
