@@ -1,0 +1,13 @@
+{
+	"type": "quote",
+   "quote": {
+   	"rich_text": [{
+      "type": "text",
+      "text": {
+        "content": "To be or not to be...",
+        "link": null
+      }
+    }],
+    "color": "default"
+   }
+}

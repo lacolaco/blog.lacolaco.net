@@ -1,0 +1,16 @@
+{
+  "type": "bulleted_list_item",
+  "bulleted_list_item": {
+    "rich_text": [{
+      "type": "text",
+      "text": {
+        "content": "Lacinato kale",
+        "link": null
+      }
+    }],
+    "color": "default",
+    "children":[{
+      "type": "paragraph"
+    }]
+  }
+}

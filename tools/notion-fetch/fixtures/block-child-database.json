@@ -1,0 +1,6 @@
+{
+  "type": "child_database",
+  "child_database": {
+    "title": "My database"
+  }
+}

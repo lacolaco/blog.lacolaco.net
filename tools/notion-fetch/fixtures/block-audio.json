@@ -1,0 +1,9 @@
+{
+  "type": "audio",
+  "audio": {
+    "type": "external",
+    "external": {
+      "url": "https://companywebsite.com/files/sample.mp3"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "file",
+  "file": {
+    "caption": [],
+    "type": "external",
+    "external": {
+      "url": "https://companywebsite.com/files/doc.txt"
+    },
+    "name": "doc.txt"
+  }
+}

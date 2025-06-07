@@ -1,0 +1,13 @@
+{
+  "type": "code",
+  "code": {
+    "caption": [],
+    "rich_text": [{
+      "type": "text",
+      "text": {
+        "content": "const a = 3"
+      }
+    }],
+    "language": "javascript"
+  }
+}

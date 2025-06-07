@@ -1,0 +1,9 @@
+{
+  "type": "video",
+  "video": {
+    "type": "external",
+    "external": {
+      "url": "https://companywebsite.com/files/video.mp4"
+    }
+  }
+}
