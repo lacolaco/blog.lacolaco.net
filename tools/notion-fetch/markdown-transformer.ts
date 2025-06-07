@@ -1,4 +1,4 @@
-import type { SpecificBlockObject, RichTextArray, RichTextNode, UntypedBlockObject } from './notion-types';
+import type { SpecificBlockObject, RichTextArray, RichTextItemObject, UntypedBlockObject } from './notion-types';
 import {
   isListBlock,
   getHeadingRichText,
@@ -169,7 +169,7 @@ function transformRichText(richText: RichTextArray): string {
   return richText.map(transformRichTextNode).join('');
 }
 
-function transformRichTextNode(node: RichTextNode): string {
+function transformRichTextNode(node: RichTextItemObject): string {
   let text = node.plain_text;
 
   // リンクの処理

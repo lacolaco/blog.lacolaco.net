@@ -30,8 +30,8 @@ import type {
 } from '@notionhq/client/build/src/api-endpoints';
 
 // @notionhq/clientの型定義を直接使用
-export type RichTextArray = RichTextItemResponse[];
-export type RichTextNode = RichTextItemResponse;
+export type RichTextItemObject = RichTextItemResponse;
+export type RichTextArray = RichTextItemObject[];
 
 // ベースとなる型なしブロックオブジェクト
 export type UntypedBlockObject = BlockObjectResponse & {
