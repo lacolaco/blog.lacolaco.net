@@ -201,7 +201,7 @@ export class ContentTransformer {
   }
 
   #callout(block: notion.BlockObject<'callout'>): CalloutNode {
-    return { type: 'callout', text: block.callout.rich_text.map(this.#text) };
+    return { type: 'callout', text: block.callout.rich_text.map((node) => this.#text(node)) };
   }
 
   #video(block: notion.BlockObject<'video'>): YoutubeNode {
@@ -282,7 +282,7 @@ export class ContentTransformer {
     return list;
   }
 
-  async #table(block: notion.BlockObject<'table'>): Promise<TableNode> {
+  #table(block: notion.BlockObject<'table'>): TableNode {
     if (block.children == null) {
       throw new Error('Table block has no children');
     }

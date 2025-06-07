@@ -1,7 +1,7 @@
-import { describe, it } from 'node:test';
 import assert from 'node:assert';
-import type { SpecificBlockObject, UntypedBlockObject } from './notion-types';
+import { describe, it } from 'node:test';
 import { transformNotionBlocksToMarkdown } from './markdown-transformer';
+import type { SpecificBlockObject, UntypedBlockObject } from './notion-types';
 
 // テスト用の型定義（実際のNotion APIレスポンスの構造に基づく）
 interface TestRichTextItem {
@@ -36,24 +36,6 @@ interface TestBlockBase {
   archived: boolean;
   in_trash: boolean;
   parent: { type: 'page_id'; page_id: string };
-}
-
-// children プロパティを持つテーブルブロック用の型
-interface TestTableBlockWithChildren extends TestBlockBase {
-  type: 'table';
-  table: {
-    table_width: number;
-    has_column_header: boolean;
-    has_row_header: boolean;
-  };
-  children: TestTableRowBlock[];
-}
-
-interface TestTableRowBlock extends TestBlockBase {
-  type: 'table_row';
-  table_row: {
-    cells: TestRichTextArray[];
-  };
 }
 
 // テスト用のヘルパー関数
@@ -115,7 +97,9 @@ function createBaseBlock<T extends string>(id: string, type: T): TestBlockBase &
 }
 
 async function loadFixture(fixtureFilename: string): Promise<UntypedBlockObject> {
-  return import(`./fixtures/${fixtureFilename}`).then((m) => m.default as UntypedBlockObject);
+  return await import(`./fixtures/${fixtureFilename}`).then(
+    (module: { default: UntypedBlockObject }) => module.default,
+  );
 }
 
 describe('transformNotionBlocksToMarkdown', () => {
@@ -298,7 +282,7 @@ describe('transformNotionBlocksToMarkdown', () => {
         {
           ...createBaseBlock('1', 'code'),
           code: {
-            rich_text: createRichText('console.log(\"hello\");'),
+            rich_text: createRichText('console.log("hello");'),
             language: 'plain text',
             caption: [],
           },
@@ -306,7 +290,7 @@ describe('transformNotionBlocksToMarkdown', () => {
       ] as SpecificBlockObject[];
 
       const result = transformNotionBlocksToMarkdown(blocks);
-      assert.strictEqual(result, '```\nconsole.log(\"hello\");\n```\n\n');
+      assert.strictEqual(result, '```\nconsole.log("hello");\n```\n\n');
     });
 
     it('TypeScript言語指定のコードブロック', () => {

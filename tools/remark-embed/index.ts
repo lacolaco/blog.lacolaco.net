@@ -1,7 +1,7 @@
-import type { Root, Paragraph, Link, Html, Parent } from 'mdast';
+import * as cheerio from 'cheerio';
+import type { Html, Paragraph, Root } from 'mdast';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
-import * as cheerio from 'cheerio';
 import { escapeHtml } from './escape-html.ts';
 
 // 設定インターフェース
@@ -297,7 +297,7 @@ const remarkEmbed: Plugin<[RemarkEmbedOptions?], Root> = (options = {}) => {
         return;
       }
 
-      const link = node.children[0] as Link;
+      const link = node.children[0];
       const url = link.url;
 
       // リンクに明示的なタイトルがある場合は処理しない

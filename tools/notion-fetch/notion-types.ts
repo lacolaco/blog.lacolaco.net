@@ -93,7 +93,7 @@ export type UrlProperty = Extract<PageProperties[string], { type: 'url' }>;
 export type DateProperty = Extract<PageProperties[string], { type: 'date' }>;
 
 // ブログページのプロパティ構造
-export interface BlogPageProperties extends Record<string, any> {
+export interface BlogPageProperties extends Record<string, unknown> {
   title: TitleProperty;
   slug: RichTextProperty;
   locale: SelectProperty;

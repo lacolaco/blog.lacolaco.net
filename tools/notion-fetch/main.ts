@@ -22,7 +22,7 @@ const { values } = parseArgs({
     debug: { type: 'boolean' },
   },
 });
-const { force = false, 'dry-run': dryRun = false, debug = false } = values;
+const { 'dry-run': dryRun = false } = values;
 
 async function main() {
   const db = new BlogDatabase(NOTION_AUTH_TOKEN);
@@ -58,7 +58,7 @@ async function main() {
     pages.map(async (page) => {
       const slug = getSlug(page);
       const locale = getLocale(page) ?? 'ja';
-      filesystems.images.remove(slug);
+      await filesystems.images.remove(slug);
       const post = await toBlogPostJSON({ ...page, slug, locale }, filesystems.images);
       const filepath = getPostJSONFileName(slug, locale);
       await filesystems.posts.save(filepath, await formatJSON(post), { encoding: 'utf-8' });
