@@ -104,12 +104,13 @@ Rich markdown support with custom plugins:
 ## Development Workflow
 
 **Test-Driven Development:**
-- Always adopt TDD approach. If there are no tests for the implementation target, make it testable first
-- After tests succeed, run code formatting
+- Always adopt TDD approach. 
+- Write tests before implementing new features or fixing bugs
+- After tests succeed, try to refactor the code while keeping tests passing
 - Ensure code is linted and passes all checks before committing
 - Use `pnpm lint` to check for linting issues
-- Use `pnpm format` to format code with Prettier
 - Ensure all changes are tested before committing
+- Use `pnpm format` to format code with Prettier
 
 **Error Handling:**
 - Handle errors gracefully with proper logging
