@@ -24,8 +24,8 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
       '@fontsource/source-code-pro':
-        specifier: 5.2.5
-        version: 5.2.5
+        specifier: 5.2.6
+        version: 5.2.6
       '@fontsource/zen-kaku-gothic-new':
         specifier: 5.2.5
         version: 5.2.5
@@ -511,8 +511,8 @@ packages:
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
     engines: {node: '>=14'}
 
-  '@fontsource/source-code-pro@5.2.5':
-    resolution: {integrity: sha512-1k7b9IdhVSdK/rJ8CkqqGFZ01C3NaXNynPZqKaTetODog/GPJiMYd6E8z+LTwSUTIX8dm2QZORDC+Uh91cjXSg==}
+  '@fontsource/source-code-pro@5.2.6':
+    resolution: {integrity: sha512-eIlEPWRXqnYwpQO7nONj2IsUpzwME+UwP2oVAgNuwXX5oyLNJqw1Jh0D2FyZWS5Zd0ddsxbz+nhgyVT4K/OgGQ==}
 
   '@fontsource/zen-kaku-gothic-new@5.2.5':
     resolution: {integrity: sha512-z70JbquTUdH0gleBQtt/1IG5iLeW+sb2M3JUNFdbL7Ma3CXR6Tz7ajr8NEY+Jug/3sLJ8uOgJBNXqc7GrWxrEA==}
@@ -3480,7 +3480,7 @@ snapshots:
 
   '@fastify/busboy@2.1.1': {}
 
-  '@fontsource/source-code-pro@5.2.5': {}
+  '@fontsource/source-code-pro@5.2.6': {}
 
   '@fontsource/zen-kaku-gothic-new@5.2.5': {}
 
