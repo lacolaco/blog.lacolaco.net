@@ -16,7 +16,8 @@
     "notion-fetch": "tsx --env-file .env tools/notion-fetch/main.ts",
     "pages:dev": "npx wrangler pages dev dist",
     "postinstall": "playwright install --with-deps chromium",
-    "test:tools": "tsx --test --test-reporter spec tools/**/*.spec.ts"
+    "test:notion-fetch": "tsx --test --test-reporter spec tools/notion-fetch/**/*.spec.ts",
+    "test:remark-embed": "tsx --test --test-reporter spec tools/remark-embed/**/*.spec.ts"
   },
   "packageManager": "pnpm@10.11.0",
   "dependencies": {

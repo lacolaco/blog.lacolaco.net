@@ -66,6 +66,7 @@ This is lacolaco's personal blog built with **Astro** as a static site generator
 - Use Japanese for all comments and documentation (this is a Japanese development environment)
 - Follow functional programming patterns where appropriate
 - Avoid side effects in pure functions
+- **NEVER use `as any` type assertions** - always define proper types or use type guards
 
 **Styling:**
 - Use Tailwind CSS following existing patterns in similar components
