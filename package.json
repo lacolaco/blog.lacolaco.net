@@ -18,7 +18,7 @@
     "postinstall": "playwright install --with-deps chromium",
     "test:tools": "tsx --test --test-reporter spec tools/**/*.spec.ts"
   },
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.11.1",
   "dependencies": {
     "@astrojs/prism": "3.3.0",
     "@astrojs/react": "4.3.0",
