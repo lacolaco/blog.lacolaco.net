@@ -31,7 +31,7 @@ notion_url: 'https://www.notion.so/Kitchen-Sink-80f5c54939b64e7ab25825bdb35f1cae
 通常の段落テキスト [リンク付き](https://www.google.com/)
 
 複数行 **太字テキスト**
-*斜体テキスト* ~~取り消し線~~
+_斜体テキスト_ ~~取り消し線~~
 `インラインコード` **_太字と斜体の組み合わせ_**
 
 ---

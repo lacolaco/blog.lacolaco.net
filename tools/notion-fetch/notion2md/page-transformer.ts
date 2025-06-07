@@ -1,10 +1,11 @@
+import * as prettier from 'prettier';
 import { transformNotionBlocksToMarkdown } from './block-transformer';
 import type { PageObject, UntypedBlockObject } from '../notion-types';
 
 /**
  * NotionページをフロントマターとMarkdownコンテンツに変換する純粋関数
  */
-export function transformNotionPageToMarkdown(page: PageObject): string {
+export async function transformNotionPageToMarkdown(page: PageObject): Promise<string> {
   const frontmatter = extractFrontmatter(page);
   const frontmatterString = formatFrontmatter(frontmatter);
 
@@ -18,7 +19,9 @@ ${frontmatterString}
 
 ${content}`;
 
-  return markdown;
+  const config = await prettier.resolveConfig(new URL('../..', import.meta.url));
+  const formattedMarkdown = await prettier.format(markdown, { parser: 'markdown', ...config });
+  return formattedMarkdown;
 }
 
 function formatFrontmatter(frontmatter: BlogPostFrontmatter): string {
