@@ -1,4 +1,4 @@
-import type { Root, Paragraph, Link, HTML } from 'mdast';
+import type { Root, Paragraph, Link, Html } from 'mdast';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
 import * as cheerio from 'cheerio';
@@ -111,8 +111,7 @@ const remarkEmbed: Plugin<[], Root> = () => {
 
       if (tweetUrl) {
         const htmlValue = createTweetEmbedHtml(tweetUrl, url);
-        // @ts-ignore: HTML型が非推奨であるという警告を抑制
-        const htmlNode: HTML = {
+        const htmlNode: Html = {
           type: 'html',
           value: htmlValue,
         };
@@ -121,8 +120,7 @@ const remarkEmbed: Plugin<[], Root> = () => {
         }
       } else if (youtubeVideoId) {
         const htmlValue = createYouTubeEmbedHtml(youtubeVideoId);
-        // @ts-ignore: HTML型が非推奨であるという警告を抑制
-        const htmlNode: HTML = {
+        const htmlNode: Html = {
           type: 'html',
           value: htmlValue,
         };
@@ -135,8 +133,7 @@ const remarkEmbed: Plugin<[], Root> = () => {
         const promise = createWebPageEmbedHtml(webPageUrl).then((htmlValue) => {
           if (htmlValue) {
             // htmlValueがundefinedでない場合のみノードを置き換える
-            // @ts-ignore: HTML型が非推奨であるという警告を抑制
-            const htmlNode: HTML = {
+            const htmlNode: Html = {
               type: 'html',
               value: htmlValue,
             };
