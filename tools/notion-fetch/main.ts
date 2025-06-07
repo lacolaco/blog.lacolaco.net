@@ -1,6 +1,7 @@
 import { BlogDatabase } from '@lacolaco/notion-db';
 import { getLocale, getSlug } from '@lib/notion';
 import { getPostJSONFileName } from '@lib/post';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
 import { toBlogPostJSON, toCategoriesJSON, toTagsJSON } from './content';
 import { FileSystem } from './file-system';
@@ -17,12 +18,14 @@ const rootDir = new URL('../..', import.meta.url).pathname;
 const { values } = parseArgs({
   args: process.argv.slice(2),
   options: {
+    draft: { type: 'boolean', short: 'd', default: false },
     force: { type: 'boolean', short: 'f' },
     'dry-run': { type: 'boolean', short: 'D' },
-    debug: { type: 'boolean' },
+    debug: { type: 'boolean', default: false },
   },
 });
-const { 'dry-run': dryRun = false } = values;
+const { draft, 'dry-run': dryRun = false, debug } = values;
+console.log(`Running with options: draft=${draft}, dryRun=${dryRun}`);
 
 async function main() {
   const db = new BlogDatabase(NOTION_AUTH_TOKEN);
@@ -45,7 +48,7 @@ async function main() {
   });
 
   console.log('Fetching pages...');
-  const pages = await db.query('blog.lacolaco.net', { dryRun });
+  const pages = await db.query('blog.lacolaco.net', { draft, dryRun });
   console.log(`Fetched ${pages.length} pages`);
 
   if (pages.length === 0) {
@@ -54,9 +57,17 @@ async function main() {
   }
 
   console.log(`Updating ${pages.length} pages...`);
+  if (debug) {
+    // Create a temporary directory for debugging
+    await mkdir(`${rootDir}.tmp`, { recursive: true });
+  }
   await Promise.all(
     pages.map(async (page) => {
       const slug = getSlug(page);
+      if (debug) {
+        // Write the raw page data to a file into .tmp directory for debugging
+        await writeFile(`${rootDir}.tmp/${slug}.json`, await formatJSON(page), { encoding: 'utf-8' });
+      }
       const locale = getLocale(page) ?? 'ja';
       await filesystems.images.remove(slug);
       const post = await toBlogPostJSON({ ...page, slug, locale }, filesystems.images);
