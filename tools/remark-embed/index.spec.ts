@@ -94,6 +94,87 @@ describe('remarkEmbed', () => {
     });
   });
 
+  describe('StackblitzのURLの埋め込み', () => {
+    test('embed=1パラメータ付きのStackblitzプロジェクトURLであるとき、iframeが埋め込まれる', async () => {
+      const markdown = 'https://stackblitz.com/edit/my-project?embed=1';
+      const expectedHtml = `
+<div class="block-link block-link-stackblitz">
+  <iframe
+    width="100%"
+    height="400"
+    src="https://stackblitz.com/edit/my-project?embed=1"
+    style="border: none;"
+    loading="lazy"
+  ></iframe>
+</div>
+      `.trim();
+      const result = await processMarkdown(markdown);
+      assert.equal(result, expectedHtml);
+    });
+
+    test('embed=1パラメータ付きのStackblitz@プロジェクトURLであるとき、iframeが埋め込まれる', async () => {
+      const markdown = 'https://stackblitz.com/@username/my-project?embed=1';
+      const expectedHtml = `
+<div class="block-link block-link-stackblitz">
+  <iframe
+    width="100%"
+    height="400"
+    src="https://stackblitz.com/@username/my-project?embed=1"
+    style="border: none;"
+    loading="lazy"
+  ></iframe>
+</div>
+      `.trim();
+      const result = await processMarkdown(markdown);
+      assert.equal(result, expectedHtml);
+    });
+
+    test('embed=1パラメータ付きのStackblitz企業プロジェクトURLであるとき、iframeが埋め込まれる', async () => {
+      const markdown = 'https://stackblitz.com/~/github/angular/angular/tree/main/adev?embed=1';
+      const expectedHtml = `
+<div class="block-link block-link-stackblitz">
+  <iframe
+    width="100%"
+    height="400"
+    src="https://stackblitz.com/~/github/angular/angular/tree/main/adev?embed=1"
+    style="border: none;"
+    loading="lazy"
+  ></iframe>
+</div>
+      `.trim();
+      const result = await processMarkdown(markdown);
+      assert.equal(result, expectedHtml);
+    });
+
+    test('他のパラメータと一緒にembed=1パラメータがあるStackblitzのURLであるとき、iframeが埋め込まれる', async () => {
+      const markdown = 'https://stackblitz.com/edit/my-project?embed=1&view=preview';
+      const expectedHtml = `
+<div class="block-link block-link-stackblitz">
+  <iframe
+    width="100%"
+    height="400"
+    src="https://stackblitz.com/edit/my-project?embed=1&amp;view=preview"
+    style="border: none;"
+    loading="lazy"
+  ></iframe>
+</div>
+      `.trim();
+      const result = await processMarkdown(markdown);
+      assert.equal(result, expectedHtml);
+    });
+
+    test('embed=1パラメータがないStackblitzのURLであるとき、Webページカードとして埋め込まれる', async () => {
+      const markdown = 'https://stackblitz.com/edit/my-project';
+      const result = await processMarkdown(markdown);
+      // Webページカードとして埋め込まれることを確認
+      assert.match(
+        result,
+        /<a href="https:\/\/stackblitz\.com\/edit\/my-project" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">/,
+      );
+      assert.match(result, /<h3 class="webpage-card-title">.*StackBlitz.*<\/h3>/);
+    });
+  });
+
   describe('埋め込まれないケース', () => {
     test('ツイートURLではないとき、埋め込まれない', async () => {
       const markdown = 'https://example.com/some-page'; // URLを一般的なものに戻す

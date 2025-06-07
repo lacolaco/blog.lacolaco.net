@@ -64,6 +64,8 @@ This is lacolaco's personal blog built with **Astro** as a static site generator
 - Use Zod for validation with exported inferred types  
 - Prefer self-documenting code over extensive comments
 - Use Japanese for all comments and documentation (this is a Japanese development environment)
+- Follow functional programming patterns where appropriate
+- Avoid side effects in pure functions
 
 **Styling:**
 - Use Tailwind CSS following existing patterns in similar components
@@ -97,3 +99,31 @@ Rich markdown support with custom plugins:
 - **Build Output**: `dist/client/` (Astro) + `dist/worker/` (Workers)
 - **CI/CD**: GitHub Actions with automated deployment
 - **Configuration**: `wrangler.toml` for Cloudflare settings
+
+## Development Workflow
+
+**Test-Driven Development:**
+- Always adopt TDD approach. If there are no tests for the implementation target, make it testable first
+- After tests succeed, run code formatting with `pnpm format`
+- Ensure all changes are tested before committing
+
+**Error Handling:**
+- Handle errors gracefully with proper logging
+- Use appropriate error boundaries in React components
+- Provide meaningful error messages for debugging
+
+**Performance Considerations:**
+- Optimize images and assets for web delivery
+- Use lazy loading where appropriate
+- Monitor bundle sizes and avoid unnecessary dependencies
+
+## Security Guidelines
+
+- Never commit sensitive information (API keys, tokens)
+- Validate all user inputs and external data
+- Use Content Security Policy (CSP) headers
+- Sanitize content when rendering user-generated HTML
+
+## Important Notes
+
+- CLAUDE.md is always written in English

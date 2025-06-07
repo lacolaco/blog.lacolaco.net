@@ -29,6 +29,10 @@ interface EmbedConfig {
   tweet: {
     fallbackText: string;
   };
+  stackblitz: {
+    width: string;
+    height: number;
+  };
 }
 
 // 埋め込みハンドラーのインターフェース
@@ -38,120 +42,28 @@ interface EmbedHandler {
   transform: (url: string) => Promise<string | undefined> | string;
 }
 
-// HTMLノードを作成して親ノードの指定位置に置換する共通関数
-function replaceWithHtmlNode(parent: Parent, index: number, htmlValue: string): void {
-  const htmlNode: Html = {
-    type: 'html',
-    value: htmlValue,
-  };
-  parent.children[index] = htmlNode;
-}
-
-function createTweetEmbedHtml(url: string, config: EmbedConfig): string {
-  const escapedUrl = escapeHtml(url);
-  return `
-<div class="block-link block-link-tweet">
-  <blockquote class="twitter-tweet">
-    <a href="${escapedUrl}">${escapedUrl}</a>
-  </blockquote>
-</div>
-  `.trim();
-}
-
-function extractYouTubeVideoId(url: string): string | undefined {
-  const match = url.match(
-    /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
-  );
-  return match ? match[1] : undefined;
-}
-
-function createYouTubeEmbedHtml(url: string, config: EmbedConfig): string {
-  const videoId = extractYouTubeVideoId(url);
-  if (!videoId) {
-    throw new Error(`Invalid YouTube URL: ${url}`);
-  }
-
-  const escapedVideoId = escapeHtml(videoId);
-  const { width, height, allowAttributes } = config.youtube;
-  const allowAttributesStr = allowAttributes.join('; ');
-
-  return `
-<div class="block-link block-link-youtube">
-  <iframe
-    width="${width}"
-    height="${height}"
-    src="https://www.youtube.com/embed/${escapedVideoId}"
-    style="border: none;"
-    allow="${allowAttributesStr}"
-    allowfullscreen
-  ></iframe>
-</div>
-  `.trim();
-}
-
-async function createDefaultEmbeddedLinkHtml(url: string, config: EmbedConfig): Promise<string | undefined> {
-  const { timeout, fallbackTitle } = config.webpage;
-
-  try {
-    // タイムアウト付きでフェッチ
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-    const response = await fetch(url, { signal: controller.signal });
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      console.warn(`Failed to fetch web page info for ${url}: ${response.status} ${response.statusText}`);
-      return undefined; // 失敗時はundefinedを返す
-    }
-    const html = await response.text();
-    const $ = cheerio.load(html);
-
-    const title = $('meta[property="og:title"]').attr('content') || $('title').text();
-    const description =
-      $('meta[property="og:description"]').attr('content') || $('meta[name="description"]').attr('content');
-    const imageUrl = $('meta[property="og:image"]').attr('content');
-    const canonicalUrl = $('meta[property="og:url"]').attr('content') || url;
-
-    const escapedUrl = escapeHtml(canonicalUrl);
-    const escapedTitle = escapeHtml(title || fallbackTitle);
-    const escapedDescription = description ? escapeHtml(description) : '';
-    const escapedImageUrl = imageUrl ? escapeHtml(imageUrl) : '';
-
-    return `
-<a href="${escapedUrl}" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">
-  <div class="webpage-card-content">
-    <h3 class="webpage-card-title">${escapedTitle}</h3>
-    ${escapedDescription ? `<p class="webpage-card-description">${escapedDescription}</p>` : ''}
-  </div>
-  ${escapedImageUrl ? `<img src="${escapedImageUrl}" alt="Page image" class="webpage-card-image">` : ''}
-</a>
-    `.trim();
-  } catch (error) {
-    if (error instanceof Error && error.name === 'AbortError') {
-      console.warn(`Timeout fetching web page info for ${url}`);
-    } else {
-      console.error(`Failed to fetch web page info for ${url}:`, error);
-    }
-    return undefined; // エラー時はundefinedを返す
-  }
-}
-
-// 埋め込みハンドラーの定義（設定を受け取る関数として）
-function createEmbedHandlers(config: EmbedConfig): EmbedHandler[] {
-  const tweetHandler: EmbedHandler = {
+// 埋め込みハンドラーファクトリ関数
+function createTweetHandler(): EmbedHandler {
+  return {
     name: 'tweet',
     test: (url: string) => {
       return url.startsWith('https://twitter.com/') || url.startsWith('https://x.com/');
     },
     transform: (url: string) => {
-      const defaultTweetConfig = { fallbackText: 'Tweet' };
-      const tweetConfig = { ...defaultTweetConfig, ...config.tweet };
-      return createTweetEmbedHtml(url, { ...config, tweet: tweetConfig });
+      const escapedUrl = escapeHtml(url);
+      return `
+<div class="block-link block-link-tweet">
+  <blockquote class="twitter-tweet">
+    <a href="${escapedUrl}">${escapedUrl}</a>
+  </blockquote>
+</div>
+      `.trim();
     },
   };
+}
 
-  const youtubeHandler: EmbedHandler = {
+function createYouTubeHandler(config: EmbedConfig): EmbedHandler {
+  return {
     name: 'youtube',
     test: (url: string) => {
       return (
@@ -177,29 +89,140 @@ function createEmbedHandlers(config: EmbedConfig): EmbedHandler[] {
         ],
       };
       const youtubeConfig = { ...defaultYouTubeConfig, ...config.youtube };
-      return createYouTubeEmbedHtml(url, { ...config, youtube: youtubeConfig });
+
+      const match = url.match(
+        /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+      );
+      const videoId = match ? match[1] : undefined;
+      if (!videoId) {
+        throw new Error(`Invalid YouTube URL: ${url}`);
+      }
+
+      const escapedVideoId = escapeHtml(videoId);
+      const { width, height, allowAttributes } = youtubeConfig;
+      const allowAttributesStr = allowAttributes.join('; ');
+
+      return `
+<div class="block-link block-link-youtube">
+  <iframe
+    width="${width}"
+    height="${height}"
+    src="https://www.youtube.com/embed/${escapedVideoId}"
+    style="border: none;"
+    allow="${allowAttributesStr}"
+    allowfullscreen
+  ></iframe>
+</div>
+      `.trim();
     },
   };
+}
 
-  const defaultHandler: EmbedHandler = {
+function createStackblitzHandler(config: EmbedConfig): EmbedHandler {
+  return {
+    name: 'stackblitz',
+    test: (url: string) => {
+      if (!url.startsWith('https://stackblitz.com/')) {
+        return false;
+      }
+      // embed=1パラメータがある場合のみiframe化する
+      const urlObj = new URL(url);
+      return urlObj.searchParams.get('embed') === '1';
+    },
+    transform: (url: string) => {
+      const defaultStackblitzConfig = {
+        width: '100%',
+        height: 400,
+      };
+      const stackblitzConfig = { ...defaultStackblitzConfig, ...config.stackblitz };
+
+      const { width, height } = stackblitzConfig;
+      const escapedUrl = escapeHtml(url);
+
+      return `
+<div class="block-link block-link-stackblitz">
+  <iframe
+    width="${width}"
+    height="${height}"
+    src="${escapedUrl}"
+    style="border: none;"
+    loading="lazy"
+  ></iframe>
+</div>
+      `.trim();
+    },
+  };
+}
+
+function createDefaultHandler(config: EmbedConfig): EmbedHandler {
+  return {
     name: 'default',
     test: (url: string) => {
       return url.startsWith('https://') || url.startsWith('http://');
     },
-    transform: (url: string) => {
+    transform: async (url: string) => {
       const defaultWebPageConfig = {
         timeout: 5000,
         fallbackTitle: 'Web Page',
       };
       const webpageConfig = { ...defaultWebPageConfig, ...config.webpage };
-      return createDefaultEmbeddedLinkHtml(url, { ...config, webpage: webpageConfig });
+
+      const { timeout, fallbackTitle } = webpageConfig;
+
+      try {
+        // タイムアウト付きでフェッチ
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          console.warn(`Failed to fetch web page info for ${url}: ${response.status} ${response.statusText}`);
+          return undefined; // 失敗時はundefinedを返す
+        }
+        const html = await response.text();
+        const $ = cheerio.load(html);
+
+        const title = $('meta[property="og:title"]').attr('content') || $('title').text();
+        const description =
+          $('meta[property="og:description"]').attr('content') || $('meta[name="description"]').attr('content');
+        const imageUrl = $('meta[property="og:image"]').attr('content');
+        const canonicalUrl = $('meta[property="og:url"]').attr('content') || url;
+
+        const escapedUrl = escapeHtml(canonicalUrl);
+        const escapedTitle = escapeHtml(title || fallbackTitle);
+        const escapedDescription = description ? escapeHtml(description) : '';
+        const escapedImageUrl = imageUrl ? escapeHtml(imageUrl) : '';
+
+        return `
+<a href="${escapedUrl}" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">
+  <div class="webpage-card-content">
+    <h3 class="webpage-card-title">${escapedTitle}</h3>
+    ${escapedDescription ? `<p class="webpage-card-description">${escapedDescription}</p>` : ''}
+  </div>
+  ${escapedImageUrl ? `<img src="${escapedImageUrl}" alt="Page image" class="webpage-card-image">` : ''}
+</a>
+        `.trim();
+      } catch (error) {
+        if (error instanceof Error && error.name === 'AbortError') {
+          console.warn(`Timeout fetching web page info for ${url}`);
+        } else {
+          console.error(`Failed to fetch web page info for ${url}:`, error);
+        }
+        return undefined; // エラー時はundefinedを返す
+      }
     },
   };
+}
 
+// 埋め込みハンドラーの定義（設定を受け取る関数として）
+function createEmbedHandlers(config: EmbedConfig): EmbedHandler[] {
   return [
-    tweetHandler,
-    youtubeHandler,
-    defaultHandler, // 最も広範囲なので最後に配置
+    createTweetHandler(),
+    createYouTubeHandler(config),
+    createStackblitzHandler(config),
+    createDefaultHandler(config), // 最も広範囲なので最後に配置
   ];
 }
 
@@ -214,6 +237,7 @@ const remarkEmbed: Plugin<[RemarkEmbedOptions?], Root> = (options = {}) => {
     youtube: options.config?.youtube || {},
     webpage: options.config?.webpage || {},
     tweet: options.config?.tweet || {},
+    stackblitz: options.config?.stackblitz || {},
   } as EmbedConfig;
 
   // 設定に基づいてハンドラーを生成
@@ -250,7 +274,8 @@ const remarkEmbed: Plugin<[RemarkEmbedOptions?], Root> = (options = {}) => {
       const transformResult = handler.transform(url);
       const promise = Promise.resolve(transformResult).then((htmlValue) => {
         if (htmlValue && parent && index !== undefined) {
-          replaceWithHtmlNode(parent, index, htmlValue);
+          const htmlNode: Html = { type: 'html', value: htmlValue };
+          parent.children[index] = htmlNode;
         }
       });
       promises.push(promise);
