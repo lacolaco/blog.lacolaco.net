@@ -1,6 +1,7 @@
-import type { Html, Link, Paragraph, Root } from 'mdast';
+import type { Root, Paragraph, Link, HTML } from 'mdast';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
+import * as cheerio from 'cheerio';
 
 function isTweetUrl(url: string): string | undefined {
   const match = url.match(/^https:\/\/(?:twitter|x)\.com\/[^/]+\/status\/(\d+)/);
@@ -39,8 +40,48 @@ function createYouTubeEmbedHtml(videoId: string): string {
   `.trim();
 }
 
+function isWebPageUrl(url: string): string | undefined {
+  // http(s)://で始まる任意のURLを対象とする
+  const match = url.match(/^https?:\/\/[^/]+\/.*/);
+  return match ? url : undefined;
+}
+
+async function createWebPageEmbedHtml(pageUrl: string): Promise<string | undefined> {
+  // undefinedを返す可能性を追加
+  try {
+    const response = await fetch(pageUrl);
+    if (!response.ok) {
+      console.warn(`Failed to fetch web page info for ${pageUrl}: ${response.status} ${response.statusText}`);
+      return undefined; // 失敗時はundefinedを返す
+    }
+    const html = await response.text();
+    const $ = cheerio.load(html);
+
+    const title = $('meta[property="og:title"]').attr('content') || $('title').text();
+    const description =
+      $('meta[property="og:description"]').attr('content') || $('meta[name="description"]').attr('content');
+    const imageUrl = $('meta[property="og:image"]').attr('content');
+    const url = $('meta[property="og:url"]').attr('content') || pageUrl;
+
+    return `
+<a href="${url}" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">
+  <div class="webpage-card-content">
+    <h3 class="webpage-card-title">${title || 'Web Page'}</h3>
+    ${description ? `<p class="webpage-card-description">${description}</p>` : ''}
+  </div>
+  ${imageUrl ? `<img src="${imageUrl}" alt="Page image" class="webpage-card-image">` : ''}
+</a>
+    `.trim();
+  } catch (error) {
+    console.error(`Failed to fetch web page info for ${pageUrl}:`, error);
+    return undefined; // エラー時はundefinedを返す
+  }
+}
+
 const remarkEmbed: Plugin<[], Root> = () => {
-  return (tree: Root) => {
+  return async (tree: Root) => {
+    const promises: Promise<void>[] = [];
+
     visit(tree, 'paragraph', (node: Paragraph, index, parent) => {
       // 親がルートノードでない場合は処理しない
       if (!parent || parent.type !== 'root') {
@@ -59,30 +100,57 @@ const remarkEmbed: Plugin<[], Root> = () => {
       const link = child as Link;
       const url = link.url;
 
-      let htmlValue: string | undefined;
+      // リンクに明示的なテキストがある場合（URLとテキストが異なる場合）は変換しない
+      if (link.children.length === 1 && link.children[0].type === 'text' && link.children[0].value !== link.url) {
+        return;
+      }
 
       const tweetUrl = isTweetUrl(url);
-      if (tweetUrl) {
-        htmlValue = createTweetEmbedHtml(tweetUrl, url);
-      }
-
       const youtubeVideoId = isYouTubeUrl(url);
-      if (youtubeVideoId) {
-        htmlValue = createYouTubeEmbedHtml(youtubeVideoId);
-      }
+      const webPageUrl = isWebPageUrl(url);
 
-      if (htmlValue) {
-        const htmlNode: Html = {
+      if (tweetUrl) {
+        const htmlValue = createTweetEmbedHtml(tweetUrl, url);
+        // @ts-ignore: HTML型が非推奨であるという警告を抑制
+        const htmlNode: HTML = {
           type: 'html',
           value: htmlValue,
         };
-
-        // パラグラフノード自体をHTMLノードに置き換える
         if (parent && index !== undefined) {
           parent.children[index] = htmlNode;
         }
+      } else if (youtubeVideoId) {
+        const htmlValue = createYouTubeEmbedHtml(youtubeVideoId);
+        // @ts-ignore: HTML型が非推奨であるという警告を抑制
+        const htmlNode: HTML = {
+          type: 'html',
+          value: htmlValue,
+        };
+        if (parent && index !== undefined) {
+          parent.children[index] = htmlNode;
+        }
+      } else if (webPageUrl) {
+        // webPageUrlがundefinedでない場合にのみ処理
+        // 非同期処理をPromiseとして収集
+        const promise = createWebPageEmbedHtml(webPageUrl).then((htmlValue) => {
+          if (htmlValue) {
+            // htmlValueがundefinedでない場合のみノードを置き換える
+            // @ts-ignore: HTML型が非推奨であるという警告を抑制
+            const htmlNode: HTML = {
+              type: 'html',
+              value: htmlValue,
+            };
+            if (parent && index !== undefined) {
+              parent.children[index] = htmlNode;
+            }
+          }
+        });
+        promises.push(promise);
       }
+      // どの埋め込みにもマッチしない場合は何もしない（元のリンクのまま）
     });
+
+    await Promise.all(promises);
   };
 };
 
