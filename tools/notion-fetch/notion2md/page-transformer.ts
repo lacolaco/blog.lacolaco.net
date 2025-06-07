@@ -12,11 +12,13 @@ export function transformNotionPageToMarkdown(page: PageObject): string {
   const pageWithChildren = page as PageObject & { children?: UntypedBlockObject[] };
   const content = pageWithChildren.children ? transformNotionBlocksToMarkdown(pageWithChildren.children) : '';
 
-  return `---
+  const markdown = `---
 ${frontmatterString}
 ---
 
 ${content}`;
+
+  return markdown;
 }
 
 function formatFrontmatter(frontmatter: BlogPostFrontmatter): string {

@@ -110,6 +110,10 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
     }
 
     case 'paragraph': {
+      if (block.paragraph?.rich_text.length === 0) {
+        // 空の段落は無視する
+        return '';
+      }
       return `${transformRichText(block.paragraph?.rich_text || [])}\n\n`;
     }
 
@@ -165,7 +169,8 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
         language = 'ts';
       }
       const code = transformRichText(block.code?.rich_text || []);
-      return `\`\`\`${language}\n${code}\n\`\`\`\n\n`;
+      const delimiter = '```';
+      return `${delimiter}${language}\n${code}\n${delimiter}\n\n`;
     }
 
     case 'image': {
@@ -223,13 +228,10 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
       const lines = content.split('\n').filter((line) => line.trim());
 
       if (lines.length === 1) {
-        return `> [!${alertType}] ${lines[0]}\n\n`;
+        return `> [!${alertType}]\n> ${lines[0]}\n\n`;
       } else {
-        const firstLine = `> [!${alertType}] ${lines[0]}`;
-        const remainingLines = lines
-          .slice(1)
-          .map((line) => `> ${line}`)
-          .join('\n');
+        const firstLine = `> [!${alertType}]`;
+        const remainingLines = lines.map((line) => `> ${line}`).join('\n');
         return `${firstLine}\n${remainingLines}\n\n`;
       }
     }
@@ -311,7 +313,7 @@ function transformRichTextNode(node: RichTextItemObject): string {
   } else if (node.annotations.bold) {
     processedText = `**${processedText}**`;
   } else if (node.annotations.italic) {
-    processedText = `_${processedText}_`;
+    processedText = `*${processedText}*`;
   }
 
   if (node.annotations.strikethrough) {

@@ -148,7 +148,7 @@ describe('transformNotionBlocksToMarkdown', () => {
       const result = transformNotionBlocksToMarkdown([fixture]);
       assert.strictEqual(
         result,
-        '|   |   |   |\n| --- | --- | --- |\n| column 1 content | column 2 content | column 3 content |\n| column 1 content | column 2 content | column 3 content |\n\n',
+        '|  |  |  |\n| --- | --- | --- |\n| column 1 content | column 2 content | column 3 content |\n| column 1 content | column 2 content | column 3 content |\n\n',
       );
     });
   });

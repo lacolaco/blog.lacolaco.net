@@ -31,7 +31,7 @@ notion_url: 'https://www.notion.so/Kitchen-Sink-80f5c54939b64e7ab25825bdb35f1cae
 通常の段落テキスト [リンク付き](https://www.google.com/)
 
 複数行 **太字テキスト**
-_斜体テキスト_ ~~取り消し線~~
+*斜体テキスト* ~~取り消し線~~
 `インラインコード` **_太字と斜体の組み合わせ_**
 
 ---
@@ -127,12 +127,15 @@ export class Comp {}
 
 ## アラート
 
-> [!NOTE] NOTE: これは注記アラートです。
+> [!NOTE]
+> NOTE: これは注記アラートです。
 > 複数行のアラートも書けます。
 
-> [!IMPORTANT] IMPORTANT: ユーザーが知っておくべき重要な情報。
+> [!IMPORTANT]
+> IMPORTANT: ユーザーが知っておくべき重要な情報。
 
-> [!WARNING] WARNING: 問題を避けるために即座に注意が必要な緊急情報。
+> [!WARNING]
+> WARNING: 問題を避けるために即座に注意が必要な緊急情報。
 
 ---
 
@@ -143,7 +146,7 @@ export class Comp {}
 
 ### 内部見出し
 
-折り畳み内容です。　_斜体テキスト_　も使用できます。
+折り畳み内容です。*斜体テキスト*も使用できます。
 
 ![](https://placehold.co/600x400)
 
@@ -177,6 +180,7 @@ graph TD;
   A-->C;
   B-->D;
   C-->D;
+
 ```
 
 ---

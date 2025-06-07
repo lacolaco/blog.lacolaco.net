@@ -15,7 +15,7 @@ describe('transformNotionPageToMarkdown', () => {
       encoding: 'utf-8',
     });
 
-    const result = transformNotionPageToMarkdown(pageFixture);
+    const result = await transformNotionPageToMarkdown(pageFixture);
     assert.strictEqual(result, expectedMarkdown);
   });
 });

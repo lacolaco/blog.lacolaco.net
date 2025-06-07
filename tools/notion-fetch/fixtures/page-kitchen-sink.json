@@ -2915,7 +2915,7 @@
               {
                 "type": "text",
                 "text": {
-                  "content": "折り畳み内容です。　",
+                  "content": "折り畳み内容です。",
                   "link": null
                 },
                 "annotations": {
@@ -2926,7 +2926,7 @@
                   "code": false,
                   "color": "default"
                 },
-                "plain_text": "折り畳み内容です。　",
+                "plain_text": "折り畳み内容です。",
                 "href": null
               },
               {
@@ -2949,7 +2949,7 @@
               {
                 "type": "text",
                 "text": {
-                  "content": "　も使用できます。",
+                  "content": "も使用できます。",
                   "link": null
                 },
                 "annotations": {
@@ -2960,7 +2960,7 @@
                   "code": false,
                   "color": "default"
                 },
-                "plain_text": "　も使用できます。",
+                "plain_text": "も使用できます。",
                 "href": null
               }
             ],
