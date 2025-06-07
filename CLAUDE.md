@@ -105,7 +105,10 @@ Rich markdown support with custom plugins:
 
 **Test-Driven Development:**
 - Always adopt TDD approach. If there are no tests for the implementation target, make it testable first
-- After tests succeed, run code formatting with `pnpm format`
+- After tests succeed, run code formatting
+- Ensure code is linted and passes all checks before committing
+- Use `pnpm lint` to check for linting issues
+- Use `pnpm format` to format code with Prettier
 - Ensure all changes are tested before committing
 
 **Error Handling:**
