@@ -112,10 +112,11 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
   switch (block.type) {
     case 'heading_1':
     case 'heading_2':
-    case 'heading_3':
+    case 'heading_3': {
       const level = block.type === 'heading_1' ? 1 : block.type === 'heading_2' ? 2 : 3;
       const headingPrefix = '#'.repeat(level);
       return `${headingPrefix} ${transformRichText(getHeadingRichText(block))}\n\n`;
+    }
 
     case 'paragraph':
       return `${transformRichText(getParagraphRichText(block))}\n\n`;
@@ -126,13 +127,14 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
     case 'quote':
       return `> ${transformRichText(getQuoteRichText(block))}\n\n`;
 
-    case 'code':
+    case 'code': {
       const codeProps = getCodeProperties(block);
       const language = codeProps.language === 'plain text' ? '' : codeProps.language;
       const code = transformRichText(codeProps.rich_text);
       return `\`\`\`${language}\n${code}\n\`\`\`\n\n`;
+    }
 
-    case 'image':
+    case 'image': {
       const imageProps = getImageProperties(block);
       const caption = transformRichText(imageProps.caption);
       if (imageProps.type === 'external' && imageProps.external) {
@@ -141,13 +143,15 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
         // ローカル画像の場合は仮のパスを使用（実装時に調整）
         return `![${caption}](/images/slug/image-id.png)\n\n`;
       }
+    }
 
     case 'bulleted_list_item':
       return `- ${transformRichText(getBulletedListItemRichText(block))}`;
 
-    case 'numbered_list_item':
+    case 'numbered_list_item': {
       const number = listNumber || 1;
       return `${number}. ${transformRichText(getNumberedListItemRichText(block))}`;
+    }
 
     case 'equation':
       return `$$\n${getEquationExpression(block)}\n$$\n\n`;
