@@ -21,8 +21,8 @@ import type {
   TweetNode,
   StackblitzNode,
 } from '@lib/post';
-import { FileSystem } from '../../file-system';
-import { getFile } from '../../utils/fetch';
+import { FileSystem } from '../file-system';
+import { getFile } from '../utils';
 
 export function newContentTransformer(page: notion.PageObjectWithContent, imageFS: FileSystem): ContentTransformer {
   return new ContentTransformer(page, imageFS);
@@ -247,7 +247,6 @@ export class ContentTransformer {
       list = { type: 'bulleted_list', items: [] };
     }
     const item = {
-      type: 'bulleted_list_item',
       text: this.#richtext(block.bulleted_list_item.rich_text),
       children: await this.#childNodes(block),
     };
@@ -270,7 +269,6 @@ export class ContentTransformer {
       list = { type: 'numbered_list', items: [] };
     }
     const item = {
-      type: 'bulleted_list_item',
       text: this.#richtext(block.numbered_list_item.rich_text),
       children: await this.#childNodes(block),
     };

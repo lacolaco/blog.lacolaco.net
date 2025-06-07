@@ -1,7 +1,7 @@
 import type { PageObjectWithContent } from '@lib/notion';
 import { type PostData, postSchema } from '@lib/post';
 import { FileSystem } from '../file-system';
-import { newContentTransformer } from './transform';
+import { newContentTransformer } from './transformer';
 
 export async function toBlogPostJSON(page: PageObjectWithContent, imageFS: FileSystem): Promise<PostData> {
   const { id: pageId, last_edited_time: lastEditedAt, created_time, slug, locale, properties } = page;
