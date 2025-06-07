@@ -7,7 +7,17 @@
         "text": {
           "content": "Finish reading the docs",
           "link": null
-        }
+        },
+        "annotations": {
+          "bold": false,
+          "italic": false,
+          "strikethrough": false,
+          "underline": false,
+          "code": false,
+          "color": "default"
+        },
+        "plain_text": "Finish reading the docs",
+        "href": null
       }
     ],
     "color": "default"

@@ -1,6 +1,6 @@
 {
-  "type": "heading_1",
-  "heading_1": {
+  "type": "callout",
+  "callout": {
     "rich_text": [
       {
         "type": "text",
@@ -20,7 +20,9 @@
         "href": null
       }
     ],
-    "color": "default",
-    "is_toggleable": false
+    "icon": {
+      "emoji": "❗️"
+    },
+    "color": "default"
   }
 }
