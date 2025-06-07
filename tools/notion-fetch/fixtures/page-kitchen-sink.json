@@ -3285,23 +3285,6 @@
             },
             "plain_text": "e=mc^2",
             "href": null
-          },
-          {
-            "type": "text",
-            "text": {
-              "content": " ",
-              "link": null
-            },
-            "annotations": {
-              "bold": false,
-              "italic": false,
-              "strikethrough": false,
-              "underline": false,
-              "code": false,
-              "color": "default"
-            },
-            "plain_text": " ",
-            "href": null
           }
         ],
         "color": "default"

@@ -127,12 +127,12 @@ export class Comp {}
 
 ## アラート
 
-> [!NOTE] これは注記アラートです。
+> [!NOTE] NOTE: これは注記アラートです。
 > 複数行のアラートも書けます。
 
-> [!IMPORTANT] ユーザーが知っておくべき重要な情報。
+> [!IMPORTANT] IMPORTANT: ユーザーが知っておくべき重要な情報。
 
-> [!WARNING] 問題を避けるために即座に注意が必要な緊急情報。
+> [!WARNING] WARNING: 問題を避けるために即座に注意が必要な緊急情報。
 
 ---
 
@@ -141,9 +141,13 @@ export class Comp {}
 <details>
 <summary>トグルの概要</summary>
 
-折り畳み内容です。　*斜体テキスト*　も使用できます。
+### 内部見出し
+
+折り畳み内容です。　_斜体テキスト_　も使用できます。
 
 ![](https://placehold.co/600x400)
+
+</details>
 
 ---
 

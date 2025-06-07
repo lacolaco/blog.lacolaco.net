@@ -66,7 +66,7 @@ function transformTable(tableBlock: SpecificBlockObject, tableRows: SpecificBloc
 
   // ヘッダー行なしの場合は空のヘッダー行を追加
   if (!tableProps.has_column_header) {
-    const emptyHeader = `| ${Array(tableProps.table_width).fill(' ').join(' | ')} |`;
+    const emptyHeader = `| ${Array(tableProps.table_width).fill('').join(' | ')} |`;
     rows.push(emptyHeader);
     const separator = `| ${Array(tableProps.table_width).fill('---').join(' | ')} |`;
     rows.push(separator);
@@ -117,11 +117,53 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
       return `---\n\n`;
     }
     case 'quote': {
-      return `> ${transformRichText(block.quote?.rich_text || [])}\n\n`;
+      const content = transformRichText(block.quote?.rich_text || []);
+      const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
+
+      if (blockWithChildren.children && blockWithChildren.children.length > 0) {
+        // 子要素がある場合は複数行引用として処理
+        const lines = [`> ${content}`];
+
+        for (let i = 0; i < blockWithChildren.children.length; i++) {
+          const child = blockWithChildren.children[i];
+          const childMarkdown = transformBlock(child);
+          const childLines = childMarkdown.trim().split('\n');
+
+          // 最初の子要素の前に空行を追加
+          if (i === 0) {
+            lines.push('>');
+          }
+
+          // 各行に '> ' プレフィックスを追加
+          for (const line of childLines) {
+            if (line.trim() === '') {
+              lines.push('>');
+            } else {
+              lines.push(`> ${line}`);
+            }
+          }
+
+          // 最後の子要素でない場合、次の子要素が段落なら空行を追加
+          if (i < blockWithChildren.children.length - 1) {
+            const nextChild = blockWithChildren.children[i + 1];
+            if (nextChild.type === 'paragraph') {
+              lines.push('>');
+            }
+          }
+        }
+
+        return lines.join('\n') + '\n\n';
+      } else {
+        // 単純な引用
+        return `> ${content}\n\n`;
+      }
     }
 
     case 'code': {
-      const language = block.code?.language === 'plain text' ? '' : block.code?.language || '';
+      let language = block.code?.language === 'plain text' ? '' : block.code?.language || '';
+      if (language === 'typescript') {
+        language = 'ts';
+      }
       const code = transformRichText(block.code?.rich_text || []);
       return `\`\`\`${language}\n${code}\n\`\`\`\n\n`;
     }
@@ -129,7 +171,11 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
     case 'image': {
       const caption = transformRichText(block.image?.caption || []);
       if (block.image?.type === 'external' && block.image?.external) {
-        return `![${caption}](${block.image.external.url})\n\n`;
+        if (caption) {
+          return `<figure>\n  <img src="${block.image.external.url}" alt="${caption}">\n  <figcaption>${caption}</figcaption>\n</figure>\n\n`;
+        } else {
+          return `![](${block.image.external.url})\n\n`;
+        }
       } else {
         // ローカル画像の場合は仮のパスを使用（実装時に調整）
         return `![${caption}](/images/slug/image-id.png)\n\n`;
@@ -137,12 +183,34 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
     }
 
     case 'bulleted_list_item': {
-      return `- ${transformRichText(block.bulleted_list_item?.rich_text || [])}`;
+      const content = transformRichText(block.bulleted_list_item?.rich_text || []);
+      const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
+      if (blockWithChildren.children && blockWithChildren.children.length > 0) {
+        const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children);
+        const indentedNested = nestedContent
+          .trim()
+          .split('\n')
+          .map((line) => `  ${line}`)
+          .join('\n');
+        return `- ${content}\n${indentedNested}`;
+      }
+      return `- ${content}`;
     }
 
     case 'numbered_list_item': {
       const number = listNumber || 1;
-      return `${number}. ${transformRichText(block.numbered_list_item?.rich_text || [])}`;
+      const content = transformRichText(block.numbered_list_item?.rich_text || []);
+      const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
+      if (blockWithChildren.children && blockWithChildren.children.length > 0) {
+        const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children);
+        const indentedNested = nestedContent
+          .trim()
+          .split('\n')
+          .map((line) => `   ${line}`)
+          .join('\n');
+        return `${number}. ${content}\n${indentedNested}`;
+      }
+      return `${number}. ${content}`;
     }
 
     case 'equation': {
@@ -151,7 +219,53 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
 
     case 'callout': {
       const alertType = getAlertTypeFromIcon(block.callout?.icon || null);
-      return `> [!${alertType}]\n> ${transformRichText(block.callout?.rich_text || [])}\n\n`;
+      const content = transformRichText(block.callout?.rich_text || []);
+      const lines = content.split('\n').filter((line) => line.trim());
+
+      if (lines.length === 1) {
+        return `> [!${alertType}] ${lines[0]}\n\n`;
+      } else {
+        const firstLine = `> [!${alertType}] ${lines[0]}`;
+        const remainingLines = lines
+          .slice(1)
+          .map((line) => `> ${line}`)
+          .join('\n');
+        return `${firstLine}\n${remainingLines}\n\n`;
+      }
+    }
+
+    case 'toggle': {
+      const summary = transformRichText(block.toggle?.rich_text || []);
+      const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
+      if (blockWithChildren.children && blockWithChildren.children.length > 0) {
+        const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children);
+        return `<details>\n<summary>${summary}</summary>\n\n${nestedContent.trim()}\n\n</details>\n\n`;
+      }
+      return `<details>\n<summary>${summary}</summary>\n\n</details>\n\n`;
+    }
+
+    case 'link_preview': {
+      const linkPreview = (block as Record<string, unknown>).link_preview as Record<string, unknown> | undefined;
+      return `${(linkPreview?.url as string) || ''}\n\n`;
+    }
+
+    case 'embed': {
+      const embed = (block as Record<string, unknown>).embed as Record<string, unknown> | undefined;
+      return `${(embed?.url as string) || ''}\n\n`;
+    }
+
+    case 'video': {
+      const video = (block as Record<string, unknown>).video as Record<string, unknown> | undefined;
+      if (video?.type === 'external') {
+        const external = video.external as Record<string, unknown> | undefined;
+        return `${(external?.url as string) || ''}\n\n`;
+      }
+      return `<!-- Unsupported video type -->\n\n`;
+    }
+
+    case 'bookmark': {
+      const bookmark = (block as Record<string, unknown>).bookmark as Record<string, unknown> | undefined;
+      return `${(bookmark?.url as string) || ''}\n\n`;
     }
 
     default: {
@@ -166,28 +280,46 @@ function transformRichText(richText: RichTextArray): string {
 }
 
 function transformRichTextNode(node: RichTextItemObject): string {
-  let text = node.plain_text;
+  const text = node.plain_text;
+
+  // 数式の処理（NotionのインラインEquationブロック）
+  if ('type' in node && node.type === 'equation') {
+    const equationNode = node as Record<string, unknown>;
+    const equation = equationNode.equation as Record<string, unknown> | undefined;
+    return `$${(equation?.expression as string) || ''}$`;
+  }
+
+  // 末尾の改行コードを保存して除去
+  const trailingNewlines = text.match(/\n+$/)?.[0] || '';
+  const textWithoutTrailingNewlines = text.replace(/\n+$/, '');
+
+  let processedText = textWithoutTrailingNewlines;
 
   // リンクの処理
   if (node.href) {
-    text = `[${text}](${node.href})`;
+    processedText = `[${processedText}](${node.href})`;
   }
 
   // 装飾の処理（ネストに対応）
   if (node.annotations.code) {
-    text = `\`${text}\``;
-  }
-  if (node.annotations.bold) {
-    text = `**${text}**`;
-  }
-  if (node.annotations.italic) {
-    text = `*${text}*`;
-  }
-  if (node.annotations.strikethrough) {
-    text = `~~${text}~~`;
+    processedText = `\`${processedText}\``;
   }
 
-  return text;
+  // 太字と斜体の組み合わせ処理
+  if (node.annotations.bold && node.annotations.italic) {
+    processedText = `**_${processedText}_**`;
+  } else if (node.annotations.bold) {
+    processedText = `**${processedText}**`;
+  } else if (node.annotations.italic) {
+    processedText = `_${processedText}_`;
+  }
+
+  if (node.annotations.strikethrough) {
+    processedText = `~~${processedText}~~`;
+  }
+
+  // 末尾の改行コードを再付加
+  return processedText + trailingNewlines;
 }
 
 function getAlertTypeFromIcon(icon: { type: string; emoji?: string } | null): string {
