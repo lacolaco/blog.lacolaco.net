@@ -20,7 +20,8 @@
     },
     {
       "groupName": "types packages",
-      "matchPackageNames": ["@types/{/,}**"]
+      "matchPackageNames": ["@types/{/,}**"],
+      "automerge": true
     },
     {
       "groupName": "iconify packages",
