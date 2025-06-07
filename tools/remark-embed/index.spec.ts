@@ -57,7 +57,7 @@ describe('remarkEmbed', () => {
     width="560"
     height="315"
     src="https://www.youtube.com/embed/${videoId}"
-    frameborder="0"
+    style="border: none;"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
     allowfullscreen
   ></iframe>
@@ -72,7 +72,10 @@ describe('remarkEmbed', () => {
     test('GitHubのレポジトリURLであるとき、Webページカードが埋め込まれる', async () => {
       const markdown = 'https://github.com/lacolaco/blog.lacolaco.net';
       const result = await processMarkdown(markdown);
-      assert.match(result, /<a href="https:\/\/github\.com\/lacolaco\/blog\.lacolaco\.net" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">/);
+      assert.match(
+        result,
+        /<a href="https:\/\/github\.com\/lacolaco\/blog\.lacolaco\.net" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">/,
+      );
       assert.match(result, /<img src="[^"]+" alt="Page image" class="webpage-card-image">/);
       assert.match(result, /<div class="webpage-card-content">/);
       assert.match(result, /<h3 class="webpage-card-title">/);
@@ -82,7 +85,8 @@ describe('remarkEmbed', () => {
       assert.match(result, /<\/a>/);
     });
 
-    test('OpenGraph情報を持たない一般的なWebページのURLであるとき、埋め込まれない', async () => { // テストケース名を変更
+    test('OpenGraph情報を持たない一般的なWebページのURLであるとき、埋め込まれない', async () => {
+      // テストケース名を変更
       const markdown = 'https://example.com/some-page';
       const expectedHtml = '<p><a href="https://example.com/some-page">https://example.com/some-page</a></p>'; // 期待値を元のリンクに
       const result = await processMarkdown(markdown);
