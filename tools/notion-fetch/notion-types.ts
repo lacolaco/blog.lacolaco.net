@@ -303,6 +303,21 @@ export function getCalloutRichText(block: SpecificBlockObject): RichTextArray {
   return block.callout?.rich_text || [];
 }
 
+export function getCalloutProperties(block: SpecificBlockObject): {
+  rich_text: RichTextArray;
+  icon: { type: string; emoji?: string } | null;
+  color: string;
+} {
+  if (!isCalloutBlock(block)) {
+    throw new Error(`Block is not a callout block: ${block.type}`);
+  }
+  return {
+    rich_text: block.callout?.rich_text || [],
+    icon: block.callout?.icon || null,
+    color: block.callout?.color || 'default',
+  };
+}
+
 export function getTableProperties(block: SpecificBlockObject): {
   table_width: number;
   has_column_header: boolean;

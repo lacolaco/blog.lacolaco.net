@@ -1,18 +1,5 @@
 import type { SpecificBlockObject, RichTextArray, RichTextItemObject, UntypedBlockObject } from './notion-types';
-import {
-  isListBlock,
-  getHeadingRichText,
-  getParagraphRichText,
-  getQuoteRichText,
-  getCodeProperties,
-  getImageProperties,
-  getBulletedListItemRichText,
-  getNumberedListItemRichText,
-  getEquationExpression,
-  getCalloutRichText,
-  getTableProperties,
-  getTableRowCells,
-} from './notion-types';
+import { isListBlock, getTableProperties, getTableRowCells } from './notion-types';
 
 /**
  * NotionブロックをMarkdown文字列に変換する純粋関数
@@ -110,58 +97,67 @@ function transformTable(tableBlock: SpecificBlockObject, tableRows: SpecificBloc
 
 function transformBlock(block: UntypedBlockObject, listNumber?: number): string {
   switch (block.type) {
-    case 'heading_1':
-    case 'heading_2':
-    case 'heading_3': {
-      const level = block.type === 'heading_1' ? 1 : block.type === 'heading_2' ? 2 : 3;
-      const headingPrefix = '#'.repeat(level);
-      return `${headingPrefix} ${transformRichText(getHeadingRichText(block))}\n\n`;
+    case 'heading_1': {
+      return `# ${transformRichText(block.heading_1?.rich_text || [])}\n\n`;
     }
 
-    case 'paragraph':
-      return `${transformRichText(getParagraphRichText(block))}\n\n`;
+    case 'heading_2': {
+      return `## ${transformRichText(block.heading_2?.rich_text || [])}\n\n`;
+    }
 
-    case 'divider':
+    case 'heading_3': {
+      return `### ${transformRichText(block.heading_3?.rich_text || [])}\n\n`;
+    }
+
+    case 'paragraph': {
+      return `${transformRichText(block.paragraph?.rich_text || [])}\n\n`;
+    }
+
+    case 'divider': {
       return `---\n\n`;
-
-    case 'quote':
-      return `> ${transformRichText(getQuoteRichText(block))}\n\n`;
+    }
+    case 'quote': {
+      return `> ${transformRichText(block.quote?.rich_text || [])}\n\n`;
+    }
 
     case 'code': {
-      const codeProps = getCodeProperties(block);
-      const language = codeProps.language === 'plain text' ? '' : codeProps.language;
-      const code = transformRichText(codeProps.rich_text);
+      const language = block.code?.language === 'plain text' ? '' : block.code?.language || '';
+      const code = transformRichText(block.code?.rich_text || []);
       return `\`\`\`${language}\n${code}\n\`\`\`\n\n`;
     }
 
     case 'image': {
-      const imageProps = getImageProperties(block);
-      const caption = transformRichText(imageProps.caption);
-      if (imageProps.type === 'external' && imageProps.external) {
-        return `![${caption}](${imageProps.external.url})\n\n`;
+      const caption = transformRichText(block.image?.caption || []);
+      if (block.image?.type === 'external' && block.image?.external) {
+        return `![${caption}](${block.image.external.url})\n\n`;
       } else {
         // ローカル画像の場合は仮のパスを使用（実装時に調整）
         return `![${caption}](/images/slug/image-id.png)\n\n`;
       }
     }
 
-    case 'bulleted_list_item':
-      return `- ${transformRichText(getBulletedListItemRichText(block))}`;
+    case 'bulleted_list_item': {
+      return `- ${transformRichText(block.bulleted_list_item?.rich_text || [])}`;
+    }
 
     case 'numbered_list_item': {
       const number = listNumber || 1;
-      return `${number}. ${transformRichText(getNumberedListItemRichText(block))}`;
+      return `${number}. ${transformRichText(block.numbered_list_item?.rich_text || [])}`;
     }
 
-    case 'equation':
-      return `$$\n${getEquationExpression(block)}\n$$\n\n`;
+    case 'equation': {
+      return `$$\n${block.equation?.expression || ''}\n$$\n\n`;
+    }
 
-    case 'callout':
-      return `> [!INFO]\n> ${transformRichText(getCalloutRichText(block))}\n\n`;
+    case 'callout': {
+      const alertType = getAlertTypeFromIcon(block.callout?.icon || null);
+      return `> [!${alertType}]\n> ${transformRichText(block.callout?.rich_text || [])}\n\n`;
+    }
 
-    default:
+    default: {
       // 未対応のブロックタイプはHTMLコメントでブロックタイプを埋め込み
       return `<!-- Unsupported block type: ${block.type} -->\n\n`;
+    }
   }
 }
 
@@ -192,4 +188,21 @@ function transformRichTextNode(node: RichTextItemObject): string {
   }
 
   return text;
+}
+
+function getAlertTypeFromIcon(icon: { type: string; emoji?: string } | null): string {
+  if (!icon || icon.type !== 'emoji' || !icon.emoji) {
+    return 'NOTE';
+  }
+
+  switch (icon.emoji) {
+    case '❗️':
+    case '❗':
+      return 'IMPORTANT';
+    case '⚠️':
+    case '⚠':
+      return 'WARNING';
+    default:
+      return 'NOTE';
+  }
 }

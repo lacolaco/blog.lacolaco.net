@@ -114,10 +114,22 @@ describe('transformNotionBlocksToMarkdown', () => {
   });
 
   describe('コールアウト', () => {
-    it('calloutはinfo alert構文に変換される', async () => {
-      const fixture = await loadFixture('block-callout.json');
+    it('calloutはNOTE alert構文に変換される', async () => {
+      const fixture = await loadFixture('block-callout-default.json');
       const result = transformNotionBlocksToMarkdown([fixture]);
-      assert.strictEqual(result, '> [!INFO]\n> Lacinato kale\n\n');
+      assert.strictEqual(result, '> [!NOTE]\n> Lacinato kale\n\n');
+    });
+
+    it('emojiが ❗️ のとき、IMPORTANT alert構文に変換される', async () => {
+      const fixture = await loadFixture('block-callout-important.json');
+      const result = transformNotionBlocksToMarkdown([fixture]);
+      assert.strictEqual(result, '> [!IMPORTANT]\n> Lacinato kale\n\n');
+    });
+
+    it('emojiが ⚠️ のとき、WARNING alert構文に変換される', async () => {
+      const fixture = await loadFixture('block-callout-warning.json');
+      const result = transformNotionBlocksToMarkdown([fixture]);
+      assert.strictEqual(result, '> [!WARNING]\n> Lacinato kale\n\n');
     });
   });
 
