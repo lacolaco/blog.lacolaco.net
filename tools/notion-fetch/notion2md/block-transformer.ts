@@ -1,5 +1,5 @@
-import type { SpecificBlockObject, RichTextArray, RichTextItemObject, UntypedBlockObject } from './notion-types';
-import { isListBlock, getTableProperties, getTableRowCells } from './notion-types';
+import type { RichTextArray, RichTextItemObject, SpecificBlockObject, UntypedBlockObject } from '../notion-types';
+import { getTableProperties, getTableRowCells, isListBlock } from '../notion-types';
 
 /**
  * NotionブロックをMarkdown文字列に変換する純粋関数

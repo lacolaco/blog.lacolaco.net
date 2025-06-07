@@ -29,6 +29,8 @@ import type {
   TableRowBlockObjectResponse,
 } from '@notionhq/client/build/src/api-endpoints';
 
+export type PageObject = PageObjectResponse;
+
 // @notionhq/clientの型定義を直接使用
 export type RichTextItemObject = RichTextItemResponse;
 export type RichTextArray = RichTextItemObject[];

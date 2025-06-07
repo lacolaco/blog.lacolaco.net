@@ -1,16 +1,16 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import { transformNotionBlocksToMarkdown } from './markdown-transformer';
-import type { ParagraphBlockObject, RichTextItemObject, UntypedBlockObject } from './notion-types';
+import { transformNotionBlocksToMarkdown } from './block-transformer';
+import type { ParagraphBlockObject, RichTextItemObject, UntypedBlockObject } from '../notion-types';
 
 async function loadFixture(fixtureFilename: string): Promise<UntypedBlockObject> {
-  return await import(`./fixtures/${fixtureFilename}`).then(
+  return await import(`../fixtures/${fixtureFilename}`).then(
     (module: { default: UntypedBlockObject }) => module.default,
   );
 }
 
 async function loadRichTextFixture(fixtureFilename: string): Promise<RichTextItemObject> {
-  return await import(`./fixtures/${fixtureFilename}`).then(
+  return await import(`../fixtures/${fixtureFilename}`).then(
     (module: { default: RichTextItemObject }) => module.default,
   );
 }
