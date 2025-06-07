@@ -74,7 +74,7 @@ importers:
         version: 4.20250607.0
       '@iconify/json':
         specifier: ^2.2.161
-        version: 2.2.344
+        version: 2.2.345
       '@iconify/tailwind':
         specifier: ^1.0.0
         version: 1.2.0
@@ -521,8 +521,8 @@ packages:
     resolution: {integrity: sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==}
     engines: {node: '>=6'}
 
-  '@iconify/json@2.2.344':
-    resolution: {integrity: sha512-wY+TYoq4WSAaNunAbecUS+5S4VobTW/3cWpTLEWezRW9Wv4V3MqguNirNN3c/jSq/dfIMJNvr9Gz+N9iNFMInA==}
+  '@iconify/json@2.2.345':
+    resolution: {integrity: sha512-cWcTkpSw42OcltXXlLRMp4bnoFEMvEXEIZDPazqqpT7nr4dPN/ztEqOk6T3z0fXrN2E3OEgW0GnHlQqZz4qDgw==}
 
   '@iconify/tailwind@1.2.0':
     resolution: {integrity: sha512-KgpIHWOTcRYw1XcoUqyNSrmYyfLLqZYu3AmP8zdfLk0F5TqRO8YerhlvlQmGfn7rJXgPeZN569xPAJnJ53zZxA==}
@@ -3486,7 +3486,7 @@ snapshots:
 
   '@fortawesome/fontawesome-free@6.7.2': {}
 
-  '@iconify/json@2.2.344':
+  '@iconify/json@2.2.345':
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 1.1.2
