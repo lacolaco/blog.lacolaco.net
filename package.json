@@ -21,7 +21,7 @@
     "test:remark-embed": "tsx --test --test-reporter spec tools/remark-embed/**/*.spec.ts",
     "lint": "eslint ."
   },
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.11.1",
   "dependencies": {
     "@astrojs/prism": "3.3.0",
     "@astrojs/react": "4.3.0",
