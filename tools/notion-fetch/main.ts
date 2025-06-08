@@ -5,7 +5,9 @@ import { FileSystem } from './filesystem';
 import { downloadImages } from './image-downloader';
 import { extractFrontmatter, generateContent, buildMarkdownFile } from './page-transformer';
 import type { TransformContext } from './block-transformer';
-import { formatJSON, parseFrontmatter, shouldSkipProcessing, toCategoriesJSON, toTagsJSON } from './utils';
+import { formatJSON, shouldSkipProcessing, toCategoriesJSON, toTagsJSON } from './utils';
+import { parseFrontmatter } from './frontmatter';
+import type { BlogPostFrontmatter } from './blog-types';
 
 const { NOTION_AUTH_TOKEN } = process.env;
 if (!NOTION_AUTH_TOKEN) {
@@ -69,7 +71,7 @@ async function main() {
       // 既存のMarkdownファイルをチェック
       const existingMarkdown = await filesystems.posts.load(filename);
       if (existingMarkdown) {
-        const frontmatter = parseFrontmatter(existingMarkdown.toString('utf-8'));
+        const frontmatter = parseFrontmatter<BlogPostFrontmatter>(existingMarkdown.toString('utf-8'));
         if (shouldSkipProcessing(page.last_edited_time, frontmatter)) {
           console.log(`Skipping ${filename} (no changes)`);
           return;

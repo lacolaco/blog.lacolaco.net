@@ -1,6 +1,7 @@
 import * as prettier from 'prettier';
-import { stringify as yamlStringify } from 'yaml';
 import { transformNotionBlocksToMarkdown, type TransformContext } from './block-transformer';
+import { formatFrontmatter } from './frontmatter';
+import type { BlogPostFrontmatter } from './blog-types';
 import type { PageObject, UntypedBlockObject } from './notion-types';
 
 /**
@@ -28,26 +29,6 @@ ${content}`;
     throw new Error('Prettier configuration not found');
   }
   return await prettier.format(markdown, { parser: 'markdown', ...config });
-}
-
-export function formatFrontmatter(frontmatter: BlogPostFrontmatter): string {
-  return yamlStringify(frontmatter, {
-    defaultStringType: 'QUOTE_SINGLE',
-    defaultKeyType: 'PLAIN',
-  }).trim();
-}
-
-export interface BlogPostFrontmatter {
-  title: string;
-  slug: string;
-  icon: string;
-  created_time: string;
-  last_edited_time: string;
-  category: string;
-  tags: string[];
-  published: boolean;
-  notion_url: string;
-  locale?: string;
 }
 
 export function extractFrontmatter(page: PageObject): BlogPostFrontmatter {

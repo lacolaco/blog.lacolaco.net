@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { describe, it } from 'node:test';
-import { formatJSON, toTagsJSON, toCategoriesJSON, parseFrontmatter, shouldSkipProcessing } from './utils';
+import { formatJSON, toTagsJSON, toCategoriesJSON, shouldSkipProcessing } from './utils';
+import { parseFrontmatter } from './frontmatter';
 import type { BlogDatabaseProperties } from '@lib/notion';
 
 describe('formatJSON', () => {
