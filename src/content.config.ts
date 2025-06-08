@@ -7,12 +7,22 @@ const post = defineCollection({
   schema: postSchema,
 });
 
-const kitchenSink = defineCollection({
-  loader: glob({ pattern: 'src/content/kitchen-sink.md' }),
+const postsV2 = defineCollection({
+  loader: glob({ pattern: 'src/content/post/**/*.md' }),
 
-  schema: z.object({
-    title: z.string(),
-  }),
+  schema: z
+    .object({
+      title: z.string(),
+      published: z.boolean(),
+      category: z.string(),
+      tags: z.array(z.string()),
+      created_time: z.string().transform((val) => new Date(val)),
+      last_edited_time: z.string().transform((val) => new Date(val)),
+      slug: z.string(),
+      locale: z.string().optional(),
+      canonical_url: z.string().optional(),
+    })
+    .passthrough(),
 });
 
-export const collections = { post, kitchenSink };
+export const collections = { post, postsV2 };

@@ -1,0 +1,26 @@
+{
+  "type": "code",
+  "code": {
+    "caption": [],
+    "rich_text": [
+      {
+        "type": "text",
+        "text": {
+          "content": "const a = 3",
+          "link": null
+        },
+        "annotations": {
+          "bold": false,
+          "italic": false,
+          "strikethrough": false,
+          "underline": false,
+          "code": false,
+          "color": "default"
+        },
+        "plain_text": "const a = 3",
+        "href": null
+      }
+    ],
+    "language": "javascript"
+  }
+}

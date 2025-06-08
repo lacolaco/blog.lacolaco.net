@@ -1,23 +1,50 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
-import { findLocalizedVersion, getRelativePostUrl } from '@lib/i18n';
+import PostDetailPage from 'src/layouts/PostDetailPage.astro';
 import BlogPost from '../../layouts/BlogPost.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('post');
-  return posts.map((post) => {
-    return {
-      params: {
-        slug: post.data.slug,
-      },
-      props: post,
-    };
-  });
+  const postsV2 = await getCollection('postsV2');
+  // Find entry from postsV2 first, if not found, fallback to posts
+  return [
+    ...postsV2
+      .filter((entry) => {
+        // import.meta.env.MODE が 'production' の場合、公開済みの投稿のみを対象とする
+        if (import.meta.env.MODE === 'production') {
+          return entry.data.published;
+        }
+        // 開発モードでは全ての投稿を対象とする
+        return true;
+      })
+      .map((entry) => {
+        return {
+          params: {
+            slug: entry.data.slug,
+          },
+          props: entry,
+        };
+      }),
+    ...posts
+      .filter((entry) => !postsV2.some((p) => p.data.slug === entry.data.slug))
+      .map((entry) => {
+        return {
+          params: {
+            slug: entry.data.slug,
+          },
+          props: entry,
+        };
+      }),
+  ];
 }
-type Props = CollectionEntry<'post'>;
-const post = Astro.props;
-
-const enVersion = await findLocalizedVersion(post.data, 'en');
+type Props = CollectionEntry<'post'> | CollectionEntry<'postsV2'>;
+const entry = Astro.props;
 ---
 
-<BlogPost post={post.data} otherLocaleUrls={{ en: enVersion && getRelativePostUrl(enVersion.data) }} />
+{
+  entry.collection === 'post' ? (
+    <BlogPost post={entry.data} />
+  ) : (
+    <PostDetailPage entry={entry} />
+  )
+}

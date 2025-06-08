@@ -1,0 +1,20 @@
+{
+  "type": "toggle",
+  "toggle": {
+    "rich_text": [
+      {
+        "type": "text",
+        "text": {
+          "content": "Additional project details",
+          "link": null
+        }
+      }
+    ],
+    "color": "default",
+    "children": [
+      {
+        "type": "paragraph"
+      }
+    ]
+  }
+}

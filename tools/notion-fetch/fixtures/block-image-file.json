@@ -1,0 +1,10 @@
+{
+  "type": "image",
+  "image": {
+    "type": "file",
+    "file": {
+      "url": "https://website.domain/images/image.png",
+      "expiry_time": "2023-10-01T00:00:00.000Z"
+    }
+  }
+}

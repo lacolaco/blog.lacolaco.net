@@ -7,15 +7,27 @@ import Header from 'src/components/Header.astro';
 import MainContainer from 'src/components/MainContainer.astro';
 import ShareButtons from 'src/components/ShareButtons.astro';
 import { SITE_TITLE } from 'src/consts';
-import { Content, frontmatter } from '../content/kitchen-sink.md';
+import { getCollection, render } from 'astro:content';
+import TagList from 'src/components/TagList.astro';
+import Tag from 'src/components/Tag.astro';
+import FormattedDate from 'src/components/FormattedDate';
+import { isAfter as isAfterDate } from 'date-fns';
 
-const { title } = frontmatter;
+const posts = await getCollection('postsV2');
+const slug = 'kitchen-sink';
+const entry = posts.find((p) => p.id === slug)!;
+
+const { title, category, tags, created_time, last_edited_time, canonical_url } = entry?.data;
+const isUpdated = last_edited_time && isAfterDate(last_edited_time, created_time);
+const { Content } = await render(entry);
 ---
 
 <!doctype html>
 <html lang="ja">
   <head>
     <BaseHead title={`${title} | ${SITE_TITLE}`} description={''} />
+
+    {canonical_url && <link rel="canonical" href={canonical_url} />}
   </head>
 
   <body class="font-base bg-default">
@@ -23,6 +35,27 @@ const { title } = frontmatter;
 
     <MainContainer>
       <article class="py-8 lg:py-16">
+        <header class="mb-6">
+          <span class="text-sm text-muted">
+            <FormattedDate date={created_time} />
+            {
+              isUpdated && (
+                <span class="text-sm text-muted">
+                  {'(Updated at: '}
+                  <FormattedDate date={last_edited_time} />
+                  {')'}
+                </span>
+              )
+            }
+          </span>
+          <h1 class="text-2xl font-semibold leading-tight mb-1">{title}</h1>
+          <div class="py-1">
+            <TagList>
+              {category && <Tag name={category} isCategory />}
+              {tags && tags.map((tag) => <Tag name={tag} />)}
+            </TagList>
+          </div>
+        </header>
         <div class="markdown-body mb-4">
           <Content />
         </div>

@@ -21,8 +21,8 @@ import type {
   TweetNode,
   StackblitzNode,
 } from '@lib/post';
-import { FileSystem } from '../../file-system';
-import { getFile } from '../../utils/fetch';
+import { FileSystem } from '../file-system';
+import { getFile } from '../utils';
 
 export function newContentTransformer(page: notion.PageObjectWithContent, imageFS: FileSystem): ContentTransformer {
   return new ContentTransformer(page, imageFS);
@@ -201,7 +201,7 @@ export class ContentTransformer {
   }
 
   #callout(block: notion.BlockObject<'callout'>): CalloutNode {
-    return { type: 'callout', text: block.callout.rich_text.map(this.#text) };
+    return { type: 'callout', text: block.callout.rich_text.map((node) => this.#text(node)) };
   }
 
   #video(block: notion.BlockObject<'video'>): YoutubeNode {
@@ -247,7 +247,6 @@ export class ContentTransformer {
       list = { type: 'bulleted_list', items: [] };
     }
     const item = {
-      type: 'bulleted_list_item',
       text: this.#richtext(block.bulleted_list_item.rich_text),
       children: await this.#childNodes(block),
     };
@@ -270,7 +269,6 @@ export class ContentTransformer {
       list = { type: 'numbered_list', items: [] };
     }
     const item = {
-      type: 'bulleted_list_item',
       text: this.#richtext(block.numbered_list_item.rich_text),
       children: await this.#childNodes(block),
     };
@@ -284,7 +282,7 @@ export class ContentTransformer {
     return list;
   }
 
-  async #table(block: notion.BlockObject<'table'>): Promise<TableNode> {
+  #table(block: notion.BlockObject<'table'>): TableNode {
     if (block.children == null) {
       throw new Error('Table block has no children');
     }

@@ -1,0 +1,8 @@
+{
+  "type": "synced_block",
+  "synced_block": {
+    "synced_from": {
+      "block_id": "original_synced_block_id"
+    }
+  }
+}

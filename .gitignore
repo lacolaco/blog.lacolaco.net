@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # Code editor files
 .claude/settings.local.json
+
+# misc
+.tmp/

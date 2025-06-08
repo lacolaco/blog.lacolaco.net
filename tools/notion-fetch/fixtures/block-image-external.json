@@ -1,0 +1,9 @@
+{
+  "type": "image",
+  "image": {
+    "type": "external",
+    "external": {
+      "url": "https://website.domain/images/image.png"
+    }
+  }
+}

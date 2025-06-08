@@ -29,7 +29,7 @@ export class FileSystem {
     const filePath = path.resolve(this.dir, filename);
     try {
       return await readFile(filePath);
-    } catch (e) {
+    } catch {
       return null;
     }
   }
