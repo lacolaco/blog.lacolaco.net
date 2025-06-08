@@ -179,6 +179,7 @@ See @docs/git-instructions.md
 ## Tool Usage Notes
 
 - Use `eslint` MCP tool to get diagnostics from ESLint rather than CLI execution.
+- Prioritize using the `gh` command for GitHub-related operations
 
 ## Important Notes
 
