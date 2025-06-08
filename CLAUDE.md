@@ -169,6 +169,10 @@ Rich markdown support with custom plugins:
 - Use Content Security Policy (CSP) headers
 - Sanitize content when rendering user-generated HTML
 
+## Tool Usage Notes
+
+- Use `eslint` MCP tool to get diagnostics from ESLint rather than CLI execution.
+
 ## Important Notes
 
 - CLAUDE.md is always written in English
