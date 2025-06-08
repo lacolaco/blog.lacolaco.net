@@ -4,6 +4,31 @@ on:
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened]
+    paths:
+      # Source code and components
+      - 'src/**'
+      # Content updates
+      - 'src/content/**'
+      # Configuration files
+      - 'astro.config.ts'
+      - 'tailwind.config.js'
+      - 'tsconfig.json'
+      # Package dependencies
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      # Remark plugins and tools affecting build
+      - 'tools/remark-embed/**'
+      # Public assets
+      - 'public/**'
+      # Cloudflare Workers
+      - 'functions/**'
+      - 'wrangler.toml'
+      # GitHub workflows (for workflow changes)
+      - '.github/workflows/deploy-preview.yml'
+      # Ignore non-content markdown files
+      - '!*.md'
+      - '!docs/**'
+      - '!tools/**/README.md'
 
 concurrency:
   group: deploy-preview-${{ github.event.number }}
