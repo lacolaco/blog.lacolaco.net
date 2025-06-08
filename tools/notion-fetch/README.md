@@ -18,12 +18,15 @@
 ```
 tools/notion-fetch/
 ├── README.md                  # このファイル
-├── main.ts                   # エントリーポイント（統合されたユーティリティ含む）
+├── main.ts                   # エントリーポイント
+├── filesystem.ts             # FileSystemクラス（ファイル操作）
 ├── notion-types.ts           # Notion API型定義
 ├── page-transformer.ts       # ページ→Markdown変換
 ├── page-transformer.spec.ts  # ページ変換テスト
 ├── block-transformer.ts      # ブロック→Markdown変換
 ├── block-transformer.spec.ts # ブロック変換テスト
+├── utils.ts                  # ユーティリティ関数
+├── utils.spec.ts             # ユーティリティテスト
 └── fixtures/                 # テストフィクスチャ
     ├── *.json                # テスト用Notionブロック
     └── page-kitchen-sink.md  # 期待値Markdownファイル
@@ -82,31 +85,40 @@ src/content/post/*.md + public/images/{slug}/
 
 ### 主要コンポーネント
 
-#### 1. `main.ts` - エントリーポイント（統合ファイル）
+#### 1. `main.ts` - エントリーポイント
 
 - 環境変数の検証
 - コマンドライン引数の解析
-- **統合された機能**:
-  - `FileSystem` クラス（ファイル操作）
-  - `formatJSON()` 関数（JSON整形）
-  - `toTagsJSON()`, `toCategoriesJSON()` 関数（メタデータ変換）
-  - `downloadImages()` 関数（画像並列ダウンロード）
+- `downloadImages()` 関数（画像並列ダウンロード）
 - ページの並列処理・画像の並列ダウンロード
 
-#### 2. `page-transformer.ts` - ページ変換
+#### 2. `filesystem.ts` - ファイル操作
+
+- `FileSystem` クラス（ファイル・ディレクトリ操作）
+- save/load/remove操作
+- ドライラン対応
+- パス解決ユーティリティ
+
+#### 3. `page-transformer.ts` - ページ変換
 
 - `transformNotionPageToMarkdown()`: Notionページを直接Markdownに変換
 - フロントマターの生成（title, slug, tags, category等）
 - 画像ダウンロードタスクの抽出
 - Prettierによる整形
 
-#### 3. `block-transformer.ts` - ブロック変換
+#### 4. `block-transformer.ts` - ブロック変換
 
 - `transformNotionBlocksToMarkdown()`: Notionブロック配列をMarkdown文字列に変換
 - `TransformContext`: スラッグ・画像ダウンロードタスクの管理
 - 各種ブロックタイプの直接的なMarkdown出力
 
-#### 4. `notion-types.ts` - 型定義
+#### 5. `utils.ts` - ユーティリティ関数
+
+- `formatJSON()` 関数（JSON整形）
+- `toTagsJSON()`, `toCategoriesJSON()` 関数（メタデータ変換）
+- `parseFrontmatter()`, `shouldSkipProcessing()` 関数（処理最適化）
+
+#### 6. `notion-types.ts` - 型定義
 
 - Notion API用の包括的なTypeScript型定義
 
@@ -212,11 +224,27 @@ notion_url: 'https://notion.so/...'
 - **事前削除**: 既存画像ディレクトリの事前削除
 - **直接変換**: 中間表現を経由せずNotionから直接Markdownに変換
 
+## モジュール構成
+
+### コアモジュール
+
+- **`main.ts`**: エントリーポイント、コマンドライン制御、メイン処理フロー
+- **`filesystem.ts`**: ファイル操作の抽象化、ドライラン対応
+- **`page-transformer.ts`**: Notionページ→Markdown変換
+- **`block-transformer.ts`**: Notionブロック→Markdown変換
+- **`utils.ts`**: 共通ユーティリティ関数
+- **`notion-types.ts`**: TypeScript型定義
+
+### テストモジュール
+
+- **`*.spec.ts`**: 各モジュールの単体テスト
+- **`fixtures/`**: テスト用フィクスチャデータ
+
 ## 依存関係
 
 - `@lacolaco/notion-db`: Notion API クライアント
 - `prettier`: Markdown/JSON整形
-- Node.js標準モジュール: `fs/promises`, `util`
+- Node.js標準モジュール: `fs/promises`, `path`, `util`
 
 ## テスト
 
