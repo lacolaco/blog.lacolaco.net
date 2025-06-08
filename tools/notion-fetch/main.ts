@@ -2,27 +2,8 @@ import { BlogDatabase } from '@lacolaco/notion-db';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
 import * as path from 'node:path';
-import { format } from 'prettier';
-import { type BlogDatabaseProperties } from '@lib/notion';
-import { Categories, Tags } from '@lib/post';
 import { transformNotionPageToMarkdown } from './page-transformer';
-
-// Utility functions
-async function formatJSON(data: unknown) {
-  return await format(JSON.stringify(data, null, 2), {
-    parser: 'json',
-  });
-}
-
-function toTagsJSON(config: BlogDatabaseProperties['tags']): Tags {
-  const tags = config.multi_select.options.map((option) => [option.name, { name: option.name, color: option.color }]);
-  return Tags.parse(Object.fromEntries(tags));
-}
-
-function toCategoriesJSON(config: BlogDatabaseProperties['category']): Categories {
-  const categories = config.select.options.map((option) => [option.name, { name: option.name, color: option.color }]);
-  return Categories.parse(Object.fromEntries(categories));
-}
+import { formatJSON, toTagsJSON, toCategoriesJSON } from './utils';
 
 // FileSystem class
 type WriteFileData = Parameters<typeof writeFile>[1];
@@ -72,7 +53,7 @@ class FileSystem {
 }
 
 const { NOTION_AUTH_TOKEN } = process.env;
-if (NOTION_AUTH_TOKEN == null) {
+if (!NOTION_AUTH_TOKEN) {
   console.error('Please set NOTION_AUTH_TOKEN');
   process.exit(1);
 }

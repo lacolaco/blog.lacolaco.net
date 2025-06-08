@@ -75,27 +75,27 @@ function extractFrontmatter(page: PageObject): BlogPostFrontmatter {
 
   // タイトルの抽出
   const titleProp = properties.title;
-  const title = titleProp && 'title' in titleProp ? titleProp.title?.[0]?.plain_text || '' : '';
+  const title = 'title' in titleProp ? titleProp.title[0]?.plain_text || '' : '';
 
   // スラッグの抽出
   const slugProp = properties.slug;
-  const slug = slugProp && 'rich_text' in slugProp ? slugProp.rich_text?.[0]?.plain_text || '' : '';
+  const slug = 'rich_text' in slugProp ? slugProp.rich_text[0]?.plain_text || '' : '';
 
   // ロケールの抽出
   const localeProp = properties.locale;
-  const locale = localeProp && 'select' in localeProp ? localeProp.select?.name || 'ja' : 'ja';
+  const locale = 'select' in localeProp ? localeProp.select?.name || 'ja' : 'ja';
 
   // カテゴリの抽出
   const categoryProp = properties.category;
-  const category = categoryProp && 'select' in categoryProp ? categoryProp.select?.name || '' : '';
+  const category = 'select' in categoryProp ? categoryProp.select?.name || '' : '';
 
   // タグの抽出
   const tagsProp = properties.tags;
-  const tags = tagsProp && 'multi_select' in tagsProp ? tagsProp.multi_select?.map((tag) => tag.name) || [] : [];
+  const tags = 'multi_select' in tagsProp ? tagsProp.multi_select.map((tag) => tag.name) : [];
 
   // 公開フラグの抽出
   const publishedProp = properties.published;
-  const published = publishedProp && 'checkbox' in publishedProp ? publishedProp.checkbox || false : false;
+  const published = 'checkbox' in publishedProp ? publishedProp.checkbox : false;
 
   // アイコンの抽出
   const icon = page.icon && 'emoji' in page.icon ? page.icon.emoji : '';

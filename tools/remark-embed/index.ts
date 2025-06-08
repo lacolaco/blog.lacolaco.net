@@ -313,7 +313,7 @@ const remarkEmbed: Plugin<[RemarkEmbedOptions?], Root> = (options = {}) => {
 
       const transformResult = handler.transform(url);
       const promise = Promise.resolve(transformResult).then((htmlValue) => {
-        if (htmlValue && parent && index !== undefined) {
+        if (htmlValue && index !== undefined) {
           const htmlNode: Html = { type: 'html', value: htmlValue };
           parent.children[index] = htmlNode;
         }

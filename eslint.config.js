@@ -18,6 +18,9 @@ export default tseslint.config(
     files: ['tools/**/*.ts'],
     settings: {},
     extends: [tseslint.configs.recommendedTypeChecked],
+    rules: {
+      '@typescript-eslint/no-unnecessary-condition': 'error',
+    },
   },
   {
     files: ['tools/**/*.spec.ts'],

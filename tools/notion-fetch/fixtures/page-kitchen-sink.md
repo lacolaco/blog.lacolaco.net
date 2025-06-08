@@ -38,7 +38,7 @@ _斜体テキスト_ ~~取り消し線~~
 
 ### 画像
 
-![](https://placehold.co/600x400)
+![image](https://placehold.co/600x400)
 
 ---
 
@@ -148,7 +148,7 @@ export class Comp {}
 
 折り畳み内容です。*斜体テキスト*も使用できます。
 
-![](https://placehold.co/600x400)
+![image](https://placehold.co/600x400)
 
 </details>
 

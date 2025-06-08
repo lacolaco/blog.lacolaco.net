@@ -2,6 +2,7 @@
   "type": "image",
   "image": {
     "type": "external",
+    "caption": [],
     "external": {
       "url": "https://website.domain/images/image.png"
     }

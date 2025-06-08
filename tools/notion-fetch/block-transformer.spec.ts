@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
 import { transformNotionBlocksToMarkdown, type TransformContext } from './block-transformer';
-import type { ParagraphBlockObject, RichTextItemObject, UntypedBlockObject } from './notion-types';
+import type { RichTextItemObject, UntypedBlockObject } from './notion-types';
 
 async function loadFixture(fixtureFilename: string): Promise<UntypedBlockObject> {
   return await import(`./fixtures/${fixtureFilename}`).then(
@@ -15,13 +15,13 @@ async function loadRichTextFixture(fixtureFilename: string): Promise<RichTextIte
   );
 }
 
-function createParagraphWithRichText(richTextItem: RichTextItemObject): ParagraphBlockObject {
+function createParagraphWithRichText(richTextItem: RichTextItemObject): UntypedBlockObject {
   return {
     type: 'paragraph',
     paragraph: {
       rich_text: [richTextItem],
     },
-  } as ParagraphBlockObject;
+  } as UntypedBlockObject;
 }
 
 function createDefaultContext(overrides: Partial<TransformContext> = {}): TransformContext {
@@ -89,20 +89,20 @@ describe('transformNotionBlocksToMarkdown', () => {
     it('外部画像はMarkdown画像構文になる', async () => {
       const fixture = await loadFixture('block-image-external.json');
       const result = transformNotionBlocksToMarkdown([fixture], createDefaultContext());
-      assert.strictEqual(result, '![](https://website.domain/images/image.png)\n\n');
+      assert.strictEqual(result, '![image](https://website.domain/images/image.png)\n\n');
     });
 
     it('ローカル画像はslug別のディレクトリに配置された画像への参照になる', async () => {
       const fixture = await loadFixture('block-image-file.json');
       const result = transformNotionBlocksToMarkdown([fixture], createDefaultContext({ slug: 'post-slug' }));
-      assert.strictEqual(result, '![](/images/post-slug/image.png)\n\n');
+      assert.strictEqual(result, '![image](/images/post-slug/image.png)\n\n');
     });
 
     it('ローカル画像のダウンロードタスクがコンテキストに追加される', async () => {
       const fixture = await loadFixture('block-image-file.json');
       const context = createDefaultContext();
       const result = transformNotionBlocksToMarkdown([fixture], context);
-      assert.strictEqual(result, '![](/images/test-slug/image.png)\n\n');
+      assert.strictEqual(result, '![image](/images/test-slug/image.png)\n\n');
       assert.deepStrictEqual(context.imageDownloads, [
         {
           filename: 'image.png',

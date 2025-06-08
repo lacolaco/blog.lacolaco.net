@@ -1,5 +1,5 @@
 import type { RichTextArray, RichTextItemObject, SpecificBlockObject, UntypedBlockObject } from './notion-types';
-import { getTableProperties, getTableRowCells, isListBlock } from './notion-types';
+import { isListBlock } from './notion-types';
 
 export interface TransformContext {
   readonly slug: string;
@@ -69,24 +69,35 @@ function transformTable(tableBlock: SpecificBlockObject, tableRows: SpecificBloc
     return '';
   }
 
-  const tableProps = getTableProperties(tableBlock);
+  // Type narrowing: tableBlock is already checked to be a table block
+  if (tableBlock.type !== 'table') {
+    throw new Error(`Expected table block, got ${tableBlock.type}`);
+  }
+
+  const tableWidth = tableBlock.table.table_width || 0;
+  const hasColumnHeader = tableBlock.table.has_column_header || false;
   const rows: string[] = [];
 
   // ヘッダー行なしの場合は空のヘッダー行を追加
-  if (!tableProps.has_column_header) {
-    const emptyHeader = `| ${Array(tableProps.table_width).fill('').join(' | ')} |`;
+  if (!hasColumnHeader) {
+    const emptyHeader = `| ${Array(tableWidth).fill('').join(' | ')} |`;
     rows.push(emptyHeader);
-    const separator = `| ${Array(tableProps.table_width).fill('---').join(' | ')} |`;
+    const separator = `| ${Array(tableWidth).fill('---').join(' | ')} |`;
     rows.push(separator);
   }
 
   // テーブル行を処理
   for (let i = 0; i < tableRows.length; i++) {
-    const cells = getTableRowCells(tableRows[i]);
+    const tableRow = tableRows[i];
+    if (tableRow.type !== 'table_row') {
+      continue;
+    }
+
+    const cells = tableRow.table_row.cells;
     const cellTexts = cells.map((cell) => transformRichText(cell).replace(/\|/g, '\\|')); // パイプをエスケープ
 
     // セルが不足している場合は空文字で埋める
-    while (cellTexts.length < tableProps.table_width) {
+    while (cellTexts.length < tableWidth) {
       cellTexts.push('');
     }
 
@@ -94,8 +105,8 @@ function transformTable(tableBlock: SpecificBlockObject, tableRows: SpecificBloc
     rows.push(row);
 
     // ヘッダー行の後にセパレーターを追加
-    if (i === 0 && tableProps.has_column_header) {
-      const separator = `| ${Array(tableProps.table_width).fill('---').join(' | ')} |`;
+    if (i === 0 && hasColumnHeader) {
+      const separator = `| ${Array(tableWidth).fill('---').join(' | ')} |`;
       rows.push(separator);
     }
   }
@@ -106,30 +117,30 @@ function transformTable(tableBlock: SpecificBlockObject, tableRows: SpecificBloc
 function transformBlock(block: UntypedBlockObject, context: TransformContext, listNumber?: number): string {
   switch (block.type) {
     case 'heading_1': {
-      return `# ${transformRichText(block.heading_1?.rich_text || [])}\n\n`;
+      return `# ${transformRichText(block.heading_1.rich_text)}\n\n`;
     }
 
     case 'heading_2': {
-      return `## ${transformRichText(block.heading_2?.rich_text || [])}\n\n`;
+      return `## ${transformRichText(block.heading_2.rich_text)}\n\n`;
     }
 
     case 'heading_3': {
-      return `### ${transformRichText(block.heading_3?.rich_text || [])}\n\n`;
+      return `### ${transformRichText(block.heading_3.rich_text)}\n\n`;
     }
 
     case 'paragraph': {
-      if (block.paragraph?.rich_text.length === 0) {
+      if (block.paragraph.rich_text.length === 0) {
         // 空の段落は無視する
         return '';
       }
-      return `${transformRichText(block.paragraph?.rich_text || [])}\n\n`;
+      return `${transformRichText(block.paragraph.rich_text)}\n\n`;
     }
 
     case 'divider': {
       return `---\n\n`;
     }
     case 'quote': {
-      const content = transformRichText(block.quote?.rich_text || []);
+      const content = transformRichText(block.quote.rich_text);
       const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
 
       if (blockWithChildren.children && blockWithChildren.children.length > 0) {
@@ -172,37 +183,41 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
     }
 
     case 'code': {
-      let language = block.code?.language === 'plain text' ? '' : block.code?.language || '';
+      let language = block.code.language === 'plain text' ? '' : block.code.language;
       if (language === 'typescript') {
         language = 'ts';
       }
-      const code = transformRichText(block.code?.rich_text || []);
+      const code = transformRichText(block.code.rich_text);
       const delimiter = '```';
       return `${delimiter}${language}\n${code}\n${delimiter}\n\n`;
     }
 
     case 'image': {
-      const caption = transformRichText(block.image?.caption || []);
-      if (block.image?.type === 'external') {
+      const caption = transformRichText(block.image.caption);
+      if (block.image.type === 'external') {
         if (caption) {
           return `<figure>\n  <img src="${block.image.external.url}" alt="${caption}">\n  <figcaption>${caption}</figcaption>\n</figure>\n\n`;
         } else {
-          return `![](${block.image.external.url})\n\n`;
+          return `![image](${block.image.external.url})\n\n`;
         }
       } else {
-        // ローカル画像の場合
+        // ローカル画像の場合はレポジトリにダウンロードする
         const imageUrl = block.image.file.url;
         const urlObj = new URL(imageUrl);
         const filename = urlObj.pathname.split('/').pop() || 'image.png';
-
         context.imageDownloads.push({ filename, url: imageUrl });
+        const imageSrc = `/images/${context.slug}/${filename}`;
 
-        return `![${caption}](/images/${context.slug}/${filename})\n\n`;
+        if (caption) {
+          return `<figure>\n  <img src="${imageSrc}" alt="${caption}">\n  <figcaption>${caption}</figcaption>\n</figure>\n\n`;
+        } else {
+          return `![image](${imageSrc})\n\n`;
+        }
       }
     }
 
     case 'bulleted_list_item': {
-      const content = transformRichText(block.bulleted_list_item?.rich_text || []);
+      const content = transformRichText(block.bulleted_list_item.rich_text);
       const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
       if (blockWithChildren.children && blockWithChildren.children.length > 0) {
         const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children, context);
@@ -218,7 +233,7 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
 
     case 'numbered_list_item': {
       const number = listNumber || 1;
-      const content = transformRichText(block.numbered_list_item?.rich_text || []);
+      const content = transformRichText(block.numbered_list_item.rich_text);
       const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
       if (blockWithChildren.children && blockWithChildren.children.length > 0) {
         const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children, context);
@@ -233,12 +248,12 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
     }
 
     case 'equation': {
-      return `$$\n${block.equation?.expression || ''}\n$$\n\n`;
+      return `$$\n${block.equation.expression || ''}\n$$\n\n`;
     }
 
     case 'callout': {
-      const alertType = getAlertTypeFromIcon(block.callout?.icon || null);
-      const content = transformRichText(block.callout?.rich_text || []);
+      const alertType = getAlertTypeFromIcon(block.callout.icon || null);
+      const content = transformRichText(block.callout.rich_text);
       const lines = content.split('\n').filter((line) => line.trim());
 
       if (lines.length === 1) {
@@ -251,7 +266,7 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
     }
 
     case 'toggle': {
-      const summary = transformRichText(block.toggle?.rich_text || []);
+      const summary = transformRichText(block.toggle.rich_text);
       const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
       if (blockWithChildren.children && blockWithChildren.children.length > 0) {
         const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children, context);
@@ -261,27 +276,22 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
     }
 
     case 'link_preview': {
-      const linkPreview = (block as Record<string, unknown>).link_preview as Record<string, unknown> | undefined;
-      return `${(linkPreview?.url as string) || ''}\n\n`;
+      return `${block.link_preview.url || ''}\n\n`;
     }
 
     case 'embed': {
-      const embed = (block as Record<string, unknown>).embed as Record<string, unknown> | undefined;
-      return `${(embed?.url as string) || ''}\n\n`;
+      return `${block.embed.url || ''}\n\n`;
     }
 
     case 'video': {
-      const video = (block as Record<string, unknown>).video as Record<string, unknown> | undefined;
-      if (video?.type === 'external') {
-        const external = video.external as Record<string, unknown> | undefined;
-        return `${(external?.url as string) || ''}\n\n`;
+      if (block.video.type === 'external') {
+        return `${block.video.external.url || ''}\n\n`;
       }
       return `<!-- Unsupported video type -->\n\n`;
     }
 
     case 'bookmark': {
-      const bookmark = (block as Record<string, unknown>).bookmark as Record<string, unknown> | undefined;
-      return `${(bookmark?.url as string) || ''}\n\n`;
+      return `${block.bookmark.url || ''}\n\n`;
     }
 
     default: {
