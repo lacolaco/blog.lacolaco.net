@@ -1,10 +1,75 @@
 import { BlogDatabase } from '@lacolaco/notion-db';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
-import { toCategoriesJSON, toTagsJSON } from './content';
-import { FileSystem } from './file-system';
-import { transformNotionPageToMarkdown } from './notion2md/page-transformer';
-import { formatJSON } from './utils';
+import * as path from 'node:path';
+import { format } from 'prettier';
+import { type BlogDatabaseProperties } from '@lib/notion';
+import { Categories, Tags } from '@lib/post';
+import { transformNotionPageToMarkdown } from './page-transformer';
+
+// Utility functions
+async function formatJSON(data: unknown) {
+  return await format(JSON.stringify(data, null, 2), {
+    parser: 'json',
+  });
+}
+
+function toTagsJSON(config: BlogDatabaseProperties['tags']): Tags {
+  const tags = config.multi_select.options.map((option) => [option.name, { name: option.name, color: option.color }]);
+  return Tags.parse(Object.fromEntries(tags));
+}
+
+function toCategoriesJSON(config: BlogDatabaseProperties['category']): Categories {
+  const categories = config.select.options.map((option) => [option.name, { name: option.name, color: option.color }]);
+  return Categories.parse(Object.fromEntries(categories));
+}
+
+// FileSystem class
+type WriteFileData = Parameters<typeof writeFile>[1];
+type WriteFileOptions = Parameters<typeof writeFile>[2];
+type ReadFileResult = Awaited<ReturnType<typeof readFile>>;
+
+class FileSystem {
+  constructor(
+    private readonly root: string,
+    private readonly base: string,
+    private readonly options: { dryRun?: boolean } = {},
+  ) {}
+
+  private get dir() {
+    return path.resolve(this.root, this.base);
+  }
+
+  async save(filename: string, data: WriteFileData, writeFileOptions?: WriteFileOptions) {
+    if (this.options.dryRun) {
+      return;
+    }
+    const filePath = path.resolve(this.dir, filename);
+    await mkdir(path.dirname(filePath), { recursive: true });
+    await writeFile(filePath, data, writeFileOptions);
+  }
+
+  async load(filename: string): Promise<ReadFileResult | null> {
+    const filePath = path.resolve(this.dir, filename);
+    try {
+      return await readFile(filePath);
+    } catch {
+      return null;
+    }
+  }
+
+  async remove(target: string) {
+    if (this.options.dryRun) {
+      return;
+    }
+    const dirPath = path.resolve(this.dir, target);
+    await rm(dirPath, { recursive: true, force: true });
+  }
+
+  resolveLocalPathFromRoot(filename: string): string {
+    return `/${path.relative(this.root, path.resolve(this.dir, filename))}`;
+  }
+}
 
 const { NOTION_AUTH_TOKEN } = process.env;
 if (NOTION_AUTH_TOKEN == null) {

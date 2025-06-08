@@ -35,8 +35,17 @@ This is lacolaco's personal blog built with **Astro** as a static site generator
 **Content Pipeline:**
 
 - Blog posts originate in **Notion** and are synced via custom `tools/notion-fetch/`
-- Content is transformed to Markdown files in `src/content/post/*.md` (**DO NOT EDIT MANUALLY**)
+- Content is **directly transformed to Markdown** with frontmatter in `src/content/post/*.md` (**DO NOT EDIT MANUALLY**)
+- **Images are automatically downloaded** to `public/images/{slug}/` directory during sync
 - Uses Astro Content Collections with frontmatter for type safety
+
+**notion-fetch Workflow:**
+
+1. Fetch pages from Notion database via API
+2. Transform each page to Markdown using `transformNotionPageToMarkdown()`
+3. Extract image download tasks during transformation
+4. Download images in parallel to slug-specific directories
+5. Save Markdown files with correct image references (`/images/{slug}/{filename}`)
 
 **Tech Stack:**
 
@@ -51,8 +60,17 @@ This is lacolaco's personal blog built with **Astro** as a static site generator
 - `src/content/post/` - Auto-generated blog post Markdown files (**DO NOT EDIT**)
 - `src/libs/` - Internal TypeScript libraries (notion, post processing, i18n, querying)
 - `src/pages/` - Astro routes including dynamic routes and OG image generation
-- `tools/notion-fetch/` - Custom Notion CMS sync tool with Markdown generation
+- `tools/notion-fetch/` - Custom Notion CMS sync tool with direct Markdown generation
 - `tools/remark-embed/` - Custom remark plugin for content embedding
+
+**notion-fetch Tool Architecture:**
+
+- `tools/notion-fetch/main.ts` - **Consolidated entry point** with integrated utilities:
+  - FileSystem class, JSON formatting, metadata conversion, image downloading
+- `tools/notion-fetch/page-transformer.ts` - Converts Notion pages to Markdown with frontmatter
+- `tools/notion-fetch/block-transformer.ts` - Converts individual Notion blocks to Markdown strings
+- `tools/notion-fetch/notion-types.ts` - Comprehensive TypeScript types for Notion API
+- `tools/notion-fetch/fixtures/` - Test fixtures for transformation logic
 
 **Internationalization:**
 

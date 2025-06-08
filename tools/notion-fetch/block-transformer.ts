@@ -1,5 +1,5 @@
-import type { RichTextArray, RichTextItemObject, SpecificBlockObject, UntypedBlockObject } from '../notion-types';
-import { getTableProperties, getTableRowCells, isListBlock } from '../notion-types';
+import type { RichTextArray, RichTextItemObject, SpecificBlockObject, UntypedBlockObject } from './notion-types';
+import { getTableProperties, getTableRowCells, isListBlock } from './notion-types';
 
 export interface TransformContext {
   readonly slug: string;

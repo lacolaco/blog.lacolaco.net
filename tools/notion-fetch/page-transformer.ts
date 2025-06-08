@@ -1,6 +1,6 @@
 import * as prettier from 'prettier';
 import { transformNotionBlocksToMarkdown } from './block-transformer';
-import type { PageObject, UntypedBlockObject } from '../notion-types';
+import type { PageObject, UntypedBlockObject } from './notion-types';
 
 /**
  * NotionページをフロントマターとMarkdownコンテンツに変換する純粋関数
@@ -27,7 +27,10 @@ ${frontmatterString}
 
 ${content}`;
 
-  const config = await prettier.resolveConfig(new URL('../..', import.meta.url));
+  const config = await prettier.resolveConfig(new URL('.', import.meta.url), { useCache: false });
+  if (config == null) {
+    throw new Error('Prettier configuration not found');
+  }
   const formattedMarkdown = await prettier.format(markdown, { parser: 'markdown', ...config });
   return {
     slug: frontmatter.slug,
