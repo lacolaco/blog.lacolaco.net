@@ -57,7 +57,7 @@ function needsQuotes(key: string): boolean {
   return ['icon', 'created_time', 'last_edited_time', 'category', 'notion_url'].includes(key);
 }
 
-interface BlogPostFrontmatter {
+export interface BlogPostFrontmatter {
   title: string;
   slug: string;
   icon: string;
@@ -70,7 +70,7 @@ interface BlogPostFrontmatter {
   locale?: string;
 }
 
-function extractFrontmatter(page: PageObject): BlogPostFrontmatter {
+export function extractFrontmatter(page: PageObject): BlogPostFrontmatter {
   const properties = page.properties;
 
   // タイトルの抽出

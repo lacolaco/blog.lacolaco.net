@@ -1,6 +1,6 @@
 import assert from 'assert';
 import { describe, it } from 'node:test';
-import { formatJSON, toTagsJSON, toCategoriesJSON } from './utils';
+import { formatJSON, toTagsJSON, toCategoriesJSON, parseFrontmatter, shouldSkipProcessing } from './utils';
 import type { BlogDatabaseProperties } from '@lib/notion';
 
 describe('formatJSON', () => {
@@ -162,5 +162,138 @@ describe('toCategoriesJSON', () => {
     assert.deepStrictEqual(result, {
       Programming: { name: 'Programming', color: 'red' },
     });
+  });
+});
+
+describe('parseFrontmatter', () => {
+  it('Markdownファイルからフロントマターを正しく抽出する', () => {
+    const markdown = `---
+title: 'Test Post'
+slug: 'test-post'
+icon: '📝'
+created_time: '2024-01-01T00:00:00.000Z'
+last_edited_time: '2024-01-02T00:00:00.000Z'
+category: 'Tech'
+tags: ['JavaScript', 'TypeScript']
+published: true
+notion_url: 'https://notion.so/test'
+---
+
+# Content here
+
+This is the content.`;
+
+    const result = parseFrontmatter(markdown);
+
+    assert.deepStrictEqual(result, {
+      title: 'Test Post',
+      slug: 'test-post',
+      icon: '📝',
+      created_time: '2024-01-01T00:00:00.000Z',
+      last_edited_time: '2024-01-02T00:00:00.000Z',
+      category: 'Tech',
+      tags: ['JavaScript', 'TypeScript'],
+      published: true,
+      notion_url: 'https://notion.so/test',
+    });
+  });
+
+  it('フロントマターがない場合はnullを返す', () => {
+    const markdown = `# Content here
+
+This is just content without frontmatter.`;
+
+    const result = parseFrontmatter(markdown);
+
+    assert.strictEqual(result, null);
+  });
+
+  it('不正なフロントマターの場合はnullを返す', () => {
+    const markdown = `---
+invalid yaml: [unclosed array
+---
+
+# Content here`;
+
+    const result = parseFrontmatter(markdown);
+
+    assert.strictEqual(result, null);
+  });
+
+  it('空のフロントマターでも正しく処理する', () => {
+    const markdown = `---
+---
+
+# Content here`;
+
+    const result = parseFrontmatter(markdown);
+
+    assert.deepStrictEqual(result, {});
+  });
+});
+
+describe('shouldSkipProcessing', () => {
+  it('最終編集時間が一致する場合はtrueを返す', () => {
+    const notionLastEditedTime = '2024-01-02T00:00:00.000Z';
+    const frontmatter = {
+      title: 'Test Post',
+      slug: 'test-post',
+      last_edited_time: '2024-01-02T00:00:00.000Z',
+      published: true,
+    };
+
+    const result = shouldSkipProcessing(notionLastEditedTime, frontmatter);
+
+    assert.strictEqual(result, true);
+  });
+
+  it('最終編集時間が異なる場合はfalseを返す', () => {
+    const notionLastEditedTime = '2024-01-02T12:00:00.000Z';
+    const frontmatter = {
+      title: 'Test Post',
+      slug: 'test-post',
+      last_edited_time: '2024-01-02T00:00:00.000Z',
+      published: true,
+    };
+
+    const result = shouldSkipProcessing(notionLastEditedTime, frontmatter);
+
+    assert.strictEqual(result, false);
+  });
+
+  it('フロントマターがnullの場合はfalseを返す', () => {
+    const notionLastEditedTime = '2024-01-02T00:00:00.000Z';
+    const frontmatter = null;
+
+    const result = shouldSkipProcessing(notionLastEditedTime, frontmatter);
+
+    assert.strictEqual(result, false);
+  });
+
+  it('フロントマターにlast_edited_timeが存在しない場合はfalseを返す', () => {
+    const notionLastEditedTime = '2024-01-02T00:00:00.000Z';
+    const frontmatter = {
+      title: 'Test Post',
+      slug: 'test-post',
+      published: true,
+    };
+
+    const result = shouldSkipProcessing(notionLastEditedTime, frontmatter);
+
+    assert.strictEqual(result, false);
+  });
+
+  it('空文字列の最終編集時間でもfalseを返す', () => {
+    const notionLastEditedTime = '';
+    const frontmatter = {
+      title: 'Test Post',
+      slug: 'test-post',
+      last_edited_time: '2024-01-02T00:00:00.000Z',
+      published: true,
+    };
+
+    const result = shouldSkipProcessing(notionLastEditedTime, frontmatter);
+
+    assert.strictEqual(result, false);
   });
 });

@@ -1,56 +1,9 @@
 import { BlogDatabase } from '@lacolaco/notion-db';
-import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
-import * as path from 'node:path';
-import { transformNotionPageToMarkdown } from './page-transformer';
-import { formatJSON, toTagsJSON, toCategoriesJSON } from './utils';
-
-// FileSystem class
-type WriteFileData = Parameters<typeof writeFile>[1];
-type WriteFileOptions = Parameters<typeof writeFile>[2];
-type ReadFileResult = Awaited<ReturnType<typeof readFile>>;
-
-class FileSystem {
-  constructor(
-    private readonly root: string,
-    private readonly base: string,
-    private readonly options: { dryRun?: boolean } = {},
-  ) {}
-
-  private get dir() {
-    return path.resolve(this.root, this.base);
-  }
-
-  async save(filename: string, data: WriteFileData, writeFileOptions?: WriteFileOptions) {
-    if (this.options.dryRun) {
-      return;
-    }
-    const filePath = path.resolve(this.dir, filename);
-    await mkdir(path.dirname(filePath), { recursive: true });
-    await writeFile(filePath, data, writeFileOptions);
-  }
-
-  async load(filename: string): Promise<ReadFileResult | null> {
-    const filePath = path.resolve(this.dir, filename);
-    try {
-      return await readFile(filePath);
-    } catch {
-      return null;
-    }
-  }
-
-  async remove(target: string) {
-    if (this.options.dryRun) {
-      return;
-    }
-    const dirPath = path.resolve(this.dir, target);
-    await rm(dirPath, { recursive: true, force: true });
-  }
-
-  resolveLocalPathFromRoot(filename: string): string {
-    return `/${path.relative(this.root, path.resolve(this.dir, filename))}`;
-  }
-}
+import { FileSystem } from './filesystem';
+import { extractFrontmatter, transformNotionPageToMarkdown } from './page-transformer';
+import { formatJSON, parseFrontmatter, shouldSkipProcessing, toCategoriesJSON, toTagsJSON } from './utils';
 
 const { NOTION_AUTH_TOKEN } = process.env;
 if (!NOTION_AUTH_TOKEN) {
@@ -101,21 +54,37 @@ async function main() {
     return;
   }
 
-  console.log(`Updating ${pages.length} pages...`);
   if (debug) {
     // Create a temporary directory for debugging
     await mkdir(`${rootDir}.tmp`, { recursive: true });
   }
+
   await Promise.all(
     pages.map(async (page) => {
-      const { slug, markdown, imageDownloads } = await transformNotionPageToMarkdown(page);
+      // まずスラッグだけを軽量に取得
+      const { slug } = extractFrontmatter(page);
+      const filename = `${slug}.md`;
+
+      // 既存のMarkdownファイルをチェック
+      const existingMarkdown = await filesystems.posts.load(filename);
+      if (existingMarkdown) {
+        const frontmatter = parseFrontmatter(existingMarkdown.toString('utf-8'));
+        if (shouldSkipProcessing(page.last_edited_time, frontmatter)) {
+          console.log(`Skipping ${filename} (no changes)`);
+          return;
+        }
+      }
+
+      // 必要な場合のみ完全な変換を実行
+      const { markdown, imageDownloads } = await transformNotionPageToMarkdown(page);
+
       if (debug) {
         // Write the raw page data to a file into .tmp directory for debugging
         await writeFile(`${rootDir}.tmp/${slug}.json`, await formatJSON(page), { encoding: 'utf-8' });
       }
 
       await downloadImages(imageDownloads, filesystems.images, slug);
-      await filesystems.posts.save(`${slug}.md`, markdown, { encoding: 'utf-8' });
+      await filesystems.posts.save(filename, markdown, { encoding: 'utf-8' });
     }),
   );
 

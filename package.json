@@ -42,7 +42,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "satori": "0.13.1",
-    "unist-util-visit": "^5.0.0"
+    "unist-util-visit": "^5.0.0",
+    "yaml": "^2.8.0"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.0.0",
