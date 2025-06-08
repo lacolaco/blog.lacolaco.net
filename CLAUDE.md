@@ -4,7 +4,30 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is lacolaco's personal blog built with **Astro** as a static site generator, using **Notion as a headless CMS**. The blog supports bilingual content (Japanese/English) and focuses on software development topics, particularly Angular.
+This is lacolaco's personal blog built with **Astro 5.x** as a static site generator, using **Notion as a headless CMS**. The blog supports bilingual content (Japanese/English) and focuses on software development topics, particularly Angular.
+
+## Prerequisites
+
+**System Requirements:**
+
+- **Node.js**: 22.x or later
+- **pnpm**: 10.11.1 (exact version enforced by packageManager)
+- **TypeScript**: ES modules enabled
+
+**Environment Variables (.env):**
+
+```bash
+NOTION_AUTH_TOKEN=secret_*       # Notion Integration Token
+NOTION_DATABASE_ID=*             # Notion Database ID
+CLOUDFLARE_API_TOKEN=*          # Cloudflare API Token (for deployment)
+```
+
+**Initial Setup:**
+
+1. Clone repository and install dependencies: `pnpm install`
+2. Setup environment variables in `.env` file
+3. Install Playwright browsers: `pnpm playwright install chromium`
+4. Verify setup: `pnpm dev`
 
 ## Essential Commands
 
@@ -22,13 +45,14 @@ This is lacolaco's personal blog built with **Astro** as a static site generator
 
 - `pnpm format` - Format code with Prettier
 - `pnpm lint` - Run ESLint to check for code issues
-- `pnpm test:tools` - Run tests for all tools (uses Node.js test runner)
-- `pnpm test:notion-fetch` - Run tests for notion-fetch tools (uses Node.js test runner)
-- `pnpm test:remark-embed` - Run tests for remark-embed tools (uses Node.js test runner)
+- `pnpm test:tools` - Run all tool tests (Node.js test runner)
+- `pnpm test:notion-fetch` - Run notion-fetch tool tests specifically
+- `pnpm test:remark-embed` - Run remark-embed plugin tests specifically
 
-**Deployment:**
+**Quality Assurance (MANDATORY before commits):**
 
-- `pnpm pages:dev` - Local development with Cloudflare Pages
+- `pnpm lint` - ESLint code quality checks (tools/ directory only)
+- `pnpm format` - Prettier code formatting (all files)
 
 ## Architecture Overview
 
@@ -62,6 +86,8 @@ This is lacolaco's personal blog built with **Astro** as a static site generator
 - `src/pages/` - Astro routes including dynamic routes and OG image generation
 - `tools/notion-fetch/` - Custom Notion CMS sync tool with direct Markdown generation
 - `tools/remark-embed/` - Custom remark plugin for content embedding
+- `functions/embed/` - Cloudflare Pages Functions for web link preview generation
+- `public/images/` - Auto-managed image storage (**DO NOT EDIT MANUALLY**)
 
 **notion-fetch Tool Architecture:**
 
@@ -75,12 +101,21 @@ This is lacolaco's personal blog built with **Astro** as a static site generator
 
 For detailed architecture and usage information, see @tools/notion-fetch/README.md
 
+**Cloudflare Pages Functions:**
+
+- `functions/embed/index.tsx` - Web page preview generation using Preact/Goober
+- Extracts page titles from URLs for link previews
+- Special handling for Amazon URLs with Googlebot UA
+- 1-day browser cache + Cloudflare edge caching
+- Built to `dist/worker/` during production build
+
 **Internationalization:**
 
 - Default locale: Japanese (`ja`)
 - Supported locales: Japanese (`ja`), English (`en`)
 - Use `getRelativeLocaleUrl()` for locale-aware links
 - File naming: `<slug>.md` (Japanese), `<slug>.en.md` (English)
+- Images stored in: `public/images/{slug}/{notion-id}/{filename}` structure
 
 ## Development Guidelines
 
@@ -92,6 +127,7 @@ For detailed architecture and usage information, see @tools/notion-fetch/README.
 **Content Boundaries:**
 
 - **NEVER modify** files in `src/content/post/*.md` - these are auto-generated from Notion
+- **NEVER modify** files in `public/images/` - these are auto-managed by notion-fetch
 - Application code (components, utilities, styles) is editable
 
 **Code Standards:**
@@ -144,9 +180,21 @@ Rich markdown support with custom plugins:
 
 **Test-Driven Development:**
 
-- Always adopt TDD approach.
+- **ALWAYS adopt TDD approach - this is NON-NEGOTIABLE**
+- **CRITICAL TDD PRINCIPLE: Tests are the specification - NEVER modify tests to fit implementation**
 - Write tests before implementing new features or fixing bugs
-- After tests succeed, try to refactor the code while keeping tests passing
+- Follow Red → Green → Refactor cycle strictly:
+  1. **Red**: Write a failing test that defines the desired behavior
+  2. **Green**: Write the minimum code to make the test pass
+  3. **Refactor**: Improve code quality while keeping tests green
+- **When tests fail after implementation changes:**
+  - **DO NOT modify the test** - the test represents the expected behavior
+  - **MODIFY the implementation** to satisfy the existing test expectations
+  - If test expectations are genuinely wrong, get explicit user confirmation before changing tests
+- **Library Integration Guidelines:**
+  - Before using any library, verify actual output format with simple test scripts
+  - Check library documentation for correct option names and usage
+  - Do not assume API behavior - always verify with concrete examples
 - **CRITICAL: TDD process MUST conclude with linting and formatting:**
   - **MANDATORY:** Run `pnpm lint` to check for linting issues and fix all errors
   - **MANDATORY:** Run `pnpm format` to format code with Prettier
@@ -178,9 +226,91 @@ See @docs/git-instructions.md
 
 ## Tool Usage Notes
 
-- Use `eslint` MCP tool to get diagnostics from ESLint rather than CLI execution.
+- Use `mcp__eslint__lint-files` MCP tool to get ESLint diagnostics rather than CLI execution
+- Use `mcp__ide__getDiagnostics` for VS Code language server diagnostics
 - Prioritize using the `gh` command for GitHub-related operations
+- When debugging code issues, combine MCP diagnostic tools with targeted file reads
+
+## Debugging & Troubleshooting
+
+**Common Issues:**
+
+1. **Notion API Connection Errors:**
+
+   - Verify `NOTION_AUTH_TOKEN` in `.env`
+   - Check token permissions for database access
+   - Run `pnpm notion-fetch --dry-run` to test connection
+
+2. **Build Failures:**
+
+   - Ensure all tests pass: `pnpm test:tools`
+   - Check TypeScript compilation: `pnpm build`
+   - Verify environment variables are set
+
+3. **Image Processing Issues:**
+
+   - Check internet connection for Notion image downloads
+   - Verify `public/images/` directory permissions
+   - Use `--debug` flag for detailed notion-fetch logs
+
+4. **Development Server Issues:**
+   - Clear `.astro` cache directory
+   - Restart development server: `pnpm dev`
+   - Check port conflicts (default: 4321)
+
+**Debugging Commands:**
+
+```bash
+pnpm notion-fetch --debug --dry-run  # Debug mode without file writes
+pnpm build --verbose                 # Verbose build output
+pnpm dev --host                      # Expose dev server to network
+```
+
+## Code Review Checklist
+
+**Before Creating PRs:**
+
+- [ ] All tests pass: `pnpm test:tools`
+- [ ] Code linting passes: `pnpm lint`
+- [ ] Code is formatted: `pnpm format`
+- [ ] Build succeeds: `pnpm build`
+- [ ] No auto-generated files modified (`src/content/post/*.md`, `public/images/`)
+- [ ] TypeScript compilation succeeds without `as any` assertions
+- [ ] New features include comprehensive tests (TDD approach)
+
+**Performance Considerations:**
+
+- Bundle size impact assessment for new dependencies
+- Image optimization and lazy loading implementation
+- Cloudflare Workers execution time limits (< 10ms typically)
+- Notion API rate limiting considerations
+
+## Claude Code Specific Guidelines
+
+**When Working with Auto-Generated Content:**
+
+- **NEVER edit** `src/content/post/*.md` files directly
+- **NEVER edit** `public/images/` directory manually
+- Always use `pnpm notion-fetch` to sync content changes
+- Understand that content changes require Notion database updates
+
+**Diagnostic Tool Priority:**
+
+1. Use `mcp__ide__getDiagnostics` for immediate code issues
+2. Use `mcp__eslint__lint-files` for linting-specific problems
+3. Use `Read` tool for targeted file analysis
+4. Use `Bash` tool only when MCP tools are insufficient
+
+**Error Resolution Approach:**
+
+1. **Check MCP diagnostics first** before manual debugging
+2. **Run quality checks early** (`pnpm lint && pnpm format`)
+3. **Test incremental changes** rather than large modifications
+4. **Respect TDD principles** - modify implementation to match tests
 
 ## Important Notes
 
 - CLAUDE.md is always written in English
+- This is a Japanese development environment - use Japanese for code comments
+- Never use `as any` type assertions - define proper types
+- Conventional Commits format required for all commits

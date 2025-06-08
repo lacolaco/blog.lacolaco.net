@@ -1,26 +1,22 @@
 import * as prettier from 'prettier';
-import { transformNotionBlocksToMarkdown } from './block-transformer';
+import { stringify as yamlStringify } from 'yaml';
+import { transformNotionBlocksToMarkdown, type TransformContext } from './block-transformer';
 import type { PageObject, UntypedBlockObject } from './notion-types';
 
 /**
- * NotionページをフロントマターとMarkdownコンテンツに変換する純粋関数
+ * ページからコンテンツを生成する純粋関数
  */
-export async function transformNotionPageToMarkdown(page: PageObject): Promise<{
-  slug: string;
-  markdown: string;
-  imageDownloads: Array<{ filename: string; url: string }>;
-}> {
-  const frontmatter = extractFrontmatter(page);
-  const frontmatterString = formatFrontmatter(frontmatter);
-
+export function generateContent(page: PageObject, context: TransformContext): string {
   // ページにchildrenプロパティがある場合（ブロックが含まれている場合）はそれを変換
   const pageWithChildren = page as PageObject & { children?: UntypedBlockObject[] };
-  const context = {
-    slug: frontmatter.slug,
-    imageDownloads: [],
-  };
-  const content = pageWithChildren.children ? transformNotionBlocksToMarkdown(pageWithChildren.children, context) : '';
+  return pageWithChildren.children ? transformNotionBlocksToMarkdown(pageWithChildren.children, context) : '';
+}
 
+/**
+ * フロントマターオブジェクトと本文を受け取ってMarkdownファイル全体を構築する純粋関数
+ */
+export async function buildMarkdownFile(frontmatter: BlogPostFrontmatter, content: string): Promise<string> {
+  const frontmatterString = formatFrontmatter(frontmatter);
   const markdown = `---
 ${frontmatterString}
 ---
@@ -31,30 +27,14 @@ ${content}`;
   if (config == null) {
     throw new Error('Prettier configuration not found');
   }
-  const formattedMarkdown = await prettier.format(markdown, { parser: 'markdown', ...config });
-  return {
-    slug: frontmatter.slug,
-    markdown: formattedMarkdown,
-    imageDownloads: context.imageDownloads,
-  };
+  return await prettier.format(markdown, { parser: 'markdown', ...config });
 }
 
-function formatFrontmatter(frontmatter: BlogPostFrontmatter): string {
-  return Object.entries(frontmatter)
-    .map(([key, value]) => {
-      if (Array.isArray(value)) {
-        return `${key}: [${value.map((v) => `'${v}'`).join(', ')}]`;
-      }
-      if (typeof value === 'string' && needsQuotes(key)) {
-        return `${key}: '${value}'`;
-      }
-      return `${key}: ${value}`;
-    })
-    .join('\n');
-}
-
-function needsQuotes(key: string): boolean {
-  return ['icon', 'created_time', 'last_edited_time', 'category', 'notion_url'].includes(key);
+export function formatFrontmatter(frontmatter: BlogPostFrontmatter): string {
+  return yamlStringify(frontmatter, {
+    defaultStringType: 'QUOTE_SINGLE',
+    defaultKeyType: 'PLAIN',
+  }).trim();
 }
 
 export interface BlogPostFrontmatter {

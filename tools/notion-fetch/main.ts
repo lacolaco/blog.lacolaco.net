@@ -3,7 +3,8 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
 import { FileSystem } from './filesystem';
 import { downloadImages } from './image-downloader';
-import { extractFrontmatter, transformNotionPageToMarkdown } from './page-transformer';
+import { extractFrontmatter, generateContent, buildMarkdownFile } from './page-transformer';
+import type { TransformContext } from './block-transformer';
 import { formatJSON, parseFrontmatter, shouldSkipProcessing, toCategoriesJSON, toTagsJSON } from './utils';
 
 const { NOTION_AUTH_TOKEN } = process.env;
@@ -62,8 +63,8 @@ async function main() {
 
   await Promise.all(
     pages.map(async (page) => {
-      const { slug } = extractFrontmatter(page);
-      const filename = `${slug}.md`;
+      const frontmatter = extractFrontmatter(page);
+      const filename = `${frontmatter.slug}.md`;
 
       // 既存のMarkdownファイルをチェック
       const existingMarkdown = await filesystems.posts.load(filename);
@@ -76,14 +77,20 @@ async function main() {
       }
 
       // 必要な場合のみ完全な変換を実行
-      const { markdown, imageDownloads } = await transformNotionPageToMarkdown(page);
+      const context: TransformContext = {
+        slug: frontmatter.slug,
+        imageDownloads: [],
+      };
+      const content = generateContent(page, context);
+      const markdown = await buildMarkdownFile(frontmatter, content);
+      const imageDownloads = context.imageDownloads;
 
       if (debug) {
         // Write the raw page data to a file into .tmp directory for debugging
-        await writeFile(`${rootDir}.tmp/${slug}.json`, await formatJSON(page), { encoding: 'utf-8' });
+        await writeFile(`${rootDir}.tmp/${frontmatter.slug}.json`, await formatJSON(page), { encoding: 'utf-8' });
       }
 
-      await downloadImages(imageDownloads, filesystems.images, slug);
+      await downloadImages(imageDownloads, filesystems.images, frontmatter.slug);
       await filesystems.posts.save(filename, markdown, { encoding: 'utf-8' });
     }),
   );

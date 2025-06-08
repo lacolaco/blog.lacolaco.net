@@ -1,5 +1,5 @@
 ---
-title: Kitchen Sink
+title: 'Kitchen Sink'
 slug: kitchen-sink
 icon: '📝'
 created_time: '2022-02-11T11:47:00.000Z'

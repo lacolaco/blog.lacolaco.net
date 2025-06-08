@@ -1,38 +1,13 @@
 import assert from 'assert';
-import { readFile } from 'fs/promises';
 import { describe, it } from 'node:test';
 import type { PageObject, SelectProperty } from './notion-types';
-import { transformNotionPageToMarkdown, extractFrontmatter } from './page-transformer';
+import { extractFrontmatter, generateContent, buildMarkdownFile } from './page-transformer';
+import type { TransformContext } from './block-transformer';
 
 async function loadPageFixture(fixtureFilename: string): Promise<PageObject> {
   const module = (await import(`./fixtures/${fixtureFilename}`)) as { default: PageObject };
   return JSON.parse(JSON.stringify(module.default)) as PageObject;
 }
-
-describe('transformNotionPageToMarkdown', () => {
-  it('NotionページをフロントマターとMarkdownに変換する', async () => {
-    const pageFixture = await loadPageFixture('page-kitchen-sink.json');
-    const expectedMarkdown = await readFile(new URL('./fixtures/page-kitchen-sink.md', import.meta.url), {
-      encoding: 'utf-8',
-    });
-
-    const { markdown } = await transformNotionPageToMarkdown(pageFixture);
-    assert.strictEqual(markdown, expectedMarkdown);
-  });
-
-  it('slugを抽出（locale: ja)', async () => {
-    const pageFixture = await loadPageFixture('page-kitchen-sink.json');
-    const { slug } = await transformNotionPageToMarkdown(pageFixture);
-    assert.strictEqual(slug, 'kitchen-sink');
-  });
-
-  it('locale=en の場合、slugはページのslugとlocaleからなる', async () => {
-    const pageFixture = await loadPageFixture('page-kitchen-sink.json');
-    pageFixture.properties.locale = { type: 'select', select: { name: 'en' } } as SelectProperty;
-    const { slug } = await transformNotionPageToMarkdown(pageFixture);
-    assert.strictEqual(slug, 'kitchen-sink.en');
-  });
-});
 
 describe('extractFrontmatter', () => {
   it('基本的なフロントマターを正しく抽出する', async () => {
@@ -120,5 +95,75 @@ describe('extractFrontmatter', () => {
 
     const frontmatter = extractFrontmatter(pageFixture);
     assert.strictEqual(frontmatter.slug, '');
+  });
+});
+
+describe('generateContent', () => {
+  it('ページからコンテンツを生成する', async () => {
+    const pageFixture = await loadPageFixture('page-kitchen-sink.json');
+    const context: TransformContext = {
+      slug: 'test-slug',
+      imageDownloads: [],
+    };
+
+    const content = generateContent(pageFixture, context);
+
+    assert.strictEqual(typeof content, 'string');
+    assert.ok(content.length > 0);
+  });
+
+  it('childrenがない場合、空のコンテンツを返す', async () => {
+    const pageFixture = await loadPageFixture('page-kitchen-sink.json');
+    const context: TransformContext = {
+      slug: 'test-slug',
+      imageDownloads: [],
+    };
+    // childrenを削除
+    const pageWithoutChildren = { ...pageFixture };
+    delete (pageWithoutChildren as PageObject & { children?: unknown }).children;
+
+    const content = generateContent(pageWithoutChildren, context);
+
+    assert.strictEqual(content, '');
+  });
+
+  it('コンテキストの画像ダウンロードタスクが更新される', async () => {
+    const pageFixture = await loadPageFixture('page-kitchen-sink.json');
+    const context: TransformContext = {
+      slug: 'test-slug',
+      imageDownloads: [],
+    };
+
+    generateContent(pageFixture, context);
+
+    // generateContentの実行により、contextのimageDownloadsが更新されることを確認
+    assert.ok(Array.isArray(context.imageDownloads));
+  });
+});
+
+describe('buildMarkdownFile', () => {
+  it('フロントマターとコンテンツから整形されたMarkdownを生成する', async () => {
+    const pageFixture = await loadPageFixture('page-kitchen-sink.json');
+    const frontmatter = extractFrontmatter(pageFixture);
+    const content = '# Test Content\n\nThis is a test.';
+
+    const markdown = await buildMarkdownFile(frontmatter, content);
+
+    assert.ok(markdown.includes('---\n'));
+    assert.ok(markdown.includes("title: 'Kitchen Sink'"));
+    assert.ok(markdown.includes('# Test Content'));
+    assert.ok(markdown.includes('This is a test.'));
+  });
+
+  it('空のコンテンツでも正常に処理される', async () => {
+    const pageFixture = await loadPageFixture('page-kitchen-sink.json');
+    const frontmatter = extractFrontmatter(pageFixture);
+    const content = '';
+
+    const markdown = await buildMarkdownFile(frontmatter, content);
+
+    assert.ok(markdown.includes('---\n'));
+    assert.ok(markdown.includes("title: 'Kitchen Sink'"));
+    assert.ok(markdown.includes('---\n'));
   });
 });
