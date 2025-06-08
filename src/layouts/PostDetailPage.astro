@@ -1,0 +1,87 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import { isAfter as isAfterDate } from 'date-fns';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import FormattedDate from '../components/FormattedDate';
+import Header from '../components/Header.astro';
+import MainContainer from '../components/MainContainer.astro';
+import ShareButtons from '../components/ShareButtons.astro';
+import Tag from '../components/Tag.astro';
+import TagList from '../components/TagList.astro';
+import { SITE_TITLE } from '../consts';
+
+type Props = {
+  entry: CollectionEntry<'postsV2'>;
+};
+
+const { entry } = Astro.props;
+const { slug, title, category, tags, created_time, last_edited_time, locale, canonical_url, published } = entry?.data;
+const isUpdated = last_edited_time && isAfterDate(last_edited_time, created_time);
+const { Content } = await render(entry);
+---
+
+<!doctype html>
+<html lang={locale || 'ja'}>
+  <head>
+    <BaseHead
+      title={`${title} | ${SITE_TITLE}`}
+      description={''}
+      image={`/og/${slug}.png`}
+      gtagProps={{
+        post_slug: `${slug}`,
+        post_locale: `${locale}`,
+        post_title: `${title}`,
+        post_timestamp: `${created_time.getTime()}`,
+      }}
+    />
+
+    {canonical_url && <link rel="canonical" href={canonical_url} />}
+  </head>
+
+  <body class="font-base bg-default">
+    <Header class="" />
+
+    <MainContainer>
+      <article class="py-8 lg:py-16">
+        <header class="mb-6">
+          <div class="leading-none">
+            <span class="text-sm text-muted">
+              {
+                published === false && (
+                  <div class="flex bg-gray-600 text-white justify-center py-1 mt-2">
+                    <span class="text-sm">DRAFT</span>
+                  </div>
+                )
+              }
+              <FormattedDate date={created_time} />
+              {
+                isUpdated && (
+                  <span class="text-sm text-muted">
+                    (Updated at: <FormattedDate date={last_edited_time} />)
+                  </span>
+                )
+              }
+            </span>
+            <h1 class="text-2xl font-semibold leading-tight mb-1">{title}</h1>
+            <div class="py-1">
+              <TagList>
+                {category && <Tag name={category} isCategory />}
+                {tags && tags.map((tag) => <Tag name={tag} />)}
+              </TagList>
+            </div>
+          </div>
+        </header>
+
+        <div class="markdown-body mb-4">
+          <Content />
+        </div>
+        <div class="mt-8">
+          <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
+        </div>
+      </article>
+    </MainContainer>
+
+    <Footer class="py-4" />
+  </body>
+</html>

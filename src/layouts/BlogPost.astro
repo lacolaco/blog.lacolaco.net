@@ -1,5 +1,5 @@
 ---
-import { PostData } from '@lib/post';
+import type { PostData } from '@lib/post';
 import { add as addDate, isAfter as isAfterDate } from 'date-fns';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
@@ -15,7 +15,7 @@ import { SITE_TITLE } from '../consts';
 
 type Props = {
   post: PostData;
-  otherLocaleUrls: {
+  otherLocaleUrls?: {
     ja?: string;
     en?: string;
   };
@@ -76,7 +76,7 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
         </header>
 
         {
-          locales.en && (
+          locales?.en && (
             <MessageBox type="info">
               <a href={locales.en} class="text-sm">
                 This article has an English version.
@@ -85,7 +85,7 @@ const isOutdated = isUpdated && isAfterDate(new Date(), addDate(updatedAt, { yea
           )
         }
         {
-          locales.ja && (
+          locales?.ja && (
             <MessageBox type="info">
               <a href={locales.ja} class="text-sm">
                 この記事には日本語版があります。

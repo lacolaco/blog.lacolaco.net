@@ -21,7 +21,10 @@ This is lacolaco's personal blog built with **Astro** as a static site generator
 **Code Quality:**
 
 - `pnpm format` - Format code with Prettier
-- `pnpm test:tools` - Run tests for custom tools (uses Node.js test runner)
+- `pnpm lint` - Run ESLint to check for code issues
+- `pnpm test:tools` - Run tests for all tools (uses Node.js test runner)
+- `pnpm test:notion-fetch` - Run tests for notion-fetch tools (uses Node.js test runner)
+- `pnpm test:remark-embed` - Run tests for remark-embed tools (uses Node.js test runner)
 
 **Deployment:**
 
@@ -32,8 +35,8 @@ This is lacolaco's personal blog built with **Astro** as a static site generator
 **Content Pipeline:**
 
 - Blog posts originate in **Notion** and are synced via custom `tools/notion-fetch/`
-- Content is transformed to JSON files in `src/content/post/*.json` (**DO NOT EDIT MANUALLY**)
-- Uses Astro Content Collections with Zod schemas for type safety
+- Content is transformed to Markdown files in `src/content/post/*.md` (**DO NOT EDIT MANUALLY**)
+- Uses Astro Content Collections with frontmatter for type safety
 
 **Tech Stack:**
 
@@ -45,10 +48,10 @@ This is lacolaco's personal blog built with **Astro** as a static site generator
 **Key Directories:**
 
 - `src/components/` - Astro/React UI components
-- `src/content/post/` - Auto-generated blog post JSON files (**DO NOT EDIT**)
+- `src/content/post/` - Auto-generated blog post Markdown files (**DO NOT EDIT**)
 - `src/libs/` - Internal TypeScript libraries (notion, post processing, i18n, querying)
 - `src/pages/` - Astro routes including dynamic routes and OG image generation
-- `tools/notion-fetch/` - Custom Notion CMS sync tool
+- `tools/notion-fetch/` - Custom Notion CMS sync tool with Markdown generation
 - `tools/remark-embed/` - Custom remark plugin for content embedding
 
 **Internationalization:**
@@ -56,6 +59,7 @@ This is lacolaco's personal blog built with **Astro** as a static site generator
 - Default locale: Japanese (`ja`)
 - Supported locales: Japanese (`ja`), English (`en`)
 - Use `getRelativeLocaleUrl()` for locale-aware links
+- File naming: `<slug>.md` (Japanese), `<slug>.en.md` (English)
 
 ## Development Guidelines
 
@@ -66,7 +70,7 @@ This is lacolaco's personal blog built with **Astro** as a static site generator
 
 **Content Boundaries:**
 
-- **NEVER modify** files in `src/content/post/*.json` - these are auto-generated from Notion
+- **NEVER modify** files in `src/content/post/*.md` - these are auto-generated from Notion
 - Application code (components, utilities, styles) is editable
 
 **Code Standards:**
@@ -106,7 +110,7 @@ Rich markdown support with custom plugins:
 - Uses Node.js built-in test runner (`tsx --test`)
 - Tests located in `tools/**/*.spec.ts`
 - Playwright installed for browser automation (if needed)
-- Run with `pnpm test:tools`
+- Run with `pnpm test:notion-fetch` or `pnpm test:remark-embed`
 
 ## Deployment
 

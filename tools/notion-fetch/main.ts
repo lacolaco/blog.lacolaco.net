@@ -1,10 +1,9 @@
 import { BlogDatabase } from '@lacolaco/notion-db';
-import { getLocale, getSlug } from '@lib/notion';
-import { getPostJSONFileName } from '@lib/post';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
-import { toBlogPostJSON, toCategoriesJSON, toTagsJSON } from './content';
+import { toCategoriesJSON, toTagsJSON } from './content';
 import { FileSystem } from './file-system';
+import { transformNotionPageToMarkdown } from './notion2md/page-transformer';
 import { formatJSON } from './utils';
 
 const { NOTION_AUTH_TOKEN } = process.env;
@@ -63,16 +62,14 @@ async function main() {
   }
   await Promise.all(
     pages.map(async (page) => {
-      const slug = getSlug(page);
+      const { filename, markdown } = await transformNotionPageToMarkdown(page);
       if (debug) {
         // Write the raw page data to a file into .tmp directory for debugging
-        await writeFile(`${rootDir}.tmp/${slug}.json`, await formatJSON(page), { encoding: 'utf-8' });
+        await writeFile(`${rootDir}.tmp/${filename}.json`, await formatJSON(page), { encoding: 'utf-8' });
       }
-      const locale = getLocale(page) ?? 'ja';
-      await filesystems.images.remove(slug);
-      const post = await toBlogPostJSON({ ...page, slug, locale }, filesystems.images);
-      const filepath = getPostJSONFileName(slug, locale);
-      await filesystems.posts.save(filepath, await formatJSON(post), { encoding: 'utf-8' });
+      // await filesystems.images.remove(slug);
+
+      await filesystems.posts.save(filename, markdown, { encoding: 'utf-8' });
     }),
   );
 

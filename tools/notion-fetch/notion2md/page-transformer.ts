@@ -5,7 +5,10 @@ import type { PageObject, UntypedBlockObject } from '../notion-types';
 /**
  * NotionページをフロントマターとMarkdownコンテンツに変換する純粋関数
  */
-export async function transformNotionPageToMarkdown(page: PageObject): Promise<string> {
+export async function transformNotionPageToMarkdown(page: PageObject): Promise<{
+  filename: string;
+  markdown: string;
+}> {
   const frontmatter = extractFrontmatter(page);
   const frontmatterString = formatFrontmatter(frontmatter);
 
@@ -21,7 +24,10 @@ ${content}`;
 
   const config = await prettier.resolveConfig(new URL('../..', import.meta.url));
   const formattedMarkdown = await prettier.format(markdown, { parser: 'markdown', ...config });
-  return formattedMarkdown;
+  return {
+    filename: `${frontmatter.slug}.md`,
+    markdown: formattedMarkdown,
+  };
 }
 
 function formatFrontmatter(frontmatter: BlogPostFrontmatter): string {
@@ -52,6 +58,7 @@ interface BlogPostFrontmatter {
   tags: string[];
   published: boolean;
   notion_url: string;
+  locale?: string;
 }
 
 function extractFrontmatter(page: PageObject): BlogPostFrontmatter {
@@ -64,6 +71,10 @@ function extractFrontmatter(page: PageObject): BlogPostFrontmatter {
   // スラッグの抽出
   const slugProp = properties.slug;
   const slug = slugProp && 'rich_text' in slugProp ? slugProp.rich_text?.[0]?.plain_text || '' : '';
+
+  // ロケールの抽出
+  const localeProp = properties.locale;
+  const locale = localeProp && 'select' in localeProp ? localeProp.select?.name || 'ja' : 'ja';
 
   // カテゴリの抽出
   const categoryProp = properties.category;
@@ -84,9 +95,9 @@ function extractFrontmatter(page: PageObject): BlogPostFrontmatter {
   const pageTitle = title.replace(/\s+/g, '-');
   const notion_url = `https://www.notion.so/${pageTitle}-${page.id.replace(/-/g, '')}`;
 
-  return {
+  const result: BlogPostFrontmatter = {
     title,
-    slug,
+    slug: locale === 'ja' ? slug : `${slug}.${locale}`,
     icon,
     created_time: page.created_time,
     last_edited_time: page.last_edited_time,
@@ -95,4 +106,6 @@ function extractFrontmatter(page: PageObject): BlogPostFrontmatter {
     published,
     notion_url,
   };
+
+  return result;
 }
