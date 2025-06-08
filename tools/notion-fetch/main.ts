@@ -71,8 +71,8 @@ async function main() {
       // 既存のMarkdownファイルをチェック
       const existingMarkdown = await filesystems.posts.load(filename);
       if (existingMarkdown) {
-        const frontmatter = parseFrontmatter<BlogPostFrontmatter>(existingMarkdown.toString('utf-8'));
-        if (shouldSkipProcessing(page.last_edited_time, frontmatter)) {
+        const markdownFrontmatter = parseFrontmatter<BlogPostFrontmatter>(existingMarkdown.toString('utf-8'));
+        if (shouldSkipProcessing(page.last_edited_time, markdownFrontmatter)) {
           console.log(`Skipping ${filename} (no changes)`);
           return;
         }

@@ -19,6 +19,8 @@ export default tseslint.config(
     settings: {},
     extends: [tseslint.configs.recommendedTypeChecked],
     rules: {
+      'no-shadow': 'off',
+      '@typescript-eslint/no-shadow': 'error',
       '@typescript-eslint/no-unnecessary-condition': 'error',
     },
   },
