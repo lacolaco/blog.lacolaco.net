@@ -3,7 +3,7 @@ title: Kitchen Sink
 slug: kitchen-sink
 icon: '📝'
 created_time: '2022-02-11T11:47:00.000Z'
-last_edited_time: '2025-06-08T01:46:00.000Z'
+last_edited_time: '2025-06-08T03:34:00.000Z'
 category: 'Tech'
 tags: ['test']
 published: false
@@ -38,7 +38,13 @@ _斜体テキスト_ ~~取り消し線~~
 
 ### 画像
 
+外部画像
+
 ![](https://placehold.co/600x400)
+
+アップロード画像
+
+![](/images/kitchen-sink/001_2.png)
 
 ---
 

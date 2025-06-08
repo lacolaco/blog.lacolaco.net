@@ -6,15 +6,20 @@ import type { PageObject, UntypedBlockObject } from '../notion-types';
  * NotionページをフロントマターとMarkdownコンテンツに変換する純粋関数
  */
 export async function transformNotionPageToMarkdown(page: PageObject): Promise<{
-  filename: string;
+  slug: string;
   markdown: string;
+  imageDownloads: Array<{ filename: string; url: string }>;
 }> {
   const frontmatter = extractFrontmatter(page);
   const frontmatterString = formatFrontmatter(frontmatter);
 
   // ページにchildrenプロパティがある場合（ブロックが含まれている場合）はそれを変換
   const pageWithChildren = page as PageObject & { children?: UntypedBlockObject[] };
-  const content = pageWithChildren.children ? transformNotionBlocksToMarkdown(pageWithChildren.children) : '';
+  const context = {
+    slug: frontmatter.slug,
+    imageDownloads: [],
+  };
+  const content = pageWithChildren.children ? transformNotionBlocksToMarkdown(pageWithChildren.children, context) : '';
 
   const markdown = `---
 ${frontmatterString}
@@ -25,8 +30,9 @@ ${content}`;
   const config = await prettier.resolveConfig(new URL('../..', import.meta.url));
   const formattedMarkdown = await prettier.format(markdown, { parser: 'markdown', ...config });
   return {
-    filename: `${frontmatter.slug}.md`,
+    slug: frontmatter.slug,
     markdown: formattedMarkdown,
+    imageDownloads: context.imageDownloads,
   };
 }
 
@@ -91,9 +97,7 @@ function extractFrontmatter(page: PageObject): BlogPostFrontmatter {
   // アイコンの抽出
   const icon = page.icon && 'emoji' in page.icon ? page.icon.emoji : '';
 
-  // Notion URLの生成
-  const pageTitle = title.replace(/\s+/g, '-');
-  const notion_url = `https://www.notion.so/${pageTitle}-${page.id.replace(/-/g, '')}`;
+  const notion_url = page.url;
 
   const result: BlogPostFrontmatter = {
     title,

@@ -131,7 +131,7 @@
     }
 
     img {
-      @apply max-w-full box-content place-self-center;
+      @apply max-w-full box-content place-self-center aspect-video object-contain;
     }
 
     figure {

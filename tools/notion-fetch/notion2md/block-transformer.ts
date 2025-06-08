@@ -1,10 +1,18 @@
 import type { RichTextArray, RichTextItemObject, SpecificBlockObject, UntypedBlockObject } from '../notion-types';
 import { getTableProperties, getTableRowCells, isListBlock } from '../notion-types';
 
+export interface TransformContext {
+  readonly slug: string;
+  imageDownloads: Array<{
+    filename: string;
+    url: string;
+  }>;
+}
+
 /**
  * NotionブロックをMarkdown文字列に変換する純粋関数
  */
-export function transformNotionBlocksToMarkdown(blocks: UntypedBlockObject[]): string {
+export function transformNotionBlocksToMarkdown(blocks: UntypedBlockObject[], context: TransformContext): string {
   const result: string[] = [];
   let listContext: { type: 'bulleted' | 'numbered'; items: string[]; counter: number } | null = null;
 
@@ -30,7 +38,7 @@ export function transformNotionBlocksToMarkdown(blocks: UntypedBlockObject[]): s
       }
 
       listContext.counter++;
-      const markdown = transformBlock(block, listContext.counter);
+      const markdown = transformBlock(block, context, listContext.counter);
       listContext.items.push(markdown.trim());
     } else if (block.type === 'table') {
       // テーブルの処理：tableブロックのchildrenからtable_rowを取得
@@ -39,7 +47,7 @@ export function transformNotionBlocksToMarkdown(blocks: UntypedBlockObject[]): s
       const markdown = transformTable(block, tableRows);
       result.push(markdown);
     } else {
-      const markdown = transformBlock(block);
+      const markdown = transformBlock(block, context);
       result.push(markdown);
     }
   }
@@ -95,7 +103,7 @@ function transformTable(tableBlock: SpecificBlockObject, tableRows: SpecificBloc
   return rows.join('\n') + '\n\n';
 }
 
-function transformBlock(block: UntypedBlockObject, listNumber?: number): string {
+function transformBlock(block: UntypedBlockObject, context: TransformContext, listNumber?: number): string {
   switch (block.type) {
     case 'heading_1': {
       return `# ${transformRichText(block.heading_1?.rich_text || [])}\n\n`;
@@ -130,7 +138,7 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
 
         for (let i = 0; i < blockWithChildren.children.length; i++) {
           const child = blockWithChildren.children[i];
-          const childMarkdown = transformBlock(child);
+          const childMarkdown = transformBlock(child, context);
           const childLines = childMarkdown.trim().split('\n');
 
           // 最初の子要素の前に空行を追加
@@ -175,15 +183,21 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
 
     case 'image': {
       const caption = transformRichText(block.image?.caption || []);
-      if (block.image?.type === 'external' && block.image?.external) {
+      if (block.image?.type === 'external') {
         if (caption) {
           return `<figure>\n  <img src="${block.image.external.url}" alt="${caption}">\n  <figcaption>${caption}</figcaption>\n</figure>\n\n`;
         } else {
           return `![](${block.image.external.url})\n\n`;
         }
       } else {
-        // ローカル画像の場合は仮のパスを使用（実装時に調整）
-        return `![${caption}](/images/slug/image-id.png)\n\n`;
+        // ローカル画像の場合
+        const imageUrl = block.image.file.url;
+        const urlObj = new URL(imageUrl);
+        const filename = urlObj.pathname.split('/').pop() || 'image.png';
+
+        context.imageDownloads.push({ filename, url: imageUrl });
+
+        return `![${caption}](/images/${context.slug}/${filename})\n\n`;
       }
     }
 
@@ -191,7 +205,7 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
       const content = transformRichText(block.bulleted_list_item?.rich_text || []);
       const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
       if (blockWithChildren.children && blockWithChildren.children.length > 0) {
-        const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children);
+        const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children, context);
         const indentedNested = nestedContent
           .trim()
           .split('\n')
@@ -207,7 +221,7 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
       const content = transformRichText(block.numbered_list_item?.rich_text || []);
       const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
       if (blockWithChildren.children && blockWithChildren.children.length > 0) {
-        const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children);
+        const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children, context);
         const indentedNested = nestedContent
           .trim()
           .split('\n')
@@ -240,7 +254,7 @@ function transformBlock(block: UntypedBlockObject, listNumber?: number): string 
       const summary = transformRichText(block.toggle?.rich_text || []);
       const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
       if (blockWithChildren.children && blockWithChildren.children.length > 0) {
-        const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children);
+        const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children, context);
         return `<details>\n<summary>${summary}</summary>\n\n${nestedContent.trim()}\n\n</details>\n\n`;
       }
       return `<details>\n<summary>${summary}</summary>\n\n</details>\n\n`;

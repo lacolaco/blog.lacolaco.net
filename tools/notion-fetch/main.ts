@@ -62,18 +62,56 @@ async function main() {
   }
   await Promise.all(
     pages.map(async (page) => {
-      const { filename, markdown } = await transformNotionPageToMarkdown(page);
+      const { slug, markdown, imageDownloads } = await transformNotionPageToMarkdown(page);
       if (debug) {
         // Write the raw page data to a file into .tmp directory for debugging
-        await writeFile(`${rootDir}.tmp/${filename}.json`, await formatJSON(page), { encoding: 'utf-8' });
+        await writeFile(`${rootDir}.tmp/${slug}.json`, await formatJSON(page), { encoding: 'utf-8' });
       }
-      // await filesystems.images.remove(slug);
 
-      await filesystems.posts.save(filename, markdown, { encoding: 'utf-8' });
+      await downloadImages(imageDownloads, filesystems.images, slug);
+      await filesystems.posts.save(`${slug}.md`, markdown, { encoding: 'utf-8' });
     }),
   );
 
   console.log('Done');
+}
+
+async function downloadImages(
+  imageDownloads: Array<{ filename: string; url: string }>,
+  filesystem: FileSystem,
+  slug: string,
+): Promise<void> {
+  if (imageDownloads.length === 0) {
+    return;
+  }
+
+  // Clean up the slug directory before downloading
+  await filesystem.remove(slug);
+
+  console.log(`Downloading ${imageDownloads.length} images...`);
+
+  await Promise.all(
+    imageDownloads.map(async ({ filename, url }) => {
+      try {
+        console.log(`Downloading ${filename} from ${url}`);
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error(`Failed to download image: ${response.status} ${response.statusText}`);
+        }
+
+        const buffer = await response.arrayBuffer();
+        await filesystem.save(`${slug}/${filename}`, new Uint8Array(buffer));
+
+        console.log(`Downloaded ${filename} to ${slug}/${filename}`);
+      } catch (error) {
+        console.error(`Failed to download ${filename}:`, error);
+        throw error;
+      }
+    }),
+  );
+
+  console.log(`Downloaded ${imageDownloads.length} images`);
 }
 
 main().catch((err) => {
