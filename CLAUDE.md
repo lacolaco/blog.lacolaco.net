@@ -65,12 +65,15 @@ This is lacolaco's personal blog built with **Astro** as a static site generator
 
 **notion-fetch Tool Architecture:**
 
-- `tools/notion-fetch/main.ts` - **Consolidated entry point** with integrated utilities:
-  - FileSystem class, JSON formatting, metadata conversion, image downloading
+- `tools/notion-fetch/main.ts` - Entry point and main processing flow
+- `tools/notion-fetch/filesystem.ts` - FileSystem class for file operations with dry-run support
 - `tools/notion-fetch/page-transformer.ts` - Converts Notion pages to Markdown with frontmatter
 - `tools/notion-fetch/block-transformer.ts` - Converts individual Notion blocks to Markdown strings
+- `tools/notion-fetch/utils.ts` - Utility functions (JSON formatting, metadata conversion, etc.)
 - `tools/notion-fetch/notion-types.ts` - Comprehensive TypeScript types for Notion API
 - `tools/notion-fetch/fixtures/` - Test fixtures for transformation logic
+
+For detailed architecture and usage information, see @tools/notion-fetch/README.md
 
 **Internationalization:**
 
@@ -168,6 +171,10 @@ Rich markdown support with custom plugins:
 - Validate all user inputs and external data
 - Use Content Security Policy (CSP) headers
 - Sanitize content when rendering user-generated HTML
+
+## Git Workflow
+
+See @docs/git-instructions.md
 
 ## Tool Usage Notes
 
