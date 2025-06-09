@@ -85,6 +85,12 @@ const { Content } = await render(entry);
 
     <Footer class="py-4" />
 
-    {features?.tweet ? <script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8" /> : ''}
+    {features?.tweet ? <script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8" /> : null}
+        {features?.mermaid ? (
+      <script>
+        import mermaid from 'mermaid';
+        mermaid.initialize({ startOnLoad: true });
+      </script>
+    ) : null}
   </body>
 </html>

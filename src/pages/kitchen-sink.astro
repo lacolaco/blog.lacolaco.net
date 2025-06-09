@@ -14,7 +14,7 @@ import { isAfter as isAfterDate } from 'date-fns';
 import { frontmatter, Content } from '../content/kitchen-sink.md';
 import type { CollectionEntry } from 'astro:content';
 
-const { title, category, tags, created_time, last_edited_time, canonical_url } =
+const { title, category, tags, created_time, last_edited_time, canonical_url, features } =
   frontmatter as CollectionEntry<'postsV2'>['data'];
 const isUpdated = last_edited_time && isAfterDate(last_edited_time, created_time);
 ---
@@ -64,6 +64,13 @@ const isUpdated = last_edited_time && isAfterDate(last_edited_time, created_time
 
     <Footer class="py-4" />
 
-    <script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    {features?.tweet ? <script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8" /> : null}
+
+    {features?.mermaid ? (
+      <script>
+        import mermaid from 'mermaid';
+        mermaid.initialize({ startOnLoad: true });
+      </script>
+    ) : null}
   </body>
 </html>

@@ -4,7 +4,7 @@ import { stringify as yamlStringify, parse as yamlParse } from 'yaml';
  * フロントマターオブジェクトをYAML文字列にフォーマットする純粋関数
  * 任意のオブジェクト型を受け付ける汎用ユーティリティ関数
  */
-export function formatFrontmatter(frontmatter: Record<string, unknown>): string {
+export function formatFrontmatter(frontmatter: unknown): string {
   const yaml = yamlStringify(frontmatter, {
     defaultStringType: 'QUOTE_SINGLE',
     defaultKeyType: 'PLAIN',

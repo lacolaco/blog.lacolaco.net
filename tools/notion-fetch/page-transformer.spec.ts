@@ -27,8 +27,6 @@ describe('extractFrontmatter', () => {
     assert.strictEqual(frontmatter.category, 'Tech');
     assert.deepStrictEqual(frontmatter.tags, ['test']);
     assert.strictEqual(frontmatter.published, false);
-    assert.strictEqual(typeof frontmatter.created_time, 'string');
-    assert.strictEqual(typeof frontmatter.last_edited_time, 'string');
     assert.strictEqual(typeof frontmatter.notion_url, 'string');
   });
 

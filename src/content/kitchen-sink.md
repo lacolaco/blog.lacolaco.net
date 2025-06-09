@@ -12,6 +12,7 @@ canonical_url: ''
 notion_url: 'https://www.notion.so/Kitchen-Sink-80f5c54939b64e7ab25825bdb35f1cae'
 features:
   tweet: true
+  mermaid: true
 ---
 
 # Markdown構文サンプル集

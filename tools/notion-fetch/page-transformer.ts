@@ -1,8 +1,8 @@
 import * as prettier from 'prettier';
 import { transformNotionBlocksToMarkdown, type TransformContext } from './block-transformer';
-import type { BlogPostFrontmatter } from './blog-types';
 import { formatFrontmatter } from './frontmatter';
 import type { PageObject, UntypedBlockObject } from './notion-types';
+import { PostFrontmatter, type PostFrontmatterOut } from '@lib/post';
 
 /**
  * ページからコンテンツを生成する純粋関数
@@ -17,7 +17,7 @@ export function generateContent(page: PageObject, context: TransformContext): st
  * フロントマターオブジェクトと本文を受け取ってMarkdownファイル全体を構築する純粋関数
  */
 export async function buildMarkdownFile(
-  frontmatter: BlogPostFrontmatter,
+  frontmatter: PostFrontmatterOut,
   content: string,
   context: TransformContext,
 ): Promise<string> {
@@ -38,7 +38,7 @@ ${content}`;
   return await prettier.format(markdown, { parser: 'markdown', ...config });
 }
 
-export function extractFrontmatter(page: PageObject): BlogPostFrontmatter {
+export function extractFrontmatter(page: PageObject): PostFrontmatterOut {
   const properties = page.properties;
 
   // タイトルの抽出
@@ -74,7 +74,7 @@ export function extractFrontmatter(page: PageObject): BlogPostFrontmatter {
 
   const notion_url = page.url;
 
-  const result: BlogPostFrontmatter = {
+  const frontmatter = PostFrontmatter.parse({
     title,
     slug: locale === 'ja' ? slug : `${slug}.${locale}`,
     icon,
@@ -86,7 +86,7 @@ export function extractFrontmatter(page: PageObject): BlogPostFrontmatter {
     locale,
     canonical_url: canonicalUrl,
     notion_url,
-  };
+  });
 
-  return result;
+  return frontmatter;
 }
