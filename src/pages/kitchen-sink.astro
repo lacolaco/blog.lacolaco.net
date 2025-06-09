@@ -7,19 +7,16 @@ import Header from 'src/components/Header.astro';
 import MainContainer from 'src/components/MainContainer.astro';
 import ShareButtons from 'src/components/ShareButtons.astro';
 import { SITE_TITLE } from 'src/consts';
-import { getCollection, render } from 'astro:content';
 import TagList from 'src/components/TagList.astro';
 import Tag from 'src/components/Tag.astro';
 import FormattedDate from 'src/components/FormattedDate';
 import { isAfter as isAfterDate } from 'date-fns';
+import { frontmatter, Content } from '../content/kitchen-sink.md';
+import type { CollectionEntry } from 'astro:content';
 
-const posts = await getCollection('postsV2');
-const slug = 'kitchen-sink';
-const entry = posts.find((p) => p.id === slug)!;
-
-const { title, category, tags, created_time, last_edited_time, canonical_url } = entry?.data;
+const { title, category, tags, created_time, last_edited_time, canonical_url } =
+  frontmatter as CollectionEntry<'postsV2'>['data'];
 const isUpdated = last_edited_time && isAfterDate(last_edited_time, created_time);
-const { Content } = await render(entry);
 ---
 
 <!doctype html>

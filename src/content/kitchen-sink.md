@@ -1,5 +1,17 @@
 ---
-title: Kitchen Sink
+title: 'Kitchen Sink'
+slug: 'kitchen-sink'
+icon: '📝'
+created_time: '2022-02-11T11:47:00.000Z'
+last_edited_time: '2025-06-08T03:34:00.000Z'
+category: 'Tech'
+tags: ['test']
+published: false
+locale: 'ja'
+canonical_url: ''
+notion_url: 'https://www.notion.so/Kitchen-Sink-80f5c54939b64e7ab25825bdb35f1cae'
+features:
+  tweet: true
 ---
 
 # Markdown構文サンプル集
@@ -467,12 +479,12 @@ https://github.com/makenotion/notion-sdk-js
 **入力:**
 
 ```markdown
-https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw
+@[tweet](https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw)
 ```
 
 **出力:**
 
-https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw
+@[tweet](https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw)
 
 ---
 
