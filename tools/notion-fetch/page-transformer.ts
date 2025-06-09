@@ -1,7 +1,7 @@
 import * as prettier from 'prettier';
 import { transformNotionBlocksToMarkdown, type TransformContext } from './block-transformer';
-import { formatFrontmatter } from './frontmatter';
 import type { BlogPostFrontmatter } from './blog-types';
+import { formatFrontmatter } from './frontmatter';
 import type { PageObject, UntypedBlockObject } from './notion-types';
 
 /**
@@ -16,7 +16,14 @@ export function generateContent(page: PageObject, context: TransformContext): st
 /**
  * フロントマターオブジェクトと本文を受け取ってMarkdownファイル全体を構築する純粋関数
  */
-export async function buildMarkdownFile(frontmatter: BlogPostFrontmatter, content: string): Promise<string> {
+export async function buildMarkdownFile(
+  frontmatter: BlogPostFrontmatter,
+  content: string,
+  context: TransformContext,
+): Promise<string> {
+  // context の features をフロントマターに反映
+  frontmatter.features = context.features;
+
   const frontmatterString = formatFrontmatter(frontmatter);
   const markdown = `---
 ${frontmatterString}
@@ -61,6 +68,10 @@ export function extractFrontmatter(page: PageObject): BlogPostFrontmatter {
   // アイコンの抽出
   const icon = page.icon && 'emoji' in page.icon ? page.icon.emoji : '';
 
+  // canonical URLの抽出
+  const canonicalUrlProp = properties.canonical_url;
+  const canonicalUrl = 'url' in canonicalUrlProp ? canonicalUrlProp.url || '' : '';
+
   const notion_url = page.url;
 
   const result: BlogPostFrontmatter = {
@@ -72,6 +83,8 @@ export function extractFrontmatter(page: PageObject): BlogPostFrontmatter {
     category,
     tags,
     published,
+    locale,
+    canonical_url: canonicalUrl,
     notion_url,
   };
 

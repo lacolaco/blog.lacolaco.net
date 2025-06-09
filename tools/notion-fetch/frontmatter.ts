@@ -5,7 +5,13 @@ import { stringify as yamlStringify, parse as yamlParse } from 'yaml';
  * 任意のオブジェクト型を受け付ける汎用ユーティリティ関数
  */
 export function formatFrontmatter(frontmatter: Record<string, unknown>): string {
-  return yamlStringify(frontmatter, { defaultStringType: 'QUOTE_SINGLE', defaultKeyType: 'PLAIN' }).trim();
+  const yaml = yamlStringify(frontmatter, {
+    defaultStringType: 'QUOTE_SINGLE',
+    defaultKeyType: 'PLAIN',
+    doubleQuotedAsJSON: true,
+  }).trim();
+
+  return yaml;
 }
 
 /**

@@ -21,6 +21,11 @@ const postsV2 = defineCollection({
       slug: z.string(),
       locale: z.string().optional(),
       canonical_url: z.string().optional(),
+      features: z
+        .object({
+          tweet: z.boolean().optional(),
+        })
+        .optional(),
     })
     .passthrough(),
 });

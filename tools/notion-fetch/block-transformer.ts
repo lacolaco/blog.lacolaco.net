@@ -7,6 +7,19 @@ export interface TransformContext {
     filename: string;
     url: string;
   }>;
+  features: {
+    tweet?: boolean; // ツイート埋め込みを含むかどうか
+  };
+}
+
+export function newTransformContext(slug: string): TransformContext {
+  return {
+    slug,
+    imageDownloads: [],
+    features: {
+      tweet: false,
+    },
+  };
 }
 
 /**
@@ -280,7 +293,13 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
     }
 
     case 'embed': {
-      return `${block.embed.url || ''}\n\n`;
+      const url = block.embed.url || '';
+      // Twitter URLの場合は @[tweet](...) 記法に変換
+      if (url.includes('twitter.com') || url.includes('x.com')) {
+        context.features.tweet = true;
+        return `@[tweet](${url})\n\n`;
+      }
+      return `${url}\n\n`;
     }
 
     case 'video': {
