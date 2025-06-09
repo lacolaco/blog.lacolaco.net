@@ -26,7 +26,7 @@ export default defineConfig({
   markdown: {
     gfm: true,
     remarkPlugins: [remarkBreaks, remarkMath, remarkEmbed],
-    rehypePlugins: [rehypeGithubEmoji, rehypeGithubAlert, rehypeKatex, [rehypeMermaid, { strategy: 'img-svg' }]],
+    rehypePlugins: [rehypeGithubEmoji, rehypeGithubAlert, rehypeKatex, [rehypeMermaid, { strategy: 'pre-mermaid' }]],
     syntaxHighlight: {
       type: 'shiki',
       excludeLangs: ['mermaid', 'math'],

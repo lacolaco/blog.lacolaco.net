@@ -1,8 +1,8 @@
 import { BlogDatabase } from '@lacolaco/notion-db';
+import type { PostFrontmatterOut } from '@lib/post';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
 import { newTransformContext } from './block-transformer';
-import type { BlogPostFrontmatter } from './blog-types';
 import { FileSystem } from './filesystem';
 import { parseFrontmatter } from './frontmatter';
 import { downloadImages } from './image-downloader';
@@ -71,7 +71,7 @@ async function main() {
       // 既存のMarkdownファイルをチェック
       const existingMarkdown = await filesystems.posts.load(filename);
       if (existingMarkdown) {
-        const markdownFrontmatter = parseFrontmatter<BlogPostFrontmatter>(existingMarkdown.toString('utf-8'));
+        const markdownFrontmatter = parseFrontmatter<PostFrontmatterOut>(existingMarkdown.toString('utf-8'));
         if (shouldSkipProcessing(page.last_edited_time, markdownFrontmatter)) {
           console.log(`Skipping ${filename} (no changes)`);
           return;
@@ -81,7 +81,7 @@ async function main() {
       // 必要な場合のみ完全な変換を実行
       const context = newTransformContext(frontmatter.slug);
       const content = generateContent(page, context);
-      const markdown = await buildMarkdownFile(frontmatter, content);
+      const markdown = await buildMarkdownFile(frontmatter, content, context);
       const imageDownloads = context.imageDownloads;
 
       if (debug) {

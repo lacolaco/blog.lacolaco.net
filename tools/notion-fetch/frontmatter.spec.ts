@@ -1,12 +1,12 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { formatFrontmatter, parseFrontmatter } from './frontmatter';
-import type { BlogPostFrontmatter } from './blog-types';
+import { type PostFrontmatterIn } from '@lib/post';
 
 describe('frontmatter', () => {
   describe('formatFrontmatter', () => {
     it('should format simple frontmatter object to YAML string', () => {
-      const frontmatter: BlogPostFrontmatter = {
+      const frontmatter: PostFrontmatterIn = {
         title: 'Test Post',
         slug: 'test-post',
         icon: '📝',
@@ -36,7 +36,7 @@ notion_url: 'https://notion.so/test'`;
     });
 
     it('should handle empty arrays in frontmatter', () => {
-      const frontmatter: BlogPostFrontmatter = {
+      const frontmatter: PostFrontmatterIn = {
         title: 'Empty Tags Post',
         slug: 'empty-tags',
         icon: '',
@@ -64,7 +64,7 @@ notion_url: 'https://notion.so/test'`;
     });
 
     it('should handle special characters in strings', () => {
-      const frontmatter: BlogPostFrontmatter = {
+      const frontmatter: PostFrontmatterIn = {
         title: 'Post with \'quotes\' and "double quotes"',
         slug: 'special-chars',
         icon: '🔥',
@@ -94,7 +94,7 @@ notion_url: 'https://notion.so/test?param=value'`;
     });
 
     it('should handle optional locale field', () => {
-      const frontmatter: BlogPostFrontmatter = {
+      const frontmatter: PostFrontmatterIn = {
         title: 'Localized Post',
         slug: 'localized-post.en',
         icon: '🌍',

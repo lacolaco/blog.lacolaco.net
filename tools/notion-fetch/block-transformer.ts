@@ -1,3 +1,4 @@
+import type { PostFrontmatterOut } from '@lib/post';
 import type { RichTextArray, RichTextItemObject, SpecificBlockObject, UntypedBlockObject } from './notion-types';
 import { isListBlock } from './notion-types';
 
@@ -7,9 +8,7 @@ export interface TransformContext {
     filename: string;
     url: string;
   }>;
-  features: {
-    tweet?: boolean; // ツイート埋め込みを含むかどうか
-  };
+  features: NonNullable<PostFrontmatterOut['features']>;
 }
 
 export function newTransformContext(slug: string): TransformContext {
@@ -17,6 +16,7 @@ export function newTransformContext(slug: string): TransformContext {
     slug,
     imageDownloads: [],
     features: {
+      mermaid: false,
       tweet: false,
     },
   };
@@ -199,6 +199,10 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
       let language = block.code.language === 'plain text' ? '' : block.code.language;
       if (language === 'typescript') {
         language = 'ts';
+      }
+      // marmeidのコードブロックがあった場合はfeatureを有効にする
+      if (language === 'mermaid') {
+        context.features.mermaid = true;
       }
       const code = transformRichText(block.code.rich_text);
       const delimiter = '```';
