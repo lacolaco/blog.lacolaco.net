@@ -1,21 +1,19 @@
 ---
-import 'katex/dist/katex.min.css';
-
+import type { PostFrontmatterOut } from '@lib/post';
+import { isAfter as isAfterDate } from 'date-fns';
 import BaseHead from 'src/components/BaseHead.astro';
 import Footer from 'src/components/Footer.astro';
+import FormattedDate from 'src/components/FormattedDate';
 import Header from 'src/components/Header.astro';
 import MainContainer from 'src/components/MainContainer.astro';
 import ShareButtons from 'src/components/ShareButtons.astro';
-import { SITE_TITLE } from 'src/consts';
-import TagList from 'src/components/TagList.astro';
 import Tag from 'src/components/Tag.astro';
-import FormattedDate from 'src/components/FormattedDate';
-import { isAfter as isAfterDate } from 'date-fns';
-import { frontmatter, Content } from '../content/kitchen-sink.md';
-import type { CollectionEntry } from 'astro:content';
+import TagList from 'src/components/TagList.astro';
+import { SITE_TITLE } from 'src/consts';
+import { Content, frontmatter } from '../content/kitchen-sink.md';
 
 const { title, category, tags, created_time, last_edited_time, canonical_url, features } =
-  frontmatter as CollectionEntry<'postsV2'>['data'];
+  frontmatter as PostFrontmatterOut;
 const isUpdated = last_edited_time && isAfterDate(last_edited_time, created_time);
 ---
 
@@ -25,6 +23,9 @@ const isUpdated = last_edited_time && isAfterDate(last_edited_time, created_time
     <BaseHead title={`${title} | ${SITE_TITLE}`} description={''} />
 
     {canonical_url && <link rel="canonical" href={canonical_url} />}
+    {features?.katex ? (
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP" crossorigin="anonymous" />
+    ) : null}
   </head>
 
   <body class="font-base bg-default">
@@ -65,7 +66,6 @@ const isUpdated = last_edited_time && isAfterDate(last_edited_time, created_time
     <Footer class="py-4" />
 
     {features?.tweet ? <script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8" /> : null}
-
     {features?.mermaid ? (
       <script>
         import mermaid from 'mermaid';

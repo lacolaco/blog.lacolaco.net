@@ -75,6 +75,7 @@ export const PostFrontmatter = z
       .object({
         tweet: z.boolean().default(false),
         mermaid: z.boolean().default(false),
+        katex: z.boolean().default(false),
       })
       .optional(),
   })

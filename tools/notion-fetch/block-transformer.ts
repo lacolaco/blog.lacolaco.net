@@ -16,6 +16,7 @@ export function newTransformContext(slug: string): TransformContext {
     slug,
     imageDownloads: [],
     features: {
+      katex: false,
       mermaid: false,
       tweet: false,
     },
@@ -57,7 +58,7 @@ export function transformNotionBlocksToMarkdown(blocks: UntypedBlockObject[], co
       // テーブルの処理：tableブロックのchildrenからtable_rowを取得
       const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
       const tableRows = (blockWithChildren.children || []).filter((child) => child.type === 'table_row');
-      const markdown = transformTable(block, tableRows);
+      const markdown = transformTable(block, tableRows, context);
       result.push(markdown);
     } else {
       const markdown = transformBlock(block, context);
@@ -77,7 +78,11 @@ function formatList(listContext: { type: 'bulleted' | 'numbered'; items: string[
   return listContext.items.join('\n');
 }
 
-function transformTable(tableBlock: SpecificBlockObject, tableRows: SpecificBlockObject[]): string {
+function transformTable(
+  tableBlock: SpecificBlockObject,
+  tableRows: SpecificBlockObject[],
+  context: TransformContext,
+): string {
   if (tableRows.length === 0) {
     return '';
   }
@@ -107,7 +112,7 @@ function transformTable(tableBlock: SpecificBlockObject, tableRows: SpecificBloc
     }
 
     const cells = tableRow.table_row.cells;
-    const cellTexts = cells.map((cell) => transformRichText(cell).replace(/\|/g, '\\|')); // パイプをエスケープ
+    const cellTexts = cells.map((cell) => transformRichText(cell, context).replace(/\|/g, '\\|')); // パイプをエスケープ
 
     // セルが不足している場合は空文字で埋める
     while (cellTexts.length < tableWidth) {
@@ -130,15 +135,15 @@ function transformTable(tableBlock: SpecificBlockObject, tableRows: SpecificBloc
 function transformBlock(block: UntypedBlockObject, context: TransformContext, listNumber?: number): string {
   switch (block.type) {
     case 'heading_1': {
-      return `# ${transformRichText(block.heading_1.rich_text)}\n\n`;
+      return `# ${transformRichText(block.heading_1.rich_text, context)}\n\n`;
     }
 
     case 'heading_2': {
-      return `## ${transformRichText(block.heading_2.rich_text)}\n\n`;
+      return `## ${transformRichText(block.heading_2.rich_text, context)}\n\n`;
     }
 
     case 'heading_3': {
-      return `### ${transformRichText(block.heading_3.rich_text)}\n\n`;
+      return `### ${transformRichText(block.heading_3.rich_text, context)}\n\n`;
     }
 
     case 'paragraph': {
@@ -146,14 +151,14 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
         // 空の段落は無視する
         return '';
       }
-      return `${transformRichText(block.paragraph.rich_text)}\n\n`;
+      return `${transformRichText(block.paragraph.rich_text, context)}\n\n`;
     }
 
     case 'divider': {
       return `---\n\n`;
     }
     case 'quote': {
-      const content = transformRichText(block.quote.rich_text);
+      const content = transformRichText(block.quote.rich_text, context);
       const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
 
       if (blockWithChildren.children && blockWithChildren.children.length > 0) {
@@ -204,13 +209,13 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
       if (language === 'mermaid') {
         context.features.mermaid = true;
       }
-      const code = transformRichText(block.code.rich_text);
+      const code = transformRichText(block.code.rich_text, context);
       const delimiter = '```';
       return `${delimiter}${language}\n${code}\n${delimiter}\n\n`;
     }
 
     case 'image': {
-      const caption = transformRichText(block.image.caption);
+      const caption = transformRichText(block.image.caption, context);
       if (block.image.type === 'external') {
         if (caption) {
           return `<figure>\n  <img src="${block.image.external.url}" alt="${caption}">\n  <figcaption>${caption}</figcaption>\n</figure>\n\n`;
@@ -234,7 +239,7 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
     }
 
     case 'bulleted_list_item': {
-      const content = transformRichText(block.bulleted_list_item.rich_text);
+      const content = transformRichText(block.bulleted_list_item.rich_text, context);
       const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
       if (blockWithChildren.children && blockWithChildren.children.length > 0) {
         const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children, context);
@@ -250,7 +255,7 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
 
     case 'numbered_list_item': {
       const number = listNumber || 1;
-      const content = transformRichText(block.numbered_list_item.rich_text);
+      const content = transformRichText(block.numbered_list_item.rich_text, context);
       const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
       if (blockWithChildren.children && blockWithChildren.children.length > 0) {
         const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children, context);
@@ -265,12 +270,14 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
     }
 
     case 'equation': {
+      // katex機能を有効にする
+      context.features.katex = true;
       return `$$\n${block.equation.expression || ''}\n$$\n\n`;
     }
 
     case 'callout': {
       const alertType = getAlertTypeFromIcon(block.callout.icon || null);
-      const content = transformRichText(block.callout.rich_text);
+      const content = transformRichText(block.callout.rich_text, context);
       const lines = content.split('\n').filter((line) => line.trim());
 
       if (lines.length === 1) {
@@ -283,7 +290,7 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
     }
 
     case 'toggle': {
-      const summary = transformRichText(block.toggle.rich_text);
+      const summary = transformRichText(block.toggle.rich_text, context);
       const blockWithChildren = block as typeof block & { children?: SpecificBlockObject[] };
       if (blockWithChildren.children && blockWithChildren.children.length > 0) {
         const nestedContent = transformNotionBlocksToMarkdown(blockWithChildren.children, context);
@@ -324,15 +331,16 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
   }
 }
 
-function transformRichText(richText: RichTextArray): string {
-  return richText.map(transformRichTextNode).join('');
+function transformRichText(richText: RichTextArray, context: TransformContext): string {
+  return richText.map((item) => transformRichTextNode(item, context)).join('');
 }
 
-function transformRichTextNode(node: RichTextItemObject): string {
+function transformRichTextNode(node: RichTextItemObject, context: TransformContext): string {
   const text = node.plain_text;
 
   // 数式の処理（NotionのインラインEquationブロック）
   if ('type' in node && node.type === 'equation') {
+    context.features.katex = true;
     const equationNode = node as Record<string, unknown>;
     const equation = equationNode.equation as Record<string, unknown> | undefined;
     return `$${(equation?.expression as string) || ''}$`;
