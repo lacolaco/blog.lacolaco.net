@@ -1,13 +1,13 @@
 import { BlogDatabase } from '@lacolaco/notion-db';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
-import { FileSystem } from './filesystem';
-import { downloadImages } from './image-downloader';
-import { extractFrontmatter, generateContent, buildMarkdownFile } from './page-transformer';
-import type { TransformContext } from './block-transformer';
-import { formatJSON, shouldSkipProcessing, toCategoriesJSON, toTagsJSON } from './utils';
-import { parseFrontmatter } from './frontmatter';
+import { newTransformContext } from './block-transformer';
 import type { BlogPostFrontmatter } from './blog-types';
+import { FileSystem } from './filesystem';
+import { parseFrontmatter } from './frontmatter';
+import { downloadImages } from './image-downloader';
+import { buildMarkdownFile, extractFrontmatter, generateContent } from './page-transformer';
+import { formatJSON, shouldSkipProcessing, toCategoriesJSON, toTagsJSON } from './utils';
 
 const { NOTION_AUTH_TOKEN } = process.env;
 if (!NOTION_AUTH_TOKEN) {
@@ -79,10 +79,7 @@ async function main() {
       }
 
       // 必要な場合のみ完全な変換を実行
-      const context: TransformContext = {
-        slug: frontmatter.slug,
-        imageDownloads: [],
-      };
+      const context = newTransformContext(frontmatter.slug);
       const content = generateContent(page, context);
       const markdown = await buildMarkdownFile(frontmatter, content);
       const imageDownloads = context.imageDownloads;

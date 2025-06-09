@@ -1,12 +1,19 @@
 import assert from 'assert';
 import { describe, it } from 'node:test';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
+import { newTransformContext } from './block-transformer';
 import type { PageObject, SelectProperty } from './notion-types';
-import { extractFrontmatter, generateContent, buildMarkdownFile } from './page-transformer';
-import type { TransformContext } from './block-transformer';
+import { buildMarkdownFile, extractFrontmatter, generateContent } from './page-transformer';
 
 async function loadPageFixture(fixtureFilename: string): Promise<PageObject> {
   const module = (await import(`./fixtures/${fixtureFilename}`)) as { default: PageObject };
   return JSON.parse(JSON.stringify(module.default)) as PageObject;
+}
+
+async function loadMarkdownFixture(fixtureFilename: string): Promise<string> {
+  const fixturePath = join(new URL(import.meta.url).pathname, '..', 'fixtures', fixtureFilename);
+  return await readFile(fixturePath, 'utf-8');
 }
 
 describe('extractFrontmatter', () => {
@@ -101,10 +108,7 @@ describe('extractFrontmatter', () => {
 describe('generateContent', () => {
   it('ページからコンテンツを生成する', async () => {
     const pageFixture = await loadPageFixture('page-kitchen-sink.json');
-    const context: TransformContext = {
-      slug: 'test-slug',
-      imageDownloads: [],
-    };
+    const context = newTransformContext('test-slug');
 
     const content = generateContent(pageFixture, context);
 
@@ -114,10 +118,7 @@ describe('generateContent', () => {
 
   it('childrenがない場合、空のコンテンツを返す', async () => {
     const pageFixture = await loadPageFixture('page-kitchen-sink.json');
-    const context: TransformContext = {
-      slug: 'test-slug',
-      imageDownloads: [],
-    };
+    const context = newTransformContext('test-slug');
     // childrenを削除
     const pageWithoutChildren = { ...pageFixture };
     delete (pageWithoutChildren as PageObject & { children?: unknown }).children;
@@ -129,10 +130,7 @@ describe('generateContent', () => {
 
   it('コンテキストの画像ダウンロードタスクが更新される', async () => {
     const pageFixture = await loadPageFixture('page-kitchen-sink.json');
-    const context: TransformContext = {
-      slug: 'test-slug',
-      imageDownloads: [],
-    };
+    const context = newTransformContext('test-slug');
 
     generateContent(pageFixture, context);
 
@@ -147,8 +145,9 @@ describe('buildMarkdownFile', () => {
     const frontmatter = extractFrontmatter(pageFixture);
     const content = '# Test Content\n\nThis is a test.';
 
-    const markdown = await buildMarkdownFile(frontmatter, content);
+    const markdown = await buildMarkdownFile(frontmatter, content, newTransformContext('test-slug'));
 
+    // This test only checks the buildMarkdownFile function with custom content
     assert.ok(markdown.includes('---\n'));
     assert.ok(markdown.includes("title: 'Kitchen Sink'"));
     assert.ok(markdown.includes('# Test Content'));
@@ -160,10 +159,25 @@ describe('buildMarkdownFile', () => {
     const frontmatter = extractFrontmatter(pageFixture);
     const content = '';
 
-    const markdown = await buildMarkdownFile(frontmatter, content);
+    const markdown = await buildMarkdownFile(frontmatter, content, newTransformContext('test-slug'));
 
     assert.ok(markdown.includes('---\n'));
     assert.ok(markdown.includes("title: 'Kitchen Sink'"));
     assert.ok(markdown.includes('---\n'));
+  });
+});
+
+describe('Kitchen Sink統合テスト', () => {
+  it('Kitchen SinkページのフルMarkdown変換をテストする', async () => {
+    const pageFixture = await loadPageFixture('page-kitchen-sink.json');
+    const expectedMarkdown = await loadMarkdownFixture('page-kitchen-sink.md');
+
+    // 既存の関数を組み合わせてフル変換を実行
+    const frontmatter = extractFrontmatter(pageFixture);
+    const context = newTransformContext(frontmatter.slug);
+    const content = generateContent(pageFixture, context);
+    const actualMarkdown = await buildMarkdownFile(frontmatter, content, context);
+
+    assert.strictEqual(actualMarkdown.trim(), expectedMarkdown.trim());
   });
 });

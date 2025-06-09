@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import { transformNotionBlocksToMarkdown, type TransformContext } from './block-transformer';
+import { newTransformContext, transformNotionBlocksToMarkdown, type TransformContext } from './block-transformer';
 import type { RichTextItemObject, UntypedBlockObject } from './notion-types';
 
 async function loadFixture(fixtureFilename: string): Promise<UntypedBlockObject> {
@@ -26,8 +26,7 @@ function createParagraphWithRichText(richTextItem: RichTextItemObject): UntypedB
 
 function createDefaultContext(overrides: Partial<TransformContext> = {}): TransformContext {
   return {
-    slug: 'test-slug',
-    imageDownloads: [],
+    ...newTransformContext('test-slug'),
     ...overrides,
   };
 }
@@ -171,6 +170,36 @@ describe('transformNotionBlocksToMarkdown', () => {
         result,
         '|  |  |  |\n| --- | --- | --- |\n| column 1 content | column 2 content | column 3 content |\n| column 1 content | column 2 content | column 3 content |\n\n',
       );
+    });
+  });
+
+  describe('埋め込み', () => {
+    it('通常のURLは埋め込みURLとして出力される', async () => {
+      const fixture = await loadFixture('block-embed.json');
+      const result = transformNotionBlocksToMarkdown([fixture], createDefaultContext());
+      assert.strictEqual(result, 'https://companywebsite.com\n\n');
+    });
+
+    it('Twitter URLは@[tweet]()記法に変換される', async () => {
+      const fixture = await loadFixture('block-embed-twitter.json');
+      const context = createDefaultContext();
+      const result = transformNotionBlocksToMarkdown([fixture], context);
+      assert.strictEqual(
+        result,
+        '@[tweet](https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw)\n\n',
+      );
+      assert.strictEqual(context.features.tweet, true);
+    });
+
+    it('X.com URLは@[tweet]()記法に変換される', async () => {
+      const fixture = await loadFixture('block-embed-x.json');
+      const context = createDefaultContext();
+      const result = transformNotionBlocksToMarkdown([fixture], context);
+      assert.strictEqual(
+        result,
+        '@[tweet](https://x.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw)\n\n',
+      );
+      assert.strictEqual(context.features.tweet, true);
     });
   });
 

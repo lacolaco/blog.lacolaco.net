@@ -12,4 +12,8 @@ export interface BlogPostFrontmatter extends Record<string, unknown> {
   published: boolean;
   notion_url: string;
   locale?: string;
+  canonical_url?: string;
+  features?: {
+    tweet?: boolean;
+  };
 }

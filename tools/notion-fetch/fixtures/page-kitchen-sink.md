@@ -1,13 +1,18 @@
 ---
 title: 'Kitchen Sink'
-slug: kitchen-sink
+slug: 'kitchen-sink'
 icon: '📝'
 created_time: '2022-02-11T11:47:00.000Z'
 last_edited_time: '2025-06-07T14:22:00.000Z'
 category: 'Tech'
-tags: ['test']
+tags:
+  - 'test'
 published: false
+locale: 'ja'
+canonical_url: ''
 notion_url: 'https://www.notion.so/Kitchen-Sink-80f5c54939b64e7ab25825bdb35f1cae'
+features:
+  tweet: true
 ---
 
 # Markdown構文サンプル集
@@ -219,7 +224,7 @@ https://github.com/makenotion/notion-sdk-js
 
 ### Twitter埋め込み
 
-https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw
+@[tweet](https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw)
 
 ---
 

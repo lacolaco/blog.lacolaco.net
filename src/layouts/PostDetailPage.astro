@@ -16,7 +16,8 @@ type Props = {
 };
 
 const { entry } = Astro.props;
-const { slug, title, category, tags, created_time, last_edited_time, locale, canonical_url, published } = entry?.data;
+const { slug, title, category, tags, created_time, last_edited_time, locale, canonical_url, published, features } =
+  entry?.data;
 const isUpdated = last_edited_time && isAfterDate(last_edited_time, created_time);
 const { Content } = await render(entry);
 ---
@@ -83,5 +84,7 @@ const { Content } = await render(entry);
     </MainContainer>
 
     <Footer class="py-4" />
+
+    {features?.tweet ? <script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8" /> : ''}
   </body>
 </html>
