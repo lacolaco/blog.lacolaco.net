@@ -481,12 +481,12 @@ https://github.com/makenotion/notion-sdk-js
 **入力:**
 
 ```markdown
-@[tweet](https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw)
+https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw
 ```
 
 **出力:**
 
-@[tweet](https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw)
+https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw
 
 ---
 

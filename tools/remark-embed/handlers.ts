@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio';
 import { escapeHtml } from './escape-html.ts';
+import { isTweetUrl } from '@lib/embed';
 
 // 設定インターフェース
 interface EmbedConfig {
@@ -29,7 +30,6 @@ interface EmbedConfig {
 interface EmbedHandler {
   name: string;
   test: (url: string) => boolean;
-  testEmbedType?: (type: string) => boolean; // @[embedType](url) 形式に対応
   transform: (url: string) => Promise<string | undefined> | string;
 }
 
@@ -37,12 +37,7 @@ interface EmbedHandler {
 function createTweetHandler(): EmbedHandler {
   return {
     name: 'tweet',
-    test: () => {
-      return false; // 従来のURLパターンにはマッチしない
-    },
-    testEmbedType: (type: string) => {
-      return type === 'tweet';
-    },
+    test: (url: string) => isTweetUrl(url),
     transform: (url: string) => {
       const safeUrl = new URL(url);
       return `

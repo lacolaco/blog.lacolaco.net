@@ -1,4 +1,5 @@
 import type { PostFrontmatterOut } from '@lib/post';
+import { isTweetUrl } from '@lib/embed';
 import type { RichTextArray, RichTextItemObject, SpecificBlockObject, UntypedBlockObject } from './notion-types';
 import { isListBlock } from './notion-types';
 
@@ -305,10 +306,9 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
 
     case 'embed': {
       const url = block.embed.url || '';
-      // Twitter URLの場合は @[tweet](...) 記法に変換
-      if (url.includes('twitter.com') || url.includes('x.com')) {
+      // Twitter URLの場合はtweet機能を有効にする
+      if (isTweetUrl(url)) {
         context.features.tweet = true;
-        return `@[tweet](${url})\n\n`;
       }
       return `${url}\n\n`;
     }

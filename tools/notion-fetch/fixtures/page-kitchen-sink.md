@@ -226,7 +226,7 @@ https://github.com/makenotion/notion-sdk-js
 
 ### Twitter埋め込み
 
-@[tweet](https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw)
+https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw
 
 ---
 

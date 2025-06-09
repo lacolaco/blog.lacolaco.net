@@ -180,25 +180,22 @@ describe('transformNotionBlocksToMarkdown', () => {
       assert.strictEqual(result, 'https://companywebsite.com\n\n');
     });
 
-    it('Twitter URLは@[tweet]()記法に変換される', async () => {
+    it('Twitter URLはコンテキストにtweetフラグを立てる', async () => {
       const fixture = await loadFixture('block-embed-twitter.json');
       const context = createDefaultContext();
       const result = transformNotionBlocksToMarkdown([fixture], context);
       assert.strictEqual(
         result,
-        '@[tweet](https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw)\n\n',
+        'https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw\n\n',
       );
       assert.strictEqual(context.features.tweet, true);
     });
 
-    it('X.com URLは@[tweet]()記法に変換される', async () => {
+    it('X.com URLはコンテキストにtweetフラグを立てる', async () => {
       const fixture = await loadFixture('block-embed-x.json');
       const context = createDefaultContext();
       const result = transformNotionBlocksToMarkdown([fixture], context);
-      assert.strictEqual(
-        result,
-        '@[tweet](https://x.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw)\n\n',
-      );
+      assert.strictEqual(result, 'https://x.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYPSHXkw\n\n');
       assert.strictEqual(context.features.tweet, true);
     });
   });

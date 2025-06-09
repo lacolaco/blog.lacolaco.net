@@ -19,9 +19,9 @@ async function processMarkdown(markdown: string) {
 }
 
 describe('remarkEmbed', () => {
-  describe('@[embedType](url) 形式の埋め込み', () => {
-    test('@[tweet](url) 形式のとき、ツイートが埋め込まれる', async () => {
-      const markdown = '@[tweet](https://twitter.com/user/status/1234567890)';
+  describe('Twitter URLの埋め込み', () => {
+    test('Twitter投稿URLのとき、ツイートが埋め込まれる', async () => {
+      const markdown = 'https://twitter.com/user/status/1234567890';
       const expectedHtml = `
 <div class="block-link block-link-tweet">
   <blockquote class="twitter-tweet">
@@ -33,7 +33,20 @@ describe('remarkEmbed', () => {
       assert.equal(result, expectedHtml);
     });
 
-    test('@[unknown](url) 形式のとき、埋め込まれない', async () => {
+    test('X.com投稿URLのとき、ツイートが埋め込まれる', async () => {
+      const markdown = 'https://x.com/user/status/1234567890';
+      const expectedHtml = `
+<div class="block-link block-link-tweet">
+  <blockquote class="twitter-tweet">
+    <a href="https://x.com/user/status/1234567890">https://x.com/user/status/1234567890</a>
+  </blockquote>
+</div>
+      `.trim();
+      const result = await processMarkdown(markdown);
+      assert.equal(result, expectedHtml);
+    });
+
+    test('@[unknown](url) 形式は埋め込まれない（廃止された形式）', async () => {
       const markdown = '@[unknown](https://example.com)';
       const expectedHtml = '<p>@<a href="https://example.com">unknown</a></p>';
       const result = await processMarkdown(markdown);

@@ -41,11 +41,25 @@ describe('Embed Handlers', () => {
     const tweetHandler = handlers.find((h) => h.name === 'tweet')!;
 
     describe('test method', () => {
-      test('従来のURLパターンにはマッチしない', () => {
-        assert.equal(tweetHandler.test('https://twitter.com/user/status/1234567890'), false);
-        assert.equal(tweetHandler.test('https://x.com/user/status/1234567890'), false);
+      test('Twitter投稿URLにマッチする', () => {
+        assert.equal(tweetHandler.test('https://twitter.com/user/status/1234567890'), true);
+        assert.equal(tweetHandler.test('https://www.twitter.com/user/status/1234567890'), true);
+        assert.equal(tweetHandler.test('http://twitter.com/user/status/1234567890'), true);
+        assert.equal(tweetHandler.test('http://www.twitter.com/user/status/1234567890'), true);
+      });
+
+      test('X.com投稿URLにマッチする', () => {
+        assert.equal(tweetHandler.test('https://x.com/user/status/1234567890'), true);
+        assert.equal(tweetHandler.test('https://www.x.com/user/status/1234567890'), true);
+        assert.equal(tweetHandler.test('http://x.com/user/status/1234567890'), true);
+        assert.equal(tweetHandler.test('http://www.x.com/user/status/1234567890'), true);
+      });
+
+      test('プロフィールURLにはマッチしない', () => {
         assert.equal(tweetHandler.test('https://twitter.com/user'), false);
         assert.equal(tweetHandler.test('https://x.com/user'), false);
+        assert.equal(tweetHandler.test('https://twitter.com/user/'), false);
+        assert.equal(tweetHandler.test('https://x.com/user/'), false);
       });
 
       test('非TwitterURLにはマッチしない', () => {
@@ -53,19 +67,12 @@ describe('Embed Handlers', () => {
         assert.equal(tweetHandler.test('https://youtube.com/watch?v=123'), false);
         assert.equal(tweetHandler.test('https://github.com/user/repo'), false);
       });
-    });
 
-    describe('testEmbedType method', () => {
-      test('tweetタイプにマッチする', () => {
-        assert.equal(tweetHandler.testEmbedType!('tweet'), true);
-      });
-
-      test('他のタイプにはマッチしない', () => {
-        assert.equal(tweetHandler.testEmbedType!('youtube'), false);
-        assert.equal(tweetHandler.testEmbedType!('video'), false);
-        assert.equal(tweetHandler.testEmbedType!('slides'), false);
-        assert.equal(tweetHandler.testEmbedType!('code'), false);
-        assert.equal(tweetHandler.testEmbedType!('unknown'), false);
+      test('不正なstatusパスにはマッチしない', () => {
+        assert.equal(tweetHandler.test('https://twitter.com/user/status/'), false);
+        assert.equal(tweetHandler.test('https://x.com/user/status/'), false);
+        assert.equal(tweetHandler.test('https://twitter.com/user/status/invalid'), false);
+        assert.equal(tweetHandler.test('https://x.com/user/status/abc'), false);
       });
     });
   });
@@ -242,20 +249,6 @@ describe('Embed Handlers', () => {
         assert.equal(typeof handler.test, 'function', `${handler.name} handler should have test method`);
         assert.equal(typeof handler.transform, 'function', `${handler.name} handler should have transform method`);
         assert.equal(typeof handler.name, 'string', `${handler.name} handler should have name property`);
-      });
-    });
-
-    test('tweetハンドラーのみtestEmbedTypeメソッドを持つ', () => {
-      handlers.forEach((handler) => {
-        if (handler.name === 'tweet') {
-          assert.equal(typeof handler.testEmbedType, 'function', 'tweet handler should have testEmbedType method');
-        } else {
-          assert.equal(
-            handler.testEmbedType,
-            undefined,
-            `${handler.name} handler should not have testEmbedType method`,
-          );
-        }
       });
     });
   });

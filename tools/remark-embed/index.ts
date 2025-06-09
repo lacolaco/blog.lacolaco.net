@@ -4,18 +4,6 @@ import { visit } from 'unist-util-visit';
 import type { EmbedConfig, EmbedHandler } from './handlers.ts';
 import { createEmbedHandlers } from './handlers.ts';
 
-// @[embedType](url) 形式のパターンを解析する関数
-function parseEmbedPattern(text: string): { type: string; url: string } | null {
-  const match = text.match(/^@\[(\w+)\]\(([^)]+)\)$/);
-  if (!match) {
-    return null;
-  }
-  return {
-    type: match[1],
-    url: match[2],
-  };
-}
-
 // プラグインのオプション型
 interface RemarkEmbedOptions {
   config?: Partial<EmbedConfig>;
@@ -46,37 +34,8 @@ const remarkEmbed: Plugin<[RemarkEmbedOptions?], Root> = (options = {}) => {
       let handler: EmbedHandler | undefined;
       let url: string | undefined;
 
-      // パターン1: @[embedType](url) 形式をチェック（@の後にリンクがある場合）
-      if (
-        node.children.length === 2 &&
-        node.children[0].type === 'text' &&
-        node.children[0].value === '@' &&
-        node.children[1].type === 'link'
-      ) {
-        const link = node.children[1];
-        const embedType = link.children.length === 1 && link.children[0].type === 'text' ? link.children[0].value : '';
-
-        if (embedType) {
-          // embedType に基づいてハンドラーを検索
-          handler = embedHandlers.find((h) => h.testEmbedType?.(embedType));
-          url = link.url;
-        }
-      }
-
-      // パターン2: 従来のテキスト形式の @[embedType](url) をチェック
-      if (!handler && node.children.length === 1 && node.children[0].type === 'text') {
-        const text = node.children[0].value;
-        const embedPattern = parseEmbedPattern(text);
-
-        if (embedPattern) {
-          // embedType に基づいてハンドラーを検索
-          handler = embedHandlers.find((h) => h.testEmbedType?.(embedPattern.type));
-          url = embedPattern.url;
-        }
-      }
-
-      // パターン3: 従来のリンク形式をチェック（上記の形式でマッチしなかった場合）
-      if (!handler && node.children.length === 1 && node.children[0].type === 'link') {
+      // リンク形式のパラグラフをチェック
+      if (node.children.length === 1 && node.children[0].type === 'link') {
         const link = node.children[0];
         url = link.url;
 
