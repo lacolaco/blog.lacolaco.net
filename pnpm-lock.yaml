@@ -63,8 +63,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       satori:
-        specifier: 0.13.2
-        version: 0.13.2
+        specifier: 0.14.0
+        version: 0.14.0
       unist-util-visit:
         specifier: ^5.0.0
         version: 5.0.0
@@ -3008,8 +3008,8 @@ packages:
     engines: {node: '>=14.0.0'}
     hasBin: true
 
-  satori@0.13.2:
-    resolution: {integrity: sha512-BPoExgKlkZPY1j4I2vSovo9OJALOw5siU37cm1aNcq/XWCojpFM3FHXHxby9tQ2R5ajV2fRQgouWoonQ83z+Hg==}
+  satori@0.14.0:
+    resolution: {integrity: sha512-s9tfkzlvZr9+KGfU17oPCrgz2rN5/juYi12xrMFKOC+ulxnlyUHnU8z3Yy9sR29bfHagz5skyNcbNI3xD+yotA==}
     engines: {node: '>=16'}
 
   sax@1.2.4:
@@ -6770,7 +6770,7 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.5.0
 
-  satori@0.13.2:
+  satori@0.14.0:
     dependencies:
       '@shuding/opentype.js': 1.4.0-beta.0
       css-background-parser: 0.1.0
