@@ -2,49 +2,21 @@
 import { type CollectionEntry, getCollection } from 'astro:content';
 import PostDetailPage from 'src/layouts/PostDetailPage.astro';
 import BlogPost from '../../layouts/BlogPost.astro';
+import { queryAvailablePosts } from '@lib/query';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('post');
-  const postsV2 = await getCollection('postsV2');
-  // Find entry from postsV2 first, if not found, fallback to posts
-  return [
-    ...postsV2
-      .filter((entry) => {
-        // import.meta.env.MODE が 'production' の場合、公開済みの投稿のみを対象とする
-        if (import.meta.env.MODE === 'production') {
-          return entry.data.published;
-        }
-        // 開発モードでは全ての投稿を対象とする
-        return true;
-      })
-      .map((entry) => {
-        return {
-          params: {
-            slug: entry.data.slug,
-          },
-          props: entry,
-        };
-      }),
-    ...posts
-      .filter((entry) => !postsV2.some((p) => p.data.slug === entry.data.slug))
-      .map((entry) => {
-        return {
-          params: {
-            slug: entry.data.slug,
-          },
-          props: entry,
-        };
-      }),
-  ];
+  const posts = await queryAvailablePosts();
+  return posts.map((entry) => {
+    return {
+      params: {
+        slug: entry.data.slug,
+      },
+      props: entry,
+    };
+  });
 }
 type Props = CollectionEntry<'post'> | CollectionEntry<'postsV2'>;
 const entry = Astro.props;
 ---
 
-{
-  entry.collection === 'post' ? (
-    <BlogPost post={entry.data} />
-  ) : (
-    <PostDetailPage entry={entry} />
-  )
-}
+{entry.collection === 'post' ? <BlogPost post={entry.data} /> : <PostDetailPage entry={entry} />}
