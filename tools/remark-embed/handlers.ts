@@ -1,6 +1,6 @@
+import { isTweetUrl } from '../shared/embed';
 import * as cheerio from 'cheerio';
-import { escapeHtml } from './escape-html.ts';
-import { isTweetUrl } from '@lib/embed';
+import { escapeHtml } from './escape-html';
 
 // 設定インターフェース
 interface EmbedConfig {
@@ -40,6 +40,10 @@ function createTweetHandler(): EmbedHandler {
     test: (url: string) => isTweetUrl(url),
     transform: (url: string) => {
       const safeUrl = new URL(url);
+      // 埋め込みウィジェットは `twitter.com` にしか対応していないため、強制的に `twitter.com` に変換
+      if (safeUrl.host !== 'twitter.com') {
+        safeUrl.host = 'twitter.com';
+      }
       return `
 <div class="block-link block-link-tweet">
   <blockquote class="twitter-tweet">
@@ -251,7 +255,7 @@ function createDefaultHandler(config: EmbedConfig): EmbedHandler {
 }
 
 // 埋め込みハンドラーの定義（設定を受け取る関数として）
-function createEmbedHandlers(config: EmbedConfig): EmbedHandler[] {
+export function createEmbedHandlers(config: EmbedConfig): EmbedHandler[] {
   return [
     createTweetHandler(),
     createYouTubeHandler(config),
@@ -262,4 +266,3 @@ function createEmbedHandlers(config: EmbedConfig): EmbedHandler[] {
 }
 
 export type { EmbedConfig, EmbedHandler };
-export { createEmbedHandlers };

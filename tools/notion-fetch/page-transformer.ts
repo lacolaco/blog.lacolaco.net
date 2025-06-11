@@ -1,5 +1,5 @@
 import * as prettier from 'prettier';
-import { transformNotionBlocksToMarkdown, type TransformContext } from './block-transformer';
+import { transformNotionBlocksToMarkdown, toPlainText, type TransformContext } from './block-transformer';
 import { formatFrontmatter } from './frontmatter';
 import type { PageObject, UntypedBlockObject } from './notion-types';
 import { PostFrontmatter, type PostFrontmatterOut } from '@lib/post';
@@ -43,11 +43,11 @@ export function extractFrontmatter(page: PageObject): PostFrontmatterOut {
 
   // タイトルの抽出
   const titleProp = properties.title;
-  const title = 'title' in titleProp ? titleProp.title[0]?.plain_text || '' : '';
+  const title = 'title' in titleProp ? toPlainText(titleProp.title) : '';
 
   // スラッグの抽出
   const slugProp = properties.slug;
-  const slug = 'rich_text' in slugProp ? slugProp.rich_text[0]?.plain_text || '' : '';
+  const slug = 'rich_text' in slugProp ? toPlainText(slugProp.rich_text) || '' : '';
 
   // ロケールの抽出
   const localeProp = properties.locale;
@@ -70,7 +70,7 @@ export function extractFrontmatter(page: PageObject): PostFrontmatterOut {
 
   // canonical URLの抽出
   const canonicalUrlProp = properties.canonical_url;
-  const canonicalUrl = 'url' in canonicalUrlProp ? canonicalUrlProp.url || '' : '';
+  const canonicalUrl = 'url' in canonicalUrlProp ? canonicalUrlProp.url : null;
 
   const notion_url = page.url;
 
@@ -84,7 +84,7 @@ export function extractFrontmatter(page: PageObject): PostFrontmatterOut {
     tags,
     published,
     locale,
-    canonical_url: canonicalUrl,
+    canonical_url: canonicalUrl ?? undefined,
     notion_url,
   });
 

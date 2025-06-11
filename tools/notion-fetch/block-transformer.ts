@@ -1,5 +1,5 @@
 import type { PostFrontmatterOut } from '@lib/post';
-import { isTweetUrl } from '@lib/embed';
+import { isTweetUrl } from '../shared/embed';
 import type { RichTextArray, RichTextItemObject, SpecificBlockObject, UntypedBlockObject } from './notion-types';
 import { isListBlock } from './notion-types';
 
@@ -211,7 +211,7 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
         context.features.mermaid = true;
       }
       const code = transformRichText(block.code.rich_text, context);
-      const delimiter = '```';
+      const delimiter = code.includes('```') ? '````' : '```';
       return `${delimiter}${language}\n${code}\n${delimiter}\n\n`;
     }
 
@@ -394,4 +394,11 @@ function getAlertTypeFromIcon(icon: { type: string; emoji?: string } | null): st
     default:
       return 'NOTE';
   }
+}
+
+/**
+ * RichTextArrayをプレーンテキストに変換する
+ */
+export function toPlainText(richText: RichTextArray): string {
+  return richText.map((item) => item.plain_text).join('');
 }

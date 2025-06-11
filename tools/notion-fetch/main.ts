@@ -2,6 +2,7 @@ import { BlogDatabase } from '@lacolaco/notion-db';
 import type { PostFrontmatterOut } from '@lib/post';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
+import { format as formatDate } from 'date-fns';
 import { newTransformContext } from './block-transformer';
 import { FileSystem } from './filesystem';
 import { parseFrontmatter } from './frontmatter';
@@ -66,7 +67,7 @@ async function main() {
   await Promise.all(
     pages.map(async (page) => {
       const frontmatter = extractFrontmatter(page);
-      const filename = `${frontmatter.slug}.md`;
+      const filename = `${formatDate(frontmatter.created_time, 'yyyy/MM')}/${frontmatter.slug}.md`;
 
       // 既存のMarkdownファイルをチェック
       const existingMarkdown = await filesystems.posts.load(filename);
