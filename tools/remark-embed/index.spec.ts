@@ -1,11 +1,11 @@
+import { strict as assert } from 'node:assert';
+import { test, describe } from 'node:test';
 import { remark } from 'remark';
 import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import rehypeStringify from 'rehype-stringify';
 import remarkGfm from 'remark-gfm';
-import { strict as assert } from 'assert';
-import { test, describe } from 'node:test';
-import remarkEmbed from './index.ts';
+import remarkEmbed from './index';
 
 async function processMarkdown(markdown: string) {
   const file = await remark()
@@ -69,27 +69,14 @@ describe('remarkEmbed', () => {
   });
 
   describe('WebページURLの埋め込み', () => {
-    test('GitHubのレポジトリURLであるとき、Webページカードが埋め込まれる', async () => {
+    test('有効なURLであるとき、Webページカードが埋め込まれる', async () => {
       const markdown = 'https://github.com/lacolaco/blog.lacolaco.net';
       const result = await processMarkdown(markdown);
-      assert.match(
-        result,
-        /<a href="https:\/\/github\.com\/lacolaco\/blog\.lacolaco\.net" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">/,
-      );
-      assert.match(result, /<img src="[^"]+" alt="Page image" class="webpage-card-image">/);
-      assert.match(result, /<div class="webpage-card-content">/);
-      assert.match(result, /<h3 class="webpage-card-title">/);
-      assert.match(result, /<\/h3>/);
-      assert.match(result, /<p class="webpage-card-description">/);
-      assert.match(result, /<\/p>/);
-      assert.match(result, /<\/a>/);
-    });
-
-    test('OpenGraph情報を持たない一般的なWebページのURLであるとき、埋め込まれない', async () => {
-      // テストケース名を変更
-      const markdown = 'https://example.com/some-page';
-      const expectedHtml = '<p><a href="https://example.com/some-page">https://example.com/some-page</a></p>'; // 期待値を元のリンクに
-      const result = await processMarkdown(markdown);
+      const expectedHtml = `
+<div class="block-link block-link-default">
+  <iframe class="border-none w-full" src="/embed?url=https://github.com/lacolaco/blog.lacolaco.net" height="122" loading="lazy"></iframe>
+</div>
+`.trim();
       assert.equal(result, expectedHtml);
     });
   });
@@ -140,7 +127,7 @@ describe('remarkEmbed', () => {
       // Webページカードとして埋め込まれることを確認（実際には失敗時はundefinedが返される）
       assert.equal(
         result,
-        '<p><a href="https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/edit">https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/edit</a></p>',
+        '<div class="block-link block-link-default">\n  <iframe class="border-none w-full" src="/embed?url=https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/edit" height="122" loading="lazy"></iframe>\n</div>',
       );
     });
   });
@@ -218,22 +205,14 @@ describe('remarkEmbed', () => {
       const markdown = 'https://stackblitz.com/edit/my-project';
       const result = await processMarkdown(markdown);
       // Webページカードとして埋め込まれることを確認
-      assert.match(
+      assert.equal(
         result,
-        /<a href="https:\/\/stackblitz\.com\/edit\/my-project" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">/,
+        `<div class="block-link block-link-default">\n  <iframe class="border-none w-full" src="/embed?url=https://stackblitz.com/edit/my-project" height="122" loading="lazy"></iframe>\n</div>`.trim(),
       );
-      assert.match(result, /<h3 class="webpage-card-title">.*StackBlitz.*<\/h3>/);
     });
   });
 
   describe('埋め込まれないケース', () => {
-    test('ツイートURLではないとき、埋め込まれない', async () => {
-      const markdown = 'https://example.com/some-page'; // URLを一般的なものに戻す
-      const expectedHtml = '<p><a href="https://example.com/some-page">https://example.com/some-page</a></p>';
-      const result = await processMarkdown(markdown);
-      assert.equal(result, expectedHtml);
-    });
-
     test('パラグラフにリンク以外のコンテンツが含まれるとき、埋め込まれない', async () => {
       const markdown = 'This is a link: https://twitter.com/user/status/1234567890';
       const expectedHtml =

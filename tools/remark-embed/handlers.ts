@@ -1,6 +1,4 @@
 import { isTweetUrl } from '../shared/embed';
-import * as cheerio from 'cheerio';
-import { escapeHtml } from './escape-html';
 
 // 設定インターフェース
 interface EmbedConfig {
@@ -88,7 +86,9 @@ function createYouTubeHandler(config: EmbedConfig): EmbedHandler {
       );
       const videoId = match ? match[1] : undefined;
       if (!videoId) {
-        throw new Error(`Invalid YouTube URL: ${url}`);
+        // 動画IDが取得できない場合は無視
+        console.warn(`Non-video YouTube URL: ${url}`);
+        return '';
       }
 
       const { width, height, allowAttributes } = youtubeConfig;
@@ -192,79 +192,87 @@ function createGoogleSlidesHandler(config: EmbedConfig): EmbedHandler {
   };
 }
 
-function createDefaultHandler(config: EmbedConfig): EmbedHandler {
+function createDefaultHandler(): EmbedHandler {
   return {
     name: 'default',
     test: (url: string) => {
       return url.startsWith('https://') || url.startsWith('http://');
     },
-    transform: async (url: string) => {
-      const defaultWebPageConfig = {
-        timeout: 5000,
-        fallbackTitle: 'Web Page',
-      };
-      const webpageConfig = { ...defaultWebPageConfig, ...config.webpage };
+    transform: (url: string) => {
+      //       const defaultWebPageConfig = {
+      //         timeout: 5000,
+      //         fallbackTitle: 'Web Page',
+      //       };
+      //       const webpageConfig = { ...defaultWebPageConfig, ...config.webpage };
 
-      const { timeout, fallbackTitle } = webpageConfig;
-      const urlObj = new URL(url);
-      try {
-        // タイムアウト付きでフェッチ
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), timeout);
+      //       const { timeout, fallbackTitle } = webpageConfig;
+      //       const urlObj = new URL(url);
+      //       try {
+      //         // タイムアウト付きでフェッチ
+      //         const controller = new AbortController();
+      //         const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-        const userAgent = 'Mozilla/5.0 (compatible; embed/1.0; +https://blog.lacolaco.net)';
-        const response = await fetch(urlObj, { signal: controller.signal, headers: { 'User-Agent': userAgent } });
-        clearTimeout(timeoutId);
+      //         const userAgent = 'Mozilla/5.0 (compatible; embed/1.0; +https://blog.lacolaco.net)';
+      //         const response = await fetch(urlObj, { signal: controller.signal, headers: { 'User-Agent': userAgent } });
+      //         clearTimeout(timeoutId);
 
-        if (!response.ok) {
-          console.warn(
-            `Failed to fetch web page info for ${urlObj.toJSON()}: ${response.status} ${response.statusText}`,
-          );
-          return undefined; // 失敗時はundefinedを返す
-        }
-        const html = await response.text();
-        const $ = cheerio.load(html);
+      //         if (!response.ok) {
+      //           console.warn(
+      //             `Failed to fetch web page info for ${urlObj.toJSON()}: ${response.status} ${response.statusText}`,
+      //           );
+      //           return undefined; // 失敗時はundefinedを返す
+      //         }
+      //         const html = await response.text();
+      //         const $ = cheerio.load(html);
 
-        const title = $('meta[property="og:title"]').attr('content') || $('title').text();
-        const description =
-          $('meta[property="og:description"]').attr('content') || $('meta[name="description"]').attr('content');
-        const imageUrl = $('meta[property="og:image"]').attr('content');
-        const canonicalUrl = $('meta[property="og:url"]').attr('content');
+      //         const title = $('meta[property="og:title"]').attr('content') || $('title').text();
+      //         const description =
+      //           $('meta[property="og:description"]').attr('content') || $('meta[name="description"]').attr('content');
+      //         const imageUrl = $('meta[property="og:image"]').attr('content');
+      //         const canonicalUrl = $('meta[property="og:url"]').attr('content');
 
-        // canonicalUrlがパスから始まる場合は、元のURLのオリジンを付加して完全なURLに変換
-        let linkTo = canonicalUrl;
-        if (canonicalUrl && !canonicalUrl.startsWith('http')) {
-          // パスから始まる場合は、元のURLのオリジンを付加
-          const baseUrl = urlObj.origin;
-          linkTo = new URL(canonicalUrl, baseUrl).toString();
-        } else if (canonicalUrl && canonicalUrl.startsWith('http')) {
-          // 完全なURLの場合はそのまま使用
-          linkTo = canonicalUrl;
-        } else {
-          // canonicalUrlがない場合は元のURLを使用
-          linkTo = url;
-        }
+      //         // canonicalUrlがパスから始まる場合は、元のURLのオリジンを付加して完全なURLに変換
+      //         let linkTo = canonicalUrl;
+      //         if (canonicalUrl && !canonicalUrl.startsWith('http')) {
+      //           // パスから始まる場合は、元のURLのオリジンを付加
+      //           const baseUrl = urlObj.origin;
+      //           linkTo = new URL(canonicalUrl, baseUrl).toString();
+      //         } else if (canonicalUrl && canonicalUrl.startsWith('http')) {
+      //           // 完全なURLの場合はそのまま使用
+      //           linkTo = canonicalUrl;
+      //         } else {
+      //           // canonicalUrlがない場合は元のURLを使用
+      //           linkTo = url;
+      //         }
 
-        const escapedTitle = escapeHtml(title || fallbackTitle);
-        const escapedDescription = description ? escapeHtml(description) : '';
+      //         const escapedTitle = escapeHtml(title || fallbackTitle);
+      //         const escapedDescription = description ? escapeHtml(description) : '';
 
-        return `
-<a href="${linkTo}" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">
-  <div class="webpage-card-content">
-    <h3 class="webpage-card-title">${escapedTitle}</h3>
-    ${escapedDescription ? `<p class="webpage-card-description">${escapedDescription}</p>` : ''}
-  </div>
-  ${imageUrl ? `<img src="${imageUrl}" alt="Page image" class="webpage-card-image">` : ''}
-</a>
-        `.trim();
-      } catch (error) {
-        if (error instanceof Error && error.name === 'AbortError') {
-          console.warn(`Timeout fetching web page info for ${url}`);
-        } else {
-          console.error(`Failed to fetch web page info for ${url}:`, error);
-        }
-        return undefined; // エラー時はundefinedを返す
-      }
+      //         return `
+      // <a href="${linkTo}" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">
+      //   <div class="webpage-card-content">
+      //     <h3 class="webpage-card-title">${escapedTitle}</h3>
+      //     ${escapedDescription ? `<p class="webpage-card-description">${escapedDescription}</p>` : ''}
+      //   </div>
+      //   ${imageUrl ? `<img src="${imageUrl}" alt="Page image" class="webpage-card-image">` : ''}
+      // </a>
+      //         `.trim();
+      //       } catch (error) {
+      //         if (error instanceof Error && error.name === 'AbortError') {
+      //           console.warn(`Timeout fetching web page info for ${url}`);
+      //         } else {
+      //           console.error(`Failed to fetch web page info for ${url}:`, error);
+      //         }
+      //         return undefined; // エラー時はundefinedを返す
+      //       }
+
+      // URLが `/` から始まる場合は、相対URLとして扱い、本番ドメインを付加する
+      const safeUrl = new URL(url); // 本番ドメインを付加
+
+      return `
+<div class="block-link block-link-default">
+  <iframe class="border-none w-full" src="/embed?url=${safeUrl.toString()}" height="122" loading="lazy"></iframe>
+</div>`.trim();
     },
   };
 }
@@ -276,7 +284,7 @@ export function createEmbedHandlers(config: EmbedConfig): EmbedHandler[] {
     createYouTubeHandler(config),
     createStackblitzHandler(config),
     createGoogleSlidesHandler(config),
-    createDefaultHandler(config), // 最も広範囲なので最後に配置
+    createDefaultHandler(), // 最も広範囲なので最後に配置
   ];
 }
 

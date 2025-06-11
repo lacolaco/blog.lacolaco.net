@@ -37,9 +37,12 @@ const remarkEmbed: Plugin<[RemarkEmbedOptions?], Root> = (options = {}) => {
       }
 
       const link = node.children[0];
+      console.debug('Processing link:', link);
 
       // リンクに明示的なタイトルがある場合は処理しない
-      if (link.title) {
+      const linkText = link.children.map((child) => (child.type === 'text' ? child.value : '')).join('');
+      if (linkText !== link.url) {
+        console.debug('Link has explicit text, skipping:', linkText);
         return;
       }
 

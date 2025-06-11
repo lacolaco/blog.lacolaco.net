@@ -84,9 +84,13 @@ async function main() {
       const childBlocks = await page.fetchChildren();
       if (debug) {
         // Write the raw page data to a file into .tmp directory for debugging
-        await writeFile(`${rootDir}.tmp/${frontmatter.slug}.json`, await formatJSON({ ...page, children: childBlocks }), {
-          encoding: 'utf-8',
-        });
+        await writeFile(
+          `${rootDir}.tmp/${frontmatter.slug}.json`,
+          await formatJSON({ ...page, children: childBlocks }),
+          {
+            encoding: 'utf-8',
+          },
+        );
       }
       const content = generateContent(childBlocks, context);
       const markdown = await buildMarkdownFile(frontmatter, content, context);

@@ -102,7 +102,9 @@ http://bit.ly/strictTemplates
   - `user.name.last` is ignored
   - Full
     - ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/c03e1c94-58b2-4578-b1fa-a827e2cdf5c6.png)
+
 - Ivy improvements
+
   - ngFor loop
     - v8
       - ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/a327ed29-9c1d-4f22-88ca-216342b3206f.png)
@@ -110,13 +112,17 @@ http://bit.ly/strictTemplates
     - strict
       - ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/156a6fd4-2eec-486f-89c8-c5289b600e61.png)
   - Inputs
+
     - v8
+
       - ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/06257608-1520-400c-96fd-aad509ac0cbd.png)
 
         - `[user]` is not type-checked
         - Problem with non-null input with `| async`
+
     - strict
       - ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/5a67a308-c26e-483f-9bf7-a5c89e7ab948.png)
+
 - $event
   - ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/2c5fb689-0d96-4993-8aad-7a9ef44450e6.png)
 - Safe navigation

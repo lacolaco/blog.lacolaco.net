@@ -1,14 +1,15 @@
-import assert from 'assert';
+import type { BlockObject, BlogPageObject } from '@lacolaco/notion-db';
+import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import { newTransformContext } from './block-transformer';
 import type { PageObject, SelectProperty } from './notion-types';
 import { buildMarkdownFile, extractFrontmatter, generateContent } from './page-transformer';
 
-async function loadPageFixture(fixtureFilename: string): Promise<PageObject> {
+async function loadPageFixture(fixtureFilename: string): Promise<BlogPageObject & { children: BlockObject[] }> {
   const module = (await import(`./fixtures/${fixtureFilename}`)) as { default: PageObject };
-  return JSON.parse(JSON.stringify(module.default)) as PageObject;
+  return JSON.parse(JSON.stringify(module.default)) as BlogPageObject & { children: BlockObject[] };
 }
 
 async function loadMarkdownFixture(fixtureFilename: string): Promise<string> {
@@ -86,20 +87,24 @@ describe('extractFrontmatter', () => {
     assert.strictEqual(frontmatter.icon, '');
   });
 
-  it('タイトルが未設定の場合、空文字列になる', async () => {
+  it('タイトルが未設定の場合、例外を投げる', async () => {
     const pageFixture = await loadPageFixture('page-kitchen-sink.json');
     pageFixture.properties.title = { type: 'title', title: [], id: 'test-id' };
 
-    const frontmatter = extractFrontmatter(pageFixture);
-    assert.strictEqual(frontmatter.title, '');
+    assert.throws(() => extractFrontmatter(pageFixture), {
+      name: 'AssertionError',
+      message: 'Title is required',
+    });
   });
 
-  it('スラッグが未設定の場合、空文字列になる', async () => {
+  it('スラッグが未設定の場合、例外を投げる', async () => {
     const pageFixture = await loadPageFixture('page-kitchen-sink.json');
     pageFixture.properties.slug = { type: 'rich_text', rich_text: [], id: 'test-id' };
 
-    const frontmatter = extractFrontmatter(pageFixture);
-    assert.strictEqual(frontmatter.slug, '');
+    assert.throws(() => extractFrontmatter(pageFixture), {
+      name: 'AssertionError',
+      message: 'Slug is required',
+    });
   });
 });
 
@@ -108,29 +113,17 @@ describe('generateContent', () => {
     const pageFixture = await loadPageFixture('page-kitchen-sink.json');
     const context = newTransformContext('test-slug');
 
-    const content = generateContent(pageFixture, context);
+    const content = generateContent(pageFixture.children, context);
 
     assert.strictEqual(typeof content, 'string');
     assert.ok(content.length > 0);
-  });
-
-  it('childrenがない場合、空のコンテンツを返す', async () => {
-    const pageFixture = await loadPageFixture('page-kitchen-sink.json');
-    const context = newTransformContext('test-slug');
-    // childrenを削除
-    const pageWithoutChildren = { ...pageFixture };
-    delete (pageWithoutChildren as PageObject & { children?: unknown }).children;
-
-    const content = generateContent(pageWithoutChildren, context);
-
-    assert.strictEqual(content, '');
   });
 
   it('コンテキストの画像ダウンロードタスクが更新される', async () => {
     const pageFixture = await loadPageFixture('page-kitchen-sink.json');
     const context = newTransformContext('test-slug');
 
-    generateContent(pageFixture, context);
+    generateContent(pageFixture.children, context);
 
     // generateContentの実行により、contextのimageDownloadsが更新されることを確認
     assert.ok(Array.isArray(context.imageDownloads));
@@ -173,7 +166,7 @@ describe('Kitchen Sink統合テスト', () => {
     // 既存の関数を組み合わせてフル変換を実行
     const frontmatter = extractFrontmatter(pageFixture);
     const context = newTransformContext(frontmatter.slug);
-    const content = generateContent(pageFixture, context);
+    const content = generateContent(pageFixture.children, context);
     const actualMarkdown = await buildMarkdownFile(frontmatter, content, context);
 
     assert.strictEqual(actualMarkdown.trim(), expectedMarkdown.trim());
