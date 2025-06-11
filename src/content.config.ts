@@ -8,7 +8,7 @@ const post = defineCollection({
 });
 
 const postsV2 = defineCollection({
-  loader: glob({ pattern: 'src/content/post/**/*.md' }),
+  loader: glob({ pattern: '**/*.md', base: 'src/content/post' }),
   schema: PostFrontmatter,
 });
 

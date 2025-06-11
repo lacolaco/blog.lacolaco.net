@@ -1,6 +1,5 @@
 ---
-import { getRelativePostUrl } from '@lib/i18n';
-import { PostData } from '@lib/post';
+import { getDate, getCategory, getTitle, getRelativePostUrl, getTags } from '@lib/post';
 import { format as formatDate } from 'date-fns';
 import { urlize } from 'src/libs/strings';
 import BaseHead from '../components/BaseHead.astro';
@@ -11,9 +10,10 @@ import MainContainer from '../components/MainContainer.astro';
 import Tag from '../components/Tag.astro';
 import TagList from '../components/TagList.astro';
 import { SITE_TITLE } from '../consts';
+import type { CollectionEntry } from 'astro:content';
 
 type Props = {
-  posts: PostData[];
+  posts: Array<CollectionEntry<'post'> | CollectionEntry<'postsV2'>>;
   feedUrl: string;
 };
 
@@ -21,12 +21,12 @@ const { posts, feedUrl } = Astro.props;
 const postsByYear = Array.from(
   posts
     .reduce((acc, post) => {
-      const year = formatDate(post.properties.date, 'yyyy');
+      const year = formatDate(getDate(post), 'yyyy');
       const posts = acc.get(year) ?? [];
       posts.push(post);
       acc.set(year, posts);
       return acc;
-    }, new Map<string, PostData[]>())
+    }, new Map<string, Array<CollectionEntry<'post'> | CollectionEntry<'postsV2'>>>())
     .entries(),
 ).sort(([a], [b]) => Number(b) - Number(a));
 ---
@@ -69,16 +69,18 @@ const postsByYear = Array.from(
                   {posts.map((post) => (
                     <li class="my-4">
                       <div class="flex flex-col items-start leading-none">
-                        <FormattedDate className="text-xs text-muted align-middle" date={post.properties.date} />
+                        <FormattedDate className="text-xs text-muted align-middle" date={getDate(post)} />
                         <a class="no-underline" href={getRelativePostUrl(post)}>
                           <span class="text-lg text-default font-semibold underline hover:text-gray-500">
-                            {post.properties.title}
+                            {getTitle(post)}
                           </span>
                         </a>
                         <div class="mt-1">
                           <TagList>
-                            {post.properties.category && <Tag name={post.properties.category} isCategory />}
-                            {post.properties.tags && post.properties.tags.map((tag) => <Tag name={tag} />)}
+                            {getCategory(post) ? <Tag name={getCategory(post)!} isCategory /> : null}
+                            {getTags(post).map((tag) => (
+                              <Tag name={tag} />
+                            ))}
                           </TagList>
                         </div>
                       </div>

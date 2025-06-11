@@ -12,7 +12,6 @@
       "@lib/post": ["src/libs/post/index.ts"],
       "@lib/i18n": ["src/libs/i18n/index.ts"],
       "@lib/query": ["src/libs/query/index.ts"],
-      "@lib/embed": ["src/libs/embed/index.ts"]
     },
     "jsx": "react-jsx",
     "jsxImportSource": "react",

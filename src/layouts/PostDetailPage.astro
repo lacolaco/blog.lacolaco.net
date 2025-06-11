@@ -1,6 +1,6 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
-import { isAfter as isAfterDate } from 'date-fns';
+import { differenceInDays } from 'date-fns';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate';
@@ -18,7 +18,7 @@ type Props = {
 const { entry } = Astro.props;
 const { slug, title, category, tags, created_time, last_edited_time, locale, canonical_url, published, features } =
   entry?.data;
-const isUpdated = last_edited_time && isAfterDate(last_edited_time, created_time);
+const isUpdated = differenceInDays(last_edited_time, created_time) > 0;
 const { Content } = await render(entry);
 ---
 
@@ -38,6 +38,9 @@ const { Content } = await render(entry);
     />
 
     {canonical_url && <link rel="canonical" href={canonical_url} />}
+    {features?.katex ? (
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP" crossorigin="anonymous" />
+    ) : null}
   </head>
 
   <body class="font-base bg-default">
@@ -86,7 +89,7 @@ const { Content } = await render(entry);
     <Footer class="py-4" />
 
     {features?.tweet ? <script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8" /> : null}
-        {features?.mermaid ? (
+    {features?.mermaid ? (
       <script>
         import mermaid from 'mermaid';
         mermaid.initialize({ startOnLoad: true });

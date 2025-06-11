@@ -1,13 +1,19 @@
 ---
-import { queryPosts, queryTags } from '@lib/query';
+import { queryAvailablePosts, queryTags } from '@lib/query';
 import Tags from '../../layouts/Tags.astro';
 
-const posts = await queryPosts();
+const posts = await queryAvailablePosts();
 const tags = await queryTags();
 
 const tagWithCount = tags
   .map((tag) => {
-    const usedCount = posts.filter((post) => post.properties.tags.includes(tag.name)).length;
+    const usedCount = posts.filter((post) => {
+      if (post.collection === 'postsV2') {
+        return post.data.tags.includes(tag.name);
+      } else {
+        return post.data.properties.tags.includes(tag.name);
+      }
+    }).length;
     return { name: tag.name, usedCount };
   })
   .filter((tag) => tag.usedCount > 0);

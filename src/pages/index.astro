@@ -1,9 +1,9 @@
 ---
-import { queryPosts } from '@lib/query';
+import { queryAvailablePosts } from '@lib/query';
 import CategoryNav from 'src/components/CategoryNav.astro';
 import List from '../layouts/List.astro';
 
-const posts = await queryPosts();
+const posts = await queryAvailablePosts();
 ---
 
 <List posts={posts} feedUrl="/index.xml">

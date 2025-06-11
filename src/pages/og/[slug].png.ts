@@ -1,9 +1,10 @@
 import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
 import { getOgImage } from '../../components/OgImage';
+import { queryAvailablePosts } from '@lib/query';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('post');
+  const posts = await queryAvailablePosts();
 
   return posts.map((post) => ({
     params: {
@@ -16,10 +17,12 @@ export async function GET({ params }: APIContext) {
   const { slug } = params;
   if (!slug) return { status: 404 };
 
-  const post = (await getCollection('post')).find((post) => post.data.slug === slug);
+  const post = (await queryAvailablePosts()).find((post) => post.data.slug === slug);
   if (!post) return { status: 404 };
 
-  const body = await getOgImage(post.data.properties.title ?? 'No title');
+  const title = post.collection === 'postsV2' ? post.data.title : post.data.properties.title || 'No title';
+
+  const body = await getOgImage(title);
 
   return new Response(body, {
     headers: {

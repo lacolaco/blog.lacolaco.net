@@ -74,7 +74,7 @@
 
 @layer components {
   .markdown-body {
-    @apply font-base;
+    @apply font-base leading-loose;
 
     & > *:first-child {
       @apply mt-0;
@@ -127,11 +127,12 @@
     }
 
     p {
-      @apply leading-normal break-words;
+      @apply break-words;
     }
 
-    img {
-      @apply max-w-full box-content place-self-center aspect-video object-contain;
+    p > img,
+    figure > img {
+      @apply max-w-full box-content place-self-center object-contain w-full md:max-w-(--breakpoint-md) max-h-[75vh];
     }
 
     figure {
@@ -189,6 +190,11 @@
 
     blockquote {
       @apply px-4 border-l-4 border-gray-200 text-gray-600;
+    }
+
+    /* 親がpre要素ではないcode要素 */
+    code:not(pre > code) {
+      @apply text-sm font-mono text-orange-700 bg-gray-100 px-1.5 py-0.5 rounded mx-0.5;
     }
 
     pre.astro-code {
