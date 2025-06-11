@@ -1,3 +1,4 @@
+import assert from 'node:assert';
 import * as prettier from 'prettier';
 import { transformNotionBlocksToMarkdown, toPlainText, type TransformContext } from './block-transformer';
 import { formatFrontmatter } from './frontmatter';
@@ -41,28 +42,29 @@ export function extractFrontmatter(page: BlogPageObject): PostFrontmatterOut {
 
   // タイトルの抽出
   const titleProp = properties.title;
-  const title = 'title' in titleProp ? toPlainText(titleProp.title) : '';
+  const title = toPlainText(titleProp.title);
+  assert(title, 'Title is required');
 
   // スラッグの抽出
   const slugProp = properties.slug;
-  const slug = 'rich_text' in slugProp ? toPlainText(slugProp.rich_text) || '' : '';
+  const slug = toPlainText(slugProp.rich_text);
+  assert(slug, 'Slug is required');
 
   // 作成日時の抽出
   const createdTimeProp = properties.created_at_override;
-  const createdTime = 'date' in createdTimeProp ? createdTimeProp.date?.start || page.created_time : page.created_time;
+  const createdTime = createdTimeProp.date?.start || page.created_time;
 
   // 更新日時の抽出
   const updatedTimeProp = properties.updated_at;
-  const updatedTime =
-    'date' in updatedTimeProp ? updatedTimeProp.date?.start || page.last_edited_time : page.last_edited_time;
+  const updatedTime = updatedTimeProp.date?.start || page.last_edited_time;
 
   // ロケールの抽出
   const localeProp = properties.locale;
-  const locale = 'select' in localeProp ? localeProp.select?.name || 'ja' : 'ja';
+  const locale = localeProp.select?.name || 'ja';
 
   // カテゴリの抽出
   const categoryProp = properties.category;
-  const category = 'select' in categoryProp ? categoryProp.select?.name || '' : '';
+  const category = categoryProp.select?.name || '';
 
   // タグの抽出
   const tagsProp = properties.tags;
@@ -70,14 +72,14 @@ export function extractFrontmatter(page: BlogPageObject): PostFrontmatterOut {
 
   // 公開フラグの抽出
   const publishedProp = properties.published;
-  const published = 'checkbox' in publishedProp ? publishedProp.checkbox : false;
+  const published = publishedProp.checkbox;
 
   // アイコンの抽出
   const icon = page.icon && 'emoji' in page.icon ? page.icon.emoji : '';
 
   // canonical URLの抽出
   const canonicalUrlProp = properties.canonical_url;
-  const canonicalUrl = 'url' in canonicalUrlProp ? canonicalUrlProp.url : null;
+  const canonicalUrl = canonicalUrlProp.url;
 
   const notion_url = page.url;
 

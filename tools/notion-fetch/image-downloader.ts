@@ -59,7 +59,7 @@ export async function downloadImages(
         }
 
         const buffer = await response.arrayBuffer();
-        await filesystem.save(`${slug}/${filename}`, new Uint8Array(buffer));
+        await filesystem.save(`${slug}/${decodeURIComponent(filename)}`, new Uint8Array(buffer));
       } catch (error) {
         console.error(`Failed to download ${filename}:`, error);
         throw error;
