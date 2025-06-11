@@ -51,7 +51,7 @@ export async function downloadImages(
   await Promise.all(
     imageDownloads.map(async ({ filename, url }) => {
       try {
-        console.log(`Downloading ${filename} from ${url}`);
+        console.log(`Downloading ${slug}/${filename}`);
         const response = await fetch(url);
 
         if (!response.ok) {
@@ -60,8 +60,6 @@ export async function downloadImages(
 
         const buffer = await response.arrayBuffer();
         await filesystem.save(`${slug}/${filename}`, new Uint8Array(buffer));
-
-        console.log(`Downloaded ${filename} to ${slug}/${filename}`);
       } catch (error) {
         console.error(`Failed to download ${filename}:`, error);
         throw error;

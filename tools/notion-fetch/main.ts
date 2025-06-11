@@ -51,7 +51,7 @@ async function main() {
   });
 
   console.log('Fetching pages...');
-  const pages = await db.query('blog.lacolaco.net', { draft, dryRun });
+  const pages = await db.query2('blog.lacolaco.net', { draft, dryRun });
   console.log(`Fetched ${pages.length} pages`);
 
   if (pages.length === 0) {
@@ -66,6 +66,11 @@ async function main() {
 
   await Promise.all(
     pages.map(async (page) => {
+      if (debug) {
+        // Write the raw page data to a file into .tmp directory for debugging
+        await writeFile(`${rootDir}.tmp/${page.id}.json`, await formatJSON(page), { encoding: 'utf-8' });
+      }
+
       const frontmatter = extractFrontmatter(page);
       const filename = `${formatDate(frontmatter.created_time, 'yyyy/MM')}/${frontmatter.slug}.md`;
 
@@ -81,14 +86,10 @@ async function main() {
 
       // 必要な場合のみ完全な変換を実行
       const context = newTransformContext(frontmatter.slug);
-      const content = generateContent(page, context);
+      const childBlocks = await page.fetchChildren();
+      const content = generateContent(childBlocks, context);
       const markdown = await buildMarkdownFile(frontmatter, content, context);
       const imageDownloads = context.imageDownloads;
-
-      if (debug) {
-        // Write the raw page data to a file into .tmp directory for debugging
-        await writeFile(`${rootDir}.tmp/${frontmatter.slug}.json`, await formatJSON(page), { encoding: 'utf-8' });
-      }
 
       await downloadImages(imageDownloads, filesystems.images, frontmatter.slug);
       await filesystems.posts.save(filename, markdown, { encoding: 'utf-8' });
