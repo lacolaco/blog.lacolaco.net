@@ -1,15 +1,5 @@
-import { extractCss, setup, styled } from 'goober';
-import { h } from 'preact';
-import { render as renderPreact } from 'preact-render-to-string';
 import { load } from 'cheerio';
 
-setup(h);
-
-declare global {
-  interface CacheStorage {
-    default: Cache; // https://developers.cloudflare.com/workers/runtime-apis/cache/#accessing-cache
-  }
-}
 interface Env {}
 
 export const onRequest: PagesFunction<Env> = async (context) => {
@@ -20,13 +10,19 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
   const cacheKey = context.request;
   const cache = caches.default;
-  const cachedResponse = await cache.match(cacheKey);
-  if (cachedResponse) {
-    return cachedResponse;
+
+  // Check if client requested cache bypass
+  const shouldBypassCache = context.request.headers.get('cache-control')?.includes('no-cache');
+
+  if (!shouldBypassCache) {
+    const cachedResponse = await cache.match(cacheKey);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
   }
 
-  const title = await getPageTitle(url);
-  const html = buildEmbedHtml(title, url);
+  const { title, description, imageUrl } = await fetchPageMetadata(url);
+  const html = buildEmbedHtml(title, description, url, imageUrl);
   const maxAge = 60 * 60 * 24; // 1 day
   const response = new Response(html, {
     headers: {
@@ -40,7 +36,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
 
 const amazonUrlPrefixes = ['https://www.amazon.co.jp/', 'https://amzn.asia/'];
 
-async function getPageTitle(url: string) {
+async function fetchPageMetadata(
+  url: string,
+): Promise<{ title: string; description: string; imageUrl: string | null }> {
   const isAmazonRequest = amazonUrlPrefixes.some((domain) => url.startsWith(domain));
   const userAgent = isAmazonRequest
     ? // use Googlebot UA for Amazon to get server-side-rendered HTML
@@ -59,96 +57,28 @@ async function getPageTitle(url: string) {
   const html = await response.text();
   const $ = load(html);
   const metaOgTitle = $('head>meta[property="og:title"]').attr('content');
-  if (metaOgTitle) {
-    return metaOgTitle;
-  }
   const metaTitle = $('head>meta[name="title"]').attr('content');
-  if (metaTitle) {
-    return metaTitle;
-  }
   const docTitle = $('title').text();
-  return docTitle || url;
+  const title = metaOgTitle || metaTitle || docTitle || url;
+
+  // 説明文取得のフォールバック戦略
+  const metaOgDescription = $('head>meta[property="og:description"]').attr('content');
+  const metaDescription = $('head>meta[name="description"]').attr('content');
+  const metaTwitterDescription = $('head>meta[name="twitter:description"]').attr('content');
+  const description = metaOgDescription || metaDescription || metaTwitterDescription || '';
+
+  // 画像取得のフォールバック戦略
+  const metaOgImage = $('head>meta[property="og:image"]').attr('content');
+  const metaTwitterImage = $('head>meta[name="twitter:image"]').attr('content');
+  const metaImage = $('head>meta[name="image"]').attr('content');
+  const firstImg = $('img').first().attr('src');
+
+  const imageUrl = metaOgImage || metaTwitterImage || metaImage || firstImg || null;
+
+  return { title, description, imageUrl };
 }
 
-function buildEmbedHtml(title: string, url: string) {
-  const hostname = new URL(url).hostname;
-
-  const App = styled('div')({
-    border: '1px solid #ccc',
-    borderRadius: '8px',
-    overflow: 'hidden',
-  });
-
-  const Link = styled('a')({
-    display: 'flex',
-    alignItems: 'center',
-    height: '120px',
-    textDecoration: 'none',
-    color: 'rgba(0, 0, 0, 0.82)',
-    background: '#fff',
-    '&:hover': {
-      background: '#e3f6ffe0',
-    },
-  });
-
-  const LinkContent = styled('div')({
-    display: 'flex',
-    flexDirection: 'column',
-    rowGap: '0.25em',
-    lineHeight: '1.5',
-    padding: '0.8em 1.2em',
-  });
-
-  const LinkTitle = styled('h1')({
-    margin: 0,
-    fontSize: '1em',
-    userSelect: 'none',
-    wordBreak: 'break-word',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: '-webkit-box',
-    '-webkit-line-clamp': 2,
-    '-webkit-box-orient': 'vertical',
-    maxHeight: '3.05em',
-  });
-
-  const LinkInfo = styled('div')({
-    display: 'flex',
-    alignItems: 'center',
-    columnGap: '0.5em',
-  });
-  const LinkFavicon = styled('img')({});
-  const LinkURL = styled('span')({
-    fontSize: '0.8em',
-    color: 'rgba(0, 0, 0, 0.6)',
-    wordBreak: 'break-word',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    display: '-webkit-box',
-    '-webkit-line-clamp': 1,
-    '-webkit-box-orient': 'vertical',
-  });
-
-  const app = renderPreact(
-    <App>
-      <Link href={url} target="_blank" rel="noreferrer noopener nofollow">
-        <LinkContent>
-          <LinkTitle>{title}</LinkTitle>
-          <LinkInfo>
-            <LinkFavicon
-              src={`https://www.google.com/s2/favicons?sz=14&domain_url=${url}`}
-              alt={`${hostname} favicon image`}
-              width="14"
-              height="14"
-            />
-            <LinkURL>{url}</LinkURL>
-          </LinkInfo>
-        </LinkContent>
-      </Link>
-    </App>,
-  );
-  const style = extractCss();
-
+function buildEmbedHtml(title: string, description: string, url: string, imageUrl: string | null) {
   return `<!DOCTYPE html>
     <html>
       <head>
@@ -159,12 +89,95 @@ function buildEmbedHtml(title: string, url: string) {
         <style>
           html, body {
             margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji';
+          }
+
+          .block-link {
+            display: flex;
+            margin-top: 0; /* mt-0 */
+            margin-bottom: 1rem; /* mb-4 */
+          }
+
+          .webpage-card {
+            display: flex;
+            align-items: center;
+            height: 7rem; /* h-28 = 112px = 7rem */
+            gap: 1rem; /* space-x-4 = 16px = 1rem */
+            border-radius: 0.5rem; /* rounded-lg */
+            border: 1px solid #e5e7eb; /* border-gray-200 */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            transition: box-shadow 200ms; /* transition-shadow duration-200 */
+            background: #fff;
+            text-decoration: none;
+            color: inherit;
+          }
+
+          .webpage-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* hover:shadow-lg */
+            text-decoration: underline; /* hover:underline */
+          }
+
+          /* Dark mode styles */
+          @media (prefers-color-scheme: dark) {
+            .webpage-card {
+              border-color: #374151; /* dark:border-gray-700 */
+              background-color: #1f2937; /* dark:bg-gray-800 */
+            }
+          }
+
+          .webpage-card-image {
+            height: 100%; /* h-full */
+            aspect-ratio: 16/9; /* aspect-video */
+            flex-shrink: 0; /* flex-shrink-0 */
+            object-fit: cover; /* object-cover */
+          }
+
+          .webpage-card-content {
+            flex-grow: 1; /* flex-grow */
+            overflow: hidden; /* overflow-hidden */
+            padding: 0 1rem; /* px-4 */
+          }
+
+          .webpage-card-title {
+            margin: 0.5rem 0; /* my-2 */
+            font-size: 1rem; /* text-base */
+            font-weight: 600; /* font-semibold */
+            color: #111827; /* text-gray-900 */
+            white-space: nowrap; /* whitespace-nowrap */
+            overflow: hidden; /* overflow-hidden */
+            text-overflow: ellipsis; /* text-ellipsis */
+          }
+
+          .webpage-card-description {
+            margin: 0.5rem 0; /* my-2 */
+            font-size: 0.875rem; /* text-sm */
+            color: #4b5563; /* text-gray-600 */
+            white-space: nowrap; /* whitespace-nowrap */
+            overflow: hidden; /* overflow-hidden */
+            text-overflow: ellipsis; /* text-ellipsis */
+          }
+
+          /* Dark mode styles for text */
+          @media (prefers-color-scheme: dark) {
+            .webpage-card-title {
+              color: #fff; /* dark:text-white */
+            }
+
+            .webpage-card-description {
+              color: #9ca3af; /* dark:text-gray-400 */
+            }
           }
         </style>
-        <style id="_goober">${style}</style>
       </head>
       <body>
-        ${app}
+        <a href="${url}" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">
+         <div class="webpage-card-content">
+           <h3 class="webpage-card-title">${title}</h3>
+           <p class="webpage-card-description">${description || new URL(url).hostname}</p>
+         </div>
+         ${imageUrl ? `<img src="${imageUrl}" alt="Page image" class="webpage-card-image">` : ''}
+       </a>
       </body>
     </html>
   `;

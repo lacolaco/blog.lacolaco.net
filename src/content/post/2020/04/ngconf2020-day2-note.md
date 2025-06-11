@@ -96,6 +96,7 @@ http://bit.ly/strictTemplates
   - similar to `strict` flag
 - Outline
 - in v8
+
   - Basic / fullTemplateTypeCheck
   - Basic
     - ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/4027df59-45f6-4645-a140-f5ed866393b0.png)
