@@ -23,7 +23,7 @@ export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'post
         }
         // import.meta.env.MODE が 'production' の場合、公開済みの投稿のみを対象とする
         if (import.meta.env.MODE === 'production') {
-          return entry.data.properties.published && isPast(entry.data.properties.date);
+          return isPast(entry.data.properties.date);
         }
         // 開発モードでは全ての投稿を対象とする
         return true;
