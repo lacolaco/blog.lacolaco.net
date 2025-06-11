@@ -194,7 +194,7 @@
 
     /* 親がpre要素ではないcode要素 */
     code:not(pre > code) {
-      @apply text-sm font-mono text-orange-700 bg-gray-100 px-1.5 py-0.5 rounded mx-0.5;
+      @apply text-[0.85em] font-mono text-orange-700 bg-gray-100 px-1.5 py-0.5 rounded mx-0.5 text-nowrap;
     }
 
     pre.astro-code {
