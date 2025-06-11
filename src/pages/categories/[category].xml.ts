@@ -9,10 +9,8 @@ export async function getStaticPaths() {
   const posts = await queryAvailablePosts();
   const categories = await queryCategories();
 
-  function hasCategory(categoryName: string, post: CollectionEntry<'post'> | CollectionEntry<'postsV2'>): boolean {
-    return post.collection === 'postsV2'
-      ? post.data.category === categoryName
-      : post.data.properties.category === categoryName;
+  function hasCategory(categoryName: string, post: CollectionEntry<'postsV2'>): boolean {
+    return post.data.category === categoryName;
   }
 
   return categories.map((category) => {
@@ -27,7 +25,7 @@ export async function getStaticPaths() {
 
 type Props = {
   category: string;
-  posts: Array<CollectionEntry<'post'> | CollectionEntry<'postsV2'>>;
+  posts: Array<CollectionEntry<'postsV2'>>;
 };
 
 export async function GET(context: APIContext<Props>) {
@@ -38,19 +36,11 @@ export async function GET(context: APIContext<Props>) {
     description: SITE_DESCRIPTION,
     site: articlesUrl,
     items: posts.map((post) => {
-      if (post.collection === 'postsV2') {
-        return {
-          title: post.data.title,
-          pubDate: post.data.created_time,
-          link: `/posts/${post.data.slug}`,
-          categories: post.data.tags,
-        };
-      }
       return {
-        title: post.data.properties.title,
-        pubDate: post.data.properties.date,
+        title: post.data.title,
+        pubDate: post.data.created_time,
         link: `/posts/${post.data.slug}`,
-        categories: post.data.properties.tags,
+        categories: post.data.tags,
       };
     }),
   });

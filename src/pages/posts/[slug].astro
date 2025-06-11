@@ -15,8 +15,8 @@ export async function getStaticPaths() {
     };
   });
 }
-type Props = CollectionEntry<'post'> | CollectionEntry<'postsV2'>;
+type Props = CollectionEntry<'postsV2'>;
 const entry = Astro.props;
 ---
 
-{entry.collection === 'post' ? <BlogPost post={entry.data} /> : <PostDetailPage entry={entry} />}
+<PostDetailPage entry={entry} />

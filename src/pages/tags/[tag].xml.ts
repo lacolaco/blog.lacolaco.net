@@ -12,11 +12,7 @@ export async function getStaticPaths() {
 
   return tags.map((tag) => {
     const matchPosts = posts.filter((post) => {
-      if (post.collection !== 'postsV2') {
-        return post.data.properties.tags.includes(tag.name);
-      } else {
-        return post.data.tags?.includes(tag.name);
-      }
+      return post.data.tags?.includes(tag.name);
     });
     const urlizedName = urlize(tag.name);
     return {
@@ -28,7 +24,7 @@ export async function getStaticPaths() {
 
 type Props = {
   tag: string;
-  posts: Array<CollectionEntry<'post'> | CollectionEntry<'postsV2'>>;
+  posts: Array<CollectionEntry<'postsV2'>>;
 };
 
 export async function GET(context: APIContext<Props>) {
@@ -39,19 +35,11 @@ export async function GET(context: APIContext<Props>) {
     description: SITE_DESCRIPTION,
     site: articlesUrl,
     items: posts.map((post) => {
-      if (post.collection === 'postsV2') {
-        return {
-          title: post.data.title,
-          pubDate: post.data.created_time,
-          link: `/posts/${post.data.slug}`,
-          categories: post.data.tags,
-        };
-      }
       return {
-        title: post.data.properties.title,
-        pubDate: post.data.properties.date,
+        title: post.data.title,
+        pubDate: post.data.created_time,
         link: `/posts/${post.data.slug}`,
-        categories: post.data.properties.tags,
+        categories: post.data.tags,
       };
     }),
   });

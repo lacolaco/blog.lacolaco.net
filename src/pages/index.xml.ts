@@ -11,14 +11,6 @@ export async function GET(context: APIContext) {
     description: SITE_DESCRIPTION,
     site: context.site?.toString() ?? '',
     items: posts.map((post) => {
-      if (post.collection !== 'postsV2') {
-        return {
-          title: post.data.properties.title,
-          pubDate: post.data.properties.date,
-          link: `/posts/${post.data.slug}`,
-          categories: post.data.properties.tags,
-        };
-      }
       return {
         title: post.data.title,
         pubDate: post.data.created_time,

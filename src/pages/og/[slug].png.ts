@@ -20,7 +20,7 @@ export async function GET({ params }: APIContext) {
   const post = (await queryAvailablePosts()).find((post) => post.data.slug === slug);
   if (!post) return { status: 404 };
 
-  const title = post.collection === 'postsV2' ? post.data.title : post.data.properties.title || 'No title';
+  const title = post.data.title || 'No title';
 
   const body = await getOgImage(title);
 

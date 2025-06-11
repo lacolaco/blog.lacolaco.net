@@ -10,11 +10,7 @@ export async function getStaticPaths() {
 
   return tags.map((tag) => {
     const matchPosts = posts.filter((post) => {
-      if (post.collection !== 'postsV2') {
-        return post.data.properties.tags.includes(tag.name);
-      } else {
-        return post.data.tags?.includes(tag.name);
-      }
+      return post.data.tags?.includes(tag.name);
     });
     const urlizedName = urlize(tag.name);
     return {
@@ -26,7 +22,7 @@ export async function getStaticPaths() {
 
 type Props = {
   tag: string;
-  posts: Array<CollectionEntry<'post'> | CollectionEntry<'postsV2'>>;
+  posts: Array<CollectionEntry<'postsV2'>>;
 };
 
 const { tag, posts } = Astro.props;

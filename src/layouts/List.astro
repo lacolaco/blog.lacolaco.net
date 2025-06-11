@@ -13,7 +13,7 @@ import { SITE_TITLE } from '../consts';
 import type { CollectionEntry } from 'astro:content';
 
 type Props = {
-  posts: Array<CollectionEntry<'post'> | CollectionEntry<'postsV2'>>;
+  posts: Array<CollectionEntry<'postsV2'>>;
   feedUrl: string;
 };
 
@@ -26,7 +26,7 @@ const postsByYear = Array.from(
       posts.push(post);
       acc.set(year, posts);
       return acc;
-    }, new Map<string, Array<CollectionEntry<'post'> | CollectionEntry<'postsV2'>>>())
+    }, new Map<string, Array<CollectionEntry<'postsV2'>>>())
     .entries(),
 ).sort(([a], [b]) => Number(b) - Number(a));
 ---

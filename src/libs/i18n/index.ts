@@ -7,7 +7,7 @@ export function toRelativeUrl(slug: string, locale: Locale) {
 }
 
 export async function findLocalizedVersion(base: PostData, locale: Locale) {
-  return await getCollection('post').then((posts) => {
+  return await getCollection('postsV2').then((posts) => {
     return posts.find((post) => post.data.slug === base.slug && post.data.locale === locale);
   });
 }
