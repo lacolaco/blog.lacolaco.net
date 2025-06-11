@@ -92,6 +92,9 @@ async function main() {
 
       await downloadImages(imageDownloads, filesystems.images, frontmatter.slug);
       await filesystems.posts.save(filename, markdown, { encoding: 'utf-8' });
+      // もし古いJSONファイルが存在する場合は削除
+      const oldJsonFile = `${frontmatter.slug}.json`;
+      await filesystems.posts.remove(oldJsonFile);
     }),
   );
 

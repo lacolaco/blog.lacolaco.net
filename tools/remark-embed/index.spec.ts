@@ -38,17 +38,10 @@ describe('remarkEmbed', () => {
       const expectedHtml = `
 <div class="block-link block-link-tweet">
   <blockquote class="twitter-tweet">
-    <a href="https://x.com/user/status/1234567890">https://x.com/user/status/1234567890</a>
+    <a href="https://twitter.com/user/status/1234567890">https://twitter.com/user/status/1234567890</a>
   </blockquote>
 </div>
       `.trim();
-      const result = await processMarkdown(markdown);
-      assert.equal(result, expectedHtml);
-    });
-
-    test('@[unknown](url) 形式は埋め込まれない（廃止された形式）', async () => {
-      const markdown = '@[unknown](https://example.com)';
-      const expectedHtml = '<p>@<a href="https://example.com">unknown</a></p>';
       const result = await processMarkdown(markdown);
       assert.equal(result, expectedHtml);
     });

@@ -206,17 +206,20 @@ function createDefaultHandler(config: EmbedConfig): EmbedHandler {
       const webpageConfig = { ...defaultWebPageConfig, ...config.webpage };
 
       const { timeout, fallbackTitle } = webpageConfig;
-
+      const urlObj = new URL(url);
       try {
         // タイムアウト付きでフェッチ
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-        const response = await fetch(url, { signal: controller.signal });
+        const userAgent = 'Mozilla/5.0 (compatible; embed/1.0; +https://blog.lacolaco.net)';
+        const response = await fetch(urlObj, { signal: controller.signal, headers: { 'User-Agent': userAgent } });
         clearTimeout(timeoutId);
 
         if (!response.ok) {
-          console.warn(`Failed to fetch web page info for ${url}: ${response.status} ${response.statusText}`);
+          console.warn(
+            `Failed to fetch web page info for ${urlObj.toJSON()}: ${response.status} ${response.statusText}`,
+          );
           return undefined; // 失敗時はundefinedを返す
         }
         const html = await response.text();
@@ -226,20 +229,32 @@ function createDefaultHandler(config: EmbedConfig): EmbedHandler {
         const description =
           $('meta[property="og:description"]').attr('content') || $('meta[name="description"]').attr('content');
         const imageUrl = $('meta[property="og:image"]').attr('content');
-        const canonicalUrl = $('meta[property="og:url"]').attr('content') || url;
-        const safeCanonicalUrl = new URL(canonicalUrl);
-        const safeImageUrl = imageUrl ? new URL(imageUrl) : null;
+        const canonicalUrl = $('meta[property="og:url"]').attr('content');
+
+        // canonicalUrlがパスから始まる場合は、元のURLのオリジンを付加して完全なURLに変換
+        let linkTo = canonicalUrl;
+        if (canonicalUrl && !canonicalUrl.startsWith('http')) {
+          // パスから始まる場合は、元のURLのオリジンを付加
+          const baseUrl = urlObj.origin;
+          linkTo = new URL(canonicalUrl, baseUrl).toString();
+        } else if (canonicalUrl && canonicalUrl.startsWith('http')) {
+          // 完全なURLの場合はそのまま使用
+          linkTo = canonicalUrl;
+        } else {
+          // canonicalUrlがない場合は元のURLを使用
+          linkTo = url;
+        }
 
         const escapedTitle = escapeHtml(title || fallbackTitle);
         const escapedDescription = description ? escapeHtml(description) : '';
 
         return `
-<a href="${safeCanonicalUrl.toString()}" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">
+<a href="${linkTo}" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">
   <div class="webpage-card-content">
     <h3 class="webpage-card-title">${escapedTitle}</h3>
     ${escapedDescription ? `<p class="webpage-card-description">${escapedDescription}</p>` : ''}
   </div>
-  ${safeImageUrl ? `<img src="${safeImageUrl.toString()}" alt="Page image" class="webpage-card-image">` : ''}
+  ${imageUrl ? `<img src="${imageUrl}" alt="Page image" class="webpage-card-image">` : ''}
 </a>
         `.trim();
       } catch (error) {

@@ -1,7 +1,7 @@
 import type { Html, Paragraph, Root } from 'mdast';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
-import type { EmbedConfig, EmbedHandler } from './handlers.ts';
+import type { EmbedConfig } from './handlers.ts';
 import { createEmbedHandlers } from './handlers.ts';
 
 // プラグインのオプション型
@@ -31,24 +31,30 @@ const remarkEmbed: Plugin<[RemarkEmbedOptions?], Root> = (options = {}) => {
         return;
       }
 
-      let handler: EmbedHandler | undefined;
-      let url: string | undefined;
-
       // リンク形式のパラグラフをチェック
-      if (node.children.length === 1 && node.children[0].type === 'link') {
-        const link = node.children[0];
-        url = link.url;
-
-        // リンクに明示的なタイトルがある場合は処理しない
-        if (link.title) {
-          return;
-        }
-
-        // URL パターンに基づいてハンドラーを検索
-        handler = embedHandlers.find((h) => h.test(url!));
+      if (node.children.length !== 1 || node.children[0].type !== 'link') {
+        return; // リンクが1つだけでない場合は何もしない
       }
 
-      if (!handler || !url) {
+      const link = node.children[0];
+
+      // リンクに明示的なタイトルがある場合は処理しない
+      if (link.title) {
+        return;
+      }
+
+      const url = link.url;
+
+      if (!url) {
+        console.warn('Link has no URL:', link);
+        return; // URLがない場合は何もしない
+      }
+
+      // URL パターンに基づいてハンドラーを検索
+      const handler = embedHandlers.find((h) => h.test(url));
+
+      if (!handler) {
+        console.warn(`No handler found for URL: ${url}`);
         return; // どのハンドラーにもマッチしない場合は何もしない
       }
 
