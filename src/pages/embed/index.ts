@@ -1,94 +1,198 @@
 import type { APIContext } from 'astro';
-import { load } from 'cheerio';
-
-// Type override for Cloudflare Workers cache API
-declare const caches:
-  | {
-      default: Cache;
-    }
-  | undefined;
+import { load, type CheerioAPI } from 'cheerio';
 
 export const prerender = false;
 
+// 定数
+const DEFAULT_CACHE_MAX_AGE = 60 * 60; // 1 hour
+const AMAZON_URL_PREFIXES = ['https://www.amazon.co.jp/', 'https://amzn.asia/'];
+const GOOGLEBOT_USER_AGENT =
+  'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/W.X.Y.Z Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
+const DEFAULT_USER_AGENT = 'blog.lacolaco.net';
+
+// 型定義
+interface PageMetadata {
+  title: string;
+  description: string;
+  imageUrl: string | null;
+  cacheControl: string | null;
+}
+
+interface FetchConfig {
+  userAgent: string;
+  cacheTtl: number;
+}
+
+/**
+ * `/embed` エンドポイントのハンドラー
+ * このエンドポイントは、指定されたURLのメタデータを取得し、Webページカードとして埋め込むHTMLを生成します。
+ * `url` パラメータで指定されたURLのメタデータを取得し、カード形式で表示します。
+ *
+ * @param context
+ * @returns
+ */
 export async function GET(context: APIContext): Promise<Response> {
   const url = new URL(decodeURIComponent(context.request.url)).searchParams.get('url');
   if (!url) {
     return new Response('Missing url parameter', { status: 400 });
   }
 
-  const cacheKey = context.request;
-  const cache = typeof caches === 'undefined' ? undefined : caches.default;
-  // Skip cache check if cache is not available
-  if (cache) {
-    // Check if client requested cache bypass
-    const shouldBypassCache = context.request.headers.get('cache-control')?.includes('no-cache');
+  const metadata = await fetchPageMetadata(url);
+  const html = buildEmbedHtml(metadata, url);
 
-    if (!shouldBypassCache) {
-      const cachedResponse = await cache.match(cacheKey);
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-    }
-  }
-
-  const { title, description, imageUrl } = await fetchPageMetadata(url);
-  const html = buildEmbedHtml(title, description, url, imageUrl);
-  const maxAge = 60 * 60 * 24; // 1 day
-  const response = new Response(html, {
+  return new Response(html, {
     headers: {
       'content-type': 'text/html; charset=utf-8',
-      'cache-control': `max-age=${maxAge}`,
+      'cache-control': metadata.cacheControl || `max-age=${DEFAULT_CACHE_MAX_AGE}`,
     },
   });
-  await cache?.put(cacheKey, response.clone());
-  return response;
 }
 
-const amazonUrlPrefixes = ['https://www.amazon.co.jp/', 'https://amzn.asia/'];
+// ヘルパー関数
+function getFetchConfig(url: string): FetchConfig {
+  const isAmazonRequest = AMAZON_URL_PREFIXES.some((domain) => url.startsWith(domain));
+  return {
+    userAgent: isAmazonRequest ? GOOGLEBOT_USER_AGENT : DEFAULT_USER_AGENT,
+    cacheTtl: DEFAULT_CACHE_MAX_AGE,
+  };
+}
 
-async function fetchPageMetadata(
-  url: string,
-): Promise<{ title: string; description: string; imageUrl: string | null }> {
-  const isAmazonRequest = amazonUrlPrefixes.some((domain) => url.startsWith(domain));
-  const userAgent = isAmazonRequest
-    ? // use Googlebot UA for Amazon to get server-side-rendered HTML
-      // https://developers.google.com/search/docs/crawling-indexing/overview-google-crawlers
-      'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/W.X.Y.Z Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)'
-    : // use custom UA by default
-      'blog.lacolaco.net';
+function extractTitle($: CheerioAPI, fallbackUrl: string): string {
+  const metaOgTitle = $('head>meta[property="og:title"]').attr('content');
+  if (metaOgTitle) return metaOgTitle;
+
+  const metaTitle = $('head>meta[name="title"]').attr('content');
+  if (metaTitle) return metaTitle;
+
+  const docTitle = $('title').text();
+  if (docTitle) return docTitle;
+
+  return fallbackUrl;
+}
+
+function extractDescription($: CheerioAPI): string {
+  const metaOgDescription = $('head>meta[property="og:description"]').attr('content');
+  if (metaOgDescription) return metaOgDescription;
+
+  const metaDescription = $('head>meta[name="description"]').attr('content');
+  if (metaDescription) return metaDescription;
+
+  const metaTwitterDescription = $('head>meta[name="twitter:description"]').attr('content');
+  if (metaTwitterDescription) return metaTwitterDescription;
+
+  return '';
+}
+
+function extractImageUrl($: CheerioAPI): string | null {
+  const metaOgImage = $('head>meta[property="og:image"]').attr('content');
+  if (metaOgImage) return metaOgImage;
+
+  const metaTwitterImage = $('head>meta[name="twitter:image"]').attr('content');
+  if (metaTwitterImage) return metaTwitterImage;
+
+  const metaImage = $('head>meta[name="image"]').attr('content');
+  if (metaImage) return metaImage;
+
+  const firstImg = $('img').first().attr('src');
+  if (firstImg) return firstImg;
+
+  return null;
+}
+
+async function fetchPageMetadata(url: string): Promise<PageMetadata> {
+  const config = getFetchConfig(url);
 
   const response = await fetch(url, {
+    cf: {
+      cacheTtlByStatus: { '200-299': config.cacheTtl, 404: 1, '500-599': 0 },
+    },
     headers: {
-      'user-agent': userAgent,
+      'user-agent': config.userAgent,
       accept: 'text/html',
       'accept-charset': 'utf-8',
     },
   });
+
   const html = await response.text();
   const $ = load(html);
-  const metaOgTitle = $('head>meta[property="og:title"]').attr('content');
-  const metaTitle = $('head>meta[name="title"]').attr('content');
-  const docTitle = $('title').text();
-  const title = metaOgTitle || metaTitle || docTitle || url;
 
-  // 説明文取得のフォールバック戦略
-  const metaOgDescription = $('head>meta[property="og:description"]').attr('content');
-  const metaDescription = $('head>meta[name="description"]').attr('content');
-  const metaTwitterDescription = $('head>meta[name="twitter:description"]').attr('content');
-  const description = metaOgDescription || metaDescription || metaTwitterDescription || '';
-
-  // 画像取得のフォールバック戦略
-  const metaOgImage = $('head>meta[property="og:image"]').attr('content');
-  const metaTwitterImage = $('head>meta[name="twitter:image"]').attr('content');
-  const metaImage = $('head>meta[name="image"]').attr('content');
-  const firstImg = $('img').first().attr('src');
-
-  const imageUrl = metaOgImage || metaTwitterImage || metaImage || firstImg || null;
-
-  return { title, description, imageUrl };
+  return {
+    title: extractTitle($, url),
+    description: extractDescription($),
+    imageUrl: extractImageUrl($),
+    cacheControl: response.headers.get('cache-control'),
+  };
 }
 
-function buildEmbedHtml(title: string, description: string, url: string, imageUrl: string | null) {
+function getEmbedStyles(): string {
+  return `
+    html, body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+    }
+
+    .block-link {
+      display: flex;
+      margin: 0;
+    }
+
+    .webpage-card {
+      display: flex;
+      align-items: center;
+      height: 7rem;
+      gap: 1rem;
+      border-radius: 0.5rem;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      transition: box-shadow 200ms;
+      background: #fff;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .webpage-card:hover {
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      text-decoration: underline;
+    }
+
+    .webpage-card-image {
+      height: 100%;
+      aspect-ratio: 16/9;
+      flex-shrink: 0;
+      object-fit: cover;
+    }
+
+    .webpage-card-content {
+      flex-grow: 1;
+      overflow: hidden;
+      padding: 0 1rem;
+    }
+
+    .webpage-card-title {
+      margin: 0.5rem 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #111827;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .webpage-card-description {
+      margin: 0.5rem 0;
+      font-size: 0.875rem;
+      color: #4b5563;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  `;
+}
+
+function buildEmbedHtml(metadata: PageMetadata, url: string): string {
+  const { title, description, imageUrl } = metadata;
+  const displayDescription = description || new URL(url).hostname;
+
   return `<!DOCTYPE html>
     <html>
       <head>
@@ -96,78 +200,16 @@ function buildEmbedHtml(title: string, description: string, url: string, imageUr
         <meta name="viewport" content="width=device-width" />
         <meta name="robots" content="noindex" />
         <title>${title}</title>
-        <style>
-          html, body {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji';
-          }
-
-          .block-link {
-            display: flex;
-            margin: 0;
-          }
-
-          .webpage-card {
-            display: flex;
-            align-items: center;
-            height: 7rem; /* h-28 = 112px = 7rem */
-            gap: 1rem; /* space-x-4 = 16px = 1rem */
-            border-radius: 0.5rem; /* rounded-lg */
-            border: 1px solid #e5e7eb; /* border-gray-200 */
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
-            transition: box-shadow 200ms; /* transition-shadow duration-200 */
-            background: #fff;
-            text-decoration: none;
-            color: inherit;
-          }
-
-          .webpage-card:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* hover:shadow-lg */
-            text-decoration: underline; /* hover:underline */
-          }
-
-          .webpage-card-image {
-            height: 100%; /* h-full */
-            aspect-ratio: 16/9; /* aspect-video */
-            flex-shrink: 0; /* flex-shrink-0 */
-            object-fit: cover; /* object-cover */
-          }
-
-          .webpage-card-content {
-            flex-grow: 1; /* flex-grow */
-            overflow: hidden; /* overflow-hidden */
-            padding: 0 1rem; /* px-4 */
-          }
-
-          .webpage-card-title {
-            margin: 0.5rem 0; /* my-2 */
-            font-size: 1rem; /* text-base */
-            font-weight: 600; /* font-semibold */
-            color: #111827; /* text-gray-900 */
-            white-space: nowrap; /* whitespace-nowrap */
-            overflow: hidden; /* overflow-hidden */
-            text-overflow: ellipsis; /* text-ellipsis */
-          }
-
-          .webpage-card-description {
-            margin: 0.5rem 0; /* my-2 */
-            font-size: 0.875rem; /* text-sm */
-            color: #4b5563; /* text-gray-600 */
-            white-space: nowrap; /* whitespace-nowrap */
-            overflow: hidden; /* overflow-hidden */
-            text-overflow: ellipsis; /* text-ellipsis */
-          }
-        </style>
+        <style>${getEmbedStyles()}</style>
       </head>
       <body>
         <a href="${url}" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">
-         <div class="webpage-card-content">
-           <h3 class="webpage-card-title">${title}</h3>
-           <p class="webpage-card-description">${description || new URL(url).hostname}</p>
-         </div>
-         ${imageUrl ? `<img src="${imageUrl}" alt="Page image" class="webpage-card-image">` : ''}
-       </a>
+          <div class="webpage-card-content">
+            <h3 class="webpage-card-title">${title}</h3>
+            <p class="webpage-card-description">${displayDescription}</p>
+          </div>
+          ${imageUrl ? `<img src="${imageUrl}" alt="Page image" class="webpage-card-image">` : ''}
+        </a>
       </body>
     </html>
   `;
