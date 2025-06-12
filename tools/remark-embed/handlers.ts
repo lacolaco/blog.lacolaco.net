@@ -204,7 +204,7 @@ function createDefaultHandler(): EmbedHandler {
 
       return `
 <div class="block-link block-link-default">
-  <iframe class="border-none w-full" src="/embed?url=${safeUrl.toString()}" height="122" loading="lazy"></iframe>
+  <iframe src="/embed?url=${safeUrl.toString()}" height="122" loading="lazy"></iframe>
 </div>`.trim();
     },
   };
