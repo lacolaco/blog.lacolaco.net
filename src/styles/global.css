@@ -261,7 +261,9 @@
       }
 
       &.block-link-default {
-        @apply border-none w-full;
+        iframe {
+          @apply border-none w-full;
+        }
       }
     }
   }

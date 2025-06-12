@@ -74,7 +74,7 @@ describe('remarkEmbed', () => {
       const result = await processMarkdown(markdown);
       const expectedHtml = `
 <div class="block-link block-link-default">
-  <iframe class="border-none w-full" src="/embed?url=https://github.com/lacolaco/blog.lacolaco.net" height="122" loading="lazy"></iframe>
+  <iframe src="/embed?url=https://github.com/lacolaco/blog.lacolaco.net" height="122" loading="lazy"></iframe>
 </div>
 `.trim();
       assert.equal(result, expectedHtml);
@@ -127,7 +127,7 @@ describe('remarkEmbed', () => {
       // Webページカードとして埋め込まれることを確認（実際には失敗時はundefinedが返される）
       assert.equal(
         result,
-        '<div class="block-link block-link-default">\n  <iframe class="border-none w-full" src="/embed?url=https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/edit" height="122" loading="lazy"></iframe>\n</div>',
+        '<div class="block-link block-link-default">\n  <iframe src="/embed?url=https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/edit" height="122" loading="lazy"></iframe>\n</div>',
       );
     });
   });
@@ -207,7 +207,7 @@ describe('remarkEmbed', () => {
       // Webページカードとして埋め込まれることを確認
       assert.equal(
         result,
-        `<div class="block-link block-link-default">\n  <iframe class="border-none w-full" src="/embed?url=https://stackblitz.com/edit/my-project" height="122" loading="lazy"></iframe>\n</div>`.trim(),
+        `<div class="block-link block-link-default">\n  <iframe src="/embed?url=https://stackblitz.com/edit/my-project" height="122" loading="lazy"></iframe>\n</div>`.trim(),
       );
     });
   });
