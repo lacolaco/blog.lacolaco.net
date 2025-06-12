@@ -1,6 +1,6 @@
 import { format } from 'prettier';
-import { type BlogDatabaseProperties } from '@lib/notion';
 import { Categories, Tags } from '@lib/post';
+import { type BlogDatabaseProperties } from './notion-types';
 
 /**
  * JSON データを Prettier でフォーマットする純粋関数

@@ -9,7 +9,23 @@ import type {
   RichTextItemResponse,
   BulletedListItemBlockObjectResponse,
   NumberedListItemBlockObjectResponse,
+  DatabaseObjectResponse,
 } from '@notionhq/client/build/src/api-endpoints';
+
+export type DatabasePropertyConfigs = DatabaseObjectResponse['properties'];
+export type DatabasePropertyConfig<T extends string> = DatabasePropertyConfigs[string] & { type: T };
+
+export type BlogDatabaseProperties = DatabasePropertyConfigs & {
+  title: DatabasePropertyConfig<'title'>;
+  slug: DatabasePropertyConfig<'rich_text'>;
+  locale: DatabasePropertyConfig<'select'>;
+  category: DatabasePropertyConfig<'select'>;
+  tags: DatabasePropertyConfig<'multi_select'>;
+  published: DatabasePropertyConfig<'checkbox'>;
+  canonical_url: DatabasePropertyConfig<'url'>;
+  created_at_override: DatabasePropertyConfig<'date'>;
+  updated_at: DatabasePropertyConfig<'date'>;
+};
 
 export type PageObject = PageObjectResponse;
 

@@ -2,7 +2,7 @@ import assert from 'assert';
 import { describe, it } from 'node:test';
 import { formatJSON, toTagsJSON, toCategoriesJSON, shouldSkipProcessing } from './utils';
 import { parseFrontmatter } from './frontmatter';
-import type { BlogDatabaseProperties } from '@lib/notion';
+import type { BlogDatabaseProperties } from './notion-types';
 
 describe('formatJSON', () => {
   it('オブジェクトを整形されたJSONに変換する', async () => {
