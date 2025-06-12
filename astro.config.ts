@@ -10,19 +10,34 @@ import rehypeGithubEmoji from 'rehype-github-emoji';
 import rehypeGithubAlert from 'rehype-github-alert';
 import remarkEmbed from './tools/remark-embed/index.ts';
 
+import cloudflare from '@astrojs/cloudflare';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://blog.lacolaco.net',
-  outDir: 'dist/client',
+  outDir: 'dist',
   integrations: [sitemap(), react()],
+
   vite: {
     plugins: [tailwindcss()],
     optimizeDeps: { exclude: ['@resvg/resvg-js'] },
+    resolve: {
+      // https://github.com/withastro/astro/issues/12824#issuecomment-2563095382
+      // Use react-dom/server.edge instead of react-dom/server.browser for React 19.
+      // Without this, MessageChannel from node:worker_threads needs to be polyfilled.
+      alias: import.meta.env.PROD
+        ? {
+            'react-dom/server': 'react-dom/server.edge',
+          }
+        : undefined,
+    },
   },
+
   i18n: {
     defaultLocale: 'ja',
     locales: ['ja', 'en'],
   },
+
   markdown: {
     gfm: true,
     remarkPlugins: [remarkBreaks, remarkMath, remarkEmbed],
@@ -35,4 +50,7 @@ export default defineConfig({
       theme: 'github-light',
     },
   },
+
+  output: 'static',
+  adapter: cloudflare(),
 });
