@@ -31,7 +31,6 @@
     "@date-fns/tz": "^1.2.0",
     "@fontsource/source-code-pro": "5.2.6",
     "@fontsource/zen-kaku-gothic-new": "5.2.5",
-    "@resvg/resvg-js": "2.6.2",
     "astro": "5.9.0",
     "cheerio": "1.0.0",
     "date-fns": "4.1.0",
