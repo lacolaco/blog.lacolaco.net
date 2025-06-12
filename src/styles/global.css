@@ -260,6 +260,14 @@
         }
       }
 
+      &.block-link-youtube {
+        @apply flex justify-center;
+
+        iframe {
+          @apply border-none aspect-video w-full h-auto md:max-w-(--breakpoint-md) max-h-[75vh];
+        }
+      }
+
       &.block-link-default {
         iframe {
           @apply border-none w-full;
