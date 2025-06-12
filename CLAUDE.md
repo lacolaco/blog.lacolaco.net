@@ -83,10 +83,11 @@ CLOUDFLARE_API_TOKEN=*          # Cloudflare API Token (for deployment)
 - `src/components/` - Astro/React UI components
 - `src/content/post/` - Auto-generated blog post Markdown files (**DO NOT EDIT**)
 - `src/libs/` - Internal TypeScript libraries (notion, post processing, i18n, querying)
-- `src/pages/` - Astro routes including dynamic routes and OG image generation
+- `src/pages/` - Astro routes including dynamic routes, API endpoints, and OG image generation
+- `src/pages/embed/` - Cloudflare Workers function for web link preview generation
+- `src/pages/og/` - Dynamic OG image generation API endpoint
 - `tools/notion-fetch/` - Custom Notion CMS sync tool with direct Markdown generation
 - `tools/remark-embed/` - Custom remark plugin for content embedding
-- `functions/embed/` - Cloudflare Pages Functions for web link preview generation
 - `public/images/` - Auto-managed image storage (**DO NOT EDIT MANUALLY**)
 
 **notion-fetch Tool Architecture:**
@@ -101,13 +102,26 @@ CLOUDFLARE_API_TOKEN=*          # Cloudflare API Token (for deployment)
 
 For detailed architecture and usage information, see @tools/notion-fetch/README.md
 
-**Cloudflare Pages Functions:**
+**API Endpoints:**
 
-- `functions/embed/index.tsx` - Web page preview generation using Preact/Goober
+- `src/pages/embed/index.ts` - Cloudflare Workers function for web link preview generation
+- `src/pages/og/[slug].png.ts` - Dynamic OG image generation endpoint
+
+**Cloudflare Workers (embed endpoint):**
+
+- Web page preview generation for link previews
 - Extracts page titles from URLs for link previews
 - Special handling for Amazon URLs with Googlebot UA
 - 1-day browser cache + Cloudflare edge caching
-- Built to `dist/worker/` during production build
+- Built to `dist/_worker.js/` during production build
+
+**OG Image Generation (og endpoint):**
+
+- Dynamic OG image generation using Satori + svg2png-wasm
+- Runtime generation (prerender: false) for flexibility
+- Uses Google Fonts (Zen Kaku Gothic New) with subset loading
+- 800x400 PNG output with blog title and post title
+- Error handling for missing posts (404 response)
 
 **Internationalization:**
 
@@ -152,7 +166,9 @@ For detailed architecture and usage information, see @tools/notion-fetch/README.
 - `@lib/i18n` → `src/libs/i18n/index.ts`
 - `@lib/query` → `src/libs/query/index.ts`
 
-## Markdown Processing
+## Content Processing
+
+**Markdown Processing:**
 
 Rich markdown support with custom plugins:
 
@@ -161,6 +177,13 @@ Rich markdown support with custom plugins:
 - **GitHub Features**: Alerts, emojis, GFM support
 - **Custom Embedding**: Via `tools/remark-embed/` plugin
 - **Syntax Highlighting**: Shiki with GitHub light theme
+
+**Image Processing:**
+
+- **Static Images**: Auto-downloaded from Notion to `public/images/{slug}/`
+- **OG Images**: Runtime generation via `/og/{slug}.png` endpoint
+- **Font Subset Loading**: Google Fonts API with text-specific subsets
+- **WASM Processing**: SVG to PNG conversion using svg2png-wasm
 
 ## Testing
 
@@ -172,7 +195,7 @@ Rich markdown support with custom plugins:
 ## Deployment
 
 - **Target**: Cloudflare Pages with Workers
-- **Build Output**: `dist/client/` (Astro) + `dist/worker/` (Workers)
+- **Build Output**: `dist/` (Astro static files) + `dist/_worker.js/` (Workers)
 - **CI/CD**: GitHub Actions with automated deployment
 - **Configuration**: `wrangler.toml` for Cloudflare settings
 
@@ -253,7 +276,14 @@ See @docs/git-instructions.md
    - Verify `public/images/` directory permissions
    - Use `--debug` flag for detailed notion-fetch logs
 
-4. **Development Server Issues:**
+4. **OG Image Generation Issues:**
+
+   - Ensure WASM initialization in OgImage component
+   - Check Google Fonts API accessibility
+   - Verify font family availability and fallbacks
+   - Debug Satori SVG generation with console logging
+
+5. **Development Server Issues:**
    - Clear `.astro` cache directory
    - Restart development server: `pnpm dev`
    - Check port conflicts (default: 4321)
@@ -283,7 +313,9 @@ pnpm dev --host                      # Expose dev server to network
 - Bundle size impact assessment for new dependencies
 - Image optimization and lazy loading implementation
 - Cloudflare Workers execution time limits (< 10ms typically)
+- OG image generation performance (runtime vs static)
 - Notion API rate limiting considerations
+- Font subset loading optimization
 
 ## Claude Code Specific Guidelines
 
