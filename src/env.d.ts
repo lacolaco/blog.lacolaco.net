@@ -1,6 +1,12 @@
+/// <reference path="../worker-configuration.d.ts" />
 /// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />
 /// <reference types="gtag.js" />
+
+declare module '*.wasm' {
+  const value: string;
+  export default value;
+}
 
 interface ImportMetaEnv {
   readonly PRODUCTION?: boolean;

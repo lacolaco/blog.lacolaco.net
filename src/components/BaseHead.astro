@@ -59,4 +59,15 @@ const { title, description, image, gtagProps } = Astro.props;
   gtag('config', 'G-0BEKSBSM5X', gtagProps ?? {});
 </script>
 
+<script is:inline>
+  const ogImageMeta = document.querySelector('meta[property="og:image"]');
+  const twitterImageMeta = document.querySelector('meta[name="twitter:image"]');
+  if (ogImageMeta && ogImageMeta.content) {
+    ogImageMeta.content = ogImageMeta.content.replace(/https?:\/\/[^/]+/, location.origin);
+  }
+  if (twitterImageMeta && twitterImageMeta.content) {
+    twitterImageMeta.content = twitterImageMeta.content.replace(/https?:\/\/[^/]+/, location.origin);
+  }
+</script>
+
 <script async src="https://cse.google.com/cse.js?cx=016749829816792588257:vx30glhznqb"></script>

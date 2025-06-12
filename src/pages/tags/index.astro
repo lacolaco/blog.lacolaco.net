@@ -8,11 +8,7 @@ const tags = await queryTags();
 const tagWithCount = tags
   .map((tag) => {
     const usedCount = posts.filter((post) => {
-      if (post.collection === 'postsV2') {
-        return post.data.tags.includes(tag.name);
-      } else {
-        return post.data.properties.tags.includes(tag.name);
-      }
+      return post.data.tags.includes(tag.name);
     }).length;
     return { name: tag.name, usedCount };
   })

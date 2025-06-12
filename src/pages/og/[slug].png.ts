@@ -1,17 +1,18 @@
-import type { APIContext } from 'astro';
-import { getCollection } from 'astro:content';
-import { getOgImage } from '../../components/OgImage';
 import { queryAvailablePosts } from '@lib/query';
+import type { APIContext } from 'astro';
+import { getOgImage } from '../../components/OgImage';
 
-export async function getStaticPaths() {
-  const posts = await queryAvailablePosts();
+// export async function getStaticPaths() {
+//   const posts = await queryAvailablePosts();
 
-  return posts.map((post) => ({
-    params: {
-      slug: post.data.slug,
-    },
-  }));
-}
+//   return posts.map((post) => ({
+//     params: {
+//       slug: post.data.slug,
+//     },
+//   }));
+// }
+
+export const prerender = false;
 
 export async function GET({ params }: APIContext) {
   const { slug } = params;

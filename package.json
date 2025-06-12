@@ -9,13 +9,13 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build && wrangler pages functions build --outdir=./dist/worker/",
-    "build:force": "astro build --force && wrangler pages functions build --outdir=./dist/worker/",
+    "build": "astro build",
+    "build:force": "astro build --force",
     "preview": "astro preview",
     "format": "prettier --cache --write 'src' 'tools'",
     "astro": "astro",
     "notion-fetch": "tsx --env-file .env tools/notion-fetch/main.ts",
-    "postinstall": "playwright install --with-deps chromium",
+    "postinstall": "playwright install --with-deps chromium && wrangler types",
     "test:tools": "tsx --test --test-reporter spec tools/**/*.spec.ts",
     "test:notion-fetch": "tsx --test --test-reporter spec tools/notion-fetch/**/*.spec.ts",
     "test:remark-embed": "tsx --test --test-reporter spec tools/remark-embed/**/*.spec.ts",
@@ -23,6 +23,7 @@
   },
   "packageManager": "pnpm@10.11.1",
   "dependencies": {
+    "@astrojs/cloudflare": "^12.5.4",
     "@astrojs/prism": "3.3.0",
     "@astrojs/react": "4.3.0",
     "@astrojs/rss": "4.0.12",
@@ -30,7 +31,6 @@
     "@date-fns/tz": "^1.2.0",
     "@fontsource/source-code-pro": "5.2.6",
     "@fontsource/zen-kaku-gothic-new": "5.2.5",
-    "@resvg/resvg-js": "2.6.2",
     "astro": "5.9.0",
     "cheerio": "1.0.0",
     "date-fns": "4.1.0",
@@ -39,11 +39,11 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "satori": "0.14.0",
+    "svg2png-wasm": "^1.4.1",
     "unist-util-visit": "^5.0.0",
     "yaml": "^2.8.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.0.0",
     "@iconify/json": "^2.2.161",
     "@iconify/tailwind": "^1.0.0",
     "@lacolaco/notion-db": "^1.5.0",
@@ -72,7 +72,7 @@
     "tailwindcss": "4.1.8",
     "tsx": "4.19.4",
     "typescript-eslint": "^8.33.1",
-    "wrangler": "^4.0.0",
+    "wrangler": "4.19.2",
     "zod": "^3.22.4"
   }
 }

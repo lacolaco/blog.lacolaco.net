@@ -1,7 +1,13 @@
 name = "blog-lacolaco-net"
 
 compatibility_date = "2025-06-04"
-main = "./dist/worker/index.js"
+main = "./dist/_worker.js/index.js"
+
+compatibility_flags = ["nodejs_compat"]
 
 [assets]
-directory = "./dist/client"
+binding = "ASSETS"
+directory = "./dist"
+
+[observability]
+enabled = true

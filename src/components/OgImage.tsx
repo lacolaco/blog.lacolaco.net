@@ -1,6 +1,9 @@
-import { Resvg } from '@resvg/resvg-js';
+import { svg2png, initialize } from 'svg2png-wasm';
+import svg2png_wasm from 'svg2png-wasm/svg2png_wasm_bg.wasm';
 import satori from 'satori';
 import { SITE_TITLE } from '../consts';
+
+await initialize(svg2png_wasm);
 
 const siteDomainName = 'blog.lacolaco.net';
 const fontFamily = 'Zen Kaku Gothic New';
@@ -93,9 +96,9 @@ export async function getOgImage(text: string) {
     },
   );
 
-  const resvg = new Resvg(svg);
+  const png = await svg2png(svg);
 
-  return resvg.render().asPng();
+  return png;
 }
 
 async function fetchFont(text: string, font: string, weight: number): Promise<ArrayBuffer> {
