@@ -1,23 +1,33 @@
+import type { APIContext } from 'astro';
 import { load } from 'cheerio';
 
-interface Env {}
+// Type override for Cloudflare Workers cache API
+declare const caches:
+  | {
+      default: Cache;
+    }
+  | undefined;
 
-export const onRequest: PagesFunction<Env> = async (context) => {
+export const prerender = false;
+
+export async function GET(context: APIContext): Promise<Response> {
   const url = new URL(decodeURIComponent(context.request.url)).searchParams.get('url');
   if (!url) {
     return new Response('Missing url parameter', { status: 400 });
   }
 
   const cacheKey = context.request;
-  const cache = caches.default;
+  const cache = typeof caches === 'undefined' ? undefined : caches.default;
+  // Skip cache check if cache is not available
+  if (cache) {
+    // Check if client requested cache bypass
+    const shouldBypassCache = context.request.headers.get('cache-control')?.includes('no-cache');
 
-  // Check if client requested cache bypass
-  const shouldBypassCache = context.request.headers.get('cache-control')?.includes('no-cache');
-
-  if (!shouldBypassCache) {
-    const cachedResponse = await cache.match(cacheKey);
-    if (cachedResponse) {
-      return cachedResponse;
+    if (!shouldBypassCache) {
+      const cachedResponse = await cache.match(cacheKey);
+      if (cachedResponse) {
+        return cachedResponse;
+      }
     }
   }
 
@@ -30,9 +40,9 @@ export const onRequest: PagesFunction<Env> = async (context) => {
       'cache-control': `max-age=${maxAge}`,
     },
   });
-  context.waitUntil(cache.put(cacheKey, response.clone()));
+  await cache?.put(cacheKey, response.clone());
   return response;
-};
+}
 
 const amazonUrlPrefixes = ['https://www.amazon.co.jp/', 'https://amzn.asia/'];
 
@@ -95,8 +105,7 @@ function buildEmbedHtml(title: string, description: string, url: string, imageUr
 
           .block-link {
             display: flex;
-            margin-top: 0; /* mt-0 */
-            margin-bottom: 1rem; /* mb-4 */
+            margin: 0;
           }
 
           .webpage-card {
@@ -116,14 +125,6 @@ function buildEmbedHtml(title: string, description: string, url: string, imageUr
           .webpage-card:hover {
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* hover:shadow-lg */
             text-decoration: underline; /* hover:underline */
-          }
-
-          /* Dark mode styles */
-          @media (prefers-color-scheme: dark) {
-            .webpage-card {
-              border-color: #374151; /* dark:border-gray-700 */
-              background-color: #1f2937; /* dark:bg-gray-800 */
-            }
           }
 
           .webpage-card-image {
@@ -156,17 +157,6 @@ function buildEmbedHtml(title: string, description: string, url: string, imageUr
             white-space: nowrap; /* whitespace-nowrap */
             overflow: hidden; /* overflow-hidden */
             text-overflow: ellipsis; /* text-ellipsis */
-          }
-
-          /* Dark mode styles for text */
-          @media (prefers-color-scheme: dark) {
-            .webpage-card-title {
-              color: #fff; /* dark:text-white */
-            }
-
-            .webpage-card-description {
-              color: #9ca3af; /* dark:text-gray-400 */
-            }
           }
         </style>
       </head>

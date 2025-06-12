@@ -1,3 +1,4 @@
+/// <reference path="../worker-configuration.d.ts" />
 /// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />
 /// <reference types="gtag.js" />
