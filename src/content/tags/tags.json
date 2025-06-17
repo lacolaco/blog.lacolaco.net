@@ -366,5 +366,21 @@
   "登壇": {
     "name": "登壇",
     "color": "green"
+  },
+  "AI": {
+    "name": "AI",
+    "color": "gray"
+  },
+  "LangChain": {
+    "name": "LangChain",
+    "color": "red"
+  },
+  "Gemini": {
+    "name": "Gemini",
+    "color": "brown"
+  },
+  "Textlint": {
+    "name": "Textlint",
+    "color": "blue"
   }
 }
