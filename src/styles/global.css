@@ -270,7 +270,7 @@
 
       &.block-link-default {
         iframe {
-          @apply border-none w-full;
+          @apply border-none w-full h-[5rem] md:h-[7rem];
         }
       }
     }

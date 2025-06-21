@@ -139,11 +139,12 @@ function getEmbedStyles(): string {
     .webpage-card {
       display: flex;
       align-items: center;
-      height: 7rem;
+      height: 5rem;
       gap: 1rem;
       border-radius: 0.5rem;
       border: 1px solid #e5e7eb;
       box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      box-sizing: border-box;
       transition: box-shadow 200ms;
       background: #fff;
       text-decoration: none;
@@ -160,17 +161,21 @@ function getEmbedStyles(): string {
       aspect-ratio: 16/9;
       flex-shrink: 0;
       object-fit: cover;
+      display: none;
     }
 
     .webpage-card-content {
+      display: flex;
+      flex-direction: column;
       flex-grow: 1;
       overflow: hidden;
-      padding: 0 1rem;
+      padding: 1rem 1rem;
+      gap: 0.5rem;
     }
 
     .webpage-card-title {
-      margin: 0.5rem 0;
-      font-size: 1rem;
+      margin: 0;
+      font-size: 0.9rem;
       font-weight: 600;
       color: #111827;
       white-space: nowrap;
@@ -179,19 +184,29 @@ function getEmbedStyles(): string {
     }
 
     .webpage-card-description {
-      margin: 0.5rem 0;
-      font-size: 0.875rem;
+      margin: 0;
+      font-size: 0.8rem;
       color: #4b5563;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
+    @media (min-width: 768px) {
+      .webpage-card {
+        height: 7rem;
+      }
+      
+      .webpage-card-image {
+        display: block;
+      }
+    }
   `;
 }
 
 function buildEmbedHtml(metadata: PageMetadata, url: string): string {
-  const { title, description, imageUrl } = metadata;
-  const displayDescription = description || new URL(url).hostname;
+  const { title, imageUrl } = metadata;
+  const displayDescription = new URL(url).hostname;
 
   return `<!DOCTYPE html>
     <html>
