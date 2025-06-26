@@ -30,8 +30,8 @@ importers:
         specifier: 5.2.6
         version: 5.2.6
       '@fontsource/zen-kaku-gothic-new':
-        specifier: 5.2.5
-        version: 5.2.5
+        specifier: 5.2.6
+        version: 5.2.6
       astro:
         specifier: 5.9.2
         version: 5.9.2(@types/node@22.15.32)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.40.0)(sass@1.89.2)(tsx@4.19.4)(typescript@5.5.4)(yaml@2.8.0)
@@ -560,8 +560,8 @@ packages:
   '@fontsource/source-code-pro@5.2.6':
     resolution: {integrity: sha512-eIlEPWRXqnYwpQO7nONj2IsUpzwME+UwP2oVAgNuwXX5oyLNJqw1Jh0D2FyZWS5Zd0ddsxbz+nhgyVT4K/OgGQ==}
 
-  '@fontsource/zen-kaku-gothic-new@5.2.5':
-    resolution: {integrity: sha512-z70JbquTUdH0gleBQtt/1IG5iLeW+sb2M3JUNFdbL7Ma3CXR6Tz7ajr8NEY+Jug/3sLJ8uOgJBNXqc7GrWxrEA==}
+  '@fontsource/zen-kaku-gothic-new@5.2.6':
+    resolution: {integrity: sha512-8gh1SbAjzEtK36ZrzlR+U8SO+EdpgykyBviS/QIIgDNwUqERxyF0QSLvlLNtMtnFUC3AEPkOUGH0L+o7KGyMnA==}
 
   '@fortawesome/fontawesome-free@6.7.2':
     resolution: {integrity: sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==}
@@ -3864,7 +3864,7 @@ snapshots:
 
   '@fontsource/source-code-pro@5.2.6': {}
 
-  '@fontsource/zen-kaku-gothic-new@5.2.5': {}
+  '@fontsource/zen-kaku-gothic-new@5.2.6': {}
 
   '@fortawesome/fontawesome-free@6.7.2': {}
 
