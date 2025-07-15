@@ -17,7 +17,7 @@ features:
   tweet: false
 ---
 
-岩波文庫『信頼と不信の哲学入門』という本を読んだ。
+岩波新書『信頼と不信の哲学入門』という本を読んだ。
 
 https://www.iwanami.co.jp/book/b654989.html
 
