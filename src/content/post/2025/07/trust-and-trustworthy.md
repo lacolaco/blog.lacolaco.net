@@ -3,7 +3,7 @@ title: '信頼されることと信頼に値すること - 『信頼と不信の
 slug: 'trust-and-trustworthy'
 icon: ''
 created_time: '2025-07-15T15:25:00.000Z'
-last_edited_time: '2025-07-15T15:25:00.000Z'
+last_edited_time: '2025-07-16T00:41:00.000Z'
 category: 'Diary'
 tags:
   - '読書'
