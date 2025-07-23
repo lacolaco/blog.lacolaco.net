@@ -3,7 +3,7 @@ title: '情報ではなく経験をアウトプットすること'
 slug: 'output-your-experiences'
 icon: ''
 created_time: '2021-03-08T01:02:00.000Z'
-last_edited_time: '2023-12-30T10:07:00.000Z'
+last_edited_time: '2025-07-23T03:15:00.000Z'
 category: 'Idea'
 tags:
   - '言語化'
@@ -49,4 +49,4 @@ features:
 だから、もし冒頭で書いたようなアウトプットの悩みを持っている人がいたらぜひ情報ではなく経験をアウトプットしてみてほしいと伝えたい。
 実際に何かをやったということは思っている以上に貴重なことなのだ。
 
-https://blog.lacolaco.net/2019/10/inner-speech/
+https://blog.lacolaco.net/posts/inner-speech/
