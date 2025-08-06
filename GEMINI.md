@@ -2,6 +2,10 @@
 
 This is a personal blog built with [Astro](https://astro.build/), a static site generator for building fast, content-focused websites. The blog is deployed to [Cloudflare Pages](https://pages.cloudflare.com/).
 
+## Communication Rules
+
+* IMPORTANT: Speak in Japanese.
+
 ## Key Technologies
 
 *   **Framework:** [Astro](https://astro.build/)
