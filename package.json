@@ -72,7 +72,7 @@
     "tailwindcss": "4.1.11",
     "tsx": "4.20.3",
     "typescript-eslint": "^8.33.1",
-    "wrangler": "4.19.2",
+    "wrangler": "4.27.0",
     "zod": "^3.22.4"
   }
 }
