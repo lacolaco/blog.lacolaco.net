@@ -18,3 +18,8 @@ jobs:
       - uses: koki-develop/claude-renovate-review@a20f64e3ea03ffd40a8995f5d9087956e42d5e6c # v1.0.2
         with:
           claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          allowed-tools: |
+            WebFetch(domain:github.com)
+            WebFetch(domain:npm.pkg.github.com)
+            WebFetch(domain:www.npmjs.com)
+            WebFetch(domain:raw.githubusercontent.com)
