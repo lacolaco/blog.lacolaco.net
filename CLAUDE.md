@@ -344,5 +344,6 @@ pnpm dev --host                      # Expose dev server to network
 
 - CLAUDE.md is always written in English
 - This is a Japanese development environment - use Japanese for code comments
+- **ALWAYS communicate with users in Japanese** for chat messages, code reviews, and all interactions
 - Never use `as any` type assertions - define proper types
 - Conventional Commits format required for all commits
