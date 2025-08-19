@@ -35,7 +35,7 @@
     "cheerio": "1.1.2",
     "date-fns": "4.1.0",
     "katex": "0.16.22",
-    "mermaid": "11.9.0",
+    "mermaid": "11.10.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "satori": "0.16.2",
