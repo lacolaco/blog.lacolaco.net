@@ -31,7 +31,7 @@
     "@date-fns/tz": "^1.2.0",
     "@fontsource/source-code-pro": "5.2.6",
     "@fontsource/zen-kaku-gothic-new": "5.2.6",
-    "astro": "5.12.8",
+    "astro": "5.13.2",
     "cheerio": "1.1.2",
     "date-fns": "4.1.0",
     "katex": "0.16.22",
