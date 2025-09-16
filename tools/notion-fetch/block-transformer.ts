@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import type { PostFrontmatterOut } from '@lib/post';
 import { isTweetUrl } from '../shared/embed';
 import type { RichTextArray, RichTextItemObject, SpecificBlockObject, UntypedBlockObject } from './notion-types';
@@ -227,7 +228,20 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
         // ローカル画像の場合はレポジトリにダウンロードする
         const imageUrl = block.image.file.url;
         const urlObj = new URL(imageUrl);
-        const filename = urlObj.pathname.split('/').pop() || 'image.png';
+        const pathSegments = urlObj.pathname.split('/').filter((segment) => segment.length > 0);
+
+        // ファイル名形式: <元ファイル名>-<ハッシュ>.<拡張子>
+        const originalFilename = pathSegments[pathSegments.length - 1] || 'image.png';
+
+        // 元ファイル名から名前と拡張子を分離
+        const dotIndex = originalFilename.lastIndexOf('.');
+        const baseName = dotIndex !== -1 ? originalFilename.substring(0, dotIndex) : originalFilename;
+        const extension = dotIndex !== -1 ? originalFilename.substring(dotIndex) : '.png';
+
+        // ファイルURLからSHA-1ハッシュ値を生成（最初の8文字を使用）
+        const hash = createHash('sha1').update(imageUrl).digest('hex').substring(0, 8);
+
+        const filename = `${baseName}-${hash}${extension}`;
         context.imageDownloads.push({ filename, url: imageUrl });
         const imageSrc = `/images/${context.slug}/${filename}`;
 
