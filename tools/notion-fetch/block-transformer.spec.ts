@@ -94,18 +94,20 @@ describe('transformNotionBlocksToMarkdown', () => {
     it('ローカル画像はslug別のディレクトリに配置された画像への参照になる', async () => {
       const fixture = await loadFixture('block-image-file.json');
       const result = transformNotionBlocksToMarkdown([fixture], createDefaultContext({ slug: 'post-slug' }));
-      assert.strictEqual(result, '![image](/images/post-slug/image.png)\n\n');
+      // ファイル名形式: <元ファイル名>-<ハッシュ>.<拡張子>
+      assert.strictEqual(result, '![image](/images/post-slug/brocolli-ee9313ab.jpeg)\n\n');
     });
 
     it('ローカル画像のダウンロードタスクがコンテキストに追加される', async () => {
       const fixture = await loadFixture('block-image-file.json');
       const context = createDefaultContext();
       const result = transformNotionBlocksToMarkdown([fixture], context);
-      assert.strictEqual(result, '![image](/images/test-slug/image.png)\n\n');
+      // ファイル名形式: <元ファイル名>-<ハッシュ>.<拡張子>
+      assert.strictEqual(result, '![image](/images/test-slug/brocolli-ee9313ab.jpeg)\n\n');
       assert.deepStrictEqual(context.imageDownloads, [
         {
-          filename: 'image.png',
-          url: 'https://website.domain/images/image.png',
+          filename: 'brocolli-ee9313ab.jpeg',
+          url: 'https://s3.us-west-2.amazonaws.com/secure.notion-static.com/9bc6c6e0-32b8-4d55-8c12-3ae931f43a01/brocolli.jpeg',
         },
       ]);
     });
