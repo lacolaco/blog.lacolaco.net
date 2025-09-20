@@ -11,7 +11,7 @@ This is lacolaco's personal blog built with **Astro 5.x** as a static site gener
 **System Requirements:**
 
 - **Node.js**: 22.x or later
-- **pnpm**: 10.11.1 (exact version enforced by packageManager)
+- **pnpm**: 10.16.1 (exact version enforced by packageManager)
 - **TypeScript**: ES modules enabled
 
 **Environment Variables (.env):**
