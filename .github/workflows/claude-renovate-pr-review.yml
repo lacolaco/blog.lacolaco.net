@@ -27,3 +27,5 @@ jobs:
             WebFetch(domain:www.astro.build)
             WebFetch(domain:tailwindcss.com)
             WebFetch(domain:docs.iconify.design)
+            WebFetch(domain:eslint.org)
+            WebFetch(domain:typescript-eslint.io)
