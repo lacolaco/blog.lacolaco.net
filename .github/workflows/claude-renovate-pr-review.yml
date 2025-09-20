@@ -21,8 +21,9 @@ jobs:
           allowed-tools: |
             WebFetch(domain:github.com)
             WebFetch(domain:npm.pkg.github.com)
-            WebFetch(domain:www.npmjs.com)
             WebFetch(domain:raw.githubusercontent.com)
+            WebFetch(domain:www.npmjs.com)
+            WebFetch(domain:nodejs.org)
             WebFetch(domain:www.astro.build)
             WebFetch(domain:tailwindcss.com)
             WebFetch(domain:docs.iconify.design)
