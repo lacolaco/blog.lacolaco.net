@@ -13,7 +13,7 @@ jobs:
       checks: read
       actions: write
     steps:
-      - uses: github/command@3ef62aea1e21fa68d85e57df4fd0edcca5cc4b53 # v2.0.1
+      - uses: github/command@4002f2aad7964e6d776c2f91bd3f1f87bf6af793 # v2.0.2
         id: command
         with:
           command: '.sync'
