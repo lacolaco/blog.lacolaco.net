@@ -25,3 +25,4 @@ jobs:
             WebFetch(domain:raw.githubusercontent.com)
             WebFetch(domain:www.astro.build)
             WebFetch(domain:tailwindcss.com)
+            WebFetch(domain:docs.iconify.design)
