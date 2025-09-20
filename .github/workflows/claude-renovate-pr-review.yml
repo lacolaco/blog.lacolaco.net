@@ -23,3 +23,5 @@ jobs:
             WebFetch(domain:npm.pkg.github.com)
             WebFetch(domain:www.npmjs.com)
             WebFetch(domain:raw.githubusercontent.com)
+            WebFetch(domain:www.astro.build)
+            WebFetch(domain:tailwindcss.com)
