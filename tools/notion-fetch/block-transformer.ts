@@ -238,8 +238,9 @@ function transformBlock(block: UntypedBlockObject, context: TransformContext, li
         const baseName = dotIndex !== -1 ? originalFilename.substring(0, dotIndex) : originalFilename;
         const extension = dotIndex !== -1 ? originalFilename.substring(dotIndex) : '.png';
 
-        // ファイルURLからSHA-1ハッシュ値を生成（最初の8文字を使用）
-        const hash = createHash('sha1').update(imageUrl).digest('hex').substring(0, 8);
+        // ファイルURLのクエリパラメータを除いた部分からSHA-1ハッシュ値を生成（最初の8文字を使用）
+        const hashSource = urlObj.origin + urlObj.pathname;
+        const hash = createHash('sha1').update(hashSource).digest('hex').substring(0, 8);
 
         const filename = `${baseName}-${hash}${extension}`;
         context.imageDownloads.push({ filename, url: imageUrl });

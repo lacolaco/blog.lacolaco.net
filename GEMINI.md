@@ -22,7 +22,14 @@ This is a personal blog built with [Astro](https://astro.build/), a static site 
     *   `src/layouts/`: Defines the layout templates for pages.
     *   `src/components/`: Contains reusable UI components.
 *   `public/`: Contains static assets like images and fonts.
-*   `tools/`: Contains scripts for fetching content from Notion and other development tools.
+*   `tools/`: Contains scripts for development and content management.
+    *   `tools/notion-fetch/`: A script to fetch content from Notion and transform it into Markdown files for Astro. It's the core of the headless CMS workflow.
+        *   **Entrypoint & Flow**: The process is orchestrated by `main.ts`. It fetches all blog pages from the Notion database and processes them in parallel. It includes an optimization to skip pages that haven't been updated by comparing the `last_edited_time` with the frontmatter of the existing Markdown file.
+        *   **Block Transformation**: `block-transformer.ts` is the core of the conversion logic. It recursively transforms an array of Notion blocks into a Markdown string. It supports a wide range of blocks, including lists, code blocks, callouts (converted to GitHub-style alerts), and equations. A `TransformContext` object is used to track required features (like KaTeX for equations) and collect image download tasks.
+        *   **Page & Frontmatter**: `page-transformer.ts` is responsible for extracting page properties (title, slug, tags, etc.) from the Notion API response and building the final Markdown file, combining the frontmatter and the transformed content. It uses Prettier for final formatting.
+        *   **Image Handling**: `image-downloader.ts` handles the parallel download of all images found during the block transformation. Images are saved locally to `public/images/{slug}/`, and the Markdown `<img>` tags are updated to point to these local files.
+        *   **File System Abstraction**: `filesystem.ts` provides a simple wrapper around Node.js file system APIs, which allows the script to support a `--dry-run` mode for safe testing.
+    *   `tools/remark-embed/`: A Remark plugin to handle embedding external content like links or other resources within Markdown files.
 
 # Building and Running
 
