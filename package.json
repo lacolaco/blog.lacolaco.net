@@ -29,7 +29,7 @@
     "@astrojs/rss": "4.0.12",
     "@astrojs/sitemap": "3.4.2",
     "@date-fns/tz": "^1.2.0",
-    "@fontsource/source-code-pro": "5.2.6",
+    "@fontsource/source-code-pro": "5.2.7",
     "@fontsource/zen-kaku-gothic-new": "5.2.6",
     "astro": "5.13.2",
     "cheerio": "1.1.2",
