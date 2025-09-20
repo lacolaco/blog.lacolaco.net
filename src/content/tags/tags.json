@@ -382,5 +382,9 @@
   "Textlint": {
     "name": "Textlint",
     "color": "blue"
+  },
+  "MCP": {
+    "name": "MCP",
+    "color": "red"
   }
 }
