@@ -28,7 +28,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@lacolaco'
       # https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#authenticating-with-github-app-generated-tokens
-      - uses: actions/create-github-app-token@df432ceedc7162793a195dd1713ff69aefc7379e # v2.0.6
+      - uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
         id: generate-token
         with:
           app-id: ${{ secrets.WORKER_APP_ID }}
