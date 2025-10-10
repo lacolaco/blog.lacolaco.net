@@ -26,8 +26,7 @@ CLOUDFLARE_API_TOKEN=*          # Cloudflare API Token (for deployment)
 
 1. Clone repository and install dependencies: `pnpm install`
 2. Setup environment variables in `.env` file
-3. Install Playwright browsers: `pnpm playwright install chromium`
-4. Verify setup: `pnpm dev`
+3. Verify setup: `pnpm dev`
 
 ## Essential Commands
 
@@ -189,7 +188,6 @@ Rich markdown support with custom plugins:
 
 - Uses Node.js built-in test runner (`tsx --test`)
 - Tests located in `tools/**/*.spec.ts`
-- Playwright installed for browser automation (if needed)
 - Run with `pnpm test:notion-fetch` or `pnpm test:remark-embed`
 
 ## Deployment
