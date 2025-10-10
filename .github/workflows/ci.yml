@@ -3,6 +3,9 @@ name: ci
 on:
   pull_request:
     branches: [main]
+    paths-ignore:
+      - 'src/content/post/**'
+      - 'public/images/**'
 
 jobs:
   build:
