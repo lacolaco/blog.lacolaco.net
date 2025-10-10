@@ -84,16 +84,19 @@ fn begin(goal): task {
 }
 
 fn finish(task): void {
-  description: "Complete task with cleanup, tests, commit, and PR"
+  description: "Complete task with quality checks, tests, commit, and PR (follows CLAUDE.md mandatory workflow)"
   action: [
     "Clean up and verify all changes are correct",
-    "Run pnpm test to ensure all tests pass",
+    project.lint(),
+    project.format(),
+    project.test(),
     "Stage all relevant files with git add",
     "Create conventional commit with detailed message using git commit",
     "Push to remote branch with git push",
     "Create pull request with gh pr create (include summary and test plan)",
     "Rebase on main if requested with git rebase origin/main",
-    "Force push rebased branch if needed with git push -f"
+    "Warn user before force push; only proceed with explicit approval",
+    "Force push rebased branch if approved with git push -f"
   ]
 }
 </acl:definitions>
