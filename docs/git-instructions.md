@@ -176,10 +176,6 @@ feat(embed): add Google Slides URL embedding support
 
 ```
 <type>(<scope>): <short description>
-
-🤖 Generated with [Claude Code](https://claude.ai/code)
-
-Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ## Automated Dependency Management
