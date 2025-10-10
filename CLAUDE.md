@@ -188,7 +188,6 @@ Rich markdown support with custom plugins:
 
 - Uses Node.js built-in test runner (`tsx --test`)
 - Tests located in `tools/**/*.spec.ts`
-- Playwright installed for browser automation (if needed)
 - Run with `pnpm test:notion-fetch` or `pnpm test:remark-embed`
 
 ## Deployment
