@@ -1,6 +1,6 @@
 import { queryAvailablePosts } from '@lib/query';
 import type { APIContext } from 'astro';
-import { SITE_TITLE } from '../../consts';
+import { generateOgImage } from '../../libs/og-image/generate';
 
 // export async function getStaticPaths() {
 //   const posts = await queryAvailablePosts();
@@ -21,11 +21,19 @@ export async function GET({ params, locals }: APIContext) {
   const post = (await queryAvailablePosts()).find((post) => post.data.slug === slug);
   if (!post) return { status: 404 };
 
-  const title = post.data.title;
+  // Assert mandatory env vars
   const ogImageServiceUrl = locals.runtime.env.OG_IMAGE_SERVICE_URL;
+  const serviceAccountKey = locals.runtime.env.GCP_SERVICE_ACCOUNT_KEY;
+  if (!ogImageServiceUrl) {
+    return new Response('OG_IMAGE_SERVICE_URL is not set', { status: 500 });
+  }
+  if (!serviceAccountKey) {
+    return new Response('GCP_SERVICE_ACCOUNT_KEY is not set', { status: 500 });
+  }
 
   try {
-    const body = await getOgImage(ogImageServiceUrl, { slug, title });
+    const title = post.data.title;
+    const body = await generateOgImage(locals.runtime.env, locals.runtime.ctx, { slug, title });
 
     return new Response(body, {
       headers: {
@@ -37,31 +45,4 @@ export async function GET({ params, locals }: APIContext) {
   } catch (error) {
     return new Response(`Failed to generate OG image: ${error}`, { status: 500 });
   }
-}
-
-const siteDomainName = 'blog.lacolaco.net';
-
-export async function getOgImage(
-  ogImageServiceUrl: string,
-  params: { slug: string; title: string },
-): Promise<ArrayBuffer> {
-  const resp = await fetch(ogImageServiceUrl, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json;charset=UTF-8',
-    },
-    body: JSON.stringify({
-      title: params.title,
-      slug: params.slug,
-      siteTitle: SITE_TITLE,
-      siteDomainName: siteDomainName,
-    }),
-  });
-
-  if (!resp.ok) {
-    const message = await resp.text();
-    throw new Error(`Failed to fetch OG image: ${resp.status} ${resp.statusText} - ${message}`);
-  }
-
-  return await resp.arrayBuffer();
 }
