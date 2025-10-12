@@ -20,7 +20,6 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
-    optimizeDeps: { exclude: ['@resvg/resvg-js'] },
     resolve: {
       // https://github.com/withastro/astro/issues/12824#issuecomment-2563095382
       // Use react-dom/server.edge instead of react-dom/server.browser for React 19.
@@ -56,5 +55,10 @@ export default defineConfig({
     platformProxy: {
       enabled: true,
     },
+    routes: {
+      extend: {
+        include: [{ pattern: '/og/:slug.png' }],
+      }
+    }
   }),
 });

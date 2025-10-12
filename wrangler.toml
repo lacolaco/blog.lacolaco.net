@@ -2,7 +2,7 @@ name = "blog-lacolaco-net"
 
 compatibility_date = "2025-06-04"
 main = "./dist/_worker.js/index.js"
-
+preview_urls = true
 compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 
 [assets]
@@ -11,3 +11,5 @@ directory = "./dist"
 
 [observability]
 enabled = true
+
+[vars]
