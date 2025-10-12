@@ -30,3 +30,4 @@ jobs:
             WebFetch(domain:eslint.org)
             WebFetch(domain:typescript-eslint.io)
             WebFetch(domain:playwright.dev)
+            WebFetch(domain:iconify.design)
