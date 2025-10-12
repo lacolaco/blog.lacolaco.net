@@ -11,5 +11,3 @@ directory = "./dist"
 
 [observability]
 enabled = true
-
-[vars]
