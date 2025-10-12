@@ -1,5 +1,6 @@
 import { queryAvailablePosts } from '@lib/query';
 import type { APIContext } from 'astro';
+import { SITE_TITLE } from '../../consts';
 
 // export async function getStaticPaths() {
 //   const posts = await queryAvailablePosts();
@@ -52,8 +53,8 @@ export async function getOgImage(
     body: JSON.stringify({
       title: params.title,
       slug: params.slug,
-      // siteTitle: SITE_TITLE,
-      // siteDomainName: siteDomainName,
+      siteTitle: SITE_TITLE,
+      siteDomainName: siteDomainName,
     }),
   });
 
