@@ -13,3 +13,12 @@ interface ImportMetaEnv {
   readonly NOTION_AUTH_TOKEN: string;
   readonly NOTION_DATABASE_ID: string;
 }
+
+/**
+ * Environment Variables Typing for `locals.env`
+ */
+type Runtime = import('@astrojs/cloudflare').Runtime<Env>;
+
+declare namespace App {
+  interface Locals extends Runtime {}
+}

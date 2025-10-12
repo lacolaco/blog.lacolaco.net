@@ -38,8 +38,6 @@
     "mermaid": "11.10.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
-    "satori": "0.18.2",
-    "svg2png-wasm": "^1.4.1",
     "unist-util-visit": "^5.0.0",
     "yaml": "^2.8.0"
   },
