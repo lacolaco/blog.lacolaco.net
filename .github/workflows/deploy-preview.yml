@@ -35,11 +35,6 @@ concurrency:
   group: deploy-preview-${{ github.event.number }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-  packages: read
-  pull-requests: write
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -47,6 +42,7 @@ jobs:
       contents: read
       packages: read
       id-token: write
+      pull-requests: write
     environment: development
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
