@@ -4,8 +4,17 @@ import { createHash } from 'node:crypto';
 
 const storage = new Storage();
 
+/**
+ * OG画像のキャッシュキーを生成する
+ * spec: {slug}-{sha256(slug + title)}
+ * 同じ記事でもタイトルが変わったらキャッシュを更新するためにタイトルも含める
+ *
+ * @param slug 記事ID(slug)
+ * @param title 記事タイトル
+ * @returns
+ */
 function getCacheKey(slug: string, title: string): string {
-  const hash = createHash('sha256').update(title).digest('hex');
+  const hash = createHash('sha256').update(`${slug}-${title}`).digest('hex');
   return `${slug}-${hash}`;
 }
 
