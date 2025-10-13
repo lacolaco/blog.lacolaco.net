@@ -4,6 +4,12 @@ import { createHash } from 'node:crypto';
 
 const storage = new Storage();
 
+// Assert mandatory environment variable
+const bucketName = import.meta.env.GCS_BUCKET_NAME;
+if (!bucketName) {
+  throw new Error('GCS_BUCKET_NAME is not set.');
+}
+
 /**
  * OG画像のキャッシュキーを生成する
  * spec: {slug}-{sha256(slug + title)}
@@ -19,11 +25,6 @@ function getCacheKey(slug: string, title: string): string {
 }
 
 export async function getCachedImage(slug: string, title: string): Promise<Buffer | null> {
-  const bucketName = import.meta.env.GCS_BUCKET_NAME;
-  if (!bucketName) {
-    throw new Error('GCS_BUCKET_NAME is not set.');
-  }
-
   const bucket = storage.bucket(bucketName);
   const cacheKey = getCacheKey(slug, title);
   const fileName = `${cacheKey}.png`;
@@ -42,11 +43,6 @@ export async function getCachedImage(slug: string, title: string): Promise<Buffe
 }
 
 export async function cacheImage(slug: string, title: string, buffer: Buffer): Promise<void> {
-  const bucketName = import.meta.env.GCS_BUCKET_NAME;
-  if (!bucketName) {
-    throw new Error('GCS_BUCKET_NAME is not set.');
-  }
-
   const bucket = storage.bucket(bucketName);
   const cacheKey = getCacheKey(slug, title);
   const fileName = `${cacheKey}.png`;
