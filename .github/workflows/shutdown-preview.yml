@@ -30,4 +30,4 @@ jobs:
       # https://cloud.google.com/run/docs/rollouts-rollbacks-traffic-migration?hl=ja#remove-tags
       - name: Remove revision tag from Cloud Run service
         run: |
-          gcloud run update-traffic web --remove-tags pr-${{ github.event.number }}
+          gcloud run services update-traffic web --region asia-northeast1 --remove-tags pr-${{ github.event.number }}
