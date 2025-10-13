@@ -2,15 +2,15 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
-import remarkBreaks from 'remark-breaks';
-import remarkMath from 'remark-math';
+import rehypeGithubAlert from 'rehype-github-alert';
+import rehypeGithubEmoji from 'rehype-github-emoji';
 import rehypeKatex from 'rehype-katex';
 import rehypeMermaid from 'rehype-mermaid';
-import rehypeGithubEmoji from 'rehype-github-emoji';
-import rehypeGithubAlert from 'rehype-github-alert';
-import remarkEmbed from './tools/remark-embed/index.ts';
+import remarkBreaks from 'remark-breaks';
+import remarkMath from 'remark-math';
+import remarkEmbed from './tools/remark-embed';
 
-import cloudflare from '@astrojs/cloudflare';
+import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
@@ -21,6 +21,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     resolve: {
+      external: ['@google-cloud/*', '@resvg/*'],
       // https://github.com/withastro/astro/issues/12824#issuecomment-2563095382
       // Use react-dom/server.edge instead of react-dom/server.browser for React 19.
       // Without this, MessageChannel from node:worker_threads needs to be polyfilled.
@@ -51,14 +52,7 @@ export default defineConfig({
   },
 
   output: 'static',
-  adapter: cloudflare({
-    platformProxy: {
-      enabled: true,
-    },
-    routes: {
-      extend: {
-        include: [{ pattern: '/og/:slug.png' }],
-      }
-    }
+  adapter: node({
+    mode: 'standalone',
   }),
 });

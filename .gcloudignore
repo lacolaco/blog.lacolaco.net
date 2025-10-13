@@ -1,0 +1,34 @@
+# This file specifies files that are *not* uploaded to Google Cloud when
+# deploying your application. See https://cloud.google.com/sdk/gcloud/reference/topic/gcloudignore
+# for more information.
+
+.gcloudignore
+# If you would like to upload your .git directory, .gitignore file, or
+# files from your .gitignore file, remove the corresponding line below:
+.git
+.gitignore
+
+# Node.js dependencies
+node_modules/
+
+# Development files
+.github/
+.vscode/
+.wrangler/
+.tmp/
+.astro/
+.acl/
+.*
+GEMINI.md
+CLAUDE.md
+
+tools/
+public/
+src/
+
+compose.yml
+eslint.config.*
+
+# Logs
+npm-debug.log
+yarn-error.log

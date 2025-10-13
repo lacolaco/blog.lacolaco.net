@@ -103,9 +103,6 @@ async function fetchPageMetadata(url: string): Promise<PageMetadata> {
   const config = getFetchConfig(url);
 
   const response = await fetch(url, {
-    cf: {
-      cacheTtlByStatus: { '200-299': config.cacheTtl, 404: 1, '500-599': 0 },
-    },
     headers: {
       'user-agent': config.userAgent,
       accept: 'text/html',

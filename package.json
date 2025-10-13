@@ -15,7 +15,6 @@
     "format": "prettier --cache --write 'src' 'tools'",
     "astro": "astro",
     "notion-fetch": "tsx --env-file .env tools/notion-fetch/main.ts",
-    "postinstall": "wrangler types",
     "test:tools": "tsx --test --test-reporter spec tools/**/*.spec.ts",
     "test:notion-fetch": "tsx --test --test-reporter spec tools/notion-fetch/**/*.spec.ts",
     "test:remark-embed": "tsx --test --test-reporter spec tools/remark-embed/**/*.spec.ts",
@@ -23,7 +22,7 @@
   },
   "packageManager": "pnpm@10.16.1",
   "dependencies": {
-    "@astrojs/cloudflare": "^12.5.4",
+    "@astrojs/node": "^9.4.6",
     "@astrojs/prism": "3.3.0",
     "@astrojs/react": "4.3.1",
     "@astrojs/rss": "4.0.12",
@@ -31,14 +30,16 @@
     "@date-fns/tz": "^1.2.0",
     "@fontsource/source-code-pro": "5.2.7",
     "@fontsource/zen-kaku-gothic-new": "5.2.6",
+    "@google-cloud/storage": "7.17.2",
+    "@resvg/resvg-js": "2.6.2",
     "astro": "5.14.3",
     "cheerio": "1.1.2",
     "date-fns": "4.1.0",
-    "jose": "^6.1.0",
     "katex": "0.16.22",
     "mermaid": "11.10.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
+    "satori": "^0.18.3",
     "unist-util-visit": "^5.0.0",
     "yaml": "^2.8.0"
   },
@@ -70,7 +71,7 @@
     "tailwindcss": "4.1.13",
     "tsx": "4.20.5",
     "typescript-eslint": "^8.33.1",
-    "wrangler": "4.38.0",
+    "vitest": "3.2.4",
     "zod": "^3.22.4"
   }
 }

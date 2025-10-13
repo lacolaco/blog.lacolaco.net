@@ -11,14 +11,20 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
+      - name: Google Auth
+        uses: 'google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093' # v3.0.0
+        with:
+          workload_identity_provider: 'projects/348931464772/locations/global/workloadIdentityPools/github-actions-pool/providers/github-deploy'
+          service_account: 'github-actions@blog-lacolaco-net.iam.gserviceaccount.com'
+
       - name: setup pnpm
         uses: pnpm/action-setup@a7487c7e89a18df4991f7f222e4898a00d66ddda # v4.1.0
-        with:
-          run_install: false
 
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
@@ -28,15 +34,19 @@ jobs:
           scope: '@lacolaco'
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         run: pnpm run build
 
-      - name: Deploy to Cloudflare Workers
-        run: pnpm exec wrangler deploy
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      - name: Deploy to Cloud Run
+        uses: 'google-github-actions/deploy-cloudrun@2028e2d7d30a78c6910e0632e48dd561b064884d' # v3.0.1
+        with:
+          service: 'web'
+          region: 'asia-northeast1'
+          source: '.'
+          flags: '--allow-unauthenticated'
+          env_vars: |-
+            GCS_BUCKET_NAME=${{ vars.GCS_BUCKET_NAME }}
