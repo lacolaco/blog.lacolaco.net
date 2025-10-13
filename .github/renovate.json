@@ -8,7 +8,7 @@
   "packageRules": [
     {
       "groupName": "@astrojs packages",
-      "matchPackageNames": ["astro", "@astrojs/{/,}**"]
+      "matchPackageNames": ["astro", "@astrojs/**"]
     },
     {
       "groupName": "esbuild packages",
@@ -20,16 +20,13 @@
     },
     {
       "groupName": "types packages",
-      "matchPackageNames": ["@types/{/,}**"],
+      "matchPackageNames": ["@types/**"],
       "automerge": true
     },
     {
       "groupName": "iconify packages",
-      "matchPackageNames": ["@iconify/{/,}**"]
-    },
-    {
-      "groupName": "preact packages",
-      "matchPackageNames": ["preact{/,}**", "preact-render-to-string{/,}**"]
+      "matchPackageNames": ["@iconify/**"],
+      "automerge": true
     }
   ]
 }
