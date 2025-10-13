@@ -18,9 +18,8 @@ export async function GET({ params }: APIContext) {
     const cachedImage = await getCachedImage(slug, title);
     if (cachedImage) {
       console.debug(`Found cached image for slug: ${slug}, title: ${title}`);
-      // res.setHeader('Content-Type', 'image/png');
-      // res.send(cachedImage);
-      return new Response(cachedImage.buffer as ArrayBuffer, {
+
+      return new Response(new Uint8Array(cachedImage).buffer, {
         headers: {
           'content-type': 'image/png',
           // Cache for 1 hour and revalidate every hour
@@ -39,7 +38,7 @@ export async function GET({ params }: APIContext) {
     await cacheImage(slug, title, pngBuffer);
     console.debug(`Cached image for slug: ${slug}, title: ${title}`);
 
-    return new Response(pngBuffer.buffer as ArrayBuffer, {
+    return new Response(new Uint8Array(pngBuffer).buffer, {
       headers: {
         'content-type': 'image/png',
         // Cache for 1 hour and revalidate every hour
