@@ -136,7 +136,8 @@ feat(embed): add Google Slides URL embedding support
 
 - **`main` ブランチへの変更** で自動的に本番デプロイがトリガーされる
 - **GitHub Actions** によりビルド・デプロイが実行される
-- **Cloudflare Pages** にデプロイされる
+- **Google Cloud Run** にコンテナイメージとしてデプロイされる
+- **プルリクエスト** に対してはプレビュー環境が自動的に作成される
 
 ## 特別なルール
 

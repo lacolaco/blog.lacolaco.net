@@ -1,0 +1,13 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    network_mode: "host"
+    env_file:
+      - .env.runtime
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/app/adc.json
+    volumes:
+      - ~/.config/gcloud/application_default_credentials.json:/app/adc.json
+

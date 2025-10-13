@@ -1,4 +1,3 @@
-/// <reference path="../worker-configuration.d.ts" />
 /// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />
 /// <reference types="gtag.js" />
@@ -9,17 +8,13 @@ interface ImportMetaEnv {
   readonly NOTION_DATABASE_ID: string;
 }
 
-/**
- * Environment Variables Typing for `locals.env`
- */
-type Runtime = import('@astrojs/cloudflare').Runtime<Env>;
-
-declare namespace App {
-  interface Locals extends Runtime {}
+// Typing for `process.env`
+declare namespace NodeJS {
+  interface ProcessEnv {
+    /**
+     * Google Cloud Storageのバケット名
+     * OG画像のキャッシュに使用する
+     */
+    readonly GCS_BUCKET_NAME: string;
+  }
 }
-
-interface CacheStorage {
-  // https://developers.cloudflare.com/workers/runtime-apis/cache/
-  default: Cache;
-}
-declare const caches: CacheStorage;

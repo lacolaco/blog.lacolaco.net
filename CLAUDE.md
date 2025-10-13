@@ -19,7 +19,7 @@ This is lacolaco's personal blog built with **Astro 5.x** as a static site gener
 ```bash
 NOTION_AUTH_TOKEN=secret_*       # Notion Integration Token
 NOTION_DATABASE_ID=*             # Notion Database ID
-CLOUDFLARE_API_TOKEN=*          # Cloudflare API Token (for deployment)
+GCS_BUCKET_NAME=*                # Google Cloud Storage bucket name (for OG image caching)
 ```
 
 **Initial Setup:**
@@ -33,7 +33,7 @@ CLOUDFLARE_API_TOKEN=*          # Cloudflare API Token (for deployment)
 **Development:**
 
 - `pnpm dev` - Start development server
-- `pnpm build` - Build for production (includes Cloudflare Workers build)
+- `pnpm build` - Build for production (static site + Node.js server)
 - `pnpm preview` - Preview production build
 
 **Content Management:**
@@ -75,7 +75,8 @@ CLOUDFLARE_API_TOKEN=*          # Cloudflare API Token (for deployment)
 - **Astro 5.x** with React integration for interactive components
 - **TypeScript** with strict configuration and path aliases (`@lib/*`)
 - **Tailwind CSS 4.x** for styling
-- **Cloudflare Pages** for hosting with Workers for serverless functions
+- **Google Cloud Run** for hosting with Node.js server (standalone mode)
+- **Google Cloud Storage** for OG image caching
 
 **Key Directories:**
 
@@ -103,23 +104,24 @@ For detailed architecture and usage information, see @tools/notion-fetch/README.
 
 **API Endpoints:**
 
-- `src/pages/embed/index.ts` - Cloudflare Workers function for web link preview generation
+- `src/pages/embed/index.ts` - Server-side API endpoint for web link preview generation
 - `src/pages/og/[slug].png.ts` - Dynamic OG image generation endpoint
 
-**Cloudflare Workers (embed endpoint):**
+**Embed API Endpoint:**
 
-- Web page preview generation for link previews
-- Extracts page titles from URLs for link previews
+- Server-side rendered web page preview generation for link previews
+- Extracts page titles and metadata from URLs using Cheerio
 - Special handling for Amazon URLs with Googlebot UA
-- 1-day browser cache + Cloudflare edge caching
-- Built to `dist/_worker.js/` during production build
+- 1-hour cache control header for browser caching
+- Runs on Node.js server (prerender: false)
 
-**OG Image Generation (og endpoint):**
+**OG Image Generation API Endpoint:**
 
-- Dynamic OG image generation using Satori + svg2png-wasm
+- Dynamic OG image generation using Satori + @resvg/resvg-js
 - Runtime generation (prerender: false) for flexibility
 - Uses Google Fonts (Zen Kaku Gothic New) with subset loading
 - 800x400 PNG output with blog title and post title
+- Caching via Google Cloud Storage for performance
 - Error handling for missing posts (404 response)
 
 **Internationalization:**
@@ -181,8 +183,9 @@ Rich markdown support with custom plugins:
 
 - **Static Images**: Auto-downloaded from Notion to `public/images/{slug}/`
 - **OG Images**: Runtime generation via `/og/{slug}.png` endpoint
+- **OG Image Caching**: Google Cloud Storage for persistent caching
 - **Font Subset Loading**: Google Fonts API with text-specific subsets
-- **WASM Processing**: SVG to PNG conversion using svg2png-wasm
+- **Image Rendering**: SVG to PNG conversion using @resvg/resvg-js
 
 ## Testing
 
@@ -192,10 +195,30 @@ Rich markdown support with custom plugins:
 
 ## Deployment
 
-- **Target**: Cloudflare Pages with Workers
-- **Build Output**: `dist/` (Astro static files) + `dist/_worker.js/` (Workers)
+- **Target**: Google Cloud Run (Container-based hosting)
+- **Build Output**: `dist/` (Astro static files + Node.js server)
+- **Container**: Docker image with Node.js runtime (see `Dockerfile`)
 - **CI/CD**: GitHub Actions with automated deployment
-- **Configuration**: `wrangler.toml` for Cloudflare settings
+  - **Production**: Deploys on push to `main` branch
+  - **Preview**: Deploys on pull requests with tagged revisions
+- **Configuration**: Environment variables set via GitHub Actions
+- **Authentication**: Workload Identity Federation for GitHub Actions
+
+### Docker Architecture
+
+The project uses a multi-stage Docker build:
+
+1. **Base Stage**: Sets up pnpm and Node.js environment
+2. **Prod-deps Stage**: Installs production dependencies only
+3. **Build Stage**: Copies pre-built Astro output (built in GitHub Actions)
+4. **Production Stage**: Combines dependencies and build output
+
+**Important Notes:**
+
+- **Build occurs in GitHub Actions**, not in Docker
+- Astro build output must exist before running `docker build`
+- The container runs the Node.js server with `node ./dist/server/entry.mjs`
+- Environment variables: `HOST=0.0.0.0`, `PORT=4321`, `NODE_ENV=production`
 
 ## Development Workflow
 
@@ -276,10 +299,11 @@ See @docs/git-instructions.md
 
 4. **OG Image Generation Issues:**
 
-   - Ensure WASM initialization in OgImage component
+   - Ensure @resvg/resvg-js initialization in OgImage component
    - Check Google Fonts API accessibility
    - Verify font family availability and fallbacks
    - Debug Satori SVG generation with console logging
+   - Check Google Cloud Storage bucket permissions and connectivity
 
 5. **Development Server Issues:**
    - Clear `.astro` cache directory
@@ -310,10 +334,11 @@ pnpm dev --host                      # Expose dev server to network
 
 - Bundle size impact assessment for new dependencies
 - Image optimization and lazy loading implementation
-- Cloudflare Workers execution time limits (< 10ms typically)
-- OG image generation performance (runtime vs static)
+- Google Cloud Run cold start times and instance management
+- OG image generation performance with GCS caching
 - Notion API rate limiting considerations
 - Font subset loading optimization
+- Node.js server memory usage and CPU optimization
 
 ## Claude Code Specific Guidelines
 
