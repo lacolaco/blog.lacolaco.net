@@ -6,5 +6,15 @@ interface ImportMetaEnv {
   readonly PRODUCTION?: boolean;
   readonly NOTION_AUTH_TOKEN: string;
   readonly NOTION_DATABASE_ID: string;
-  readonly GCS_BUCKET_NAME: string;
+}
+
+// Typing for `process.env`
+declare namespace NodeJS {
+  interface ProcessEnv {
+    /**
+     * Google Cloud Storageのバケット名
+     * OG画像のキャッシュに使用する
+     */
+    readonly GCS_BUCKET_NAME: string;
+  }
 }
