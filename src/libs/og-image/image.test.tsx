@@ -7,7 +7,8 @@ vi.mock('satori');
 describe('image', () => {
   describe('convertSvgToPngBuffer', () => {
     it('should convert a simple SVG to a PNG buffer', async () => {
-      const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="red" /></svg>';
+      const svg =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="red" /></svg>';
       const pngBuffer = await convertSvgToPngBuffer(svg);
       expect(pngBuffer).toBeInstanceOf(Buffer);
       expect(pngBuffer.length).toBeGreaterThan(0);

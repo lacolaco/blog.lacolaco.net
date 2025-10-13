@@ -6,9 +6,11 @@ WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./ 
 
+# Install Astro runtime dependencies 
 FROM base AS prod-deps
 RUN pnpm install --prod --ignore-scripts --shamefully-hoist
 
+# NOTE: Requires Astro build output before Docker build
 FROM base AS build
 # Copy Astro build output
 COPY ./dist ./dist

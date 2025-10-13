@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer';
 import { Resvg } from '@resvg/resvg-js';
 import satori from 'satori';
 import { googleFontLoader } from './font-loader.js';

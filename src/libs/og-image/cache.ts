@@ -1,4 +1,5 @@
 import { Storage } from '@google-cloud/storage';
+import { Buffer } from 'node:buffer';
 import { createHash } from 'node:crypto';
 
 const storage = new Storage();
@@ -32,7 +33,7 @@ export async function getCachedImage(slug: string, title: string): Promise<Buffe
 }
 
 export async function cacheImage(slug: string, title: string, buffer: Buffer): Promise<void> {
-  const bucketName = process.env.GCS_BUCKET_NAME;
+  const bucketName = import.meta.env.GCS_BUCKET_NAME;
   if (!bucketName) {
     throw new Error('GCS_BUCKET_NAME is not set.');
   }

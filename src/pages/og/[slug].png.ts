@@ -1,17 +1,7 @@
 import { queryAvailablePosts } from '@lib/query';
 import type { APIContext } from 'astro';
-import { generateOgImage } from '../../libs/og-image/generate';
 import { cacheImage, getCachedImage } from '../../libs/og-image/cache';
-
-// export async function getStaticPaths() {
-//   const posts = await queryAvailablePosts();
-
-//   return posts.map((post) => ({
-//     params: {
-//       slug: post.data.slug,
-//     },
-//   }));
-// }
+import { generateOgImage } from '../../libs/og-image/generate';
 
 export const prerender = false;
 
