@@ -1,13 +1,18 @@
-import { Storage } from '@google-cloud/storage';
+import { Bucket, Storage } from '@google-cloud/storage';
 import { Buffer } from 'node:buffer';
 import { createHash } from 'node:crypto';
 
-const storage = new Storage();
+let storage: Storage | null = null;
 
-// Assert mandatory environment variable
-const bucketName = process.env.GCS_BUCKET_NAME;
-if (!bucketName) {
-  throw new Error('GCS_BUCKET_NAME is not set.');
+function getCacheBucket(): Bucket {
+  const bucketName = process.env.GCS_BUCKET_NAME;
+  if (!bucketName) {
+    throw new Error('GCS_BUCKET_NAME is not set.');
+  }
+  if (!storage) {
+    storage = new Storage();
+  }
+  return storage.bucket(bucketName);
 }
 
 /**
@@ -25,7 +30,7 @@ function getCacheKey(slug: string, title: string): string {
 }
 
 export async function getCachedImage(slug: string, title: string): Promise<Buffer | null> {
-  const bucket = storage.bucket(bucketName);
+  const bucket = getCacheBucket();
   const cacheKey = getCacheKey(slug, title);
   const fileName = `${cacheKey}.png`;
   const file = bucket.file(fileName);
@@ -43,7 +48,7 @@ export async function getCachedImage(slug: string, title: string): Promise<Buffe
 }
 
 export async function cacheImage(slug: string, title: string, buffer: Uint8Array): Promise<void> {
-  const bucket = storage.bucket(bucketName);
+  const bucket = getCacheBucket();
   const cacheKey = getCacheKey(slug, title);
   const fileName = `${cacheKey}.png`;
   const file = bucket.file(fileName);
