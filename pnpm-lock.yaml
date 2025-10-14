@@ -30,8 +30,8 @@ importers:
         specifier: 5.2.7
         version: 5.2.7
       '@fontsource/zen-kaku-gothic-new':
-        specifier: 5.2.6
-        version: 5.2.6
+        specifier: 5.2.7
+        version: 5.2.7
       '@google-cloud/storage':
         specifier: 7.17.2
         version: 7.17.2
@@ -510,8 +510,8 @@ packages:
   '@fontsource/source-code-pro@5.2.7':
     resolution: {integrity: sha512-7papq9TH94KT+S5VSY8cU7tFmwuGkIe3qxXRMscuAXH6AjMU+KJI75f28FzgBVDrlMfA0jjlTV4/x5+H5o/5EQ==}
 
-  '@fontsource/zen-kaku-gothic-new@5.2.6':
-    resolution: {integrity: sha512-8gh1SbAjzEtK36ZrzlR+U8SO+EdpgykyBviS/QIIgDNwUqERxyF0QSLvlLNtMtnFUC3AEPkOUGH0L+o7KGyMnA==}
+  '@fontsource/zen-kaku-gothic-new@5.2.7':
+    resolution: {integrity: sha512-tfGiyBqeeBjUURHm+RIuBJCxIKhZFp46/+LEc+zCxR4sLslKwlVpWda0ZOnX/mTvOHpfr4DYjiV/pVosRXHWaw==}
 
   '@fortawesome/fontawesome-free@6.7.2':
     resolution: {integrity: sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==}
@@ -4182,7 +4182,7 @@ snapshots:
 
   '@fontsource/source-code-pro@5.2.7': {}
 
-  '@fontsource/zen-kaku-gothic-new@5.2.6': {}
+  '@fontsource/zen-kaku-gothic-new@5.2.7': {}
 
   '@fortawesome/fontawesome-free@6.7.2': {}
 
