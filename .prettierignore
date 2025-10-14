@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+pnpm-lock.yaml
+
+# Build output
+dist/
+.astro/
+
+# Auto-generated content (DO NOT EDIT OR FORMAT)
+src/content/post/
+src/content/tags/tags.json
+src/content/categories/categories.json
+
+# Auto-managed assets (DO NOT EDIT OR FORMAT)
+public/images/
+
+# Temporary files
+.tmp/
+
+# System files
+.DS_Store
