@@ -27,6 +27,11 @@
       "groupName": "iconify packages",
       "matchPackageNames": ["@iconify/**"],
       "automerge": true
+    },
+    {
+      "matchPackageNames": ["@fontsource/**"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     }
   ]
 }
