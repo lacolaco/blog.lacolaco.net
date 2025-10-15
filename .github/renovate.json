@@ -32,6 +32,12 @@
       "matchPackageNames": ["@fontsource/**"],
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
+    },
+    {
+      "groupName": "typescript-eslint packages",
+      "matchPackageNames": ["typescript-eslint", "@typescript-eslint/**"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
     }
   ]
 }
