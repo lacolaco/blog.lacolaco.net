@@ -31,3 +31,4 @@ jobs:
             WebFetch(domain:typescript-eslint.io)
             WebFetch(domain:playwright.dev)
             WebFetch(domain:iconify.design)
+            WebFetch(domain:developers.notion.com)
