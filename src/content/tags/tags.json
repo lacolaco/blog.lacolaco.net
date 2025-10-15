@@ -386,5 +386,13 @@
   "MCP": {
     "name": "MCP",
     "color": "red"
+  },
+  "セキュリティ": {
+    "name": "セキュリティ",
+    "color": "orange"
+  },
+  "CSP": {
+    "name": "CSP",
+    "color": "gray"
   }
 }
