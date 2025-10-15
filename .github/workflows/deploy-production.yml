@@ -49,6 +49,7 @@ jobs:
           service: 'web'
           region: 'asia-northeast1'
           source: '.'
+          revision_traffic: 'LATEST=100'
           flags: '--allow-unauthenticated'
           env_vars: |-
             GCS_BUCKET_NAME=${{ vars.GCS_BUCKET_NAME }}
