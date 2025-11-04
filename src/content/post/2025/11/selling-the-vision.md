@@ -1,6 +1,6 @@
 ---
 title: '「ないものを売る」とはどういうことか'
-slug: 'selling-a-dream'
+slug: 'selling-the-vision'
 icon: ''
 created_time: '2025-11-04T07:06:00.000Z'
 last_edited_time: '2025-11-04T07:06:00.000Z'
