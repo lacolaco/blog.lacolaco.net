@@ -199,10 +199,37 @@ Rich markdown support with custom plugins:
 - **Build Output**: `dist/` (Astro static files + Node.js server)
 - **Container**: Docker image with Node.js runtime (see `Dockerfile`)
 - **CI/CD**: GitHub Actions with automated deployment
-  - **Production**: Deploys on push to `main` branch
-  - **Preview**: Deploys on pull requests with tagged revisions
+  - **Production**: Deploys on push to `main` branch (`deploy-production.yml`)
+  - **Preview**: Deploys on pull requests with tagged revisions (`deploy-preview.yml`)
 - **Configuration**: Environment variables set via GitHub Actions
 - **Authentication**: Workload Identity Federation for GitHub Actions
+
+### GitHub Actions Workflow Guidelines
+
+**CRITICAL: Always explore workflow files before making changes**
+
+When modifying GitHub Actions workflows, follow this checklist:
+
+1. **List all workflow files first**:
+   ```bash
+   ls .github/workflows/
+   # or
+   glob .github/workflows/*.yml
+   ```
+
+2. **Identify environment-specific workflows**:
+   - `deploy-preview.yml` - Preview environment for PRs (**Test changes here first**)
+   - `deploy-production.yml` - Production environment (**NEVER modify directly for testing**)
+   - Other workflows - Check naming patterns and triggers
+
+3. **Verify workflow triggers**:
+   - Check `on:` section to understand when each workflow runs
+   - Ensure test workflow matches your testing scenario (PR vs push)
+
+4. **NEVER modify production workflows directly**:
+   - Always test in preview/staging environments first
+   - Use production workflows as reference, not as test subjects
+   - Apply "推測するな、計測せよ" principle to deployment changes
 
 ### Docker Architecture
 
