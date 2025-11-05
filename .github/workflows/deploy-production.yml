@@ -43,36 +43,13 @@ jobs:
       - name: Build
         run: pnpm run build
 
-      # Docker Buildx セットアップ
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349 # v3.7.1
-
-      # Google Cloud Docker 認証
-      - name: Configure Docker for Google Cloud
-        run: gcloud auth configure-docker asia-northeast1-docker.pkg.dev
-
-      # Docker イメージのビルドとプッシュ（GitHub Actions Cacheでキャッシング）
-      - name: Build and push Docker image
-        uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75 # v6.9.0
+      - name: Deploy to Cloud Run
+        uses: ./.github/actions/deploy-cloudrun
         with:
-          context: .
-          push: true
-          tags: |
+          environment: 'production'
+          image-tags: |
             asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:latest
             asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}
-          # GitHub Actions Cache を使った Docker Layer Caching
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      # Cloud Run デプロイ（事前ビルド済みイメージを使用）
-      - name: Deploy to Cloud Run
-        uses: 'google-github-actions/deploy-cloudrun@2028e2d7d30a78c6910e0632e48dd561b064884d' # v3.0.1
-        with:
-          service: 'web'
-          region: 'asia-northeast1'
-          # source から image に変更
-          image: 'asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}'
-          revision_traffic: 'LATEST=100'
-          flags: '--allow-unauthenticated'
-          env_vars: |-
-            GCS_BUCKET_NAME=${{ vars.GCS_BUCKET_NAME }}
+          deploy-image: 'asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}'
+          revision-traffic: 'LATEST=100'
+          gcs-bucket: ${{ vars.GCS_BUCKET_NAME }}

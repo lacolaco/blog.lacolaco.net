@@ -1,0 +1,81 @@
+name: 'Deploy to Cloud Run'
+description: 'Build Docker image with layer caching and deploy to Cloud Run'
+
+inputs:
+  environment:
+    description: 'Deployment environment (preview or production)'
+    required: true
+  image-tags:
+    description: 'Docker image tags (multiline string)'
+    required: true
+  deploy-image:
+    description: 'Docker image to deploy (primary image with SHA)'
+    required: true
+  service-name:
+    description: 'Cloud Run service name'
+    required: true
+    default: 'web'
+  region:
+    description: 'Cloud Run region'
+    required: true
+    default: 'asia-northeast1'
+  registry:
+    description: 'Docker registry URL'
+    required: true
+    default: 'asia-northeast1-docker.pkg.dev'
+  no-traffic:
+    description: 'Set to true for preview deployments'
+    required: false
+    default: 'false'
+  revision-tag:
+    description: 'Cloud Run revision tag (for preview)'
+    required: false
+  revision-traffic:
+    description: 'Traffic allocation (for production)'
+    required: false
+  gcs-bucket:
+    description: 'GCS bucket name for environment variables'
+    required: true
+
+outputs:
+  url:
+    description: 'Deployed service URL'
+    value: ${{ steps.deploy.outputs.url }}
+
+runs:
+  using: 'composite'
+  steps:
+    # Docker Buildx セットアップ
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349 # v3.7.1
+
+    # Google Cloud Docker 認証
+    - name: Configure Docker for Google Cloud
+      shell: bash
+      run: gcloud auth configure-docker ${{ inputs.registry }}
+
+    # Docker イメージのビルドとプッシュ（GitHub Actions Cacheでキャッシング）
+    - name: Build and push Docker image
+      uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75 # v6.9.0
+      with:
+        context: .
+        push: true
+        tags: ${{ inputs.image-tags }}
+        # GitHub Actions Cache を使った Docker Layer Caching
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    # Cloud Run デプロイ（事前ビルド済みイメージを使用）
+    - name: Deploy to Cloud Run
+      id: deploy
+      uses: 'google-github-actions/deploy-cloudrun@2028e2d7d30a78c6910e0632e48dd561b064884d' # v3.0.1
+      with:
+        service: ${{ inputs.service-name }}
+        region: ${{ inputs.region }}
+        image: ${{ inputs.deploy-image }}
+        no_traffic: ${{ inputs.no-traffic }}
+        tag: ${{ inputs.revision-tag }}
+        revision_traffic: ${{ inputs.revision-traffic }}
+        flags: '--allow-unauthenticated'
+        env_vars: |-
+          GCS_BUCKET_NAME=${{ inputs.gcs-bucket }}
