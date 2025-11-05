@@ -26,6 +26,8 @@ on:
       - '.gcloudignore'
       # GitHub workflows (for workflow changes)
       - '.github/workflows/deploy-preview.yml'
+      # Composite actions
+      - '.github/actions/deploy-cloudrun/**'
       # Ignore non-content markdown files
       - '!*.md'
       - '!docs/**'
