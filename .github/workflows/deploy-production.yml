@@ -44,12 +44,12 @@ jobs:
         run: pnpm run build
 
       - name: Deploy to Cloud Run
-        uses: 'google-github-actions/deploy-cloudrun@2028e2d7d30a78c6910e0632e48dd561b064884d' # v3.0.1
+        uses: ./.github/actions/deploy-cloudrun
         with:
-          service: 'web'
-          region: 'asia-northeast1'
-          source: '.'
-          revision_traffic: 'LATEST=100'
-          flags: '--allow-unauthenticated'
-          env_vars: |-
-            GCS_BUCKET_NAME=${{ vars.GCS_BUCKET_NAME }}
+          environment: 'production'
+          image-tags: |
+            asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:latest
+            asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}
+          deploy-image: 'asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}'
+          revision-traffic: 'LATEST=100'
+          gcs-bucket: ${{ vars.GCS_BUCKET_NAME }}
