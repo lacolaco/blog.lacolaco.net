@@ -3,7 +3,7 @@ title: 'ビジネスとエンジニアリングの3wayハンドシェイク'
 slug: 'business-and-engineering-3-way-handshake'
 icon: ''
 created_time: '2022-11-01T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:05:00.000Z'
+last_edited_time: '2025-11-06T01:41:00.000Z'
 category: 'Idea'
 tags:
   - '雑記'
@@ -23,7 +23,7 @@ features:
 
 最初のステップは、ビジネスがプロダクトへの要求をすべてテーブルに載せる。 **「テーブルに載せる」** というのは、人々が囲む円卓の上に情報や考えを公開し、それぞれの人が吟味して議論できるようにするイメージだ。ここではプロダクトというテーブルをビジネスとエンジニアリングが囲んでいるということになる。
 
-![image](/images/business-and-engineering-3-way-handshake/Untitled.png)
+![image](/images/business-and-engineering-3-way-handshake/Untitled-0750acfb.png)
 
 「要求」に求められるのは、忖度も遠慮もなく、**100%の理想**をまずテーブルに載せること。2番目の「検査」では、最初にテーブルに載せられたものしか扱えない。ここで隠した目論見や期待が後出しされ、すでに動き出したプロジェクトが吸収できる衝撃の許容限界を超えてしまえば、プロジェクトは炎上する。
 
@@ -43,7 +43,7 @@ features:
 
 **実現可能性と顧客価値の両方が最大化される点**を見つけ、その実現に明確なコミットメントを置かなければ、プロジェクトは炎上する。厳しすぎるゴールはそもそも実現できないし、参加メンバーも消耗する。**甘すぎるゴール**もコミットメントがあいまいになり、計画性や生産性を高めるための創意工夫がおろそかになる。そしてプロジェクトの期間が長くなれば長くなるほど後からビジネス要求が追加される可能性も高まる。（**パーキンソンの法則**）
 
-![image](/images/business-and-engineering-3-way-handshake/Untitled.png)
+![image](/images/business-and-engineering-3-way-handshake/Untitled-7452722a.png)
 
 ビジネスにとっても顧客にとってもエンジニアリングにとっても、甘すぎるゴールは望ましくない。実現可能性と顧客価値の両方が最大化される絶妙なラインを見定めるのが、ビジネスとエンジニアリングでテーブルを囲んでやらなければならないことである。
 
@@ -61,7 +61,7 @@ features:
 
 また、これはあくまでも**信頼できるコネクションを確立するまで**のプロトコルにすぎず、確立したコネクション上でどのようにコミュニケーションしてデリバリーにつなげるかはチームのプロトコル次第だというのも、TCPとHTTPの関係に似ているようにも思う。
 
-![image](/images/business-and-engineering-3-way-handshake/Untitled.png)
+![image](/images/business-and-engineering-3-way-handshake/Untitled-b7d190b8.png)
 
 ## 3way ハンドシェイクができないチーム
 
