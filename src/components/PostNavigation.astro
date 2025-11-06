@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getRelativePostUrl } from '../libs/compat';
 import Tag from './Tag.astro';
 
 type Props = {
@@ -21,7 +21,7 @@ if (!prev && !next) {
     {
       prev ? (
         <a
-          href={getRelativeLocaleUrl(prev.data.locale || 'ja', `/${prev.data.slug}`)}
+          href={getRelativePostUrl(prev)}
           class="block p-4 border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         >
           <div class="text-sm text-muted mb-2">← 前の記事</div>
@@ -45,7 +45,7 @@ if (!prev && !next) {
     {
       next ? (
         <a
-          href={getRelativeLocaleUrl(next.data.locale || 'ja', `/${next.data.slug}`)}
+          href={getRelativePostUrl(next)}
           class="block p-4 border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors md:text-right"
         >
           <div class="text-sm text-muted mb-2">次の記事 →</div>
