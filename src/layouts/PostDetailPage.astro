@@ -6,10 +6,12 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate';
 import Header from '../components/Header.astro';
 import MainContainer from '../components/MainContainer.astro';
+import PostNavigation from '../components/PostNavigation.astro';
 import ShareButtons from '../components/ShareButtons.astro';
 import Tag from '../components/Tag.astro';
 import TagList from '../components/TagList.astro';
 import { SITE_TITLE } from '../consts';
+import { queryAdjacentPostsInCategory } from '../libs/query/posts';
 
 type Props = {
   entry: CollectionEntry<'postsV2'>;
@@ -20,6 +22,9 @@ const { slug, title, category, tags, created_time, last_edited_time, locale, can
   entry?.data;
 const isUpdated = differenceInDays(last_edited_time, created_time) > 0;
 const { Content } = await render(entry);
+
+// カテゴリ内の前後の記事を取得
+const adjacentPosts = category ? await queryAdjacentPostsInCategory(entry, category) : null;
 ---
 
 <!doctype html>
@@ -80,6 +85,15 @@ const { Content } = await render(entry);
         <div class="markdown-body mb-4">
           <Content />
         </div>
+        {
+          adjacentPosts && category && (
+            <PostNavigation
+              previousPost={adjacentPosts.previousPost}
+              nextPost={adjacentPosts.nextPost}
+              category={category}
+            />
+          )
+        }
         <div class="mt-8">
           <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
         </div>

@@ -1,0 +1,61 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getRelativePostUrl } from '@lib/compat';
+import Tag from './Tag.astro';
+
+type Props = {
+  previousPost?: CollectionEntry<'postsV2'>;
+  nextPost?: CollectionEntry<'postsV2'>;
+  category: string;
+};
+
+const { previousPost, nextPost, category } = Astro.props;
+
+// 前後の記事が両方存在しない場合は何も表示しない
+if (!previousPost && !nextPost) {
+  return null;
+}
+---
+
+<nav class="border-t border-muted pt-8 mt-8">
+  <div class="mb-4">
+    <div class="flex items-center gap-2">
+      <span class="text-sm text-muted">カテゴリ内の他の記事</span>
+      <Tag name={category} isCategory />
+    </div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {
+      previousPost ? (
+        <a
+          href={getRelativePostUrl(previousPost)}
+          class="block p-4 border border-muted rounded hover:bg-muted/10 transition-colors"
+        >
+          <div class="text-xs text-muted mb-1">← 前の記事</div>
+          <div class="flex items-start gap-2">
+            {previousPost.data.icon && <span class="text-lg">{previousPost.data.icon}</span>}
+            <span class="text-sm font-medium line-clamp-2">{previousPost.data.title}</span>
+          </div>
+        </a>
+      ) : (
+        <div />
+      )
+    }
+    {
+      nextPost ? (
+        <a
+          href={getRelativePostUrl(nextPost)}
+          class="block p-4 border border-muted rounded hover:bg-muted/10 transition-colors md:text-right"
+        >
+          <div class="text-xs text-muted mb-1">次の記事 →</div>
+          <div class="flex items-start gap-2 md:flex-row-reverse md:justify-end">
+            {nextPost.data.icon && <span class="text-lg">{nextPost.data.icon}</span>}
+            <span class="text-sm font-medium line-clamp-2">{nextPost.data.title}</span>
+          </div>
+        </a>
+      ) : (
+        <div />
+      )
+    }
+  </div>
+</nav>
