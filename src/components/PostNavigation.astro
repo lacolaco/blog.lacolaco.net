@@ -1,0 +1,69 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Tag from './Tag.astro';
+
+type Props = {
+  prev: CollectionEntry<'postsV2'> | null;
+  next: CollectionEntry<'postsV2'> | null;
+};
+
+const { prev, next } = Astro.props;
+
+// 前後の記事が両方存在しない場合は何も表示しない
+if (!prev && !next) {
+  return null;
+}
+---
+
+<nav class="border-t border-b border-gray-300 dark:border-gray-700 py-6 my-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {
+      prev ? (
+        <a
+          href={getRelativeLocaleUrl(prev.data.locale || 'ja', `/${prev.data.slug}`)}
+          class="block p-4 border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        >
+          <div class="text-sm text-muted mb-2">← 前の記事</div>
+          <div class="flex items-center gap-2">
+            {prev.data.icon && <span class="text-xl">{prev.data.icon}</span>}
+            <div class="flex-1">
+              <div class="font-semibold text-sm line-clamp-2">{prev.data.title}</div>
+              {prev.data.category && (
+                <div class="mt-1">
+                  <Tag name={prev.data.category} isCategory />
+                </div>
+              )}
+            </div>
+          </div>
+        </a>
+      ) : (
+        <div />
+      )
+    }
+
+    {
+      next ? (
+        <a
+          href={getRelativeLocaleUrl(next.data.locale || 'ja', `/${next.data.slug}`)}
+          class="block p-4 border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors md:text-right"
+        >
+          <div class="text-sm text-muted mb-2">次の記事 →</div>
+          <div class="flex items-center gap-2 md:flex-row-reverse">
+            {next.data.icon && <span class="text-xl">{next.data.icon}</span>}
+            <div class="flex-1">
+              <div class="font-semibold text-sm line-clamp-2">{next.data.title}</div>
+              {next.data.category && (
+                <div class="mt-1 flex md:justify-end">
+                  <Tag name={next.data.category} isCategory />
+                </div>
+              )}
+            </div>
+          </div>
+        </a>
+      ) : (
+        <div />
+      )
+    }
+  </div>
+</nav>
