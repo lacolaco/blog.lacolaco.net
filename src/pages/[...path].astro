@@ -1,7 +1,7 @@
 ---
-// Catch-allページ: 定義されていないすべてのルートをキャッチしてトップページにリダイレクト
+// Catch-allページ: 定義されていないすべてのルートをキャッチして404ページにリダイレクト
 // Node.js standaloneアダプターでは404.astroが機能しないため、このcatch-allページで確実にリダイレクト
 
-// Astro.redirect()を使用してトップページにリダイレクト
-return Astro.redirect('/');
+// 404ページにリダイレクト
+return Astro.redirect('/404', 302);
 ---
