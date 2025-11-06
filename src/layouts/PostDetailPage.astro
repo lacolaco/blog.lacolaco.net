@@ -11,7 +11,7 @@ import ShareButtons from '../components/ShareButtons.astro';
 import Tag from '../components/Tag.astro';
 import TagList from '../components/TagList.astro';
 import { SITE_TITLE } from '../consts';
-import { queryAdjacentPostsInCategory } from '../libs/query/posts';
+import { queryAdjacentPostsInCategory, queryAvailablePosts } from '../libs/query/posts';
 
 type Props = {
   entry: CollectionEntry<'postsV2'>;
@@ -24,7 +24,8 @@ const isUpdated = differenceInDays(last_edited_time, created_time) > 0;
 const { Content } = await render(entry);
 
 // カテゴリ内の前後の記事を取得
-const adjacentPosts = category ? await queryAdjacentPostsInCategory(slug, category) : { prev: null, next: null };
+const posts = await queryAvailablePosts();
+const adjacentPosts = category ? queryAdjacentPostsInCategory(posts, slug, category) : { prev: null, next: null };
 ---
 
 <!doctype html>

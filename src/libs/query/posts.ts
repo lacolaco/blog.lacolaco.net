@@ -20,12 +20,11 @@ export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'post
  * 同じカテゴリ内で時系列順に前後の記事を取得する
  * ロケールは区別しない
  */
-export async function queryAdjacentPostsInCategory(
+export function queryAdjacentPostsInCategory(
+  posts: Array<CollectionEntry<'postsV2'>>,
   currentSlug: string,
   category: string,
-): Promise<{ prev: CollectionEntry<'postsV2'> | null; next: CollectionEntry<'postsV2'> | null }> {
-  const posts = await queryAvailablePosts();
-
+): { prev: CollectionEntry<'postsV2'> | null; next: CollectionEntry<'postsV2'> | null } {
   // 同じカテゴリの記事のみフィルタリング
   const postsInCategory = posts.filter((post) => post.data.category === category);
 
