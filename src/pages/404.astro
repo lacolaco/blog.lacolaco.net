@@ -1,0 +1,25 @@
+---
+// 404ページ: 存在しないページにアクセスされた場合、トップページにリダイレクト
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ページが見つかりません - lacolaco blog</title>
+    <!-- 即座にトップページにリダイレクト -->
+    <meta http-equiv="refresh" content="0;url=/" />
+  </head>
+  <body>
+    <div style="text-align: center; padding: 2rem; font-family: sans-serif;">
+      <h1>404 - ページが見つかりません</h1>
+      <p>トップページにリダイレクトしています...</p>
+      <a href="/" style="color: #0066cc; text-decoration: underline;">クリックしてトップページに移動</a>
+    </div>
+    <script>
+      // JavaScriptによる即座のリダイレクト
+      window.location.href = '/';
+    </script>
+  </body>
+</html>
