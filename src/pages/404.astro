@@ -1,0 +1,37 @@
+---
+// 404ページ: 存在しないページにアクセスされた場合に表示
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MainContainer from '../components/MainContainer.astro';
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <BaseHead
+      title="404 - ページが見つかりません | lacolaco's marginalia"
+      description="お探しのページは見つかりませんでした。"
+    />
+  </head>
+  <body class="font-base bg-default">
+    <Header />
+    <MainContainer>
+      <div class="flex flex-col items-center justify-center py-16 px-4">
+        <h1 class="text-6xl font-bold text-gray-300 mb-4">404</h1>
+        <p class="text-2xl font-semibold mb-4">ページが見つかりません</p>
+        <p class="text-sm text-gray-500 mb-2">Page Not Found</p>
+        <p class="text-gray-600 mb-8 text-center max-w-md">
+          お探しのページは削除されたか、URLが変更された可能性があります。
+        </p>
+        <a
+          href="/"
+          class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors no-underline"
+        >
+          トップページに戻る
+        </a>
+      </div>
+    </MainContainer>
+    <Footer class="py-4" />
+  </body>
+</html>
