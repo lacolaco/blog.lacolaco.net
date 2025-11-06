@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getRelativePostUrl } from '../libs/compat';
-import Tag from './Tag.astro';
+import { getCategoryByName } from '@lib/post';
 
 type Props = {
   prev: CollectionEntry<'postsV2'> | null;
@@ -14,6 +14,12 @@ const { prev, next } = Astro.props;
 if (!prev && !next) {
   return null;
 }
+
+// カテゴリの色を取得する関数
+const getCategoryColor = (categoryName: string) => {
+  const category = getCategoryByName(categoryName);
+  return category?.color ?? 'default';
+};
 ---
 
 <nav class="border-t border-b border-gray-300 dark:border-gray-700 py-6 my-8">
@@ -31,7 +37,12 @@ if (!prev && !next) {
               <div class="font-semibold text-sm line-clamp-2">{prev.data.title}</div>
               {prev.data.category && (
                 <div class="mt-1">
-                  <Tag name={prev.data.category} isCategory />
+                  <span
+                    style={`--color-tag-bg: var(--color-tag-bg-${getCategoryColor(prev.data.category)}); --color-tag-text: var(--color-tag-text-${getCategoryColor(prev.data.category)});`}
+                    class="leading-relaxed text-xs inline-block px-2 rounded-sm bg-[var(--color-tag-bg)] text-[var(--color-tag-text)]"
+                  >
+                    {prev.data.category}
+                  </span>
                 </div>
               )}
             </div>
@@ -55,7 +66,12 @@ if (!prev && !next) {
               <div class="font-semibold text-sm line-clamp-2">{next.data.title}</div>
               {next.data.category && (
                 <div class="mt-1 flex md:justify-end">
-                  <Tag name={next.data.category} isCategory />
+                  <span
+                    style={`--color-tag-bg: var(--color-tag-bg-${getCategoryColor(next.data.category)}); --color-tag-text: var(--color-tag-text-${getCategoryColor(next.data.category)});`}
+                    class="leading-relaxed text-xs inline-block px-2 rounded-sm bg-[var(--color-tag-bg)] text-[var(--color-tag-text)]"
+                  >
+                    {next.data.category}
+                  </span>
                 </div>
               )}
             </div>
