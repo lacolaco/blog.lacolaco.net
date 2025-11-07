@@ -25,7 +25,7 @@ const { Content } = await render(entry);
 
 // カテゴリ内の前後の記事を取得
 const posts = await queryAvailablePosts();
-const adjacentPosts = category ? queryAdjacentPostsInCategory(posts, slug, category) : { prev: null, next: null };
+const adjacentPosts = queryAdjacentPostsInCategory(posts, slug, category);
 ---
 
 <!doctype html>

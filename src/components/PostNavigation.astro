@@ -1,7 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import { getRelativePostUrl } from '../libs/compat';
-import { getCategoryByName } from '@lib/post';
 
 type Props = {
   prev: CollectionEntry<'postsV2'> | null;
@@ -14,37 +13,21 @@ const { prev, next } = Astro.props;
 if (!prev && !next) {
   return null;
 }
-
-// カテゴリの色を取得する関数
-const getCategoryColor = (categoryName: string) => {
-  const category = getCategoryByName(categoryName);
-  return category?.color ?? 'default';
-};
 ---
 
 <nav class="border-t border-b border-gray-300 dark:border-gray-700 py-6 my-8">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     {
-      prev ? (
+      next ? (
         <a
-          href={getRelativePostUrl(prev)}
+          href={getRelativePostUrl(next)}
           class="block p-4 border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
         >
-          <div class="text-sm text-muted mb-2">← 前の記事</div>
+          <div class="text-sm text-muted mb-2">← {next.data.category}カテゴリの次の記事</div>
           <div class="flex items-center gap-2">
-            {prev.data.icon && <span class="text-xl">{prev.data.icon}</span>}
+            {next.data.icon && <span class="text-xl">{next.data.icon}</span>}
             <div class="flex-1">
-              <div class="font-semibold text-sm line-clamp-2">{prev.data.title}</div>
-              {prev.data.category && (
-                <div class="mt-1">
-                  <span
-                    style={`--color-tag-bg: var(--color-tag-bg-${getCategoryColor(prev.data.category)}); --color-tag-text: var(--color-tag-text-${getCategoryColor(prev.data.category)});`}
-                    class="leading-relaxed text-xs inline-block px-2 rounded-sm bg-[var(--color-tag-bg)] text-[var(--color-tag-text)]"
-                  >
-                    {prev.data.category}
-                  </span>
-                </div>
-              )}
+              <div class="font-semibold text-sm line-clamp-2">{next.data.title}</div>
             </div>
           </div>
         </a>
@@ -54,26 +37,16 @@ const getCategoryColor = (categoryName: string) => {
     }
 
     {
-      next ? (
+      prev ? (
         <a
-          href={getRelativePostUrl(next)}
+          href={getRelativePostUrl(prev)}
           class="block p-4 border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors md:text-right"
         >
-          <div class="text-sm text-muted mb-2">次の記事 →</div>
+          <div class="text-sm text-muted mb-2">{prev.data.category}カテゴリの前の記事 →</div>
           <div class="flex items-center gap-2 md:flex-row-reverse">
-            {next.data.icon && <span class="text-xl">{next.data.icon}</span>}
+            {prev.data.icon && <span class="text-xl">{prev.data.icon}</span>}
             <div class="flex-1">
-              <div class="font-semibold text-sm line-clamp-2">{next.data.title}</div>
-              {next.data.category && (
-                <div class="mt-1 flex md:justify-end">
-                  <span
-                    style={`--color-tag-bg: var(--color-tag-bg-${getCategoryColor(next.data.category)}); --color-tag-text: var(--color-tag-text-${getCategoryColor(next.data.category)});`}
-                    class="leading-relaxed text-xs inline-block px-2 rounded-sm bg-[var(--color-tag-bg)] text-[var(--color-tag-text)]"
-                  >
-                    {next.data.category}
-                  </span>
-                </div>
-              )}
+              <div class="font-semibold text-sm line-clamp-2">{prev.data.title}</div>
             </div>
           </div>
         </a>
