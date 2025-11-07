@@ -15,13 +15,13 @@ if (!prev && !next) {
 }
 ---
 
-<nav class="border-t border-b border-gray-200 dark:border-gray-800 py-6 my-8">
+<nav class="py-6 my-8">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     {
       next ? (
         <a
           href={getRelativePostUrl(next)}
-          class="block p-4 border border-gray-200 dark:border-gray-800 rounded hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+          class="block p-4 rounded hover:bg-muted transition-colors"
         >
           <div class="text-sm text-muted mb-2">← 次の記事</div>
           <div class="flex items-center gap-2">
@@ -40,7 +40,7 @@ if (!prev && !next) {
       prev ? (
         <a
           href={getRelativePostUrl(prev)}
-          class="block p-4 border border-gray-200 dark:border-gray-800 rounded hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors md:text-right"
+          class="block p-4 rounded hover:bg-muted transition-colors md:text-right"
         >
           <div class="text-sm text-muted mb-2">前の記事 →</div>
           <div class="flex items-center gap-2 md:flex-row-reverse">

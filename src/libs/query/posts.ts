@@ -41,31 +41,3 @@ export function queryAdjacentPosts(
   };
 }
 
-/**
- * 同じカテゴリ内で時系列順に前後の記事を取得する
- * ロケールは区別しない
- */
-export function queryAdjacentPostsInCategory(
-  posts: Array<CollectionEntry<'postsV2'>>,
-  currentSlug: string,
-  category: string,
-): { prev: CollectionEntry<'postsV2'> | null; next: CollectionEntry<'postsV2'> | null } {
-  // 同じカテゴリの記事のみフィルタリング
-  const postsInCategory = posts.filter((post) => post.data.category === category);
-
-  // 時系列順（古い順）にソート
-  const sortedPosts = postsInCategory.sort((a, b) => compareAsc(a.data.created_time, b.data.created_time));
-
-  // 現在の記事のインデックスを取得
-  const currentIndex = sortedPosts.findIndex((post) => post.data.slug === currentSlug);
-
-  if (currentIndex === -1) {
-    return { prev: null, next: null };
-  }
-
-  // 前の記事（より古い記事）と次の記事（より新しい記事）を返す
-  return {
-    prev: currentIndex > 0 ? sortedPosts[currentIndex - 1] : null,
-    next: currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null,
-  };
-}
