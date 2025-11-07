@@ -15,15 +15,15 @@ if (!prev && !next) {
 }
 ---
 
-<nav class="border-t border-b border-gray-300 dark:border-gray-700 py-6 my-8">
+<nav class="border-t border-b border-gray-200 dark:border-gray-800 py-6 my-8">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     {
       next ? (
         <a
           href={getRelativePostUrl(next)}
-          class="block p-4 border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          class="block p-4 border border-gray-200 dark:border-gray-800 rounded hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
         >
-          <div class="text-sm text-muted mb-2">← {next.data.category}カテゴリの次の記事</div>
+          <div class="text-sm text-muted mb-2">← 次の記事</div>
           <div class="flex items-center gap-2">
             {next.data.icon && <span class="text-xl">{next.data.icon}</span>}
             <div class="flex-1">
@@ -40,9 +40,9 @@ if (!prev && !next) {
       prev ? (
         <a
           href={getRelativePostUrl(prev)}
-          class="block p-4 border border-gray-300 dark:border-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors md:text-right"
+          class="block p-4 border border-gray-200 dark:border-gray-800 rounded hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors md:text-right"
         >
-          <div class="text-sm text-muted mb-2">{prev.data.category}カテゴリの前の記事 →</div>
+          <div class="text-sm text-muted mb-2">前の記事 →</div>
           <div class="flex items-center gap-2 md:flex-row-reverse">
             {prev.data.icon && <span class="text-xl">{prev.data.icon}</span>}
             <div class="flex-1">
