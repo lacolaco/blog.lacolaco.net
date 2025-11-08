@@ -1,21 +1,32 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content';
+import { type CollectionEntry } from 'astro:content';
 import PostDetailPage from 'src/layouts/PostDetailPage.astro';
-import { queryAvailablePosts } from '@lib/query';
+import { queryAvailablePosts, queryAdjacentPosts } from '@lib/query';
 
 export async function getStaticPaths() {
   const posts = await queryAvailablePosts();
   return posts.map((entry) => {
+    // ビルド時に隣接記事を事前計算
+    const adjacentPosts = queryAdjacentPosts(posts, entry.data.slug);
     return {
       params: {
         slug: entry.data.slug,
       },
-      props: entry,
+      props: {
+        entry,
+        adjacentPosts,
+      },
     };
   });
 }
-type Props = CollectionEntry<'postsV2'>;
-const entry = Astro.props;
+type Props = {
+  entry: CollectionEntry<'postsV2'>;
+  adjacentPosts: {
+    prev: CollectionEntry<'postsV2'> | null;
+    next: CollectionEntry<'postsV2'> | null;
+  };
+};
+const { entry, adjacentPosts } = Astro.props;
 ---
 
-<PostDetailPage entry={entry} />
+<PostDetailPage entry={entry} adjacentPosts={adjacentPosts} />

@@ -11,21 +11,20 @@ import ShareButtons from '../components/ShareButtons.astro';
 import Tag from '../components/Tag.astro';
 import TagList from '../components/TagList.astro';
 import { SITE_TITLE } from '../consts';
-import { queryAdjacentPosts, queryAvailablePosts } from '../libs/query/posts';
 
 type Props = {
   entry: CollectionEntry<'postsV2'>;
+  adjacentPosts: {
+    prev: CollectionEntry<'postsV2'> | null;
+    next: CollectionEntry<'postsV2'> | null;
+  };
 };
 
-const { entry } = Astro.props;
+const { entry, adjacentPosts } = Astro.props;
 const { slug, title, category, tags, created_time, last_edited_time, locale, canonical_url, published, features } =
   entry?.data;
 const isUpdated = differenceInDays(last_edited_time, created_time) > 0;
 const { Content } = await render(entry);
-
-// 前後の記事を取得（カテゴリ区別なし）
-const posts = await queryAvailablePosts();
-const adjacentPosts = queryAdjacentPosts(posts, slug);
 ---
 
 <!doctype html>
