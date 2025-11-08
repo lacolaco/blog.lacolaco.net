@@ -21,7 +21,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@lacolaco'
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build
@@ -40,7 +40,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@lacolaco'
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run lint
@@ -60,7 +60,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@lacolaco'
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Check formatting
@@ -79,7 +79,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@lacolaco'
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run tests
@@ -98,7 +98,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com'
           scope: '@lacolaco'
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run notion-fetch dry-run
