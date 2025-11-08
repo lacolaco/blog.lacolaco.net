@@ -18,6 +18,8 @@
     "test:tools": "tsx --test --test-reporter spec tools/**/*.spec.ts",
     "test:notion-fetch": "tsx --test --test-reporter spec tools/notion-fetch/**/*.spec.ts",
     "test:remark-embed": "tsx --test --test-reporter spec tools/remark-embed/**/*.spec.ts",
+    "test:libs": "vitest run",
+    "test": "pnpm test:tools && pnpm test:libs",
     "lint": "eslint ."
   },
   "packageManager": "pnpm@10.19.0",

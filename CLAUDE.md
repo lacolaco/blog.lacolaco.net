@@ -390,6 +390,14 @@ pnpm dev --host                      # Expose dev server to network
 3. **Test incremental changes** rather than large modifications
 4. **Respect TDD principles** - modify implementation to match tests
 
+**Error Handling Priority:**
+
+- **CRITICAL: Errors must be fixed immediately** - never proceed with other tasks while errors exist
+- **NEVER use workarounds** - no `it.skip()`, `eslint-disable`, or custom types to bypass errors
+- **UI work is secondary** - error resolution always takes precedence over UI implementation
+- **Test failures block progress** - all tests must pass before moving to next task
+- When browser/development errors appear, fix them immediately before taking screenshots or continuing work
+
 ## Important Notes
 
 - CLAUDE.md is always written in English

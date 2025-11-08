@@ -1,0 +1,66 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getRelativePostUrl } from '../libs/compat';
+
+type Props = {
+  prev: CollectionEntry<'postsV2'> | null;
+  next: CollectionEntry<'postsV2'> | null;
+};
+
+const { prev, next } = Astro.props;
+
+// 前後の記事が両方存在しない場合は何も表示しない
+if (!prev && !next) {
+  return null;
+}
+---
+
+<nav aria-label="記事ナビゲーション" class="py-6 my-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+    {
+      next ? (
+        <a
+          href={getRelativePostUrl(next)}
+          aria-label={`次の記事: ${next.data.title}`}
+          class="group block p-4 md:p-6 rounded-2xl bg-white transition-all duration-300 ease-in-out shadow-[6px_6px_12px_rgba(163,177,198,0.4),-6px_-6px_12px_rgba(255,255,255,0.4)] hover:shadow-[inset_4px_4px_8px_rgba(163,177,198,0.4),inset_-4px_-4px_8px_rgba(255,255,255,0.4)]"
+        >
+          <div class="flex items-center gap-2 md:gap-3">
+            <span
+              class="icon-[mdi--arrow-left] text-lg text-muted group-hover:text-default transition-colors flex-shrink-0"
+              aria-hidden="true"
+            />
+            {next.data.icon && <span class="text-xl md:text-2xl flex-shrink-0">{next.data.icon}</span>}
+            <div class="flex-1 min-w-0">
+              <div class="font-semibold text-sm md:text-base line-clamp-2">{next.data.title}</div>
+            </div>
+          </div>
+        </a>
+      ) : (
+        <div />
+      )
+    }
+
+    {
+      prev ? (
+        <a
+          href={getRelativePostUrl(prev)}
+          aria-label={`前の記事: ${prev.data.title}`}
+          class="group block p-4 md:p-6 rounded-2xl bg-white transition-all duration-300 ease-in-out shadow-[6px_6px_12px_rgba(163,177,198,0.4),-6px_-6px_12px_rgba(255,255,255,0.4)] hover:shadow-[inset_4px_4px_8px_rgba(163,177,198,0.4),inset_-4px_-4px_8px_rgba(255,255,255,0.4)]"
+        >
+          <div class="flex items-center gap-2 md:gap-3 md:flex-row-reverse">
+            <span
+              class="icon-[mdi--arrow-right] text-lg text-muted group-hover:text-default transition-colors flex-shrink-0"
+              aria-hidden="true"
+            />
+            {prev.data.icon && <span class="text-xl md:text-2xl flex-shrink-0">{prev.data.icon}</span>}
+            <div class="flex-1 min-w-0 md:text-right">
+              <div class="font-semibold text-sm md:text-base line-clamp-2">{prev.data.title}</div>
+            </div>
+          </div>
+        </a>
+      ) : (
+        <div />
+      )
+    }
+  </div>
+</nav>

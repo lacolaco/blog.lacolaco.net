@@ -1,10 +1,9 @@
-import { Bucket, Storage } from '@google-cloud/storage';
-import { Buffer } from 'node:buffer';
+import { Storage } from '@google-cloud/storage';
 import { createHash } from 'node:crypto';
 
 let storage: Storage | null = null;
 
-function getCacheBucket(): Bucket {
+function getCacheBucket() {
   const bucketName = process.env.GCS_BUCKET_NAME;
   if (!bucketName) {
     throw new Error('GCS_BUCKET_NAME is not set.');

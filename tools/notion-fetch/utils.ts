@@ -1,6 +1,6 @@
 import { format } from 'prettier';
 import { Categories, Tags } from '@lib/post';
-import { type BlogDatabaseProperties } from './notion-types';
+import { type BlogDatabasePropertyConfigs } from './notion-types';
 
 /**
  * JSON データを Prettier でフォーマットする純粋関数
@@ -14,16 +14,20 @@ export async function formatJSON(data: unknown): Promise<string> {
 /**
  * Notion データベースのタグプロパティを Tags オブジェクトに変換する純粋関数
  */
-export function toTagsJSON(config: BlogDatabaseProperties['tags']): Tags {
-  const tags = config.multi_select.options.map((option) => [option.name, { name: option.name, color: option.color }]);
+export function toTagsJSON(config: BlogDatabasePropertyConfigs['tags']): Tags {
+  const tags = config.multi_select.options.map(
+    (option) => [option.name, { name: option.name, color: option.color }] as const,
+  );
   return Tags.parse(Object.fromEntries(tags));
 }
 
 /**
  * Notion データベースのカテゴリプロパティを Categories オブジェクトに変換する純粋関数
  */
-export function toCategoriesJSON(config: BlogDatabaseProperties['category']): Categories {
-  const categories = config.select.options.map((option) => [option.name, { name: option.name, color: option.color }]);
+export function toCategoriesJSON(config: BlogDatabasePropertyConfigs['category']): Categories {
+  const categories = config.select.options.map(
+    (option) => [option.name, { name: option.name, color: option.color }] as const,
+  );
   return Categories.parse(Object.fromEntries(categories));
 }
 

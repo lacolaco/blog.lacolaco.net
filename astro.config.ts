@@ -21,7 +21,6 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     resolve: {
-      external: ['@google-cloud/*', '@resvg/*'],
       // https://github.com/withastro/astro/issues/12824#issuecomment-2563095382
       // Use react-dom/server.edge instead of react-dom/server.browser for React 19.
       // Without this, MessageChannel from node:worker_threads needs to be polyfilled.
@@ -30,6 +29,14 @@ export default defineConfig({
             'react-dom/server': 'react-dom/server.edge',
           }
         : undefined,
+    },
+    optimizeDeps: {
+      exclude: ['@resvg/resvg-js'],
+    },
+    ssr: {
+      // @google-cloud/storage は Node.js 専用パッケージなので、
+      // SSR ビルド時に外部パッケージとして扱う
+      external: ['@google-cloud/storage'],
     },
   },
 

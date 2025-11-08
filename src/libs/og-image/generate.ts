@@ -1,4 +1,3 @@
-import { Buffer } from 'node:buffer';
 import { SITE_TITLE } from '../../consts';
 import { buildOgImageSvg, convertSvgToPngBuffer } from './image';
 
