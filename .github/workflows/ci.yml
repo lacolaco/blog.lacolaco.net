@@ -43,6 +43,8 @@ jobs:
         run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Generate Astro type definitions
+        run: pnpm astro sync
       - name: Run lint
         run: pnpm lint
 
