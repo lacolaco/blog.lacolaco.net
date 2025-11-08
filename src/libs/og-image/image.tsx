@@ -106,9 +106,9 @@ export async function buildOgImageSvg(
 /**
  * Convert an SVG string to a PNG buffer.
  * @param svg The SVG string to convert.
- * @returns A promise that resolves with the PNG buffer.
+ * @returns The PNG buffer.
  */
-export async function convertSvgToPngBuffer(svg: string): Promise<Buffer> {
+export function convertSvgToPngBuffer(svg: string): Buffer {
   const resvg = new Resvg(svg);
   const rendered = resvg.render();
   return rendered.asPng();

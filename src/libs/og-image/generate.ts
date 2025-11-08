@@ -7,6 +7,6 @@ export async function generateOgImage(params: { slug: string; title: string }): 
   // Generate OG image SVG
   const svg = await buildOgImageSvg(params.title, SITE_TITLE, siteDomainName);
   // Convert the SVG to a PNG buffer
-  const pngBuffer = await convertSvgToPngBuffer(svg);
+  const pngBuffer = convertSvgToPngBuffer(svg);
   return pngBuffer;
 }

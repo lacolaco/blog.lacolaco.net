@@ -7,7 +7,7 @@ import { urlize } from '../../libs/strings';
 
 export async function getStaticPaths() {
   const posts = await queryAvailablePosts();
-  const categories = await queryCategories();
+  const categories = queryCategories();
 
   function hasCategory(categoryName: string, post: CollectionEntry<'postsV2'>): boolean {
     return post.data.category === categoryName;
