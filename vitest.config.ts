@@ -1,17 +1,18 @@
-import { defineConfig } from 'vitest/config';
-import path from 'node:path';
+/// <reference types="vitest/config" />
+import { getViteConfig } from 'astro/config';
 
-export default defineConfig({
+export default getViteConfig({
   test: {
     globals: true,
     environment: 'node',
-  },
-  resolve: {
-    alias: {
-      '@lib/notion': path.resolve(__dirname, './src/libs/notion/index.ts'),
-      '@lib/post': path.resolve(__dirname, './src/libs/post/index.ts'),
-      '@lib/i18n': path.resolve(__dirname, './src/libs/i18n/index.ts'),
-      '@lib/query': path.resolve(__dirname, './src/libs/query/index.ts'),
-    },
+    testTimeout: 10000, // Increase timeout for OG image tests
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/cypress/**',
+      '**/.{idea,git,cache,output,temp}/**',
+      '**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build,eslint,prettier}.config.*',
+      '**/tools/**', // Exclude tools directory (uses Node.js test runner)
+    ],
   },
 });

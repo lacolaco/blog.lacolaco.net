@@ -3,6 +3,13 @@ import { buildOgImageSvg, convertSvgToPngBuffer } from './image.js';
 import satori from 'satori';
 
 vi.mock('satori');
+vi.mock('@resvg/resvg-js', () => ({
+  Resvg: vi.fn().mockImplementation(() => ({
+    render: vi.fn().mockReturnValue({
+      asPng: vi.fn().mockReturnValue(Buffer.from('mock-png-data')),
+    }),
+  })),
+}));
 
 describe('image', () => {
   describe('convertSvgToPngBuffer', () => {
