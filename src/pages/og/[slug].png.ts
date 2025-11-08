@@ -46,6 +46,7 @@ export async function GET({ params }: APIContext) {
       },
     });
   } catch (error) {
-    return new Response(`Failed to generate OG image: ${error}`, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return new Response(`Failed to generate OG image: ${errorMessage}`, { status: 500 });
   }
 }

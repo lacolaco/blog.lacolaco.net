@@ -13,10 +13,10 @@ vi.mock('@resvg/resvg-js', () => ({
 
 describe('image', () => {
   describe('convertSvgToPngBuffer', () => {
-    it('should convert a simple SVG to a PNG buffer', async () => {
+    it('should convert a simple SVG to a PNG buffer', () => {
       const svg =
         '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="red" /></svg>';
-      const pngBuffer = await convertSvgToPngBuffer(svg);
+      const pngBuffer = convertSvgToPngBuffer(svg);
       expect(pngBuffer).toBeInstanceOf(Buffer);
       expect(pngBuffer.length).toBeGreaterThan(0);
     });

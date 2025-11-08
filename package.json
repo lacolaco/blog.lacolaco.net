@@ -13,6 +13,7 @@
     "build:force": "astro build --force",
     "preview": "astro preview",
     "format": "prettier --cache --write 'src' 'tools'",
+    "format:check": "prettier --cache --check 'src' 'tools'",
     "astro": "astro",
     "notion-fetch": "tsx --env-file .env tools/notion-fetch/main.ts",
     "test:tools": "tsx --test --test-reporter spec tools/**/*.spec.ts",

@@ -7,7 +7,7 @@ import type { CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await queryAvailablePosts();
-  const tags = await queryTags();
+  const tags = queryTags();
 
   return tags.map((tag) => {
     const matchPosts = posts.filter((post) => {

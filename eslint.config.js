@@ -4,7 +4,7 @@ import { globalIgnores } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
-  globalIgnores(['.*', '**/*.js', 'node_modules', 'coverage', 'dist', 'build', 'functions', 'public', 'src']),
+  globalIgnores(['.*', '**/*.js', 'node_modules', 'coverage', 'dist', 'build', 'functions', 'public']),
   {
     languageOptions: {
       parserOptions: {
@@ -15,6 +15,14 @@ export default tseslint.config(
   },
   eslint.configs.recommended,
   {
+    files: ['src/**/*.ts', 'src/**/*.tsx'],
+    settings: {},
+    extends: [tseslint.configs.recommendedTypeChecked],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'error',
+    },
+  },
+  {
     files: ['tools/**/*.ts'],
     settings: {},
     extends: [tseslint.configs.recommendedTypeChecked],
@@ -22,6 +30,7 @@ export default tseslint.config(
       'no-shadow': 'off',
       '@typescript-eslint/no-shadow': 'error',
       '@typescript-eslint/no-unnecessary-condition': 'error',
+      '@typescript-eslint/no-explicit-any': 'error',
     },
   },
   {
