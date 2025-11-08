@@ -40,4 +40,3 @@ export function queryAdjacentPosts(
     next: currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null,
   };
 }
-

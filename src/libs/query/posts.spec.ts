@@ -153,4 +153,3 @@ describe('queryAdjacentPosts', () => {
     expect(result.next).toBeNull();
   });
 });
-

@@ -2,7 +2,7 @@ import assert from 'assert';
 import { describe, it } from 'node:test';
 import { formatJSON, toTagsJSON, toCategoriesJSON, shouldSkipProcessing } from './utils';
 import { parseFrontmatter } from './frontmatter';
-import type { BlogDatabaseProperties } from './notion-types';
+import type { BlogDatabasePropertyConfigs } from './notion-types';
 
 describe('formatJSON', () => {
   it('オブジェクトを整形されたJSONに変換する', async () => {
@@ -48,16 +48,16 @@ describe('formatJSON', () => {
 
 describe('toTagsJSON', () => {
   it('NotionのタグプロパティをTagsオブジェクトに変換する', () => {
-    const config: BlogDatabaseProperties['tags'] = {
+    const config: BlogDatabasePropertyConfigs['tags'] = {
       id: 'test-id',
       name: 'Tags',
       type: 'multi_select',
-      description: 'Tags property',
+      description: null,
       multi_select: {
         options: [
-          { id: 'tag1-id', name: 'JavaScript', color: 'blue', description: 'JavaScript tag' },
-          { id: 'tag2-id', name: 'TypeScript', color: 'red', description: 'TypeScript tag' },
-          { id: 'tag3-id', name: 'Angular', color: 'green', description: 'Angular tag' },
+          { id: 'tag1-id', name: 'JavaScript', color: 'blue', description: null },
+          { id: 'tag2-id', name: 'TypeScript', color: 'red', description: null },
+          { id: 'tag3-id', name: 'Angular', color: 'green', description: null },
         ],
       },
     };
@@ -72,11 +72,11 @@ describe('toTagsJSON', () => {
   });
 
   it('空のオプション配列でも動作する', () => {
-    const config: BlogDatabaseProperties['tags'] = {
+    const config: BlogDatabasePropertyConfigs['tags'] = {
       id: 'test-id',
       name: 'Tags',
       type: 'multi_select',
-      description: 'Tags property',
+      description: null,
       multi_select: {
         options: [],
       },
@@ -88,13 +88,13 @@ describe('toTagsJSON', () => {
   });
 
   it('単一のタグでも動作する', () => {
-    const config: BlogDatabaseProperties['tags'] = {
+    const config: BlogDatabasePropertyConfigs['tags'] = {
       id: 'test-id',
       name: 'Tags',
       type: 'multi_select',
-      description: 'Tags property',
+      description: null,
       multi_select: {
-        options: [{ id: 'tag1-id', name: 'React', color: 'purple', description: 'React tag' }],
+        options: [{ id: 'tag1-id', name: 'React', color: 'purple', description: null }],
       },
     };
 
@@ -108,16 +108,16 @@ describe('toTagsJSON', () => {
 
 describe('toCategoriesJSON', () => {
   it('NotionのカテゴリプロパティをCategoriesオブジェクトに変換する', () => {
-    const config: BlogDatabaseProperties['category'] = {
+    const config: BlogDatabasePropertyConfigs['category'] = {
       id: 'test-id',
       name: 'Category',
       type: 'select',
-      description: 'Category property',
+      description: null,
       select: {
         options: [
-          { id: 'cat1-id', name: 'Tech', color: 'blue', description: 'Tech category' },
-          { id: 'cat2-id', name: 'Life', color: 'green', description: 'Life category' },
-          { id: 'cat3-id', name: 'Review', color: 'yellow', description: 'Review category' },
+          { id: 'cat1-id', name: 'Tech', color: 'blue', description: null },
+          { id: 'cat2-id', name: 'Life', color: 'green', description: null },
+          { id: 'cat3-id', name: 'Review', color: 'yellow', description: null },
         ],
       },
     };
@@ -132,11 +132,11 @@ describe('toCategoriesJSON', () => {
   });
 
   it('空のオプション配列でも動作する', () => {
-    const config: BlogDatabaseProperties['category'] = {
+    const config: BlogDatabasePropertyConfigs['category'] = {
       id: 'test-id',
       name: 'Category',
       type: 'select',
-      description: 'Category property',
+      description: null,
       select: {
         options: [],
       },
@@ -148,13 +148,13 @@ describe('toCategoriesJSON', () => {
   });
 
   it('単一のカテゴリでも動作する', () => {
-    const config: BlogDatabaseProperties['category'] = {
+    const config: BlogDatabasePropertyConfigs['category'] = {
       id: 'test-id',
       name: 'Category',
       type: 'select',
-      description: 'Category property',
+      description: null,
       select: {
-        options: [{ id: 'cat1-id', name: 'Programming', color: 'red', description: 'Programming category' }],
+        options: [{ id: 'cat1-id', name: 'Programming', color: 'red', description: null }],
       },
     };
 
