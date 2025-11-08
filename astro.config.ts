@@ -33,6 +33,11 @@ export default defineConfig({
     optimizeDeps: {
       exclude: ['@resvg/resvg-js'],
     },
+    ssr: {
+      // @google-cloud/storage は Node.js 専用パッケージなので、
+      // SSR ビルド時に外部パッケージとして扱う
+      external: ['@google-cloud/storage'],
+    },
   },
 
   i18n: {
