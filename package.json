@@ -54,7 +54,7 @@
     "@tailwindcss/vite": "^4.1.4",
     "@types/gtag.js": "^0.0.20",
     "@types/katex": "0.16.7",
-    "@types/node": "22.19.0",
+    "@types/node": "24.10.0",
     "@types/react": "19.2.2",
     "@types/react-dom": "19.2.2",
     "eslint": "^9.28.0",
