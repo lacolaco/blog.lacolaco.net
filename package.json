@@ -27,7 +27,7 @@
   "dependencies": {
     "@astrojs/node": "^9.4.6",
     "@astrojs/prism": "3.3.0",
-    "@astrojs/react": "4.4.1",
+    "@astrojs/react": "4.4.2",
     "@astrojs/rss": "4.0.13",
     "@astrojs/sitemap": "3.6.0",
     "@date-fns/tz": "^1.2.0",
