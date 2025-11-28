@@ -3,7 +3,7 @@ title: '[Angular 4.0] 新しいngIfの使い方'
 slug: 'ng4-feature-ngif'
 icon: ''
 created_time: '2017-03-05T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
+last_edited_time: '2025-11-27T12:10:00.000Z'
 category: 'Tech'
 tags:
   - 'Angular'

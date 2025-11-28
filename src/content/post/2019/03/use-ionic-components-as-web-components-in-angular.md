@@ -3,7 +3,7 @@ title: 'Use Ionic components as Web Components in Angular'
 slug: 'use-ionic-components-as-web-components-in-angular'
 icon: ''
 created_time: '2019-03-07T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2025-11-28T15:05:00.000Z'
 category: 'Tech'
 tags:
   - 'Angular'
@@ -17,7 +17,7 @@ features:
   tweet: false
 ---
 
-![image](/images/use-ionic-components-as-web-components-in-angular/1__Y2FNLwDY1sJ39QlfpLqAaQ.png)
+![image](/images/use-ionic-components-as-web-components-in-angular/1__Y2FNLwDY1sJ39QlfpLqAaQ-4f8252f7.png)
 
 This article explains how to use Ionic components as standard Web Components. The Ionic team provides them as the first-class citizen, and it is quite easy to use.
 
@@ -66,7 +66,7 @@ In summary, you don’t have to worry about the payload size of unused component
 
 In Ionic v4.1, `ion-skeleton-text` is available. It provides a view to display temporal loading state.
 
-![image](/images/use-ionic-components-as-web-components-in-angular/0__v60Dp5pS0YJXAGDt.gif)
+![image](/images/use-ionic-components-as-web-components-in-angular/0__v60Dp5pS0YJXAGDt-c1529f95.gif)
 
 from [https://blog.ionicframework.com/ionic-release-4-1-hydrogen-out-now/](https://blog.ionicframework.com/ionic-release-4-1-hydrogen-out-now/)
 
@@ -101,7 +101,7 @@ Its template is here. It shows text only when the latest value of `text$` is not
 ><ng-template #empty> <ion-skeleton-text animated [style.width.px]="200"> </ion-skeleton-text></ng-template>
 ```
 
-![image](/images/use-ionic-components-as-web-components-in-angular/1__XgAC86CfaTipJ9__37Jg5mg.gif)
+![image](/images/use-ionic-components-as-web-components-in-angular/1__XgAC86CfaTipJ9__37Jg5mg-101149d8.gif)
 
 Cool! Using Ionic components in Angular app is very easy. Also, you can see the running example at Stackblitz.
 
