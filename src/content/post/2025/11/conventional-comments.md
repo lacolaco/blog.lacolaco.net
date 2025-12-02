@@ -3,11 +3,12 @@ title: 'Conventional Comments'
 slug: 'conventional-comments'
 icon: ''
 created_time: '2025-11-30T13:28:00.000Z'
-last_edited_time: '2025-11-30T14:19:00.000Z'
+last_edited_time: '2025-12-02T07:54:00.000Z'
 tags:
   - 'コードレビュー'
 published: false
 locale: 'ja'
+category: 'Idea'
 notion_url: 'https://www.notion.so/Conventional-Comments-2bb3521b014a80b88b48d68bef7324ce'
 features:
   katex: false

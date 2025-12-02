@@ -75,6 +75,7 @@ const result = await syncNotionBlog({
   verbose: true,
   mode,
   force,
+  filterPost: (metadata) => !!metadata.category,
   postPathResolver: (metadata) => {
     const customMetadata = metadata as CustomMetadata;
     const date = new Date(customMetadata.created_time);
