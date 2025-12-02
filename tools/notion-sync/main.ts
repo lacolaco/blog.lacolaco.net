@@ -174,12 +174,12 @@ const metadataJson = JSON.parse(await readFile(`${rootDir}/src/content/post/meta
 
 // tags.json生成
 const tagsData = Object.fromEntries(metadataJson.tags.map((tag) => [tag.name, { name: tag.name, color: tag.color }]));
-await writeFile(`${rootDir}/src/content/tags/tags.json`, JSON.stringify(tagsData, null, 2));
+await writeFile(`${rootDir}/src/content/tags/tags.json`, JSON.stringify(tagsData, null, 2) + '\n');
 console.log('Generated tags.json');
 
 // categories.json生成
 const categoriesData = Object.fromEntries(
   metadataJson.categories.map((category) => [category.name, { name: category.name, color: category.color }]),
 );
-await writeFile(`${rootDir}/src/content/categories/categories.json`, JSON.stringify(categoriesData, null, 2));
+await writeFile(`${rootDir}/src/content/categories/categories.json`, JSON.stringify(categoriesData, null, 2) + '\n');
 console.log('Generated categories.json');
