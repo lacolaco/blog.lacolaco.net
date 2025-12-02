@@ -103,6 +103,8 @@ jobs:
         run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create .env file
+        run: touch .env
       - name: Run notion-sync dry-run
         run: pnpm notion-sync -- --dry-run
         env:
