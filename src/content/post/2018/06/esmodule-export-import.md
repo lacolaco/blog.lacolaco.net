@@ -4,12 +4,12 @@ slug: 'esmodule-export-import'
 icon: ''
 created_time: '2018-06-26T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'ECMAScript'
   - 'JavaScript'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/ECMAScript-import-export-4a2c1ab7cb284e92a201925dee868227'
 features:
   katex: false
@@ -36,14 +36,13 @@ https://twitter.com/laco2net/status/1011468925152870400
 まず、デフォルトエクスポートする方法がふたつある。ひとつは専用の`export default`文によってエクスポートする方法。
 
 ```javascript
-export default function () {}
+export default function() {}
 ```
 
 また、`default`という名前で名前付きエクスポートすれば、それもデフォルトエクスポートしたことになる。
 
 ```javascript
-function foo() {}
-export { foo as default };
+function foo() {}export { foo as default };
 ```
 
 デフォルトエクスポートが`default`という固有名がつけられることは、Spec の https://www.ecma-international.org/ecma-262/6.0/#sec-exports-static-semantics-exportentries にかかれている。
@@ -55,13 +54,13 @@ export { foo as default };
 デフォルトエクスポートされたものをインポートする方法もいくつかある。ひとつは一番シンプルなデフォルトインポート用の専用構文を使う。
 
 ```javascript
-import otherDefault from 'other.js';
+import otherDefault from "other.js";
 ```
 
 ところでこれは名前付きインポートで次のように書き換えられる。先程デフォルトエクスポートで書いたように、デフォルトエクスポートは`default`という固有名でエクスポートされていることを利用できる。
 
 ```javascript
-import { default as otherDefault } from 'other.js';
+import { default as otherDefault } from "other.js";
 ```
 
 この構文、MDN の import 文のところには書かれていない。
@@ -71,7 +70,7 @@ import { default as otherDefault } from 'other.js';
 ちなみに、`default as`というのは専用の構文ではなく、`as`によるエイリアス付きインポートの構文が適用されており、仕様上では`default`は特別なキーワードではなくただの IdentifierName として扱われているはず。 次のコードで default と foo は仕様上同じもので区別できない。
 
 ```javascript
-import { default as otherDefault, foo as otherFoo } from 'other.js';
+import { default as otherDefault, foo as otherFoo } from "other.js";
 ```
 
 https://www.ecma-international.org/ecma-262/6.0/#sec-imports-static-semantics-boundnames
@@ -101,3 +100,4 @@ https://www.ecma-international.org/ecma-262/6.0/#sec-imports
 MDN の構文例は export と import どちらも、デフォルトエクスポートが`default`という名前付きエクスポートとして振る舞っている例を扱っていないが、 これは仕様が複雑で説明が難しいからされてないんだろうか。
 
 とりあえず自分の中で整理がついたので良し。
+

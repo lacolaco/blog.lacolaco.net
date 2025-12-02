@@ -4,7 +4,6 @@ slug: 'trusted-types-and-angular-security'
 icon: ''
 created_time: '2019-05-13T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Trusted Types'
@@ -12,6 +11,7 @@ tags:
   - 'Security'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/DOM-XSS-Trusted-Types-Angular-7de35a8fb66b43c2ac9af009f211efd1'
 features:
   katex: false
@@ -57,7 +57,7 @@ class SomeComponent {
 
 2 つ目の `<p [innerHTML]="htmlSnippet"></p>` は、 `<p>` タグの `innerHTML` プロパティにデータを渡す。これが Angular のテンプレートで動的な HTML 文字列を展開する唯一の方法である。ただし、 `innerHTML` プロパティへのバインディングは Angular により監視されていて、危険な文字列を検知するとその部分を除去、あるいは安全な文字列に置換する **サニタイズ処理** を自動的に行う。上記の例では、 `<script>` タグの部分だけが除去され、それ以外の部分はそのまま適用される。
 
-![image](/images/trusted-types-and-angular-security/Untitled.png)
+![image](/images/trusted-types-and-angular-security/Untitled.d7461e69d43758e7.png)
 
 他にも `<a [href]="...">` や `<img [src]="...">` など、XSS の危険性のあるプロパティへのデータバインディングはすべて Angular により検査されているため、**データバインディングによって DOM-based XSS が起こることは基本的にない**。
 
@@ -172,3 +172,4 @@ Trusted Types がもし標準化されれば、Angular のサニタイズ処理�
 - Angular には組み込みの XSS 防止機構があり、Trusted Types と非常によく似ている
 - Angular が防げるのはテンプレート内の脆弱性だけであり、DOM そのものの保護は Trusted Types が必要
 - Trusted Types は既存の仕組みと競合するものではなく、フレームワークの内部で使われることも期待できる。
+

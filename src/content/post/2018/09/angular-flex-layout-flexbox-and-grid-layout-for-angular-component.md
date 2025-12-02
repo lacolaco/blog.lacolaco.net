@@ -4,11 +4,11 @@ slug: 'angular-flex-layout-flexbox-and-grid-layout-for-angular-component'
 icon: ''
 created_time: '2018-09-28T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Flex-Layout-Flexbox-and-Grid-Layout-for-Angular-Component-20719d161ba045e989264d36f993b77e'
 features:
   katex: false
@@ -62,7 +62,7 @@ export class AppModule {}
 
 Installation is done! 🎉 BTW, there is `CardComponent` in declarations of AppModule. It’s a component to display a simple card for the demonstration of Flexbox layout.
 
-![image](/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/1__lB4R1qGsbAESz4HHsPXhZg.png)
+![image](/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/1__lB4R1qGsbAESz4HHsPXhZg.c75289e8640a2b98.png)
 
 ```
 @Component({
@@ -93,7 +93,7 @@ We’re ready to make a component with Flexbox layouts! Let’s learn about Flex
 The best simple example is a column-based list. It can be implemented with plain CSS like below;
 
 <figure>
-  <img src="/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/1__pmiPyK8wZzXZzApAWsINVw.png" alt="Column-based card list">
+  <img src="/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/1__pmiPyK8wZzXZzApAWsINVw.7182dbd65b03e0bd.png" alt="Column-based card list">
   <figcaption>Column-based card list</figcaption>
 </figure>
 
@@ -131,17 +131,17 @@ With Angular Flex-Layout, the same layout will be implemented as following templ
 As you can see, there is a Flexbox container with `fxLayout="column"` and configuration of it. Isn’t it intuitive? In the above example, 2 directives are used to create a Flexbox container.
 
 - `fxLayout=”column”` —Corresponding to `display: flex` and `flex-direction` .
-  Create a new Flexbox container and setting its direction
+Create a new Flexbox container and setting its direction
 - `fxLayoutGap=”32px”` —Corresponding to `margin-bottom: 32px`
-  for each child except the last.
-  Configure the gap size between each item
+for each child except the last.
+Configure the gap size between each item
 
 **Example 2. Row-based card list**
 
 Another example is a row-based card list with 3 columns. It’s a common UI pattern used with small cards.
 
 <figure>
-  <img src="/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/1__JDttyhBkw7wRmEHVpjTrAA.png" alt="Row-based card list">
+  <img src="/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/1__JDttyhBkw7wRmEHVpjTrAA.7bec85270a6b9b85.png" alt="Row-based card list">
   <figcaption>Row-based card list</figcaption>
 </figure>
 
@@ -188,16 +188,16 @@ And rewritten template with Angular Flex-Layout is the below;
 It’s very cool! 😎 In this case, there is a container with `fxLayout="row wrap"` . The`fxLayout` directive can take a wrapping configuration as the second parameter. And I added the`fxFlex` directive for each element to adjust its width to align as 3 columns.
 
 - `fxLayoutAlign=”flex-start”` — Corresponding to `justify-content: flex-start`.
-  Configure alignment of the Flexbox container
+Configure alignment of the Flexbox container
 - `fxFlex="1 0 auto"` — Corresponding to `flex: 1 0 auto`.
-  Configure its CSS `flex` properties
+Configure its CSS `flex` properties
 
 ### Responsive APIs
 
 The previous row-based example has a problem with the mobile viewport. Let’s make its card size responsive!
 
 <figure>
-  <img src="/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/1__knG2YsFXSoCTPMFqQgDLLw.gif" alt="Responsive Columns">
+  <img src="/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/1__knG2YsFXSoCTPMFqQgDLLw.889feec99ade0ab8.gif" alt="Responsive Columns">
   <figcaption>Responsive Columns</figcaption>
 </figure>
 
@@ -257,9 +257,18 @@ Angular Flex-Layout directives can take a breakpoint alias as the syntax; `<dire
 Here is the rewritten code. Super simple and declarative!
 
 ```html
-<div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutGap="32px" fxLayoutAlign="flex-start">
+<div
+  fxLayout="row wrap"
+  fxLayout.lt-sm="column"
+  fxLayoutGap="32px"
+  fxLayoutAlign="flex-start"
+>
   <ng-container *ngFor="let _ of [1,2,3,4,5,6]">
-    <app-card fxFlex="0 1 calc(33.3% - 32px)" fxFlex.lt-md="0 1 calc(50% - 32px)" fxFlex.lt-sm="100%"></app-card>
+    <app-card
+      fxFlex="0 1 calc(33.3% - 32px)"
+      fxFlex.lt-md="0 1 calc(50% - 32px)"
+      fxFlex.lt-sm="100%"
+    ></app-card>
   </ng-container>
 </div>
 ```
@@ -271,7 +280,7 @@ Each child element has new `fxFlex.lt-md` and `fxFlex.lt-sm` directives to confi
 So far, the card list is aligned well but the card itself is still almost blank. Finally, let’s add Grid layout inside each card!
 
 <figure>
-  <img src="/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/1__rduM7quXn__SJiMCNoJJeRw.png" alt="Grid Layout in the card">
+  <img src="/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/1__rduM7quXn__SJiMCNoJJeRw.d2e016824ee5fd67.png" alt="Grid Layout in the card">
   <figcaption>Grid Layout in the card</figcaption>
 </figure>
 
@@ -283,7 +292,7 @@ The example implementation is the below (coloring part is not shown). The Grid c
 <style>
   .cardInner {
     display: grid;
-    grid-template-areas: 'header header' 'side content' 'footer footer';
+    grid-template-areas: "header header" "side content" "footer footer";
     grid-template-rows: auto auto auto;
     grid-row-gap: 16px;
     grid-column-gap: 16px;
@@ -291,27 +300,47 @@ The example implementation is the below (coloring part is not shown). The Grid c
 </style>
 
 <div class="cardInner">
-  <div [style.grid-area]="'header'">Header</div>
+  <div [style.grid-area]="'header'">
+    Header
+  </div>
 
-  <div [style.grid-area]="'side'">Side</div>
+  <div [style.grid-area]="'side'">
+    Side
+  </div>
 
-  <div [style.grid-area]="'content'">Content</div>
+  <div [style.grid-area]="'content'">
+    Content
+  </div>
 
-  <div [style.grid-area]="'footer'">Footer</div>
+  <div [style.grid-area]="'footer'">
+    Footer
+  </div>
 </div>
 ```
 
 To use Grid directives, any additional setup isn’t needed. Once installed `FlexLayoutModule` , all APIs are available. Rewritten code is the below;
 
 ```html
-<div gdAreas="header header | side content | footer footer" gdGap="16px" gdRows="auto auto auto">
-  <div gdArea="header">Header</div>
+<div
+  gdAreas="header header | side content | footer footer"
+  gdGap="16px"
+  gdRows="auto auto auto"
+>
+  <div gdArea="header">
+    Header
+  </div>
 
-  <div gdArea="side">Side</div>
+  <div gdArea="side">
+    Side
+  </div>
 
-  <div gdArea="content">Content</div>
+  <div gdArea="content">
+    Content
+  </div>
 
-  <div gdArea="footer">Footer</div>
+  <div gdArea="footer">
+    Footer
+  </div>
 </div>
 ```
 
@@ -320,7 +349,7 @@ Look at the Grid container. `gdAreas` and `gdRows` directives correspond to `gri
 It’s notable that Grid directives also support the responsive enhancement as well as Flexbox! For example, the following template changes the card layout to a vertical column only in a narrow viewport. Updates are only two lines!
 
 <figure>
-  <img src="/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/1__hCCjDLFyC6kW0We20WubzQ.gif" alt="Responsive Grid layout">
+  <img src="/images/angular-flex-layout-flexbox-and-grid-layout-for-angular-component/1__hCCjDLFyC6kW0We20WubzQ.a06afd217eeca74a.gif" alt="Responsive Grid layout">
   <figcaption>Responsive Grid layout</figcaption>
 </figure>
 
@@ -351,3 +380,4 @@ Angular Flex-Layout’s Grid APIs are not documented officially, yet. Probably, 
 - [GitHub repo](https://github.com/angular/flex-layout)
 - [Documentation Wiki](https://github.com/angular/flex-layout/wiki)
 - [Stackblitz of this article](https://stackblitz.com/edit/lacolaco-angular-flex-layout-example)
+

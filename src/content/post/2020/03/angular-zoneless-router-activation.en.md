@@ -4,11 +4,11 @@ slug: 'angular-zoneless-router-activation.en'
 icon: ''
 created_time: '2020-03-24T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'en'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Zoneless-Angular-Tip-How-To-Detect-Activated-Route-Change-8e70c8ca2d5649b094b002c8332db5c5'
 features:
   katex: false
@@ -67,3 +67,4 @@ export class AppComponent {
 ```
 
 Running example: [https://ng-run.com/edit/pwwWzXxngYX0FUJDZIIj?open=app%2Fapp.component.ts](https://ng-run.com/edit/pwwWzXxngYX0FUJDZIIj?open=app%2Fapp.component.ts)
+

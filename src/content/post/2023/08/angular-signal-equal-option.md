@@ -4,12 +4,12 @@ slug: 'angular-signal-equal-option'
 icon: ''
 created_time: '2023-08-09T04:05:00.000Z'
 last_edited_time: '2023-12-30T10:01:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Signal-e6e80b9f4a394d25905f4b4711f09f37'
 features:
   katex: false
@@ -28,14 +28,14 @@ Signalが保持するオブジェクトの変更を通知するタイミング�
 - `Signal#mutate` メソッドが呼び出されたあと
 - `computed` 関数の算出関数が返す値が、保存されている値と**等値でない**とき
 
-```ts
+```typescript
 const name = signal('Alice');
 
 name.set('Alice'); // 新しくセットされた値が、保存されている値と等値である
 name.set('Bob'); // 新しくセットされた値が、保存されている値と等値でない
 
-name.update((value) => 'Alice'); // 新しくセットされた値が、保存されている値と等値である
-name.update((value) => 'Bob'); // 新しくセットされた値が、保存されている値と等値でない
+name.update(value => 'Alice'); // 新しくセットされた値が、保存されている値と等値である
+name.update(value => 'Bob'); // 新しくセットされた値が、保存されている値と等値でない
 
 const message = computed(() => {
   return `Hello, ${name()}`; // nameが更新されたときに算出結果が変わる
@@ -48,7 +48,7 @@ const message = computed(() => {
 
 さて上記にまとめたように、変更が通知されるかどうかを決定しているのは、新しい値が保存されている値と等値であるかという判定に基づいている。Angular Signal のデフォルトの等値判定は以下のロジックで計算される。
 
-```ts
+```typescript
 /**
  * The default equality function used for `signal` and `computed`, which treats objects and arrays
  * as never equal, and all other primitive values using identity semantics.
@@ -70,7 +70,7 @@ export function defaultEquals<T>(a: T, b: T) {
 
 https://github.com/angular/angular/blob/16.1.8/packages/core/src/signals/src/api.ts#L77-L93
 
-基本的には `[Object.is](http://object.is/)` 関数で等値だと判定される値は等値だとされるが、例外がある。 `typeof` 演算子が `object` を返すような値は、それが `null` でない場合には常に非等値であると判定されようになっている。つまり、Signal でプリミティブではない値を保持させた場合には、 `set` や `update` メソッドであっても内部の等値判定は常にfalseであり、そのSignalに依存する派生Signalに変更が通知される。
+基本的には [`Object.is`](http://object.is/) 関数で等値だと判定される値は等値だとされるが、例外がある。 `typeof` 演算子が `object` を返すような値は、それが `null` でない場合には常に非等値であると判定されようになっている。つまり、Signal でプリミティブではない値を保持させた場合には、 `set` や `update` メソッドであっても内部の等値判定は常にfalseであり、そのSignalに依存する派生Signalに変更が通知される。
 
 https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Object/is
 
@@ -78,19 +78,19 @@ JavaScriptではオブジェクト自身が等値判定のロジックを提供�
 
 参照が同じであっても内部の値が変わっている可能性を考慮すれば、変更しているはずなのに必要な通知がなされないことよりも、不要な通知がなされる可能性があるほうが、デフォルトの挙動としては安全である。この戦略はAngularコンポーネントの変更検知と同じである。
 
-```ts
-const user = signal({ name: 'Alice' });
+```typescript
+const user = signal({name: 'Alice'});
 
 user.set(user()); // 同じオブジェクトだが、非等値であるとされる
-user.update((value) => value); // 同じオブジェクトだが、非等値であるとされる
-user.mutate((value) => value); // 同じオブジェクトだが、非等値であるとされる
+user.update(value => value); // 同じオブジェクトだが、非等値であるとされる
+user.mutate(value => value); // 同じオブジェクトだが、非等値であるとされる
 ```
 
 ただしこれはフレームワーク側の戦略であって、それぞれのオブジェクトの詳細を知っている開発者は、デフォルトではなくそれぞれのオブジェクト固有の等値判定ロジックをSignalに設定することができる。
 
 たとえば次の例では、 `posX` と `posY` の座標値を持つ `Point` 型の値をSignalで管理するにあたって、オブジェクトの参照にかかわらず座標が同じなら等値であるというロジックを `equal` オプションで定義している。等値関数だけでエクスポートしてもよいが、Signalオブジェクトの作成自体を `createXXXSignal` という形でラップしてしまうのが使いやすいだろう。
 
-```ts
+```typescript
 import { signal } from '@angular/core';
 
 export type Point = {
@@ -110,3 +110,4 @@ export function createPointSignal(initialValue?: Point) {
 Signalで保持されている座標に応じてCanvasに点を打つサンプルアプリを作ってみたが、この例では同じ座標が繰り返し入力されることが少ないので、あまり効果の実感は得られない。雰囲気だけ感じてほしい。
 
 https://stackblitz.com/edit/angular-jatgsy?ctl=1&embed=1&file=src/main.ts
+

@@ -4,12 +4,12 @@ slug: 'angular-host-directives-observer-directive'
 icon: ''
 created_time: '2022-10-30T09:53:00.000Z'
 last_edited_time: '2022-10-30T00:00:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'standalone component'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-v15-hostDirectives-8921bbca9dc243128119845110ae380e'
 features:
   katex: false
@@ -41,7 +41,7 @@ https://stackblitz.com/edit/angular-ivy-utpuhe?ctl=1&embed=1&file=src/app/app.co
 
 本質的な部分ではないので詳細は省くが、 `IntersectionObserver` を使ってホスト要素が完全に表示されたときに `viewportIn` イベントを、ホスト要素が完全に画面外に隠れたときに `viewportOut` イベントを発火する。
 
-```ts
+```typescript
 @Directive({
   selector: '[appViewport]',
   standalone: true,
@@ -63,7 +63,7 @@ export class ViewportDirective implements AfterViewInit, OnDestroy {
     },
     {
       threshold: [0, 1],
-    },
+    }
   );
 
   @Output()
@@ -85,24 +85,21 @@ export class ViewportDirective implements AfterViewInit, OnDestroy {
 
 まずは `ViewportDirective` をそのままテンプレート中で直接呼び出して利用する。比較対象として書いているだけなので特に解説することはない。
 
-```ts
+```typescript
 @Component({
   selector: 'my-app',
   standalone: true,
   imports: [ViewportDirective],
   template: `
-    <div class="container">
-      <div style="height: 110vh; background: tomato;">110vh</div>
+  <div class="container">
+    <div style="height: 110vh; background: tomato;">110vh</div>
 
-      <div
-        appViewport
-        style="padding: 16px; border: 1px solid black;"
-        (viewportIn)="onViewportIn('direct')"
-        (viewportOut)="onViewportOut('direct')"
-      >
-        viewport directive (direct)
-      </div>
+    <div appViewport style="padding: 16px; border: 1px solid black;"
+      (viewportIn)="onViewportIn('direct')" 
+      (viewportOut)="onViewportOut('direct')">
+      viewport directive (direct)
     </div>
+  </div>
   `,
   styleUrls: ['./app.component.css'],
 })
@@ -121,11 +118,13 @@ export class AppComponent {
 
 では、 `hostDirectives` を使ってコンポーネントに合成して `ViewportDirective` を使ってみよう。まずは合成する先のコンポーネントとして `BannerComponent` を定義する。
 
-```ts
+```typescript
 @Component({
   selector: 'app-banner',
   standalone: true,
-  template: ` <ng-content></ng-content> `,
+  template: `
+    <ng-content></ng-content>
+  `,
 })
 export class BannerComponent {}
 ```
@@ -134,7 +133,7 @@ export class BannerComponent {}
 
 デフォルトではアウトプットは合成されないため、 `ViewportDirective` が持つ2つのアウトプットを `BannerComponent` の一部として公開するために、 `outputs` プロパティを設定している。
 
-```ts
+```typescript
 @Component({
   ...,
   hostDirectives: [
@@ -148,19 +147,21 @@ export class BannerComponent {}
 
 これにより、 親コンポーネントでは `BannerComponent` には定義されていない `viewportIn` と `viewportOut` イベントにもアクセスできる。
 
-```ts
+```typescript
 @Component({
   selector: 'my-app',
   standalone: true,
   imports: [ViewportDirective, BannerComponent],
   template: `
-    <div class="container">
-      <div style="height: 110vh; width: 100%; background: skyblue;">110vh</div>
+  <div class="container">
+    <div style="height: 110vh; width: 100%; background: skyblue;">110vh</div>
 
-      <app-banner (viewportIn)="onViewportIn('composite')" (viewportOut)="onViewportOut('composite')">
-        viewport directive (composite)
-      </app-banner>
-    </div>
+    <app-banner
+      (viewportIn)="onViewportIn('composite')" 
+      (viewportOut)="onViewportOut('composite')">
+      viewport directive (composite)
+    </app-banner>
+  </div>
   `,
   styleUrls: ['./app.component.css'],
 })
@@ -173,7 +174,7 @@ export class AppComponent {}
 
 次のように `inject` 関数で取得したホスト要素の `ViewportDirective` インスタンスを使い、 `viewportIn` と `viewportOut` のイベントを購読して処理を行うことができる。
 
-```ts
+```typescript
 @Component({
   ...
   hostDirectives: [
@@ -208,7 +209,7 @@ export class BannerComponent {
 
 `BannerComponent` から再公開したインプット・アウトプットが合成されたものであったとしても、 `BannerComponent` を利用する側からすれば直接定義されたものとの間に違いはない。だから `BannerComponent` が持っていても不自然ではない名前で公開するようにエイリアスを設定するのがいいだろう。エイリアスは `元の名前: 再公開する名前` で設定できる。
 
-```ts
+```typescript
 @Component({
   ...,
   hostDirectives: [
@@ -221,3 +222,4 @@ export class BannerComponent {
   ],
 })
 ```
+

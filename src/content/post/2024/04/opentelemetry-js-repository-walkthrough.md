@@ -4,11 +4,11 @@ slug: 'opentelemetry-js-repository-walkthrough'
 icon: ''
 created_time: '2024-04-14T00:37:00.000Z'
 last_edited_time: '2024-04-14T03:45:00.000Z'
-category: 'Tech'
 tags:
   - 'OpenTelemetry'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/opentelemetry-js-1a5a4c7ea7844aca8cf5ef394fe0564c'
 features:
   katex: false
@@ -40,14 +40,14 @@ https://github.com/open-telemetry/opentelemetry-js
 
 このディレクトリの中の命名規則は単純である。先頭の `opentelemetry-` は共通のものとして、大きく次の分類ができる。
 
-- **`opentelemetry-context-*`**
+- `opentelemetry-context-*`
   - `TraceProvider` に登録する `ContextManager` として使える個別の実装を提供する
-- **`opentelemetry-exporter-*`**
+- `opentelemetry-exporter-*`
   - `SpanExporter` として使える個別の実装を提供する。あまり数は多くない
   - `new BatchSpanProcessor(exporter)` のように `SpanProcessor` に渡すことになる
-- **`opentelemetry-propagator-*`**
+- `opentelemetry-propagator-*`
   - `TraceProvider` に登録する `TextMapPropagator` として使える個別の実装を提供する
-- **`opentelemetry-sdk-trace-*`\*\*** \*\*
+- `opentelemetry-sdk-trace-*`** **
   - 上述のパッケージなどが組み合わされたBattery-includedな `TraceProvider` 実装を提供する
   - Node.jsやBrowserのようなプラットフォームごとのSDKになっている
 - その他
@@ -60,15 +60,16 @@ https://github.com/open-telemetry/opentelemetry-js
 
 このディレクトリには（おそらく）まだ安定しているとは言えない新しいパッケージ群が含まれている。頻繁に破壊的変更が入ることを想定して使うべきだが、けっこう便利なものが多く使わざるを得ない場面がある。数が多いので個別には解説できないが、ここでもパッケージの命名規則でだいたいの役割を掴むことができる。
 
-- **`api-logs`**
+- `api-logs`
   - ログ収集のための計装API。トレースの計装APIは安定版になっているがログはまだ実験的なのでここにある。
   - 同様に `api-events` というものも開発中
-- **`exporter-*`**
+- `exporter-*` 
   - テレメトリのExporter実装を提供している。ログのExporterもあるが、トレースのものもある。それぞれ各OTLPのプロトコルに対応してパッケージが分けられている
   - `opentelemetry-exporter-metrics-*` もあるが、命名規則が違う理由はわからない。
   - 基底パッケージとして `otlp-*-exporter-base` というものもあり、このあたりは自分がほしいAPIがどこにあるかひとつひとつ探して見つけるしかない
-- **`opentelemetry-instrumentation-*`**
+- `opentelemetry-instrumentation-*` 
   - 自動計装を提供するパッケージ群
   - 自動計装のパッチを当てる対象ごとにパッケージが分けられている
 
 このあたりを抑えておけばひととおり欲しいAPIは見つけられるだろう。実験的パッケージ群は命名規則も一貫性がない気がしており、名前もいつ変わるかわからないと思って構えておくのがいいと思われる。
+

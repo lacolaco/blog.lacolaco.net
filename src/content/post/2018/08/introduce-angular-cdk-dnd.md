@@ -4,12 +4,12 @@ slug: 'introduce-angular-cdk-dnd'
 icon: ''
 created_time: '2018-08-29T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Angular CDK'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-CDK-drag-and-drop-a3993f7db21f4b38a87e6c15cb98c825'
 features:
   katex: false
@@ -41,17 +41,26 @@ drag-and-drop はその名のとおり、UI 上でのドラッグアンドドロ
 <ul>
   <li cdkDrag>
     <h2>
-      <a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a>
+      <a target="_blank" rel="noopener" href="https://angular.io/tutorial"
+        >Tour of Heroes</a
+      >
     </h2>
   </li>
   <li cdkDrag>
     <h2>
-      <a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a>
+      <a
+        target="_blank"
+        rel="noopener"
+        href="https://github.com/angular/angular-cli/wiki"
+        >CLI Documentation</a
+      >
     </h2>
   </li>
   <li cdkDrag>
     <h2>
-      <a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a>
+      <a target="_blank" rel="noopener" href="https://blog.angular.io/"
+        >Angular blog</a
+      >
     </h2>
   </li>
 </ul>
@@ -72,17 +81,26 @@ drag-and-drop はその名のとおり、UI 上でのドラッグアンドドロ
   <ul>
     <li cdkDrag>
       <h2>
-        <a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a>
+        <a target="_blank" rel="noopener" href="https://angular.io/tutorial"
+          >Tour of Heroes</a
+        >
       </h2>
     </li>
     <li cdkDrag>
       <h2>
-        <a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a>
+        <a
+          target="_blank"
+          rel="noopener"
+          href="https://github.com/angular/angular-cli/wiki"
+          >CLI Documentation</a
+        >
       </h2>
     </li>
     <li cdkDrag>
       <h2>
-        <a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a>
+        <a target="_blank" rel="noopener" href="https://blog.angular.io/"
+          >Angular blog</a
+        >
       </h2>
     </li>
   </ul>
@@ -97,14 +115,14 @@ drag-and-drop はその名のとおり、UI 上でのドラッグアンドドロ
 
 並べ替えをおこなうためには、リストをコンポーネント側で管理する必要があります。これまでは適当な`li`要素を使っていましたが、AppComponent に次のような`list`プロパティをもたせます。
 
-```ts
+```typescript
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
 })
 export class AppComponent {
-  list = ['まぐろ', 'サーモン', 'えび'];
+  list = ["まぐろ", "サーモン", "えび"];
 }
 ```
 
@@ -123,19 +141,23 @@ export class AppComponent {
 
 ポイントは `<cdk-drop [data]="list" (dropped)="drop($event)">` です。`[data]`プロパティには並べ替えの対象となるデータモデルを渡します。 次に、`(dropped)="drop($event)"`では、`dropped`イベントハンドラで`drop`メソッドを呼び出しています。 `drop`メソッドは次のように記述します。
 
-```ts
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+```typescript
+import { CdkDragDrop, moveItemInArray } from "@angular/cdk/drag-drop";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
 })
 export class AppComponent {
-  list = ['まぐろ', 'サーモン', 'えび'];
+  list = ["まぐろ", "サーモン", "えび"];
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    moveItemInArray(
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
   }
 }
 ```
@@ -144,8 +166,12 @@ export class AppComponent {
 
 `moveItemInArray`関数は、基本的な配列の並べ替えを行ってくれる CDK の機能です。中身は単なる JavaScript の配列の並べ替えですが、Angular チームによる実装にまかせておくのが安心だと思います。
 
-```ts
-export function moveItemInArray<T = any>(array: T[], fromIndex: number, toIndex: number): void {
+```typescript
+export function moveItemInArray<T = any>(
+  array: T[],
+  fromIndex: number,
+  toIndex: number
+): void {
   const from = clamp(fromIndex, array.length - 1);
   const to = clamp(toIndex, array.length - 1);
 
@@ -172,18 +198,22 @@ export function moveItemInArray<T = any>(array: T[], fromIndex: number, toIndex:
 
 複数のグループを跨いだ並べ替えも可能です。先程の AppComponent を次のように変更します。`list`プロパティを`like`プロパティに改名し、新しく`unlike`プロパティを追加します。
 
-```ts
+```typescript
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
 })
 export class AppComponent {
-  like = ['まぐろ', 'サーモン', 'えび'];
-  unlike = ['数の子', 'たくあん'];
+  like = ["まぐろ", "サーモン", "えび"];
+  unlike = ["数の子", "たくあん"];
 
   drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    moveItemInArray(
+      event.container.data,
+      event.previousIndex,
+      event.currentIndex
+    );
   }
 }
 ```
@@ -214,7 +244,12 @@ export class AppComponent {
 
 ```html
 <h2>好きなネタ</h2>
-<cdk-drop #dropLike [data]="like" (dropped)="drop($event)" [connectedTo]="[dropUnlike]">
+<cdk-drop
+  #dropLike
+  [data]="like"
+  (dropped)="drop($event)"
+  [connectedTo]="[dropUnlike]"
+>
   <ul>
     <li *ngFor="let item of like" cdkDrag>
       <h2>{{item}}</h2>
@@ -223,7 +258,12 @@ export class AppComponent {
 </cdk-drop>
 
 <h2>好きじゃないネタ</h2>
-<cdk-drop #dropUnlike [data]="unlike" (dropped)="drop($event)" [connectedTo]="[dropLike]">
+<cdk-drop
+  #dropUnlike
+  [data]="unlike"
+  (dropped)="drop($event)"
+  [connectedTo]="[dropLike]"
+>
   <ul>
     <li *ngFor="let item of unlike" cdkDrag>
       <h2>{{item}}</h2>
@@ -236,7 +276,7 @@ export class AppComponent {
 
 グループを跨いだ移動かどうかは `event.previousContainer` と `event.container` を比較して判定できます。 次のように書けば、一致する場合は配列内での移動を、一致しない場合はグループを越えた移動をおこないます。
 
-```ts
+```typescript
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
@@ -296,3 +336,4 @@ export class AppComponent {
 - `cdkDrag`ディレクティブと`cdk-drop`コンポーネントで並べ替えやグルーピングが簡単に実装できる
 
 CDK のアップデートは Angular v7 のリリースと合わせておこなわれるだろうと見られています。 楽しみに待ちましょう。
+

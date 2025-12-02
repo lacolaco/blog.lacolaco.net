@@ -4,11 +4,11 @@ slug: 'angular-lightweight-injection-token-overview'
 icon: ''
 created_time: '2020-07-29T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Lightweight-Injection-Token-66159df0e34842f19a275319c346cdc3'
 features:
   katex: false
@@ -29,7 +29,9 @@ features:
 あるAngularライブラリが、次のような使い方ができる `<lib-card>` コンポーネントを提供している。
 
 ```html
-<lib-card> Hello World! </lib-card>
+<lib-card>
+  Hello World!
+</lib-card>
 ```
 
 このコンポーネントは、Contentとして `<lib-card-header>` コンポーネントを配置すると、カードのヘッダーとして取り扱う **オプショナル** な機能があることをイメージしよう。
@@ -149,3 +151,4 @@ const CardHeaderToken
 - Misko HeveryによるDesign Doc [https://hackmd.io/@mhevery/SyqDjUlrU](https://hackmd.io/@mhevery/SyqDjUlrU)
 - 公式ドキュメントへの追加PR [https://github.com/angular/angular/pull/36144](https://github.com/angular/angular/pull/36144)
 - Angular MaterialのIssue [https://github.com/angular/components/issues/19576](https://github.com/angular/components/issues/19576)
+

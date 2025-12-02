@@ -4,12 +4,12 @@ slug: 'setting-up-angular-2-testing-environment-with-karma-and-webpack'
 icon: ''
 created_time: '2016-10-25T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Testing'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Setting-up-Angular-Testing-Environment-with-Karma-and-webpack-ba94cfed9b6441d3862b55c25fe0cea7'
 features:
   katex: false
@@ -193,7 +193,7 @@ At last, add “test” npm-script in package.json:
 
 Let’s execute “npm test” command.
 
-![image](/images/setting-up-angular-2-testing-environment-with-karma-and-webpack/npm_test.png)
+![image](/images/setting-up-angular-2-testing-environment-with-karma-and-webpack/npm_test.c799a05414a8766c.png)
 
 Okey! Setting up karma runner is done! Let’s go to next step.
 
@@ -463,3 +463,4 @@ context.keys().map(context);
 - Write tests!
 
 Source code in this article is at [GitHub](https://github.com/laco0416/ng2-test-seed)
+

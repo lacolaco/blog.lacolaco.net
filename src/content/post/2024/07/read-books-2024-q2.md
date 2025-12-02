@@ -4,11 +4,11 @@ slug: 'read-books-2024-q2'
 icon: ''
 created_time: '2024-07-03T08:41:00.000Z'
 last_edited_time: '2024-07-03T09:01:00.000Z'
-category: 'Diary'
 tags:
   - '読書'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/2024-Q2-23ca824909bf4218879b45f6cdcd9ca9'
 features:
   katex: false
@@ -18,7 +18,7 @@ features:
 
 2024年 4月〜6月に読んだ本・読み始めた本
 
-![image](/images/read-books-2024-q2/Untitled.png)
+![image](/images/read-books-2024-q2/Untitled.6d0c8bdf6f2020d6.png)
 
 ## 数学嫌いな人のための数学
 
@@ -79,3 +79,4 @@ https://amzn.asia/d/03KIrvDw
 もうすぐ読み終わる。Amazonのレコメンドに出てきたので読んでみたが、「エンジニアのための」というのは不要そうな内容だった。出典に基づいた記述が少なく、著者本人の経験に基づく意見が強いが、その内容には全体的に同意できる。
 
 これは「図解」の入門ではなく「図解思考」の入門であり、この本に書かれているのは図解の方法論ではない。レクチャーされているのは概念とラベリング、構造理解、具体と抽象についての思考法であり、そのスキルを磨きたいが鍛え方がわからない人にとっては実践しやすいトレーニング本として機能しそうだ。
+

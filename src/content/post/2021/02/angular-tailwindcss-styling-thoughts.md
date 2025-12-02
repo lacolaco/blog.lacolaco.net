@@ -4,13 +4,13 @@ slug: 'angular-tailwindcss-styling-thoughts'
 icon: ''
 created_time: '2021-02-17T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'tailwindcss'
   - '言語化'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Tailwind-CSS-69bb91a6ecf3453fbfcd5c2e6354033a'
 features:
   katex: false
@@ -18,7 +18,7 @@ features:
   tweet: false
 ---
 
-Angular CLI v11.2 から[Tailwind CSS](https://tailwindcss.com/)の公式サポートが追加された。 コミュニティでは以前から`[@ngneat/tailwind](https://github.com/ngneat/tailwind/)`のようなサードパーティライブラリによってサポートされており、そういう意味では Angular + Tailwind CSS の組み合わせ自体は今に始まったものではない。 とはいえ公式サポートされたことによりこれまでよりも多くの Angular ユーザーが Tailwind CSS を検討するようになるだろう。
+Angular CLI v11.2 から[Tailwind CSS](https://tailwindcss.com/)の公式サポートが追加された。 コミュニティでは以前から[`@ngneat/tailwind`](https://github.com/ngneat/tailwind/)のようなサードパーティライブラリによってサポートされており、そういう意味では Angular + Tailwind CSS の組み合わせ自体は今に始まったものではない。 とはいえ公式サポートされたことによりこれまでよりも多くの Angular ユーザーが Tailwind CSS を検討するようになるだろう。
 
 この記事では Angular と組み合わせる上での Tailwind CSS の使われ方について個人的な所感をまとめる。 あくまでも所感であり、開発者コミュニティがどのようなプラクティスを支持していくかはまだこれから模索されていく段階であることを念頭に置いてもらえればと思う。
 
@@ -69,8 +69,9 @@ module.exports = {
 まとまりのない文章になってしまったが、次の点は Angular と Tailwind CSS の組み合わせにおける推奨事項としてある程度妥当ではないかと考えている。
 
 1. コンポーネントスタイル内での `@apply` の利用は控える
-2. Angular コンポーネントをスタイルの再利用の単位とする
-3. Tailwind CSS は Theming の関心に閉じて使う
-4. アプリケーション特有のスタイル、コンポーネント特有のスタイルに Tailwind CSS を関与させない
+1. Angular コンポーネントをスタイルの再利用の単位とする
+1. Tailwind CSS は Theming の関心に閉じて使う
+1. アプリケーション特有のスタイル、コンポーネント特有のスタイルに Tailwind CSS を関与させない
 
 会社や組織のなかでデザインシステムを構築しており、それを Angular アプリケーションに適用しやすいようにライブラリ化したいというようなユースケースであれば、 Tailwind CSS を基盤として使うことで満足度の高い開発者体験が得られるだろう。 ユーティリティセットとしてビルトインのデザインシステムを借用したいという場合も、 ユーティリティの利用だけに留めて Tailwind CSS 上での拡張は避け、これまでどおり Angular のコンポーネントスタイルを中心に表現していくのがいいだろう。
+

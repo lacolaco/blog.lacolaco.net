@@ -4,13 +4,13 @@ slug: 'io2023-angular-summary'
 icon: ''
 created_time: '2023-05-15T12:09:00.000Z'
 last_edited_time: '2023-12-30T10:04:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Firebase'
   - 'Signals'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Google-I-O-2023-Angular-09878dcc7052432cad3f89c3b30ced25'
 features:
   katex: false
@@ -28,7 +28,7 @@ https://www.youtube.com/watch?v=r8T0SnwHRNI
 
 Flutter のアップデートに関するところでは、Flutter Web の新しい機能のデモにちゃっかり登場した。 Flutter Web で作られたウィジェットが Angular アプリケーションに埋め込まれているというものだ。
 
-![image](/images/io2023-angular-summary/Developer_keynote_%28Google_I_O_23%29_36-38_screenshot.png)
+![image](/images/io2023-angular-summary/Developer_keynote_%28Google_I_O_23%29_36-38_screenshot.b0e0a07645a22151.png)
 
 このデモについては Flutter の個別セッション動画の方でもう少し詳しく触れられているので興味があれば見てみるとよい。特にAngularの開発者に役立つ情報はないが。
 
@@ -37,19 +37,19 @@ https://youtu.be/PY42FysQTgw?t=211
 Developer keynote の Webパート では、Chrome DevTools のデバッグ機能のアップデートを紹介する題材としてAngularアプリケーションの例が使われていた。同じ機能を紹介する個別セッション動画の方では React のコードになっていたのだが、keynote ではあえて Angular を選んでくれたのだろうか。
 
 <figure>
-  <img src="/images/io2023-angular-summary/Developer_keynote_%28Google_I_O_23%29_37-2_screenshot.png" alt="エラースタックトレースの改善">
+  <img src="/images/io2023-angular-summary/Developer_keynote_%28Google_I_O_23%29_37-2_screenshot.ed1faff92000821b.png" alt="エラースタックトレースの改善">
   <figcaption>エラースタックトレースの改善</figcaption>
 </figure>
 
 <figure>
-  <img src="/images/io2023-angular-summary/Developer_keynote_%28Google_I_O_23%29_37-4_screenshot.png" alt="ソースマップとデバッグ機能の改善">
+  <img src="/images/io2023-angular-summary/Developer_keynote_%28Google_I_O_23%29_37-4_screenshot.f84abd2de15a3de2.png" alt="ソースマップとデバッグ機能の改善">
   <figcaption>ソースマップとデバッグ機能の改善</figcaption>
 </figure>
 
 また、パフォーマンスに関するセクションでは先日リリースされた Angular v16 のパフォーマンス改善を紹介してくれた。Google I/O の keynote でこんな大々的にプロモーションされるのはかなりレアだ。
 
 <figure>
-  <img src="/images/io2023-angular-summary/Developer_keynote_%28Google_I_O_23%29_38-38_screenshot.png" alt="Angular v16 のパフォーマンス改善">
+  <img src="/images/io2023-angular-summary/Developer_keynote_%28Google_I_O_23%29_38-38_screenshot.cd3dba355e069771.png" alt="Angular v16 のパフォーマンス改善">
   <figcaption>Angular v16 のパフォーマンス改善</figcaption>
 </figure>
 
@@ -64,7 +64,7 @@ Developer keynote の Webパート では、Chrome DevTools のデバッグ機�
 https://www.youtube.com/watch?v=uqWUv0dpib0
 
 <figure>
-  <img src="/images/io2023-angular-summary/Whats_new_in_Angular_15-38_screenshot.png" alt="Angular の最近のアップデートの3本柱 Reactivity, SSR改善, QoL改善">
+  <img src="/images/io2023-angular-summary/Whats_new_in_Angular_15-38_screenshot.c1d098e3a6e834a9.png" alt="Angular の最近のアップデートの3本柱 Reactivity, SSR改善, QoL改善">
   <figcaption>Angular の最近のアップデートの3本柱 Reactivity, SSR改善, QoL改善</figcaption>
 </figure>
 
@@ -75,12 +75,12 @@ Angular v16 で開発者プレビューAPIとして公開された Signals API �
 https://www.youtube.com/watch?v=EIF0g9LDHcQ
 
 <figure>
-  <img src="/images/io2023-angular-summary/Rethinking_reactivity_with_Angular_Signals_9-33_screenshot.png" alt="v16移行のSignalsの計画について">
+  <img src="/images/io2023-angular-summary/Rethinking_reactivity_with_Angular_Signals_9-33_screenshot.c09ad46fdfdfd3aa.png" alt="v16移行のSignalsの計画について">
   <figcaption>v16移行のSignalsの計画について</figcaption>
 </figure>
 
 <figure>
-  <img src="/images/io2023-angular-summary/Rethinking_reactivity_with_Angular_Signals_9-49_screenshot.png" alt="Signals をひとことで。">
+  <img src="/images/io2023-angular-summary/Rethinking_reactivity_with_Angular_Signals_9-49_screenshot.5b7e21680ba228aa.png" alt="Signals をひとことで。">
   <figcaption>Signals をひとことで。</figcaption>
 </figure>
 
@@ -105,7 +105,7 @@ https://codelabs.developers.google.com/angular-signals?hl=ja#0
 Firebase HostingとFunctionsについてのアップデートの中で、Angular Universal のサポートについて言及があった。ライブラリのメンテナンスには今後も投資してくれそうだ。
 
 <figure>
-  <img src="/images/io2023-angular-summary/How_to_run_dynamic_web_apps_on_Firebase_8-22_screenshot.png" alt="Angular Universal への投資を今後も続けていく">
+  <img src="/images/io2023-angular-summary/How_to_run_dynamic_web_apps_on_Firebase_8-22_screenshot.89e7792eac921561.png" alt="Angular Universal への投資を今後も続けていく">
   <figcaption>Angular Universal への投資を今後も続けていく</figcaption>
 </figure>
 
@@ -116,3 +116,4 @@ Firebase HostingとFunctionsについてのアップデートの中で、Angular
 こちらは AngularFire を使って実践的なアプリケーションを開発するコードラボのワークショップセッション。Auth, Storage, Firestore, Functions, Hosting を組み合わせた内容になっているのでなかなかやりごたえがありそうだ。ローカルエミュレータを使った開発も学べるようになっている。
 
 https://firebase.google.com/codelabs/firebase-web-io23?hl=ja#0
+

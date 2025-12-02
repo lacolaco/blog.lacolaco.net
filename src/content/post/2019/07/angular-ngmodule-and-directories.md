@@ -4,12 +4,12 @@ slug: 'angular-ngmodule-and-directories'
 icon: ''
 created_time: '2019-07-11T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - '設計'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-NgModule-30d898e5e62d4967a93879622e2f9730'
 features:
   katex: false
@@ -93,3 +93,4 @@ src
 　 　 ├ index.ts
 　 　 └ bar.module.ts
 ```
+

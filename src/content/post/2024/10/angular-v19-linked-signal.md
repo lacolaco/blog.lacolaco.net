@@ -4,12 +4,12 @@ slug: 'angular-v19-linked-signal'
 icon: ''
 created_time: '2024-10-28T14:10:00.000Z'
 last_edited_time: '2024-10-28T14:22:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-v19-linked-signal'
 notion_url: 'https://www.notion.so/Angular-v19-linkedSignal-12d3521b014a80f395ffd9c289dd689e'
 features:
@@ -26,7 +26,7 @@ features:
 
 具体的なコード例で考えてみよう。ユーザーがセレクトボックスからアイテムを選択できるUIがあり、どのアイテムが選択されたのかを状態として保持する必要があるとする。次の例では `FavoriteFoodSelector` コンポーネントが、親コンポーネントからインプットとして与えられる`options`シグナルの値（選択候補）をセレクトボックスに表示している。そして、選択中の値を`selectedFood`シグナルで管理している。セレクトボックスからアイテムが選択されると、`selectFood`メソッドを通じて値が更新される。
 
-```ts
+```typescript
 const initialOptions = ['apple', 'banana', 'cheese'];
 
 @Component({
@@ -47,78 +47,78 @@ const initialOptions = ['apple', 'banana', 'cheese'];
 })
 export class FavoriteFoodSelector {
   options = input(initialOptions);
-
+  
   selectedFood = /* ??? */
-
+  
   selectFood(food: string) {
-    this.selectedFood.set(food);
+    this.selectedFood.set(food); 
   }
 }
 ```
 
 さて、このような実装で、`selectedFood`シグナルはどのように作成できるだろうか。単純に考えれば、次のように`signal()`によって書き換え可能な`WritableSignal`を作ることになるだろう。
 
-```ts
+```typescript
 export class FavoriteFoodSelector {
   options = input(initialOptions);
-
-  selectedFood = signal<string | null>(null);
-
+  
+  selectedFood = signal<string|null>(null);
+  
   selectFood(food: string) {
-    this.selectedFood.set(food);
+    this.selectedFood.set(food); 
   }
 }
 ```
 
 ただし、ここで追加の要件がある。親コンポーネントから渡される`options`が更新されたら、その時点で選択中の値は破棄して未選択状態にリセットしなければならないとしよう。どうすればそれが実現できるだろうか？まずは`effect()`を使う方法が思い浮かぶかもしれない。`options`の値が変わったことをトリガーにして非同期的にリセットする方法だ。だがこの方法には問題があることは[以前書いた記事で説明している](https://zenn.dev/lacolaco/articles/angular-v19-effect-changes)。
 
-```ts
+```typescript
 export class FavoriteFoodSelector {
   options = input(initialOptions);
-
-  selectedFood = signal<string | null>(null);
-
+  
+  selectedFood = signal<string|null>(null);
+  
   constructor() {
-    effect(() => {
-      this.options(); // 変更の購読のためのgetter呼び出し
-      this.selectedFood.set(null);
-    });
+	  effect(() => {
+	    this.options(); // 変更の購読のためのgetter呼び出し
+	    this.selectedFood.set(null);
+	  })
   }
-
+  
   selectFood(food: string) {
-    this.selectedFood.set(food);
+    this.selectedFood.set(food); 
   }
 }
 ```
 
 したがって、`effect()`を使わずに`computed()`を使った書き方によって実現するのが、v18までのプラクティスである。しかしこのシグナルを返すシグナルという方法はパターンとして知っていないと普通は思いつかないと思われるし、知っていたとしても複雑で直感的ではない。
 
-```ts
+```typescript
 export class FavoriteFoodSelector {
   options = input(initialOptions);
-
+  
   selectedFood = computed(() => {
-    this.options(); // 変更の購読のためのgetter呼び出し
-    return signal<string | null>(null);
+	  this.options(); // 変更の購読のためのgetter呼び出し
+	  return signal<string|null>(null);
   });
 
   selectFood(food: string) {
-    this.selectedFood().set(food);
+    this.selectedFood().set(food); 
   }
 }
 ```
 
 前置きが長くなったが、ここで`linkedSignal()`が登場する。`linkedSignal()`はこの`computed()`を使って派生的に`WritableSignal`を生成するパターンを標準化したAPIである。つまり、上記の例は次のように書き換えられる。
 
-```ts
+```typescript
 export class FavoriteFoodSelector {
   options = input(initialOptions);
-
+  
   selectedFood = linkedSignal({
     source: this.options,
     computation: (): string | null => null, // Unselect on input change
   });
-
+  
   selectFood(food: string) {
     this.selectedFood.set(food); // Linked signal is writable
   }
@@ -139,8 +139,9 @@ export class FavoriteFoodSelector {
 - 従来の`signal()`と`computed()`の組み合わせよりも、より簡潔で直感的な記述が可能。
 - 実験的APIであるため、正式リリース前後で変更される可能性がある点に注意が必要。
 
-[https://github.com/angular/angular/pull/58189](https://github.com/angular/angular/pull/58189)
+https://github.com/angular/angular/pull/58189
 
 今回のサンプルコードはStackblitzに置いてあるので自由に使ってほしい。
 
 https://stackblitz.com/edit/stackblitz-starters-fmerva?ctl=1&embed=1&file=src%2Fmain.ts
+

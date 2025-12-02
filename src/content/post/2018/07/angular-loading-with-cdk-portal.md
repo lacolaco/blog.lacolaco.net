@@ -4,12 +4,12 @@ slug: 'angular-loading-with-cdk-portal'
 icon: ''
 created_time: '2018-07-01T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Angular CDK'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-CDK-Portal-4218a5a9be5f46b9b852033819cb87da'
 features:
   katex: false
@@ -39,18 +39,18 @@ features:
 
 `@angular/cdk/portal`からインポートできる`PortalModule`によって、`cdkPortalOutlet`などのいくつかのディレクティブが有効になります。
 
-```ts
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { PortalModule } from '@angular/cdk/portal';
+```typescript
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
+import { PortalModule } from "@angular/cdk/portal";
 
-import { AppComponent } from './app.component';
-import { LoadingWrapperComponent } from './loading-wrapper.component';
+import { AppComponent } from "./app.component";
+import { LoadingWrapperComponent } from "./loading-wrapper.component";
 
 @NgModule({
   imports: [BrowserModule, PortalModule],
   declarations: [AppComponent, LoadingWrapperComponent],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
 ```
@@ -86,16 +86,16 @@ export class AppModule {}
 
 コンポーネント側では、初期化時と、ローディング状態を制御する`loading`プロパティが変わったときにビューをスイッチするようにします。 次のコードにおける`switchView`メソッドが、`TemplateOutlet`を作成している部分です。
 
-```ts
+```typescript
 @Component({
-  selector: 'loading-wrapper',
-  templateUrl: './loading-wrapper.component.html',
+  selector: "loading-wrapper",
+  templateUrl: "./loading-wrapper.component.html"
 })
 export class LoadingWrapperComponent implements OnInit, OnChanges {
   @Input() loading: boolean;
 
-  @ViewChild('loadingContent') loadingContentTemplate: TemplateRef<any>;
-  @ViewChild('content') contentTemplate: TemplateRef<any>;
+  @ViewChild("loadingContent") loadingContentTemplate: TemplateRef<any>;
+  @ViewChild("content") contentTemplate: TemplateRef<any>;
 
   contentPortal: CdkPortal;
 
@@ -106,7 +106,7 @@ export class LoadingWrapperComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.hasOwnProperty('loading')) {
+    if (changes.hasOwnProperty("loading")) {
       this.switchView();
     }
   }
@@ -133,3 +133,4 @@ export class LoadingWrapperComponent implements OnInit, OnChanges {
 完成形がこちらです。
 
 https://stackblitz.com/edit/angular-ttuxpm
+

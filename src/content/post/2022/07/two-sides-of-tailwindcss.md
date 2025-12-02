@@ -4,13 +4,13 @@ slug: 'two-sides-of-tailwindcss'
 icon: ''
 created_time: '2022-07-24T00:52:00.000Z'
 last_edited_time: '2022-07-24T00:00:00.000Z'
-category: 'Tech'
 tags:
   - 'tailwindcss'
   - '雑記'
   - '言語化'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Tailwind-CSS-6ede1797c0244d72aea305528ed253b1'
 features:
   katex: false
@@ -33,7 +33,7 @@ Tailwind CSSというツールの本質は大きく2つ認められるだろう�
 ### **pluggableなCSSライブラリビルドツールとしての本質**
 
 <figure>
-  <img src="/images/two-sides-of-tailwindcss/Untitled.png" alt="“Use the tailwind.config.js” file to craft your own design system”">
+  <img src="/images/two-sides-of-tailwindcss/Untitled.39851be2327a8f0a.png" alt="“Use the tailwind.config.js” file to craft your own design system”">
   <figcaption>“Use the tailwind.config.js” file to craft your own design system”</figcaption>
 </figure>
 
@@ -50,7 +50,7 @@ https://tailwindcss.com/docs/presets
 ### デザインシステムを表現するCSSライブラリとしての本質
 
 <figure>
-  <img src="/images/two-sides-of-tailwindcss/Untitled.png" alt="“An API for your design system”">
+  <img src="/images/two-sides-of-tailwindcss/Untitled.0c0308763f34451a.png" alt="“An API for your design system”">
   <figcaption>“An API for your design system”</figcaption>
 </figure>
 
@@ -63,7 +63,7 @@ Tailwind CSS が提供するCSSライブラリのユーティリティクラス�
 これが、 Tailwind CSS を二面性のもとに、2つの本質を持つものとして捉える見方である。
 
 <figure>
-  <img src="/images/two-sides-of-tailwindcss/Untitled.png" alt="デザインシステムを元にしたコンフィグと、そのコンフィグをCSSライブラリ化するためのビルドツール">
+  <img src="/images/two-sides-of-tailwindcss/Untitled.caf2c05e383fc705.png" alt="デザインシステムを元にしたコンフィグと、そのコンフィグをCSSライブラリ化するためのビルドツール">
   <figcaption>デザインシステムを元にしたコンフィグと、そのコンフィグをCSSライブラリ化するためのビルドツール</figcaption>
 </figure>
 
@@ -90,3 +90,4 @@ Tailwind CSS が提供するユーティリティCSSの命名や振る舞いが�
 表現力を他者に委ねることが省力化による喜びを生み出すかぎりは、借り物のデザインシステムは有益なものになるだろう。しかしそれが不自由による苦しみを生むのであれば、それを解消する方法はコントロールを取り戻すことしかないだろう。デザインシステムを借りることをやめ、独自のデザインシステムを構築することだ。幸いにも、Tailwind CSS はそれも容易にしている。
 
 また、ひとつの体系として調和を図ること自体が難しい、クリエイティブかつ探索的な段階の表現においては、デザインシステムの根本的な効用であるはずの**制約**こそが目的を阻害するのであるから、Tailwind に限らずデザインシステムそのものがミスマッチである。どこまでの表現力が必要になるかわからないうちにデザインシステムを利用するのは賭けであると言えよう。
+

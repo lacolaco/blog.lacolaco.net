@@ -4,11 +4,11 @@ slug: 'angular-v6-tree-shakable-di'
 icon: ''
 created_time: '2018-03-01T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-v6-Tree-Shakable-DI-73231349348240fca317e3cd68e612a3'
 features:
   katex: false
@@ -34,7 +34,7 @@ https://slides.com/laco/angular-v6-tree-shakable-di/embed
 
 ![image](https://cdn-ak.f.st-hatena.com/images/fotolife/l/lacolaco/20180301/20180301145501.png)
 
-たとえどこからも Injection されないサービスでも、Provider を登録する時点で NgModule からの参照が発生するため、ビルド時に不要なコードをふるい落とす*Tree-Shaking*の対象にすることができませんでした。
+たとえどこからも Injection されないサービスでも、Provider を登録する時点で NgModule からの参照が発生するため、ビルド時に不要なコードをふるい落とす_Tree-Shaking_の対象にすることができませんでした。
 
 ## 新しいアプローチ
 
@@ -53,3 +53,4 @@ Angular v6 では、`@Injectable`デコレータに機能追加をおこない�
 また、アプリケーションコードにおいても AppModule に溢れかえる大量の providers 地獄を解決できるかもしれません。
 
 かならず対応する必要はありませんが、シビアなバンドルサイズを要求されるプロダクトにとっては嬉しい新機能となるでしょう。
+

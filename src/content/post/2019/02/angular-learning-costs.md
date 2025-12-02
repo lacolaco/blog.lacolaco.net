@@ -4,12 +4,12 @@ slug: 'angular-learning-costs'
 icon: ''
 created_time: '2019-02-19T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:14:00.000Z'
-category: 'Idea'
 tags:
   - 'Angular'
   - '言語化'
 published: true
 locale: 'ja'
+category: 'Idea'
 notion_url: 'https://www.notion.so/Angular-9ab0d5bb97964cd8bd900d06170682ff'
 features:
   katex: false
@@ -128,3 +128,4 @@ https://community.angular.jp/
 https://angular.jp/
 
 長々とお付き合いいただきありがとうございました。学習コストの高低だけじゃない観点で Angular を評価してくれる人が一人でも増えたら嬉しいです。
+

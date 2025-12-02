@@ -4,12 +4,12 @@ slug: 'angular-rendering-effects-and-business-effects'
 icon: ''
 created_time: '2024-06-20T15:00:00.000Z'
 last_edited_time: '2024-06-20T23:52:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Rendering-Effects-Business-Effects-9be76b98487943be8422fa29fd0a884a'
 features:
   katex: false
@@ -35,7 +35,7 @@ AlexいわくSignals APIは “bottom up” ならぬ “component up” で設�
 
 それはそれとして、この “rendering effects”と”business effects”という切り口は面白く、これを使うとAngularのコンポーネントが持つ責任について整理がつけやすい。コンポーネントを中心に、その状態 (state) と結果 (view) がどのように関係するか、改めて図示すると次のようになるだろう。
 
-![image](/images/angular-rendering-effects-and-business-effects/Untitled.png)
+![image](/images/angular-rendering-effects-and-business-effects/Untitled.c902b04bb05751ba.png)
 
 コンポーネントは状態をクエリ（読み取り）し、テンプレートを介してビューを構築する。ビューをからコンポーネントはユーザーイベントを受け取り、状態に対してコマンド（書き込み）を行う。これが単純な関係だが、これだけでは表現できない関係をEffectsが担っている。
 
@@ -46,3 +46,4 @@ AlexいわくSignals APIは “bottom up” ならぬ “component up” で設�
 https://ngrx.io/guide/signals/signal-store
 
 アプリケーションを実装するうえでも、これらの状況を理解したうえで、あまりがっつりと作り込まないようにしておくのがよいだろう。Developer Previewというのは無意味なラベルではなく、このような不確実性の高いものであることを意味している。
+

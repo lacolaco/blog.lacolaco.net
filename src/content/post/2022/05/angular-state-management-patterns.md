@@ -4,12 +4,12 @@ slug: 'angular-state-management-patterns'
 icon: ''
 created_time: '2022-05-11T02:10:00.000Z'
 last_edited_time: '2023-12-30T10:06:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - '状態管理'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-49cd00ee40f044eca73c43f946510dff'
 features:
   katex: false
@@ -25,9 +25,9 @@ Standalone Componentsなど、Angularのメンタルモデルが変わってい�
 
 一番最初のパターンは、次の例のようにコンポーネントクラスが自身のクラスフィールドで状態管理をするものである。状態管理のあり方としてはもっとも素朴で、単純なパターンである。
 
-```ts
+```typescript
 @Component({
-  template: `<p>{{ message }}</p>`,
+  template: `<p> {{ message }} </p>`
 })
 export class MyComponent {
   message: string;
@@ -51,16 +51,16 @@ export class MyComponent {
 
 このパターンは、最初のパターンと同じくコンポーネントクラスのフィールドとして状態管理するが、その管理がリアクティブな形式に沿っている点が違っている。次のような実装を想像してほしい。
 
-```ts
+```typescript
 import { createStore } from 'awesome-state-management-library';
 
 const store = createStore({ message: '' });
 
 @Component({
-  template: `<p>{{ message$ | async }}</p>`,
+  template: `<p> {{ message$ | async }} </p>`
 })
 export class MyComponent {
-  readonly message$: Observable<string> = store.select((state) => state.message);
+  readonly message$: Observable<string> = store.select(state => state.message);
 
   updateMessage(message: string) {
     store.setState({ message });
@@ -85,7 +85,7 @@ export class MyComponent {
 
 コンポーネントローカルなサービスとは、コンポーネントの `providers` によって提供され、そのコンポーネントないし子孫コンポーネントでのみ利用可能であるようなサービスを指す。Facade パターンと呼ばれることもある。次のような実装を想像してほしい。
 
-```ts
+```typescript
 // my-component-store.ts
 import { createStore } from 'awesome-state-management-library';
 
@@ -93,7 +93,7 @@ const store = createStore({ message: '' });
 
 @Injectable()
 export class MyComponentStore {
-  readonly message$ = store.select((state) => state.message);
+  readonly message$ = store.select(state => state.message);
 
   updateMessage(message: string) {
     this.store.setState({ message });
@@ -101,11 +101,11 @@ export class MyComponentStore {
 }
 
 // my-component.ts
-import { MyComponentStore } from './my-component-store';
+import { MyComponentStore } from './my-component-store'; 
 
 @Component({
-  template: `<p>{{ message$ | async }}</p>`,
-  providers: [MyComponentStore],
+  template: `<p> {{ message$ | async }} </p>`,
+  providers: [MyComponentStore]
 })
 export class MyComponent {
   readonly message$: Observable<string> = this.store.message$;
@@ -136,14 +136,15 @@ export class MyComponent {
 
 シングルトンサービスとは、典型的には `@Injectable({ providedIn 'root' })` で提供されるような、コンポーネントの親子関係などにかかわらず同一のインスタンスにアクセスできるようなサービスである。
 
-```ts
+```typescript
 import { AppStore } from '../app-store';
 
 @Component({
-  template: `<p>{{ message$ | async }}</p>`,
+  template: `<p> {{ message$ | async }} </p>`
 })
 export class MyComponent {
-  readonly message$: Observable<string> = this.appStore.select((state) => state.message);
+  readonly message$: Observable<string> 
+    = this.appStore.select(state => state.message);
 
   constructor(private appStore: AppStore) {}
 
@@ -166,8 +167,8 @@ export class MyComponent {
 
 ここまでの例で登場した `createStore` ユーティリティは、さまざまな実装例が考えられる。たとえば簡素ではあるが、次のようにRxJSだけで実装することもできる。
 
-```ts
-import { BehaviorSubject } from 'rxjs';
+```typescript
+import { BehaviorSubject } from 'rxjs'; 
 
 export function createStore(initialState) {
   const subject = new BehaviorSubject(initialState);
@@ -199,3 +200,4 @@ export function createStore(initialState) {
 - 原始状態ではコンポーネントが持つ状態管理の役割は、諸々のニーズに沿って段階的にコンポーネントから距離を取るようにリファクタリングされる
 - コンポーネントがクラスフィールドで状態管理するパターンから、シングルトンサービスで状態管理するパターンまでの間にも、いくつかのグラデーションが考えられる。コンポーネントローカルなサービスによる状態管理は、一般的なニーズの多くを解決できる
 - シングルトンサービスによるアプリケーショングローバルな状態管理は、これまでAngularアプリケーション開発のトレンドの中でメジャーな選択肢であったが、コンポーネントローカルな状態管理のあり方に注目が集まっている。Angular v14で導入されるStandalone Componentsはそのようなコンポーネント中心の設計を後押しするだろう
+

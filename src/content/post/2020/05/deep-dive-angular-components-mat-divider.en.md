@@ -4,12 +4,12 @@ slug: 'deep-dive-angular-components-mat-divider.en'
 icon: ''
 created_time: '2020-05-05T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Angular Material'
 published: true
 locale: 'en'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Deep-Dive-into-Angular-Components-MatDivider-4d1722665b4b488d8049bf2ac4fee642'
 features:
   katex: false
@@ -121,9 +121,9 @@ It sets `mat-divider-vertical` class to `<mat-divider>` host element by using **
 
 ```scss
 &.mat-divider-vertical {
-  border-top: 0;
-  border-right-width: $mat-divider-width;
-  border-right-style: solid;
+    border-top: 0;
+    border-right-width: $mat-divider-width;
+    border-right-style: solid;
 }
 ```
 
@@ -131,16 +131,16 @@ It sets `mat-divider-vertical` class to `<mat-divider>` host element by using **
 
 This line is similar to the above but interestingly `mat-divider-horizontal` class is not used in the SCSS. How do you think why it is set?
 
-- [https://github.com/angular/components/blob/master/src/material/divider/divider.scss](https://github.com/angular/components/blob/master/src/material/divider/divider.scss)
-- [https://github.com/angular/components/blob/master/src/material/divider/\_divider-theme.scss](https://github.com/angular/components/blob/master/src/material/divider/_divider-theme.scss)
+- [https://github.com/angular/components/blob/master/src/material/divider/divider.scss](https://github.com/angular/components/blob/master/src/material/divider/divider.scss) 
+- [https://github.com/angular/components/blob/master/src/material/divider/_divider-theme.scss](https://github.com/angular/components/blob/master/src/material/divider/_divider-theme.scss) 
 
 As far I can imagine, this is set for user customization. Develoers can override horizontal-specific style by using `.mat-divider-hotizontal`. Angular Material supports user-customization at many points.
 
 ```scss
 .my-app {
-  .mat-divider-horizontal {
-    border-top-width: 2px; // Override divider's thickness
-  }
+    .mat-divider-horizontal {
+        border-top-width: 2px; // Override divider's thickness
+    }
 }
 ```
 
@@ -239,3 +239,4 @@ Similar to the above.
 - `MatDivider` provides CSS classes to allow user customization.
 - `MatDivider` displays only host element border.
 - `MatDivider` can accept a shorthand of the boolean input like `<mat-divider vertical>`
+

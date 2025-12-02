@@ -4,12 +4,12 @@ slug: 'angular-signals-and-component-communication'
 icon: ''
 created_time: '2023-08-02T03:02:00.000Z'
 last_edited_time: '2023-12-30T10:01:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-signals-and-component-communication'
 notion_url: 'https://www.notion.so/Angular-Signals-9de77b78554f4e23b970c8ff5a57d2ce'
 features:
@@ -20,11 +20,11 @@ features:
 
 Angularアプリケーションの実装でSignalsを使う場面が増えたので、コンポーネント間の通信において手に馴染む実装パターンがわかってきた。それをいくつかメモしておく。
 
-## Plain Input/Output
+## Plain Input/Output 
 
 子コンポーネントのほうは何の変哲もない、普通のInput/Outputを持っている。親はInput/Outputに対するバインディングにSignalを直接割り当てる。いままでのAngularと大きく変わらないSignalの使い方だと思われる。これだと単に親コンポーネントの状態管理がRxJSのSubjectからSignalに置き換わっただけだという感触。
 
-```ts
+```typescript
 @Component({
   selector: 'app-sushi-selector',
   standalone: true,
@@ -49,8 +49,11 @@ export class SushiSelectorComponent {
   standalone: true,
   imports: [CommonModule, SushiSelectorComponent],
   template: `
-    <app-sushi-selector [value]="$selectedSushi()" (valueChange)="$selectedSushi.set($event)" />
-    <p>Selected Sushi: {{ $selectedSushi() }}</p>
+    <app-sushi-selector 
+      [value]="$selectedSushi()" 
+      (valueChange)="$selectedSushi.set($event)"
+    /> 
+    <p> Selected Sushi: {{ $selectedSushi() }} </p>
   `,
 })
 export class App {
@@ -64,13 +67,13 @@ https://stackblitz.com/edit/angular-yscmpy?ctl=1&embed=1&file=src/main.ts
 
 https://dev.to/oz/application-state-management-with-angular-signals-1371
 
-## Signalized Input/Output
+## Signalized Input/Output 
 
 子コンポーネントの内部でもSignalを使うパターンとして、まずはInput/Outputのインターフェースはそのままに、内部の状態保持をSignalizeしたもの。クラスフィールドとして `$value` Signalを持ち、InputはこのSignalへの入力に、OutputはこのSignalからの出力に接続する。
 
 親コンポーネントとのインターフェースにだけプレーンなオブジェクトを使い、内部ではすべてSignalを中心に実装する。これは現段階のSignals APIで可能なアプローチの中ではけっこう気に入っている。Signalをどう使ったらいいか迷っている人はとりあえず真似してみてもよいと思う。
 
-```ts
+```typescript
 @Component({
   selector: 'app-sushi-selector',
   standalone: true,
@@ -103,7 +106,7 @@ https://stackblitz.com/edit/angular-xymevb?ctl=1&embed=1&file=src/main.ts
 
 これは簡潔ではあるものの、まだ積極的に取り入れるには早いように思う。メンタルモデルとして、AngularコンポーネントのInputというのはこれまで値渡しであることがほぼ常であり、子から親へのメッセージはイベントによって表現されてきた。その定石を崩し、Inputに渡したSignalの中身が子によって書き換えられると親のほうに直接逆流するようになるのは、リアクティブプログラミングとしては直感的だが、状態の変更経路が予測しづらくなる点に注意が必要だ。正直まだおすすめできない。
 
-```ts
+```typescript
 @Component({
   selector: 'app-sushi-selector',
   standalone: true,
@@ -127,8 +130,10 @@ export class SushiSelectorComponent {
   standalone: true,
   imports: [CommonModule, SushiSelectorComponent],
   template: `
-    <app-sushi-selector [$value]="$selectedSushi" />
-    <p>Selected Sushi: {{ $selectedSushi() }}</p>
+    <app-sushi-selector 
+      [$value]="$selectedSushi" 
+    /> 
+    <p> Selected Sushi: {{ $selectedSushi() }} </p>
   `,
 })
 export class App {
@@ -143,3 +148,4 @@ https://stackblitz.com/edit/angular-2fgxwr?ctl=1&embed=1&file=src/main.ts
 ちなみにこのような双方向バインディングについては `model` APIで検討されているため、このメンタルモデルに慣れておくと将来的にはSignalをより使いこなす準備とも言えるかもしれない。
 
 [https://github.com/angular/angular/discussions/49682](https://github.com/angular/angular/discussions/49682)
+

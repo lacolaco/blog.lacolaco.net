@@ -4,11 +4,11 @@ slug: 'angular-http-with-axios'
 icon: ''
 created_time: '2018-04-20T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-axios-HTTP-e6735cdf159e4c34be00a20927cdb7a1'
 features:
   katex: false
@@ -16,7 +16,7 @@ features:
   tweet: false
 ---
 
-題して「頼りすぎない Angular」ということで、Angular の層をなるべく*薄く*アプリケーションを作るにはどうすればいいかというのを考えるシリーズです。 Angular 良さそうなんだけどロックインされて捨てにくそう、という人々向けに、コードのモジュール性とフレームワーク非依存性を重視した実装パターンを試行錯誤します。
+題して「頼りすぎない Angular」ということで、Angular の層をなるべく_薄く_アプリケーションを作るにはどうすればいいかというのを考えるシリーズです。 Angular 良さそうなんだけどロックインされて捨てにくそう、という人々向けに、コードのモジュール性とフレームワーク非依存性を重視した実装パターンを試行錯誤します。
 
 第一回目は Angular の HttpClient を覚えずに、人気の npm モジュールである [axios](https://github.com/axios/axios) を使って Angular アプリで Ajax する例を紹介します。 axios は TypeScript の型定義を同梱していて、インターセプターなど Angular の HttpClient と同じような機能が揃っています。
 
@@ -32,8 +32,8 @@ features:
 
 さて今回は Angular 公式の HttpClient モジュールを使わずフレームワーク非依存の axios を使って HttpClient を作ります。 次のようなファイルでアプリケーション用のカスタムインスタンスを生成して export します。 今回は何もしませんが実際はデフォルトのヘッダを追加したりインターセプターを追加したりいろいろすると思います。
 
-```ts
-import axios from 'axios';
+```typescript
+import axios from "axios";
 
 const instance = axios.create();
 
@@ -44,16 +44,16 @@ export default instance;
 
 次に、作成した HttpClient を使って API 呼び出しを行うためのサービスクラスを作ります。 単純に import して使うだけです
 
-```ts
-import { Injectable } from '@angular/core';
-import httpClient from '../infrastructure/http-client';
+```typescript
+import { Injectable } from "@angular/core";
+import httpClient from "../infrastructure/http-client";
 
 @Injectable()
 export class UserRepository {
   async random() {
-    const { data } = await httpClient.get('https://randomuser.me/api/');
+    const { data } = await httpClient.get("https://randomuser.me/api/");
     const {
-      results: [user],
+      results: [user]
     } = data;
     return user;
   }
@@ -62,18 +62,18 @@ export class UserRepository {
 
 作成したサービスクラスを AppModule に登録します。
 
-```ts
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+```typescript
+import { NgModule } from "@angular/core";
+import { BrowserModule } from "@angular/platform-browser";
 
-import { AppComponent } from './app.component';
-import { UserRepository } from './repository/user';
+import { AppComponent } from "./app.component";
+import { UserRepository } from "./repository/user";
 
 @NgModule({
   imports: [BrowserModule],
   declarations: [AppComponent],
   bootstrap: [AppComponent],
-  providers: [UserRepository],
+  providers: [UserRepository]
 })
 export class AppModule {}
 ```
@@ -82,14 +82,14 @@ export class AppModule {}
 
 最後にコンポーネントからサービスを利用します。ここは Angular の DI を使います。
 
-```ts
-import { Component } from '@angular/core';
-import { UserRepository } from './repository/user';
+```typescript
+import { Component } from "@angular/core";
+import { UserRepository } from "./repository/user";
 
 @Component({
-  selector: 'my-app',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+  selector: "my-app",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
 })
 export class AppComponent {
   user: User | null = null;
@@ -114,11 +114,7 @@ export class AppComponent {
 テンプレートでは名前と写真を表示して、ボタンを押すと`changeUser()`メソッドをトリガーするようにしています。これで完成です。
 
 ```html
-<h2>Angular with axios</h2>
-<ng-container *ngIf="user as user">
-  <h2>{{ user.name.first + ' ' + user.name.last | titlecase }}</h2>
-  <img src="{{user.picture.large}}" /></ng-container
-><button (click)="changeUser()">Change User</button>
+<h2>Angular with axios</h2><ng-container *ngIf="user as user">  <h2>{{ user.name.first + ' ' + user.name.last | titlecase }}</h2>  <img src="{{user.picture.large}}" /></ng-container><button (click)="changeUser()">Change User</button>
 ```
 
 ## テストと DI
@@ -151,3 +147,4 @@ RxJS の恩恵については、`UserRepository`の層で`fromPromise`関数な�
 - DI するかどうかはテストしやすさを考える
 
 次回は未定です。
+

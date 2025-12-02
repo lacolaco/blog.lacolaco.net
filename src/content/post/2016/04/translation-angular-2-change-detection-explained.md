@@ -4,17 +4,17 @@ slug: 'translation-angular-2-change-detection-explained'
 icon: ''
 created_time: '2016-04-10T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Testing'
   - 'translation'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-2-Change-Detection-Explained-6a6d79b6ae744c4982a95804cc0b5e0f'
 features:
   katex: false
   mermaid: false
-  tweet: false
+  tweet: true
 ---
 
 - Original: [Angular 2 Change Detection Explained](http://blog.thoughtram.io//angular/2016/02/22/angular-2-change-detection-explained.html)
@@ -33,7 +33,7 @@ Change Detectionの基本的な役割は、プログラムの内部の状態を�
 
 状態はユーザーインターフェースの中でパラグラフやフォーム、リンク、ボタンとなるかもしれません。 具体的に言えば、それはWeb上でDOMとなります。 つまり、私たちは基本的にデータを入力として取得し、DOMを生成してユーザーに見せています。 このプロセスを私たちはレンダリングと呼んでいます。
 
-![image](/images/translation-angular-2-change-detection-explained/cd-4.png)
+![image](/images/translation-angular-2-change-detection-explained/cd-4.4df0b4b74c011881.png)
 
 しかし、レンダリングは実行時に変更が起きた時、トリッキーになります。 DOMが描画されてからしばらく経ったあとのことです。 私たちはどのようにして、モデルの変更と、更新しなければならないDOMの位置を知るのでしょうか？ DOMツリーへのアクセスは常にコストが高いので、更新する位置を探すだけではなく、なるべく小さなアクセスに留めたいですね。
 
@@ -128,13 +128,13 @@ class ApplicationRef {
 
 OK、いいですね、私たちはChange Detectionがいつ実行されるのかを知りました。 ですが、どのように処理されるのでしょうか？ ええ、Angular2において、まず私たちが知る必要があることは、 **それぞれのコンポーネントがそれぞれのChange Detectorを持っている** ということです。
 
-![image](/images/translation-angular-2-change-detection-explained/cd-tree-2.png)
+![image](/images/translation-angular-2-change-detection-explained/cd-tree-2.356cafb88119e28d.png)
 
 これは重大な事実です、なぜならそれぞれのコンポーネントについて個別に、 いつどのようにChange Detectionを処理するかをコントロールできるようにしてくれるからです。 詳しくは後で話します。
 
 私たちのコンポーネントツリーのどこかでイベントが起きた、例えばボタンがクリックされたと仮定しましょう。 次に何が起きるでしょうか？ 私たちはちょうどZoneが与えられたハンドラーを実行し、 ターンが終了した時にAngularに伝え、 それが最終的にはAngularにChange Detectionを処理させることを学びました。
 
-![image](/images/translation-angular-2-change-detection-explained/cd-tree-7.png)
+![image](/images/translation-angular-2-change-detection-explained/cd-tree-7.c2f00c592b9804e2.png)
 
 それぞれのコンポーネントが自身のChange Detectorを持っていて、 しかもAngularアプリケーションはコンポーネントツリーで構成されているので、 当然の結果として私たちは **Change Detectorツリー** も持っています。 このツリーはデータが常に上から下に流れている有向グラフとしてみることもできます。
 
@@ -244,7 +244,7 @@ class VCardCmp {
 
 これで終わりです！ 大きなコンポーネントツリーをイメージしてください。 イミュータブルなオブジェクトが使われ、それがAngularに伝わったとき、私たちは サブツリーすべてをスキップできます。
 
-![image](/images/translation-angular-2-change-detection-explained/cd-tree-8.png)
+![image](/images/translation-angular-2-change-detection-explained/cd-tree-8.610452736c9e9de7.png)
 
 [Jurgen Van De Moere](http://twitter.com/jvandemo)は [in-depth article](http://www.jvandemo.com/how-i-optimized-minesweeper-using-angular-2-and-immutable-js-to-make-it-insanely-fast/)で 彼がどのようにAngular 2とImmutable.jsを使って驚くほど高速なマインスイーパーを作ったのかを書いています。 ぜひチェックしてください。
 
@@ -286,7 +286,7 @@ class CartBadgeCmp {
 
 これが私たちの(**すべて**を**OnPush**に設定した)Change Detectorツリーの見え方です。 イベントが起きてもChange Detectionは全く動作しません。
 
-![image](/images/translation-angular-2-change-detection-explained/cd-tree-10.png)
+![image](/images/translation-angular-2-change-detection-explained/cd-tree-10.8df9e8c2c61b3f8a.png)
 
 どうすればAngularに変更を知らせることができるでしょうか？ どうすればたとえツリー全体が`OnPush`にセットされていても、 このコンポーネントはChange Detectionの実行が**必要**だとAngularに知らせることができるでしょうか？
 
@@ -315,11 +315,11 @@ constructor(private cd: ChangeDetectorRef) {}
 
 Boom,これだけです！ これはObservableのイベントが発火されたあと、Change Detectionが始まる前です。
 
-![image](/images/translation-angular-2-change-detection-explained/cd-tree-12.png)
+![image](/images/translation-angular-2-change-detection-explained/cd-tree-12.9a2740acc0477497.png)
 
 そして、Change Detectionが実行されると、シンプルに上から下へと進んでいきます。
 
-![image](/images/translation-angular-2-change-detection-explained/cd-tree-13.png)
+![image](/images/translation-angular-2-change-detection-explained/cd-tree-13.b20b7212e92059aa.png)
 
 クールですよね？一度Change Detectionが走った後は、ツリー全体は`OnPush`状態に戻ります。
 
@@ -336,3 +336,4 @@ Boom,これだけです！ これはObservableのイベントが発火された�
 この発表を準備するにあたって、**多大な**助けと支援となった [Jurgen Van De Moere](http://twitter.com/jvandemo)に感謝したい。 彼は私の理解について議論するのに多くの時間を費やし、 このコンテンツに入っている私を助ける良い質問を沢山挙げてくれました。 また、彼はデモがよく動くように確認してくれました。 彼のCSSスキルは素晴らしいです。 Jurgen、そんな支えになるいい人であることにとてもとても感謝します。
 
 Angular 2のChange Detectionについての質問にたくさん答えてくれた [Victor Savkin](http://twitter.com/victorsavkin)と彼が書いた とても参考になる記事に感謝したい。 ありがとうVictor！
+

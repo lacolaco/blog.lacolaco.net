@@ -4,12 +4,12 @@ slug: 'ngconf2020-day1-note'
 icon: ''
 created_time: '2020-04-02T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'ng-conf'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/ng-conf-2020-Day1-Note-e1cd81aac8d34ccd8eb901261b18f7fd'
 features:
   katex: false
@@ -423,3 +423,4 @@ https://drive.google.com/file/d/1JO8SHNjvoIzSyV-sGE0E9AAQPVc1-TYc/view?usp=shari
 John Papa Yvonne Allen Stephen Fluin
 
 - TBD
+

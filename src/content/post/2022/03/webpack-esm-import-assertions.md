@@ -4,13 +4,13 @@ slug: 'webpack-esm-import-assertions'
 icon: ''
 created_time: '2022-03-09T00:18:00.000Z'
 last_edited_time: '2023-12-30T10:06:00.000Z'
-category: 'Tech'
 tags:
   - 'webpack'
   - 'ESModule'
   - 'Import Assertions'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/webpack-ES-Module-Import-Assertions-2d15afb885274cc48b6930a395588112'
 features:
   katex: false
@@ -35,21 +35,21 @@ https://github.com/webpack/webpack/pull/12278
 `data.json` ファイルを拡張子付きのパスでインポートする。webpackはJSONのインポートをビルトインでサポートしており、これはそのまま自動的にJSONとしてパースされる。
 
 <figure>
-  <img src="/images/webpack-esm-import-assertions/Untitled.png" alt="data.jsonのインポート（アサーションなし）">
+  <img src="/images/webpack-esm-import-assertions/Untitled.edeffcb58f5a8e39.png" alt="data.jsonのインポート（アサーションなし）">
   <figcaption>data.jsonのインポート（アサーションなし）</figcaption>
 </figure>
 
 インポートのパスで拡張子を省略していても、デフォルトのwebpack設定が `.json` の省略を許可しているので自動的に探索され、ファイルの拡張子からJSONであることを判別する。
 
 <figure>
-  <img src="/images/webpack-esm-import-assertions/Untitled.png" alt="data.jsonのインポート（アサーションなし、拡張子省略）">
+  <img src="/images/webpack-esm-import-assertions/Untitled.fdc307c744822bd0.png" alt="data.jsonのインポート（アサーションなし、拡張子省略）">
   <figcaption>data.jsonのインポート（アサーションなし、拡張子省略）</figcaption>
 </figure>
 
 つまり、ファイルの拡張子を削除するとwebpackはそのファイルがJSONであることがわからなくなり、モジュールのパースに失敗する。次の例では `./data` ファイルをインポートしようとしてパースできずにエラーになっている。
 
 <figure>
-  <img src="/images/webpack-esm-import-assertions/Untitled.png" alt="dataのインポート（アサーションなし、拡張子なし）は失敗する">
+  <img src="/images/webpack-esm-import-assertions/Untitled.e3560f34fbf487b1.png" alt="dataのインポート（アサーションなし、拡張子なし）は失敗する">
   <figcaption>dataのインポート（アサーションなし、拡張子なし）は失敗する</figcaption>
 </figure>
 
@@ -58,7 +58,7 @@ https://github.com/webpack/webpack/pull/12278
 ここからは Import Assertions によるファイル形式のアサーションを試みる。 `assert { type: 'json' }` を付与し、先ほどの拡張子がないJSONファイルのインポートをすると、JSONであることを判別し、問題なくパースできていた。（エディタ上の赤線は無視してほしい）
 
 <figure>
-  <img src="/images/webpack-esm-import-assertions/Untitled.png" alt="dataのインポート（JSONアサーションあり）は成功する">
+  <img src="/images/webpack-esm-import-assertions/Untitled.23128ddc007a774f.png" alt="dataのインポート（JSONアサーションあり）は成功する">
   <figcaption>dataのインポート（JSONアサーションあり）は成功する</figcaption>
 </figure>
 
@@ -69,7 +69,7 @@ webpackといえば Loader によってさまざまな形式のファイルを�
 JSONの拡張であるJSON5のファイル `data.json5` をパースできるか試してみた。事前に `json5-loader` をインストールした上で、特にwebpack設定には手を入れずに `type: 'json5'` を指定してみたが、これではモジュール解決できなかった。エラーを見るに、JSONとしてパースしようとして失敗したようだ。なぜJSONだと解釈したのだろうか？
 
 <figure>
-  <img src="/images/webpack-esm-import-assertions/Untitled.png" alt="data.json5のパース（アサーションあり）は失敗">
+  <img src="/images/webpack-esm-import-assertions/Untitled.7cb28c122166c863.png" alt="data.json5のパース（アサーションあり）は失敗">
   <figcaption>data.json5のパース（アサーションあり）は失敗</figcaption>
 </figure>
 
@@ -78,7 +78,7 @@ JSONの拡張であるJSON5のファイル `data.json5` をパースできるか
 結果は以下のように、 `.postcss` ファイルに対応する Loader がないためにパースできずエラーとなった。アサーションによって Loader を切り替えるようなことは（少なくとも今は）できないようだ。
 
 <figure>
-  <img src="/images/webpack-esm-import-assertions/Untitled.png" alt="cssであることをアサーションで教えることはできなかった">
+  <img src="/images/webpack-esm-import-assertions/Untitled.006e7ccff310d542.png" alt="cssであることをアサーションで教えることはできなかった">
   <figcaption>cssであることをアサーションで教えることはできなかった</figcaption>
 </figure>
 
@@ -91,3 +91,4 @@ webpackのImport Assertions対応は、現状では JSON 形式のアサーシ�
 今回の調査は Stackblitz上の Node.js 環境で行った。再現したい場合はこちらを参照されたし。
 
 https://stackblitz.com/edit/node-xzb5hq?file=index.js
+

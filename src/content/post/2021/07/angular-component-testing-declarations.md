@@ -4,12 +4,12 @@ slug: 'angular-component-testing-declarations'
 icon: ''
 created_time: '2021-07-07T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Testing'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Testing-TestBed-declarations-imports-49b8a62610b540be869b0a39ab002ff9'
 features:
   katex: false
@@ -64,12 +64,10 @@ describe('FooComponent', () => {
       - アプリケーションコードで新しく実装するたびにするたびにテスト側でも同じモジュールを追加する
       - アプリケーションコードでは不要になったモジュールをテスト側に残り続けることもしばしば
 - `TestBed.configureTestingModule()`の目的
-
   1. テスト対象の依存関係解決
-  2. テストダブルのセットアップ
+  1. テストダブルのセットアップ
 
   - テストダブルのセットアップはテストだけの関心なのでそのままで問題ない
-
 - **同じコンポーネントを二度宣言しない**
   - アプリケーション側でそのコンポーネントを `declarations` に追加しているモジュールがすでにあるはず
   - TestBed でその NgModule をインポートすればテスト対象の依存関係解決は達成されるはず
@@ -151,3 +149,4 @@ describe('FooDirective', () => {
     });
 });
 ```
+

@@ -4,12 +4,12 @@ slug: 'why-i-dont-humblebrag'
 icon: ''
 created_time: '2020-08-25T23:56:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Idea'
 tags:
   - '雑記'
   - '言語化'
 published: true
 locale: 'ja'
+category: 'Idea'
 notion_url: 'https://www.notion.so/5cc1860433a543dcbd1b5787bd0c978b'
 features:
   katex: false
@@ -47,3 +47,4 @@ https://blog.lacolaco.net/2020/02/professional-and-expert/
 自分の行為が他者にとってどのような価値があり、どう評価され、どう改善できるのか、学習するためにはフィードバックが重要になる。
 だから、褒めてもらえることはすごくありがたいことで、その貴重なフィードバックには自然に「ありがとうございます」と言葉が出るし、
 また次もフィードバックがもらえるように相手からの「承認を承認」したいと思う。
+

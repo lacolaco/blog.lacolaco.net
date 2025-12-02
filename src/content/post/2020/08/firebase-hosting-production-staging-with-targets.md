@@ -4,11 +4,11 @@ slug: 'firebase-hosting-production-staging-with-targets'
 icon: ''
 created_time: '2020-08-17T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Firebase'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Firebase-Hosting-Deploy-Targets-production-staging-f6287c7268f94adcbe2470f401207886'
 features:
   katex: false
@@ -49,7 +49,7 @@ Web コンソール上でポチっと押せばすぐできる。リンクの場�
 
 サブドメインの入力を求められるがこれがそのまま Site の ID？のような識別子になる。今回はたまたま `-dev` が空いていたので使ったが何でも良い。
 
-![image](/images/firebase-hosting-production-staging-with-targets/Untitled.png)
+![image](/images/firebase-hosting-production-staging-with-targets/Untitled.d564c5d3cfbc834e.png)
 
 ### 2. プロジェクトの `.firebaserc` にターゲットを追加する
 
@@ -87,3 +87,4 @@ Firebase プロジェクト上に作った Site を、Firebase CLI が備える 
 - ある程度割り切れば Multiple Sites での production/staging は運用が楽そう
 - Storage は Bucket を分ければいいし、Functions や Firestore は完全には分離できないが URL 設計や Collection 設計次第でどうにかできそう。特に Firestore は情報がセンシティブならやめたほうがいいけどルートレベルで production/staging の分岐することはできそう
 - そもそも真に Staging なのであれば production と同じデータを使用しているべきではという話もある。（Functions で production→staging の自動コピーしてあげてもよさそうだが）
+

@@ -4,12 +4,12 @@ slug: 'translation-angular-2-component-styles'
 icon: ''
 created_time: '2016-04-16T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'translation'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-2-Component-Styles-448489093c084dc8986a050b8741eaff'
 features:
   katex: false
@@ -53,10 +53,10 @@ Angular 2のコンポーネントを書くとき、HTMLのテンプレートだ�
 これは古典的なCSSとくらべてモジュール化において大きな改良点です。
 
 1. コンポーネントのコンテキストの中で、直感的なセレクタやクラス名を使うことができます
-2. クラス名やセレクタがアプリケーション中で衝突することを気にする必要がありません
-3. コンポーネントのスタイルが別の場所から書き換えられることがありません
-4. プロジェクトの構造が変わり、CSSのコードをTypeScriptやHTMLと同じディレクトリに置くことができます。
-5. 将来的にCSSのコードを変えたり削除したりする際に、そのスタイルが他の場所で使われていないかを気にしなくてよいです
+1. クラス名やセレクタがアプリケーション中で衝突することを気にする必要がありません
+1. コンポーネントのスタイルが別の場所から書き換えられることがありません
+1. プロジェクトの構造が変わり、CSSのコードをTypeScriptやHTMLと同じディレクトリに置くことができます。
+1. 将来的にCSSのコードを変えたり削除したりする際に、そのスタイルが他の場所で使われていないかを気にしなくてよいです
 
 ## 特殊セレクタ
 
@@ -216,7 +216,7 @@ styles: [require('my.component.css')]
 
 ### CSS @importsによる読み込み
 
-最後に、コンポーネントスタイルではCSS標準の`[@import](https://developer.mozilla.org/en/docs/Web/CSS/@import)`[ルール](https://developer.mozilla.org/en/docs/Web/CSS/@import)を使うこともできます。
+最後に、コンポーネントスタイルではCSS標準の[`@import`](https://developer.mozilla.org/en/docs/Web/CSS/@import)[ルール](https://developer.mozilla.org/en/docs/Web/CSS/@import)を使うこともできます。
 
 ```css
 @import 'hero-details-box.css';
@@ -238,3 +238,4 @@ encapsulation: ViewEncapsulation.Native
 ```
 
 `Native`はブラウザがShadow DOMを実装している時だけ動作します。 Shadow DOMはまだサポートが進んでいないため、多くの場合ではデフォルトの`Emulated`を使うことをおすすめします。
+

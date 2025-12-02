@@ -4,11 +4,11 @@ slug: 'custom-elements-event-target'
 icon: ''
 created_time: '2018-04-25T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Web Components'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Custom-Elements-EventTarget-5a42f600d9194260a6a894cfdc3fbe3d'
 features:
   katex: false
@@ -40,7 +40,7 @@ Custom Elements で分断されたマイクロアプリケーション間でコ�
 
 ## CustomElementRegistry
 
-で、そのスコープって今仕様が議論されている CustomElementRegistry と同じ粒度なんじゃないかと思い、 GitHub に*EventTargetRegistry*みたいなものがあると良いのでは！？というコメントを書いてみた。
+で、そのスコープって今仕様が議論されている CustomElementRegistry と同じ粒度なんじゃないかと思い、 GitHub に_EventTargetRegistry_みたいなものがあると良いのでは！？というコメントを書いてみた。
 
 > I think scoped root EventTarget also will be needed. Separated elements can only communicate each other via its outer event bus, window. Events are identified by its name as well as elements. So, as the same idea, I guess something like EventTargetRegistry will be important.
 
@@ -93,3 +93,4 @@ MDN にも項目があった。知らなかった。
 - CustomElementRegistry が EventTarget になったら直感的な気がする
 - EventTarget は new できる
 - 現状は自前で EventBus 作る感じになりそう。
+

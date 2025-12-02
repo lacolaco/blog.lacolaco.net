@@ -4,11 +4,11 @@ slug: 'angular-component-style-with-emotion'
 icon: ''
 created_time: '2018-07-28T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-emotion-8db2b4c69abe4f3994f1e1bf70d145ed'
 features:
   katex: false
@@ -88,3 +88,4 @@ helloStyle$ = this.form.valueChanges.pipe( map(({ fontSize }) => ({ fontSize:
 https://stackblitz.com/edit/angular-emotion?embed=1&file=src/app/app.component.ts
 
 React の場合、className は HTML 要素に対応するコンポーネントにしか使えないが、Angular の場合すべてのコンポーネントは HTML 要素に対応付けられるので、テンプレート中で親から className プロパティにバインディングするだけで子コンポーネント側でなにもしなくてもよいのは、比較的楽だなと思った。 しかし emotion で一番やりたい styled-component が React しか使えないので、これをどうにかしてみたい。
+

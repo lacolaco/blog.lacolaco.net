@@ -4,7 +4,6 @@ slug: 'upgrading-angularjs-app-with-angular-elements'
 icon: ''
 created_time: '2019-08-18T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Angular Elements'
@@ -12,6 +11,7 @@ tags:
   - 'Web'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Elements-AngularJS-f19ec1718d0c4245becbad06777044f5'
 features:
   katex: false
@@ -47,9 +47,9 @@ window.customElements.define("my-element", MyElement);
 
 https://github.com/webcomponents/webcomponentsjs#browser-support
 
-![image](/images/upgrading-angularjs-app-with-angular-elements/Untitled.png)
+![image](/images/upgrading-angularjs-app-with-angular-elements/Untitled.728536a437f7e026.png)
 
-![image](/images/upgrading-angularjs-app-with-angular-elements/Untitled_1.png)
+![image](/images/upgrading-angularjs-app-with-angular-elements/Untitled_1.66bff369eea5edae.png)
 
 # エントリポイントとしての Custom Elements
 
@@ -144,3 +144,4 @@ AngularJS から Angular への移行をコンポーネント単位で行いな�
 `window.enableAngular` フラグを有効にすると、Angular Elements で `<app-counter>` タグに `CounterComponent` を適用する。すると Angular コンポーネントがレンダリングされ、タグの内側のノードを置き換えてくれる。
 
 [https://stackblitz.com/edit/angularjs-angular-elements-poc?embed=1&file=src/index.html](https://stackblitz.com/edit/angularjs-angular-elements-poc?embed=1&file=src%2Findex.html)
+

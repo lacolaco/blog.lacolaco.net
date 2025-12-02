@@ -4,11 +4,11 @@ slug: 'platform-prividers-of-angular-2'
 icon: ''
 created_time: '2016-04-22T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-2-Platform-Provider-5ae80d320b244a6bb01b7ffa6feb932a'
 features:
   katex: false
@@ -28,7 +28,7 @@ Angular 2のDIは基本的に、 **トークン** に対して値をセットし
 providers: [
     MyClass, // 自動的にMyClassがインスタンス化される
     new Provider(MyClass, {useClass: MyClass}), // 上と同義
-    new Provider("myValue", {useValue: "value"}, // 文字列をトークンにする
+    new Provider("myValue", {useValue: "value"}, // 文字列をトークンにする 
 ]
 ```
 
@@ -158,3 +158,4 @@ expect(injector.get(t)).toEqual("bindingValue");
 ## まとめ
 
 `PLATFORM_DIRECTIVES`と`PLATFORM_PIPES`を使うと、 汎用的なコンポーネントやディレクティブ、パイプを毎回宣言することなく、どこでも使えるようになります。 アプリケーションが大きくなってきたらぜひ活用してみてください。
+

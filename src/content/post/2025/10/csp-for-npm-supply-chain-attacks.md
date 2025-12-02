@@ -4,13 +4,13 @@ slug: 'csp-for-npm-supply-chain-attacks'
 icon: ''
 created_time: '2025-10-15T01:14:00.000Z'
 last_edited_time: '2025-10-15T01:14:00.000Z'
-category: 'Tech'
 tags:
   - 'Web'
   - 'セキュリティ'
   - 'CSP'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/npm-Content-Security-Policy-28c3521b014a8055ae27e56dcf158ee3'
 features:
   katex: false
@@ -101,3 +101,4 @@ POSTリクエストなどキャッシュが難しいものについては、ユ�
 - npmサプライチェーン攻撃からは開発環境だけでなくユーザーを守る必要もある
 - 混入防止には限界がある
 - たいていの薄く広い攻撃は`connect-src` で無害化できる
+

@@ -4,11 +4,11 @@ slug: 'weekly-commits-on-angular-2025-02-26'
 icon: ''
 created_time: '2025-02-26T09:58:00.000Z'
 last_edited_time: '2025-02-26T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/weekly-commits-on-angular-2025-02-26'
 notion_url: 'https://www.notion.so/Weekly-Commits-on-Angular-2025-02-26-1a63521b014a808f9266e92dc6f86dfc'
 features:
@@ -132,3 +132,4 @@ https://github.com/angular/components/commit/dc8f98e9e34f9af6572a6cf08f9c263f7e4
 https://github.com/angular/components/commit/6a5943d8b0fe6042c885e608d7d2a071e27dd802
 
 これまでは2つ別々のディレクティブだった`MatButton`と`MatAnchor`がひとつのディレクティブとして統合されました。ディレクティブの使用方法については基本的に互換性が保たれているので特に移行作業は必要ありません。
+

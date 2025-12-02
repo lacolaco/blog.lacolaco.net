@@ -4,13 +4,13 @@ slug: 'angular-inputs-stream-pattern'
 icon: ''
 created_time: '2023-02-14T00:40:00.000Z'
 last_edited_time: '2023-12-30T10:05:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'RxJS'
   - 'rx-angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-inputs-stream-pattern'
 notion_url: 'https://www.notion.so/Angular-Input-Observable-Inputs-Stream-02ff5a3536af4d6996091ea3f818ad95'
 features:
@@ -31,11 +31,11 @@ https://stackblitz.com/edit/angular-ivy-3cvcwd?ctl=1&embed=1&file=src/app/app.co
 - setterメソッドは渡された値をコンポーネント内部の**インプットストア**に格納する
 - コンポーネントのロジックやテンプレートに使う値は、インプットストアを購読することでリアクティブに取り出す
 
-## `inputs: RxState<Inputs>`
+## `inputs: RxState<Inputs>` 
 
 今回は例として `@rx-angular/state` を使ったインプットストアの実装を示している。単に `new RxState()` しているだけなので特筆することはない。
 
-```ts
+```typescript
 private readonly inputs = new RxState<{ name: string }>();
 ```
 
@@ -43,7 +43,7 @@ private readonly inputs = new RxState<{ name: string }>();
 
 こちらもインプットストアの値を更新しているだけで特別なことはしていない。
 
-```ts
+```typescript
 @Input()
 set name(value: string) {
   this.inputs.set({ name: value });
@@ -56,7 +56,7 @@ set name(value: string) {
 
 今回の例はぶっちゃけ同期的でもいい例だが、たとえば `message` の構築に非同期APIの呼び出しが必要なケースなどをイメージするとよい。
 
-```ts
+```typescript
 ngOnInit() {
   // initial state
   this.state.set({ message: '' });
@@ -88,8 +88,9 @@ Inputs Streamパターンの利点はざっくり以下の点が思いつく。
 - 自前で `BehaviorSubject` など使ってインプットストアを実装してもいいが、汎用性をもたせようとすると結構大変なので現実的には何らかのライブラリに頼ることになる
   - 今回は `@rx-angular/state` を使ったが、当然他のものでもなんでもよい
 
-とはいえ慣れるとコンポーネントの `[this.xxx](http://this.xxx/)` に直接保持する状態がなくなることで振る舞いの予測可能性があがり、テストもしやすいように感じているので、ぜひおすすめしたい。
+とはいえ慣れるとコンポーネントの [`this.xxx`](http://this.xxx/) に直接保持する状態がなくなることで振る舞いの予測可能性があがり、テストもしやすいように感じているので、ぜひおすすめしたい。
 
 今回のサンプルもそうだが、コンポーネントが状態値を単一のストリームでテンプレートに渡す Single State Stream パターンとの相性もよいので、こちらも改めて紹介しておきたい。
 
 https://blog.lacolaco.net/2019/07/angular-single-state-stream-pattern/
+

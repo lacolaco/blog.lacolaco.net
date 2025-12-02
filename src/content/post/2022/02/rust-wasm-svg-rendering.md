@@ -4,12 +4,12 @@ slug: 'rust-wasm-svg-rendering'
 icon: ''
 created_time: '2022-02-26T03:29:00.000Z'
 last_edited_time: '2023-12-30T10:06:00.000Z'
-category: 'Tech'
 tags:
   - 'Rust'
   - 'WebAssembly'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Rust-wasm-SVG-10-48a52b0559eb43a5b9046e66f64550ce'
 features:
   katex: false
@@ -55,7 +55,7 @@ version = "0.1.0"
 
 ```json
 {
-  "implicitDependencies": {
+	"implicitDependencies": {
     "angular.json": "*",
     "package.json": "*",
     "tsconfig.json": "*",
@@ -122,7 +122,7 @@ https://rustwasm.github.io/wasm-pack/book/
 
 今回Rustで実装した関数は、TypeScriptでは次のようなシグニチャである。コントリビューターオブジェクトの配列を受け取り、SVG文字列を返すことを意味している。
 
-```ts
+```typescript
 type Renderer = (contributors: Contributor[]) => Promise<string>;
 ```
 
@@ -185,7 +185,7 @@ https://docs.rs/svg/latest/svg/
 
 計測は同じ引数での関数呼び出しを十分な回数繰り返し、合計時間を回数で割った平均時間を比較することとした。入力の配列の長さによる傾向も知りたかったので、データサイズごとに計測した。
 
-```ts
+```typescript
 async function benchmark_js(times: number, contributors: Contributor[]) {
   performance.mark('js:start');
   for (let index = 0; index < times; index++) {
@@ -291,7 +291,7 @@ https://docs.github.com/en/actions/creating-actions/creating-a-composite-action
 name: Setup Rust
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - uses: actions-rs/toolchain@v1
       with:
@@ -308,3 +308,4 @@ runs:
 Rustの学習を兼ねて思いつきでやってみたが、思っていた以上の効果が得られて驚いた。JSからRust+wasmへの置き換えで高速化するという話はいろんな場所で聞いていたが、実際に自分の小さなアプリケーションでも再現したのはいい経験になった。
 
 今回はSVG生成部分だけを置き換えたが、他の処理も今後置き換えを進めてみたい。
+

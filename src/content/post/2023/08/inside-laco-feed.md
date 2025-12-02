@@ -4,13 +4,13 @@ slug: 'inside-laco-feed'
 icon: ''
 created_time: '2023-08-19T10:56:00.000Z'
 last_edited_time: '2023-12-30T10:01:00.000Z'
-category: 'Tech'
 tags:
   - 'Cloudflare'
   - 'Notion'
   - '雑記'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/SNS-laco_feed-69879d3d01444aa29d3b128b15689a53'
 features:
   katex: false
@@ -38,7 +38,7 @@ https://bsky.app/profile/lacolaco.bsky.social/post/3k5cqgzf6hm2r
 
 ## 全体像
 
-![image](/images/inside-laco-feed/PXL_20230819_1114158082.jpg)
+![image](/images/inside-laco-feed/PXL_20230819_1114158082.984afdd50dfa7c89.jpg)
 
 - Cloudflare Workers
   - 主役。すべてここで動いている。しかも無料枠。
@@ -66,7 +66,7 @@ Misskey のAPIは、ActivityPubのメンタルモデルがだいたいわかっ�
 
 https://misskey-hub.net/docs/api/endpoints/notes/create.html
 
-```ts
+```typescript
 /**
  * Post a message to Misskey.
  *
@@ -94,7 +94,7 @@ Bluesky の機能はBlueskyが準拠しているAT Protocolによって呼び出
 
 https://www.memory-lovers.blog/entry/2023/07/09/152224
 
-```ts
+```typescript
 import { BskyAgent, RichText } from '@atproto/api';
 
 const bsky = new BskyAgent({ service: 'https://bsky.social' });
@@ -114,7 +114,7 @@ export async function createBlueskyPost(item: FeedItem, identifier: string, pass
 }
 ```
 
-### Twitter
+### Twitter 
 
 かなり苦戦した。ふつうの Node.js サーバーだったらもっと簡単だったが、Cloudflare Workersのエッジ環境であることで、クロスポスト先の中で一番OSSも豊富なはずのTwitter APIだが、全然先人の実装を利用できなかった。
 
@@ -122,7 +122,7 @@ export async function createBlueskyPost(item: FeedItem, identifier: string, pass
 
 https://github.com/azu/tweet-truncator
 
-```ts
+```typescript
 import encBase64 from 'crypto-js/enc-base64';
 import hmacSha1 from 'crypto-js/hmac-sha1';
 import OAuth from 'oauth-1.0a';
@@ -161,9 +161,7 @@ export async function createTwitterPost(
     },
   });
 
-  const oauthHeader = oauth.toHeader(
-    oauth.authorize(req, { key: credentials.accessToken, secret: credentials.accessSecret }),
-  );
+  const oauthHeader = oauth.toHeader(oauth.authorize(req, { key: credentials.accessToken, secret: credentials.accessSecret }));
   const resp = await fetch(req.url, {
     method: req.method,
     headers: {
@@ -205,3 +203,4 @@ https://www.npmjs.com/package/crypto-js
 
 - 自分で作れば無料！
 - どれもカテゴリとしては近いWebサービスなのに、認証方法もAPIのデザインも全然違うのでクロスポスト実装すると多様性が感じられる。
+

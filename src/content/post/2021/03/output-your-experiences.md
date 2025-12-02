@@ -4,12 +4,12 @@ slug: 'output-your-experiences'
 icon: ''
 created_time: '2021-03-08T01:02:00.000Z'
 last_edited_time: '2025-07-23T03:15:00.000Z'
-category: 'Idea'
 tags:
   - '言語化'
   - '雑記'
 published: true
 locale: 'ja'
+category: 'Idea'
 notion_url: 'https://www.notion.so/e51abef41d4744c980784e13059e6506'
 features:
   katex: false
@@ -32,7 +32,7 @@ features:
 ましてやそれをやり続けているともなればかなり独自性の高い経験になる。
 
 <figure>
-  <img src="/images/output-your-experiences/Untitled.png" alt="かけた時間に比例してその経験は独自性を増す">
+  <img src="/images/output-your-experiences/Untitled.9f791d1a585aa4cf.png" alt="かけた時間に比例してその経験は独自性を増す">
   <figcaption>かけた時間に比例してその経験は独自性を増す</figcaption>
 </figure>
 
@@ -50,3 +50,4 @@ features:
 実際に何かをやったということは思っている以上に貴重なことなのだ。
 
 https://blog.lacolaco.net/posts/inner-speech/
+

@@ -4,12 +4,12 @@ slug: 'angular-elements-composable-definition-pattern.en'
 icon: ''
 created_time: '2020-07-22T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Angular Elements'
 published: true
 locale: 'en'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Elements-Composable-Definition-Pattern-eb942520a359470483d7c4ba864b7ce8'
 features:
   katex: false
@@ -94,3 +94,4 @@ export class Lib2ElementsModule {
   }
 }
 ```
+

@@ -4,12 +4,12 @@ slug: 'ngconf2020-day3-note'
 icon: ''
 created_time: '2020-04-04T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'ng-conf'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/ng-conf-2020-Day3-Note-696576eb42b44c2683442a1ef14f2515'
 features:
   katex: false
@@ -326,3 +326,4 @@ Sander Elias
 # Session #9 Q&A
 
 Shai Reznik Keen Yee Liau Divya Tagtachian Tara Z. Manicsic Sander Elias
+

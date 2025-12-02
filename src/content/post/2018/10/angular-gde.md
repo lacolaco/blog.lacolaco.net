@@ -4,12 +4,12 @@ slug: 'angular-gde'
 icon: ''
 created_time: '2018-10-05T00:00:00.000Z'
 last_edited_time: '2025-06-11T09:13:00.000Z'
-category: 'Diary'
 tags:
   - 'GDE'
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/Google-Developers-Expert-Angular-ff3c7f843d4043a58696b65f32a068bd'
 features:
   katex: false
@@ -29,9 +29,10 @@ https://github.com/angular/angular/commit/35936864bc842a197aa71bfb686d055961ad77
 
 プログラムの進行をサポートしてくれたGoogleのえーじさんやたくおさん、面接に協力してくれたGDEのFilipさんとAngular TeamのStephenには大感謝です。~~Angular GDEはWeb GDEのグループにも含まれるようなので、~~Angularに限らずWeb技術のオープンコミュニティへも微力ながら貢献していくつもりです。
 
-> [!NOTE]
+> [!TIP]
 > 追記: GDEのカテゴリとしてAngularはWebと分割されたため、現在（2024年時点）ではAngularカテゴリだけの認定です。
 
 GDEになったからといってこれまでの活動が変わることはほとんどないと思いますが、マウンテンビューから遠く離れた日本でAngularのコミュニティを発展させていくための旗印として、この新しい立場を有効活用していく、あるいはコミュニティが僕を利用するとよいと考えています。そして、自分がそうだったように、僕を含めた日本のGDEというモデルが、学生たちがエキスパートを目指すモチベーションとなれるように頑張ります。
 
 というわけで、ただのAngular好きからGoogle Developer Expertにランクアップしたlacolacoを今後ともよろしくおねがいします。Angularのエキスパートが必要なときには気軽にお声がけください！
+

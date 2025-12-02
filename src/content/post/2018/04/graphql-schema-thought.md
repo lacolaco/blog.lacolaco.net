@@ -4,11 +4,11 @@ slug: 'graphql-schema-thought'
 icon: ''
 created_time: '2018-04-03T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'GraphQL'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/GraphQL-acc3701986524e0a812f1496941ec93a'
 features:
   katex: false
@@ -37,3 +37,4 @@ organization { users {} }
 は組織に紐付くユーザーは増えたり減ったりするから、たいてい users のほうが organization より更新頻度が高くなりそう。 このクエリは本質的には organization を要求しているはずなんだけど、キャッシュは organization が変わってなくても users が変わるたびに捨てなきゃいけないので、あんまり頭良くない気がする。users は organization のフィールドとはあんまり思えない感じ。
 
 今は直感というか、嗅覚みたいなところでこれ考えてるんだけど、この辺の設計論を理論立てて書いてる本とかあったら誰か教えてください。
+

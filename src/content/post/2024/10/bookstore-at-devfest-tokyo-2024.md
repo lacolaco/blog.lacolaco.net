@@ -4,12 +4,12 @@ slug: 'bookstore-at-devfest-tokyo-2024'
 icon: ''
 created_time: '2024-10-30T23:29:00.000Z'
 last_edited_time: '2024-10-30T23:29:00.000Z'
-category: 'Diary'
 tags:
   - '本屋'
   - 'GDE'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/GDG-DevFest-Tokyo-2024-1293521b014a8073bb02e294780424be'
 features:
   katex: false
@@ -23,7 +23,7 @@ https://gdg-tokyo.connpass.com/event/335192/
 
 さらに、今年は**DevFest Tokyoの会場で本屋を出店する**ことになりました！この本屋はGDG Tokyoではなくlacolaco個人が運営するものです。僕が店主として本を会場のブースに並べて売らせていただきます。ぜひ様子を見に来てください！
 
-![image](/images/bookstore-at-devfest-tokyo-2024/image.png)
+![image](/images/bookstore-at-devfest-tokyo-2024/image.7558263177a19a65.png)
 
 今回取り扱う本は、DevFestにちなんで「**その日の登壇者が関わった本**」または「**Google技術について書かれた本**」から選んだいくつかのタイトルです（そんなに多くはないです）。当日のセッションを聞いて興味を持った技術や登壇者がいたら、ぜひその高まった気分で本を買って、さらに学びを深めるきっかけにしてもらえるといいんじゃないかと考えています。もしかしたら、本人からサインをもらうチャンスもあるかもしれません。
 
@@ -60,3 +60,4 @@ DevFestでの出店で感覚が掴めたら、来年はどんどんいろんな�
 https://gist.github.com/ko1/7216d4c19af8a030e43fbdeae5497de3
 
 実は9月に偶然話をする機会があって、そこでお互い同じようなことをやろうとしていることを知る、ということがありました。完全にシンクロニシティです。「技術系のイベントに行ったら会場に本屋がある」というのが珍しくない風景にしていきたいと思っているので、僕以外にも仲間がいて心強いなと思っています。
+

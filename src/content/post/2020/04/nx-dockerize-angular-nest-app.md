@@ -4,12 +4,12 @@ slug: 'nx-dockerize-angular-nest-app'
 icon: ''
 created_time: '2020-04-29T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Nx'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Nx-Angular-Nest-js-Docker-eb5832c419094ad19bfad5ed2f86a16b'
 features:
   katex: false
@@ -130,3 +130,4 @@ FROM node:12WORKDIR /appCOPY package.json yarn.lock ./RUN yarn install --product
 
 - Dockerfileで node_modulesをインストールするなら、最初からNest.jsのビルドでバンドルをしないようにしたほうがイメージサイズが減るのではないか
   - Nest.jsである必要もないので面倒そうならexpressに換装してもよさそう
+

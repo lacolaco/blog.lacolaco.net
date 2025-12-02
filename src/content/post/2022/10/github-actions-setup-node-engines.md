@@ -4,12 +4,12 @@ slug: 'github-actions-setup-node-engines'
 icon: ''
 created_time: '2022-10-03T13:39:00.000Z'
 last_edited_time: '2022-10-03T00:00:00.000Z'
-category: 'Tech'
 tags:
   - 'GitHub Actions'
   - 'Node.js'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/GitHub-Actions-setup-node-Node-js-package-json-1934ffc5baff4477a7661e34e8dd45f7'
 features:
   katex: false
@@ -41,3 +41,4 @@ steps:
 ```
 
 いままでサポートされていたNode.jsバージョン管理ツール用の設定ファイルと違い、 `package.json` の `engines` はnpmやyarnなどパッケージマネージャがもれなくサポートしているため、開発ツールを厳密に標準化していないチームでも共通のバージョン制約を適用しやすいはずだ。（npmの場合は `engine-strict=true` 設定が必要ではあるが）
+

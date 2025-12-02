@@ -4,13 +4,13 @@ slug: 'leaning-curve-and-angular-app-architecture'
 icon: ''
 created_time: '2019-07-24T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - '設計'
   - '言語化'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-f6c7a5b10d5c495c90b2924d788cb3c2'
 features:
   katex: false
@@ -25,7 +25,7 @@ features:
 システムの開発が持続可能であるための条件はざっくりまとめれば次の 2 つに尽きる。
 
 1. 開発者を持続的に手に入れられること
-2. 実行環境を持続的に手に入れられること
+1. 実行環境を持続的に手に入れられること
 
 つまり、誰でも開発に参加できて、どこでも実行できるなら、そのシステムの開発持続性は高い。言い換えれば、開発持続性が高いということは、高いスキルへの依存と環境への依存が小さいということになる。可読性や可用性、メンテナンス性といった要素はこの 2 つの持続性に吸収される。
 
@@ -71,19 +71,19 @@ Angular アプリの開発チームに新たなメンバーを迎えるにあた
 
 「ドメイン層」と呼ばれる類のモジュールは、このコアユニットに該当する。ライブラリやフレームワーク、あらゆる外部環境に依存せず、純粋な TypeScript の型定義やクラス、関数、定数などで構成される。 プレゼンテーション/ドメイン分離（PDS）が済ませたコンポーネントとサービスから構成される状態の Angular アプリケーションから、まずはコアユニットを切り出す事が重要だ。
 
-![image](/images/leaning-curve-and-angular-app-architecture/Untitled.png)
+![image](/images/leaning-curve-and-angular-app-architecture/Untitled.2a6634fa91a6f5f6.png)
 
 ### ビジュアルユニット: HTML/CSS の理解
 
 次に多くの開発者が理解できる領域は、HTML/CSS が理解できれば扱えるモジュールが属する。ここでは「ビジュアルユニット」と呼ぶこととする。 ただし、Angular のコンポーネントのすべてがビジュアルユニットに含められるわけではない。なぜならこのユニットでは RxJS や Angular のコンポーネント機能への十分な理解は求められないからだ。「Presentational Component」や「Dumb Component」と呼ばれるような、アプリケーションの末端に位置するコンポーネントがここに該当する。 `{{ data }}` という補完構文レベルの知識は要求されるが、複雑な Directive や Pipe の活用はこのユニットには含められない。
 
-![image](/images/leaning-curve-and-angular-app-architecture/Untitled_1.png)
+![image](/images/leaning-curve-and-angular-app-architecture/Untitled_1.cb9ee67912cd72f6.png)
 
 ### インフラユニット: 外部 API の理解
 
 次に理解しやすい領域は、ブラウザが持つ Web API や、Google Analytics のような完全にシステムの外部にある API とアプリケーションをつなぐ部分だ。ここでは「インフラユニット」と呼ぶ。「アプリケーションサービス」や「アダプター」と呼ばれるようなモジュールはこのユニットに多く該当する。Visual とは反対の位置でアプリケーションの末端に位置するこのユニットは依存対象が少なく、モジュールの責務が単一で明確に維持しやすい。新しく参加したメンバーでもそのモジュールが果たすべき役割をすぐに把握できるだろう。
 
-![image](/images/leaning-curve-and-angular-app-architecture/Untitled_2.png)
+![image](/images/leaning-curve-and-angular-app-architecture/Untitled_2.785bb4590e32f9f4.png)
 
 ### アプリケーションユニット: RxJS/Observable の理解
 
@@ -91,13 +91,13 @@ Angular アプリの開発チームに新たなメンバーを迎えるにあた
 
 また、もし NgRx のような状態管理ライブラリを利用すると、その知識も要求される。ただし、このユニットに Angular API への関心を持たせないことが重要である。ちなみに `@Injectable()` については Angular API と捉えず妥協する。フレームワークが提供する DI システムとして利用する。
 
-![image](/images/leaning-curve-and-angular-app-architecture/Untitled_3.png)
+![image](/images/leaning-curve-and-angular-app-architecture/Untitled_3.084fde8d39902255.png)
 
 ### Angular ユニット: Angular API の理解
 
 最後に残った部分が、Angular への理解を高く求められる領域である。Store とテンプレートをつなぐ「Container Component」や、フォーム管理、ルーティングなど、コンポーネントシステムに限らず Angular API への関心が強い部分だ。当然 RxJS も理解しておく必要がある。
 
-![image](/images/leaning-curve-and-angular-app-architecture/Untitled_4.png)
+![image](/images/leaning-curve-and-angular-app-architecture/Untitled_4.b8ba88a0f83c8227.png)
 
 最終的なユニット分割の依存関係を見ると、依存される末端のユニットほど参入障壁が低いように設計されていることがわかる。そしてアプリケーションの中心に近づくにつれて階段を登るように要求スキルがあがっていくようになっている。
 
@@ -106,3 +106,4 @@ Angular アプリの開発チームに新たなメンバーを迎えるにあた
 Angular アプリケーションの開発持続性を高め、スケーラビリティを確保するにはいかに Angular ユニットを小さく作るかにかかっている。UI の見た目に関する責務は HTML と CSS だけわかっていれば書けるビジュアルユニットへ逃し、ロジックは TypeScript と RxJS がわかっていれば書ける Application ユニットへ逃がす。そしてさらに Pure TypeScript で書ける部分はコアユニットへ逃していく。
 
 参入障壁が低いユニットに取り組み始めたメンバーは、アプリケーションへの理解度を高めながら、緩やかな学習曲線を描いていく。慣れてきたら別のユニットに取り組む。これを繰り返すことで結果的には多くのメンバーが Angular ユニットまで早く到達できるだろう。
+

@@ -2,13 +2,13 @@
 title: 'Angular: Selectorlessがもうすぐやってくる'
 slug: 'angular-selectorless-is-coming'
 icon: ''
-created_time: '2025-04-09T11:35:00.000Z'
+created_time: '2025-04-09T14:13:00.000Z'
 last_edited_time: '2025-04-09T15:04:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-selectorless-is-coming'
 notion_url: 'https://www.notion.so/Angular-Selectorless-1d03521b014a8070af87dfbe63ce9c9a'
 features:
@@ -43,7 +43,7 @@ Angularの公式ロードマップでも、SelectorlessはStandalone Component�
 
 Selectorlessのコンセプトをサンプルコードで理解しよう。次のようなコンポーネントを想像してほしい。
 
-```ts
+```typescript
 @Component({
   selector: 'app-greeting',
   template: `<p>Hello, {{ name }}!</p>`,
@@ -55,26 +55,30 @@ export class Greeting {
 
 上述の通り、Standalone Componentの導入でNgModuleの記述は不要になったが、テンプレート内での利用には依然としてセレクタが必要であった。この`Greeting`コンポーネントを利用する親コンポーネントでは、`imports`配列にコンポーネントを読み込んだうえでテンプレート中では`<app-greeting>`セレクタで参照する必要がある。
 
-```ts
+```typescript
 import { Greeting } from './greeting';
 
 @Component({
-  selector: 'app-root',
+	selector: 'app-root',
   imports: [Greeting],
-  template: ` <app-greeting name="World" /> `,
+  template: `
+    <app-greeting name="World" />
+  `,
 })
 export class App {}
 ```
 
 Selectorlessの具体的なシンタックスは今後のRFCで提案される見込みだが、現在検討中の案では次の例のように、テンプレート内でクラス名を直接参照できるようになる見込みだ。このように、セレクタの記述が不要になることで、より簡潔で直感的なテンプレート記述が期待される。
 
-```ts
+```typescript
 import { Greeting } from './greeting';
 
 @Component({
-  selector: 'app-root',
+	selector: 'app-root',
   imports: [Greeting],
-  template: ` <Greeting name="World" /> `,
+  template: `
+    <Greeting name="World" />
+  `,
 })
 export class App {}
 ```
@@ -88,3 +92,4 @@ https://github.com/angular/angular/pull/60724/files#diff-6398e1ffddbcd90e365c156
 ## まとめ
 
 Selectorlessは、Angular開発における新たなコンポーネント実装のコンセプトである。Standalone Componentの定着によりフレームワークが解決すべき課題が次のステージへ進んでいるとも言える。セレクタという抽象化を取り除くことで、開発効率やアプリケーションのパフォーマンス、そしてコードの可読性を向上させることが期待される。おそらく5月にリリースされるAngular v20の期間には、もっと具体的な姿が見えてくるだろう。今後の動向にぜひ期待しよう。
+

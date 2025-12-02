@@ -4,11 +4,11 @@ slug: 'ng-conf-2017-day-3-note'
 icon: ''
 created_time: '2017-04-07T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/ng-conf-2017-3-Keynote-5b8306d1a3ce49278181888a10c958eb'
 features:
   katex: false
@@ -94,3 +94,4 @@ features:
 1日目同様に新発表などはほとんどありませんでした。キーワードは**TypeScript**と**ABC**、**platform-server**でしょうか。 GoogleでTypeScriptが公式に採用されたのは大きなニュースかもしれません。これまで以上にAngularとTypeScriptの関係が親密になりそうな予感がします。 動画はすでに [Youtube](https://www.youtube.com/watch?v=Nj9_p4qvm5U)に公開されているので、もっと細かくチェックしたい方は参照してください。
 
 それではこれから日本に帰ります。さよならソルトレイクシティ！
+

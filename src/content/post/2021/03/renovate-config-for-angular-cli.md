@@ -4,12 +4,12 @@ slug: 'renovate-config-for-angular-cli'
 icon: ''
 created_time: '2021-03-20T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Angular CLI'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Renovate-7bdac4fe30d94ae2a78081cbbb21b3c7'
 features:
   katex: false
@@ -59,7 +59,11 @@ Renovate からプルリクエストが来るたびにこのような経験則�
     },
     {
       "groupName": "@angular/material package group (major or minor)",
-      "matchPackageNames": ["@angular/material", "@angular/cdk", "@angular/material-moment-adapter"],
+      "matchPackageNames": [
+        "@angular/material",
+        "@angular/cdk",
+        "@angular/material-moment-adapter"
+      ],
       "matchUpdateTypes": ["major", "minor"],
       "enabled": false
     },
@@ -131,3 +135,4 @@ Angular とは関係ないが、日頃 `@types`パッケージのバージョン
 Angular CLI ベースのリポジトリで一般的に適用できる Renovate 設定を共有可能プリセットとして公開した。 プリセットに含めたのは Angular 公式パッケージに関連するものに限っているが、他に`ng update`に対応しているサードパーティライブラリを使っていればそれにも同じ設定を適用することをおすすめする。
 
 もし Angular プロジェクトで Renovate の運用に困っている人がいたら参考にしてみてほしい。
+

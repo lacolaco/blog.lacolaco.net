@@ -4,12 +4,12 @@ slug: 'trace-based-testing'
 icon: ''
 created_time: '2023-08-09T11:35:00.000Z'
 last_edited_time: '2023-12-30T10:01:00.000Z'
-category: 'Diary'
 tags:
   - '日記'
   - 'Testing'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/Trace-based-Testing-01bcb5d2a0e14ced8760bbf17db18b2f'
 features:
   katex: false
@@ -32,3 +32,4 @@ Trace-based Testingがもっともよく機能するのは、開発者がデプ�
 裏を返せば、Trace-based Testingは、普段トレースを見ていないならばたいして安心に繋がらないだろう。テストのためのトレースになってしまっては意味がない。
 
 日頃、何をもってデプロイが成功したと判断しているか。それが自分が何によって安心を得ているかということである。デプロイ後に手元で動作確認しなければ安心できないなら、Trace-based Testingはそれほど安心につながらないだろう。逆に、手元の動作ではなくリアルユーザーモニタリングによるトレースを強く信頼しているのなら、Trace-based Testingは試して見る価値があるように思う。
+

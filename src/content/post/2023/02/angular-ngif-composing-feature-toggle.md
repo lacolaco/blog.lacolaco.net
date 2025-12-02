@@ -4,12 +4,12 @@ slug: 'angular-ngif-composing-feature-toggle'
 icon: ''
 created_time: '2023-02-08T06:00:00.000Z'
 last_edited_time: '2023-12-30T10:05:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'standalone component'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-ngif-composing-feature-toggle'
 notion_url: 'https://www.notion.so/Angular-NgIf-c30c4744b39047558495a126d32ad0d9'
 features:
@@ -28,7 +28,7 @@ https://stackblitz.com/edit/angular-ivy-nacplk?ctl=1&embed=1&file=src/app/app.co
 
 次のコードで、`AuthDirective` に `NgIf` ディレクティブを合成している。合成とはどういうことか。そのディレクティブがテンプレートで使用されるとき、あたかも合成されたディレクティブも同じ位置に使用されているかのように振る舞う、ということである。
 
-```ts
+```typescript
 @Directive({
   selector: '[appIfHasPermissions]',
   standalone: true,
@@ -42,11 +42,15 @@ export class AuthDirective implements OnInit, OnDestroy {
 
 あとは表示する条件を満たしたときに `NgIf` ディレクティブの `ngIf` プロパティが `true` になるようロジックを実装すればよい。
 
-```ts
-combineLatest([this.authService.user$, this._permissions]).subscribe(([user, requiredPermissions]) => {
-  const permitted = requiredPermissions.every((p) => user.permissions.includes(p));
-  this.ngIfDirective.ngIf = permitted;
-});
+```typescript
+combineLatest([this.authService.user$, this._permissions]).subscribe(
+      ([user, requiredPermissions]) => {
+        const permitted = requiredPermissions.every((p) =>
+          user.permissions.includes(p)
+        );
+        this.ngIfDirective.ngIf = permitted;
+      }
+    );
 ```
 
 このように `NgIf` と条件ロジックを合成したディレクティブを再利用可能にすることで、ディレクティブを使う側の責務は減ってコンポーネントが簡素になり、より宣言的なテンプレートに仕上がる。そしてDOM要素の生成・破棄のロジックはAngularの組み込みディレクティブに委譲しており、アプリケーションのユースケース的な関心だけを自前実装することができた。
@@ -58,3 +62,4 @@ combineLatest([this.authService.user$, this._permissions]).subscribe(([user, req
 ```
 
 `NgIf` に限らず、Angularの組み込みディレクティブを `hostDirectives` を使って自作ディレクティブに合成して実装量を減らし、クオリティが保証されたDOM操作実装に乗っかることが簡単になった。つまり、**UIライブラリ的な関心事だけを実装したディレクティブ**と、**アプリケーション的な関心事をそれに上乗せするディレクティブ**とを分けて実装し、再利用やテストがしやすいモジュール化を実現しやすくなったということだ。ぜひさまざまな場面でこの新機能を活用してほしい。
+

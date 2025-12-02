@@ -4,12 +4,12 @@ slug: '8892acbcdb0e'
 icon: ''
 created_time: '2023-12-27T05:34:00.000Z'
 last_edited_time: '2025-06-11T08:37:00.000Z'
-category: 'Tech'
 tags:
   - 'Astro'
   - 'Blog Dev'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Astro-a1bb976f7cd04fd0a8927a6ada485f97'
 features:
   katex: false
@@ -27,7 +27,7 @@ https://docs.astro.build/ja/guides/images/
 
 https://developer.mozilla.org/ja/docs/Web/API/HTMLImageElement/decoding
 
-```ts
+```typescript
 {
   external ? (
     <img src={url} decoding="async" />
@@ -43,7 +43,7 @@ https://developer.mozilla.org/ja/docs/Web/API/HTMLImageElement/decoding
 
 https://docs.astro.build/ja/recipes/dynamically-importing-images/
 
-```ts
+```typescript
 const images = import.meta.glob<{ default: ImageMetadata }>('/src/content/images/**/*.{jpg,jpeg,png,gif,svg}');
 if (!external && !images[url]) {
   throw new Error(`"${url}" does not exist in glob: "src/content/images/**/*"`);
@@ -54,4 +54,5 @@ if (!external && !images[url]) {
 
 ということで、Astroのビルド時に画像の幅・高さの設定とwebpへの最適化、遅延読み込みの有効化などが自動的に行われるようになった。めでたしめでたし。
 
-![image](/images/8892acbcdb0e/001_2.png)
+![image](/images/8892acbcdb0e/001_2.50bc1c0f7cce5989.png)
+

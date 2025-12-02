@@ -4,13 +4,13 @@ slug: 'notion-headless-cms-2'
 icon: ''
 created_time: '2022-02-13T23:59:00.000Z'
 last_edited_time: '2023-12-30T10:06:00.000Z'
-category: 'Tech'
 tags:
   - 'Notion'
   - 'Markdown'
   - 'Blog Dev'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Notion-CMS-2-Markdown-4047b3f13e884bcab2757dd81a6eef99'
 features:
   katex: false
@@ -39,13 +39,13 @@ https://blog.lacolaco.net/2022/02/notion-headless-cms-1/
 Notion のページプロパティはページに紐付けられるメタ情報のセットで、次の画像のようなプロパティ名と値のKey-Valueマップのデータである。
 
 <figure>
-  <img src="/images/notion-headless-cms-2/Untitled.png" alt="ページプロパティ">
+  <img src="/images/notion-headless-cms-2/Untitled.0352e57b73109500.png" alt="ページプロパティ">
   <figcaption>ページプロパティ</figcaption>
 </figure>
 
 問題はこのプロパティ情報を格納した `PageObject` の `properties` オブジェクトが、自由記述のプロパティ表示名をキーとして、プロパティ固有のIDが値側に格納されていることである。
 
-```ts
+```typescript
   properties: Record<string, {
       type: "title";
       title: Array<RichTextItemResponse>;
@@ -60,8 +60,10 @@ Notion のページプロパティはページに紐付けられるメタ情報�
 
 Notion の GUI 上ではいつでもプロパティ表示名を変更できるため、キー側をもとに特定のプロパティを探索するのは堅牢性に欠ける。まずはプロパティのIDをキーにしたマップオブジェクトに詰め替えることから始めることになった。
 
-```ts
-const properties = Object.fromEntries(Object.values(page.properties).map((prop) => [prop.id, prop]));
+```typescript
+const properties = Object.fromEntries(
+  Object.values(page.properties).map((prop) => [prop.id, prop])
+);
 ```
 
 ### プロパティの型をプロパティタイプから推論する
@@ -70,9 +72,11 @@ Notion のページプロパティはいくつものデータ型をサポート�
 
 そこで、プロパティのマップオブジェクトからデータ型を指定しつつ特定のプロパティを取り出すために、次のようなユーティリティ関数を作成した。IDとデータ型が一致すればそのプロパティを返し、一致しなければ `null` を返す。そして取り出したプロパティは Type Guard によりデータ型が確定する。
 
-```ts
+```typescript
 export function createPagePropertyMap(page: PageObject) {
-  const properties = Object.fromEntries(Object.values(page.properties).map((prop) => [prop.id, prop]));
+  const properties = Object.fromEntries(
+    Object.values(page.properties).map((prop) => [prop.id, prop])
+  );
   return {
     get<PropType extends string>(id: string, type: PropType) {
       const prop = properties[id];
@@ -94,7 +98,7 @@ function matchPropertyType<PropType extends string, Prop extends { type: string 
 
 このユーティリティを使ってページプロパティ情報からブログ記事のメタデータとなる Frontmatter 情報が作成できるようになった。
 
-```ts
+```typescript
 async renderPost(post: NotionPost, options: { forceUpdate?: boolean } = {}) {
   const { created_time: remoteCreatedAt, last_edited_time: remoteUpdatedAt, archived } = post;
   if (archived) {
@@ -134,9 +138,9 @@ export function renderFrontmatter(params: Record<string, unknown>): string {
 
 Notion の画像ブロックは外部URLを指定するものと、Notionへ直接画像をアップロードして埋め込むものと2種類あるが、ファイルアップロードによる画像ブロックはURLが一定時間で失効する。そのため、ブログ記事として永続化させるためにはURLが生きているうちに画像をダウンロードし、レポジトリ内へ保存したうえで相対パスによって参照することになる。
 
-```ts
+```typescript
 const renderer: BlockObjectRendererMap = {
-  // ...
+	// ...
   image: async (block) => {
     switch (block.image.type) {
       case 'external':
@@ -155,7 +159,7 @@ const renderer: BlockObjectRendererMap = {
 
 前回の記事でも触れたが、箇条書きリスト、番号付きリストはネストさせると子ブロックを持つようになる。ネストの深さに応じてインデントされるように、前回保持させた `depth` フィールドを使う。
 
-```ts
+```typescript
     bulleted_list_item: (block) => {
       const indent = '\t'.repeat(block.depth);
       const text = renderRichTextArray(block.bulleted_list_item.text);
@@ -172,7 +176,7 @@ const renderer: BlockObjectRendererMap = {
 
 Notion のテキストはほとんどのブロックでリッチテキストとして表現され、文字装飾が可能だ。すべての装飾をMarkdownへ変換しても保持するのは大変なので、ブログ記事として必要なものに絞って変換した。 `annotations` のそれぞれのフラグは排他ではなくすべての組み合わせがありえるため、優先順をつけて再帰的に処理することとした。ブログ側ではインラインコードの装飾は除去し、Markdown側で2文字のマーカーが必要なものから順番に処理する。リンクや改行の処理は最後になるようにした。
 
-```ts
+```typescript
 type RichTextObject = {
   plain_text: string;
   href: string | null;
@@ -238,3 +242,4 @@ function renderRichText(richText: RichTextObject): string {
 こうして Notion APIから取得したページデータをもとにMarkdownファイルを生成することができた。
 
 次回は、この記事生成を含むデプロイフローが Notion で記事を書いたあと自動的に実行されるようにするための、GitHub Actionsのワークフローについて書く。
+

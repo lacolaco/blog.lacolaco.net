@@ -4,11 +4,11 @@ slug: 'read-books-2025-q1'
 icon: ''
 created_time: '2025-04-02T09:15:00.000Z'
 last_edited_time: '2025-04-02T09:15:00.000Z'
-category: 'Diary'
 tags:
   - '読書'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/2025-Q1-1c93521b014a80bfb779eb623edab9e1'
 features:
   katex: false
@@ -18,7 +18,7 @@ features:
 
 2025年 1月〜3月に読んだ本・読んでいる本
 
-![image](/images/read-books-2025-q1/CleanShot_2025-04-02_at_16.39.242x.png)
+![image](/images/read-books-2025-q1/CleanShot_2025-04-02_at_16.39.242x.394484a55b256280.png)
 
 ### カレー移民の謎 日本を制覇する「インネパ」
 
@@ -78,3 +78,4 @@ https://sayusha.com/books/-/isbn9784865284218
   - マイケル・サンデルの名著。「偶然性」と「正義」はセットで考えなければならないということを『不道徳的倫理学講義 ─人生にとって運とは何か』で教えられた。
 - Good Code, Bad Code 持続可能な開発のためのソフトウェアエンジニア的思考
   - 積読になっていたが、読み始めたら予想以上におもしろい本だった。近々リファラジでも話す予定。
+

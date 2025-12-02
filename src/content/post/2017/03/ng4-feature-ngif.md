@@ -3,12 +3,12 @@ title: '[Angular 4.0] 新しいngIfの使い方'
 slug: 'ng4-feature-ngif'
 icon: ''
 created_time: '2017-03-05T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
+last_edited_time: '2025-11-27T12:10:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-4-0-ngIf-e34eeccc4c1e4aeba1c4eb3381c58440'
 features:
   katex: false
@@ -91,16 +91,16 @@ class NgIfThenElse implements OnInit {
 ```html
 <p>{{ (user$ | async)?.name }}</p>
 <p>{{ (user$ | async)?.age }}</p>
-<img [src]="(user$ | async)?.icon" />
+<img [src]="(user$ | async)?.icon">
 ```
 
 せめて`?.`をなくそうと`ngIf`で囲っても、`async`パイプは全てのバインディングに必要です。
 
 ```html
 <div *ngIf="user$ | async">
-  <p>{{ (user$ | async).name }}</p>
-  <p>{{ (user$ | async).age }}</p>
-  <img [src]="(user$ | async).icon" />
+    <p>{{ (user$ | async).name }}</p>
+    <p>{{ (user$ | async).age }}</p>
+    <img [src]="(user$ | async).icon">
 </div>
 ```
 
@@ -108,9 +108,9 @@ Angular 4.0以降は、`as`を使うことで評価結果を変数として保�
 
 ```html
 <div *ngIf="user$ | async as user">
-  <p>{{ user.name }}</p>
-  <p>{{ user.age }}</p>
-  <img [src]="user.icon" />
+    <p>{{ user.name }}</p>
+    <p>{{ user.age }}</p>
+    <img [src]="user.icon">
 </div>
 ```
 
@@ -122,12 +122,12 @@ Woohoo!!!!! :tada::tada::tada::tada::tada:
 
 ```html
 <div *ngIf="user$ | async as user; else userNotFound">
-  <p>{{ user.name }}</p>
-  <p>{{ user.age }}</p>
-  <img [src]="user.icon" />
+    <p>{{ user.name }}</p>
+    <p>{{ user.age }}</p>
+    <img [src]="user.icon">
 </div>
 <ng-template #userNotFound>
-  <p>not found</p>
+    <p>not found</p>
 </ng-template>
 ```
 
@@ -135,8 +135,8 @@ Woohoo!!!!! :tada::tada::tada::tada::tada:
 
 ```html
 <div *ngFor="let user of (users$ | async) as users; index as i">
-  <span>{{ i + 1 }} / users.length</span>
-  <span>{{ user.name }}</span>
+    <span>{{ i + 1 }} / users.length</span>
+    <span>{{ user.name }}</span>
 </div>
 ```
 
@@ -155,3 +155,4 @@ Woohoo!!!!! :tada::tada::tada::tada::tada:
 - [formsモジュールの更新について](/post/ng4-feature-forms-update/)
 - [core/commonモジュールの変更について](/post/ng4-feature-core-update/)
 - [router/http/animationsモジュールの変更について](/post/ng4-feature-libs-update/)
+

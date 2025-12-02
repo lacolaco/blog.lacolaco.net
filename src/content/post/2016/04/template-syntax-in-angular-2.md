@@ -4,11 +4,11 @@ slug: 'template-syntax-in-angular-2'
 icon: ''
 created_time: '2016-04-11T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-2-8d9ba74af57a443db49369454c9916c8'
 features:
   katex: false
@@ -31,12 +31,12 @@ import {Component, Directive, ElementRef, Renderer} from 'angular2/core'
   selector: "[myDirective]"
 })
 class MyDirective {
-
+  
   constructor(
-    private el: ElementRef,
+    private el: ElementRef, 
     private renderer: Renderer
   ) {}
-
+  
   ngOnInit() {
     this.renderer.setElementStyle(this.el.nativeElement, "color", "red");
   }
@@ -135,12 +135,12 @@ import {Component, Directive, ViewContainerRef, TemplateRef} from 'angular2/core
   selector: "[myDirective]"
 })
 class MyDirective {
-
+  
   constructor(
     private _template: TemplateRef,
     private _viewContainer: ViewContainerRef
   ) {}
-
+  
   ngOnInit() {
     for(let i = 0; i < 2; i++) {
       this._viewContainer.createEmbeddedView(this._template);
@@ -200,3 +200,4 @@ export class App {
 Angular 2の`*`シンタックスはHTML要素のテンプレート化のためのものであり、`*ngIf`や`*ngFor`などの組み込みのディレクティブだけではなく、独自に使うことができる便利な機能です。ただし使いこなすのは簡単ではないので、コンポーネントによるビューの組み立てを身につけた後に習得して欲しい中級者向けのテクニックです。
 
 今回のサンプルコードは [Plunker](http://plnkr.co/edit/ylBGrQhdlOZ0SunPLid6?p=preview)にあります。
+

@@ -4,12 +4,12 @@ slug: 'enjoyable-webworkers-in-angular'
 icon: ''
 created_time: '2018-12-22T00:00:00.000Z'
 last_edited_time: '2021-05-26T00:00:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Web Worker'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Enjoyable-WebWorkers-in-Angular-d98e8a7e98534346b12bcc4bec8a0cb7'
 features:
   katex: false
@@ -17,7 +17,7 @@ features:
   tweet: false
 ---
 
-[Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) have attracted the attention as one of the most important things of web development. **[Comlink](https://github.com/GoogleChromeLabs/comlink)** is a JavaScript library created by Google Chrome team to **make WebWorkers enjoyable**. It provides an easy way to communicate with classes defined in Worker-side.
+[Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers) have attracted the attention as one of the most important things of web development. [**Comlink**](https://github.com/GoogleChromeLabs/comlink) is a JavaScript library created by Google Chrome team to **make WebWorkers enjoyable**. It provides an easy way to communicate with classes defined in Worker-side.
 
 This post explains how to integrate Comlink with your Angular application that created by Angular CLI. By using Comlink, You will be able to move away heavy processing **off-the-main-thread** easily and make JavaScript bundles smaller by **code separation**. Let’s get started!
 
@@ -25,9 +25,9 @@ This post explains how to integrate Comlink with your Angular application that c
 
 - Syntax for worker module was updated since webpack v5. CLI v12 can migrate automatically by executing `ng update @angular/cli@12`.
 
-![image](/images/enjoyable-webworkers-in-angular/2021-05-26T11-16-04.png)
+![image](/images/enjoyable-webworkers-in-angular/2021-05-26T11-16-04.9f6547d624a81df3.png)
 
-![image](/images/enjoyable-webworkers-in-angular/2021-05-26T11-20-53.png)
+![image](/images/enjoyable-webworkers-in-angular/2021-05-26T11-20-53.823454186117111d.png)
 
 ### Setting up an application
 
@@ -59,10 +59,15 @@ Next, create `src/tsconfig.worker.json` for the application project. Its locatio
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/worker",
-    "lib": ["es2018", "webworker"],
+    "lib": [
+      "es2018",
+      "webworker"
+    ],
     "types": []
   },
-  "include": ["**/*.worker.ts"]
+  "include": [
+    "**/*.worker.ts"
+  ]
 }
 ```
 
@@ -204,7 +209,7 @@ export class AppComponent {
 
 Let’s serve the app by using`ng serve` and open browser’s devtool. `0.worker.js` is a chunk that is split by WorkerPlugin. It is loaded lazily after initial scripts are all loaded. It doesn’t block the initial rendering. Cool!
 
-![image](/images/enjoyable-webworkers-in-angular/1__WghqP__ww8aX6KVZVQNzmeA.gif)
+![image](/images/enjoyable-webworkers-in-angular/1__WghqP__ww8aX6KVZVQNzmeA.be7ff58c47d6e207.gif)
 
 ### Summary
 
@@ -217,3 +222,4 @@ All sample code is public in GitHub.
 [https://github.com/lacolaco/angular-comlink-example](https://github.com/lacolaco/angular-comlink-example)
 
 Any feedback is welcome. Thanks for reading!!
+

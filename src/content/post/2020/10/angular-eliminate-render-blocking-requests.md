@@ -4,11 +4,11 @@ slug: 'angular-eliminate-render-blocking-requests'
 icon: ''
 created_time: '2020-10-01T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Eliminate-Render-Blocking-Requests-ab8e452125df4704bcc7aa3da401391d'
 features:
   katex: false
@@ -60,7 +60,12 @@ Before
 After
 
 ```html
-<link rel="stylesheet" href="styles.css" media="print" onload="this.media='all'" />
+<link
+  rel="stylesheet"
+  href="styles.css"
+  media="print"
+  onload="this.media='all'"
+/>
 <noscript><link rel="stylesheet" href="styles.css" /></noscript>
 ```
 
@@ -82,7 +87,10 @@ CSS のダウンロードやパースの時間を短縮するため、ファイ�
 Before
 
 ```html
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/icon?family=Material+Icons"
+/>
 ```
 
 After
@@ -93,7 +101,8 @@ After
     font-family: 'Material Icons';
     font-style: normal;
     font-weight: 400;
-    src: url(https://fonts.gstatic.com/s/materialicons/v55/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2) format('woff2');
+    src: url(https://fonts.gstatic.com/s/materialicons/v55/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2)
+      format('woff2');
   }
 
   .material-icons {
@@ -184,3 +193,4 @@ RFC を通して集まったフィードバックのまとめは以下の通り�
 - [How CommonJS is making your bundles larger](https://web.dev/commonjs-larger-bundles/)
 
 Eliminate Render-Blocking Requests についてはゼロコンフィグ、あるいはほぼ設定不要で使えるべきであるという姿勢が強く見られるため、 完成には時間がかかりそうではあるがぜひ期待したい。
+

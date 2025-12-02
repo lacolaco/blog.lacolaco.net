@@ -4,11 +4,11 @@ slug: 'angular-atomic-design-and-ngmodule'
 icon: ''
 created_time: '2019-07-11T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Atomic-Design-NgModule-544a0dd66f0b4c7dae3e7f5ba21a6320'
 features:
   katex: false
@@ -89,3 +89,4 @@ Atoms と同様に `MoleculesModule` は認められない。
 
 - Dialog や Table はコンテキストを持たないように思えるが存在としては Organisms であるようにも感じる。ライブラリ側の Organisms というのも存在するのか？
   - もはや Molecules には「Atoms ではない」という意味だけを与えてしまえば Molecules で吸収できる。 Compounds（化合物）という語彙を与えてもいいかもしれない。
+

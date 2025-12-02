@@ -4,12 +4,12 @@ slug: 'angular-ssr-docker'
 icon: ''
 created_time: '2023-11-12T14:38:00.000Z'
 last_edited_time: '2023-12-30T09:59:00.000Z'
-category: 'Idea'
 tags:
   - 'Angular'
   - 'Docker'
 published: true
 locale: 'ja'
+category: 'Idea'
 notion_url: 'https://www.notion.so/Angular-SSR-on-Docker-ee8cd85b3e4f48ddb84db63d473cc5d7'
 features:
   katex: false
@@ -71,3 +71,4 @@ CMD node server/server.mjs
 ビルドもDockerに任せたい場合はマルチステージビルドを使ってもよいが、個人的にはおすすめしない。昨今いろいろなCLIツールは永続キャッシュによる高速化が図られていることが多く、Dockerでビルドさせるとその恩恵が得にくいケースが多い。工夫すればできないことはないだろうが、物事をシンプルに保つうえであらかじめ `ng build` しておいた結果をコピーするだけに留めておくほうがよかろうと思う。
 
 あとは適当にDockerイメージをビルドしてデプロイすれば終わりだ。いやあ簡単になったものだ。
+

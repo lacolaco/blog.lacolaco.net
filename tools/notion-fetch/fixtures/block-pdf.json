@@ -1,9 +1,0 @@
-{
-  "type": "pdf",
-  "pdf": {
-    "type": "external",
-    "external": {
-      "url": "https://website.domain/files/doc.pdf"
-    }
-  }
-}

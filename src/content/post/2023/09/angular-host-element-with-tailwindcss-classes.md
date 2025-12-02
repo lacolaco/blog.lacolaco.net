@@ -4,12 +4,12 @@ slug: 'angular-host-element-with-tailwindcss-classes'
 icon: ''
 created_time: '2023-09-06T03:58:00.000Z'
 last_edited_time: '2023-12-30T10:01:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'tailwindcss'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-host-element-with-tailwindcss-classes'
 notion_url: 'https://www.notion.so/Angular-TailwindCSS-4b13c6c076da42c381d181affb15f518'
 features:
@@ -23,7 +23,7 @@ Angular アプリケーションで TailwindCSS を使っているとき、コ�
 https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss
 
 <figure>
-  <img src="/images/angular-host-element-with-tailwindcss-classes/Untitled.png" alt="hostメタデータのclassプロパティはTailwindCSS Extensionにクラスを記述する場所だと認識されていない">
+  <img src="/images/angular-host-element-with-tailwindcss-classes/Untitled.b4659f6b809c1ee9.png" alt="hostメタデータのclassプロパティはTailwindCSS Extensionにクラスを記述する場所だと認識されていない">
   <figcaption>hostメタデータのclassプロパティはTailwindCSS Extensionにクラスを記述する場所だと認識されていない</figcaption>
 </figure>
 
@@ -39,15 +39,18 @@ https://github.com/tailwindlabs/tailwindcss/issues/7553
 
 ```json
 {
-  "tailwindCSS.experimental.classRegex": ["class\\:\\s*[\"'`]([^\"'`]*).*?[\"'`]"]
+    "tailwindCSS.experimental.classRegex": [
+        "class\\:\\s*[\"'`]([^\"'`]*).*?[\"'`]"
+    ]
 }
 ```
 
 結果、無事にコンポーネントの `host.class` プロパティでもTailwindCSSのクラス入力補完が使えるようになった。
 
 <figure>
-  <img src="/images/angular-host-element-with-tailwindcss-classes/Untitled.png" alt="classプロパティの中で TailwildCSS の入力補完が効くようになった">
+  <img src="/images/angular-host-element-with-tailwindcss-classes/Untitled.c68ee4d0697b108d.png" alt="classプロパティの中で TailwildCSS の入力補完が効くようになった">
   <figcaption>classプロパティの中で TailwildCSS の入力補完が効くようになった</figcaption>
 </figure>
 
 スタンドアローンコンポーネントで書くようになってから、テンプレートHTMLはインラインで書くことが増えたが、CSSもインラインで書くのにこの点だけがネックだったので、それが解決して嬉しい。
+

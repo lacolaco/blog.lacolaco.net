@@ -87,7 +87,7 @@ jobs:
       - name: Run tests
         run: pnpm test:tools
 
-  notion-fetch-dry-run:
+  notion-sync-dry-run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -103,8 +103,9 @@ jobs:
         run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run notion-fetch dry-run
-        run: pnpm exec tsx tools/notion-fetch/main.ts --dry-run
+      - name: Create .env file
+        run: touch .env
+      - name: Run notion-sync dry-run
+        run: pnpm notion-sync -- --dry-run
         env:
           NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}
-          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}

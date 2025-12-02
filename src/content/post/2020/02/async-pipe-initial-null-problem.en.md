@@ -4,12 +4,12 @@ slug: 'async-pipe-initial-null-problem.en'
 icon: ''
 created_time: '2020-02-19T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'RxJS'
 published: true
 locale: 'en'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Initial-Null-Problem-of-AsyncPipe-and-async-data-binding-618c54c986894e02a3ef4db0ac7ab530'
 features:
   katex: false
@@ -74,7 +74,7 @@ The next if statement is for when an Observable has changed from the one you are
 
 And the rest of the code is for returning the latest value `this._latestValue` from the subscribed Observable. The returned value will be the value actually used to render the template.
 
-What you can see here is that **AsyncPipe returns the cached \*\***`this._latestValue`\***\* when the\*\***`transform()`\***\*method is called**. This can also be seen in AsyncPipe’s `_subscribe()` and `this._updateLatestValue()` methods. When the value flows into the asynchronous data subscribed by the `_subscribe()` method, `markForCheck()` of `ChangeDetectorRef` is called in the callback. It causes the next `transform()` call.
+What you can see here is that **AsyncPipe returns the cached **`this._latestValue`** when the**`transform()`**method is called**. This can also be seen in AsyncPipe’s `_subscribe()` and `this._updateLatestValue()` methods. When the value flows into the asynchronous data subscribed by the `_subscribe()` method, `markForCheck()` of `ChangeDetectorRef` is called in the callback. It causes the next `transform()` call.
 
 ```
   private _subscribe(obj: Observable<any>|Promise<any>|EventEmitter<any>): void {
@@ -95,9 +95,9 @@ What you can see here is that **AsyncPipe returns the cached \*\***`this._latest
 In other words, AsyncPipe renders templates using the following mechanism.
 
 1. Pipe’s `transform()` is called in Change Detection
-2. Start subscribing to the passed Observable
-3. Return `this._latestValue` at the time `transform()`is called
-4. When Observable flows new data, update `this._latestValue` and trigger Change Detection (back to 1)
+1. Start subscribing to the passed Observable
+1. Return `this._latestValue` at the time `transform()`is called
+1. When Observable flows new data, update `this._latestValue` and trigger Change Detection (back to 1)
 
 `transform()` must return a synchronous value, because the template can only render synchronous values. It can only return a cached snapshot at the time `transform()` is called.
 
@@ -132,13 +132,13 @@ While this problem seems serious, it has been automatically avoided in many case
 In the following template, the value returned by `source$ | async` is evaluated by the NgIf directive, and if it is Truthy, it will be rendered, so if it is `null`, it will not go inside `*ngIf`.
 
 ```html
-<div *ngIf="source$ | async as state">{{ state.count }}</div>
+<div *ngIf="source$ | async as state">  {{ state.count }}</div>
 ```
 
 Similarly, in the following template, the value returned by `source$ | async` is evaluated by the NgFor directive and ignored if it is Falsey, so if it is `null`, it will not be inside `*ngFor`.
 
 ```html
-<div *ngFor="let item of source$ | async">{{ item }}</div>
+<div *ngFor="let item of source$ | async">  {{ item }}</div>
 ```
 
 Through null-safe directives such as `*ngIf` and `*ngFor`, the Initial Null Problem does not affect the application. The problem is otherwise, that is, passing values directly to the child component’s Input via AsyncPipe. In the following cases, the child component should define a `prop` Input type, but you have to consider the possibility of passing `null` to it. If `prop` is a getter or setter, you can easily imagine a runtime error when trying to access the value.
@@ -160,14 +160,14 @@ So I tried using a directive. I think an approach that accepts an input and a te
 So I implemented the `*rxSubscribe` directive. The sample that actually works is [here](https://stackblitz.com/edit/github-zg4qep). It subscribe an Observable with a structural directive as follows:
 
 ```html
-<div *rxSubscribe="source$; let state">{{ state.count }}</div>
+<div *rxSubscribe="source$; let state">  {{ state.count }}</div>
 ```
 
 The directive is implemented as follows. What this directive does is
 
 1. Subscribe an Observable received by `rxSubscribe` Input.
-2. When the Observable value flows, embed (render) the template for the first time
-3. When the value after the second time flows, update the context and call `markForCheck()`
+1. When the Observable value flows, embed (render) the template for the first time
+1. When the value after the second time flows, update the context and call `markForCheck()`
 
 https://github.com/lacolaco/ngivy-rx-subscribe-directive/blob/master/src/app/rx-subscribe.directive.ts
 
@@ -205,18 +205,17 @@ By the way, the type of `state` in `let state`is inferred from the type of `sour
 
 ```html
 <div *rxSubscribe="source$; let state">
-  {{ state.foo }}
-  <!-- compile error: state doesn't have `foo` -->
+  {{ state.foo }}  <!-- compile error: state doesn't have `foo` -->
 </div>
 ```
 
 AsyncPipe could always only infer `or null` due to the Initial Null Problem, but the structure directive approach can infer the context type exactly from `Observable<T>`.
 
-I’ve published this `*rxSubscribe` directive as the npm package **`@soundng/rx-subscribe`**.
+I’ve published this `*rxSubscribe` directive as the npm package `@soundng/rx-subscribe`.
 
-- GitHub [https://github.com/soundng/rx-subscribe](https://github.com/soundng/rx-subscribe)
-- NPM [https://www.npmjs.com/package/@soundng/rx-subscribe](https://www.npmjs.com/package/@soundng/rx-subscribe)
-- Demo [https://stackblitz.com/edit/github-zg4qep-kq9pyw?file=src/app/app.component.html](https://stackblitz.com/edit/github-zg4qep-kq9pyw?file=src%2Fapp%2Fapp.component.html)
+- GitHub [https://github.com/soundng/rx-subscribe](https://github.com/soundng/rx-subscribe) 
+- NPM [https://www.npmjs.com/package/@soundng/rx-subscribe](https://www.npmjs.com/package/@soundng/rx-subscribe) 
+- Demo [https://stackblitz.com/edit/github-zg4qep-kq9pyw?file=src/app/app.component.html](https://stackblitz.com/edit/github-zg4qep-kq9pyw?file=src%2Fapp%2Fapp.component.html) 
 
 ## Conclusion
 
@@ -225,3 +224,4 @@ I’ve published this `*rxSubscribe` directive as the npm package **`@soundng/rx
 - Pipe has limitations in handling asynchronous data
 - Structural directive approach can solve AsyncPipe problem
 - Feedback welcome to `@soundng/rx-subscribe`
+

@@ -4,13 +4,13 @@ slug: 'angular-v15-optin-browserslist'
 icon: ''
 created_time: '2022-09-15T00:09:00.000Z'
 last_edited_time: '2022-09-15T00:00:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'browserslist'
   - 'commit note'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-browserslist-v15-5d1a14f0328a4165a2e580e75aefe9ec'
 features:
   katex: false
@@ -27,3 +27,4 @@ Angular CLIはフレームワークがデフォルトでサポートするブラ
 `ng update` では、プロジェクトの `.browserslistrc` ファイルの内容がデフォルトのままであれば削除され、変更が加えられていればそのまま残される。
 
 Browserslistによるサポート対象ブラウザの拡張がなくなったわけではなく、アプリケーションのテンプレートから削除され、開発者がオプトインで導入するものになったということだ。
+

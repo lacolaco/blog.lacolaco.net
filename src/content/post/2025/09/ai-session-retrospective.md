@@ -4,11 +4,11 @@ slug: 'ai-session-retrospective'
 icon: ''
 created_time: '2025-09-29T15:03:00.000Z'
 last_edited_time: '2025-09-29T15:03:00.000Z'
-category: 'Tech'
 tags:
   - 'AI'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/AI-27d3521b014a8069a238d1bf5090621d'
 features:
   katex: false
@@ -29,3 +29,4 @@ https://scrapbox.io/lacolaco/.claude%2Fcommands%2Fsession-insights.md
 このふりかえりにおける観点には、ユーザーの要求を効率よく達成できたかどうかだけでなく、ユーザー満足度も含まれている。チャットのやり取りからユーザーの感情を分析し、どうすれば満足度を高められるかを考えさせている。これによってちゃんとAIエージェントに対して怒りを表明することにインセンティブが生まれる。要はこちらから仕事ぶりに対して細かなフィードバックを返してあげようということである。フィードバックなくして改善なし。
 
 生まれてしまうイライラはちゃんと発散し、健やかに人間らしくコーディングを楽しもう。
+

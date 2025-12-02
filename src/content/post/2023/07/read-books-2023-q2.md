@@ -4,12 +4,12 @@ slug: 'read-books-2023-q2'
 icon: ''
 created_time: '2023-07-27T09:52:00.000Z'
 last_edited_time: '2023-12-30T10:02:00.000Z'
-category: 'Diary'
 tags:
   - '日記'
   - '読書'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/2023-Q2-501bc9945fe443608a6dc49898bfdb91'
 features:
   katex: false
@@ -19,7 +19,7 @@ features:
 
 2023年 4月〜6月に読んだ本・読み始めた本
 
-![image](/images/read-books-2023-q2/Untitled.png)
+![image](/images/read-books-2023-q2/Untitled.4b7ff8b4e577a70b.png)
 
 ### 読んだ
 
@@ -31,14 +31,14 @@ features:
   - 『対話をデザインする』の著者である細川英雄さんの本を読んでみた
   - 『対話をデザインする』と言っていることはそんなに変わらないが、この本のほうが読みにくく感じた。より口語的な感じがするというか、接続詞や文章の展開に違和感がたびたびあった。
 - フェリエン・ヘルマンス『プログラマー脳』
-
   - 今のところ今年一番読んでよかった本。書名にヒキがなくてもったいない。
 
   https://twitter.com/laco2net/status/1674581593254690817
 
 ## これから読む本
 
-![image](/images/read-books-2023-q2/Untitled.png)
+![image](/images/read-books-2023-q2/Untitled.a9f8c44fa6a8ab5d.png)
 
 - もう7月も終わるが、『パイドン』は読み終わった。あと『テアイテトス』と『ゴルギアス』を読み終われば光文社古典新訳文庫のプラトンシリーズを完走できる。
 - 哲学書以外では、『はじめてのUIデザイン』が読みかけなのを読み終わり、そのあとは今年出た本に追いついておきたい。
+

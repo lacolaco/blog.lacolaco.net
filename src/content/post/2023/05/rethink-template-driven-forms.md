@@ -4,12 +4,12 @@ slug: 'rethink-template-driven-forms'
 icon: '🔍'
 created_time: '2023-05-07T00:41:00.000Z'
 last_edited_time: '2023-12-30T10:04:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Forms'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/rethink-template-driven-forms'
 notion_url: 'https://www.notion.so/Angular-4e8bcf7e4c2c4d31806bff592edf4232'
 features:
@@ -60,16 +60,18 @@ Angular のフォームAPIにはテンプレート駆動フォームとリアク
 
 v16.0 時点ではまだ `[(ngModel)]="signal"` という記述はできないが、Signals の RFC で提案されていたように、これも時間の問題である。現状でも getter と setter を分離すれば問題なく組み込むことができる。
 
-```ts
+```typescript
 @Component({
   selector: 'my-app',
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
     <h1>Signals with template-driven forms</h1>
-
+    
     <form #form="ngForm" (ngSubmit)="onSubmit()">
-      <input name="message" [ngModel]="message()" (ngModelChange)="message.set($event)" />
+      <input name="message" 
+        [ngModel]="message()" 
+        (ngModelChange)="message.set($event)" >
 
       <button [disabled]="!form.valid">submit</button>
     </form>
@@ -117,3 +119,4 @@ https://stackblitz.com/edit/angular-zr2659?ctl=1&embed=1&file=src/main.ts
   - とはいえ Signals には RxJS との相互運用 API もあるため、大した違いではなさそうだ。
 
 このような状況でリアクティブフォームを使うなら、これまでとは違う惰性ではない理由付けが必要だ。軽い用途にはテンプレート駆動、プロダクション用途ならリアクティブフォームという安直な評価はもはやできそうにない。それぞれのアプリケーションにとって、Signalsを得てもなおリアクティブフォームを選択することで何が得られるのかをもう一度考えるべきだろう。
+

@@ -4,11 +4,11 @@ slug: 'access-to-global-variables-in-angular-2'
 icon: ''
 created_time: '2016-10-04T01:24:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Access-to-global-variables-in-Angular-2-5fa5bd2c24b5494a984cd234f8fab462'
 features:
   katex: false
@@ -34,40 +34,45 @@ Prepare a global variable `foo` as example.
 
 ```html
 <body>
-  <my-app> loading... </my-app>
+  <my-app>
+    loading...
+  </my-app>
   <script>
     window.DATA = {
-      foo: 'bar',
+      foo: "bar"
     };
   </script>
 </body>
+
 ```
 
 ## Declare global type
 
 First, we should declare our global type as an interface. In this case, global type has only `foo` string field.
 
-```ts
+```typescript
 export interface MyGlobal {
   foo: string;
 }
+
 ```
 
 ## Create `GlobalRef` class
 
 This is a hero of this story. `GlobalRef` is an abstract class to access to the global object. It has only one `nativeGlobal` getter. (consistent with `ElementRef#nativeElement`.)
 
-```ts
+```typescript
 export abstract class GlobalRef {
   abstract get nativeGlobal(): MyGlobal;
 }
+
 ```
 
 ## Create platform-specific classes
 
 `GlobalRef` class is just a placeholder. Let’s make platform-specific classes by extending `GlobalRef`.
 
-```ts
+```typescript
 export class BrowserGlobalRef extends GlobalRef {
   get nativeGlobal(): MyGlobal {
     return window as MyGlobal;
@@ -78,55 +83,58 @@ export class NodeGlobalRef extends GlobalRef {
     return global as MyGlobal;
   }
 }
+
 ```
 
 ## Provide `GlobalRef`
 
 We must provide the classes. Let’ create `SharedModule` and define `SharedModule.forBrowser()` and `SharedModule.forNode()`.
 
-```ts
-import { NgModule, ModuleWithProviders } from '@angular/core';
-import { GlobalRef, BrowserGlobalRef, NodeGlobalRef } from './global-ref';
+```typescript
+import { NgModule, ModuleWithProviders } from "@angular/core";
+import { GlobalRef, BrowserGlobalRef, NodeGlobalRef } from "./global-ref";
 @NgModule({})
 export class SharedModule {
   static forBrowser(): ModuleWithProviders {
     return {
       ngModule: SharedModule,
-      providers: [{ provide: GlobalRef, useClass: BrowserGlobalRef }],
+      providers: [{ provide: GlobalRef, useClass: BrowserGlobalRef }]
     };
   }
 
   static forNode(): ModuleWithProviders {
     return {
       ngModule: SharedModule,
-      providers: [{ provide: GlobalRef, useClass: NodeGlobalRef }],
+      providers: [{ provide: GlobalRef, useClass: NodeGlobalRef }]
     };
   }
 }
+
 ```
 
 And use them in `BrowserAppModule` and `NodeAppModule`.
 
-```ts
+```typescript
 @NgModule({
   imports: [BrowserModule, SharedModule.forBrowser()],
   declarations: [App],
-  bootstrap: [App],
+  bootstrap: [App]
 })
 export class BrowserAppModule {}
 @NgModule({
   imports: [BrowserModule, SharedModule.forNode()],
   declarations: [App],
-  bootstrap: [App],
+  bootstrap: [App]
 })
 export class NodeAppModule {}
+
 ```
 
 ## Bootstrap
 
 Bootstrapping must be separated for each platform. Following is for only browser.
 
-```ts
+```typescript
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {AppBrowserModule} from './app';
 platformBrowserDynamic().bootstrapModule(AppBrowserModule)
@@ -159,3 +167,4 @@ Plunker: [http://plnkr.co/edit/ceuEBlVpWhNNYZvMOqbO?p=preview](http://plnkr.co/e
 - Use dependency injection and NgModule
 
 Note: I never recommend you to use global variables. This is a small tip to tackle the real world… Good luck!
+

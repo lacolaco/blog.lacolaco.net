@@ -4,13 +4,13 @@ slug: 'angular-unit-testing-runner-v20'
 icon: ''
 created_time: '2025-06-25T09:56:00.000Z'
 last_edited_time: '2025-06-25T10:02:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Angular CLI'
   - 'Testing'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-unit-testing-runner-v20'
 notion_url: 'https://www.notion.so/Angular-CLI-Unit-Testing-Runner-21d3521b014a80e0a40bcb6943377b34'
 features:
@@ -134,7 +134,7 @@ npx playwright install
 ```
 
 <figure>
-  <img src="/images/angular-unit-testing-runner-v20/CleanShot_2025-06-25_at_18.26.222x.png" alt="ng testの実行中画面（Vitest）">
+  <img src="/images/angular-unit-testing-runner-v20/CleanShot_2025-06-25_at_18.26.222x.39a2ac851d0220db.png" alt="ng testの実行中画面（Vitest）">
   <figcaption>ng testの実行中画面（Vitest）</figcaption>
 </figure>
 
@@ -155,3 +155,4 @@ Angular v20では、これまでの`@angular-devkit/build-angular:karma` に置�
 また、実験的機能 `@angular/build:unit-test` ビルダーにより、KarmaからVitestへの移行が段階的に進められるようになりつつある。第一段階ではKarma/Jasmine構成のままでビルダーだけを切り替える。第二段階では設定をほとんど変えないままにテストランナーを切り替えることができる。
 
 ユニットテスト実行環境がプロジェクト作成直後からデフォルトで整うのがAngular CLIの大きな利点のひとつだ。今後のアップデートの恩恵を受けるため、サードパーティに依存してJestやVitestを利用しているプロジェクトでも、様子を見ながら本家に帰ってくる準備を始めてもいいだろう。
+

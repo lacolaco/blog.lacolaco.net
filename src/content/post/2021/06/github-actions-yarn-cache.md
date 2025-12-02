@@ -4,11 +4,11 @@ slug: 'github-actions-yarn-cache'
 icon: ''
 created_time: '2021-06-01T00:00:00.000Z'
 last_edited_time: '2021-07-03T00:00:00.000Z'
-category: 'Tech'
 tags:
   - 'GitHub Actions'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/GitHub-Actions-Yarn-387ce9b4867047719be1dbcc920250f6'
 features:
   katex: false
@@ -126,3 +126,4 @@ jobs:
 ```
 
 ちなみに `yarn install` 後の `node_modules` はキャッシュしないようにしている。こちらのキャッシュは `yarn.lock` に変化があったときに破棄しなければならないが、依存パッケージのアップデートに追従するたびに破棄されるため Yarn キャッシュと比べてキャッシュヒット率が極めて低い。そのうえ `node_modules`はかなりのサイズになるためキャッシュの保存、復元の時間もそれなりに掛かる。うまく管理できれば高速化するのは間違いないが、キャッシュ事故のリスクを含めコストパフォーマンスに見合っているかを検討した上でキャッシュしたほうがいいだろう。私は基本的にキャッシュしないようにしている。
+

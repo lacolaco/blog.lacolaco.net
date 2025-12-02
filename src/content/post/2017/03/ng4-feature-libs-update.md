@@ -4,11 +4,11 @@ slug: 'ng4-feature-libs-update'
 icon: ''
 created_time: '2017-03-13T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-4-0-router-http-animations-aa3078a5d0bb4538aa415008ca903a52'
 features:
   katex: false
@@ -101,3 +101,4 @@ transition(fromVoid, ...)
 - [formsモジュールの更新について](/post/ng4-feature-forms-update/)
 - [core/commonモジュールの変更について](/post/ng4-feature-core-update/)
 - [router/http/animationsモジュールの変更について](/post/ng4-feature-libs-update/)
+

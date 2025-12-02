@@ -4,13 +4,13 @@ slug: 'why-angular-has-not-static-site-generators'
 icon: ''
 created_time: '2019-01-13T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'SSG'
   - 'Angular Elements'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Elements-Angular-dd51c92026ab47ba898223ae64a2a1f0'
 features:
   katex: false
@@ -35,7 +35,7 @@ features:
 Angular CLI を使用して､`heroes`という名前の新しいコンポーネントを生成します。
 
 ```html
-<code-example language="sh" class="code-shell"> ng generate component heroes</code-example>
+<code-example language="sh" class="code-shell">  ng generate component heroes</code-example>
 ```
 
 <figure>
@@ -56,3 +56,4 @@ Angular Elements のアプローチの概念実証として angular.io が作ら
 Angular Elements + Ivy によって、Angular Elements の開発体験とユーザ体験を高めることが 2019 年の主要なテーマのひとつです。 Angular は単なる SPA 開発フレームワークではなく、あらゆる Web のユースケースに対応できる開発プラットフォームとしてこれから進化していくことでしょう。
 
 [追記] Nuxt.js は静的サイトジェネレータ以外の用途もあるという指摘で、冒頭の部分で誤解を生みそうな点を教えてもらったので、修正しました。
+

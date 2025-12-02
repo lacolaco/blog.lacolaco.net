@@ -4,13 +4,13 @@ slug: 'angular-cva-signals'
 icon: ''
 created_time: '2024-06-13T14:44:00.000Z'
 last_edited_time: '2024-06-14T01:04:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Signals'
   - 'Forms'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Model-Inputs-3a28e81c63c84670af97d9e6218e2db8'
 features:
   katex: false
@@ -20,11 +20,11 @@ features:
 
 Angular v17.2で実装されたModel Inputsを使ってカスタムフォームコントロールを実装してみよう。SignalベースのAPIが揃ってきたことで、`ControlValueAccessor`の実装もかなり簡潔になった。
 
-## `TimeInputComponent`
+## `TimeInputComponent` 
 
 次のような`Time`型を読み書きする`ControlValueAccessor`を題材にする。
 
-```ts
+```typescript
 export type Time = {
   hour: number;
   minute: number;
@@ -33,7 +33,7 @@ export type Time = {
 
 今回は素朴にselect要素で時間と分を選択するようなコンポーネントを考える。UIだけ実装すると次のようになる。
 
-```ts
+```typescript
 @Component({
   selector: 'app-time-input',
   standalone: true,
@@ -41,38 +41,35 @@ export type Time = {
   template: `
     <div>
       <select>
-        @for (i of hourOptions; track i) {
-          <option [value]="i">{{ i | number: '2.0' }}</option>
+        @for(i of hourOptions; track i) {
+          <option [value]="i">{{ i | number : '2.0' }}</option>
         }
       </select>
       <span>:</span>
       <select>
-        @for (i of minuteOptions; track i) {
-          <option [value]="i">{{ i | number: '2.0' }}</option>
+        @for(i of minuteOptions; track i) {
+          <option [value]="i">{{ i | number : '2.0' }}</option>
         }
       </select>
     </div>
   `,
-  styles: `
-    :host {
-      display: inline-block;
-    }
-  `,
+  styles: `:host { display: inline-block; }`,
 })
 export class TimeInputComponent {
   readonly hourOptions = getRange(0, 23);
   readonly minuteOptions = getRange(0, 59);
 }
+
 ```
 
 <figure>
-  <img src="/images/angular-cva-signals/Untitled.png" alt="時と分をセレクトボックスで選択できる素朴な時刻入力コンポーネント">
+  <img src="/images/angular-cva-signals/Untitled.3b3f1a35c5badee2.png" alt="時と分をセレクトボックスで選択できる素朴な時刻入力コンポーネント">
   <figcaption>時と分をセレクトボックスで選択できる素朴な時刻入力コンポーネント</figcaption>
 </figure>
 
 これをAngular Formsと連携できるカスタムフォームコントロールとして実装しよう。まずは `value` という`Time`型のModel Inputを作成する。これを次のように`NgModel`を使ってselectと紐付ける。
 
-```ts
+```typescript
 @Component({
   selector: 'app-time-input',
   standalone: true,
@@ -80,18 +77,18 @@ export class TimeInputComponent {
   template: `
     <div>
       <select [ngModel]="value().hour" (ngModelChange)="updateHour($event)">
-        @for (i of hourOptions; track i) {
-          <option [value]="i">{{ i | number: '2.0' }}</option>
-        }
+      @for(i of hourOptions; track i) {
+        <option [value]="i">{{ i | number : '2.0' }}</option>
+      }
       </select>
       <span>:</span>
       <select [ngModel]="value().minute" (ngModelChange)="updateMinute($event)">
-        @for (i of minuteOptions; track i) {
-          <option [value]="i">{{ i | number: '2.0' }}</option>
-        }
+      @for(i of minuteOptions; track i) {
+        <option [value]="i">{{ i | number : '2.0' }}</option>
+      }
       </select>
     </div>
-  `,
+  `
 })
 export class TimeInputComponent {
   readonly value = model<Time>({ hour: 0, minute: 0 });
@@ -113,7 +110,7 @@ export class TimeInputComponent {
 
 `TImeInputComponent` クラスで`ControlValueAccessor` インターフェースを実装すると次のようになる。Angular Formsからカスタムフォームコントロールであることが識別できるように`NG_VALUE_ACCESSOR` として自身を提供することを忘れないようにする。
 
-```ts
+```typescript
 @Component({
   selector: 'app-time-input',
   standalone: true,
@@ -130,7 +127,7 @@ export class TimeInputComponent {
 export class TimeInputComponent implements ControlValueAccessor {
   readonly value = model<Time>({ hour: 0, minute: 0 });
   #onChangeListener = (_: Time) => {};
-
+  
   constructor() {
     // Emit value change to form control
     effect(() => {
@@ -156,7 +153,7 @@ export class TimeInputComponent implements ControlValueAccessor {
 
 Signalベースになったことでのポイントは、フォームモデルへ値の変更を伝えるためのコールバック関数 `#onChangeListener` の呼び出しが、`value` SignalのEffectを書くだけで完結している点だ。どのような経緯であれ`value` に変更があればフォームモデルに同期できるため、同期漏れの心配がない。また、コンポーネントが破棄されたあとのメモリリークの心配もない。
 
-```ts
+```typescript
   #onChangeListener = (_: Time) => {};
 
   constructor() {
@@ -172,13 +169,14 @@ Signalベースになったことでのポイントは、フォームモデル�
 
 同期漏れの心配はないが、逆に同期しすぎることはありえる。特に今回の例では`Time` 型はオブジェクトなので、`value` が更新されるたびに参照が変わる。等値ではないことになるため、実際の値が変わっていなくても`value` がセットされるたびにフォームモデルへ通知されてしまう。
 
-> [!NOTE]
+> [!TIP]
 > `model()` は `signal()` や `computed()` と違い、`equal` オプションを持たないため、等値判定を変更できない。これは `input()` も同様である。オプションの追加を求めるイシューがあるため、賛同する人がいればイシューに対してさらなるVoteをお願いしたい。
+> 
 > [https://github.com/angular/angular/issues/54111](https://github.com/angular/angular/issues/54111)
 
 この問題を解決するために、新たに `#changedValue` Signalを作成する。これは`value` Signalから派生し、`Time`型のための等値判定関数を与えていることで、実際の値が変更したときだけ通知されるSignalになる。
 
-```ts
+```typescript
 // 等値判定関数
 export function isEqualTime(a: Time, b: Time) {
   return a.hour === b.hour && a.minute === b.minute;
@@ -201,3 +199,4 @@ export class TimeInputComponent implements ControlValueAccessor {
 動作するサンプルは以下。現実のユースケースではもう少し複雑なコンポーネントになるが、基本的な構造はこの形から始めて拡張していけるはずだ。また、Angular本体のほうでもよりSignal APIとの親和性を高めるためのフォームAPIの拡張を計画しているため、それが来るともっとボイラープレートを減らせるかもしれない。それに備える意味でも今からカスタムコントロールをSignalベースに寄せていくのは無駄にならないだろう。
 
 https://stackblitz.com/edit/angular-91xmwg?ctl=1&embed=1&file=src/main.ts
+

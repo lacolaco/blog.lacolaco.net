@@ -4,12 +4,12 @@ slug: 'bloc-design-pattern-with-angular'
 icon: ''
 created_time: '2018-05-22T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - '設計'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Flutter-BLoC-Angular-6bbc2bc05d0f4e2eadfb010e6d45fa4b'
 features:
   katex: false
@@ -28,9 +28,9 @@ BLoC とは、**B**usiness **Lo**gic **C**omponent の略である。 BLoC を�
 BLoC は複数の環境向けにアプリケーションを開発するときのコードシェアカバレッジを高めるための、リファクタリング指針のようなものだ。 具体的には、以下の指針を与える。
 
 1. BLoC の入力・出力インターフェースは**すべて Stream/Sink**である
-2. BLoC の依存は必ず**注入可能**で、**環境に依存しない**
-3. BLoC 内に環境ごとの条件分岐は持たない
-4. 以上のルールに従う限り実装は自由である
+1. BLoC の依存は必ず**注入可能**で、**環境に依存しない**
+1. BLoC 内に環境ごとの条件分岐は持たない
+1. 以上のルールに従う限り実装は自由である
 
 詳しくは BLoC パターンの初出であるこのセッションを見るとよい。
 
@@ -46,13 +46,18 @@ Angular において BLoC パターンの恩恵がどれほどあるのかは議
 
 [https://stackblitz.com/edit/angular-bloc-example-1?file=src%2Fapp%2Fapp.component.ts](https://stackblitz.com/edit/angular-bloc-example-1?file=src%2Fapp%2Fapp.component.ts)
 
-```ts
+```typescript
 @Component({
-  selector: 'my-app',
+  selector: "my-app",
   template: `
     <div cdkTrapFocus [cdkTrapFocusAutoCapture]="false">
       <mat-form-field appearance="outline" style="width: 80%;">
-        <input matInput placeholder="Search for..." ngModel (ngModelChange)="onInputChange($event)" />
+        <input
+          matInput
+          placeholder="Search for..."
+          ngModel
+          (ngModelChange)="onInputChange($event)"
+        />
       </mat-form-field>
     </div>
 
@@ -63,14 +68,16 @@ Angular において BLoC パターンの恩恵がどれほどあるのかは議
         {{ result }}
       </li>
     </ul>
-  `,
+  `
 })
 export class AppComponent {
-  private query = '';
+  private query = "";
   results: string[] = [];
 
   get preamble() {
-    return this.query == null || this.query.length == 0 ? '' : `Results for ${this.query}`;
+    return this.query == null || this.query.length == 0
+      ? ""
+      : `Results for ${this.query}`;
   }
 
   constructor(private repository: SearchRepository) {}
@@ -93,13 +100,15 @@ UI コンポーネントが API の呼び出しや状態の保持などさまざ
 
 BLoC はポータビリティを考えると、ほとんどの場合は単なるクラスとして宣言される。 ここでは`SearchBloc`クラスを作成する。 もともと`AppComponent`が持っていたビジネスロジックをすべて`SearchBloc`に移動すると次のようになる。
 
-```ts
+```typescript
 class SearchBloc {
-  private query = '';
+  private query = "";
   results: string[] = [];
 
   get preamble() {
-    return this.query == null || this.query.length == 0 ? '' : `Results for ${this.query}`;
+    return this.query == null || this.query.length == 0
+      ? ""
+      : `Results for ${this.query}`;
   }
 
   constructor(private repository: SearchRepository) {}
@@ -114,13 +123,18 @@ class SearchBloc {
 
 そして`AppComponent`は`SearchBloc`に依存して次のようになる。
 
-```ts
+```typescript
 @Component({
-  selector: 'my-app',
+  selector: "my-app",
   template: `
     <div cdkTrapFocus [cdkTrapFocusAutoCapture]="false">
       <mat-form-field appearance="outline" style="width: 80%;">
-        <input matInput placeholder="Search for..." ngModel (ngModelChange)="bloc.executeSearch($event)" />
+        <input
+          matInput
+          placeholder="Search for..."
+          ngModel
+          (ngModelChange)="bloc.executeSearch($event)"
+        />
       </mat-form-field>
     </div>
 
@@ -131,7 +145,7 @@ class SearchBloc {
         {{ result }}
       </li>
     </ul>
-  `,
+  `
 })
 export class AppComponent {
   bloc: SearchBloc;
@@ -154,7 +168,7 @@ Angular の場合は RxJS が BLoC の実装を助けてくれる。
 
 Dart の Stream を`Observable`、Sink を`Observer`に置き換えると、`SearchBloc`は次のようになる。
 
-```ts
+```typescript
 class SearchBloc {
   private _results$: Observable<string[]>;
   get results$(): Observable<string[]> {
@@ -166,14 +180,18 @@ class SearchBloc {
     return this._preamble$;
   }
 
-  private _query$ = new BehaviorSubject<string>('');
+  private _query$ = new BehaviorSubject<string>("");
   get query(): Observer<string> {
     return this._query$;
   }
 
   constructor(private repository: SearchRepository) {
-    this._results$ = this._query$.pipe(switchMap((query) => observableFrom(this.repository.search(query))));
-    this._preamble$ = this.results$.pipe(withLatestFrom(this._query$, (_, q) => (q ? `Results for ${q}` : '')));
+    this._results$ = this._query$.pipe(
+      switchMap(query => observableFrom(this.repository.search(query)))
+    );
+    this._preamble$ = this.results$.pipe(
+      withLatestFrom(this._query$, (_, q) => (q ? `Results for ${q}` : ""))
+    );
   }
 
   dispose() {
@@ -188,13 +206,18 @@ class SearchBloc {
 
 これを`AppComponent`から使うと次のようになる。テンプレート中で`async`パイプを使い、Observable の変更に反応してビューの再描画が実行されるようになる。
 
-```ts
+```typescript
 @Component({
-  selector: 'my-app',
+  selector: "my-app",
   template: `
     <div cdkTrapFocus [cdkTrapFocusAutoCapture]="false">
       <mat-form-field appearance="outline" style="width: 80%;">
-        <input matInput placeholder="Search for..." ngModel (ngModelChange)="bloc.query.next($event)" />
+        <input
+          matInput
+          placeholder="Search for..."
+          ngModel
+          (ngModelChange)="bloc.query.next($event)"
+        />
       </mat-form-field>
     </div>
 
@@ -205,7 +228,7 @@ class SearchBloc {
         {{ result }}
       </li>
     </ul>
-  `,
+  `
 })
 export class AppComponent {
   bloc: SearchBloc;
@@ -238,3 +261,4 @@ export class AppComponent {
 - Flutter/AngularDart でのコードシェアリングのために生まれたが、Dart だけのものではない
 - Angular では RxJS の Observable を使って実装できる。
 - Angular だけの単一プラットフォームであっても、ビジネスロジックのテスタビリティを高めることができる。
+

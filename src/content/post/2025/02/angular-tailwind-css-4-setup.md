@@ -4,12 +4,12 @@ slug: 'angular-tailwind-css-4-setup'
 icon: ''
 created_time: '2025-02-02T05:54:00.000Z'
 last_edited_time: '2025-02-02T06:49:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'tailwindcss'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-tailwind-css-4-setup'
 notion_url: 'https://www.notion.so/Angular-Tailwind-CSS-4-0-18e3521b014a80d9af62f945ecfa18f3'
 features:
@@ -45,7 +45,7 @@ https://v3.tailwindcss.com/docs/guides/angular
 https://tailwindcss.com/docs/upgrade-guide#using-a-javascript-config-file
 
 ```css
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @config "../tailwind.config.js";
 ```
@@ -55,3 +55,4 @@ https://tailwindcss.com/docs/upgrade-guide#using-a-javascript-config-file
 ## まとめ
 
 Angular プロジェクトでのTailwind CSS 4.0の組み込みは `.postcssrc.json`を使用したPostCSS経由のセットアップがシンプルで推奨される方法だ。既存プロジェクトでは@configディレクティブを使用してJavaScript設定ファイルからの段階的な移行が可能で、Angular CLIとの統合に依存せず、将来的なアップグレードも容易になる。
+

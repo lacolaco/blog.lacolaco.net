@@ -4,12 +4,12 @@ slug: 'webbundles-with-angular'
 icon: ''
 created_time: '2019-12-25T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'webpackaging'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Web-Bundles-71bd2be8bc254bf692ae57848af085ef'
 features:
   katex: false
@@ -44,7 +44,7 @@ $ ng run <project name>:gen-bundle
 ngx-web-bundleがやっているのは２つのことです。
 
 1. `ng add` されたときに `angular.json` を更新し、 `gen-bundle`コマンドを定義する
-2. `gen-bundle`コマンドが実行されたときに処理する
+1. `gen-bundle`コマンドが実行されたときに処理する
 
 ### ng-add時の動き
 
@@ -55,7 +55,7 @@ https://github.com/lacolaco/ngx-web-bundles/blob/master/schematics/ng-add/index.
 やっていることは次の2つです。
 
 1. 対象とするプロジェクトを特定する
-2. プロジェクトの `architects` に `gen-bundle`を追加する
+1. プロジェクトの `architects` に `gen-bundle`を追加する
 
 ### `gen-bundle`時の動き
 
@@ -66,8 +66,8 @@ https://github.com/lacolaco/ngx-web-bundles/blob/master/index.ts#L51
 やっていることは次の3つです。
 
 1. `executeBrowserBuilder` を使って、アプリケーションのビルドをおこなう（`ng build`と同じ処理を実行する）
-2. ビルド後の生成物を `wbn` パッケージを使ってバンドル化する
-3. アプリケーションの生成物を同じ場所にバンドルを出力する
+1. ビルド後の生成物を `wbn` パッケージを使ってバンドル化する
+1. アプリケーションの生成物を同じ場所にバンドルを出力する
 
 バンドル化の処理は次の関数に記述されています。特別に配慮が必要なのはindex.htmlだけで、それ以外はファイルごとに同じ処理をしています。
 
@@ -81,3 +81,4 @@ https://github.com/lacolaco/ngx-web-bundles/blob/master/index.ts#L24
 - 自作のスクリプトを`ng add`や`ng run`に対応させるのは意外に簡単です
   - デバッグはちょっと面倒です
 - Web Bundlesについては web.dev/web-bundles/ を参照してください
+

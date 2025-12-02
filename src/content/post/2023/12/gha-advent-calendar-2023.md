@@ -4,11 +4,11 @@ slug: 'gha-advent-calendar-2023'
 icon: ''
 created_time: '2023-12-20T15:00:00.000Z'
 last_edited_time: '2023-12-30T09:58:00.000Z'
-category: 'Tech'
 tags:
   - 'GitHub Actions'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/GitHub-Actions-Job-Outputs-b28b8ef4ebdb495fa2b51c0e89c9cded'
 features:
   katex: false
@@ -74,7 +74,7 @@ jobs:
         uses: ... # 内部で ready=true|false を出力する
   release:
     runs-on: ubuntu-latest
-    needs:
+    needs: 
       - check
     if: ${{ needs.check.outputs.release_ready }} # 常に真になる
     steps:
@@ -87,7 +87,7 @@ jobs:
 
 [https://github.com/actions/toolkit/blob/main/packages/core/src/core.ts#L185-L200](https://github.com/actions/toolkit/blob/main/packages/core/src/core.ts#L185-L200)
 
-```ts
+```typescript
 /**
  * Sets the value of an output.
  *
@@ -98,7 +98,7 @@ jobs:
 export function setOutput(name: string, value: any): void {
 ```
 
-ふたつめの理由は、上述の例でいうところの `release_ready` が本当に `false` になっているのかを確かめるためにログを入れての調査は早くに始めていたのですが、 `echo ${{steps.release_check.outputs.ready}}` では `false` と `"false"` の区別がつかないことに気づくのが遅かったためです。ログには `false` と出力されるのに `if` 条件が真になってしまうのが謎でかなり悩みました。
+ふたつめの理由は、上述の例でいうところの `release_ready` が本当に `false` になっているのかを確かめるためにログを入れての調査は早くに始めていたのですが、 `echo ${{steps.release_check.outputs.ready}}`  では `false` と `"false"` の区別がつかないことに気づくのが遅かったためです。ログには `false` と出力されるのに `if` 条件が真になってしまうのが謎でかなり悩みました。
 
 ## 文字列以外の出力には `fromJSON()` を
 
@@ -120,7 +120,7 @@ jobs:
         uses: ... # 内部で ready=true|false を出力する
   release:
     runs-on: ubuntu-latest
-    needs:
+    needs: 
       - check
     if: fromJSON(needs.check.outputs.release_ready)
     steps:
@@ -128,3 +128,4 @@ jobs:
 ```
 
 これにて一件落着、めでたしめでたしということで、今年もたくさんGitHub Actionsのお世話になりました。来年もたくさんお世話になると思います。みなさんも楽しいGitHub Actionsライフを！
+

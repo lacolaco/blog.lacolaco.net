@@ -4,7 +4,6 @@ slug: 'angular-signals-component-design-patterns'
 icon: ''
 created_time: '2023-06-03T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:04:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - '状態管理'
@@ -12,6 +11,7 @@ tags:
   - '設計'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-signals-component-design-patterns'
 notion_url: 'https://www.notion.so/Signal-Angular-c0a2a3172b8f47ef821d9ef5e602c5f9'
 features:
@@ -41,7 +41,7 @@ https://blog.lacolaco.net/2022/05/angular-state-management-patterns/
 <p>Count: {{ count }}</p>
 ```
 
-```ts
+```typescript
 @Component({
   selector: 'app-stateless-counter',
   templateUrl: './stateless.component.html',
@@ -73,10 +73,15 @@ export class StatelessCounterComponent {
 Angular Signalsによってリアクティブな状態管理をRxJSやObservable、外部ライブラリなどを使わずに実現できるようになった。
 
 ```html
-<app-stateless-counter [count]="count()" (increment)="increment()" (decrement)="decrement()" (reset)="reset()" />
+<app-stateless-counter 
+  [count]="count()" 
+  (increment)="increment()"
+  (decrement)="decrement()"
+  (reset)="reset()"
+/>
 ```
 
-```ts
+```typescript
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { StatelessCounterComponent } from '../stateless/stateless.component';
 
@@ -124,13 +129,15 @@ https://martinfowler.com/bliki/PresentationDomainSeparation.html
 
 このパターンではPDS原則に従い、コンポーネントと密接なビジネスロジックをローカルサービス (ここでは**ユースケース**と呼ぶ）に分離し、コンポーネントからメソッドを呼び出す。ユースケースクラスにはHTTP通信やアプリケーションのドメインロジックなどが記述される。
 
-```ts
+```typescript
 @Injectable()
 export class UserListUsecase {
   #http = inject(HttpClient);
 
   async getUsers(): Promise<User[]> {
-    return lastValueFrom(this.#http.get<User[]>('https://jsonplaceholder.typicode.com/users'));
+    return lastValueFrom(
+      this.#http.get<User[]>('https://jsonplaceholder.typicode.com/users')
+    );
   }
 }
 ```
@@ -145,7 +152,7 @@ HTMLテンプレートはステートフルコンポーネントと同じくス�
 </ul>
 ```
 
-```ts
+```typescript
 import { UserListUsecase } from './usecase';
 
 @Component({
@@ -170,7 +177,7 @@ export class SimplePdsUserListComponent implements OnInit {
 ```
 
 <figure>
-  <img src="/images/angular-signals-component-design-patterns/simple-pds.png" alt="Simple PDS Component">
+  <img src="/images/angular-signals-component-design-patterns/simple-pds.c9f96748d9626c35.png" alt="Simple PDS Component">
   <figcaption>Simple PDS Component</figcaption>
 </figure>
 
@@ -195,21 +202,21 @@ Simple PDSパターンではコンポーネントが状態管理の責任を持�
 PDS+CQS パターンの主要な構成要素は、**ステート**・**ユースケース**・**コンテナコンポーネント**の3つである。状態管理の責任をプレゼンテーション側からドメイン側のステートに移した上で、コンポーネントとステートの間のデータの流れは、ユースケースによって状態の更新を行うコマンドと状態の読み取りを行うクエリに分離される。この3つの構成要素と2つの分離原則の関係を図示すると次のようになる。
 
 <figure>
-  <img src="/images/angular-signals-component-design-patterns/pds-cqs.png" alt="PDS+CQS Component">
+  <img src="/images/angular-signals-component-design-patterns/pds-cqs.b5158f22090ce52c.png" alt="PDS+CQS Component">
   <figcaption>PDS+CQS Component</figcaption>
 </figure>
 
 このパターンが適用されるコンポーネントはアプリケーションの中で多くないし、あまり増やすべきではない。主にページ単位の状態を扱うことになる Routed Component や、クライアントサイドでの状態の操作が多い複雑なUIを構築するコンポーネントに適している。このパターンでは対象範囲の状態管理を一箇所に集約してカプセル化するため、UIを構成するほとんどのコンポーネントをステートレスコンポーネントとして実装できることが利点である。
 
-## PDS+CQSサンプル: TodoList
+## PDS+CQSサンプル: TodoList 
 
 このパターンの実装例として、簡単なTODOリストを作ってみよう。
 
-### SignalState
+### SignalState 
 
 まずは `SignalState<T>` というインターフェースの導入を検討する。このインターフェースは `asReadonly()` メソッドを持ち、 `ReadonlyState<T>` を返す。 `ReadonlyState<T>` は与えられた型を読み取り専用の `Signal` 型に変換した型だ。 （書き込み可能なSignalは `WritableSignal` 型に限られる）
 
-```ts
+```typescript
 // signal-state.ts
 export interface SignalState<T> {
   asReadonly(): ReadonlyState<T>;
@@ -226,7 +233,7 @@ export type ReadonlyState<T> = T extends object
 
 このインターフェースを実装したステートクラス `TodoListState` は次のようになる。このステートクラスの責任は、状態の保持とその更新手続きのカプセル化である。クラスフィールドは `signal()` または `computed()` で作成された Signal オブジェクトであり、Signal の値を更新するメソッドが定義されている。そして `asReadonly()` メソッドで読み取り専用の状態オブジェクトを返す。
 
-```ts
+```typescript
 // todo-list.state.ts
 import { computed, signal } from '@angular/core';
 import { SignalState } from '../shared/signal-state';
@@ -254,7 +261,7 @@ export class TodoListState implements SignalState<State> {
     return this.todos().filter((todo) => !todo.completed);
   });
 
-  addTodo(title: string): void {
+	addTodo(title: string): void {
     this.todos.update((todos) => [
       {
         id: todos.length + 1,
@@ -290,7 +297,7 @@ https://martinfowler.com/bliki/CommandQuerySeparation.html
 
 ユースケースクラス `TodoListUsecase` は `#state` プライベートフィールドに `TodoListState` のインスタンスを持ち、 `state` パブリックフィールドに `TodoListState` の `asReadonly()` メソッドの戻り値を持つ。
 
-```ts
+```typescript
 // todo-list.usecase.ts
 import { TodoListState } from './state';
 import { Todo } from './todo';
@@ -316,13 +323,12 @@ export class TodoListUsecase {
 コンテナコンポーネントはステートクラスの存在を直接知ることはなく、ユースケースクラスだけに依存する。状態管理についてはユースケースクラスが提供する `state` フィールドだけを知っており、その裏の実体については隠蔽されている。
 
 ```html
-<app-todo-list-view
+<app-todo-list-view 
   [items]="usecase.state.todos()"
-  (changeCompleted)="usecase.setTodoCompleted($event.id, $event.completed)"
-/>
+  (changeCompleted)="usecase.setTodoCompleted($event.id, $event.completed)" />
 ```
 
-```ts
+```typescript
 import { TodoListUsecase } from './usecase';
 import { TodoListViewComponent } from './views/todo-list-view/todo-list-view.component';
 
@@ -347,11 +353,12 @@ https://stackblitz.com/edit/stackblitz-starters-jcdjgn?ctl=1&embed=1&file=src/pd
 
 今回紹介したコンポーネント設計パターンにおける責任についてまとめると次のようになる。
 
-| パターン                   | UI構築         | 状態管理       | ビジネスロジック |
-| -------------------------- | -------------- | -------------- | ---------------- |
-| ステートレスコンポーネント | コンポーネント | なし           | なし             |
-| ステートフルコンポーネント | コンポーネント | コンポーネント | なし             |
-| Simple PDS                 | コンポーネント | コンポーネント | ユースケース     |
-| PDS+CQS                    | コンポーネント | ステート       | ユースケース     |
+| パターン | UI構築 | 状態管理 | ビジネスロジック |
+| ------- | ------- | ------- | ------- |
+| ステートレスコンポーネント | コンポーネント | なし | なし |
+| ステートフルコンポーネント | コンポーネント | コンポーネント | なし |
+| Simple PDS | コンポーネント | コンポーネント | ユースケース |
+| PDS+CQS | コンポーネント | ステート | ユースケース |
 
 どのパターンにもそれに適した場面があり、目的に合わせて組み合わせて使うものである。ただし、アプリケーションの全体を通して、複雑なコンポーネントよりも単純なパターンのコンポーネントのほうが多くの割合を占めるようにするべきだ。そうすることでアプリケーションの大部分をユニットテストしやすい状態に保つことができる。
+

@@ -4,11 +4,11 @@ slug: 'why-entrycomponents-will-be-deprecated'
 icon: ''
 created_time: '2019-11-04T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/entryComponents-56463883d9204375a2f4f76b6fcf3c88'
 features:
   katex: false
@@ -39,7 +39,7 @@ v9.0 で非推奨となる `entryComponents` とは何だったのかという�
 
 たとえば Angular CDK の[Overlay API](https://material.angular.io/cdk/overlay/overview)を使ってコンポーネントをオーバーレイ上に表示するには次のようなコードを書きます。
 
-```ts
+```typescript
 export class AppComponent {
   constructor(private overlay: Overlay) {}
 
@@ -53,10 +53,10 @@ export class AppComponent {
 
 このとき、動的に表示したい `MyModalComponent` は、 それが宣言される `NgModule` の `entryComponents` 配列に追加される必要があります。
 
-```ts
+```typescript
 @NgModule({
   declarations: [AppComponent, MyModalComponent],
-  entryComponents: [MyModalComponent],
+  entryComponents: [MyModalComponent]
 })
 export class AppModule {}
 ```
@@ -71,7 +71,7 @@ Angular に慣れている人にとっては、もはや当たり前のように
 
 動的コンポーネントの生成には `ComponentFactoryResolver` という API を使います。この API はコンポーネントクラスから、そのコンポーネントに対して AoT コンパイラが生成した **ComponentFactory** オブジェクトを返すものです。
 
-```ts
+```typescript
 export class AppComponent {
   constructor(private cfr: ComponentFactoryResolver) {}
 
@@ -159,14 +159,14 @@ Ivy の AoT コンパイラは同一クラスの静的フィールドに Compone
 
 つまり、次のように動的な `import()` 文で取得した `SomeComponent` クラスでも `ComponentFactoryResolver` で解決できるということです。
 
-```ts
+```typescript
 export class AppComponent {
   constructor(private cfr: ComponentFactoryResolver) {}
 
   ngOnInit() {
-    import('./some/some.component')
-      .then((m) => this.cfr.resolveComponentFactory(m.SomeComponent))
-      .then((someCompFactory) => {
+    import("./some/some.component")
+      .then(m => this.cfr.resolveComponentFactory(m.SomeComponent))
+      .then(someCompFactory => {
         console.log(someCompFactory);
       });
   }
@@ -191,3 +191,4 @@ Ivy についての詳しい話は、 AngularConnect 2019 での次のセッシ�
 - [How Angular works | Kara Erickson](https://www.youtube.com/watch?v=S0o-4yc2n-8&list=PLAw7NFdKKYpE-f-yMhP2WVmvTH2kBs00s&index=26)
 - [How we make Angular fast | Miško Hevery](https://www.youtube.com/watch?v=EqSRpkMRyY4&list=PLAw7NFdKKYpE-f-yMhP2WVmvTH2kBs00s&index=10)
 - [The secrets behind Angular’s lightning speed | Max Koretskyi](https://www.youtube.com/watch?v=nQ8oJ1rpwIc&list=PLAw7NFdKKYpE-f-yMhP2WVmvTH2kBs00s&index=7)
+

@@ -4,12 +4,12 @@ slug: 'angular-model-inputs'
 icon: ''
 created_time: '2024-02-24T03:18:00.000Z'
 last_edited_time: '2024-02-24T05:25:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-model-inputs'
 notion_url: 'https://www.notion.so/Angular-Model-Inputs-fc06702ae32a483ea5464ed5b9c3b702'
 features:
@@ -36,9 +36,9 @@ https://github.com/angular/angular/discussions/49682
 
 Model Inputsの機能は`model`関数で提供される。これはSignal Inputの特殊なバージョンで、`input()`で作られたSignal Inputが読み取り専用なのに対して、`model()`で作れるModel Inputは書き込み可能な`WritableSignal`になる。このSignalの値が変更されたとき、自動的にその変更をコンポーネントのアウトプットとして出力できる。
 
-次の`NameInputComponent`を例にしよう。このコンポーネントは親コンポーネントから入力値を受け取る`value`インプットを持っている。これは`model()`で作られたModel Inputなので親から値を受け取るだけでなく、`NameInputComponent`自身が値を更新できる。この例ではテキストフィールドの入力値を`value`フィールドに反映している。実は、**v17.2からは双方向バインディングに\*\***`WritableSignal`\***\*をそのまま渡すこともできるようになった**。そのため、`[(ngModel)]`にModel Inputのフィールドを渡すだけで、値の書き込みとユーザー入力からの反映を実現できる。双方向どちらに向けても変更の伝播のためのコードは一切必要ない。
+次の`NameInputComponent`を例にしよう。このコンポーネントは親コンポーネントから入力値を受け取る`value`インプットを持っている。これは`model()`で作られたModel Inputなので親から値を受け取るだけでなく、`NameInputComponent`自身が値を更新できる。この例ではテキストフィールドの入力値を`value`フィールドに反映している。実は、**v17.2からは双方向バインディングに**`WritableSignal`**をそのまま渡すこともできるようになった**。そのため、`[(ngModel)]`にModel Inputのフィールドを渡すだけで、値の書き込みとユーザー入力からの反映を実現できる。双方向どちらに向けても変更の伝播のためのコードは一切必要ない。
 
-```ts
+```typescript
 import { Component, model } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
@@ -49,7 +49,7 @@ import { FormsModule } from '@angular/forms';
   imports: [FormsModule],
   template: `
     <label>Full Name: </label>
-    <input type="text" name="fullname" [(ngModel)]="value" />
+    <input type="text" name="fullname" [(ngModel)]="value" >
   `,
 })
 export class NameInputComponent {
@@ -61,22 +61,22 @@ export class NameInputComponent {
 
 したがって、親コンポーネントは次のように双方向バインディングの構文`[(value)]`を使える。また、親コンポーネントが`WritableSignal`で値を持っていれば、**Signal-to-Signalの双方向バインディング**によって、親子コンポーネント間で値が同期される。もちろん`[value]`と`(valueChange)`を別々に使うこともできる。
 
-```ts
+```typescript
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [NameInputComponent],
   template: `
-    <!-- one-way binding -->
-    <name-input [value]="name" />
+		<!-- one-way binding -->
+    <name-input [value]="name" /> 
 
-    <!-- one-way listening -->
-    <name-input (valueChange)="onChange($event)" />
+		<!-- one-way listening -->
+    <name-input (valueChange)="onChange($event)" /> 
 
-    <!-- 2-way binding -->
-    <name-input [(value)]="name" />
+		<!-- 2-way binding -->
+    <name-input [(value)]="name" /> 
 
-    <!-- signal-to-signal 2-way binding -->
+		<!-- signal-to-signal 2-way binding -->
     <name-input [(value)]="nameSignal" />
   `,
 })
@@ -115,3 +115,4 @@ Model Inputsの導入により、より多くのユースケースにおいて�
 https://netbasal.com/angulars-model-function-explored-a-comprehensive-overview-4481d023c822
 
 https://angular.io/api/core/model
+

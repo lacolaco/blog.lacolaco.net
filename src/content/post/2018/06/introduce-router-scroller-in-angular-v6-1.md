@@ -4,11 +4,11 @@ slug: 'introduce-router-scroller-in-angular-v6-1'
 icon: ''
 created_time: '2018-06-09T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Introduce-Router-Scroller-in-Angular-v6-1-5116a5eaca934e2c8c5d3e492a935c1c'
 features:
   katex: false
@@ -115,3 +115,4 @@ The sample code of this article is published on GitHub.
 https://github.com/lacolaco/ng-router-scrolling-example
 
 Thanks.
+

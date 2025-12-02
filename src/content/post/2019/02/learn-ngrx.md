@@ -4,11 +4,11 @@ slug: 'learn-ngrx'
 icon: ''
 created_time: '2019-02-11T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'NgRx'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Learn-NgRx-4812cf7d681e4a7aa2ceb9091267791b'
 features:
   katex: false
@@ -113,9 +113,9 @@ Effects で定義される `Effect` とは Action を受け取り Action を返�
 いわゆる**副作用**を記述するものだが、Effects の発表直後からそのベストプラクティスは変わってきている。第一に、**API コールは副作用ではない。**ということだ。主作用があって初めて副作用がある。NgRx を使った設計においては、主作用を Facade が担い、その主作用の副作用として起きる変化を Effects で定義するのがよい。 主作用とは次の流れだ。
 
 1. Component が Facade を呼び出す
-2. Facade が現在の State を使い Service を呼び出す。その結果を Action として dispatch する
-3. reducer が State を書き換える
-4. Component に新しい State が届く
+1. Facade が現在の State を使い Service を呼び出す。その結果を Action として dispatch する
+1. reducer が State を書き換える
+1. Component に新しい State が届く
 
 ここで 2 の Action が何か別の作用を生み出す必要があるとき、それは副作用と呼ばれ、 Effects を使って記述する。副作用を起こすためだけの Action をわざわざ作る必要はない。reducer から参照されていない Action がある時点で、それは副作用として主作用を書いているのだ。Action は Reducer で主作用になることを前提とする。
 
@@ -156,3 +156,4 @@ Component はまったく Router や UrlTree のことを知らなくてよく�
 [Sharing data between modules is peanuts. - Angular In Depth](https://blog.angularindepth.com/sharing-data-between-modules-is-peanuts-3f40fcb38dd)
 
 [NgRx Refactoring Patterns enhanced with ngrx-ducks](https://speakerdeck.com/gregonnet/ngrx-refactoring-patterns-enhanced-with-ngrx-ducks)
+

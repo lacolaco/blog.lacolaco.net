@@ -4,11 +4,11 @@ slug: 'event-broadcasting-in-angular-2'
 icon: ''
 created_time: '2016-04-24T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Broadcasting-events-in-Angular-2-3af033c8da5647f19adf4eef3310067f'
 features:
   katex: false
@@ -83,7 +83,7 @@ class App {}
 export class ChildComponent {
   constructor(private broadcaster: Broadcaster) {
   }
-
+  
   registerStringBroadcast() {
     this.broadcaster.on<string>('MyEvent')
       .subscribe(message => {
@@ -145,21 +145,21 @@ import {MessageEvent} from '../../services/message_event';
 @Component({
   selector: 'child',
   ...
-  providers: [
+  providers: [ 
     MessageEvent
   ],
 })
 export class Child {
   constructor(private messageEvent: MessageEvent) {
   }
-
+  
   registerTypeBroadcast() {
     this.messageEvent.on()
       .subscribe(message => {
         ...
       });
   }
-
+  
   emitTypeBroadcast() {
     this.messageEvent.fire(`Message from ${this.boxID}`);
   }
@@ -171,3 +171,4 @@ Demo is [here](http://plnkr.co/edit/aJe5SUtFlnpmGXWA5eHk).
 ## Conclusion
 
 In this article, I explained a way to implement an event propagation like Angular 1’s `$broadcast`. And I introduced old string-based event system and type-based safe event system.
+

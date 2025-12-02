@@ -4,12 +4,12 @@ slug: 'angular-strict-property-initialization-best-practice'
 icon: ''
 created_time: '2018-06-27T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'TypeScript'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-strictPropertyInitialization-f798bd04a39e46d2a75a6266c2ee468d'
 features:
   katex: false
@@ -27,7 +27,7 @@ tsconfig の`strictPropertyInitialization` オプションを有効にすると�
 
 たとえば次のようなコードがエラーになる。`name`プロパティは`string`型なので`undefined`を許容せず、初期化漏れのコンパイルエラーになる。
 
-```ts
+```typescript
 class Person {
   name: string; // Property 'name' has no initializer and is not definitely assigned in the constructor.
 
@@ -51,7 +51,7 @@ Angular コアチームの Stephen は、TypeScript にしたがい、ビュー�
 
 次のように、`child`は基本的にオプショナルであり、存在が確認できるときだけ処理をするのがベストである。なぜなら ngIf によるスイッチングなど、コンポーネントの生存中に子ビューの参照が消えることは多々あるからだ。
 
-```ts
+```typescript
 class SomeComponent {
   @ViewChild() child?: SomeChildComponent;
 
@@ -71,9 +71,9 @@ https://twitter.com/laco2net/status/1011734955565576192
 
 現実問題として、Input にはオプショナルなものと必須なものがある。常に特定の Input が与えられることを前提として記述されるコンポーネントだ。たとえば次のような例が考えられる。
 
-```ts
+```typescript
 @Component({
-  selector: 'user-card',
+  selector: "user-card"
 })
 class UserCardComponent {
   @Input() user: User;
@@ -94,16 +94,16 @@ https://twitter.com/radokirov/status/1011800376289288193
 
 親からの値が必須である Input プロパティについては、実行時アサーションとセットにした Non-null アサーションオペレータで解決するのが、現状のベストプラクティスになりそうだ。
 
-```ts
+```typescript
 @Component({
-  selector: 'user-card',
+  selector: "user-card"
 })
 class UserCardComponent {
   @Input() user!: User;
 
   ngOnInit() {
     if (this.user == null) {
-      throw new Error('[user] is required');
+      throw new Error("[user] is required");
     }
 
     this.someFunc(this.user); // no need `if` type guard
@@ -121,12 +121,12 @@ Store との接続や、リアルタイム DB との接続など、コンポー�
 
 よくある Redux 的な状態管理をしているアプリケーションだと、このようにコンポーネントとストアを接続する。 そしてコンポーネント内では`subscribe`せず、テンプレート内で`async`パイプを使って非同期ビューを構築する。
 
-```ts
+```typescript
 class UserListComponent {
   userList$: Observable<User[]>;
 
   constructor(store: Store) {
-    this.userList$ = this.store.select((state) => state.userList);
+    this.userList$ = this.store.select(state => state.userList);
   }
 }
 ```
@@ -138,3 +138,4 @@ class UserListComponent {
 - `@ViewChild`や`@ContentChild`はオプショナルプロパティとして扱うべし
 - 必ず親から値を渡されないと困る`@Input`は、実行時アサーションとセットで Non-null アサーションオペレータを使うべし
 - Observable のプロパティ初期化はコンストラクタで行い、`subscribe`は`async`パイプあるいは`ngOnInit`以降に Angular のライフサイクルにあわせて開始するべし
+

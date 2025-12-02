@@ -4,11 +4,11 @@ slug: 'angular-ivy-library-compilation-design-in-depth.en'
 icon: ''
 created_time: '2021-02-24T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'en'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Understanding-Angular-Ivy-Library-Compilation-8f425a78a2da4952953729fca1cdd4ff'
 features:
   katex: false
@@ -63,14 +63,14 @@ By the way, for libraries that are only used locally in monorepo, such as Angula
 
 In order to make the following explanations concise, let’s first sort out the terminology.
 
-|                           |                                                                                                |
-| ------------------------- | ---------------------------------------------------------------------------------------------- |
-| term                      | meaning                                                                                        |
-| Angular decorators        | Decorators defined by Angular such as `@Component`, `@Directive`, and `@Injectable`.           |
-| Compiler                  | The Angular compiler is a tool that analyzes Angular decorators and generates executable code. |
-| `ngc`                     | An executable CLI for the Angular compiler                                                     |
-| Ivy compiler              | A compiler introduced in Angular v9                                                            |
-| View Engine (VE) compiler | A deprecated compiler that was used by default until Angular v8                                |
+|  |  |
+| ------- | ------- |
+| term | meaning |
+| Angular decorators | Decorators defined by Angular such as `@Component`, `@Directive`, and `@Injectable`. |
+| Compiler | The Angular compiler is a tool that analyzes Angular decorators and generates executable code. |
+| `ngc` | An executable CLI for the Angular compiler |
+| Ivy compiler | A compiler introduced in Angular v9 |
+| View Engine (VE) compiler | A deprecated compiler that was used by default until Angular v8 |
 
 ## Ivy compilation for applications
 
@@ -108,7 +108,7 @@ SomeComponent.ɵcmp = ɵɵdefineComponent({
 
 The Ivy compiler generates the code to create the _definition_ from the metadata contained in the decorator. The HTML template, which was a string, becomes executable code as a **Template Function**. The `ɵɵelementStart` and `ɵɵtext` used in the template functions are called **Template Instructions**, and abstract the concrete DOM API calls and data binding update process.
 
-![image](/images/angular-ivy-library-compilation-design-in-depth.en/ivy-app-compilation.png)
+![image](/images/angular-ivy-library-compilation-design-in-depth.en/ivy-app-compilation.f5991bd9939e765d.png)
 
 Angular compilation is internally divided into two steps; Analysis step and code generation step.
 
@@ -133,7 +133,7 @@ For example, when a component `<app-parent>` uses a template to call a component
 
 Since the direct compilation result, `parent.component.js`, does not refer to either `child.component.js` or `child.component.ngfactory.js`, it cannot determine when it needs to be recompiled. Therefore, ViewEngine had to recompile the entire application at each build time.
 
-![image](/images/angular-ivy-library-compilation-design-in-depth.en/ngfactory-dependency-link.png)
+![image](/images/angular-ivy-library-compilation-design-in-depth.en/ngfactory-dependency-link.0fdb66f334799c69.png)
 
 To solve this problem, the Ivy compiler generates the code as a static field of the class. In the generation code, the classes of the directives referenced in the template are included. This makes it easy to determine which files will be affected when that file is changed.
 
@@ -169,7 +169,7 @@ Libraries used locally within monorepo were Ivy compilable because as long as it
 
 Here is the main topic. First, let’s look at compiling libraries with `enableIvy: false`, which is the current recommended setting for v11. Compiling a library with no Ivy is just **inlining the metadata** collected in the analysis step. The Angular decorator metadata is embedded in the static field as shown below.
 
-![image](/images/angular-ivy-library-compilation-design-in-depth.en/library-compilation-ivy-false-1.png)
+![image](/images/angular-ivy-library-compilation-design-in-depth.en/library-compilation-ivy-false-1.fa2d6d73583ac826.png)
 
 The library compilation works to convert the metadata into a JavaScript representation that can be published to NPM. However, this is still a metadata and cannot be executed as a component when loaded into an application. It needs to be compiled again based on this metadata. **Angular Compatibility Compiler**, `ngcc`, is the tool to do it.
 
@@ -179,7 +179,7 @@ As we don’t know whether the application side compiler is Ivy or VE, the only 
 
 The compilation result of `ngcc` is the same as that of compiling the library directly. The difference is that `ngc` uses decorators in TypeScript as metadata, while `ngcc` uses `.decorators` in JavaScript as metadata.
 
-![image](/images/angular-ivy-library-compilation-design-in-depth.en/library-compilation-ivy-false-2.png)
+![image](/images/angular-ivy-library-compilation-design-in-depth.en/library-compilation-ivy-false-2.e23add7832df4f25.png)
 
 Although `ngcc` achieved its purpose to allow libraries to be released to NPM with compatibility, the frequent compilations spoiled the developer experience. Many of you may have felt the frustration of running `ngcc` repeatedly every time you installed a library. The `ngcc` overwrites the library code in `node_modules` installed from NPM and compiles it, so if the contents of `node_modules` are changed by the `npm install` command, you have to recompile it.
 
@@ -208,7 +208,7 @@ LTO compilation, which is done before publishing to NPM, is a mechanism to compl
 
 The compiled JavaScript contains the following code. It looks similar to the normal compilation result, but the important thing is that the **template is preserved as a string** and it has **Locality**.
 
-![image](/images/angular-ivy-library-compilation-design-in-depth.en/library-compilation-ivy-1.png)
+![image](/images/angular-ivy-library-compilation-design-in-depth.en/library-compilation-ivy-1.34825d2c463538cd.png)
 
 The information obtained from the analysis step is inlined as a _declaration_. It includes a list of directives on which it depends, and has a locality that allows it to execute the code generation step with only information in the file. And by deferring the code generation of template functions until they are linked, the library can ensure runtime compatibility.
 
@@ -218,7 +218,7 @@ Also, the Angular version of the LTO compilation is included. Even if the templa
 
 An application that installs an LTO compiled library will link it at the building time just-in-time. The **Linker**, which does the linking, will generate code based on the declarations from the LTO compilation, and replace them with definitions that can be used by the application.
 
-![image](/images/angular-ivy-library-compilation-design-in-depth.en/library-compilation-ivy-2.png)
+![image](/images/angular-ivy-library-compilation-design-in-depth.en/library-compilation-ivy-2.766d2a4a8ab26474.png)
 
 Unlike `ngcc`, which required analysis step, the linking process can be executed independently for each file thanks to Locality of LTO compilation, so it can work as a plugin in module resolution like webpack. In the Angular CLI build, it is implemented as a Babel plugin called `AngularLinker`.
 
@@ -231,3 +231,4 @@ The new Ivy library compilation can be summarized as follows:
 - The other is the **linking** process, which completes the compilation of the library by generating code at application build time.
 
 I hope this article will help you readers understand how new Ivy library compilation is designed, based on the differences between applications and libraries in compilation, and the issues of `ngcc` used today.
+

@@ -4,13 +4,13 @@ slug: 'angular-ai-forward'
 icon: ''
 created_time: '2025-09-20T00:48:00.000Z'
 last_edited_time: '2025-09-20T01:28:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'AI'
   - 'MCP'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-ai-forward'
 notion_url: 'https://www.notion.so/Angular-AI-2713521b014a800cb4dded9150c0dc1c'
 features:
@@ -34,14 +34,14 @@ https://github.com/angular/web-codegen-scorer
 Web Codegen Scorerは、計測用のプロンプトに対して**生成されたアプリケーションコードのクオリティを評価**する。ビルドに成功するかどうかだけでなく、ランタイムパフォーマンスやセキュリティ、アクセシビリティのベストプラクティスに則っているかも総合的にチェックする。Web Codegen Scorer の開発にはGoogleのセキュリティチーム、Gemini開発チーム、Chromeチームなどがコラボレーションしており、その結果の信頼性はお墨付きだ。
 
 <figure>
-  <img src="/images/angular-ai-forward/image-cb5531b8.png" alt="Web Codegen Scorer">
+  <img src="/images/angular-ai-forward/image.e6e689e0744a413f.png" alt="Web Codegen Scorer">
   <figcaption>Web Codegen Scorer</figcaption>
 </figure>
 
 Angularチームが Web Codegen Scorer を開発したのは、**確実な改善のために計測が欠かせない**からだ。このツールにより、フレームワークの現状に合わせて LLM を最適化するための信頼性高いプロンプトを作成できるようになった。これは [angular.dev/ai](https://angular.dev/ai/develop-with-ai) で公開されていて、各種ツールのルールドキュメントやシステムインストラクションに組み込むことができる。
 
 <figure>
-  <img src="/images/angular-ai-forward/image-7221c1b1.png" alt="LLM Prompt Improvement Process">
+  <img src="/images/angular-ai-forward/image.b74ae42b7dbbd657.png" alt="LLM Prompt Improvement Process">
   <figcaption>LLM Prompt Improvement Process</figcaption>
 </figure>
 
@@ -50,7 +50,7 @@ Angularチームが Web Codegen Scorer を開発したのは、**確実な改善
 これらの成果として、LLMは従来のAngularの機能について高い安定性でコード生成できるだけでなく、次のバージョンで試験的機能としてリリースされる Signal Forms 機能についても**初日から**適切に処理できるようになった。Angularチームは、すでに**LLMが優れたAngular開発者として機能する**ことをデータから確信している。
 
 <figure>
-  <img src="/images/angular-ai-forward/image-8a650b13.png" alt="“LLM models are great Angular developers — Angular team & data”">
+  <img src="/images/angular-ai-forward/image.210b96fcf07bc985.png" alt="“LLM models are great Angular developers — Angular team & data”">
   <figcaption>“LLM models are great Angular developers — Angular team & data”</figcaption>
 </figure>
 
@@ -61,7 +61,7 @@ https://angular.dev/ai/mcp
 さらに将来的には、**Angular MCPとブラウザオートメーションを統合**した一連のローカル開発ワークフローを構築できるようにする予定だ。`ng serve` で起動したローカルサーバーをMCP経由で管理し、プロンプトでコードを生成したらビルドを待つ。ビルド後にPlaywright MCPで動作を確認、問題があれば Angular MCPがソースコードをデバッグ、うまくいけば次のコード生成へ、というサイクルができあがる。これは一度作って終わりのバイブコーディングではなく、**継続的にメンテナンスするアプリケーション**の開発を念頭に置いたものだ。
 
 <figure>
-  <img src="/images/angular-ai-forward/image-c750efd5.png" alt="AI-driven Angular Dev">
+  <img src="/images/angular-ai-forward/image.818a8f3a067898fd.png" alt="AI-driven Angular Dev">
   <figcaption>AI-driven Angular Dev</figcaption>
 </figure>
 
@@ -74,7 +74,7 @@ https://github.com/angular/ai-tutor
 AI TutorはFirebase Studio上で動作する。GitHubのREADMEに貼られた “**Try in Firebase Studio**” のリンクからプロジェクトを生成すると、ベースとなるAngularアプリケーションとともに、チャット画面でAIが学習をサポートしてくれる。現在の理解度に応じて難易度を変えてくれるので、初心者の入門ハンズオンから経験者の久々のキャッチアップまで幅広く対応できる。
 
 <figure>
-  <img src="/images/angular-ai-forward/Angular__AI_Developer_Event_-_YouTube_-_15_27-4838d49a.png" alt="Angular AI Tutor">
+  <img src="/images/angular-ai-forward/Angular__AI_Developer_Event_-_YouTube_-_15_27.24119becc1c59b30.png" alt="Angular AI Tutor">
   <figcaption>Angular AI Tutor</figcaption>
 </figure>
 
@@ -85,7 +85,7 @@ Angular TutorはAngular MCPにも組み込まれているため、Firebase Studi
 また、**Gemini Canvas**や**Google AI Studio**といったGoogleのAI製品のWebアプリ作成にも、Angularが組み込まれるようになった。アイデアをもとに簡単なプロトタイプを手早く作るのに適している。
 
 <figure>
-  <img src="/images/angular-ai-forward/CleanShot_2025-09-20_at_09.20.092x-a9880f05.png" alt="Gemini Canvas">
+  <img src="/images/angular-ai-forward/CleanShot_2025-09-20_at_09.20.092x.2845d3d0327e000c.png" alt="Gemini Canvas">
   <figcaption>Gemini Canvas</figcaption>
 </figure>
 
@@ -96,7 +96,7 @@ LLMは、**Angularフレームワークそのものの開発**においても活
 その内容は次のようなものだ。基本的なコンセプトをもとに、APIドキュメントの草稿を作成する。次に、そのドキュメントを入力として**LLMに実装コード例を生成させる**。その出力されたコードをAngularチームがレビューし、APIコンセプトを見直す。このサイクルによって、実際に**実装する前からAPIデザインの妥当性を検証**している。
 
 <figure>
-  <img src="/images/angular-ai-forward/image-d8171090.png" alt="API Design Process with AI">
+  <img src="/images/angular-ai-forward/image.f0d57d56d0472b2d.png" alt="API Design Process with AI">
   <figcaption>API Design Process with AI</figcaption>
 </figure>
 
@@ -121,3 +121,4 @@ https://github.com/angular/angular/discussions/63766
 Angularは着実に進化を続けてきたフレームワークだが、いまやAIと共に成長し、AIと共に開発を支援し、AIと共に学習を促進するという新たな道を歩み始めている。これがAngularの “AI-forward” の方向性だ。
 
 Angular MCPをはじめとした各種ツールの導入により、LLMとの連携が強化され、開発者体験の向上だけでなく、フレームワーク自体の設計にも影響を与えている。しかしAngularとAIのコラボレーションはバイブコーディングを超えて、これまでどおり、品質の高いスケーラブルなWebアプリケーションを構築する開発者とチームのためにある。AI時代においても「自信を持って」開発できるフレームワークとしてのAngularに今後も期待してほしい。
+

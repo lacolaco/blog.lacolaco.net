@@ -4,13 +4,13 @@ slug: 'agent-communication-language'
 icon: ''
 created_time: '2025-10-09T14:33:00.000Z'
 last_edited_time: '2025-10-09T15:00:00.000Z'
-category: 'Tech'
 tags:
   - '雑記'
   - 'AI'
   - 'MCP'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Agent-Communication-Language-2873521b014a809b9010e60a892ed141'
 features:
   katex: false
@@ -26,7 +26,7 @@ https://github.com/lacolaco/acl
 
 たとえば、次のような形で指示を出す。
 
-```ts
+```typescript
 fix("failing tests")                     # Fix issues
 refactor("auth module", "extract logic") # Refactor code
 test("integration/**")                   # Run tests
@@ -37,7 +37,7 @@ ACLの文法の基本形は `scope.action(details)` だ。`scope` が省略さ�
 
 これらの関数は、次のように定義される。
 
-```ts
+```typescript
 fn fix(issue): void {
   description: "Analyze and fix problems"
   action: [
@@ -70,7 +70,7 @@ readonly fn think(issue): string {
 
 オブジェクトとそのメソッドを定義することもできる。
 
-```ts
+```typescript
 obj project = "Current project context"
 
 fn project.build(): void {
@@ -93,7 +93,7 @@ fn project.deploy(): void {
 
 たとえば次の`begin`/`finish`は僕の個人的なワークフローを関数化している。タスクを始める前に`begin(goal)` を呼び出すと、作業ブランチをmainからチェックアウトし、最初にTODOを整理させる。この関数は`task` スコープを生成する。作業が終わったら`finish(task)`を呼び出すことでGitコミットからプルリクエストの作成までをやってもらう。
 
-```ts
+```typescript
 fn begin(goal): task {
   description: "Begin working on task with git branch and TODO planning; ALWAYS starts from up-to-date origin/main; pairs with finish(task)"
   action: [
@@ -122,13 +122,13 @@ fn finish(task): void {
 }
 ```
 
-![image](/images/agent-communication-language/CleanShot_2025-10-09_at_23.17.222x-e2ee8673.png)
+![image](/images/agent-communication-language/CleanShot_2025-10-09_at_23.17.222x.3c2481988310e156.png)
 
-![image](/images/agent-communication-language/CleanShot_2025-10-09_at_23.18.112x-adc29e8a.png)
+![image](/images/agent-communication-language/CleanShot_2025-10-09_at_23.18.112x.0c5dcb0866569874.png)
 
 想像力次第で、表現は自由にできる。ACLの仕様を書くのにもACLを使っているが、`spec.refine("add glossary section")` のようなメソッドを呼び出せば仕様書の中に用語集セクションを追加できる。この`spec.refine` は未定義だが、`scope.action(details)` という基本文法に照らして解釈してくれる。
 
-![image](/images/agent-communication-language/CleanShot_2025-10-09_at_23.31.542x-6952995a.png)
+![image](/images/agent-communication-language/CleanShot_2025-10-09_at_23.31.542x.ac8e150980b1d8fd.png)
 
 ## Slash commandでよくない？
 
@@ -162,3 +162,4 @@ Choose the appropriate communication language based on the user's message:
 ```
 
 このあたりはまだ模索中だ。
+

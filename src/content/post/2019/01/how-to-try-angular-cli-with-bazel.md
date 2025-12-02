@@ -4,12 +4,12 @@ slug: 'how-to-try-angular-cli-with-bazel'
 icon: ''
 created_time: '2019-01-01T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Bazel'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/How-to-Try-Angular-CLI-with-Bazel-b3355b6fa9f94b0da35d23b772427c5b'
 features:
   katex: false
@@ -17,7 +17,7 @@ features:
   tweet: false
 ---
 
-![image](/images/how-to-try-angular-cli-with-bazel/1__ReNz4DpvQrUpGduIF8RS2w.png)
+![image](/images/how-to-try-angular-cli-with-bazel/1__ReNz4DpvQrUpGduIF8RS2w.6e9a48f3c437d159.png)
 
 **A Happy New Year!** I expect this year will be a beginning of Bazel Era!
 
@@ -25,7 +25,7 @@ This post is a reminder note for someone will try Angular CLI with Bazel (referr
 
 This is based on Minko Gechev’s introduction post.
 
-**[Introducing Bazel Schematics for Angular CLI](https://blog.mgechev.com/2018/12/17/introduction-bazel-schematics-angular-cli/)**
+[**Introducing Bazel Schematics for Angular CLI**](https://blog.mgechev.com/2018/12/17/introduction-bazel-schematics-angular-cli/)
 
 ### Environment Preparation
 
@@ -144,8 +144,8 @@ $ ./dist/bin/src/prodserver --port=4200
 So currently, to deploy the application, you have to follow the below steps;
 
 1. Build application
-2. Copy `dist` to remote server
-3. Execute `prodserver` with Bazel environment
+1. Copy `dist` to remote server
+1. Execute `prodserver` with Bazel environment
 
 I think it is not easy, and Angular Bazel should support typical simple build output to deploy to web hosting ecosystems like GitHub Pages, Netlify, or Firebase Hosting.
 
@@ -157,3 +157,4 @@ I think it is not easy, and Angular Bazel should support typical simple build ou
 - Built output is very different to today’s CLI
 
 Angular Bazel is still in RC.0. I’ll try next release.
+
