@@ -72,7 +72,7 @@ const result = await syncNotionBlog({
   mode,
   force,
   dryRun,
-  filterPost: (metadata) => !!metadata.category,
+  filterPost: (metadata) => metadata.published && !!metadata.category,
   postPathResolver: (metadata) => {
     const date = new Date(metadata.created_time);
     const year = date.getFullYear();
