@@ -4,12 +4,12 @@ slug: 'angular-v19-prerendering'
 icon: ''
 created_time: '2024-09-25T03:01:00.000Z'
 last_edited_time: '2024-09-25T06:02:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'SSG'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-v19-prerendering'
 notion_url: 'https://www.notion.so/Angular-v19-d98c0b65806e4a10a239b329958ab674'
 features:
@@ -38,7 +38,7 @@ https://github.com/angular/angular-cli/commit/3b00fc908d4f07282e89677928e00665c8
 
 サーバーサイドレンダリング用のアプリケーション設定に、あらたに`provideServerSideRoutesConfig(routes)` を加えるようになる。このプロバイダー関数の引数にサーバーサイドルートの設定を渡している。
 
-```ts
+```typescript
 import { ApplicationConfig, mergeApplicationConfig } from '@angular/core';
 import { provideServerRendering } from '@angular/platform-server';
 import { provideServerRoutesConfig } from '@angular/ssr';
@@ -56,7 +56,7 @@ export const config = mergeApplicationConfig(appConfig, serverConfig);
 
 次の例のアプリケーションでプリレンダリングするのは、空文字列のルートパスと、`users/:id`で指定されたユーザー詳細ページのパスの2種類である。サーバーサイドルートでは、この`:id`のようなパスパラメータに具体的な値を指定してプリレンダリングするように指示できる。そのためのプロパティが`getPrerenderParams`である。バックエンドAPIに問い合わせて取得したユーザーのリストをもとに`id`として使う文字列を返せば、ビルド時に実際の値が入って個別のページがプリレンダリングされる。
 
-```ts
+```typescript
 import { inject } from '@angular/core';
 import { RenderMode, ServerRoute } from '@angular/ssr';
 import { UserApi } from './user-api.service';
@@ -99,8 +99,9 @@ export const routes: ServerRoute[] = [
 ```
 
 <figure>
-  <img src="/images/angular-v19-prerendering/CleanShot_2024-09-25_at_11.56.002x.png" alt="ng buildの結果。プリレンダリングされたHTMLファイルが確認できる。">
+  <img src="/images/angular-v19-prerendering/CleanShot_2024-09-25_at_11.56.002x.49888c615379845d.png" alt="ng buildの結果。プリレンダリングされたHTMLファイルが確認できる。">
   <figcaption>ng buildの結果。プリレンダリングされたHTMLファイルが確認できる。</figcaption>
 </figure>
 
 これまでのAngularはクライアントサイドのリッチなシングルページアプリケーションの構築に重心が置かれたフレームワークだったが、v18、v19とサーバーサイドレンダリング方面の強化を強めることでより幅広いWebサイト構築に使えるようになってきた。v19の正式リリースが楽しみだ。ぜひ今まではAngularが向いていないと思われていたユースケースでもいろいろ試してみて欲しい。
+

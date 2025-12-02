@@ -4,12 +4,12 @@ slug: 'angular-state-of-linting-2020'
 icon: ''
 created_time: '2020-11-12T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'ESLint'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-ESLint-2020-Autumn-2d6a637a1d094e33b18128d0f15c450e'
 features:
   katex: false
@@ -55,3 +55,4 @@ https://angular.io/guide/roadmap
 Lintの設定をデフォルトからほとんど変えていないのであれば、v12, v13あたりで公式に推奨されるであろう移行ガイドを待っていてもよいだろう。 もちろん今すぐangular-eslintに切り替えるのも自由だ。
 
 ただ、もしAngularのプロジェクトでTSLintのカスタムルールを今から追加しようとしているのであれば、それはangular-eslintに移行してからESLintのカスタムルールを追加するように切り替えたほうがいいだろう。 特にCodelyzerによるテンプレートASTの解析に依存するカスタムルールであれば、今から新たに追加するのは将来移行するのを難しくする可能性がある。 むしろangular-eslintへ移行した上で足りない機能があれば早めにフィードバックしておくのがオープンソース利用者の振る舞いとしても好ましいだろう。
+

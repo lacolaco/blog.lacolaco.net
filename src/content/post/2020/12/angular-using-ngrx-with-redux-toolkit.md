@@ -4,13 +4,13 @@ slug: 'angular-using-ngrx-with-redux-toolkit'
 icon: ''
 created_time: '2020-12-16T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'NgRx'
   - '状態管理'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Using-NgRx-Store-with-Redux-Toolkit-0bbe31d5b26e4cc9802d80dd2ff17ecb'
 features:
   katex: false
@@ -18,7 +18,7 @@ features:
   tweet: true
 ---
 
-This article introduces the idea of combining **[NgRx Store](https://ngrx.io/guide/store)**, the de facto standard state management library for Angular applications, with the **[Redux Toolkit](https://redux-toolkit.js.org/)**, a library from the Redux team.
+This article introduces the idea of combining [**NgRx Store**](https://ngrx.io/guide/store), the de facto standard state management library for Angular applications, with the [**Redux Toolkit**](https://redux-toolkit.js.org/), a library from the Redux team.
 
 I expect that this will eventually become the solid configuration for Angular applications.
 
@@ -58,7 +58,7 @@ If you are familiar with the Redux [“ducks” pattern](https://github.com/erik
 
 > Thanks to createSlice, we already have our action creators and the reducer right here in one file. All we have to do is export them separately, and our todos slice file now matches the common “ducks” pattern. (https://redux-toolkit.js.org/tutorials/intermediate-tutorial)
 
-```ts
+```typescript
 // ducks pattern exports
 export const { increment } = counterSlice.actions;
 export default counterSlice.reducer;
@@ -66,7 +66,7 @@ export default counterSlice.reducer;
 
 The reason why it is called “Slice” will become clearer when we apply multiple Slices to a single Store. To combine multiple Slices, we will continue to use the `combineReducers` function. The Slice is the combination of `[name]: namedReducer` in this combine step. Each slice is a thin layer of the whole reducer.
 
-![image](/images/angular-using-ngrx-with-redux-toolkit/slices.png)
+![image](/images/angular-using-ngrx-with-redux-toolkit/slices.a3b77effb548c7cf.png)
 
 There have been various approaches to dividing the Reducer in this way, and the ducks pattern has been popular. It creates modules that are scoped by namespaces while ensuring atomic state updates through centralized state management infrastructure. The reason why RTK and `createSlice()` should be used is that it is easy and anyone can implement the scalable Redux best practices in the same way.
 
@@ -85,7 +85,7 @@ RTK can also solve the needs of TypeScript-friendliness and simplicity of descri
 
 In NgRx Store, you can create a “Feature State” by using `StoreModule.forFeature()` for lazy loading or simply for separation of concerns. For applications of a large size, it is common to modularize them into Feature States instead of managing everything in the Root State.
 
-```ts
+```typescript
 import counterReducer, { name as counterFeatureKey } from './state/counter';
 @NgModule({
   imports: [StoreModule.forFeature(counterFeatureKey, counterReducer)],
@@ -109,7 +109,7 @@ https://codesandbox.io/embed/staging-dust-pg930?fontsize=14&hidenavigation=1&mod
 
 First, we need to prepare `StoreModule.forRoot()` to make `Store` available to components and services. If it is fully modularized, there will be no reducer to pass to `forRoot()`.
 
-```ts
+```typescript
 @NgModule({
   imports: [BrowserModule, StoreModule.forRoot({})],
   // ...
@@ -121,7 +121,7 @@ export class AppModule {}
 
 The first thing to do is to create a Slice. Create `counter/counter-slice.ts` and use the `createSlice()` function to create a Slice object. That’s almost all the code for state management.
 
-```ts
+```typescript
 import { createSlice } from '@reduxjs/toolkit';
 const counterSlice = createSlice({
   name: 'counter',
@@ -140,7 +140,7 @@ const counterSlice = createSlice({
 
 Based on the Slice created in step 1, we will modularize the Slice according to the ducks pattern: default export for Reducer, named export for Action Creator and other objects. Using object destructuring, we can write like the following:
 
-```ts
+```typescript
 const {
   reducer,
   actions: { increment },
@@ -156,7 +156,7 @@ This is a preference, so if you don’t find the ducks pattern valuable, you can
 
 We will use the object exported from `counter-slice.ts` to set the Feature State of NgRx. Just call `StoreModule.forFeature()` in `counter.module.ts` and pass the `name` and `reducer` of the Slice as follows:
 
-```ts
+```typescript
 import counterReducer, { name as counterFeatureKey } from './counter-slice';
 @NgModule({
   imports: [StoreModule.forFeature(counterFeatureKey, counterReducer)],
@@ -169,25 +169,29 @@ export class CounterModule {}
 
 In the NgRx Store, it is common to use a Feature Selector to retrieve the Feature State from the `Store`. This time, `counter-slice.ts` itself will create and export a Feature Selector. The type of the Feature State managed by `counterSlice` can be retrieved using `ReturnType<typeof reducer>`, thanks to RTK’s strong type inference support.
 
-```ts
-export const selectFeature = createFeatureSelector<ReturnType<typeof reducer>>(name);
+```typescript
+export const selectFeature = createFeatureSelector<ReturnType<typeof reducer>>(
+  name
+);
 ```
 
 ### 5. Access to Feature State
 
 Finally, refer to the Feature State from the component, dispatch an Action to update it, and you are done. The code in this area is not affected by the RTK.
 
-```ts
+```typescript
 import { createSelector, Store } from '@ngrx/store';
 import * as counterSlice from './counter-slice';
 @Component({
   selector: 'app-counter',
-  template: `<button (click)="increment()">INCREMENT</button>: {{ counter$ | async }}`,
+  template: `<button (click)="increment()">INCREMENT</button>:    {{ counter$ | async }}`,
 })
 export class CounterComponent {
   constructor(private readonly store: Store<{}>) {}
   // Get state
-  counter$ = this.store.select(createSelector(counterSlice.selectFeature, (state) => state.count));
+  counter$ = this.store.select(
+    createSelector(counterSlice.selectFeature, (state) => state.count)
+  );
   increment() {
     // Update state
     this.store.dispatch(counterSlice.increment());
@@ -203,21 +207,21 @@ This is a brief summary of the advantages and disadvantages of using NgRx Store 
 
 Compared to the bare Redux, utilities provided by NgRx such as `createReducer` and `createAction` simplify the description, while `createSlice()` reduces waste to the absolute minimum. It not only reduces the amount of code but also hides the combination of multiple APIs in just one `createSlice()`, which is very good in terms of ease of remembering how to use it.
 
-```ts
+```typescript
 // NgRx
 import { createAction, createReducer } from '@ngrx/store';
 export const increment = createAction('[Counter Component] Increment');
 export const initialState = 0;
 const _counterReducer = createReducer(
   initialState,
-  on(increment, (state) => state + 1),
+  on(increment, (state) => state + 1)
 );
 export function counterReducer(state, action) {
   return _counterReducer(state, action);
 }
 ```
 
-```ts
+```typescript
 // Redux Toolkit
 import { createSlice } from '@reduxjs/toolkit';
 const counterSlice = createSlice({
@@ -252,3 +256,4 @@ Since the RTK, the Redux ecosystem seems to be gaining momentum in spreading bes
 The implementation example presented here is just one idea at the moment, and if you can find a better interoperable implementation pattern, I’d love to see NgRx Store + RTK made by others. I’m looking forward to your feedback.
 
 See you.
+

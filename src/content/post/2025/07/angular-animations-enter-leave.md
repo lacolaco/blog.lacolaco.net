@@ -4,11 +4,11 @@ slug: 'angular-animations-enter-leave'
 icon: ''
 created_time: '2025-07-26T10:15:00.000Z'
 last_edited_time: '2025-07-26T10:19:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-animations-enter-leave'
 notion_url: 'https://www.notion.so/Angular-Enter-Leave-API-23c3521b014a80369152cc3d38813adf'
 features:
@@ -59,10 +59,10 @@ https://stackblitz.com/edit/stackblitz-starters-jctzpta6?ctl=1&embed=1&file=src%
 さらに複雑な制御を行いたい場合、たとえばサードパーティライブラリを使ったアニメーションをしたいときなどは、イベントバインディング形式を使うこともできる。次のように、`(animate.enter)` イベントでコールバックメソッドを呼び出すと、アニメーション対象のDOM要素参照を引数に受け取って好きな処理を実行できる。
 
 ```html
-<div (animate.enter)="animateEnter($event)">Hello</div>
+  <div (animate.enter)="animateEnter($event)">Hello</div>
 ```
 
-```ts
+```typescript
   // `animate.enter="enter"` と同等の処理
   animateEnter(event: AnimationCallbackEvent) {
     // クラスを付与
@@ -89,3 +89,4 @@ https://stackblitz.com/edit/stackblitz-starters-jctzpta6?ctl=1&embed=1&file=src%
 Angular v20.2で導入される新しいEnter/Leaveアニメーションは、コンポーネントやDOM要素の表示・非表示に簡単にアニメーションを適用できる強力なAPIだ。簡単なアニメーションであればCSSクラスの付け外しだけで簡単に実装でき、複雑なユースケースにおいてもコールバック関数を使って柔軟なアニメーション制御が可能になる。サードパーティのアニメーションライブラリとの親和性も十分に期待できる。
 
 おそらくv20.2段階では開発者プレビュー版となるだろうが、リリースが楽しみだ。
+

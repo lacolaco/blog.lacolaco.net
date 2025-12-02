@@ -4,12 +4,12 @@ slug: 'state-of-angular-elements-2020-summer'
 icon: ''
 created_time: '2020-09-22T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Angular Elements'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Elements-2020-Summer-c392710074624b3eacb775d58b6b9652'
 features:
   katex: false
@@ -17,7 +17,7 @@ features:
   tweet: false
 ---
 
-![image](/images/state-of-angular-elements-2020-summer/2020-09-22T17-35-00.png)
+![image](/images/state-of-angular-elements-2020-summer/2020-09-22T17-35-00.741935cd422dd458.png)
 
 本稿では 2020 年夏（Angular v10.1） 時点において Angular Elements がどのような状態にあるのかを簡潔にまとめる。すでに達成されていることと、まだ達成されていないことを手早く把握できることを目的とする。Angular Elements の将来については [公式ロードマップ](https://angular.jp/guide/roadmap) に書かれていないことを独自に述べることはない。
 
@@ -53,7 +53,7 @@ export class AppModule {
 
 まずはじめに、Angular Elements という機能が Web 標準仕様にどれほど準拠できているかをまとめる。 逆に Angular アプリケーション内で Custom Elements を利用するケースについては [Custom Elements Everywhere](https://custom-elements-everywhere.com/) にまとめられているのでそちらを参照すること。
 
-![image](/images/state-of-angular-elements-2020-summer/2020-09-22T17-41-39.png)
+![image](/images/state-of-angular-elements-2020-summer/2020-09-22T17-41-39.5f7dba0db80d4a92.png)
 
 ### Custom Elements
 
@@ -104,7 +104,7 @@ v6.0 とともに Angular Elements がリリースされてから 2 年、当初
 具体的な用例でいえば、 [angular.io](http://angular.io/) 内のサンプルコードや StackBlitz へのリンクなどは Angular Elements で表示されている。 `<code-snippet>` のような Angular Elements をあらかじめ登録しておき、Markdown のドキュメンテーション中でタグを記述すればドキュメント中にリッチなコンテンツを展開できるようになっている。
 
 <figure>
-  <img src="/images/state-of-angular-elements-2020-summer/2020-09-22T17-30-55.png" alt="code-exampleタグの様子">
+  <img src="/images/state-of-angular-elements-2020-summer/2020-09-22T17-30-55.b677ec7b167003d8.png" alt="code-exampleタグの様子">
   <figcaption>code-exampleタグの様子</figcaption>
 </figure>
 
@@ -137,3 +137,4 @@ v6.0 とともに Angular Elements がリリースされてから 2 年、当初
   - ShadowDom を使わなければ基本的に polyfill で困ることはないが、信頼性やパフォーマンスなどの面で重要である
 
 つまりほとんど問題なく使えるため、ぜひ活用してコミュニティから需要や期待、フィードバックを発信してほしい。
+

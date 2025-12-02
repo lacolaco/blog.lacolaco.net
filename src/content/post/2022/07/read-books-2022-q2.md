@@ -4,12 +4,12 @@ slug: 'read-books-2022-q2'
 icon: ''
 created_time: '2022-07-02T00:20:00.000Z'
 last_edited_time: '2023-12-30T10:06:00.000Z'
-category: 'Diary'
 tags:
   - '日記'
   - '読書'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/2022-Q2-7513b1f4e7e64b10ba15e54411a3deb6'
 features:
   katex: false
@@ -19,7 +19,7 @@ features:
 
 2022 4月〜6月に読んだ本・読み始めた本
 
-![image](/images/read-books-2022-q2/Untitled.png)
+![image](/images/read-books-2022-q2/Untitled.4b03c2ef0c248459.png)
 
 ### まだ読んでる
 
@@ -54,6 +54,7 @@ features:
 
 ## これから読む本
 
-![image](/images/read-books-2022-q2/Untitled.png)
+![image](/images/read-books-2022-q2/Untitled.ffa1d8f51783ae66.png)
 
 NOISEは積み続けている。『省察』を読み終わるとようやく17世紀哲学に区切りをつけて18世紀へ迎えるので楽しみ。
+

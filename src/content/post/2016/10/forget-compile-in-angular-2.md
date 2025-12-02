@@ -4,12 +4,12 @@ slug: 'forget-compile-in-angular-2'
 icon: ''
 created_time: '2016-10-02T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'AngularJS'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Forget-compile-in-Angular-2-b423a3edd0c94e599e1235e08c72bc64'
 features:
   katex: false
@@ -96,3 +96,4 @@ It’s very grunt code, but works well. We should go on the right way of Angular
 ### Summary
 
 Angular 2 is stable now. We should throw away tricky ways. Keep our applications AoT-friendly and optimizable. Follow the right Angular way.
+

@@ -4,11 +4,11 @@ slug: 'angular-property-binding-atttribute-binding'
 icon: ''
 created_time: '2021-09-03T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-bdddec227b87480180bd0660353509c9'
 features:
   katex: false
@@ -61,3 +61,4 @@ Angular を勉強中のとある学生から質問をもらった。いい質問
 ### まとめ
 
 プロパティバインディングと属性バインディングが区別されている理由は、属性バインディングでしか記述できない場合があるからだ、ということを改めて解説した。 適切に使い分けるというよりは、属性バインディングはプロパティバインディングでカバーできないユースケースを補うための機能として捉えておくのがいいだろう。
+

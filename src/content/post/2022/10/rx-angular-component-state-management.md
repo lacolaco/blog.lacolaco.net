@@ -4,13 +4,13 @@ slug: 'rx-angular-component-state-management'
 icon: ''
 created_time: '2022-10-26T06:46:00.000Z'
 last_edited_time: '2022-10-26T00:00:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'rx-angular'
   - '状態管理'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/rx-angular-state-e7898e37330444828657dff38ca1f349'
 features:
   katex: false
@@ -38,7 +38,7 @@ https://blog.lacolaco.net/2019/07/angular-single-state-stream-pattern/
 
 シンプルな例として、ユーザー情報を非同期的に取得して表示するようなケースだと、このようになる。
 
-```ts
+```typescript
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { RxState } from '@rx-angular/state';
@@ -58,19 +58,19 @@ const initialState: State = {
   standalone: true,
   imports: [CommonModule],
   providers: [RxState],
-  template: `
-    <ng-container *ngIf="state$ | async as state">
-      <div><button (click)="load()">Load</button></div>
+  template: ` 
+  <ng-container *ngIf="state$ | async as state">
+    <div><button (click)="load()">Load</button></div>
 
-      <ng-container *ngIf="state.userFetching; else showUser">
-        <span>Loading...</span>
-      </ng-container>
-
-      <ng-template #showUser>
-        <span>User Name: {{ state.user.name }} </span>
-      </ng-template>
+    <ng-container *ngIf="state.userFetching; else showUser">
+      <span>Loading...</span>
     </ng-container>
-  `,
+
+    <ng-template #showUser>
+      <span>User Name: {{ state.user.name }} </span>
+    </ng-template>
+  </ng-container>
+`,
 })
 export class AppComponent {
   private readonly store = inject<RxState<State>>(RxState);
@@ -100,7 +100,7 @@ https://stackblitz.com/edit/angular-ivy-r34mhv?ctl=1&embed=1&file=src/app/app.co
 
 `RxStore` の注入を `inject()` 関数で行っているが、これはもちろんコンストラクタ引数でも構わない。
 
-```ts
+```typescript
 export class AppComponent {
   readonly state$ = this.store.select();
 
@@ -112,7 +112,7 @@ export class AppComponent {
 
 rx-angular/state の特徴的な点は、状態の初期化が遅延されていることだ。多くの状態管理ライブラリや `BehaviorSubject` による素朴な状態管理では、 `initialState` を与える初期化が一般的である。そのStateの型に合った初期値をインスタンス生成時に与える必要があるが、 `RxState` には `initialState` という概念はない。
 
-`select()` メソッドが返すObservableは最初の `set()` が呼び出されるまで何も値を流さない。初期値を与えたければ、利用者がコンストラクタなどの初期化にふさわしいタイミングで `set()` メソッドを使って状態をセットすればいい。大抵のケースではそうすることになるだろう。だが、初期値を与えるかどうかをユーザー側で選択できるようにしていることが面白い。
+ `select()` メソッドが返すObservableは最初の `set()` が呼び出されるまで何も値を流さない。初期値を与えたければ、利用者がコンストラクタなどの初期化にふさわしいタイミングで `set()` メソッドを使って状態をセットすればいい。大抵のケースではそうすることになるだろう。だが、初期値を与えるかどうかをユーザー側で選択できるようにしていることが面白い。
 
 ## 継承を使ったパターンを避けたい理由
 
@@ -120,7 +120,7 @@ rx-angular/state の `RxState` クラスは上記のようにサービスとし�
 
 Setup | RxAngular [https://www.rx-angular.io/docs/state/setup#inherit](https://www.rx-angular.io/docs/state/setup#inherit)
 
-```ts
+```typescript
 @Component({})
 export class StatefulComponent extends RxState<{ foo: number }> {
   readonly state$ = this.select();
@@ -134,3 +134,4 @@ export class StatefulComponent extends RxState<{ foo: number }> {
 コンポーネントクラスが `RxState` クラスを継承することで、コンポーネント自身の `this` が `select()` や `set()` などのAPIを持つようになる。
 
 この書き方は手軽さではあるが、あまり本格的に使いたいものではない。その理由はテンプレートに対する可視性や意図しない外部へのAPIの露出によって、このライブラリへの結合が複雑になってしまうことがある。 `this` に `RxState` のAPIが継承されるということは、テンプレート内で直接 `set()` できてしまうということだ。うっかり参照してしまうことを避けるために、継承ではなくDIによるクラスフィールドとして `private` の可視性で扱い、テンプレートから参照できるのはテンプレートで使われることを意図したフィールドだけにしたい。
+

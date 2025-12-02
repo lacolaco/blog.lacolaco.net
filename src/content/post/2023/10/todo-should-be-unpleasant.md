@@ -4,11 +4,11 @@ slug: 'todo-should-be-unpleasant'
 icon: ''
 created_time: '2023-10-02T13:29:00.000Z'
 last_edited_time: '2023-12-30T10:00:00.000Z'
-category: 'Idea'
 tags:
   - '雑記'
 published: true
 locale: 'ja'
+category: 'Idea'
 notion_url: 'https://www.notion.so/TODO-ffaa77445abc4ec5b2a39965065d0268'
 features:
   katex: false
@@ -23,3 +23,4 @@ features:
 積読もそうしたデザインと捉えられる。物理的に本を積み上げてデスクや作業スペースを圧迫することで「邪魔だ」と感じることに意味がある。もし慣れてしまったらもっと高く大きく積み上げるしかない。
 
 これらは、自身の快不快のセンサーに負の圧力を加えて、それを取り払うような反動を呼び起こそうという、やる気に頼らないセルフモチベーションマネジメントのライフハックといえる。
+

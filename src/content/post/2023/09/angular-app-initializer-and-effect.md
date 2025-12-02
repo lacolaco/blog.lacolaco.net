@@ -4,12 +4,12 @@ slug: 'angular-app-initializer-and-effect'
 icon: ''
 created_time: '2023-09-08T10:20:00.000Z'
 last_edited_time: '2023-12-30T10:01:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-APP_INITIALIZER-Effect-3d881d0fdcf44c19ada86ceb05f8e874'
 features:
   katex: false
@@ -23,7 +23,7 @@ Signal APIの `effect` はSignalの値の変更に反応して副作用を実行
 
 [https://angular.jp/guide/dependency-injection-context](https://angular.jp/guide/dependency-injection-context)
 
-```ts
+```typescript
 @Component({...})
 export class EffectiveCounterCmp {
   readonly count = signal(0);
@@ -42,7 +42,7 @@ export class EffectiveCounterCmp {
 
 たとえば、アプリケーションのログインユーザー情報を外部のサービス（たとえばGoogle AnalyticsやSentryなど）に送信したいケース。一般化すれば、アプリケーション内部の状態の変化を一方的に外部サービスへ同期したいような場面では、状態の変更を購読する形で実装したい。状態がSignalであれば、次のように副作用として記述できる。
 
-```ts
+```typescript
 // Sentry.setUserのようなもののイメージ
 const analyticsService = {
   setUser: (user: User | null) => {
@@ -65,7 +65,7 @@ function bindUserToAnalytics($user: Signal<User | null>) {
 
 ではこの `effect` をどう呼び出すかというと、 `APP_INITIALIZER` のファクトリー関数で呼び出す。 `useFactory` 関数のスコープはインジェクションコンテキストである。 `inject()` が呼び出せるということは `effect()` も呼び出せる。このようにアプリケーションの初期化のタイミングで副作用を宣言しておけば、アプリケーション側からはまったく関心を向けずにおくことができる。
 
-```ts
+```typescript
 bootstrapApplication(App, {
   providers: [
     {
@@ -86,7 +86,7 @@ bootstrapApplication(App, {
 
 何もしない関数を返しているのが気持ち悪ければ、初期化関数をインジェクションコンテキストにしてしまってもよいが、結果にほとんど違いはない。汎用的にユーティリティ関数を作れば、次のようにまとめられる。
 
-```ts
+```typescript
 function bindUserToAnalytics($user: Signal<User | null>) {
   effect(() => {
     const user = $user();
@@ -124,3 +124,4 @@ SignalやEffectの可能性はまだまだ未知数で、サンプルコード�
 実際に動くサンプルを貼っておく。
 
 https://stackblitz.com/edit/angular-f2bgnd?ctl=1&embed=1&file=src/main.ts
+

@@ -4,12 +4,12 @@ slug: 'write-better-code'
 icon: ''
 created_time: '2022-02-17T02:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Idea'
 tags:
   - '雑記'
   - '言語化'
 published: true
 locale: 'ja'
+category: 'Idea'
 notion_url: 'https://www.notion.so/b81b02a5843e43c78a204f020179061f'
 features:
   katex: false
@@ -26,3 +26,4 @@ features:
 常にいいコードを書けるように励もう。どんなコードも時間とともに老化する。老いに対抗できるのは、絶えずよりよいコードに書き換えていく新陳代謝だけだ。
 
 今日は昨日よりいいコードを書こう。
+

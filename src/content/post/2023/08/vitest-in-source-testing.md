@@ -4,12 +4,12 @@ slug: 'vitest-in-source-testing'
 icon: ''
 created_time: '2023-08-22T10:23:00.000Z'
 last_edited_time: '2023-12-30T10:01:00.000Z'
-category: 'Tech'
 tags:
   - 'Testing'
   - 'Vitest'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Vitest-In-source-Testing-579ff1eca68c4fbe9fa67d7c59f1698d'
 features:
   katex: false
@@ -25,7 +25,7 @@ https://doc.rust-jp.rs/book-ja/ch11-03-test-organization.html#非公開関数を
 
 https://zenn.dev/azukiazusa/articles/vitest-same-test-file
 
-```ts
+```typescript
 // in-source test suites
 if (import.meta.vitest) {
   const { describe, it, expect } = import.meta.vitest;
@@ -65,3 +65,4 @@ https://github.com/lacolaco/feed2social/blob/466a0e8af91da40911f0ac2ca8981fa5e3c
 - テストを書くためにその関数の可視性がどうだとか悩む必要がないので、とにかくまずテストを書き始めるということをやりやすい。
 - テストが実装とすぐ近くにあるので、テストファーストの開発スタイルには特に向いていると思う。
 - 当然だがファイルが大きくなりやすいが、実装が増えたにしろテストが増えたにしろそれはつまりそのファイルの関心事が増えているということなので、関心を分離しろということになる。テストファイルがどんどん大きくなっていくのは見逃されやすいので、実装と同じファイルであることで「適切に困る」ことができそうだ。
+

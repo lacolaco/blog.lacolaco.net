@@ -4,11 +4,11 @@ slug: 'london-trip-2025'
 icon: ''
 created_time: '2025-09-16T13:40:00.000Z'
 last_edited_time: '2025-09-16T13:48:00.000Z'
-category: 'Diary'
 tags:
   - '日記'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/AngularConnect-2025-2703521b014a80969603e3c924fece24'
 features:
   katex: false
@@ -22,7 +22,7 @@ https://angularconnect.com/
 
 AngularConnect には2016, 2019の2回参加したことがあり、ロンドンも3回目だ。COVID-19以後一度も日本国外に出ていなかったため、慣れている国で海外旅行リハビリをしたかったのもあり、いい機会だった。
 
-![image](/images/london-trip-2025/image-3db4a395.png)
+![image](/images/london-trip-2025/image.93a315cfa108125d.png)
 
 肝心のAngularConnectの内容についてはまた後日。
 
@@ -61,12 +61,12 @@ https://en.wikipedia.org/wiki/Elizabeth_line
 日本食が食べられる店が以前より増えている気がする。itsuとWasabiとwagamamaはめっちゃよく見た。ヒースロー空港にも回転寿司があるし、Farringdon駅前のkurumayaのカツカレーは普通に美味しかった。
 
 <figure>
-  <img src="/images/london-trip-2025/image-52b5fca6.png" alt="Farringdon の kurumaya">
+  <img src="/images/london-trip-2025/image.9d0194cb9f8268b4.png" alt="Farringdon の kurumaya">
   <figcaption>Farringdon の kurumaya</figcaption>
 </figure>
 
 <figure>
-  <img src="/images/london-trip-2025/image-7a97efc5.png" alt="Heathrow空港のYO!">
+  <img src="/images/london-trip-2025/image.2cb8d975677da6f8.png" alt="Heathrow空港のYO!">
   <figcaption>Heathrow空港のYO!</figcaption>
 </figure>
 
@@ -85,6 +85,7 @@ https://en.wikipedia.org/wiki/Elizabeth_line
 - Canterbury Cathedral
 
 <figure>
-  <img src="/images/london-trip-2025/image-6cf7e086.png" alt="Canterbury Cathedral">
+  <img src="/images/london-trip-2025/image.bfd0a992d6a08907.png" alt="Canterbury Cathedral">
   <figcaption>Canterbury Cathedral</figcaption>
 </figure>
+

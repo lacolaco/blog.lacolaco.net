@@ -4,12 +4,12 @@ slug: 'list-component-design'
 icon: ''
 created_time: '2019-02-18T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - '設計'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-ListComponent-ListItemComponent-b0a1124520914ae6a17a7291930e0970'
 features:
   katex: false
@@ -150,3 +150,4 @@ export class AppComponent {
 このように、親子の結合が強い UI 構造をコンポーネント化する際には Sass の mixin 機能を使うことでシンプルにスタイルを集約できる。Angular CLI であればデフォルトで Sass ファイルをサポートしているので準備はまったく不要だ。
 
 また、UI を責務とするコンポーネントからはデータの構造やコンテンツへの関心を極力排除するほうが好ましい。UI コンポーネントはひたすら見た目とユーザーインタラクションに集中し、コンポジションによってコンテンツを表示しよう。UI コンポーネントというのは複数コンテキストで共有するのが前提なのだから、コンテキストには無関心でなければアプリケーション間の横のつながりを生んでしまうのだ。
+

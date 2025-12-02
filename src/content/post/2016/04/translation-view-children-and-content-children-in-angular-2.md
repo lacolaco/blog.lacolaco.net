@@ -4,12 +4,12 @@ slug: 'translation-view-children-and-content-children-in-angular-2'
 icon: ''
 created_time: '2016-04-16T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'translation'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/ViewChildren-and-ContentChildren-in-Angular-2-a2178d0a22104f9b9dfc7fca9a317c9a'
 features:
   katex: false
@@ -67,7 +67,7 @@ map ((*2).(+1)) [1, 2, 3]
 // ...@Component({  selector: 'todo-app',  providers: [TodoList],  directives: [TodoCmp, TodoInputCmp],  template: `    <section>      Add todo:      <todo-input (onTodo)="addTodo($event)"></todo-input>    </section>    <section>      <h4 *ngIf="todos.getAll().length">Todo list</h4>      <todo *ngFor="var todo of todos.getAll()" [todo]="todo">      </todo>    </section>    <ng-content select="footer"></ng-content>  `})class TodoAppCmp {  constructor(private todos: TodoList) {}  addTodo(todo) {    this.todos.add(todo);  }}// ...
 ```
 
-これは _Yet another MV_ todo application\* です. (訳注：アプリケーションの名前なのでそのまま残しています。)
+これは _Yet another MV* todo application_ です. (訳注：アプリケーションの名前なのでそのまま残しています。)
 
 上では `todo-app` というセレクタで、テンプレートを持ったコンポーネントを定義しています。 そして、子要素として使われるディレクティブのセットを定義しています。
 
@@ -80,7 +80,7 @@ map ((*2).(+1)) [1, 2, 3]
 これは標準的なXMLの構文なので、 開始タグと終了タグの間に任意のcontentを挿入することができます。
 
 ```html
-<todo-app> <footer>Yet another todo app!</footer></todo-app>
+<todo-app>  <footer>    Yet another todo app!  </footer></todo-app>
 ```
 
 ## `ng-content` による基本的なcontentの表示
@@ -130,7 +130,7 @@ import {ViewChild, ViewChildren, Component...} from 'angular2/core';
 class TodoAppCmp {
   @ViewChild(TodoInputCmp)
   inputComponent: TodoInputCmp
-
+  
   @ViewChildren(TodoCmp)
   todoComponents: QueryList<TodoCmp>;
 
@@ -147,7 +147,7 @@ class TodoAppCmp {
 
 もう一つ重要なことは、 `inputComponent` と `todoComponents` の型です。 前者のプロパティの型は `TodoInputCmp` になっています。 これはクエリした結果要素が見つからなければnullになり、見つかればそのコンポーネントのインスタンスが代入されます。 一方、 `todoComponents` プロパティの型は `QueryList<TodoCmp>` で、動的に増えたり減ったりする `TodoCmp`のインスタンスを扱えます。 `QueryList` はObservableなコレクションなので、新しく追加されたり、要素が削除された時にはイベントを発生してくれます。
 
-**AngularのDOMコンパイラは \*\***`todo-app`\***\* コンポーネントを先に初期化し、その後子要素を初期化します。** **つまり \*\***`todo-app`\***\* コンポーネントの初期化の間は \*\***`inputComponent`\***\* も \*\***`todoComponents`\***\* もまだ初期化されていません** **これらは \*\***`ngAfterCiewInit`\***\* ライフサイクルフックのタイミングで使用可能になります**
+**AngularのDOMコンパイラは **`todo-app`** コンポーネントを先に初期化し、その後子要素を初期化します。** **つまり **`todo-app`** コンポーネントの初期化の間は **`inputComponent`** も **`todoComponents`** もまだ初期化されていません** **これらは **`ngAfterCiewInit`** ライフサイクルフックのタイミングで使用可能になります**
 
 ### Content Childrenにアクセスする
 
@@ -190,7 +190,7 @@ export class AppCmp {}
 class TodoAppCmp {
   @ContentChild(Footer)
   footer: Footer;
-
+  
   ngAfterContentInit() {
     // this.footer is now with value set
   }
@@ -242,7 +242,7 @@ class TodoAppCmp {
 EXCEPTION: No provider for TodoList! (Footer -> TodoList)
 ```
 
-**これは \*\***`viewProviders`\***\* によって宣言されたプロバイダはそのコンポーネントとView Childrenにだけアクセス可能になるということです**
+**これは **`viewProviders`** によって宣言されたプロバイダはそのコンポーネントとView Childrenにだけアクセス可能になるということです**
 
 `Footer` でも `TodoList` サービスにアクセスしたい場合は、 `viewProviders` から `providers` に変える必要があります。
 
@@ -255,3 +255,4 @@ EXCEPTION: No provider for TodoList! (Footer -> TodoList)
 この記事ではコンポーネントとディレクティブの合成の方法について解説しました。 また、View ChildrenとContent Childrenの違いと、それらにどうやってアクセスするのかについても紹介しました。
 
 そして最後に、 `viewProviders` と `providers` の意味についても説明しました。 もしこのテーマにもっと興味がある場合は、私が書いている[Switching to Angular 2](https://www.packtpub.com/web-development/switching-angular-2)を読むことをおすすめします！
+

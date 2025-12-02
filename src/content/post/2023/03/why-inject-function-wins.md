@@ -4,13 +4,13 @@ slug: 'why-inject-function-wins'
 icon: '📝'
 created_time: '2023-03-23T00:44:00.000Z'
 last_edited_time: '2023-12-30T10:05:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'dependency injection'
   - 'TypeScript'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/why-inject-function-wins'
 notion_url: 'https://www.notion.so/Angular-inject-23c54aef56ff4d4c99b035e052b80056'
 features:
@@ -31,18 +31,18 @@ https://netbasal.com/unleash-the-power-of-di-functions-in-angular-2eb9f2697d66
 
 コンストラクタ引数を使用した依存性の注入は、TypeScriptのExperimental Decoratorsで実装されているParameter Decoratorsの機能が不可欠である。Parameter Decoratorsとは、関数の引数を修飾するデコレーターである。コンストラクタ引数による依存性の注入に使われる `@Inject()` や `@Self()` 、 `@Optional()` などはすべてParameter Decoratorsである。
 
-```ts
+```typescript
 class Foo {
-  constructor(@Inject(Bar) bar: Bar) {}
+	constructor(@Inject(Bar) bar: Bar) {}
 }
 ```
 
 `@Inject()` を使っていないコンストラクタ引数でもインジェクションできていると思っている人もいるかもしれないが、それはAngularのデコレーターコンパイラが型パラメータを自動的にインジェクショントークンに変換して次のように書き換えているからである。これは `@Inject()` の省略記法にすぎない。
 
-```ts
+```typescript
 class Foo {
-  // 型パラメータから判断して自動的に @Inject(Bar) が生成される
-  constructor(bar: Bar) {}
+	// 型パラメータから判断して自動的に @Inject(Bar) が生成される
+	constructor(bar: Bar) {}
 }
 ```
 
@@ -71,3 +71,4 @@ https://github.com/angular/angular/pull/49492
 コンストラクタ引数による依存性の注入をやめなければ、TypeScript の実験的実装に依存し続けることになる。今後しばらくはTypeScriptがサポートを切ることはないらしいが、今後さまざまなライブラリやツールが標準デコレーターを前提とした形で登場してくるだろう。そのとき、非標準のデコレーターでしかサポートされていないParameter Decoratorsの存在が足を引っ張る可能性は高い。
 
 もはやどちらを使うか選べる段階は終わったと考えるべきだ。 `inject()` 関数が依存性の注入を利用するただひとつの安定APIである。
+

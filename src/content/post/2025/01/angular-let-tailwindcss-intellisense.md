@@ -4,12 +4,12 @@ slug: 'angular-let-tailwindcss-intellisense'
 icon: ''
 created_time: '2025-01-09T13:01:00.000Z'
 last_edited_time: '2025-01-09T13:27:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'tailwindcss'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-let-tailwindcss-intellisense'
 notion_url: 'https://www.notion.so/Angular-Tailwind-CSS-IntelliSense-1763521b014a80ca916dd87cfc630eca'
 features:
@@ -23,16 +23,16 @@ Angularの `@let` 構文によるテンプレート内変数でTailwind CSSの�
 次の画像のように、Tailwind CSS IntelliSense によってクラス文字列であると認識され、入力補完が効くし、入力後には色のプレビューアイコンも表示される。完璧である。
 
 <figure>
-  <img src="/images/angular-let-tailwindcss-intellisense/CleanShot_2025-01-09_at_21.41.322x.png" alt="VS Code上でTailwind CSSのユーティリティクラスの入力補完が動作している様子を示したスクリーンショット">
+  <img src="/images/angular-let-tailwindcss-intellisense/CleanShot_2025-01-09_at_21.41.322x.6a27d7a9684259ba.png" alt="VS Code上でTailwind CSSのユーティリティクラスの入力補完が動作している様子を示したスクリーンショット">
   <figcaption>VS Code上でTailwind CSSのユーティリティクラスの入力補完が動作している様子を示したスクリーンショット</figcaption>
 </figure>
 
 <figure>
-  <img src="/images/angular-let-tailwindcss-intellisense/CleanShot_2025-01-09_at_21.34.452x.png" alt="テンプレート内変数の文字列がTailwind CSSのユーティリティクラスだと認識されている様子を示したスクリーンショット">
+  <img src="/images/angular-let-tailwindcss-intellisense/CleanShot_2025-01-09_at_21.34.452x.05480b1d1c3500dc.png" alt="テンプレート内変数の文字列がTailwind CSSのユーティリティクラスだと認識されている様子を示したスクリーンショット">
   <figcaption>テンプレート内変数の文字列がTailwind CSSのユーティリティクラスだと認識されている様子を示したスクリーンショット</figcaption>
 </figure>
 
-## `classAttributes`
+## `classAttributes` 
 
 やったことは簡単で、Tailwind CSS IntelliSense の `classAttributes` 設定を変更しただけである。
 
@@ -55,3 +55,4 @@ https://github.com/tailwindlabs/tailwindcss-intellisense?tab=readme-ov-file#tail
 ```
 
 この設定を `.vscode/settings.json` に加えるなりユーザー設定を変更するなりして、VS Code拡張を再起動すると冒頭のスクリーンショットのように機能する。再起動しないと反映されないので注意。
+

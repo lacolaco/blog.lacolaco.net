@@ -4,11 +4,11 @@ slug: 'perspective-of-angular-in-2020'
 icon: ''
 created_time: '2019-12-24T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Perspective-of-Angular-in-2020-6c416ea17a9c4a0484352c68031918af'
 features:
   katex: false
@@ -157,3 +157,4 @@ Angular 公式にも取り組んでいる Work in Progress なプロジェクト
 Values の 3 本軸、ユーザーが愛せるアプリケーション（ユーザー体験）、開発者が愛せるアプリケーション（開発者体験）、そして世界中に広がるコミュニティの力で、これまで以上に魅力的な Web 開発プラットフォームに育っていくと期待しています。
 
 それでは良いお年を。
+

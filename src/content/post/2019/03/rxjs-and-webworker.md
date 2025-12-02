@@ -4,12 +4,12 @@ slug: 'rxjs-and-webworker'
 icon: ''
 created_time: '2019-03-26T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'RxJS'
   - 'Web Worker'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/RxJS-Web-Worker-2-9e5898a659e043159846fe94baa9a101'
 features:
   katex: false
@@ -32,7 +32,7 @@ https://www.chromestatus.com/feature/5761300827209728
 Module Worker では次のようなコードで `type: 'module'` を指定すると、コンストラクタに指定したパスを ES Module として読み込めます。 さらに Worker スクリプト内でも ES Module のコンテキストで他のモジュールを import/export 文を使えるようになります。
 
 ```javascript
-const worker = new Worker('./worker.mjs', { type: 'module' });
+const worker = new Worker("./worker.mjs", { type: "module" });
 ```
 
 もちろん Chrome ですらまだ普通には使えない機能なので、今 Module Worker を使うためには小細工が必要です。 webpack を使っている場合は、Google の Chrome チームが開発している WorkerPlugin を使うのが便利です。
@@ -59,15 +59,23 @@ Worker は postMessage/ommessage によって他のスレッドとコミュニ�
 
 次のコードは、Worker を隠蔽する `WorkerSubject` の実装例です。 `WorkerSubject` は`next` メソッドで渡されたデータを Worker に postMessage し、 Worker の `message` / `error` イベントを内部の子 Subject で購読します。 `WorkerSubject` を購読する Subscriber は 内部の子 Subject を間接的に購読することになります。 これは実装の一例であって、もっと効率的な実装はあると思います。
 
-```ts
+```typescript
 export class WorkerSubject<T> extends Subject<T> {
   private inner = new ReplaySubject();
   private sub = new Subscription();
 
   constructor(public worker: Worker) {
     super();
-    this.sub.add(fromEvent<MessageEvent>(worker, 'message').subscribe((ev) => this.inner.next(ev.data)));
-    this.sub.add(fromEvent<ErrorEvent>(worker, 'error').subscribe((ev) => this.inner.error(ev.error)));
+    this.sub.add(
+      fromEvent<MessageEvent>(worker, "message").subscribe(ev =>
+        this.inner.next(ev.data)
+      )
+    );
+    this.sub.add(
+      fromEvent<ErrorEvent>(worker, "error").subscribe(ev =>
+        this.inner.error(ev.error)
+      )
+    );
     this._subscribe = this.inner._subscribe.bind(this.inner);
   }
 
@@ -87,8 +95,8 @@ export class WorkerSubject<T> extends Subject<T> {
 
 Subject に隠蔽するためには、入力に対して出力を返す ping-pong 型の Worker であると好都合です（必ずしもそうでなくてもよいですが）。 `onmessage`で受け取った文字列を変換し、 `postMessage` でレスポンスのイベントを発火しています。
 
-```ts
-import * as marked from 'marked';
+```typescript
+import * as marked from "marked";
 
 function compileMarkdown(markdownString: string) {
   return new Promise<string>((resolve, reject) => {
@@ -105,12 +113,12 @@ function compileMarkdown(markdownString: string) {
 // [tsconfig] lib: "dom" and "webworker" are exclutive.
 const _self: Worker = self as any;
 
-_self.onmessage = (ev) => {
+_self.onmessage = ev => {
   compileMarkdown(ev.data)
-    .then((result) => {
+    .then(result => {
       _self.postMessage(result);
     })
-    .catch((err) => {
+    .catch(err => {
       throw err;
     });
 };
@@ -120,22 +128,26 @@ _self.onmessage = (ev) => {
 
 あとは Module Worker を作って、 `WorkerSubject` でラップすると使えるようになります。 Angular のコンポーネントで使うと、次のようなコードになります。 結果としてこのコンポーネントのテンプレートには `## foo` が `<h2>foo</h2>` に変換された HTML 文字列が表示されます。
 
-```ts
+```typescript
 @Component({
-  selector: 'app-root',
-  template: ` <div>{{ compiled$ | async }}</div> `,
+  selector: "app-root",
+  template: `
+    <div>{{ compiled$ | async }}</div>
+  `
 })
 export class AppComponent implements OnInit {
   compiled$: Subject<string>;
 
   constructor() {
     // Module Workerの作成とWorkerSubjectでのラップ
-    this.compiled$ = new WorkerSubject(new Worker('./compile-markdown', { type: 'module' }));
+    this.compiled$ = new WorkerSubject(
+      new Worker("./compile-markdown", { type: "module" })
+    );
   }
 
   ngOnInit() {
     // WorkerSubjectに新しいデータを送る
-    this.compiled$.next('## foo');
+    this.compiled$.next("## foo");
   }
 }
 ```
@@ -162,10 +174,10 @@ RxJS のオペレーターで、関数を渡して処理をおこなう代表的
 
 RxJS のオペレーターの実体は Observable を受け取って Observable を返す関数です。 `mapOnWorker` は次のように簡単に実装できます。
 
-```ts
-import gleenlet from 'greenlet';
-import { from, Observable } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
+```typescript
+import gleenlet from "greenlet";
+import { from, Observable } from "rxjs";
+import { concatMap } from "rxjs/operators";
 
 export function mapOnWorker<T, U>(fn: (arg: T) => Promise<U>) {
   // 関数をインラインWorker化する
@@ -174,47 +186,49 @@ export function mapOnWorker<T, U>(fn: (arg: T) => Promise<U>) {
     // 1. `workerized`関数を呼び出す
     // 2. 戻り値のPromiseを `from` 関数でObservableに変換する
     // 3. `concatMap` オペレーターで元のObservableと結合する
-    return source.pipe(concatMap((v) => from(workerized(v))));
+    return source.pipe(concatMap(v => from(workerized(v))));
   };
 }
 ```
 
 `map` オペレーターと同じように順序を守るために `concatMap` を使いましたが、`mergeMap` や `switchMap` のようなオペレーターを使うものも簡単に作れます。
 
-```ts
+```typescript
 export const mapOnWorker = concatMapOnWorker;
 
 export function concatMapOnWorker<T, U>(fn: (arg: T) => Promise<U>) {
   const workerized = gleenlet(fn);
   return (source: Observable<T>): Observable<U> => {
-    return source.pipe(concatMap((v) => from(workerized(v))));
+    return source.pipe(concatMap(v => from(workerized(v))));
   };
 }
 
 export function switchMapOnWorker<T, U>(fn: (arg: T) => Promise<U>) {
   const workerized = gleenlet(fn);
   return (source: Observable<T>): Observable<U> => {
-    return source.pipe(switchMap((v) => from(workerized(v))));
+    return source.pipe(switchMap(v => from(workerized(v))));
   };
 }
 
 export function exhaustMapOnWorker<T, U>(fn: (arg: T) => Promise<U>) {
   const workerized = gleenlet(fn);
   return (source: Observable<T>): Observable<U> => {
-    return source.pipe(exhaustMap((v) => from(workerized(v))));
+    return source.pipe(exhaustMap(v => from(workerized(v))));
   };
 }
 ```
 
 Worker への関心はオペレーターの内部に完全に閉じているので、オペレーターの利用側は他のオペレーターと同じようにただ `pipe` メソッドに渡すだけです。
 
-```ts
-import { interval, Observable } from 'rxjs';
-import { mapOnWorker } from '../lib/mapOnWorker';
+```typescript
+import { interval, Observable } from "rxjs";
+import { mapOnWorker } from "../lib/mapOnWorker";
 
 @Component({
-  selector: 'app-root',
-  template: ` <div>{{ calculated$ | async }}</div> `,
+  selector: "app-root",
+  template: `
+    <div>{{ calculated$ | async }}</div>
+  `
 })
 export class AppComponent implements OnInit {
   calculated$: Observable<any>;
@@ -223,7 +237,7 @@ export class AppComponent implements OnInit {
     // 1msごとに発火するObservable
     this.calculated$ = interval(1).pipe(
       // Workerで計算処理を実行する
-      mapOnWorker(async (i) => Math.sqrt(i)),
+      mapOnWorker(async i => Math.sqrt(i))
     );
   }
 }
@@ -244,3 +258,4 @@ https://github.com/GoogleChromeLabs/clooney
 サンプルコードは GitHub 上で公開しています。 コード例はどれも完璧である保証はなく、もっと効率的な実装があるかもしれませんので、ご利用は自由ですが自己責任でよろしくおねがいします。
 
 https://github.com/lacolaco/rxjs-worker-sandbox
+

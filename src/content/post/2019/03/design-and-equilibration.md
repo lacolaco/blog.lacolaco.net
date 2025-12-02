@@ -4,12 +4,12 @@ slug: 'design-and-equilibration'
 icon: ''
 created_time: '2019-03-17T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Idea'
 tags:
   - '雑記'
   - '設計'
 published: true
 locale: 'ja'
+category: 'Idea'
 notion_url: 'https://www.notion.so/105a0b80ef804a6dada02ab40f4e36ef'
 features:
   katex: false
@@ -77,3 +77,4 @@ https://twitter.com/laco2net/status/1107813445951352832
 - 問題を見逃さない目。多くの問題は一般的に発生するパターンがある。
 - 解決手段の引き出し。より多くの選択肢の中から最良の決定をする。
 - 想像力。一度達した平衡が崩れる将来リスクを認識し、備える。
+

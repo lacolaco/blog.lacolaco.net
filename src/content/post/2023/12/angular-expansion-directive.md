@@ -4,12 +4,12 @@ slug: 'angular-expansion-directive'
 icon: ''
 created_time: '2023-12-18T12:24:00.000Z'
 last_edited_time: '2023-12-30T09:58:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'CSS'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-CSS-Grid-Expansion-5cd15f39e63e48b7828eaf1224f8d884'
 features:
   katex: false
@@ -33,7 +33,7 @@ https://stackblitz.com/edit/angular-kyt4lx?ctl=1&embed=1&file=src/main.ts
 
 ディレクティブを使ってスタイルを付与する場合は、ホストバインディングで `style` プロパティへオブジェクトを渡してあげればよい。 `ngStyle` や `style.xxx` といった機能を使わなくとも、まとめてスタイルを付与できる。
 
-```ts
+```typescript
 @Directive({
   selector: '[expandable]',
   standalone: true,
@@ -59,18 +59,20 @@ export class Expandable {
 
 `Expandable` ディレクティブを任意のコンテナ要素に付与し、その直下の子要素に `overflow: hidden` スタイルを付与する。こうすることでグリッドの高さが `0fr` になったときに溢れる部分が非表示になる。
 
-```ts
+```typescript
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [Expandable],
   template: `
     <h1>Expansion with grid-template-rows</h1>
-
+    
     <button (click)="toggle()">toggle</button>
     <div [expandable]="isExpanded()" style="border: 1px solid black;">
       <div style="overflow: hidden;">
-        <p>Lorem ipsum dolor sit amet, ...</p>
+        <p>
+        Lorem ipsum dolor sit amet, ...
+        </p>
       </div>
     </div>
   `,
@@ -87,3 +89,4 @@ export class App {
 ## 所感
 
 Angular には独自のアニメーション機能もあるが、このエキスパンションパネルのユースケースではCSSだけで十分だと思う。非常に汎用性の高い仕組みだし実装も難しくないので、積極的に使っていきたいテクニックだと感じた。（そもそも `height: auto` でアニメーションできればそれに越したことはないのだが。）
+

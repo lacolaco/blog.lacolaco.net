@@ -4,11 +4,11 @@ slug: 'try-angular-2-aot-compilation'
 icon: ''
 created_time: '2016-10-05T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Try-Angular-2-AoT-compilation-6b7d57eab6c948d98a5ac7d374d32343'
 features:
   katex: false
@@ -18,7 +18,7 @@ features:
 
 with Angular-CLI
 
-![image](/images/try-angular-2-aot-compilation/1__2HGmglBA6b78AoREpWpULw.png)
+![image](/images/try-angular-2-aot-compilation/1__2HGmglBA6b78AoREpWpULw.cae349fc340d29d3.png)
 
 Ahead-of-Time(AoT) compilation is a key feature of Angular 2. It bring us big performance and small payload size. Let’s try it easily. It’s good news, **Angular-CLI** started AoT support **experimentally!**
 
@@ -78,7 +78,7 @@ And use source-map-explorer for the bundle and source map
 
 Web browser opens automatically and show a graph telling items of the bundle!
 
-![image](/images/try-angular-2-aot-compilation/1__kV__ewHL8x4Y__7DGLrMnHzg.png)
+![image](/images/try-angular-2-aot-compilation/1__kV__ewHL8x4Y__7DGLrMnHzg.91b089b7c2db7050.png)
 
 Awesome! Now we can see that `@angular/compiler` is the largest module. In JiT mode, all Angular applications require the compiler at runtime. In AoT mode, it doesn’t. Let’s make it sure.
 
@@ -98,7 +98,7 @@ And explore the bundle again.
 > source-map-explorer dist/main.bundle.js dist/main.map
 ```
 
-![image](/images/try-angular-2-aot-compilation/1__vrqivZOWelOyCHeYfS__Wgw.png)
+![image](/images/try-angular-2-aot-compilation/1__vrqivZOWelOyCHeYfS__Wgw.c09973ee4ecf149d.png)
 
 Yeeeeeah! We removed `@angular/compiler` module from our bundle! By AoT compilation, we can eliminate files which are no longer used in runtime and can reduce initial loss time for compilation.
 
@@ -110,3 +110,4 @@ Yeeeeeah! We removed `@angular/compiler` module from our bundle! By AoT compilat
 if you have not watched yet, I recommend you this video, Martin’s great session about optimizing bundle at AngularConnect 2016.
 
 Thanks.
+

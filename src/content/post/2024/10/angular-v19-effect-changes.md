@@ -4,12 +4,12 @@ slug: 'angular-v19-effect-changes'
 icon: ''
 created_time: '2024-10-09T09:14:00.000Z'
 last_edited_time: '2024-10-09T09:32:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-v19-effect-changes'
 notion_url: 'https://www.notion.so/Angular-v19-effect-11a3521b014a8026b45efb2c2fc99ee0'
 features:
@@ -42,7 +42,7 @@ https://angular.jp/reference/releases#developer-preview
 
 v18までは`effect()`関数内でSignalへ同期的な書き込みをすることはデフォルトで禁止されていた。
 
-```ts
+```typescript
 const val = signal(0);
 
 effect(() => {
@@ -56,7 +56,7 @@ https://www.youtube.com/watch?v=aKxcIQMWSNU
 
 というわけで、Signalへの同期的書き込みは非推奨とされているが、開発者の責任で明示的に許可することはできた。`allowSignalWrites`フラグを有効にするか、`untracked()`関数でラップするかどちらかによって、同期的な値の書き込みができた。
 
-```ts
+```typescript
 const val = signal(0);
 
 effect(() => {
@@ -97,3 +97,4 @@ v18までは、`effect()`関数で作成されたすべてのEffectは、Angular
 v19が正式リリースされるまでにはまだ時間があるが、v18のうちにやっておけることがあるとすれば、まずは`effect()`の使用箇所を特定しておくことだろう。その中で、コンポーネントのライフサイクルやレンダリングのタイミングなどに依存していそうな怪しいものがあれば、アプリケーションのデプロイ前に問題を発見できるように、なるべくテストを書いて準備しておこう。そして、v19のRCバージョンがリリースされたタイミングでテストを実行して問題が起きないかを試しておくことだ。
 
 また、振る舞いが変わることがわかった今のタイミングでは新たに`effect()`を使うのはやめておき、v19にアップグレードしてから使うように我慢しておくのもいいだろう。
+

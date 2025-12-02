@@ -4,11 +4,11 @@ slug: 'management-learning-book-review'
 icon: ''
 created_time: '2023-10-16T12:50:00.000Z'
 last_edited_time: '2023-12-30T10:00:00.000Z'
-category: 'Diary'
 tags:
   - '読書'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/2d01249d63fb4dbf96e90f56b8662c93'
 features:
   katex: false
@@ -29,3 +29,4 @@ https://www.utp.or.jp/book/b553616.html
 この本を読んで、これまでチーム論や組織マネジメントの文脈で断片的に学んだり経験してきたことが、経営学習論というフィールドの上で結びついた感覚があった。マネージャーとしての仕事をしていると、ひとつひとつの課題が特殊で個別性が強いように感じるが、この本を読むと一般的かつ抽象的な課題のあらわれでしかないことがよくわかる。
 
 会社での採用やオンボーディングなどについて考えるため、「組織再社会化」の理解を深めようと読み始めたが、この本の射程はとても広く、知り合いのマネジメント職全員におすすめしたいと思えた。
+

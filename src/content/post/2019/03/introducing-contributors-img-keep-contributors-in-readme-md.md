@@ -4,12 +4,12 @@ slug: 'introducing-contributors-img-keep-contributors-in-readme-md'
 icon: ''
 created_time: '2019-03-29T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'GitHub'
   - 'OSS'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Introducing-contributors-img-Keep-contributors-in-README-md-7c05b97b52b24509a1199c3f5fedd229'
 features:
   katex: false
@@ -39,3 +39,4 @@ Technically, contributors-img is built on top of Google Cloud Functions / Puppet
 - For each repository, images are generated once in a day and it will be cached for later requests.
 
 Thanks!
+

@@ -4,11 +4,11 @@ slug: 'ng-conf-2017-day-1-note'
 icon: ''
 created_time: '2017-04-05T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/ng-conf-2017-1-Keynote-b0f5f2b306014805b6f332feed870c3c'
 features:
   katex: false
@@ -108,3 +108,4 @@ features:
 オープンソースで開発されているのでほとんどの内容はすでに知られていることでしたが、LTSの発表には驚きました。 今回は採用事例についての話が多く、Angularをプロダクションにどんどん使ってもらいたいことは強く伝わってきました。
 
 Keynoteは3日目にもあるので、そちらもメモを投稿する予定です。近いうちにKeynoteの動画はyoutubeに上がると思うので、詳しく知りたい方はご自身で確認してください。
+

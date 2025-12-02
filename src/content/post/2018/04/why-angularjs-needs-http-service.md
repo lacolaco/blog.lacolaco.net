@@ -4,12 +4,12 @@ slug: 'why-angularjs-needs-http-service'
 icon: ''
 created_time: '2018-04-20T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'AngularJS'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/AngularJS-http-Angular-HttpClient-b5de8f3306b24e58bb12009345948aa7'
 features:
   katex: false
@@ -32,8 +32,8 @@ https://docs.angularjs.org/api/ng/service/$http
 ```javascript
 // Simple GET request example:
 $http({
-  method: 'GET',
-  url: '/someUrl',
+  method: "GET",
+  url: "/someUrl"
 }).then(
   function successCallback(response) {
     // this callback will be called asynchronously
@@ -42,7 +42,7 @@ $http({
   function errorCallback(response) {
     // called asynchronously if an error occurs
     // or server returns response with an error status.
-  },
+  }
 );
 ```
 
@@ -96,3 +96,4 @@ RxJS に精通し、使いこなせる開発者にとっては、非常に強力
   - `$http` はどうしても必要だった
 - RxJS とどう付き合うかで考えるとよい
 - お気に入りのライブラリがあるならそれを使って楽しく開発するのがよい
+

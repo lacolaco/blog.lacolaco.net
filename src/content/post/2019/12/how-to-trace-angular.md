@@ -4,16 +4,16 @@ slug: 'how-to-trace-angular'
 icon: ''
 created_time: '2019-12-25T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-70f6f715a71d47adadc08aca8916c1c7'
 features:
   katex: false
   mermaid: false
-  tweet: false
+  tweet: true
 ---
 
 [Angular #2 Advent Calendar 2019](https://qiita.com/advent-calendar/2019/angular-2)の 25 日目の記事です。
@@ -101,3 +101,4 @@ Angular のリポジトリの更新を追うなら CHANGELOG やリリースを�
 ---
 
 年末年始、ぜひ Angular を深く学ぶ時間にしてもらえれば幸いです。
+

@@ -1,0 +1,1437 @@
+{
+  "5abcd25b-9466-4e91-a124-bb3a3026bc78": {
+    "lastModified": "2025-11-28T15:05:00.000Z",
+    "slug": "use-ionic-components-as-web-components-in-angular",
+    "filePath": "2019/03/use-ionic-components-as-web-components-in-angular.md"
+  },
+  "e34eeccc-4c1e-4aeb-a1c4-eb3381c58440": {
+    "lastModified": "2025-11-27T12:10:00.000Z",
+    "slug": "ng4-feature-ngif",
+    "filePath": "2017/03/ng4-feature-ngif.md"
+  },
+  "2b73521b-014a-801c-b1d9-da3027e1e221": {
+    "lastModified": "2025-11-26T00:42:00.000Z",
+    "slug": "spinoza-ethics",
+    "filePath": "2022/06/spinoza-ethics.md"
+  },
+  "2a13521b-014a-80d5-bbb8-ebacad6b3a3c": {
+    "lastModified": "2025-11-06T04:26:00.000Z",
+    "slug": "selling-the-vision",
+    "filePath": "2025/11/selling-the-vision.md"
+  },
+  "83efd4c0-a070-498b-add9-149d96ab564f": {
+    "lastModified": "2025-11-06T01:41:00.000Z",
+    "slug": "business-and-engineering-3-way-handshake",
+    "filePath": "2022/11/business-and-engineering-3-way-handshake.md"
+  },
+  "28c3521b-014a-8055-ae27-e56dcf158ee3": {
+    "lastModified": "2025-10-15T01:14:00.000Z",
+    "slug": "csp-for-npm-supply-chain-attacks",
+    "filePath": "2025/10/csp-for-npm-supply-chain-attacks.md"
+  },
+  "2883521b-014a-80a0-a116-f5365064060d": {
+    "lastModified": "2025-10-10T10:46:00.000Z",
+    "slug": "2025-10-10",
+    "filePath": "2025/10/2025-10-10.md"
+  },
+  "2873521b-014a-809b-9010-e60a892ed141": {
+    "lastModified": "2025-10-09T15:00:00.000Z",
+    "slug": "agent-communication-language",
+    "filePath": "2025/10/agent-communication-language.md"
+  },
+  "27d3521b-014a-8069-a238-d1bf5090621d": {
+    "lastModified": "2025-09-29T15:03:00.000Z",
+    "slug": "ai-session-retrospective",
+    "filePath": "2025/09/ai-session-retrospective.md"
+  },
+  "2713521b-014a-800c-b4dd-ed9150c0dc1c": {
+    "lastModified": "2025-09-20T01:28:00.000Z",
+    "slug": "angular-ai-forward",
+    "filePath": "2025/09/angular-ai-forward.md"
+  },
+  "2703521b-014a-8096-9603-e3c924fece24": {
+    "lastModified": "2025-09-16T13:48:00.000Z",
+    "slug": "london-trip-2025",
+    "filePath": "2025/09/london-trip-2025.md"
+  },
+  "23c3521b-014a-8036-9152-cc3d38813adf": {
+    "lastModified": "2025-07-26T10:19:00.000Z",
+    "slug": "angular-animations-enter-leave",
+    "filePath": "2025/07/angular-animations-enter-leave.md"
+  },
+  "e51abef4-1d47-44c9-8078-4e13059e6506": {
+    "lastModified": "2025-07-23T03:15:00.000Z",
+    "slug": "output-your-experiences",
+    "filePath": "2021/03/output-your-experiences.md"
+  },
+  "2353521b-014a-8036-8960-d57494b84243": {
+    "lastModified": "2025-07-19T08:35:00.000Z",
+    "slug": "technocrat-failure",
+    "filePath": "2025/07/technocrat-failure.md"
+  },
+  "2303521b-014a-8086-af98-d4b2b9cf0763": {
+    "lastModified": "2025-07-19T03:57:00.000Z",
+    "slug": "trust-and-trustworthy",
+    "filePath": "2025/07/trust-and-trustworthy.md"
+  },
+  "21d3521b-014a-80e0-a40b-cb6943377b34": {
+    "lastModified": "2025-06-25T10:02:00.000Z",
+    "slug": "angular-unit-testing-runner-v20",
+    "filePath": "2025/06/angular-unit-testing-runner-v20.md"
+  },
+  "2163521b-014a-807a-b53a-e340ba3c84c3": {
+    "lastModified": "2025-06-18T06:45:00.000Z",
+    "slug": "carta-tech-assessment",
+    "filePath": "2025/06/carta-tech-assessment.md"
+  },
+  "2153521b-014a-80c3-bea6-d437b0ab1e42": {
+    "lastModified": "2025-06-17T12:42:00.000Z",
+    "slug": "ai-markdown-translator-with-gemini-textlint",
+    "filePath": "2025/06/ai-markdown-translator-with-gemini-textlint.md"
+  },
+  "ff3c7f84-3d40-43a5-8696-b65f32a068bd": {
+    "lastModified": "2025-06-11T09:13:00.000Z",
+    "slug": "angular-gde",
+    "filePath": "2018/10/angular-gde.md"
+  },
+  "77445eb2-1395-4715-a3c2-d8ee7888b4bb": {
+    "lastModified": "2025-06-11T08:44:00.000Z",
+    "slug": "344dd234430d",
+    "filePath": "2022/03/344dd234430d.md"
+  },
+  "573f8d31-890d-4722-9f51-8f67a6f18a75": {
+    "lastModified": "2025-06-11T08:41:00.000Z",
+    "slug": "fb3588de30bb",
+    "filePath": "2021/10/fb3588de30bb.md"
+  },
+  "1f4bd4af-7cbd-4178-92c0-c0b24f702aed": {
+    "lastModified": "2025-06-11T08:41:00.000Z",
+    "slug": "f1122f25c01a",
+    "filePath": "2022/05/f1122f25c01a.md"
+  },
+  "10f3521b-014a-80c9-9fa3-fba715751ea4": {
+    "lastModified": "2025-06-11T08:40:00.000Z",
+    "slug": "f0c70b7fbba8",
+    "filePath": "2024/09/f0c70b7fbba8.md"
+  },
+  "86b6e95a-21b6-49e0-b865-871a62030d47": {
+    "lastModified": "2025-06-11T08:40:00.000Z",
+    "slug": "eb64b9996e3f",
+    "filePath": "2023/12/eb64b9996e3f.md"
+  },
+  "31126469-c4ae-49fd-b636-fd2442e818e3": {
+    "lastModified": "2025-06-11T08:40:00.000Z",
+    "slug": "e030fe9ff885",
+    "filePath": "2024/03/e030fe9ff885.md"
+  },
+  "d0a077fb-608b-42d7-ad52-32bbb9c37d0d": {
+    "lastModified": "2025-06-11T08:39:00.000Z",
+    "slug": "e6b3bd69debc",
+    "filePath": "2023/12/e6b3bd69debc.md"
+  },
+  "fccb4121-4c61-46ba-8da5-248ef87d0691": {
+    "lastModified": "2025-06-11T08:39:00.000Z",
+    "slug": "d9839f1915dd",
+    "filePath": "2022/03/d9839f1915dd.md"
+  },
+  "d477099b-de00-4870-ae5a-26bb66ae3f78": {
+    "lastModified": "2025-06-11T08:38:00.000Z",
+    "slug": "d12f0da2f01e",
+    "filePath": "2023/11/d12f0da2f01e.md"
+  },
+  "e0167abb-2961-4742-8e08-66be20024ad1": {
+    "lastModified": "2025-06-11T08:38:00.000Z",
+    "slug": "cfdbe43959bd",
+    "filePath": "2022/03/cfdbe43959bd.md"
+  },
+  "9d30853a-e23f-4fa5-921a-8a3132749585": {
+    "lastModified": "2025-06-11T08:38:00.000Z",
+    "slug": "c8ad24ffd513",
+    "filePath": "2022/08/c8ad24ffd513.md"
+  },
+  "c70e219e-1959-4986-8de8-b7d2b68e8907": {
+    "lastModified": "2025-06-11T08:37:00.000Z",
+    "slug": "c5e0f640a7aa",
+    "filePath": "2024/07/c5e0f640a7aa.md"
+  },
+  "998b6066-78f0-4f24-b5dd-6f882a6ce4e1": {
+    "lastModified": "2025-06-11T08:37:00.000Z",
+    "slug": "be8d2cf9a69e",
+    "filePath": "2023/11/be8d2cf9a69e.md"
+  },
+  "a1bb976f-7cd0-4fd0-a892-7a6ada485f97": {
+    "lastModified": "2025-06-11T08:37:00.000Z",
+    "slug": "8892acbcdb0e",
+    "filePath": "2023/12/8892acbcdb0e.md"
+  },
+  "fc400db0-92a7-4c5e-9870-0965e1b94264": {
+    "lastModified": "2025-06-11T08:36:00.000Z",
+    "slug": "703efacd5399",
+    "filePath": "2022/05/703efacd5399.md"
+  },
+  "f2915bdd-b7a5-4468-b295-cd685099ce5f": {
+    "lastModified": "2025-06-11T08:36:00.000Z",
+    "slug": "9b110500fe16",
+    "filePath": "2024/07/9b110500fe16.md"
+  },
+  "c83872a6-c28f-4a5e-a3cc-7ce763967a79": {
+    "lastModified": "2025-06-11T08:35:00.000Z",
+    "slug": "5fb0998c46b0",
+    "filePath": "2023/02/5fb0998c46b0.md"
+  },
+  "2a91295f-0262-4f84-9efb-02129b3b0458": {
+    "lastModified": "2025-06-11T08:34:00.000Z",
+    "slug": "4cd43ac4122b",
+    "filePath": "2023/11/4cd43ac4122b.md"
+  },
+  "70f287eb-ebb9-4dfa-bd97-7f00afdb50ed": {
+    "lastModified": "2025-06-11T08:34:00.000Z",
+    "slug": "4aa12fe7f756",
+    "filePath": "2024/01/4aa12fe7f756.md"
+  },
+  "715fc199-23d9-41de-bc9f-c6ade96d65a4": {
+    "lastModified": "2025-06-11T08:34:00.000Z",
+    "slug": "2b66719bbf39",
+    "filePath": "2022/05/2b66719bbf39.md"
+  },
+  "83577cc5-bb18-4442-a0af-7636350d9064": {
+    "lastModified": "2025-06-11T08:34:00.000Z",
+    "slug": "2af7bdf042a9",
+    "filePath": "2022/07/2af7bdf042a9.md"
+  },
+  "fd46ec62-6df1-4bdc-9f4a-050456e6d8b8": {
+    "lastModified": "2025-06-11T08:33:00.000Z",
+    "slug": "1e35376391fe",
+    "filePath": "2023/11/1e35376391fe.md"
+  },
+  "1373521b-014a-808e-9d87-ee16aa5e6c6d": {
+    "lastModified": "2025-06-11T08:33:00.000Z",
+    "slug": "1e2cf439b3c2",
+    "filePath": "2024/11/1e2cf439b3c2.md"
+  },
+  "2083521b-014a-8078-b103-c38f323bef11": {
+    "lastModified": "2025-06-04T11:24:00.000Z",
+    "slug": "book-review-looks-good-to-me",
+    "filePath": "2025/06/book-review-looks-good-to-me.md"
+  },
+  "2033521b-014a-80d9-8b70-f882faed196e": {
+    "lastModified": "2025-05-31T02:12:00.000Z",
+    "slug": "tskaigi-2025-explain",
+    "filePath": "2025/05/tskaigi-2025-explain.md"
+  },
+  "1ff3521b-014a-80ce-ac20-c9e6e608bc43": {
+    "lastModified": "2025-05-28T06:50:00.000Z",
+    "slug": "deck-markdown-to-google-slides",
+    "filePath": "2025/05/deck-markdown-to-google-slides.md"
+  },
+  "1fc3521b-014a-806e-b1b8-e154f6b3507a": {
+    "lastModified": "2025-05-23T12:54:00.000Z",
+    "slug": "tskaigi-2025-slide",
+    "filePath": "2025/05/tskaigi-2025-slide.md"
+  },
+  "1e23521b-014a-80ee-a293-c9a03f195b00": {
+    "lastModified": "2025-04-27T13:33:00.000Z",
+    "slug": "issueops-by-github-command-action",
+    "filePath": "2025/04/issueops-by-github-command-action.md"
+  },
+  "1d03521b-014a-8070-af87-dfbe63ce9c9a": {
+    "lastModified": "2025-04-09T15:04:00.000Z",
+    "slug": "angular-selectorless-is-coming",
+    "filePath": "2025/04/angular-selectorless-is-coming.md"
+  },
+  "1d03521b-014a-80be-ae58-f852f4628521": {
+    "lastModified": "2025-04-09T07:36:00.000Z",
+    "slug": "weekly-commits-on-angular-2025-04-09",
+    "filePath": "2025/04/weekly-commits-on-angular-2025-04-09.md"
+  },
+  "1c93521b-014a-80bf-b779-eb623edab9e1": {
+    "lastModified": "2025-04-02T09:15:00.000Z",
+    "slug": "read-books-2025-q1",
+    "filePath": "2025/04/read-books-2025-q1.md"
+  },
+  "1c23521b-014a-8006-826d-f570a3e9e91c": {
+    "lastModified": "2025-03-26T02:03:00.000Z",
+    "slug": "angular-using-web-worker-through-resource",
+    "filePath": "2025/03/angular-using-web-worker-through-resource.md"
+  },
+  "1bb3521b-014a-80de-aa71-c45e578737b9": {
+    "lastModified": "2025-03-19T06:09:00.000Z",
+    "slug": "weekly-commits-on-angular-2025-03-19",
+    "filePath": "2025/03/weekly-commits-on-angular-2025-03-19.md"
+  },
+  "1ad3521b-014a-80e5-bde2-e61a84634c57": {
+    "lastModified": "2025-03-12T09:00:00.000Z",
+    "slug": "weekly-commits-on-angular-2025-03-12",
+    "filePath": "2025/03/weekly-commits-on-angular-2025-03-12.md"
+  },
+  "1b43521b-014a-8044-8298-efca294f5fde": {
+    "lastModified": "2025-03-12T06:35:00.000Z",
+    "slug": "weekly-commits-on-angular-2025-03-05",
+    "filePath": "2025/03/weekly-commits-on-angular-2025-03-05.md"
+  },
+  "1ab3521b-014a-80fb-b2b3-edfd08438071": {
+    "lastModified": "2025-03-03T23:40:00.000Z",
+    "slug": "v-tokyo-22-pre",
+    "filePath": "2025/03/v-tokyo-22-pre.md"
+  },
+  "1a63521b-014a-808f-9266-e92dc6f86dfc": {
+    "lastModified": "2025-02-26T10:09:00.000Z",
+    "slug": "weekly-commits-on-angular-2025-02-26",
+    "filePath": "2025/02/weekly-commits-on-angular-2025-02-26.md"
+  },
+  "1983521b-014a-80d0-8a7c-c09020dd3420": {
+    "lastModified": "2025-02-12T02:05:00.000Z",
+    "slug": "angular-http-resource-quick-overview",
+    "filePath": "2025/02/angular-http-resource-quick-overview.md"
+  },
+  "1913521b-014a-80f0-9c8a-f2b4dde093d1": {
+    "lastModified": "2025-02-05T02:50:00.000Z",
+    "slug": "angular-cdk-overlay-with-animations",
+    "filePath": "2025/02/angular-cdk-overlay-with-animations.md"
+  },
+  "18e3521b-014a-80d9-af62-f945ecfa18f3": {
+    "lastModified": "2025-02-02T06:49:00.000Z",
+    "slug": "angular-tailwind-css-4-setup",
+    "filePath": "2025/02/angular-tailwind-css-4-setup.md"
+  },
+  "1803521b-014a-8061-ac65-d2a070fe5d09": {
+    "lastModified": "2025-01-19T11:02:00.000Z",
+    "slug": "angular-prototyping-afternextchange-for-signals",
+    "filePath": "2025/01/angular-prototyping-afternextchange-for-signals.md"
+  },
+  "1763521b-014a-80ca-916d-d87cfc630eca": {
+    "lastModified": "2025-01-09T13:27:00.000Z",
+    "slug": "angular-let-tailwindcss-intellisense",
+    "filePath": "2025/01/angular-let-tailwindcss-intellisense.md"
+  },
+  "14d3521b-014a-803e-a815-c7030c8e4287": {
+    "lastModified": "2025-01-09T13:02:00.000Z",
+    "slug": "angular-signal-forms-prototype",
+    "filePath": "2024/12/angular-signal-forms-prototype.md"
+  },
+  "1603521b-014a-8027-8694-dcc8096690a8": {
+    "lastModified": "2024-12-19T15:03:00.000Z",
+    "slug": "books-of-the-year-2024",
+    "filePath": "2024/12/books-of-the-year-2024.md"
+  },
+  "1523521b-014a-80af-9ba3-c39c2a20e510": {
+    "lastModified": "2024-12-11T05:22:00.000Z",
+    "slug": "bookstore-2024",
+    "filePath": "2024/12/bookstore-2024.md"
+  },
+  "1443521b-014a-80f2-a3c9-e4a8873c3171": {
+    "lastModified": "2024-11-20T03:08:00.000Z",
+    "slug": "contribution-by-mention",
+    "filePath": "2024/11/contribution-by-mention.md"
+  },
+  "1403521b-014a-8021-ba2c-e240f1d439e8": {
+    "lastModified": "2024-11-16T01:26:00.000Z",
+    "slug": "angular-idea-resource-factory.en",
+    "filePath": "2024/11/angular-idea-resource-factory.en.md"
+  },
+  "1293521b-014a-8073-bb02-e294780424be": {
+    "lastModified": "2024-10-30T23:29:00.000Z",
+    "slug": "bookstore-at-devfest-tokyo-2024",
+    "filePath": "2024/10/bookstore-at-devfest-tokyo-2024.md"
+  },
+  "12e3521b-014a-80da-a5a9-ed157e6bc9b1": {
+    "lastModified": "2024-10-29T14:06:00.000Z",
+    "slug": "angular-v19-resource",
+    "filePath": "2024/10/angular-v19-resource.md"
+  },
+  "12d3521b-014a-80f3-95ff-d9c289dd689e": {
+    "lastModified": "2024-10-28T14:22:00.000Z",
+    "slug": "angular-v19-linked-signal",
+    "filePath": "2024/10/angular-v19-linked-signal.md"
+  },
+  "11a3521b-014a-8026-b45e-fb2c2fc99ee0": {
+    "lastModified": "2024-10-09T09:32:00.000Z",
+    "slug": "angular-v19-effect-changes",
+    "filePath": "2024/10/angular-v19-effect-changes.md"
+  },
+  "1133521b-014a-8051-8a7a-ce579b5f9413": {
+    "lastModified": "2024-10-02T14:32:00.000Z",
+    "slug": "lacolaco-user-voice",
+    "filePath": "2024/10/lacolaco-user-voice.md"
+  },
+  "1123521b-014a-8007-a56e-ea4e916ca7f4": {
+    "lastModified": "2024-10-01T00:57:00.000Z",
+    "slug": "read-books-2024-q3",
+    "filePath": "2024/10/read-books-2024-q3.md"
+  },
+  "d98c0b65-806e-4a10-a239-b329958ab674": {
+    "lastModified": "2024-09-25T06:02:00.000Z",
+    "slug": "angular-v19-prerendering",
+    "filePath": "2024/09/angular-v19-prerendering.md"
+  },
+  "52edeabe-72e3-44cc-9edd-d2ccf9148002": {
+    "lastModified": "2024-09-18T14:55:00.000Z",
+    "slug": "angular-material-disabled-interactive",
+    "filePath": "2024/09/angular-material-disabled-interactive.md"
+  },
+  "4518985f-136b-4811-8aef-e72b464720a4": {
+    "lastModified": "2024-09-18T14:36:00.000Z",
+    "slug": "angular-basic-ui-components",
+    "filePath": "2022/07/angular-basic-ui-components.md"
+  },
+  "50321da1-64af-4987-8a8f-24041e7761af": {
+    "lastModified": "2024-09-04T09:48:00.000Z",
+    "slug": "angular-defer-scheduled-view",
+    "filePath": "2024/08/angular-defer-scheduled-view.md"
+  },
+  "c981b185-000b-427e-b15e-561f0a881bf5": {
+    "lastModified": "2024-08-03T02:39:00.000Z",
+    "slug": "drunkdeer-a75-pro",
+    "filePath": "2024/08/drunkdeer-a75-pro.md"
+  },
+  "6d1b50f2-cb24-42fb-94d8-7a1fc04688b6": {
+    "lastModified": "2024-07-10T12:15:00.000Z",
+    "slug": "cloudflare-image-transform-for-image-optimization",
+    "filePath": "2024/06/cloudflare-image-transform-for-image-optimization.md"
+  },
+  "23ca8249-09bf-4218-879b-45f6cdcd9ca9": {
+    "lastModified": "2024-07-03T09:01:00.000Z",
+    "slug": "read-books-2024-q2",
+    "filePath": "2024/07/read-books-2024-q2.md"
+  },
+  "6de8867a-9891-4c24-b26c-b45aeb3f3e32": {
+    "lastModified": "2024-07-03T03:05:00.000Z",
+    "slug": "angular-v18-let-syntax",
+    "filePath": "2024/07/angular-v18-let-syntax.md"
+  },
+  "1add2e31-b222-4912-bd32-2faab675cc5d": {
+    "lastModified": "2024-06-26T08:39:00.000Z",
+    "slug": "poc-trace-via-service-worker",
+    "filePath": "2024/06/poc-trace-via-service-worker.md"
+  },
+  "9be76b98-4879-43be-8422-fa29fd0a884a": {
+    "lastModified": "2024-06-20T23:52:00.000Z",
+    "slug": "angular-rendering-effects-and-business-effects",
+    "filePath": "2024/06/angular-rendering-effects-and-business-effects.md"
+  },
+  "7b14ed47-6933-4797-8ef0-c29e83922a49": {
+    "lastModified": "2024-06-15T00:46:00.000Z",
+    "slug": "testing-angular-applications-with-vitest",
+    "filePath": "2023/08/testing-angular-applications-with-vitest.md"
+  },
+  "cef457cd-75d5-4eaa-a22d-7824fd3cbfdb": {
+    "lastModified": "2024-06-14T03:05:00.000Z",
+    "slug": "order-by-objective",
+    "filePath": "2024/06/order-by-objective.md"
+  },
+  "3a28e81c-63c8-4670-af97-d9e6218e2db8": {
+    "lastModified": "2024-06-14T01:04:00.000Z",
+    "slug": "angular-cva-signals",
+    "filePath": "2024/06/angular-cva-signals.md"
+  },
+  "a2c74ee0-85a2-4950-90f5-f4a968192faf": {
+    "lastModified": "2024-05-15T08:18:00.000Z",
+    "slug": "firebase-app-hosting-angular-ssr-tryout",
+    "filePath": "2024/05/firebase-app-hosting-angular-ssr-tryout.md"
+  },
+  "1a5a4c7e-a784-4aca-8cf5-ef394fe0564c": {
+    "lastModified": "2024-04-14T03:45:00.000Z",
+    "slug": "opentelemetry-js-repository-walkthrough",
+    "filePath": "2024/04/opentelemetry-js-repository-walkthrough.md"
+  },
+  "6b94501f-9bf4-457b-8080-ee4e007b2f55": {
+    "lastModified": "2024-03-17T03:19:00.000Z",
+    "slug": "ya8-2024",
+    "filePath": "2024/03/ya8-2024.md"
+  },
+  "fc06702a-e32a-483e-a546-4ed5b9c3b702": {
+    "lastModified": "2024-02-24T05:25:00.000Z",
+    "slug": "angular-model-inputs",
+    "filePath": "2024/02/angular-model-inputs.md"
+  },
+  "ca3bf239-647a-4d90-ad2a-e9c42c8e46b3": {
+    "lastModified": "2024-02-18T00:57:00.000Z",
+    "slug": "the-rules-of-programming-book-review",
+    "filePath": "2024/02/the-rules-of-programming-book-review.md"
+  },
+  "94d2bdf2-cdf7-42f3-b988-539639f95d27": {
+    "lastModified": "2024-02-17T14:03:00.000Z",
+    "slug": "angular-with-assertion-in-production",
+    "filePath": "2024/02/angular-with-assertion-in-production.md"
+  },
+  "61a8dc12-72fb-4e08-abc3-40051de4f75f": {
+    "lastModified": "2024-02-14T23:45:00.000Z",
+    "slug": "functionality-of-patterns",
+    "filePath": "2024/02/functionality-of-patterns.md"
+  },
+  "190478da-4fdf-4db6-a71f-4942d2011d2a": {
+    "lastModified": "2024-01-11T06:50:00.000Z",
+    "slug": "angular-signal-inputs",
+    "filePath": "2024/01/angular-signal-inputs.md"
+  },
+  "9ab0d5bb-9796-4cd8-bd90-0d06170682ff": {
+    "lastModified": "2023-12-30T10:14:00.000Z",
+    "slug": "angular-learning-costs",
+    "filePath": "2019/02/angular-learning-costs.md"
+  },
+  "252e8627-540a-4d33-a6f9-a3852e0c41d4": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "initial",
+    "filePath": "2016/04/initial.md"
+  },
+  "6b7d57ea-b6c9-48d9-8a5a-c7d374d32343": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "try-angular-2-aot-compilation",
+    "filePath": "2016/10/try-angular-2-aot-compilation.md"
+  },
+  "a2178d0a-2210-4f9b-9dfc-7fca9a317c9a": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "translation-view-children-and-content-children-in-angular-2",
+    "filePath": "2016/04/translation-view-children-and-content-children-in-angular-2.md"
+  },
+  "3f8c4b9e-8542-45a2-b428-a333076afb0a": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "translation-template-driven-form-in-angular-2",
+    "filePath": "2016/04/translation-template-driven-form-in-angular-2.md"
+  },
+  "44848909-3c08-4dc8-986a-050b8741eaff": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "translation-angular-2-component-styles",
+    "filePath": "2016/04/translation-angular-2-component-styles.md"
+  },
+  "6a6d79b6-ae74-4c49-82a9-5804cc0b5e0f": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "translation-angular-2-change-detection-explained",
+    "filePath": "2016/04/translation-angular-2-change-detection-explained.md"
+  },
+  "8d9ba74a-f57a-443d-b493-69454c9916c8": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "template-syntax-in-angular-2",
+    "filePath": "2016/04/template-syntax-in-angular-2.md"
+  },
+  "ba94cfed-9b64-41d3-862b-55c25fe0cea7": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "setting-up-angular-2-testing-environment-with-karma-and-webpack",
+    "filePath": "2016/10/setting-up-angular-2-testing-environment-with-karma-and-webpack.md"
+  },
+  "5ae80d32-0b24-4a6b-b01b-7ffa6feb932a": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "platform-prividers-of-angular-2",
+    "filePath": "2016/04/platform-prividers-of-angular-2.md"
+  },
+  "fe6eb6f9-2534-4204-b31c-a32dbec371ba": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "ng4-feature-meta-service",
+    "filePath": "2017/03/ng4-feature-meta-service.md"
+  },
+  "aa3078a5-d0bb-4538-aa41-5008ca903a52": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "ng4-feature-libs-update",
+    "filePath": "2017/03/ng4-feature-libs-update.md"
+  },
+  "e87dce04-7a32-43d2-b14b-e546a741e9d9": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "ng4-feature-forms-update",
+    "filePath": "2017/03/ng4-feature-forms-update.md"
+  },
+  "de7ff9bc-e847-4322-bc47-d3f686b88db6": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "ng4-feature-core-update",
+    "filePath": "2017/03/ng4-feature-core-update.md"
+  },
+  "5b8306d1-a3ce-4927-8181-888a10c958eb": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "ng-conf-2017-day-3-note",
+    "filePath": "2017/04/ng-conf-2017-day-3-note.md"
+  },
+  "b0f5f2b3-0601-4805-b6f3-32feed870c3c": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "ng-conf-2017-day-1-note",
+    "filePath": "2017/04/ng-conf-2017-day-1-note.md"
+  },
+  "eb888a6f-797f-4562-907a-2adb7ea9d36a": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "merging-objects-with-partial-type",
+    "filePath": "2017/11/merging-objects-with-partial-type.md"
+  },
+  "5d985bb5-3b53-41d8-b097-d2f5cf8ddb57": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "local-variables-and-exportas-of-angular-2",
+    "filePath": "2016/04/local-variables-and-exportas-of-angular-2.md"
+  },
+  "fce69b90-8ffc-4369-a68b-b56f02e16320": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "how-to-use-angular-2-nightly-builds",
+    "filePath": "2016/08/how-to-use-angular-2-nightly-builds.md"
+  },
+  "b423a3ed-d0c9-4e59-9e12-35e08c72bc64": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "forget-compile-in-angular-2",
+    "filePath": "2016/10/forget-compile-in-angular-2.md"
+  },
+  "3af033c8-da56-47f1-9adf-4eef3310067f": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "event-broadcasting-in-angular-2",
+    "filePath": "2016/04/event-broadcasting-in-angular-2.md"
+  },
+  "655c55b5-69cc-4063-8608-44d8f10ec88b": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "aot-compilation-with-webpack",
+    "filePath": "2016/10/aot-compilation-with-webpack.md"
+  },
+  "5f9d3b12-aa0a-4be9-92e5-c8c9e4f6f53b": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "angular2-view-encapsulation-fallback",
+    "filePath": "2016/04/angular2-view-encapsulation-fallback.md"
+  },
+  "5004a8f6-78b3-4281-9b4a-f575cdb1871b": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "angular-2-how-detect-object-changes",
+    "filePath": "2016/01/angular-2-how-detect-object-changes.md"
+  },
+  "5fa5bd2c-24b5-494a-984c-d234f8fab462": {
+    "lastModified": "2023-12-30T10:11:00.000Z",
+    "slug": "access-to-global-variables-in-angular-2",
+    "filePath": "2016/10/access-to-global-variables-in-angular-2.md"
+  },
+  "b5de8f33-06b2-4e58-bb12-009345948aa7": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "why-angularjs-needs-http-service",
+    "filePath": "2018/04/why-angularjs-needs-http-service.md"
+  },
+  "de2f47a3-3dcc-4621-8f6c-f56dc1b57062": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "state-management-library",
+    "filePath": "2018/01/state-management-library.md"
+  },
+  "f6bcdb70-96ae-42f1-84bf-94651422e9b7": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "read-ivy-design-doc-separate-compilation",
+    "filePath": "2018/03/read-ivy-design-doc-separate-compilation.md"
+  },
+  "281f136b-6bbe-4581-b7da-ae8db0af3c61": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "npm-new-package-name-rules",
+    "filePath": "2018/01/npm-new-package-name-rules.md"
+  },
+  "cada7ee0-19fd-4cc1-b74d-399d78d01d80": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "modular-graphql-schema-documentation",
+    "filePath": "2018/02/modular-graphql-schema-documentation.md"
+  },
+  "9dab9594-a41d-4af6-9f35-36e029edd915": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "migrate-angular-cli-from-1-7-to-6-0",
+    "filePath": "2018/04/migrate-angular-cli-from-1-7-to-6-0.md"
+  },
+  "bc3234bd-380a-4b3b-9f5a-d78c9b784cbe": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "merge-graphql-schemas",
+    "filePath": "2018/02/merge-graphql-schemas.md"
+  },
+  "acc37019-8652-4e0a-812f-1496941ec93a": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "graphql-schema-thought",
+    "filePath": "2018/04/graphql-schema-thought.md"
+  },
+  "c4159f8a-2131-4c7a-bd1f-fc0bdec1a71b": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "for-sustainable-angular-development",
+    "filePath": "2018/05/for-sustainable-angular-development.md"
+  },
+  "5a42f600-d919-4260-a6a8-94cfdc3fbe3d": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "custom-elements-event-target",
+    "filePath": "2018/04/custom-elements-event-target.md"
+  },
+  "6bbc2bc0-5d0f-4e2e-adfb-010e6d45fa4b": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "bloc-design-pattern-with-angular",
+    "filePath": "2018/05/bloc-design-pattern-with-angular.md"
+  },
+  "73231349-3482-40fc-a317-e3cd68e612a3": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "angular-v6-tree-shakable-di",
+    "filePath": "2018/03/angular-v6-tree-shakable-di.md"
+  },
+  "ecaa239c-f616-409c-80b8-26b507a161f6": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "angular-ivy-experimental-note",
+    "filePath": "2018/03/angular-ivy-experimental-note.md"
+  },
+  "e6735cdf-159e-4c34-be00-a20927cdb7a1": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "angular-http-with-axios",
+    "filePath": "2018/04/angular-http-with-axios.md"
+  },
+  "e3968f95-daba-42a8-88ff-f3cc92b3e661": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "angular-common-pattern-part-1",
+    "filePath": "2018/04/angular-common-pattern-part-1.md"
+  },
+  "ca90e008-8109-41f6-a4bb-889503419f3b": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "20-lines-simple-store-with-rxjs",
+    "filePath": "2018/01/20-lines-simple-store-with-rxjs.md"
+  },
+  "105a0b80-ef80-4a6d-ada0-2ab40f4e36ef": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "design-and-equilibration",
+    "filePath": "2019/03/design-and-equilibration.md"
+  },
+  "dd51c920-26ab-47ba-8982-23ae64a2a1f0": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "why-angular-has-not-static-site-generators",
+    "filePath": "2019/01/why-angular-has-not-static-site-generators.md"
+  },
+  "9e5898a6-59e0-4315-9846-fe94baa9a101": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "rxjs-and-webworker",
+    "filePath": "2019/03/rxjs-and-webworker.md"
+  },
+  "b0a11245-2091-4ae6-a17a-7291930e0970": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "list-component-design",
+    "filePath": "2019/02/list-component-design.md"
+  },
+  "4812cf7d-681e-4a7a-a2ce-b9091267791b": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "learn-ngrx",
+    "filePath": "2019/02/learn-ngrx.md"
+  },
+  "7c05b97b-52b2-4509-a119-9c3f5fedd229": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "introducing-contributors-img-keep-contributors-in-readme-md",
+    "filePath": "2019/03/introducing-contributors-img-keep-contributors-in-readme-md.md"
+  },
+  "5116a5ea-ca93-4e2c-8c5d-3e492a935c1c": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "introduce-router-scroller-in-angular-v6-1",
+    "filePath": "2018/06/introduce-router-scroller-in-angular-v6-1.md"
+  },
+  "a3993f7d-b21f-4b38-a87e-6c15cb98c825": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "introduce-angular-cdk-dnd",
+    "filePath": "2018/08/introduce-angular-cdk-dnd.md"
+  },
+  "b3355b6f-a9f9-4b0d-a35d-23b772427c5b": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "how-to-try-angular-cli-with-bazel",
+    "filePath": "2019/01/how-to-try-angular-cli-with-bazel.md"
+  },
+  "d55bc2a7-4dc7-4431-9924-7ff1d5610666": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "graphql-and-restful-backend",
+    "filePath": "2018/07/graphql-and-restful-backend.md"
+  },
+  "d98e8a7e-9853-4346-b12b-cc4bec8a0cb7": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "enjoyable-webworkers-in-angular",
+    "filePath": "2018/12/enjoyable-webworkers-in-angular.md"
+  },
+  "4218a5a9-be5f-46b9-b852-033819cb87da": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "angular-loading-with-cdk-portal",
+    "filePath": "2018/07/angular-loading-with-cdk-portal.md"
+  },
+  "5423020e-64c0-46c3-918a-7c026b580ed2": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "angular-how-to-use-action-creator-introduced-in-ngrx-v7-4-ja",
+    "filePath": "2019/04/angular-how-to-use-action-creator-introduced-in-ngrx-v7-4-ja.md"
+  },
+  "20719d16-1ba0-45e9-8926-4d36f993b77e": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "angular-flex-layout-flexbox-and-grid-layout-for-angular-component",
+    "filePath": "2018/09/angular-flex-layout-flexbox-and-grid-layout-for-angular-component.md"
+  },
+  "d3b13513-d4e3-4d4a-bccf-1f286f55a32b": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "angular-dynamic-importing-large-libraries",
+    "filePath": "2019/03/angular-dynamic-importing-large-libraries.md"
+  },
+  "8db2b4c6-9abe-4f39-94f1-e1bf70d145ed": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "angular-component-style-with-emotion",
+    "filePath": "2018/07/angular-component-style-with-emotion.md"
+  },
+  "4a2c1ab7-cb28-4e92-a201-925dee868227": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "esmodule-export-import",
+    "filePath": "2018/06/esmodule-export-import.md"
+  },
+  "f798bd04-a39e-46d2-a75a-6266c2ee468d": {
+    "lastModified": "2023-12-30T10:10:00.000Z",
+    "slug": "angular-strict-property-initialization-best-practice",
+    "filePath": "2018/06/angular-strict-property-initialization-best-practice.md"
+  },
+  "71059486-37d1-4723-b844-5a3349f49a11": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "system-design-and-philosophical-thinking",
+    "filePath": "2019/09/system-design-and-philosophical-thinking.md"
+  },
+  "dd7d97b9-2132-4c44-96a6-7a423853cfcc": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "inner-speech",
+    "filePath": "2019/10/inner-speech.md"
+  },
+  "56463883-d920-4375-a2f4-f76b6fcf3c88": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "why-entrycomponents-will-be-deprecated",
+    "filePath": "2019/11/why-entrycomponents-will-be-deprecated.md"
+  },
+  "71bd2be8-bc25-4bf6-92ae-57848af085ef": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "webbundles-with-angular",
+    "filePath": "2019/12/webbundles-with-angular.md"
+  },
+  "f19ec171-8d0c-4245-becb-ad06777044f5": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "upgrading-angularjs-app-with-angular-elements",
+    "filePath": "2019/08/upgrading-angularjs-app-with-angular-elements.md"
+  },
+  "7de35a8f-b66b-43c2-ac9a-f009f211efd1": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "trusted-types-and-angular-security",
+    "filePath": "2019/05/trusted-types-and-angular-security.md"
+  },
+  "e4ec3823-e1e4-48d7-a390-0387a87e3095": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "proposal-angular-partial-form-injection-pattern",
+    "filePath": "2020/02/proposal-angular-partial-form-injection-pattern.md"
+  },
+  "6c416ea1-7a9c-4a04-8435-2c68031918af": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "perspective-of-angular-in-2020",
+    "filePath": "2019/12/perspective-of-angular-in-2020.md"
+  },
+  "4cdbdec6-e74c-4ea4-86e2-6c899e5369af": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "network-aware-preloading-strategy-for-angular-lazy-loading.en",
+    "filePath": "2019/05/network-aware-preloading-strategy-for-angular-lazy-loading.en.md"
+  },
+  "b989169b-f9a4-470a-9aae-9eb49a823e4a": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "migrate-circleci-to-github-actions",
+    "filePath": "2019/09/migrate-circleci-to-github-actions.md"
+  },
+  "aa9c6eae-0193-468f-8855-ea5a38f72e0d": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "managing-key-value-constants-in-typescript",
+    "filePath": "2019/08/managing-key-value-constants-in-typescript.md"
+  },
+  "f6c7a5b1-0d5c-495c-90b2-924d788cb3c2": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "leaning-curve-and-angular-app-architecture",
+    "filePath": "2019/07/leaning-curve-and-angular-app-architecture.md"
+  },
+  "70f6f715-a71d-47ad-adc0-8aca8916c1c7": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "how-to-trace-angular",
+    "filePath": "2019/12/how-to-trace-angular.md"
+  },
+  "d4fdf732-3192-45b8-b5d9-1ed9f6c4c062": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "differential-loading-a-new-feature-of-angular-cli-v8.en",
+    "filePath": "2019/04/differential-loading-a-new-feature-of-angular-cli-v8.en.md"
+  },
+  "f1218e5c-5190-4cf5-b6e1-c27896a9862a": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "angular-single-state-stream-pattern",
+    "filePath": "2019/07/angular-single-state-stream-pattern.md"
+  },
+  "30d898e5-e62d-4967-a938-79622e2f9730": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "angular-ngmodule-and-directories",
+    "filePath": "2019/07/angular-ngmodule-and-directories.md"
+  },
+  "acbf55ee-e651-42b5-8132-04835b8fdab1": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "angular-how-to-use-action-creator-introduced-in-ngrx-v7-4",
+    "filePath": "2019/04/angular-how-to-use-action-creator-introduced-in-ngrx-v7-4.md"
+  },
+  "544a0dd6-6f0b-4c7d-ae3e-7f5ba21a6320": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "angular-atomic-design-and-ngmodule",
+    "filePath": "2019/07/angular-atomic-design-and-ngmodule.md"
+  },
+  "079d51b6-a4d3-4a1a-ab62-245e97797984": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "professional-and-expert",
+    "filePath": "2020/02/professional-and-expert.md"
+  },
+  "7908eb7e-5234-42c7-a940-b1615464cdfe": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "pre-order-jsprimer",
+    "filePath": "2020/04/pre-order-jsprimer.md"
+  },
+  "eb5832c4-1909-4ad1-9bfa-d5ed2f86a16b": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "nx-dockerize-angular-nest-app",
+    "filePath": "2020/04/nx-dockerize-angular-nest-app.md"
+  },
+  "696576eb-42b4-4c26-8344-2a1ef14f2515": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "ngconf2020-day3-note",
+    "filePath": "2020/04/ngconf2020-day3-note.md"
+  },
+  "35867cc9-ff22-4107-88d8-cafe3e17f010": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "ngconf2020-day2-note",
+    "filePath": "2020/04/ngconf2020-day2-note.md"
+  },
+  "e1cd81aa-c8d3-4ccd-8eb9-01261b18f7fd": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "ngconf2020-day1-note",
+    "filePath": "2020/04/ngconf2020-day1-note.md"
+  },
+  "f6287c72-68f9-4adc-be24-70f401207886": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "firebase-hosting-production-staging-with-targets",
+    "filePath": "2020/08/firebase-hosting-production-staging-with-targets.md"
+  },
+  "4d172266-5b4b-488d-8049-bf2ac4fee642": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "deep-dive-angular-components-mat-divider.en",
+    "filePath": "2020/05/deep-dive-angular-components-mat-divider.en.md"
+  },
+  "289a7964-b989-4c20-818f-45f429907bd1": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "async-pipe-initial-null-problem",
+    "filePath": "2020/02/async-pipe-initial-null-problem.md"
+  },
+  "618c54c9-8689-4e02-a3ef-4db0ac7ab530": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "async-pipe-initial-null-problem.en",
+    "filePath": "2020/02/async-pipe-initial-null-problem.en.md"
+  },
+  "8e70c8ca-2d56-49b0-94b0-02c8332db5c5": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "angular-zoneless-router-activation.en",
+    "filePath": "2020/03/angular-zoneless-router-activation.en.md"
+  },
+  "66159df0-e348-42f1-9a27-5319c346cdc3": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "angular-lightweight-injection-token-overview",
+    "filePath": "2020/07/angular-lightweight-injection-token-overview.md"
+  },
+  "eb942520-a359-4704-83d7-c4ba864b7ce8": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "angular-elements-composable-definition-pattern.en",
+    "filePath": "2020/07/angular-elements-composable-definition-pattern.en.md"
+  },
+  "09047f7d-f09e-48ec-b004-a98745ede141": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "angular-content-projection-101",
+    "filePath": "2020/02/angular-content-projection-101.md"
+  },
+  "e2c2dfec-0816-45ec-91da-8e3b41c704ad": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "angular-app-reactiveness.en",
+    "filePath": "2020/03/angular-app-reactiveness.en.md"
+  },
+  "4552fa97-268f-4c15-b088-766732b2f74c": {
+    "lastModified": "2023-12-30T10:09:00.000Z",
+    "slug": "theory-of-state-01",
+    "filePath": "2020/04/theory-of-state-01.md"
+  },
+  "5214f4b0-5e70-4ac6-9b8e-bc77871a6b14": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "translation-crunchbase-and-angular-why-we-made-the-transition",
+    "filePath": "2021/03/translation-crunchbase-and-angular-why-we-made-the-transition.md"
+  },
+  "c3927100-7462-4b3e-acb7-75d58b6b9652": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "state-of-angular-elements-2020-summer",
+    "filePath": "2020/09/state-of-angular-elements-2020-summer.md"
+  },
+  "69bb91a6-ecf3-453f-bfcd-5c2e6354033a": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "angular-tailwindcss-styling-thoughts",
+    "filePath": "2021/02/angular-tailwindcss-styling-thoughts.md"
+  },
+  "2d6a637a-1d09-4e33-b181-28d0f15c450e": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "angular-state-of-linting-2020",
+    "filePath": "2020/11/angular-state-of-linting-2020.md"
+  },
+  "6de3a8dd-12c3-4893-8a53-0fd4e5789e65": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "angular-ivy-library-compilation-design-in-depth",
+    "filePath": "2021/02/angular-ivy-library-compilation-design-in-depth.md"
+  },
+  "8f425a78-a2da-4952-9537-29fca1cdd4ff": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "angular-ivy-library-compilation-design-in-depth.en",
+    "filePath": "2021/02/angular-ivy-library-compilation-design-in-depth.en.md"
+  },
+  "ab8e4521-25df-4704-bcc7-aa3da401391d": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "angular-eliminate-render-blocking-requests",
+    "filePath": "2020/10/angular-eliminate-render-blocking-requests.md"
+  },
+  "a78e0e2c-f3cc-478d-ac9b-7ae6825d66c6": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "angular-trusted-types",
+    "filePath": "2020/11/angular-trusted-types.md"
+  },
+  "0bbe31d5-b26e-4cc9-802d-80dd2ff17ecb": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "angular-using-ngrx-with-redux-toolkit",
+    "filePath": "2020/12/angular-using-ngrx-with-redux-toolkit.md"
+  },
+  "5cc18604-33a5-43dc-bd1b-5787bd0c978b": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "why-i-dont-humblebrag",
+    "filePath": "2020/08/why-i-dont-humblebrag.md"
+  },
+  "7bdac4fe-30d9-4ae2-a780-81cbbb21b3c7": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "renovate-config-for-angular-cli",
+    "filePath": "2021/03/renovate-config-for-angular-cli.md"
+  },
+  "387ce9b4-8670-4771-9be1-dbcc920250f6": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "github-actions-yarn-cache",
+    "filePath": "2021/06/github-actions-yarn-cache.md"
+  },
+  "1247081c-70a7-4563-886a-056d3778a33f": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "enjoyable-webworkers-in-angular.ja",
+    "filePath": "2021/05/enjoyable-webworkers-in-angular.ja.md"
+  },
+  "bdddec22-7b87-4801-80bd-0660353509c9": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "angular-property-binding-atttribute-binding",
+    "filePath": "2021/09/angular-property-binding-atttribute-binding.md"
+  },
+  "1ed8c3e3-8fee-458b-81fe-67202edc5a1c": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "angular-jest-setup",
+    "filePath": "2021/06/angular-jest-setup.md"
+  },
+  "49b8a626-10b5-40be-869b-0a39ab002ff9": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "angular-component-testing-declarations",
+    "filePath": "2021/07/angular-component-testing-declarations.md"
+  },
+  "f73568f5-3267-474d-bbe8-410a46000a9c": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "gravity-of-knowledge",
+    "filePath": "2022/01/gravity-of-knowledge.md"
+  },
+  "10032eb7-7733-4b78-a146-7bacbd58a9ae": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "ask-than-wish",
+    "filePath": "2021/09/ask-than-wish.md"
+  },
+  "e2d773ef-b710-4713-96b4-0f35e263f0f6": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "there-is-no-problem",
+    "filePath": "2021/09/there-is-no-problem.md"
+  },
+  "b81b02a5-843e-43c7-8a20-4f020179061f": {
+    "lastModified": "2023-12-30T10:07:00.000Z",
+    "slug": "write-better-code",
+    "filePath": "2022/02/write-better-code.md"
+  },
+  "af9e064d-fecb-4dd3-98dc-268f54ef4089": {
+    "lastModified": "2023-12-30T10:06:00.000Z",
+    "slug": "angular-router-title-strategy",
+    "filePath": "2022/01/angular-router-title-strategy.md"
+  },
+  "48a52b05-59eb-43a5-b904-6e66f64550ce": {
+    "lastModified": "2023-12-30T10:06:00.000Z",
+    "slug": "rust-wasm-svg-rendering",
+    "filePath": "2022/02/rust-wasm-svg-rendering.md"
+  },
+  "47d8a289-80af-4cd7-a943-2091d4335b30": {
+    "lastModified": "2023-12-30T10:06:00.000Z",
+    "slug": "notion-headless-cms-3",
+    "filePath": "2022/02/notion-headless-cms-3.md"
+  },
+  "4047b3f1-3e88-4bca-b275-7dd81a6eef99": {
+    "lastModified": "2023-12-30T10:06:00.000Z",
+    "slug": "notion-headless-cms-2",
+    "filePath": "2022/02/notion-headless-cms-2.md"
+  },
+  "0d887003-a8d1-457f-a6be-c484dfcb2346": {
+    "lastModified": "2023-12-30T10:06:00.000Z",
+    "slug": "notion-headless-cms-1",
+    "filePath": "2022/02/notion-headless-cms-1.md"
+  },
+  "2d15afb8-8527-4cc4-8b69-30a395588112": {
+    "lastModified": "2023-12-30T10:06:00.000Z",
+    "slug": "webpack-esm-import-assertions",
+    "filePath": "2022/03/webpack-esm-import-assertions.md"
+  },
+  "7513b1f4-e7e6-4b10-ba15-e54411a3deb6": {
+    "lastModified": "2023-12-30T10:06:00.000Z",
+    "slug": "read-books-2022-q2",
+    "filePath": "2022/07/read-books-2022-q2.md"
+  },
+  "2f780bc5-4f7d-42d7-89fd-8149884d8233": {
+    "lastModified": "2023-12-30T10:06:00.000Z",
+    "slug": "github-actions-oidc-google-cloud",
+    "filePath": "2022/07/github-actions-oidc-google-cloud.md"
+  },
+  "6ede1797-c024-4d72-aea3-05528ed253b1": {
+    "lastModified": "2023-12-30T10:06:00.000Z",
+    "slug": "two-sides-of-tailwindcss",
+    "filePath": "2022/07/two-sides-of-tailwindcss.md"
+  },
+  "bd73a6a1-faae-4e9b-b64f-0e6f4f6d1f15": {
+    "lastModified": "2023-12-30T10:06:00.000Z",
+    "slug": "bd73a6a1-faae-4e9b-b64f-0e6f4f6d1f15",
+    "filePath": "2022/05/bd73a6a1-faae-4e9b-b64f-0e6f4f6d1f15.md"
+  },
+  "49cd00ee-40f0-44ec-a73c-43f946510dff": {
+    "lastModified": "2023-12-30T10:06:00.000Z",
+    "slug": "angular-state-management-patterns",
+    "filePath": "2022/05/angular-state-management-patterns.md"
+  },
+  "b6a71163-583d-42c6-99e8-09fdf5b64f4e": {
+    "lastModified": "2023-12-30T10:06:00.000Z",
+    "slug": "reverse-conways-law",
+    "filePath": "2022/08/reverse-conways-law.md"
+  },
+  "50dc0b15-6bb8-4b89-9b51-f142e115f8ed": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "engineering-manager-job-book-review",
+    "filePath": "2022/10/engineering-manager-job-book-review.md"
+  },
+  "613bc5dd-c46c-4c0a-8e30-b0f0dc1b8d4d": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "angular-provider-function-pattern",
+    "filePath": "2022/10/angular-provider-function-pattern.md"
+  },
+  "48d047d8-4383-4029-a49a-35e649f01a9d": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "presentation-angular-standalone-based-app",
+    "filePath": "2022/09/presentation-angular-standalone-based-app.md"
+  },
+  "06291552-322a-4152-9379-de518e857222": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "angular-component-visual-testing-with-cypress",
+    "filePath": "2022/10/angular-component-visual-testing-with-cypress.md"
+  },
+  "1934ffc5-baff-4477-a766-1e34e8dd45f7": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "github-actions-setup-node-engines",
+    "filePath": "2022/10/github-actions-setup-node-engines.md"
+  },
+  "5d1a14f0-328a-4165-a2e5-80e75aefe9ec": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "angular-v15-optin-browserslist",
+    "filePath": "2022/09/angular-v15-optin-browserslist.md"
+  },
+  "df74379c-5f80-4dff-9fb8-16ae978af4a8": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "angular-new-provide-router-api",
+    "filePath": "2022/08/angular-new-provide-router-api.md"
+  },
+  "72dc7816-6db0-4536-a947-d93054f9386e": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "dokken-2022-winter-application",
+    "filePath": "2022/10/dokken-2022-winter-application.md"
+  },
+  "e7898e37-3304-4482-8657-dff38ca1f349": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "rx-angular-component-state-management",
+    "filePath": "2022/10/rx-angular-component-state-management.md"
+  },
+  "8921bbca-9dc2-4312-8119-845110ae380e": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "angular-host-directives-observer-directive",
+    "filePath": "2022/10/angular-host-directives-observer-directive.md"
+  },
+  "93f70a4b-f638-4352-93b2-376076d9a62c": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "dokken-2022-winter-success",
+    "filePath": "2023/01/dokken-2022-winter-success.md"
+  },
+  "52c3af16-edb2-431f-9cc6-bba494864a53": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "yapc-kyoto-2023",
+    "filePath": "2023/03/yapc-kyoto-2023.md"
+  },
+  "aa5b1283-87fb-4b2f-bc91-6ec77c9f5d2a": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "angular-16-jest",
+    "filePath": "2023/05/angular-16-jest.md"
+  },
+  "23c54aef-56ff-4d4c-99b0-35e052b80056": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "why-inject-function-wins",
+    "filePath": "2023/03/why-inject-function-wins.md"
+  },
+  "02ff5a35-36af-4d69-9609-1ea3f818ad95": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "angular-inputs-stream-pattern",
+    "filePath": "2023/02/angular-inputs-stream-pattern.md"
+  },
+  "c30c4744-b390-4755-8495-a126d32ad0d9": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "angular-ngif-composing-feature-toggle",
+    "filePath": "2023/02/angular-ngif-composing-feature-toggle.md"
+  },
+  "bfac9356-b695-446d-b543-1bd67d943a16": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "change-blog-title-2023",
+    "filePath": "2023/05/change-blog-title-2023.md"
+  },
+  "03ccefe8-3594-4857-a531-ae0beceb1622": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "jsprimer-2nd",
+    "filePath": "2023/06/jsprimer-2nd.md"
+  },
+  "d8b87746-62dd-48f6-97ad-06ffb2a76604": {
+    "lastModified": "2023-12-30T10:04:00.000Z",
+    "slug": "presentation-what-is-signals",
+    "filePath": "2023/06/presentation-what-is-signals.md"
+  },
+  "83989f98-b8c5-470d-b414-90f097702ea3": {
+    "lastModified": "2023-12-30T10:04:00.000Z",
+    "slug": "signals-memo-20230621",
+    "filePath": "2023/06/signals-memo-20230621.md"
+  },
+  "d23a2cfd-5a46-47f6-a430-0533e00371a6": {
+    "lastModified": "2023-12-30T10:04:00.000Z",
+    "slug": "astro-satori-og-image-generation",
+    "filePath": "2023/06/astro-satori-og-image-generation.md"
+  },
+  "c0a2a317-2b8f-47ef-821d-9ef5e602c5f9": {
+    "lastModified": "2023-12-30T10:04:00.000Z",
+    "slug": "angular-signals-component-design-patterns",
+    "filePath": "2023/06/angular-signals-component-design-patterns.md"
+  },
+  "09878dcc-7052-432c-ad3f-89c3b30ced25": {
+    "lastModified": "2023-12-30T10:04:00.000Z",
+    "slug": "io2023-angular-summary",
+    "filePath": "2023/05/io2023-angular-summary.md"
+  },
+  "2131694e-dc7e-4221-ad63-e13b749d4fc0": {
+    "lastModified": "2023-12-30T10:04:00.000Z",
+    "slug": "angular-new-input-transforms",
+    "filePath": "2023/05/angular-new-input-transforms.md"
+  },
+  "4e8bcf7e-4c2c-4d31-806b-ff592edf4232": {
+    "lastModified": "2023-12-30T10:04:00.000Z",
+    "slug": "rethink-template-driven-forms",
+    "filePath": "2023/05/rethink-template-driven-forms.md"
+  },
+  "b32d2012-806c-4c34-8ecc-004f9385e1c0": {
+    "lastModified": "2023-12-30T10:04:00.000Z",
+    "slug": "notion-ai-slug-auto-generation",
+    "filePath": "2023/06/notion-ai-slug-auto-generation.md"
+  },
+  "c591feb7-e9d0-4b8b-9e1e-0fca8d07b690": {
+    "lastModified": "2023-12-30T10:04:00.000Z",
+    "slug": "presentation-phpconfuk-testing-dom",
+    "filePath": "2023/06/presentation-phpconfuk-testing-dom.md"
+  },
+  "00edd736-25bd-4fca-be5b-fa414a75b745": {
+    "lastModified": "2023-12-30T10:04:00.000Z",
+    "slug": "php-conference-fukuoka-2023",
+    "filePath": "2023/06/php-conference-fukuoka-2023.md"
+  },
+  "5d0c0a4d-96f7-4b24-8d84-a5250d5224bd": {
+    "lastModified": "2023-12-30T10:04:00.000Z",
+    "slug": "presentation-new-in-angular-io2023jp",
+    "filePath": "2023/07/presentation-new-in-angular-io2023jp.md"
+  },
+  "501bc994-5fe4-4360-8a6d-c49898bfdb91": {
+    "lastModified": "2023-12-30T10:02:00.000Z",
+    "slug": "read-books-2023-q2",
+    "filePath": "2023/07/read-books-2023-q2.md"
+  },
+  "1f3c7b97-cba3-4bbd-9d57-3b53c9b5aa4f": {
+    "lastModified": "2023-12-30T10:02:00.000Z",
+    "slug": "thoughts-about-gathering",
+    "filePath": "2023/08/thoughts-about-gathering.md"
+  },
+  "98e52895-d1b5-4fb1-8efb-80a8b35ce940": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "what-is-a-small-release",
+    "filePath": "2023/08/what-is-a-small-release.md"
+  },
+  "e6e80b9f-4a39-4d25-905f-4b4711f09f37": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "angular-signal-equal-option",
+    "filePath": "2023/08/angular-signal-equal-option.md"
+  },
+  "9de77b78-554f-4e23-b970-c8ff5a57d2ce": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "angular-signals-and-component-communication",
+    "filePath": "2023/08/angular-signals-and-component-communication.md"
+  },
+  "01bcb5d2-a0e1-4ced-8760-bbf17db18b2f": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "trace-based-testing",
+    "filePath": "2023/08/trace-based-testing.md"
+  },
+  "012e0360-1748-49d6-bdbf-141976e33385": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "typograms",
+    "filePath": "2023/08/typograms.md"
+  },
+  "5aaa4170-7374-407f-8295-9b48fc9da5e7": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "books-20230811",
+    "filePath": "2023/08/books-20230811.md"
+  },
+  "be0af076-3ae9-4a80-9531-f1dafbaeb541": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "finish-plato-series",
+    "filePath": "2023/08/finish-plato-series.md"
+  },
+  "faa94324-1ab4-4608-a94d-ccbee6328928": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "team-level-and-objective",
+    "filePath": "2023/08/team-level-and-objective.md"
+  },
+  "4a9df5fd-86fa-43de-838c-f962af587ebe": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "angular-signal-as-a-dependency",
+    "filePath": "2023/09/angular-signal-as-a-dependency.md"
+  },
+  "4b13c6c0-76da-42c3-81d1-81affb15f518": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "angular-host-element-with-tailwindcss-classes",
+    "filePath": "2023/09/angular-host-element-with-tailwindcss-classes.md"
+  },
+  "e735baab-fe9f-4ecb-9944-f340b479572a": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "button-and-link",
+    "filePath": "2023/08/button-and-link.md"
+  },
+  "579ff1ec-a68c-4fbe-9fa6-7d7c59f1698d": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "vitest-in-source-testing",
+    "filePath": "2023/08/vitest-in-source-testing.md"
+  },
+  "d857b4c4-fa8b-4086-8a78-2f2b4ab3fbf0": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "notion-ai-bookmark-summarize",
+    "filePath": "2023/08/notion-ai-bookmark-summarize.md"
+  },
+  "69879d3d-0144-4aa2-9d3b-128b15689a53": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "inside-laco-feed",
+    "filePath": "2023/08/inside-laco-feed.md"
+  },
+  "3d881d0f-dcf4-4c19-ada8-6ceb05f8e874": {
+    "lastModified": "2023-12-30T10:01:00.000Z",
+    "slug": "angular-app-initializer-and-effect",
+    "filePath": "2023/09/angular-app-initializer-and-effect.md"
+  },
+  "636cb161-ad90-4d9b-acf1-aab96a58416d": {
+    "lastModified": "2023-12-30T10:00:00.000Z",
+    "slug": "slo-book-review",
+    "filePath": "2023/09/slo-book-review.md"
+  },
+  "41e326de-5455-488c-b731-732e45de6e0e": {
+    "lastModified": "2023-12-30T10:00:00.000Z",
+    "slug": "discord-bot-cfworkers-hono",
+    "filePath": "2023/09/discord-bot-cfworkers-hono.md"
+  },
+  "331292ed-743a-41ca-a3d7-5e039b9af412": {
+    "lastModified": "2023-12-30T10:00:00.000Z",
+    "slug": "why-angular-is-not-popular",
+    "filePath": "2023/09/why-angular-is-not-popular.md"
+  },
+  "7b9d8d5b-6552-4cdc-96fd-3dc21a708147": {
+    "lastModified": "2023-12-30T10:00:00.000Z",
+    "slug": "read-books-2023-q3",
+    "filePath": "2023/09/read-books-2023-q3.md"
+  },
+  "ffaa7744-5abc-4ec5-b2a3-9965065d0268": {
+    "lastModified": "2023-12-30T10:00:00.000Z",
+    "slug": "todo-should-be-unpleasant",
+    "filePath": "2023/10/todo-should-be-unpleasant.md"
+  },
+  "2d01249d-63fb-4dbf-96e9-0f56b8662c93": {
+    "lastModified": "2023-12-30T10:00:00.000Z",
+    "slug": "management-learning-book-review",
+    "filePath": "2023/10/management-learning-book-review.md"
+  },
+  "40f4e1df-5de5-45b9-b837-f96a36605ba9": {
+    "lastModified": "2023-12-30T10:00:00.000Z",
+    "slug": "angular-mat-suffix-show-only-when-focused",
+    "filePath": "2023/10/angular-mat-suffix-show-only-when-focused.md"
+  },
+  "8c030420-0157-4f74-9397-6b60a0814c15": {
+    "lastModified": "2023-12-30T09:59:00.000Z",
+    "slug": "make-icon-badge",
+    "filePath": "2023/10/make-icon-badge.md"
+  },
+  "b6496dfc-5594-4dd8-b714-eb1e65ec3180": {
+    "lastModified": "2023-12-30T09:59:00.000Z",
+    "slug": "team-as-object",
+    "filePath": "2023/10/team-as-object.md"
+  },
+  "ee8cd85b-3e4f-48dd-b84d-b63d473cc5d7": {
+    "lastModified": "2023-12-30T09:59:00.000Z",
+    "slug": "angular-ssr-docker",
+    "filePath": "2023/11/angular-ssr-docker.md"
+  },
+  "d840388c-2dbd-406f-a01f-14ebff50dc7e": {
+    "lastModified": "2023-12-30T09:59:00.000Z",
+    "slug": "yurugengo-advent-calendar-2023",
+    "filePath": "2023/12/yurugengo-advent-calendar-2023.md"
+  },
+  "119f8e2c-8fc7-40f4-aa76-755373a0b009": {
+    "lastModified": "2023-12-30T09:58:00.000Z",
+    "slug": "angular-advent-calendar-2023",
+    "filePath": "2023/12/angular-advent-calendar-2023.md"
+  },
+  "a2f898eb-84e7-4ee8-b7da-7413c1e8902b": {
+    "lastModified": "2023-12-30T09:58:00.000Z",
+    "slug": "presentation-new-in-angular-devfest2023",
+    "filePath": "2023/12/presentation-new-in-angular-devfest2023.md"
+  },
+  "b28b8ef4-ebdb-495f-a2b5-1c0e89c9cded": {
+    "lastModified": "2023-12-30T09:58:00.000Z",
+    "slug": "gha-advent-calendar-2023",
+    "filePath": "2023/12/gha-advent-calendar-2023.md"
+  },
+  "2baf74e5-4ee0-4629-bba3-e69952099c3d": {
+    "lastModified": "2023-12-30T09:58:00.000Z",
+    "slug": "angular-expansion-directive.en",
+    "filePath": "2023/12/angular-expansion-directive.en.md"
+  },
+  "5cd15f39-e63e-48b7-828e-af1224f8d884": {
+    "lastModified": "2023-12-30T09:58:00.000Z",
+    "slug": "angular-expansion-directive",
+    "filePath": "2023/12/angular-expansion-directive.md"
+  },
+  "5ad67d6f-9feb-4970-a107-105bb88d8023": {
+    "lastModified": "2023-12-30T09:58:00.000Z",
+    "slug": "angular-input-transforms-for-arrays-in-query-params.en",
+    "filePath": "2023/12/angular-input-transforms-for-arrays-in-query-params.en.md"
+  },
+  "b01d0937-931d-4a74-8ff3-1a416346feab": {
+    "lastModified": "2023-12-30T09:58:00.000Z",
+    "slug": "angular-input-transforms-for-arrays-in-query-params",
+    "filePath": "2023/12/angular-input-transforms-for-arrays-in-query-params.md"
+  },
+  "2bb3521b-014a-80b8-8b48-d68bef7324ce": {
+    "lastModified": "2025-11-30T14:19:00.000Z",
+    "slug": "conventional-comments",
+    "filePath": "2025/11/conventional-comments.md"
+  },
+  "80f5c549-39b6-4e7a-b258-25bdb35f1cae": {
+    "lastModified": "2025-11-02T16:00:00.000Z",
+    "slug": "kitchen-sink",
+    "filePath": "2022/02/kitchen-sink.md"
+  },
+  "15c3521b-014a-8049-92ef-d7d6da2cf925": {
+    "lastModified": "2025-06-11T08:36:00.000Z",
+    "slug": "064fb0cc6577",
+    "filePath": "2024/12/064fb0cc6577.md"
+  },
+  "92bf97dd-802c-4b39-b752-7a50b5875273": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "dirty-checking-misunderstanding",
+    "filePath": "2023/03/dirty-checking-misunderstanding.md"
+  },
+  "5be92ed1-16af-4773-ab1d-19300a72928c": {
+    "lastModified": "2023-12-30T10:05:00.000Z",
+    "slug": "angular-basic-terms-change-detection",
+    "filePath": "2023/02/angular-basic-terms-change-detection.md"
+  }
+}

@@ -4,13 +4,13 @@ slug: 'typograms'
 icon: ''
 created_time: '2023-08-10T12:11:00.000Z'
 last_edited_time: '2023-12-30T10:01:00.000Z'
-category: 'Tech'
 tags:
   - '日記'
   - 'Angular'
   - 'SVG'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/google-typograms-012e0360174849d6bdbf141976e33385'
 features:
   katex: false
@@ -36,12 +36,14 @@ https://github.com/google/typograms/issues/3#issuecomment-1670746657
 
 さくっとAngularコンポーネントに組み込んで、Inputで受け取った文字列からSVGを生成できた。HTMLと違い、JavaScriptのテンプレートリテラル中で普通にバックスラッシュを書くとエスケープだということになるので、 `String.raw` タグ関数を使って描いてみた。
 
-```ts
+```typescript
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, TypogramComponent],
-  template: ` <app-typogram style="width: 300px" [source]="typogram"></app-typogram> `,
+  template: `
+    <app-typogram style="width: 300px" [source]="typogram"></app-typogram>
+  `,
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
@@ -55,8 +57,9 @@ export class AppComponent {
 }
 ```
 
-![image](/images/typograms/Untitled.png)
+![image](/images/typograms/Untitled.b5ab25b9ba864200.png)
 
 実用性はまだわからないが、とりあえずおもしろかった。組み込んだ部分の詳細などはレポジトリを参照してほしい。
 
 https://github.com/lacolaco/angular-typograms
+

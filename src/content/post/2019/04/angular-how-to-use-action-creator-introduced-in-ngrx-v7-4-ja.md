@@ -4,12 +4,12 @@ slug: 'angular-how-to-use-action-creator-introduced-in-ngrx-v7-4-ja'
 icon: ''
 created_time: '2019-04-03T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'NgRx'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/NgRx-v7-4-Action-Creator-5423020e64c046c3918a7c026b580ed2'
 features:
   katex: false
@@ -25,7 +25,7 @@ features:
 
 これまでのアクション定義では、アクションタイプのEnum と、それを持つ各アクションクラス、そしてそのクラス型のUnion Typeを定義するのが一般的でした。 たとえば `Increment` と `Reset` というアクションとする `counter.actions.ts` を定義すると次のようになります。 `Increment` は与えられた数だけカウントを進め、 `Reset` は カウントを 0 に戻すためのアクションです。
 
-```ts
+```typescript
 // counter.actions.ts
 import { Action } from '@ngrx/store';
 
@@ -37,7 +37,7 @@ export enum ActionTypes {
 export class Increment implements Action {
   readonly type = ActionTypes.Increment;
 
-  constructor(public payload: number) {}
+  constructor(public payload: number) { }
 }
 
 export class Reset implements Action {
@@ -49,13 +49,18 @@ export type ActionsUnion = Increment | Reset;
 
 このファイルはAction Creatorによって次のように書き換えられます。
 
-```ts
+```typescript
 // counter.actions.ts
 import { createAction, union } from '@ngrx/store';
 
-export const increment = createAction('[Counter] Increment', (payload: number) => ({ payload }));
+export const increment = createAction(
+  '[Counter] Increment',
+  (payload: number) => ({ payload })
+);
 
-export const reset = createAction('[Counter] Reset');
+export const reset = createAction(
+  '[Counter] Reset'
+);
 
 const actions = union({
   increment,
@@ -69,7 +74,7 @@ export type ActionsUnion = typeof actions;
 
 まずクラス定義を置き換えている `createAction` 関数について解説します。 この関数は Action Creatorを返します。Action Creatorはアクションオブジェクトを返す関数です。 つまり、ディスパッチするアクションが、クラスをnewしたインスタンスから関数の戻り値に変わります。
 
-```ts
+```typescript
 import * as Actions from './actions';
 
 // アクションクラスのインスタンス
@@ -84,7 +89,7 @@ store.dispatch(Actions.increment(1));
 
 `increment` アクションをもう一度見てみましょう。 第2引数は数値を `payload` 引数として受け取る関数で、戻り値は `payload` プロパティをもつオブジェクトです。。 この関数の戻り値は第1引数から作られるアクションオブジェクトとマージされ、 最終的に `{ type: '[Counter] Increment'', payload }` というアクションオブジェクトを作成することになります。
 
-```ts
+```typescript
 // アクションを作成する
 const action = Actions.increment(1);
 
@@ -102,7 +107,7 @@ console.log(action.payload); // => 1
 
 すべてのAction Creatorを `union` 関数に渡し、その戻り値を **エクスポートせず** 宣言します。 なぜエクスポートしないかというと、欲しいのはその型だけだからでです。エクスポートして外部から参照可能にしたところで使いみちはありません。 `actions` 変数を宣言したら、`typeof` を使ってその型を `Union` 型として外部にエクスポートします。
 
-```ts
+```typescript
 // 戻り値はエクスポートしない
 const actions = union({
   increment,
@@ -117,7 +122,7 @@ export type ActionsUnion = typeof actions;
 
 Action Creatorを定義したら、次はReducerを対応させます。 もともとアクションクラスとEnumを使っていたときは、次のような Reducerになっていました。 引数に渡されるアクションの型は `ActionsUnion` 型で、 `action.type` を `ActionTypes` のEnum文字列と照らし合わせるswitch文を記述します。
 
-```ts
+```typescript
 import { ActionsUnion, ActionTypes } from './actions';
 import { State, initialState } from './state';
 
@@ -144,8 +149,8 @@ export function reducer(state = initialState, action: ActionsUnion): State {
 
 このReducerに先ほどの アクション定義の変更を反映すると、次のようになります。 変わったのはcase文だけです。 case文で指定するアクションタイプは、Action Creatorがもつ `type` プロパティに変わりました。 このように Action Creatorから直接取得できるため、アクション定義側でEnumに分離する必要がなくなっています。
 
-```ts
-import { ActionsUnion, increment, reset } from './actions';
+```typescript
+import { ActionsUnion, increment, reset} from './actions';
 import { State, initialState } from './state';
 
 export function reducer(state = initialState, action: ActionsUnion): State {
@@ -173,7 +178,7 @@ export function reducer(state = initialState, action: ActionsUnion): State {
 
 NgRxのEffectsを使って、カウンターの加算とリセットがおこなわれるたびにログを出力する副作用を定義します。 従来のアクション定義では次のようになります。
 
-```ts
+```typescript
 import { Injectable } from '@angular/core';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { tap } from 'rxjs/operators';
@@ -182,21 +187,22 @@ import { ActionsUnion, ActionTypes } from './actions';
 
 @Injectable()
 export class CounterEffects {
-  constructor(private actions$: Actions<ActionsUnion>) {}
+
+  constructor(private actions$: Actions<ActionsUnion>) { }
 
   @Effect({ dispatch: false })
   logger$ = this.actions$.pipe(
     ofType(ActionTypes.Increment, ActionTypes.Reset),
-    tap((action) => {
+    tap(action => {
       console.log(action);
     }),
-  );
+  )
 }
 ```
 
 これも Reducerと同じように、アクションタイプの部分だけに影響があります。
 
-```ts
+```typescript
 import { Injectable } from '@angular/core';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { tap } from 'rxjs/operators';
@@ -205,15 +211,16 @@ import { ActionsUnion, increment, reset } from './actions';
 
 @Injectable()
 export class CounterEffects {
-  constructor(private actions$: Actions<ActionsUnion>) {}
+
+  constructor(private actions$: Actions<ActionsUnion>) { }
 
   @Effect({ dispatch: false })
   logger$ = this.actions$.pipe(
     ofType(increment.type, reset.type),
-    tap((action) => {
+    tap(action => {
       console.log(action);
     }),
-  );
+  )
 }
 ```
 
@@ -221,21 +228,24 @@ export class CounterEffects {
 
 最後にアクションをディスパッチする部分です。 従来のアクションクラスでは、クラスインスタンスを生成して次のようにディスパッチしていました。
 
-```ts
+```typescript
 import * as CounterActions from './state/counter/actions';
 
 @Component({
   selector: 'my-app',
   template: `
-    <div>{{ count$ | async }}</div>
-    <button (click)="incrementOne()">+1</button>
-    <button (click)="reset()">Reset</button>
+     <div>{{ count$ | async }}</div>
+     <button (click)="incrementOne()">+1</button>
+     <button (click)="reset()">Reset</button>
   `,
 })
 export class AppComponent {
-  count$ = this.store.pipe(select((state) => state.counter.count));
 
-  constructor(private store: Store<AppState>) {}
+  count$ = this.store.pipe(
+    select(state => state.counter.count),
+  );
+
+  constructor(private store: Store<AppState>) { }
 
   incrementOne() {
     this.store.dispatch(new CounterActions.Increment(1));
@@ -249,21 +259,24 @@ export class AppComponent {
 
 これはすでに説明したとおり、Action Creatorの関数を呼び出した戻り値をディスパッチするように変わります。
 
-```ts
+```typescript
 import * as CounterActions from './state/counter/actions';
 
 @Component({
   selector: 'my-app',
   template: `
-    <div>{{ count$ | async }}</div>
-    <button (click)="incrementOne()">+1</button>
-    <button (click)="reset()">Reset</button>
+     <div>{{ count$ | async }}</div>
+     <button (click)="incrementOne()">+1</button>
+     <button (click)="reset()">Reset</button>
   `,
 })
 export class AppComponent {
-  count$ = this.store.pipe(select((state) => state.counter.count));
 
-  constructor(private store: Store<AppState>) {}
+  count$ = this.store.pipe(
+    select(state => state.counter.count),
+  );
+
+  constructor(private store: Store<AppState>) { }
 
   incrementOne() {
     this.store.dispatch(CounterActions.increment(1));
@@ -294,3 +307,4 @@ Action Creatorでは関数で記述できるので、無駄なコードが大き
 この記事で扱ったカウンターアプリケーションが実際に動作する様子を確認してみてください。
 
 [https://stackblitz.com/edit/angular-pj4f4p?file=src%2Fapp%2Fapp.component.ts](https://stackblitz.com/edit/angular-pj4f4p?file=src%2Fapp%2Fapp.component.ts)
+

@@ -4,11 +4,11 @@ slug: 'read-books-2024-q3'
 icon: ''
 created_time: '2024-10-01T00:56:00.000Z'
 last_edited_time: '2024-10-01T00:57:00.000Z'
-category: 'Diary'
 tags:
   - '読書'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/2024-Q3-1123521b014a8007a56eea4e916ca7f4'
 features:
   katex: false
@@ -18,7 +18,7 @@ features:
 
 2024年 7月〜9月に読んだ本・読んでいる本
 
-![image](/images/read-books-2024-q3/CleanShot_2024-10-01_at_09.33.092x.png)
+![image](/images/read-books-2024-q3/CleanShot_2024-10-01_at_09.33.092x.01b61e6f112a2cf1.png)
 
 今回は9冊とそこそこのペースを保って読めた。
 
@@ -79,3 +79,4 @@ https://amzn.asia/d/6MsnHJ7
 https://blog.magnolia.tech/entry/2024/07/02/003045
 
 これ会得してなかったら13歳以下の設計力ということでいいでしょう。大人も今すぐ読むべき。
+

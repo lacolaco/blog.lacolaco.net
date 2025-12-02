@@ -4,11 +4,11 @@ slug: 'contribution-by-mention'
 icon: ''
 created_time: '2024-11-20T02:53:00.000Z'
 last_edited_time: '2024-11-20T03:08:00.000Z'
-category: 'Idea'
 tags:
   - 'OSS'
 published: true
 locale: 'ja'
+category: 'Idea'
 notion_url: 'https://www.notion.so/1443521b014a80f2a3c9e4a8873c3171'
 features:
   katex: false
@@ -29,3 +29,4 @@ features:
 「作り手」だけではオープンソースプロジェクトは生きられない。それを使ってくれるユーザーが必要で、ユーザーがいることを作り手に伝えるために、「話題にする」ことは必要不可欠だと思う。プロジェクトが本当に終わるのは、世界の誰もそれを話題にしなくなったときだ。
 
 オープンソースプロジェクトを応援したいが、世の中のすごい人みたいなコントリビューションは無理だと思っている人がいれば、ぜひ「話題にする」という最小かつ最重要の貢献から始めてみてほしい。
+

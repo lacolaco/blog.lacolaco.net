@@ -4,12 +4,12 @@ slug: 'reverse-conways-law'
 icon: ''
 created_time: '2022-08-18T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:06:00.000Z'
-category: 'Idea'
 tags:
   - '雑記'
   - '言語化'
 published: true
 locale: 'ja'
+category: 'Idea'
 notion_url: 'https://www.notion.so/b6a71163583d42c699e809fdf5b64f4e'
 features:
   katex: false
@@ -31,3 +31,4 @@ https://scrapbox.io/lacolaco/コンウェイの法則の反転現象
 - また、**ソフトウェア開発現場のアジャイル化はこの現象をさらに促進するだろう**
   - アジャイルな組織とは変更容易性の高い組織であるため、相対的に必然的に組織の構造のほうが適応しやすい
 - この現象によって、逆コンウェイ戦略を狙ってシステム構造の改善をめがけた組織構造の再編も、結局現状のシステムに引っ張られて元に戻ろうとする
+

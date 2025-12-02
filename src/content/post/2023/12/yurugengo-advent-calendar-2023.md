@@ -4,12 +4,12 @@ slug: 'yurugengo-advent-calendar-2023'
 icon: ''
 created_time: '2023-12-11T00:00:00.000Z'
 last_edited_time: '2023-12-30T09:59:00.000Z'
-category: 'Diary'
 tags:
   - '雑記'
   - '英語史'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/d840388c2dbd406fa01f14ebff50dc7e'
 features:
   katex: false
@@ -29,19 +29,19 @@ https://adventar.org/calendars/9168
 
 https://www.youtube.com/watch?v=ZA2gRo3F7pM
 
-![image](/images/yurugengo-advent-calendar-2023/%E8%8B%B1%E5%8D%98%E8%AA%9E%E5%B8%B3%E3%81%AE%E8%AA%9E%E6%BA%90%E3%82%92%E5%85%A8%E9%83%A8%E7%9F%A5%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AB%E3%80%81%E7%A0%94%E7%A9%B6%E8%80%85%E3%82%92%E5%91%BC%E3%81%B2%E3%82%99%E3%81%BE%E3%81%97%E3%81%9F%E3%80%90%E3%82%BF%E3%83%BC%E3%82%B1%E3%82%99%E3%83%83%E3%83%881900_with_%E5%A0%80%E7%94%B0%E5%85%88%E7%94%9F%E3%80%91247_48-8_screenshot.png)
+![image](/images/yurugengo-advent-calendar-2023/%E8%8B%B1%E5%8D%98%E8%AA%9E%E5%B8%B3%E3%81%AE%E8%AA%9E%E6%BA%90%E3%82%92%E5%85%A8%E9%83%A8%E7%9F%A5%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AB%E3%80%81%E7%A0%94%E7%A9%B6%E8%80%85%E3%82%92%E5%91%BC%E3%81%B2%E3%82%99%E3%81%BE%E3%81%97%E3%81%9F%E3%80%90%E3%82%BF%E3%83%BC%E3%82%B1%E3%82%99%E3%83%83%E3%83%881900_with_%E5%A0%80%E7%94%B0%E5%85%88%E7%94%9F%E3%80%91247_48-8_screenshot.f09d3fa2ffcc41f2.png)
 
-![image](/images/yurugengo-advent-calendar-2023/%E8%8B%B1%E5%8D%98%E8%AA%9E%E5%B8%B3%E3%81%AE%E8%AA%9E%E6%BA%90%E3%82%92%E5%85%A8%E9%83%A8%E7%9F%A5%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AB%E3%80%81%E7%A0%94%E7%A9%B6%E8%80%85%E3%82%92%E5%91%BC%E3%81%B2%E3%82%99%E3%81%BE%E3%81%97%E3%81%9F%E3%80%90%E3%82%BF%E3%83%BC%E3%82%B1%E3%82%99%E3%83%83%E3%83%881900_with_%E5%A0%80%E7%94%B0%E5%85%88%E7%94%9F%E3%80%91247_48-19_screenshot.png)
+![image](/images/yurugengo-advent-calendar-2023/%E8%8B%B1%E5%8D%98%E8%AA%9E%E5%B8%B3%E3%81%AE%E8%AA%9E%E6%BA%90%E3%82%92%E5%85%A8%E9%83%A8%E7%9F%A5%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AB%E3%80%81%E7%A0%94%E7%A9%B6%E8%80%85%E3%82%92%E5%91%BC%E3%81%B2%E3%82%99%E3%81%BE%E3%81%97%E3%81%9F%E3%80%90%E3%82%BF%E3%83%BC%E3%82%B1%E3%82%99%E3%83%83%E3%83%881900_with_%E5%A0%80%E7%94%B0%E5%85%88%E7%94%9F%E3%80%91247_48-19_screenshot.2602bb4616bc2228.png)
 
 われわれ（？）語源うんちく愛好家のバイブルは、おそらくこの回で初出だ。英語の語源や文法に興味がある人におすすめの文献として、堀田先生が紹介した**『英語語源辞典』**である。
 
 https://www.amazon.co.jp/英語語源辞典（縮刷版）-寺澤-芳雄/dp/4767431050
 
-![image](/images/yurugengo-advent-calendar-2023/%E8%8B%B1%E5%8D%98%E8%AA%9E%E5%B8%B3%E3%81%AE%E8%AA%9E%E6%BA%90%E3%82%92%E5%85%A8%E9%83%A8%E7%9F%A5%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AB%E3%80%81%E7%A0%94%E7%A9%B6%E8%80%85%E3%82%92%E5%91%BC%E3%81%B2%E3%82%99%E3%81%BE%E3%81%97%E3%81%9F%E3%80%90%E3%82%BF%E3%83%BC%E3%82%B1%E3%82%99%E3%83%83%E3%83%881900_with_%E5%A0%80%E7%94%B0%E5%85%88%E7%94%9F%E3%80%91247_49-38_screenshot.png)
+![image](/images/yurugengo-advent-calendar-2023/%E8%8B%B1%E5%8D%98%E8%AA%9E%E5%B8%B3%E3%81%AE%E8%AA%9E%E6%BA%90%E3%82%92%E5%85%A8%E9%83%A8%E7%9F%A5%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AB%E3%80%81%E7%A0%94%E7%A9%B6%E8%80%85%E3%82%92%E5%91%BC%E3%81%B2%E3%82%99%E3%81%BE%E3%81%97%E3%81%9F%E3%80%90%E3%82%BF%E3%83%BC%E3%82%B1%E3%82%99%E3%83%83%E3%83%881900_with_%E5%A0%80%E7%94%B0%E5%85%88%E7%94%9F%E3%80%91247_49-38_screenshot.534d0e4242369057.png)
 
-![image](/images/yurugengo-advent-calendar-2023/%E8%8B%B1%E5%8D%98%E8%AA%9E%E5%B8%B3%E3%81%AE%E8%AA%9E%E6%BA%90%E3%82%92%E5%85%A8%E9%83%A8%E7%9F%A5%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AB%E3%80%81%E7%A0%94%E7%A9%B6%E8%80%85%E3%82%92%E5%91%BC%E3%81%B2%E3%82%99%E3%81%BE%E3%81%97%E3%81%9F%E3%80%90%E3%82%BF%E3%83%BC%E3%82%B1%E3%82%99%E3%83%83%E3%83%881900_with_%E5%A0%80%E7%94%B0%E5%85%88%E7%94%9F%E3%80%91247_50-13_screenshot.png)
+![image](/images/yurugengo-advent-calendar-2023/%E8%8B%B1%E5%8D%98%E8%AA%9E%E5%B8%B3%E3%81%AE%E8%AA%9E%E6%BA%90%E3%82%92%E5%85%A8%E9%83%A8%E7%9F%A5%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AB%E3%80%81%E7%A0%94%E7%A9%B6%E8%80%85%E3%82%92%E5%91%BC%E3%81%B2%E3%82%99%E3%81%BE%E3%81%97%E3%81%9F%E3%80%90%E3%82%BF%E3%83%BC%E3%82%B1%E3%82%99%E3%83%83%E3%83%881900_with_%E5%A0%80%E7%94%B0%E5%85%88%E7%94%9F%E3%80%91247_50-13_screenshot.e863408b5d989436.png)
 
-![image](/images/yurugengo-advent-calendar-2023/%E8%8B%B1%E5%8D%98%E8%AA%9E%E5%B8%B3%E3%81%AE%E8%AA%9E%E6%BA%90%E3%82%92%E5%85%A8%E9%83%A8%E7%9F%A5%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AB%E3%80%81%E7%A0%94%E7%A9%B6%E8%80%85%E3%82%92%E5%91%BC%E3%81%B2%E3%82%99%E3%81%BE%E3%81%97%E3%81%9F%E3%80%90%E3%82%BF%E3%83%BC%E3%82%B1%E3%82%99%E3%83%83%E3%83%881900_with_%E5%A0%80%E7%94%B0%E5%85%88%E7%94%9F%E3%80%91247_50-37_screenshot.png)
+![image](/images/yurugengo-advent-calendar-2023/%E8%8B%B1%E5%8D%98%E8%AA%9E%E5%B8%B3%E3%81%AE%E8%AA%9E%E6%BA%90%E3%82%92%E5%85%A8%E9%83%A8%E7%9F%A5%E3%82%8B%E3%81%9F%E3%82%81%E3%81%AB%E3%80%81%E7%A0%94%E7%A9%B6%E8%80%85%E3%82%92%E5%91%BC%E3%81%B2%E3%82%99%E3%81%BE%E3%81%97%E3%81%9F%E3%80%90%E3%82%BF%E3%83%BC%E3%82%B1%E3%82%99%E3%83%83%E3%83%881900_with_%E5%A0%80%E7%94%B0%E5%85%88%E7%94%9F%E3%80%91247_50-37_screenshot.460171dad0239cb5.png)
 
 まさしく僕は英語の語源や文法に興味がある一般人であり、この参考文献は間違いなく僕が買うべき本だと一瞬で確信した。
 
@@ -51,16 +51,16 @@ https://www.amazon.co.jp/英語語源辞典（縮刷版）-寺澤-芳雄/dp/4767
 
 『英語語源辞典』は本当にすごい。英語の語源の疑問がことごとく解決する。この辞典が届いたその日から、毎日暇さえあればパラパラとページをめくり、目に留まった単語の語源を読んでいた。自宅のデスクの上ではいつでも手が届くところに常に置いてある。たまにうんちくとして面白い語源を掘り当てることがあり、そのときにはサポコミュDiscordの `#語源` チャンネルにシェアするようになった。
 
-![image](/images/yurugengo-advent-calendar-2023/Untitled.png)
+![image](/images/yurugengo-advent-calendar-2023/Untitled.565e531bb1d9a37c.png)
 
-![image](/images/yurugengo-advent-calendar-2023/Untitled.png)
+![image](/images/yurugengo-advent-calendar-2023/Untitled.1b13249bc748dbe4.png)
 
-![image](/images/yurugengo-advent-calendar-2023/Untitled.png)
+![image](/images/yurugengo-advent-calendar-2023/Untitled.cd1c12c9bf3839c9.png)
 
 また最近では、池袋のゆる学徒カフェに行くときにいつも持参している。買ったのは縮刷版なので携帯するのに便利だ。
 
 <figure>
-  <img src="/images/yurugengo-advent-calendar-2023/1000004015.jpg" alt="“携帯に便利な縮刷版”、公式がそう言っている">
+  <img src="/images/yurugengo-advent-calendar-2023/1000004015.74d9565b6c9f3e49.jpg" alt="“携帯に便利な縮刷版”、公式がそう言っている">
   <figcaption>“携帯に便利な縮刷版”、公式がそう言っている</figcaption>
 </figure>
 
@@ -108,3 +108,4 @@ https://voicy.jp/channel/1950/638194
 - 堀田先生の関連コンテンツはどれもおもしろい
 - サポコミュに入れば先行公開で参考文献の先取りもできる
 - 言語学者を推せる場所、helwaへようこそ
+

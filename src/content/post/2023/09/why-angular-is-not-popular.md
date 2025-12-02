@@ -4,12 +4,12 @@ slug: 'why-angular-is-not-popular'
 icon: ''
 created_time: '2023-09-24T01:36:00.000Z'
 last_edited_time: '2023-12-30T10:00:00.000Z'
-category: 'Diary'
 tags:
   - '雑記'
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/Angular-331292ed743a41caa3d75e039b9af412'
 features:
   katex: false
@@ -31,15 +31,15 @@ features:
 
 GitHubが毎年出しているOctoverseというレポートでは、[2018年にはその年に増えたコントリビューターの数が多いレポジトリの上位10件に2つもランクイン](https://octoverse.github.com/2018/projects#repositories)しており、
 
-![image](/images/why-angular-is-not-popular/Untitled.png)
+![image](/images/why-angular-is-not-popular/Untitled.51d8b08f180df001.png)
 
 [2020年にはレポジトリにつけられたトピックの3位にangular9がランクイン](https://octoverse.github.com/2020/#finding-balance)しており、
 
-![image](/images/why-angular-is-not-popular/Untitled.png)
+![image](/images/why-angular-is-not-popular/Untitled.ea0bd88ff23e002a.png)
 
 [Angularのnpmパッケージは週に300万回以上ダウンロード](https://www.npmjs.com/package/@angular/core)されており、
 
-![image](/images/why-angular-is-not-popular/Untitled.png)
+![image](/images/why-angular-is-not-popular/Untitled.6e4a0067685b9eec.png)
 
 [USのIndeedで求人を検索すれば9000件以上ヒット](https://www.indeed.com/jobs?q=angular)する。これが「広く普及している」と言えないなら世の中の大抵のOSSは普及していないんじゃなかろうか。それでも世界にはたくさんOSSがあるし、それぞれが使われている場所でそれぞれの価値を発揮しつづけており、それぞれのOSSに根強いファンがいる。断言するが、「流行って」いなくともそんなことでOSSは死なない。死ぬとしたら、流行り物好きの頭の中でだけだ。ただし仮に流行り物好きがマジョリティだとしたら（以下略）
 
@@ -49,7 +49,7 @@ GitHubが毎年出しているOctoverseというレポートでは、[2018年に
 
 最近Angularのコースがオープンした [Sololearn](https://www.sololearn.com/learn/courses/angular) という海外のプログラミング学習サービスでは露骨にその点がプッシュされており、Angularを学ぶことでGoogleで働くチャンスが近づくという触れ込みだ。このコンテンツは[GoogleのAngularチームも公認](https://blog.angular.io/new-free-interactive-angular-course-for-beginners-on-sololearn-7a4c4f91810a)である。
 
-![image](/images/why-angular-is-not-popular/Untitled.png)
+![image](/images/why-angular-is-not-popular/Untitled.1d07106b92419195.png)
 
 ところがどっこい、この事情はGoogle Japanにはほとんど関係しない。Google JapanにはAngularを担当にするDevRelの方はいないし、個人的に興味を持っている方はいても、仕事でAngularを使っている方はGoogle Japanにいないのではなかろうか（いらっしゃったらむしろ話をしたい）。
 
@@ -66,3 +66,4 @@ Angularは海外でも比較的大きな会社での採用事例が多く、カ�
 僕はAngularというオープンソースプロジェクトを愛するファンでありエキスパートであるけども、あくまでもユーザーあるいはコントリビューターであって、別に広報担当ではないので流行らせるのが仕事ではないし、実のところ流行ってほしいとは特に思っていない。それよりも、Angularを使うことを選んだ開発者やそのチームがもっとうまくAngularの価値を引き出せるように支援して、Angularのファンで良かったと思えるようにすることと、Angularを開発しているメンテナたちに日本でも使われているという発信をすることで、より多様なユーザー・ユースケースをサポートするプロジェクトに育てる手助けをするのが、**僕の**やりたいことである。
 
 念のためだが、だからといってAngularを流行らせようとする人を否定することはないので、流行らせたい人は流行らせるべく頑張ってほしいし、いちファンとして応援したい。おのおのが、自分の愛のために思うことを頑張ればよいのだ。
+

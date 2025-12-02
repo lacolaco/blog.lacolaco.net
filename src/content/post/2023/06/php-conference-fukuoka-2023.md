@@ -4,11 +4,11 @@ slug: 'php-conference-fukuoka-2023'
 icon: ''
 created_time: '2023-06-25T12:11:00.000Z'
 last_edited_time: '2023-12-30T10:04:00.000Z'
-category: 'Diary'
 tags:
   - '日記'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/PHP-phpconfuk-00edd73625bd4fcabe5bfa414a75b745'
 features:
   katex: false
@@ -103,7 +103,7 @@ https://twitter.com/laco2net/status/1672610124190601217
 昼まで実家で過ごし、その後空港に向かった。途中天神に寄って開催中のスプラトゥーン3の展示を見た。
 
 <figure>
-  <img src="/images/php-conference-fukuoka-2023/PXL_20230625_042748142.jpg" alt="天神ソラリアステージでのスプラトゥーン3展示">
+  <img src="/images/php-conference-fukuoka-2023/PXL_20230625_042748142.0bba902a31f8fb25.jpg" alt="天神ソラリアステージでのスプラトゥーン3展示">
   <figcaption>天神ソラリアステージでのスプラトゥーン3展示</figcaption>
 </figure>
 
@@ -121,3 +121,4 @@ https://twitter.com/laco2net/status/1672843793157230592
 - まったくPHP関係ないトークでもCfPを通してくれたPHPカンファレンス福岡に感謝
 
 https://twitter.com/laco2net/status/1672629681273843712
+

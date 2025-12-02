@@ -4,12 +4,12 @@ slug: 'angular-how-to-use-action-creator-introduced-in-ngrx-v7-4'
 icon: ''
 created_time: '2019-04-03T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'NgRx'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-How-to-use-Action-Creator-introduced-in-NgRx-v7-4-acbf55eee65142b5813204835b8fdab1'
 features:
   katex: false
@@ -25,23 +25,23 @@ Let’s review how to write NgRx so far while implementing a simple counter. Thi
 
 In the previous action definition, it was common to define Enum of action type, each action class that has it, and Union Type of that class type. For example, if you define `counter.actions.ts` with actions `Increment` and `Reset`, it looks like the following. `Increment` increment the count by a given number, and`Reset` is an action to reset the count back to zero.
 
-```ts
+```typescript
 // counter.actions.ts
-import { Action } from '@ngrx/store';
+import {Action} from '@ngrx/store';
 
 export enum ActionTypes {
-  Increment = '[Counter] Increment',
-  Reset = '[Counter] Reset',
+  Increment = '[Counter] Increment',
+  Reset = '[Counter] Reset',
 }
 
 export class Increment implements Action {
-  readonly type = ActionTypes.Increment;
+  readonly type = ActionTypes.Increment;
 
-  constructor(public payload: number) {}
+  constructor (public payload: number) {}
 }
 
 export class Reset implements Action {
-  readonly type = ActionTypes.Reset;
+  readonly type = ActionTypes.Reset;
 }
 
 export type ActionsUnion = Increment | Reset;
@@ -49,17 +49,22 @@ export type ActionsUnion = Increment | Reset;
 
 This file is rewritten by Action Creator as follows:
 
-```ts
+```typescript
 // counter.actions.ts
-import { createAction, union } from '@ngrx/store';
+import {createAction, union} from '@ngrx/store';
 
-export const increment = createAction('[Counter] Increment', (payload: number) => ({ payload }));
+export const increment = createAction(
+  '[Counter] Increment',
+  (payload: number) => ({payload})
+);
 
-export const reset = createAction('[Counter] Reset');
+export const reset = createAction(
+  '[Counter] Reset'
+);
 
 const actions = union({
-  increment,
-  reset,
+  increment,
+  reset,
 });
 
 export type ActionsUnion = typeof actions;
@@ -69,7 +74,7 @@ export type ActionsUnion = typeof actions;
 
 First, we will discuss the `createAction` function, which replaces the class definition. This function returns an **Action Creator**. Action Creator is a function that returns an action object. In other words, the dispatching action changes from the instance of the new class to the return value of the function.
 
-```ts
+```typescript
 import * as Actions from './actions';
 
 // instance of action class
@@ -84,7 +89,7 @@ An action that takes an argument passes the function to the second argument of t
 
 Let’s look at the `increment` action again. The second argument is a function that accepts a numeric value as the `payload` argument, and the return value is an object with the`payload` property. The return value of this function is merged with the action object created with the first argument, and finally the action object `{type: '[Counter] Increment', payload}` will be created.
 
-```ts
+```typescript
 // Create an action
 const action = Actions.increment(1);
 
@@ -102,11 +107,11 @@ The `ActionsUnion` type, which is a composite of a series of action types, is re
 
 Pass all Action Creators to the `union` function and declare its return value ** without exporting **. The reason why you don’t want to export is that you only want that type. There is no use in the place where it was exported and made available externally. Once you have declared the `actions` variable, use `typeof` to export its type as `Union`.
 
-```ts
+```typescript
 // do not export return value
 const actions = union({
-  increment,
-  reset,
+  increment,
+  reset,
 });
 
 // export only type
@@ -117,55 +122,55 @@ export type ActionsUnion = typeof actions;
 
 After defining the Action Creator, let’s make the Reducer correspond. When originally using the action class and Enum, it was the following Reducer. The type of action passed to the argument is of type `ActionsUnion`, which describes a switch statement that compares`action.type` with the Enum string of `ActionTypes`.
 
-```ts
-import { ActionsUnion, ActionTypes } from './actions';
-import { State, initialState } from './state';
+```typescript
+import {ActionsUnion, ActionTypes} from './actions';
+import {State, initialState} from './state';
 
-export function reducer(state = initialState, action: ActionsUnion): State {
-  switch (action.type) {
-    case ActionTypes.Increment: {
-      return {
-        ...state,
-        count: state.count + action.payload,
-      };
-    }
-    case ActionTypes.Reset: {
-      return {
-        ...state,
-        count: 0,
-      };
-    }
-    default: {
-      return state;
-    }
-  }
+export function reducer (state = initialState, action: ActionsUnion): State {
+  switch (action.type) {
+    case ActionTypes.Increment: {
+      return {
+        ... state,
+        count: state.count + action.payload,
+      };
+    }
+    case ActionTypes.Reset: {
+      return {
+        ... state,
+        count: 0,
+      };
+    }
+    default: {
+      return state;
+    }
+  }
 }
 ```
 
 The following is the result of reflecting the previous change of the action definition in this Reducer. Only the case statement has changed. The action type specified in the case statement has been changed to the `type` property possessed by Action Creator. In this way, because it can be obtained directly from Action Creator, it is not necessary to separate in Enum at the action definition side.
 
-```ts
-import { ActionsUnion, increment, reset } from './actions';
-import { State, initialState } from './state';
+```typescript
+import {ActionsUnion, increment, reset} from './actions';
+import {State, initialState} from './state';
 
-export function reducer(state = initialState, action: ActionsUnion): State {
-  switch (action.type) {
-    case increment.type: {
-      return {
-        ...state,
-        count: state.count + action.payload,
-      };
-    }
-    case reset.type: {
-      return {
-        ...state,
-        count: 0,
-      };
-    }
-    default: {
-      return state;
-    }
-  }
+export function reducer (state = initialState, action: ActionsUnion): State {
+  switch (action.type) {
+    case increment.type: {
+      return {
+        ... state,
+        count: state.count + action.payload,
+      };
+    }
+    case reset.type: {
+      return {
+        ... state,
+        count: 0,
+      };
+    }
+    default: {
+      return state;
+    }
+  }
 }
 ```
 
@@ -173,30 +178,31 @@ export function reducer(state = initialState, action: ActionsUnion): State {
 
 Use NgRx Effects to define the side effect of outputting a log each time a counter is added and reset. The traditional action definition is as follows:
 
-```ts
-import { Injectable } from '@angular/core';
-import { Effect, Actions, ofType } from '@ngrx/effects';
-import { tap } from 'rxjs/operators';
+```typescript
+import {Injectable} from '@angular/core';
+import {Effect, Actions, ofType} from '@ngrx/effects';
+import {tap} from 'rxjs/operators';
 
-import { ActionsUnion, ActionTypes } from './actions';
+import {ActionsUnion, ActionTypes} from './actions';
 
 @Injectable()
 export class CounterEffects {
-  constructor(private actions$: Actions<ActionsUnion>) {}
 
-  @Effect({ dispatch: false })
-  logger$ = this.actions$.pipe(
-    ofType(ActionTypes.Increment, ActionTypes.Reset),
-    tap((action) => {
-      console.log(action);
-    }),
-  );
+  constructor (private actions$: Actions<ActionsUnion>) {}
+
+  @Effect({dispatch: false})
+  logger$ = this.actions$.pipe(
+    ofType(ActionTypes.Increment, ActionTypes.Reset),
+    tap(action => {
+      console.log(action);
+    }),
+  )
 }
 ```
 
 As with Reducer, this only affects the part of the action type.
 
-```ts
+```typescript
 import { Injectable } from '@angular/core';
 import { Effect, Actions, ofType } from '@ngrx/effects';
 import { tap } from 'rxjs/operators';
@@ -205,15 +211,16 @@ import { ActionsUnion, increment, reset } from './actions';
 
 @Injectable()
 export class CounterEffects {
-  constructor(private actions$: Actions<ActionsUnion>) {}
+
+  constructor(private actions$: Actions<ActionsUnion>) { }
 
   @Effect({ dispatch: false })
   logger$ = this.actions$.pipe(
     ofType(increment.type, reset.type),
-    tap((action) => {
+    tap(action => {
       console.log(action);
     }),
-  );
+  )
 }
 ```
 
@@ -221,21 +228,24 @@ export class CounterEffects {
 
 The last part is to dispatch the action. In conventional action classes, class instances are created and dispatched as follows.
 
-```ts
+```typescript
 import * as CounterActions from './state/counter/actions';
 
 @Component({
   selector: 'my-app',
   template: `
-    <div>{{ count$ | async }}</div>
-    <button (click)="incrementOne()">+1</button>
-    <button (click)="reset()">Reset</button>
+     <div>{{ count$ | async }}</div>
+     <button (click)="incrementOne()">+1</button>
+     <button (click)="reset()">Reset</button>
   `,
 })
 export class AppComponent {
-  count$ = this.store.pipe(select((state) => state.counter.count));
 
-  constructor(private store: Store<AppState>) {}
+  count$ = this.store.pipe(
+    select(state => state.counter.count),
+  );
+
+  constructor(private store: Store<AppState>) { }
 
   incrementOne() {
     this.store.dispatch(new CounterActions.Increment(1));
@@ -249,21 +259,24 @@ export class AppComponent {
 
 This changes to dispatch the return value that called the Action Creator function, as described above.
 
-```ts
+```typescript
 import * as CounterActions from './state/counter/actions';
 
 @Component({
   selector: 'my-app',
   template: `
-    <div>{{ count$ | async }}</div>
-    <button (click)="incrementOne()">+1</button>
-    <button (click)="reset()">Reset</button>
+     <div>{{ count$ | async }}</div>
+     <button (click)="incrementOne()">+1</button>
+     <button (click)="reset()">Reset</button>
   `,
 })
 export class AppComponent {
-  count$ = this.store.pipe(select((state) => state.counter.count));
 
-  constructor(private store: Store<AppState>) {}
+  count$ = this.store.pipe(
+    select(state => state.counter.count),
+  );
+
+  constructor(private store: Store<AppState>) { }
 
   incrementOne() {
     this.store.dispatch(CounterActions.increment(1));
@@ -294,3 +307,4 @@ Once you have updated your project’s NgRx to v7.4, basically you should procee
 Check out how the counter application covered in this article actually works.
 
 [https://stackblitz.com/edit/angular-pj4f4p?file=src%2Fapp%2Fapp.component.ts](https://stackblitz.com/edit/angular-pj4f4p?file=src%2Fapp%2Fapp.component.ts)
+

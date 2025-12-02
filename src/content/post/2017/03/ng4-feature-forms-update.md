@@ -4,11 +4,11 @@ slug: 'ng4-feature-forms-update'
 icon: ''
 created_time: '2017-03-08T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-4-0-forms-e87dce047a3243d2b14be546a741e9d9'
 features:
   katex: false
@@ -28,8 +28,8 @@ Angular 4.0ではformsモジュールにいくつかの変更が入っていま�
 
 ```html
 <form>
-  <input type="email" name="mail" />
-  <input type="email" name="mailConfirm" equalsTo="mail" />
+    <input type="email" name="mail">
+    <input type="email" name="mailConfirm" equalsTo="mail">
 </form>
 ```
 
@@ -37,10 +37,10 @@ Angular 4.0ではformsモジュールにいくつかの変更が入っていま�
 
 ```html
 <form>
-  <div ngModelGroup="user">
-    <input type="email" ngModel name="mail" />
-    <input type="email" ngModel name="mailConfirm" equalsTo="user.mail" />
-  </div>
+    <div ngModelGroup="user">
+        <input type="email" ngModel name="mail">
+        <input type="email" ngModel name="mailConfirm" equalsTo="user.mail">
+    </div>
 </form>
 ```
 
@@ -51,7 +51,7 @@ Angular 4.0からは、テンプレート中の`<form>`には自動的に`novali
 もちろん元の挙動に戻すことは可能です。`ngNativeValidate`ディレクティブを`<form>`タグに付与することで2系の挙動になります。
 
 ```html
-<form ngNativeValidate></form>
+<form ngNativeValidate>
 ```
 
 ## まとめ
@@ -71,3 +71,4 @@ Angular 4.0からは、テンプレート中の`<form>`には自動的に`novali
 - [formsモジュールの更新について](/post/ng4-feature-forms-update/)
 - [core/commonモジュールの変更について](/post/ng4-feature-core-update/)
 - [router/http/animationsモジュールの変更について](/post/ng4-feature-libs-update/)
+

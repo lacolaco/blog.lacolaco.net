@@ -4,13 +4,13 @@ slug: 'angular-using-web-worker-through-resource'
 icon: ''
 created_time: '2025-03-26T01:33:00.000Z'
 last_edited_time: '2025-03-26T02:03:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Web Worker'
   - 'Signals'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-using-web-worker-through-resource'
 notion_url: 'https://www.notion.so/Angular-Using-Web-Worker-through-Resources-1c23521b014a8006826df570a3e9e91c'
 features:
@@ -37,7 +37,7 @@ https://angular.jp/ecosystem/web-workers
 
 `echo.worker.ts` は受け取ったメッセージをそのまま返却するが、負荷の高い計算処理をシミュレートする目的で1秒の遅延を加えることにする。これでWeb Worker側の実装は終わりである。
 
-```ts
+```typescript
 /// <reference lib="webworker" />
 
 addEventListener('message', ({ data }) => {
@@ -45,6 +45,7 @@ addEventListener('message', ({ data }) => {
   // delay for 1 second to simulate a slow calculation
   setTimeout(() => postMessage(response), 1000);
 });
+
 ```
 
 ## Web Worker over Resource
@@ -53,7 +54,7 @@ addEventListener('message', ({ data }) => {
 
 今回はサンプルなので、関数呼び出しのたびに`new Worker()`を呼び出している。現実的には一度作成したWorkerインスタンスは再利用しないとオーバーヘッドが大きいことに注意してほしい。
 
-```ts
+```typescript
 function echo(message: string): Promise<string> {
   return new Promise((resolve) => {
     const worker = new Worker(new URL('./echo.worker', import.meta.url));
@@ -68,15 +69,17 @@ function echo(message: string): Promise<string> {
 
 この`echo`関数をAngularの`resource` APIと接続する。ユーザーがテキストフィールドで文字列を入力したら、それをWorkerに送ってレスポンスを表示するようにしてみよう。`message`フィールドは入力されたテキストの値を保持するSignalで、`workerMessage`はWorkerから返されたメッセージを保持するResourceである。`workerMessage`は`message`の値が変わるたびに`echo`関数を呼び出して値を解決する。
 
-```ts
+```typescript
 @Component({
   selector: 'app-root',
   imports: [FormsModule],
   template: `
-    <div>
-      <input type="text" [(ngModel)]="message" />
-      <p>Worker: {{ workerMessage.isLoading() ? 'Waiting...' : workerMessage.value() }}</p>
-    </div>
+  <div>
+    <input type="text" [(ngModel)]="message" />
+    <p> Worker: {{ 
+      workerMessage.isLoading() ? 'Waiting...' : workerMessage.value() 
+    }}</p>
+  </div>
   `,
 })
 export class AppComponent {
@@ -87,9 +90,10 @@ export class AppComponent {
     loader: ({ request }) => echo(request.message),
   });
 }
+
 ```
 
-![image](/images/angular-using-web-worker-through-resource/CleanShot_2025-03-26_at_10.21.55.gif)
+![image](/images/angular-using-web-worker-through-resource/CleanShot_2025-03-26_at_10.21.55.5980536265efaf29.gif)
 
 キャプチャから実際に動いている様子が確認できる。同様のことはもちろん`resource` を使わなくても実現できるが、`resource`でラップすることによる利点もある。もちろんResourceインターフェースの`isLoading()`や`error()`などのSignalが使いやすいのはもちろんだが、特に大きいのは、RxJSでいうところの`switchMap`的な効果、つまり同時に複数の解決が走って値の更新がコンフリクトするということが起きない点だ。
 
@@ -105,3 +109,4 @@ export class AppComponent {
 今回のコードの全体はGitHubで公開している。
 
 https://github.com/lacolaco/angular-webworker-resource-example
+

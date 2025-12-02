@@ -4,13 +4,13 @@ slug: 'angular-trusted-types'
 icon: ''
 created_time: '2020-11-03T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Security'
   - 'Web'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Trusted-Types-a78e0e2cf3cc478dac9b7ae6825d66c6'
 features:
   katex: false
@@ -31,9 +31,15 @@ Trusted Types そのものが初見であれば、Jxck さんのブログ記事�
 [CSP](https://developer.mozilla.org/ja/docs/Web/HTTP/CSP)と併用することで、信頼できることがマークされていない文字列はブラウザがセキュリティポリシー違反としてエラーを報告できるようになる。 検証目的であれば`index.html`の `<head>`タグ内に次の HTML を追加すれば簡単に Trusted Types の動作を確認できる。
 
 ```html
-<meta http-equiv="Content-Security-Policy" content="require-trusted-types-for 'script';" />
+<meta
+  http-equiv="Content-Security-Policy"
+  content="require-trusted-types-for 'script';"
+/>
 <script>
-  window.addEventListener('securitypolicyviolation', console.error.bind(console));
+  window.addEventListener(
+    'securitypolicyviolation',
+    console.error.bind(console)
+  );
 </script>
 ```
 
@@ -49,7 +55,7 @@ Trusted Types そのものが初見であれば、Jxck さんのブログ記事�
 
 `DomSanitizer` は、任意の文字列が信頼できる HTML、スクリプト、CSS などであることを、開発者が Angular に伝えるための API だ。 たとえば `innerHTML` への文字列の挿入で `<iframe>` タグを残してほしければ、次のように文字列が安全な HTML であるとマークする。
 
-```ts
+```typescript
 import { Component } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -70,12 +76,13 @@ export class AppComponent {
 
 当然だが、バイパスする場合 HTML の安全性、XSS の回避は完全に開発者の責任となることは留意しなくてはならない。 特に user-generated な文字列を挿入するケースでは、独自のサニタイズ処理を行うことは必須だろう。
 
-> [!NOTE] > `<script>`タグを含むHTMLをバイパスして `innerHTML` に挿入されても何も動作しないように見えるが、これはサニタイズされたのではなく `<script>` タグの[仕様](https://www.w3.org/TR/2014/REC-html5-20141028/scripting-1.html#the-script-element)である。 `<script>` タグのノード自体は作成されているが、実行はされない。動的な `<script>` タグの挿入は `document.createElement` などのAPIを使おう。
+> [!NOTE]
+> `<script>`タグを含むHTMLをバイパスして `innerHTML` に挿入されても何も動作しないように見えるが、これはサニタイズされたのではなく `<script>` タグの[仕様](https://www.w3.org/TR/2014/REC-html5-20141028/scripting-1.html#the-script-element)である。 `<script>` タグのノード自体は作成されているが、実行はされない。動的な `<script>` タグの挿入は `document.createElement` などのAPIを使おう。
 
 `innerHTML` へのテンプレートバインディングから実際に DOM に挿入されるまでの流れを簡単に模式化すると次のようになる。 処理の流れはバインディングされた HTML が string か `SafeHtml` かでサニタイズの有無が変わるが、 もし CSP で Trusted Types が要求されていれば、どちらにしてもブラウザからすれば信頼できない値としてエラーとなる。 つまり、これまで Angular アプリケーションでは Trusted Types を満足に利用することは難しかった。
 
 <figure>
-  <img src="/images/angular-trusted-types/2020-11-03T11-26-13.png" alt="innerHTML binding and sanitization">
+  <img src="/images/angular-trusted-types/2020-11-03T11-26-13.5c3ba623777ef65e.png" alt="innerHTML binding and sanitization">
   <figcaption>innerHTML binding and sanitization</figcaption>
 </figure>
 
@@ -86,7 +93,7 @@ Angular に新しく実装される Trusted Types のサポートでは、上記
 最終的な DOM 操作の前に、Angular は対象の文字列を Trusted HTML に変換するようになるが、このとき使用されるポリシーは、サニタイズがバイパスされているかどうかで変わる。 バイパスされず Angular が組み込みのサニタイザーを通した安全な文字列は `angular` ポリシーで Trusted HTML に変換される。 一方、Angular によるサニタイズをバイパスした場合は `angular#unsafe-bypass` ポリシーで変換される。
 
 <figure>
-  <img src="/images/angular-trusted-types/2020-11-03T11-43-43.png" alt="innerHTML binding and sanitization with trusted types">
+  <img src="/images/angular-trusted-types/2020-11-03T11-43-43.8e5211ee0e20fcd6.png" alt="innerHTML binding and sanitization with trusted types">
   <figcaption>innerHTML binding and sanitization with trusted types</figcaption>
 </figure>
 
@@ -107,3 +114,4 @@ v11.0 の RC バージョンが開始してリリースが近づいてきたが�
 Angular の Trusted Types サポートの動きを追跡したければ、GitHub のイシューを購読するとよい。
 
 [[tracking] Support Trusted Types in Angular by bjarkler · Pull Request #39222 · angular/angular](https://github.com/angular/angular/pull/39222)
+

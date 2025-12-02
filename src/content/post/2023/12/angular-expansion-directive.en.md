@@ -4,12 +4,12 @@ slug: 'angular-expansion-directive.en'
 icon: ''
 created_time: '2023-12-18T12:53:00.000Z'
 last_edited_time: '2023-12-30T09:58:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'CSS'
 published: true
 locale: 'en'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Implementing-Expansion-Directive-with-CSS-Grid-2baf74e54ee04629bba3e69952099c3d'
 features:
   katex: false
@@ -31,7 +31,7 @@ The `Expandable` directive applies styles to the host element it is assigned to.
 
 When applying styles using directives, you can simply pass an object to the `style` property through host binding. You can apply styles collectively without using features like `ngStyle` or `[style.xxx]`.
 
-```ts
+```typescript
 @Directive({
   selector: '[expandable]',
   standalone: true,
@@ -57,18 +57,20 @@ export class Expandable {
 
 Apply the `Expandable` directive to any container element and add the `overflow: hidden` style to its immediate child elements. This will hide the overflowing content when the height of the grid becomes `0fr`.
 
-```ts
+```typescript
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [Expandable],
   template: `
     <h1>Expansion with grid-template-rows</h1>
-
+    
     <button (click)="toggle()">toggle</button>
     <div [expandable]="isExpanded()" style="border: 1px solid black;">
       <div style="overflow: hidden;">
-        <p>Lorem ipsum dolor sit amet, ...</p>
+        <p>
+        Lorem ipsum dolor sit amet, ...
+        </p>
       </div>
     </div>
   `,
@@ -85,3 +87,4 @@ export class App {
 ## Thoughts
 
 Angular has its animation feature, but I think CSS alone is sufficient for this expansion panel use case. It is a highly versatile mechanism and its implementation is not difficult, so I felt it is a technique that I want to actively use. (In the first place, it would be great if we could animate with `height: auto`.)
+

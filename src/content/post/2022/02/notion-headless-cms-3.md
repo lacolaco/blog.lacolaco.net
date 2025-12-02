@@ -4,7 +4,6 @@ slug: 'notion-headless-cms-3'
 icon: ''
 created_time: '2022-02-15T23:13:00.000Z'
 last_edited_time: '2023-12-30T10:06:00.000Z'
-category: 'Tech'
 tags:
   - 'Notion'
   - 'GitHub Actions'
@@ -12,6 +11,7 @@ tags:
   - 'Blog Dev'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Notion-CMS-3-GitHub-Actions-47d8a28980af4cd7a9432091d4335b30'
 features:
   katex: false
@@ -120,7 +120,7 @@ jobs:
 
 これで、Notionで記事を書けば約10分後にはGitHubに取り込みプルリクエストが作成され、自動デプロイされたプレビュー環境で表示のチェックができるようになった。完成である。
 
-![image](/images/notion-headless-cms-3/Untitled.png)
+![image](/images/notion-headless-cms-3/Untitled.be63152af6c99727.png)
 
 NotionにWebhookができればもう少しスマートになるが、今のAPIの使い方でもレートリミットなどは問題なさそうなのでしばらくはこのまま運用する。
 
@@ -129,3 +129,4 @@ https://developers.notion.com/reference/request-limits
 ## まとめ
 
 3回に分けて、NotionをこのブログのヘッドレスCMSとして使えるようにするにあたって苦労した点をまとめた。ほぼ自分用の備忘録と、実際にNotionで記事を書けると捗るのかどうかの実験を兼ねたものだが、もし似たようなものを作ろうとする誰かの参考になるなら幸いである。
+

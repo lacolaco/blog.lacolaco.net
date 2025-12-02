@@ -4,11 +4,11 @@ slug: 'weekly-commits-on-angular-2025-03-19'
 icon: ''
 created_time: '2025-03-19T06:08:00.000Z'
 last_edited_time: '2025-03-19T06:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/weekly-commits-on-angular-2025-03-19'
 notion_url: 'https://www.notion.so/Weekly-Commits-on-Angular-2025-03-19-1bb3521b014a80deaa71c45e578737b9'
 features:
@@ -23,7 +23,7 @@ features:
 
 Commits: [https://github.com/angular/angular/commits/main/?since=2025-03-13&until=2025-03-19](https://github.com/angular/angular/commits/main/?since=2025-03-13&until=2025-03-19)
 
-### docs: added short explanation about event reply (#60349)
+### docs: added short explanation about event reply (#60349) 
 
 https://github.com/angular/angular/commit/55ba1ededdbd0799830ae37048ac4402bc0dc2b2
 
@@ -31,7 +31,7 @@ https://github.com/angular/angular/commit/55ba1ededdbd0799830ae37048ac4402bc0dc2
 
 https://angular.dev/guide/hydration#event-replay
 
-### feat(compiler-cli): support type checking of host bindings (#60267)
+### feat(compiler-cli): support type checking of host bindings (#60267) 
 
 コンパイラーが、コンポーネントやディレクティブのホストバインディングに対する型チェックをサポートするようになりました。これにより、ホストバインディング内の型エラーが早期に発見されるため、安全に利用できます。この改善により Language Serviceで型エラーを検出できている様子がプルリクエストの説明文で確認できます。
 
@@ -43,13 +43,15 @@ https://github.com/angular/angular/commit/1971e57a457ff9fd4dc8a353b59b51364e08b4
 
 動的に生成されたコンポーネントで双方向バインディングがサポートされるようになりました。先週実装された動的コンポーネントへの宣言的バインディング機能の拡張です。次のような書き方でSignalを介した双方向バインディングを宣言できます。
 
-```ts
-import { createComponent, signal, twoWayBinding } from '@angular/core';
+```typescript
+import {createComponent, signal, twoWayBinding} from '@angular/core';
 
 const value = signal('');
 
 createComponent(MyCheckbox, {
-  bindings: [twoWayBinding('value', value)],
+  bindings: [
+    twoWayBinding('value', value),
+  ],
 });
 ```
 
@@ -83,7 +85,7 @@ Sassに新たに実装されたパッケージインポート機能に対応し�
 
 https://sass-lang.com/blog/announcing-pkg-importers/
 
-### fix(@schematics/angular): generate components without a .component extension/type
+### fix(@schematics/angular): generate components without a .component extension/type 
 
 https://github.com/angular/angular-cli/commit/23fc8e1e176f23442876b086bff52dd5f35abbc0
 
@@ -99,7 +101,7 @@ https://github.com/angular/angular-cli/commit/bc0f07b484300848ee81c5719c58909b40
 
 Commits: [https://github.com/angular/components/commits/main/?since=2025-03-13&until=2025-03-19](https://github.com/angular/components/commits/main/?since=2025-03-13&until=2025-03-19)
 
-### feat(material/button): allow appearance to be set dynamically
+### feat(material/button): allow appearance to be set dynamically 
 
 https://github.com/angular/components/commit/e79f60558fec6055c78dddc9d6e291a600778bc5
 
@@ -124,3 +126,4 @@ https://github.com/angular/components/commit/097f49d90f5fe079a0399fd499202a8bdd1
 https://material.angular.io/components/autocomplete/overview
 
 これまではインラインでオートコンプリート用のドロップダウンリストが表示されるだけでしたが、バックドロップを使うことでどれかの候補を選択するまで他の操作を防ぐようなモーダル表示ができるようになります。
+

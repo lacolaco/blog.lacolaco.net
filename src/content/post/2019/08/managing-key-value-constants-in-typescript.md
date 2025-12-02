@@ -4,11 +4,11 @@ slug: 'managing-key-value-constants-in-typescript'
 icon: ''
 created_time: '2019-08-20T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'TypeScript'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Managing-Key-Value-Constants-in-TypeScript-aa9c6eae0193468f8855ea5a38f72e0d'
 features:
   katex: false
@@ -30,8 +30,8 @@ In TypeScript, a tuple is an array, but its length and items are fixed. You can 
 
 Create `colors.ts` and define `colorIDs` tuple as following;
 
-```ts
-export const colorIDs = ['green', 'red', 'blue'] as const;
+```typescript
+export const colorIDs = ["green", "red", "blue"] as const;
 ```
 
 The type of `colorIDs` is not `string[]` but `['green', 'red', 'blue']` . Its length is absolutely 3 and `colorIDs[0]` is always `'green'`. This is a tuple!
@@ -42,10 +42,10 @@ A Tuple type can be converted to its item’s **union type**. In this case, you 
 
 Add a line to `colors.ts` like below;
 
-```ts
-export const colorIDs = ['green', 'red', 'blue'] as const;
+```typescript
+export const colorIDs = ["green", "red", "blue"] as const;
 
-type ColorID = (typeof colorIDs)[number]; // === 'green' | 'red' | 'blue'
+type ColorID = typeof colorIDs[number]; // === 'green' | 'red' | 'blue'
 ```
 
 Got confusing? Don’t worry. It’s not magic.
@@ -58,11 +58,11 @@ So `typeof colorIDs[number]` becomes the union type `'green' | 'red' | 'blue'`.
 
 `colorLabels` map is an object like the below;
 
-```ts
+```typescript
 const colorLabels = {
-  blue: 'Blue',
-  green: 'Green',
-  red: 'Red',
+  blue: "Blue",
+  green: "Green",
+  red: "Red"
 };
 ```
 
@@ -72,15 +72,15 @@ Let’s make sure that `colorLabels` has a complete label set of all colors! `Co
 
 TypeScript gives us `Record` type to define Key-Value map object. The key is `ColorID` and the value is string. So `colorLabels` ’s type should be `Record<ColorID, string>` .
 
-```ts
-export const colorIDs = ['green', 'red', 'blue'] as const;
+```typescript
+export const colorIDs = ["green", "red", "blue"] as const;
 
-type ColorID = (typeof colorIDs)[number];
+type ColorID = typeof colorIDs[number];
 
 export const colorLabels: Record<ColorID, string> = {
-  green: 'Green',
-  red: 'Red',
-  blue: 'Blue',
+  green: "Green",
+  red: "Red",
+  blue: "Blue"
 } as const;
 ```
 
@@ -93,14 +93,14 @@ When you missed to define `red` field, TypeScript compiler throw the error on th
 
 By the way, **Angular v8.0+ is compatible with TypeScript v3.4**. The demo app in the above is the following;
 
-```ts
-import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+```typescript
+import { Component } from "@angular/core";
+import { FormControl } from "@angular/forms";
 
-import { colorIDs, colorLabels } from './colors';
+import { colorIDs, colorLabels } from "./colors";
 
 @Component({
-  selector: 'app-root',
+  selector: "app-root",
   template: `
     <label for="favoriteColor">Select Favorite Color:&nbsp;</label>
     <select id="favoriteColor" [formControl]="favoriteColorControl">
@@ -109,7 +109,7 @@ import { colorIDs, colorLabels } from './colors';
       </option>
     </select>
     <div>Selected color ID: {{ favoriteColorControl.value }}</div>
-  `,
+  `
 })
 export class AppComponent {
   readonly colorIDs = colorIDs;
@@ -124,3 +124,4 @@ export class AppComponent {
 - `as const` turns an array into a **tuple**
 - `typeof colorIDs[number]` returns an **union type** of its item
 - Define an object with `Record<ColorID, string>` for keeping a complete field set.
+

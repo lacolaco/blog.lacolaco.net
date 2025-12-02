@@ -4,11 +4,11 @@ slug: 'local-variables-and-exportas-of-angular-2'
 icon: ''
 created_time: '2016-04-11T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-2-exportAs-5d985bb53b5341d8b097d2f5cf8ddb57'
 features:
   katex: false
@@ -37,7 +37,7 @@ Angular 2には**local variables**(ローカル変数)という機能があり�
 })
 export class App {
   value: string;
-
+  
   submit(value: string) {
     this.value = value;
   }
@@ -123,7 +123,7 @@ export class App {
   template: `
     <form #f #ngf="ngForm" (ngSubmit)="submit(ngf.value)">
       <input type="text" ngControl="name">
-
+      
       <button type="submit">submit</button>
       <button (click)="f.reset()">reset</button>
     </form>
@@ -133,7 +133,7 @@ export class App {
 })
 export class App {
   value: any;
-
+  
   submit(value: any) {
     this.value = value;
   }
@@ -156,18 +156,18 @@ export class App {
   exportAs: "myDiv"
 })
 class MyDiv {
-
+  
   constructor(private element: ElementRef, private renderer: Renderer) {
   }
-
+  
   toUpper() {
     return this.renderer.setElementStyle(this.element.nativeElement, "text-transform", "uppercase");
   }
-
+  
   toLower() {
     return this.renderer.setElementStyle(this.element.nativeElement, "text-transform", "lowercase");
   }
-
+  
   reset() {
     return this.renderer.setElementStyle(this.element.nativeElement, "text-transform", "");
   }
@@ -196,3 +196,4 @@ export class App {
 ## まとめ
 
 Angular 2のローカル変数について基礎的な部分を紹介し、`exportAs`を活用することで機能的なディレクティブを作れることがわかってもらえたと思います。 ローカル変数を使うとコンポーネントのコード量を減らし、テンプレート内で直感的にHTML要素やディレクティブのインスタンスを扱うことができます。 ぜひ活用してみてください。
+

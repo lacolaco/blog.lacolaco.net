@@ -4,11 +4,11 @@ slug: 'read-ivy-design-doc-separate-compilation'
 icon: ''
 created_time: '2018-03-03T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/DESIGN-DOC-Ivy-Separate-Compilation-f6bcdb7096ae42f184bf94651422e9b7'
 features:
   katex: false
@@ -87,7 +87,7 @@ This document refers to this style of code generation as ivy after the code name
 
 - 必要な情報
 
-The information available across compilations in Angular 5 is represented in the compiler by a summary description. For example, components and directives are represented by the `[CompileDirectiveSummary](https://github.com/angular/angular/blob/d3827a0017fd5ff5ac0f6de8a19692ce47bf91b4/packages/compiler/src/compile_metadata.ts#L257)`. The following table shows where this information ends up in an ivy compiled class:
+The information available across compilations in Angular 5 is represented in the compiler by a summary description. For example, components and directives are represented by the [`CompileDirectiveSummary`](https://github.com/angular/angular/blob/d3827a0017fd5ff5ac0f6de8a19692ce47bf91b4/packages/compiler/src/compile_metadata.ts#L257). The following table shows where this information ends up in an ivy compiled class:
 
 - Angular 5 においてコンパイルを超えて有効な情報はコンパイラ中でサマリーの記述として表されます。
 - たとえば、コンポーネントやディレクティブは`CompileDirectiveSummary`として表されます。
@@ -95,29 +95,29 @@ The information available across compilations in Angular 5 is represented in the
 
 ### `CompileDirectiveSummary`
 
-|                     |                  |
-| ------------------- | ---------------- |
-| field               | destination      |
-| `type`              | implicit         |
-| `isComponent`       | `ngComponentDef` |
-| `selector`          | `ngModuleScope`  |
-| `exportAs`          | `ngDirectiveDef` |
-| `inputs`            | `ngDirectiveDef` |
-| `outputs`           | `ngDirectiveDef` |
-| `hostListeners`     | `ngDirectiveDef` |
-| `hostProperties`    | `ngDirectiveDef` |
-| `hostAttributes`    | `ngDirectiveDef` |
-| `providers`         | `ngInjectorDef`  |
-| `viewProviders`     | `ngComponentDef` |
-| `queries`           | `ngDirectiveDef` |
-| `guards`            | not used         |
-| `viewQueries`       | `ngComponentDef` |
-| `entryComponents`   | not used         |
-| `changeDetection`   | `ngComponentDef` |
-| `template`          | `ngComponentDef` |
-| `componentViewType` | not used         |
-| `renderType`        | not used         |
-| `componentFactory`  | not used         |
+|  |  |
+| ------- | ------- |
+| field | destination |
+| `type` | implicit |
+| `isComponent` | `ngComponentDef` |
+| `selector` | `ngModuleScope` |
+| `exportAs` | `ngDirectiveDef` |
+| `inputs` | `ngDirectiveDef` |
+| `outputs` | `ngDirectiveDef` |
+| `hostListeners` | `ngDirectiveDef` |
+| `hostProperties` | `ngDirectiveDef` |
+| `hostAttributes` | `ngDirectiveDef` |
+| `providers` | `ngInjectorDef` |
+| `viewProviders` | `ngComponentDef` |
+| `queries` | `ngDirectiveDef` |
+| `guards` | not used |
+| `viewQueries` | `ngComponentDef` |
+| `entryComponents` | not used |
+| `changeDetection` | `ngComponentDef` |
+| `template` | `ngComponentDef` |
+| `componentViewType` | not used |
+| `renderType` | not used |
+| `componentFactory` | not used |
 
 Only one definition is generated per class. All components are directives so a `ngComponentDef` contains all the `ngDirectiveDef` information. All directives are injectable so `ngComponentDef` and `ngDirectiveDef` contain `ngInjectableDef` information.
 
@@ -131,12 +131,12 @@ For `CompilePipeSummary` the table looks like:
 
 ### `CompilePipeSummary`
 
-|        |                 |
-| ------ | --------------- |
-| field  | destination     |
-| `type` | implicit        |
+|  |  |
+| ------- | ------- |
+| field | destination |
+| `type` | implicit |
 | `name` | `ngModuleScope` |
-| `pure` | `ngPipeDef`     |
+| `pure` | `ngPipeDef` |
 
 The only pieces of information that are not generated into the definition are the directive selector and the pipe name as they go into the module scope.
 
@@ -180,8 +180,8 @@ The metadata for a component is transformed by:
 - コンポーネントのメタデータは次のように変換されます
 
 1. Removing the `@Component` directive.
-2. Add `"ngComponentDef": {}` static field.
-3. Add `"ngSelector": <selector-value>` static field.
+1. Add `"ngComponentDef": {}` static field.
+1. Add `"ngSelector": <selector-value>` static field.
 
 - @Component`ディレクティブを削除する
   - 訳注: このディレクティブは多分一般的な`命令`くらいの意味
@@ -243,8 +243,8 @@ The metadata for a directive is transformed by:
 - ディレクティブのメタデータは次のように変換されます
 
 1. Removing the `@Directive` directive.
-2. Add `"ngDirectiveDef": {}` static field.
-3. Add `"ngSelector": <selector-value>` static field.
+1. Add `"ngDirectiveDef": {}` static field.
+1. Add `"ngSelector": <selector-value>` static field.
 
 - `@Directive`ディレクティブを削除する
 - `"ngDirectiveDef": {}`静的フィールドを追加する
@@ -297,8 +297,8 @@ The metadata for a pipe is transformed by:
 - パイプのメタデータは次のように変換されます
 
 1. Removing the `@Pipe` directive.
-2. Add `"ngPipeDef": {}` static field.
-3. Add `"ngSelector": <name-value>` static field.
+1. Add `"ngPipeDef": {}` static field.
+1. Add `"ngSelector": <name-value>` static field.
 
 - `@Pipe`ディレクティブを削除する
 - `"ngPipeDef": {}`静的フィールドを追加する
@@ -349,8 +349,8 @@ The metadata for a module is transformed by:
 - モジュールのメタデータは次のように変換されます
 
 1. Remove the `@NgModule` directive.
-2. Add `"ngInjectorDef": {}` static field.
-3. Add `"ngModuleScope": <module-scope>` static field.
+1. Add `"ngInjectorDef": {}` static field.
+1. Add `"ngModuleScope": <module-scope>` static field.
 
 - `@NgModule`ディレクティブを削除する
 - `"ngInjectorDef": {}`静的フィールドを追加する
@@ -635,19 +635,19 @@ The recommended options for producing a ivy application are
 
 - Ivy アプリケーションを作成するための推奨オプションは次のとおりです。
 
-|                                |          |          |
-| ------------------------------ | -------- | -------- |
-| option                         | value    |          |
-| `"enableIvy"`                  | `true`   | required |
-| `"generateRenderer2Factories"` | `true`   | implied  |
-| `"renderer2BackPatching"`      | `true`   | implied  |
-| `"generateCodeForLibraries"`   | `true`   | default  |
-| `"annotationsAs"`              | `remove` | implied  |
-| `"enableLegacyTemplate"`       | `false`  | default  |
-| `"preserveWhitespaces"`        | `false`  | default  |
-| `"skipMetadataEmit"`           | `true`   | default  |
-| `"strictMetadataEmit"`         | `false`  | implied  |
-| `"skipTemplateCodegen"`        |          | ignored  |
+|  |  |  |
+| ------- | ------- | ------- |
+| option | value |  |
+| `"enableIvy"` | `true` | required |
+| `"generateRenderer2Factories"` | `true` | implied |
+| `"renderer2BackPatching"` | `true` | implied |
+| `"generateCodeForLibraries"` | `true` | default |
+| `"annotationsAs"` | `remove` | implied |
+| `"enableLegacyTemplate"` | `false` | default |
+| `"preserveWhitespaces"` | `false` | default |
+| `"skipMetadataEmit"` | `true` | default |
+| `"strictMetadataEmit"` | `false` | implied |
+| `"skipTemplateCodegen"` |  | ignored |
 
 The options marked “implied” are implied by other options having the recommended value and do not need to be explicitly set. Options marked “default” also do not need to be set explicitly.
 
@@ -679,19 +679,19 @@ The recommended options for producing a ivy library are:
 
 - Ivy ライブラリを作成するときの推奨オプションは次のとおりです。
 
-|                                |          |          |
-| ------------------------------ | -------- | -------- |
-| option                         | value    |          |
-| `"enableIvy"`                  | `true`   | required |
-| `"generateRenderer2Factories"` | `false`  |          |
-| `"renderer2BackPatching"`      | `false`  | default  |
-| `"generateCodeForLibraries"`   | `false`  |          |
-| `"annotationsAs"`              | `remove` | implied  |
-| `"enableLegacyTemplate"`       | `false`  | default  |
-| `"preserveWhitespaces"`        | `false`  | default  |
-| `"skipMetadataEmit"`           | `false`  |          |
-| `"strictMetadataEmit"`         | `true`   |          |
-| `"skipTemplateCodegen"`        |          | ignored  |
+|  |  |  |
+| ------- | ------- | ------- |
+| option | value |  |
+| `"enableIvy"` | `true` | required |
+| `"generateRenderer2Factories"` | `false` |  |
+| `"renderer2BackPatching"` | `false` | default |
+| `"generateCodeForLibraries"` | `false` |  |
+| `"annotationsAs"` | `remove` | implied |
+| `"enableLegacyTemplate"` | `false` | default |
+| `"preserveWhitespaces"` | `false` | default |
+| `"skipMetadataEmit"` | `false` |  |
+| `"strictMetadataEmit"` | `true` |  |
+| `"skipTemplateCodegen"` |  | ignored |
 
 The options marked “implied” are implied by other options having the recommended value and do not need to be explicitly set. Options marked “default” also do not need to be set explicitly.
 
@@ -707,47 +707,47 @@ The default Angular Compiler options default to, mostly, the recommended set of 
 - デフォルトの Angular コンパイラオプションは殆どの場合、推奨されるオプションのセットですが、特定のターゲットに設定するのに必要なオプションが明確ではなく、それらを混合すると無意味な結果が生じる可能性があります。
 - `target`オプションはコンパイラオプションをターゲットに依存した推奨値に設定するのを簡略化するために利用できます。
 
-|                 |                                |              |          |
-| --------------- | ------------------------------ | ------------ | -------- |
-| target          | option                         | value        |          |
-| `"application"` | `"generateRenderer2Factories"` | `true`       | enforced |
-|                 | `"renderer2BackPatching"`      | `true`       | enforced |
-|                 | `"generateCodeForLibraries"`   | `true`       |          |
-|                 | `"annotationsAs"`              | `remove`     |          |
-|                 | `"enableLegacyTemplate"`       | `false`      |          |
-|                 | `"preserveWhitespaces"`        | `false`      |          |
-|                 | `"skipMetadataEmit"`           | `false`      |          |
-|                 | `"strictMetadataEmit"`         | `true`       |          |
-|                 | `"skipTemplateCodegen"`        | `false`      |          |
-|                 | `"fullTemplateTypeCheck"`      | `true`       |          |
-|                 | `"enableLegacyTemplate"`       | `false`      |          |
-|                 |                                |              |          |
-| `"library"`     | `"generateRenderer2Factories"` | `false`      | enforced |
-|                 | `"renderer2BackPatching"`      | `false`      | enforced |
-|                 | `"generateCodeForLibraries"`   | `false`      | enforced |
-|                 | `"annotationsAs"`              | `decorators` |          |
-|                 | `"enableLegacyTemplate"`       | `false`      |          |
-|                 | `"preserveWhitespaces"`        | `false`      |          |
-|                 | `"skipMetadataEmit"`           | `false`      | enforced |
-|                 | `"strictMetadataEmit"`         | `true`       |          |
-|                 | `"skipTemplateCodegen"`        | `false`      | enforced |
-|                 | `"fullTemplateTypeCheck"`      | `true`       |          |
-|                 | `"enableLegacyTemplate"`       | `false`      |          |
-|                 |                                |              |          |
-| `"package"`     | `"flatModuleOutFile"`          |              | required |
-|                 | `"flatModuleId"`               |              | required |
-|                 | `"enableIvy"`                  | `false`      | enforced |
-|                 | `"generateRenderer2Factories"` | `false`      | enforced |
-|                 | `"renderer2BackPatching"`      | `false`      | enforced |
-|                 | `"generateCodeForLibraries"`   | `false`      | enforced |
-|                 | `"annotationsAs"`              | `remove`     |          |
-|                 | `"enableLegacyTemplate"`       | `false`      |          |
-|                 | `"preserveWhitespaces"`        | `false`      |          |
-|                 | `"skipMetadataEmit"`           | `false`      | enforced |
-|                 | `"strictMetadataEmit"`         | `true`       |          |
-|                 | `"skipTemplateCodegen"`        | `false`      | enforced |
-|                 | `"fullTemplateTypeCheck"`      | `true`       |          |
-|                 | `"enableLegacyTemplate"`       | `false`      |          |
+|  |  |  |  |
+| ------- | ------- | ------- | ------- |
+| target | option | value |  |
+| `"application"` | `"generateRenderer2Factories"` | `true` | enforced |
+|  | `"renderer2BackPatching"` | `true` | enforced |
+|  | `"generateCodeForLibraries"` | `true` |  |
+|  | `"annotationsAs"` | `remove` |  |
+|  | `"enableLegacyTemplate"` | `false` |  |
+|  | `"preserveWhitespaces"` | `false` |  |
+|  | `"skipMetadataEmit"` | `false` |  |
+|  | `"strictMetadataEmit"` | `true` |  |
+|  | `"skipTemplateCodegen"` | `false` |  |
+|  | `"fullTemplateTypeCheck"` | `true` |  |
+|  | `"enableLegacyTemplate"` | `false` |  |
+|  |  |  |  |
+| `"library"` | `"generateRenderer2Factories"` | `false` | enforced |
+|  | `"renderer2BackPatching"` | `false` | enforced |
+|  | `"generateCodeForLibraries"` | `false` | enforced |
+|  | `"annotationsAs"` | `decorators` |  |
+|  | `"enableLegacyTemplate"` | `false` |  |
+|  | `"preserveWhitespaces"` | `false` |  |
+|  | `"skipMetadataEmit"` | `false` | enforced |
+|  | `"strictMetadataEmit"` | `true` |  |
+|  | `"skipTemplateCodegen"` | `false` | enforced |
+|  | `"fullTemplateTypeCheck"` | `true` |  |
+|  | `"enableLegacyTemplate"` | `false` |  |
+|  |  |  |  |
+| `"package"` | `"flatModuleOutFile"` |  | required |
+|  | `"flatModuleId"` |  | required |
+|  | `"enableIvy"` | `false` | enforced |
+|  | `"generateRenderer2Factories"` | `false` | enforced |
+|  | `"renderer2BackPatching"` | `false` | enforced |
+|  | `"generateCodeForLibraries"` | `false` | enforced |
+|  | `"annotationsAs"` | `remove` |  |
+|  | `"enableLegacyTemplate"` | `false` |  |
+|  | `"preserveWhitespaces"` | `false` |  |
+|  | `"skipMetadataEmit"` | `false` | enforced |
+|  | `"strictMetadataEmit"` | `true` |  |
+|  | `"skipTemplateCodegen"` | `false` | enforced |
+|  | `"fullTemplateTypeCheck"` | `true` |  |
+|  | `"enableLegacyTemplate"` | `false` |  |
 
 Options that are marked “enforced” are reported as an error if they are explicitly set to a value different from what is specified here. The options marked “required” are required to be set and an error message is displayed if no value is supplied but no default is provided.
 
@@ -979,3 +979,4 @@ The `ng_experimental_ivy_srcs` rule is only needed when ivy is experimental. Onc
 - Ivy がリリースされたあとは、`ng_experimental_ivy_srcs`と依存するルールは削除できます。
 
 ---
+

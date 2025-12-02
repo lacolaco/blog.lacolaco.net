@@ -4,12 +4,12 @@ slug: 'async-pipe-initial-null-problem'
 icon: ''
 created_time: '2020-02-18T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'RxJS'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/AsyncPipe-null-289a7964b9894c20818f45f429907bd1'
 features:
   katex: false
@@ -72,7 +72,7 @@ AsyncPipeはPromiseとObservableのどちらでも扱えるように非同期デ
 
 そして残りのコードで、購読中のObservableから得られた最新の値 `this._latestValue` をreturnしている。returnされた値が、実際にテンプレートのレンダリングに使われる値になる。
 
-ここからわかることは、**AsyncPipeは \*\***`transform()`\***\*メソッドが呼び出されたときにキャッシュしている \*\***`this._latestValue`\***\* を返している** ということだ。 このことはAsyncPipeの `_subscribe()` メソッドと `this._updateLatestValue()` メソッドを見てもわかる。 `_subscribe()`メソッドで購読した非同期データに値が流れてきたら、そのコールバックで `ChangeDetectorRef` の `markForCheck()` が呼び出される。
+ここからわかることは、**AsyncPipeは **`transform()`**メソッドが呼び出されたときにキャッシュしている **`this._latestValue`** を返している** ということだ。 このことはAsyncPipeの `_subscribe()` メソッドと `this._updateLatestValue()` メソッドを見てもわかる。 `_subscribe()`メソッドで購読した非同期データに値が流れてきたら、そのコールバックで `ChangeDetectorRef` の `markForCheck()` が呼び出される。
 
 ```
   private _subscribe(obj: Observable<any>|Promise<any>|EventEmitter<any>): void {
@@ -93,9 +93,9 @@ AsyncPipeはPromiseとObservableのどちらでも扱えるように非同期デ
 つまり、AsyncPipeは次のような仕組みでテンプレートをレンダリングしている。
 
 1. Change DetectionでPipeの `transform()` が呼び出される
-2. 渡されたObservableの購読を開始する
-3. `transform()` が呼び出された時点の `this._latestValue` を 返して終了する
-4. Observableが値を流したら `this._latestValue` を更新して Change Detectionをトリガーする（1に戻る）
+1. 渡されたObservableの購読を開始する
+1. `transform()` が呼び出された時点の `this._latestValue` を 返して終了する
+1. Observableが値を流したら `this._latestValue` を更新して Change Detectionをトリガーする（1に戻る）
 
 テンプレートが最終的に同期的な値しかレンダリングできない以上、 `transform()` は同期的な値を返す必要があり、それは `transform()` が呼ばれたタイミングでのスナップショットを返すことしかできないのだ。
 
@@ -130,13 +130,13 @@ export class AsyncPipe implements OnDestroy, PipeTransform {
 次のテンプレートでは、 `source$ | async` が返した値を NgIfディレクティブが評価して、Truthyならレンダリングされるため、 `null` のときは `*ngIf` の内側に入ることはない。
 
 ```html
-<div *ngIf="source$ | async as state">{{ state.count }}</div>
+<div *ngIf="source$ | async as state">  {{ state.count }}</div>
 ```
 
 同様に次のテンプレートでは、 `source$ | async` が返した値を NgForディレクティブが評価して、Falsyなら無視されるため、 `null` のときは `*ngFor` の内側に入ることはない。
 
 ```html
-<div *ngFor="let item of source$ | async">{{ item }}</div>
+<div *ngFor="let item of source$ | async">  {{ item }}</div>
 ```
 
 - `ngIf` や `ngFor` のような null安全なディレクティブを通してあれば、初期値null問題がアプリケーションに影響を与えることはない。問題はそうではない場合、つまり、子コンポーネントのInputに直接AsyncPipeで値を渡しているケースだ。 次のようなケースで、子コンポーネントは `prop` Inputの型を定義してあるはずだが、そこには `null` が渡される可能性を考慮しなくてはならない。`prop` がgetterやsetterであった場合、値にアクセスしようとして実行時エラーが発生することは容易に想像できる。
@@ -158,14 +158,14 @@ export class AsyncPipe implements OnDestroy, PipeTransform {
 そこで筆者が実装したのが `*rxSubscribe` ディレクティブだ。実際に動作するサンプルは[こちら](https://stackblitz.com/edit/github-zg4qep)。次のように構造ディレクティブでObservableを購読する。
 
 ```html
-<div *rxSubscribe="source$; let state">{{ state.count }}</div>
+<div *rxSubscribe="source$; let state">  {{ state.count }}</div>
 ```
 
 ディレクティブは次のような実装になっている。このディレクティブがおこなうことは、
 
 1. `rxSubscribe` Inputで受け取ったObservableを `ngOnInit` で購読する。
-2. Observableが値を流したら、初回はテンプレートをEmbedする（レンダリングする）
-3. 2回め以降の値が流れてきたら、contextを更新して `markForCheck` を呼び出す
+1. Observableが値を流したら、初回はテンプレートをEmbedする（レンダリングする）
+1. 2回め以降の値が流れてきたら、contextを更新して `markForCheck` を呼び出す
 
 [https://github.com/lacolaco/ngivy-rx-subscribe-directive/blob/master/src/app/rx-subscribe.directive.ts](https://github.com/lacolaco/ngivy-rx-subscribe-directive/blob/master/src/app/rx-subscribe.directive.ts)
 
@@ -203,8 +203,7 @@ export class RxSubscribeDirective<T> implements OnInit, OnDestroy {
 
 ```html
 <div *rxSubscribe="source$; let state">
-  {{ state.foo }}
-  <!-- stateは `foo` を持たないためAOTコンパイルエラーになる -->
+  {{ state.foo }}  <!-- stateは `foo` を持たないためAOTコンパイルエラーになる -->
 </div>
 ```
 
@@ -212,9 +211,9 @@ AsyncPipeでは初期値null問題によって常に `or null` の推論しか�
 
 ちなみに、この `*rxSubscribe` ディレクティブは `@soundng/rx-subscribe` というnpmパッケージで公開している。ぜひ使ってみてほしい。
 
-- GitHub [https://github.com/soundng/rx-subscribe](https://github.com/soundng/rx-subscribe)
-- NPM [https://www.npmjs.com/package/@soundng/rx-subscribe](https://www.npmjs.com/package/@soundng/rx-subscribe)
-- Demo [https://stackblitz.com/edit/github-zg4qep-kq9pyw?file=src/app/app.component.html](https://stackblitz.com/edit/github-zg4qep-kq9pyw?file=src%2Fapp%2Fapp.component.html)
+- GitHub [https://github.com/soundng/rx-subscribe](https://github.com/soundng/rx-subscribe) 
+- NPM [https://www.npmjs.com/package/@soundng/rx-subscribe](https://www.npmjs.com/package/@soundng/rx-subscribe) 
+- Demo [https://stackblitz.com/edit/github-zg4qep-kq9pyw?file=src/app/app.component.html](https://stackblitz.com/edit/github-zg4qep-kq9pyw?file=src%2Fapp%2Fapp.component.html) 
 
 ## まとめ
 
@@ -223,3 +222,4 @@ AsyncPipeでは初期値null問題によって常に `or null` の推論しか�
 - 非同期データを扱うにはPipeの限界がある
 - 構造ディレクティブによるアプローチはAsyncPipeの問題を解決できる
 - `@soundng/rx-subscribe` へのフィードバック歓迎
+

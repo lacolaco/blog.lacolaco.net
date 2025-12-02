@@ -4,11 +4,11 @@ slug: 'ng4-feature-meta-service'
 icon: ''
 created_time: '2017-03-07T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-4-0-Meta-fe6eb6f925344204b31ca32dbec371ba'
 features:
   katex: false
@@ -53,10 +53,10 @@ const tags = metaService.getTags('name=author');
 
 ```
 export type MetaDefinition = {
-  charset?: string;
-  content?: string;
-  httpEquiv?: string;
-  id?: string;
+  charset?: string; 
+  content?: string; 
+  httpEquiv?: string; 
+  id?: string; 
   itemprop?: string;
   name?: string;
   property?: string;
@@ -109,3 +109,4 @@ metaService.addTags([
 - [formsモジュールの更新について](/post/ng4-feature-forms-update/)
 - [core/commonモジュールの変更について](/post/ng4-feature-core-update/)
 - [router/http/animationsモジュールの変更について](/post/ng4-feature-libs-update/)
+

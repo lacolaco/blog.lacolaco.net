@@ -4,11 +4,11 @@ slug: 'angular-defer-scheduled-view'
 icon: ''
 created_time: '2024-08-27T12:13:00.000Z'
 last_edited_time: '2024-09-04T09:48:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Deferred-View-50321da164af49878a8f24041e7761af'
 features:
   katex: false
@@ -26,13 +26,15 @@ Angularには `@defer` 構文によってチャンク分割したコンポーネ
 
 まずは秘匿されるコンテンツをひとつのコンポーネントにまとめる。今回は `CampaignMessage` とした。このコンポーネントは遅延読み込みされる側なので特別な実装はなにもない。
 
-```ts
+```typescript
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'campaign-message',
   standalone: true,
-  template: ` <p>Happy New Year!</p> `,
+  template: `
+  <p>Happy New Year!</p>
+  `,
 })
 export default class CampaignMessage {}
 ```
@@ -41,7 +43,7 @@ export default class CampaignMessage {}
 
 https://angular.jp/guide/defer#トリガー
 
-```ts
+```typescript
 import CampaignMessage from './campaign';
 
 @Component({
@@ -49,9 +51,10 @@ import CampaignMessage from './campaign';
   standalone: true,
   imports: [CampaignMessage],
   template: `
-    @defer (when isOpen("2024-01-01")) {
+    @defer(when isOpen("2024-01-01")) {
       <campaign-message />
-    } @placeholder {
+    }
+    @placeholder {
       <p>Stay tuned!</p>
     }
   `,
@@ -72,3 +75,4 @@ export class App {
 とはいえ `when` 条件を使う例としておもしろかった。実際に動作するサンプルも置いておく。
 
 https://stackblitz.com/edit/stackblitz-starters-vrvpn4?ctl=1&embed=1&file=src/main.ts
+

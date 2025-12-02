@@ -4,11 +4,11 @@ slug: 'migrate-angular-cli-from-1-7-to-6-0'
 icon: ''
 created_time: '2018-04-09T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-CLI-v1-7-v6-0-for-v6-0-0-rc-2-9dab9594a41d4af69f3536e029edd915'
 features:
   katex: false
@@ -72,3 +72,4 @@ https://github.com/lacolaco/ngcli173migration/commit/9251788e5c59bbfa52b45b5b0f9
   - `yarn add --dev @angular/cli@^6.0.0-rc.2`
 - `ng update`コマンドでプロジェクトを v6 用にマイグレーションする
   - `ng update @angular/cli --migrate-only --from=1.7.3`
+

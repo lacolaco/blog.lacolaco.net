@@ -4,12 +4,12 @@ slug: 'angular-content-projection-101'
 icon: ''
 created_time: '2020-02-10T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Web Components'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Content-Projection-09047f7df09e48ecb004a98745ede141'
 features:
   katex: false
@@ -25,8 +25,8 @@ features:
 
 ```html
 <ul>
-  <li>Item 1</li>
-  <li>Item 2</li>
+    <li>Item 1</li>
+    <li>Item 2</li>
 </ul>
 ```
 
@@ -40,7 +40,7 @@ Angularに話を戻そう。Angularのコンポーネントは基本的にWeb Co
 
 Web ComponentsのCustom ElementsはHTMLのカスタム要素を定義する機能である。カスタム要素は標準要素と違い、**自動的にContent Projectionはおこなわれない**。特にShadow DOMと組み合わせたカスタム要素は、スタンドアロンでカプセル化されたビューであるため、カプセル化の外からビューを与えて干渉することはカスタム要素側が許可しない限り不可能だ。 そしてShadow DOMでは、自身のDOMツリー内に `<slot>` という要素を宣言すると、その位置にContentが投影される。
 
-[https://developer.mozilla.org/ja/docs/Web/HTML/Element/slot](https://developer.mozilla.org/ja/docs/Web/HTML/Element/slot) [https://developer.mozilla.org/ja/docs/Web/Web_Components/Using_templates_and_slots](https://developer.mozilla.org/ja/docs/Web/Web_Components/Using_templates_and_slots)
+[https://developer.mozilla.org/ja/docs/Web/HTML/Element/slot](https://developer.mozilla.org/ja/docs/Web/HTML/Element/slot)   [https://developer.mozilla.org/ja/docs/Web/Web_Components/Using_templates_and_slots](https://developer.mozilla.org/ja/docs/Web/Web_Components/Using_templates_and_slots)
 
 これと同様の概念をAngularのコンポーネントも備えていて、それが `<ng-content>` 疑似要素と、 `@ContentChild()` / `@ContentChildren()` 機能だ。 これらの概念は基本的にAngular 2.0.0のリリース時から変わっておらず、Angularのコンポーネント機能の根幹を支えている概念である。
 
@@ -72,8 +72,8 @@ export class HelloComponent  {}
 
 ```html
 <h1>
-  <ng-content select="[name]"></ng-content>!
-  <ng-content select="[greeting]"></ng-content>
+  <ng-content select="[name]"></ng-content>! 
+  <ng-content select="[greeting]"></ng-content> 
 </h1>
 ```
 
@@ -185,3 +185,4 @@ export class HelloComponent {
 - AngularのコンポーネントやWeb Componentsでは Content Projectionは明示的に宣言する必要がある
 - インスタントなContent Projectionは `<ng-content>` だけで可能
 - 再利用可能なテンプレートを受け取りたいときは `@ContentChild()` と `TemplateRef` を使った方法が必要
+

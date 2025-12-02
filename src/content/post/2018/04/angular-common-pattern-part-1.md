@@ -4,11 +4,11 @@ slug: 'angular-common-pattern-part-1'
 icon: ''
 created_time: '2018-04-10T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-1-e3968f95daba42a888fff3cc92b3e661'
 features:
   katex: false
@@ -160,3 +160,4 @@ export class CoreModule {}
 ---
 
 書いてみるとそれほど種類がないなという気がしてきたので、次回は未定です。
+

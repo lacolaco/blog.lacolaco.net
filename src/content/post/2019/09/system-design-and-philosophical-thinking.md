@@ -4,13 +4,13 @@ slug: 'system-design-and-philosophical-thinking'
 icon: ''
 created_time: '2019-09-24T12:27:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Idea'
 tags:
   - '雑記'
   - '言語化'
   - '哲学'
 published: true
 locale: 'ja'
+category: 'Idea'
 notion_url: 'https://www.notion.so/7105948637d14723b8445a3349f49a11'
 features:
   katex: false
@@ -47,3 +47,4 @@ https://ja.wikipedia.org/wiki/ドメインモデル
 ---
 
 こんな感じの心持ちで、引き続きしばらく哲学というものについて本を読むことにする。オチなし。以上
+

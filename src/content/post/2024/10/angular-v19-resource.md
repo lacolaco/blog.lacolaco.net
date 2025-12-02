@@ -4,12 +4,12 @@ slug: 'angular-v19-resource'
 icon: ''
 created_time: '2024-10-29T13:38:00.000Z'
 last_edited_time: '2024-10-29T14:06:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-v19-resource'
 notion_url: 'https://www.notion.so/Angular-v19-resource-12e3521b014a80daa5a9ed157e6bc9b1'
 features:
@@ -36,17 +36,17 @@ https://twitter.com/Jean__Meche/status/1847074532689170437
 
 具体的なコードを見ればわかりやすい。次のコードは、`resource()`を使ってHTTP通信を行い、サーバーAPIから製品情報を取得している。リクエストのパラメータには親コンポーネントから受け取った`productId`が使われている。`productId`の値が変更されたらデータの再取得を行う。非同期データの値と取得状態がカプセル化されているのが`ResourceRef`型の`productResource`フィールドである。
 
-```ts
+```typescript
 @Component({
   selector: 'app-product-viewer',
   template: `
-    @if (productResource.value(); as product) {
-      <p>Title: {{ product.title }}</p>
-    } @else if (productResource.error()) {
-      <p>load failed</p>
-    } @else if (productResource.isLoading()) {
-      <p>loading...</p>
-    }
+  @if (productResource.value(); as product) {
+    <p> Title: {{ product.title }} </p>
+  } @else if (productResource.error(); ) {
+    <p> load failed </p>
+  } @else if(productResource.isLoading()) {
+    <p> loading... </p>
+  }
   `,
 })
 export class ProductViewer {
@@ -76,28 +76,28 @@ export class ProductViewer {
 
 従来はこのようなユースケースは`signal()`と`effect()`によって解決されていたが、副作用として何でもできてしまう`effect()`を使わずに済み、なおかつ意図が明確な`resource()`ひとつで完結するのは嬉しい改善だ。上述の例を`resource()`なしでやろうとすると次のようになるが、やることに対してコードが多く複雑すぎる。
 
-```ts
+```typescript
 // resource() がない場合
 export class ProductViewer {
   productId = input.required<number>();
   productData = signal<Product | null>(null);
   isProductLoading = signal<boolean>(false);
 
-  constructor() {
-    effect(async (onCleanup) => {
-      const productId = this.productId();
-      this.isProductLoading.set(true);
-      const abortCtrl = new AbortController();
-      onCleanup(() => abortCtrl.abort());
-
-      const resp = await fetch(`https://dummyjson.com/products/${productId}`, {
+	constructor() {
+	  effect(async (onCleanup) => {
+		  const productId = this.productId();
+		  this.isProductLoading.set(true);
+		  const abortCtrl = new AbortController();
+      onCleanup(() => abortCtrl.abort())
+		  
+		  const resp = await fetch(`https://dummyjson.com/products/${productId}`, {
         signal: abortCtrl.signal,
       });
-      const data = (await resp.json()) as Promise<Product>;
+      const data = await resp.json() as Promise<Product>;
       this.productData.set(data);
       this.isProductLoading.set(false);
-    });
-  }
+	  });
+	}
 }
 ```
 
@@ -107,7 +107,7 @@ export class ProductViewer {
 
 なぜかというと、`resource()`の`loader`関数はPromiseからシグナルへの変換を行うが、`Obervable`型の値からシグナルへの変換をしないからだ。HttpClientのメソッドが返す値は`Observable`なので、リターンする前に自前で変換する必要がある。RxJSが提供している`firstValueFrom`関数を使えば変換はできるが、`resource()`というAngularのコアAPI（候補）の中で、`Observable`は第一級サポートされないインターフェースである。
 
-```ts
+```typescript
 export class ProductViewer {
   productId = input.required<number>();
   http = inject(HttpClient);
@@ -115,9 +115,10 @@ export class ProductViewer {
   productResource: ResourceRef<Product> = resource({
     request: () => this.productId(), // load on productId change
     loader: ({ request: productId, abortSignal }) => {
-      const destroy$ = fromEvent(abortSignal, 'abort');
+      const destroy$ = fromEvent(abortSignal, "abort");
       return firstValueFrom(
-        this.http.get<Product>(`https://dummyjson.com/products/${productId}`).pipe(takeUntil(destroy$)),
+        this.http.get<Product>(`https://dummyjson.com/products/${productId}`)
+          .pipe(takeUntil(destroy$))
       );
     },
   });
@@ -126,7 +127,7 @@ export class ProductViewer {
 
 とはいえ実際には多くのアプリケーションで`HttpClient`が使われており、`resource()`との併用が望まれるのも当然わかりきっているので、RxJSとの相互運用性のためのサブパッケージ `@angular/core/rxjs-interop` から`rxResource()`というAPIも提供される。これは`resource()`とほぼ同じインターフェースを持っているが、`loader`関数が`Observable`型にも対応している。次のサンプルコードのように、`HttpClient`のメソッドの戻り値を返すだけで、コンポーネントの破棄によるリクエストの中断も含めてすべてやってくれる。
 
-```ts
+```typescript
 export class ProductViewer {
   productId = input.required<number>();
   http = inject(HttpClient);
@@ -154,3 +155,4 @@ Angularのフレームワークコアからだんだんと`Observable`の第一�
 今回のサンプルコードもStackblitzに置いているので好きに使ってほしい。
 
 https://stackblitz.com/edit/stackblitz-starters-fb3yue?ctl=1&embed=1&file=src%2Fmain.ts
+

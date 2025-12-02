@@ -2,13 +2,13 @@
 title: 'k1LoW/deck: MarkdownでGoogleスライドを作る'
 slug: 'deck-markdown-to-google-slides'
 icon: ''
-created_time: '2025-05-26T14:07:00.000Z'
+created_time: '2025-05-28T01:09:00.000Z'
 last_edited_time: '2025-05-28T06:50:00.000Z'
-category: 'Tech'
 tags:
   - '雑記'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/k1LoW-deck-Markdown-Google-1ff3521b014a80ceac20c9e6e608bc43'
 features:
   katex: false
@@ -137,3 +137,4 @@ Markdown側で `key` を明示的に書けばそれを追跡して移動を検�
 ## お試しあれ
 
 普通に便利なうえに、開発者との距離が近くOSSとしても面白いので、ぜひ普段Googleスライドを使っているがMarkdownでソースコード管理したいと思った方は使ってみてほしい。広げようdeckの輪。
+

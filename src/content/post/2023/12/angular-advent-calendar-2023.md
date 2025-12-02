@@ -4,11 +4,11 @@ slug: 'angular-advent-calendar-2023'
 icon: ''
 created_time: '2023-12-24T15:00:00.000Z'
 last_edited_time: '2023-12-30T09:58:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-advent-calendar-2023'
 notion_url: 'https://www.notion.so/Angular-119f8e2c8fc740f4aa76755373a0b009'
 features:
@@ -37,7 +37,7 @@ https://stackblitz.com/edit/angular-t3gnpu?ctl=1&embed=1&file=src/global_styles.
 
 まずはボタンコンポーネントを作成します。 `AwesomeButton` コンポーネントは `awesome-button` 属性を持つ`button`要素と`input`要素にマッチする**属性セレクタ**を設定します。汎用的なボタンコンポーネントを実装する際に避けるべきことは、コンポーネントのセレクタを要素セレクタにして、コンポーネントの内部にHTML標準の`button`タグを隠蔽してしまうことです。
 
-```ts
+```typescript
 import { Component } from '@angular/core';
 
 @Component({
@@ -70,8 +70,8 @@ HTML標準の`button`要素を内包した独自のボタンコンポーネン�
 <button awesome-button disabled>&#60;button disabled&#62;</button>
 
 <h4>Input Buttons</h4>
-<input awesome-button type="button" value="<input type=button>" />
-<input awesome-button type="file" />
+<input awesome-button type="button" value="<input type=button>"/>
+<input awesome-button type="file">
 ```
 
 作成したコンポーネントに最低限のスタイルを加えます。元記事と同じく[open-props](https://open-props.style/)を使ってCSS変数を導入し、AwesomeButtonコンポーネントのスタイルを設定した状態で一段落です。
@@ -139,7 +139,7 @@ https://stackblitz.com/edit/angular-edap9x?ctl=1&embed=1&file=src/button.compone
 
 また、ここで今後のステップにそなえてコンポーネントのセレクタも修正します。コンポーネント側では`input`要素の`type=reset`と`type=submit`にも対応します。
 
-```ts
+```typescript
 @Component({
   selector: `
   button[awesome-button],
@@ -193,7 +193,7 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/:host-context
 }
 ```
 
-> [!NOTE]
+> [!TIP]
 > このセレクタは本当であれば`:host(:where(button:not([type],[disabled])))` と書けなければいけないが、今のAngularのCSSコンパイラでは解釈に失敗するらしく、やむなく`:where`を外している。この件については後日イシューを報告する。
 
 また、ボタンコンポーネントにマウスカーソルが重なったときにはインタラクション可能であることをユーザーに伝えますが、[元記事](https://web.dev/articles/building/a-button-component?hl=en#cursor_and_touch_adjustments)では`cursor: pointer`だけでなく、`touch-action: manipulation`もセットしています。これにより、ユーザーがダブルタップなどしたときにデバイス側でのズーム機能などが反応してしまうことを防げるようです。
@@ -201,7 +201,7 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/:host-context
 https://developer.mozilla.org/ja/docs/Web/CSS/touch-action#manipulation
 
 ```css
-:host(:where(button, input[type='button'], input[type='submit'], input[type='reset'])),
+:host(:where(button,input[type='button'],input[type='submit'],input[type='reset'])),
 :host(:where(input[type='file'])::file-selector-button) {
   cursor: pointer;
   touch-action: manipulation;
@@ -218,7 +218,7 @@ https://stackblitz.com/edit/angular-9m5xdt?ctl=1&embed=1&file=src/button.compone
 
 まずは、`<button awesome-button color="custom">` のように、`color`インプットに対して`custom`という値が渡されたときにスタイルをカスタマイズします。既定値は`default`とし、`color`プロパティの値を`data-color`属性にバインディングすることでCSSセレクタからアクセスできるようにします。
 
-```ts
+```typescript
 export type AwesomeButtonColor = 'custom' | 'default';
 
 @Component({
@@ -268,3 +268,4 @@ https://stackblitz.com/edit/angular-uxu7uj?ctl=1&embed=1&file=src/button.compone
 今回の例では`input[type=file]`の特殊ケースを扱うことでCSSは少し複雑になりましたが、ネスト構文などを使えばもう少し整理されたCSSにできそうに思います。ただCSS変数の数がすごく多いので、変数管理のあたりは実用的にはまだまだ改善しなければならないですね。
 
 Angular Materialもそうですが、CSS変数がいよいよ本格的にUIコンポーネント設計の中で考慮すべきものとして普及してきているように感じています。来年はもっとCSS変数を活用して上手にコンポーネントのスタイリングを実装していきたいものです。
+

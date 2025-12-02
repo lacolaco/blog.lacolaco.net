@@ -1,13 +1,19 @@
 ---
 title: Kitchen Sink
 slug: kitchen-sink
-icon: '📝'
 created_time: '2022-02-11T11:47:00.000Z'
-last_edited_time: '2025-06-08T03:34:00.000Z'
-category: 'Tech'
-tags: ['test']
+last_edited_time: '2025-11-02T16:00:00.000Z'
+tags:
+  - test
 published: false
-notion_url: 'https://www.notion.so/Kitchen-Sink-80f5c54939b64e7ab25825bdb35f1cae'
+locale: ja
+category: Tech
+icon: ''
+notion_url: https://www.notion.so/Kitchen-Sink-80f5c54939b64e7ab25825bdb35f1cae
+features:
+  katex: true
+  mermaid: true
+  tweet: true
 ---
 
 # Markdown構文サンプル集
@@ -40,11 +46,11 @@ _斜体テキスト_ ~~取り消し線~~
 
 外部画像
 
-![](https://placehold.co/600x400)
+![image](https://placehold.co/600x400)
 
 アップロード画像
 
-![](/images/kitchen-sink/001_2.png)
+![image](/images/kitchen-sink/001_2.b20960f6f4a1f2e7.png)
 
 ---
 
@@ -68,15 +74,24 @@ _斜体テキスト_ ~~取り消し線~~
   - **太字**を含むアイテム
 - リストアイテム3
   - ネストしたアイテム3-1
+- 画像 in リストアイテム
+  - ![image](https://placehold.co/600x400)
 
 ---
 
 ### 番号付きリスト
 
 1. 番号付きリストアイテム1
-2. 番号付きリストアイテム2
+1. 番号付きリストアイテム2
    1. ネストした番号付きアイテム2-1
-   2. ネストした番号付きアイテム2-2
+   1. ネストした番号付きアイテム2-2
+
+---
+
+### リスト形式の混在
+
+- 箇条書きアイテム
+  1. 番号付きアイテム
 
 ---
 
@@ -122,7 +137,7 @@ function hello() {
 
 ### コードブロック（TypeScript）
 
-```ts
+```typescript
 @Component({
   template: '<div>hello</div>',
 })
@@ -133,7 +148,7 @@ export class Comp {}
 
 ## アラート
 
-> [!NOTE]
+> [!TIP]
 > NOTE: これは注記アラートです。
 > 複数行のアラートも書けます。
 
@@ -152,9 +167,9 @@ export class Comp {}
 
 ### 内部見出し
 
-折り畳み内容です。*斜体テキスト*も使用できます。
+折り畳み内容です。_斜体テキスト_も使用できます。
 
-![](https://placehold.co/600x400)
+![image](https://placehold.co/600x400)
 
 </details>
 
@@ -195,14 +210,14 @@ graph TD;
 
 ### ヘッダー付き表
 
-| 列1     | 列2     |
+| 列1 | 列2 |
 | ------- | ------- |
 | セル1,1 | セル1,2 |
 | セル2,1 | セル2,2 |
 
 ### ヘッダーなし表
 
-|         |         |
+|  |  |
 | ------- | ------- |
 | セル1,1 | セル1,2 |
 | セル2,1 | セル2,2 |
@@ -244,3 +259,4 @@ https://stackblitz.com/edit/angular-ivy-qxbz13?embed=1&file=src/app/fancy-button
 ### Google Slides埋め込み
 
 https://docs.google.com/presentation/d/e/2PACX-1vRI8Y64QSxw7obQQ_B6Zztyf6NvumARR2t6rWDLpipqcXfBeSssi63dsut3PUCQyUeLj6chqlO7ODOT/pub
+

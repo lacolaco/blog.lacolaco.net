@@ -4,12 +4,12 @@ slug: '20-lines-simple-store-with-rxjs'
 icon: ''
 created_time: '2018-01-05T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'TypeScript'
   - 'RxJS'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/20-Lines-Simple-Store-with-RxJS-ca90e008810941f6a4bb889503419f3b'
 features:
   katex: false
@@ -17,9 +17,9 @@ features:
   tweet: false
 ---
 
-```ts
-import { distinctUntilChanged, map } from 'rxjs/operators';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+```typescript
+import { distinctUntilChanged, map } from "rxjs/operators";
+import { BehaviorSubject } from "rxjs/BehaviorSubject";
 
 export abstract class Store<T> extends BehaviorSubject<T> {
   constructor(initialState: T) {
@@ -38,13 +38,14 @@ export abstract class Store<T> extends BehaviorSubject<T> {
     return fn(this.getValue());
   }
 }
+
 ```
 
 Example: UserStore
 
-```ts
-import { User } from '../entity/user';
-import { Store } from '../../store';
+```typescript
+import { User } from "../entity/user";
+import { Store } from "../../store";
 
 export interface State {
   currentUser: User | null;
@@ -53,22 +54,24 @@ export interface State {
 export class UserStore extends Store<State> {
   constructor() {
     super({
-      currentUser: null,
+      currentUser: null
     });
   }
 
   get currentUser$() {
-    return this.select((state) => state.currentUser);
+    return this.select(state => state.currentUser);
   }
   get currentUser() {
-    return this.selectSync((state) => state.currentUser);
+    return this.selectSync(state => state.currentUser);
   }
 
   setCurrentUser(user: User) {
-    this.dispatch((state) => ({
+    this.dispatch(state => ({
       ...state,
-      currentUser: user,
+      currentUser: user
     }));
   }
 }
+
 ```
+

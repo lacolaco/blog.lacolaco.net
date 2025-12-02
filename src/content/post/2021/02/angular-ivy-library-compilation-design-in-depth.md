@@ -4,11 +4,11 @@ slug: 'angular-ivy-library-compilation-design-in-depth'
 icon: ''
 created_time: '2021-02-24T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Ivy-6de3a8dd12c348938a530fd4e5789e65'
 features:
   katex: false
@@ -63,14 +63,14 @@ Angular v11.1 からは実験的に、Ivy 未対応のアプリケーション�
 
 このあとの説明を簡潔にするために、はじめに用語の整理をしておく。
 
-|                            |                                                                                |
-| -------------------------- | ------------------------------------------------------------------------------ |
-| 用語                       | 意味                                                                           |
-| Angular デコレータ         | `@Component`、 `@Directive`、 `@Injectable`などの Angular が定義するデコレータ |
-| コンパイラ                 | Angular のコンパイラは Angular デコレータを解析して実行コードを生成するツール  |
-| `ngc`                      | Angular コンパイラの 実行可能な CLI                                            |
-| Ivy コンパイラ             | Angular v9 で導入されたコンパイラ                                              |
-| View Engine (VE)コンパイラ | Angular v8 までデフォルトで使われていた現在は非推奨のコンパイラ                |
+|  |  |
+| ------- | ------- |
+| 用語 | 意味 |
+| Angular デコレータ | `@Component`、 `@Directive`、 `@Injectable`などの Angular が定義するデコレータ |
+| コンパイラ | Angular のコンパイラは Angular デコレータを解析して実行コードを生成するツール |
+| `ngc` | Angular コンパイラの 実行可能な CLI |
+| Ivy コンパイラ | Angular v9 で導入されたコンパイラ |
+| View Engine (VE)コンパイラ | Angular v8 までデフォルトで使われていた現在は非推奨のコンパイラ |
 
 ## アプリケーションの Ivy コンパイル
 
@@ -108,7 +108,7 @@ SomeComponent.ɵcmp = ɵɵdefineComponent({
 
 Ivy コンパイラはデコレータに含まれるメタデータから _Definition_ を作成するコードを生成する。 文字列だった HTML テンプレートは、**テンプレート関数**として実行可能なコードになる。 テンプレート関数の中で利用される`ɵɵelementStart`や`ɵɵtext`は **テンプレートインストラクション** と呼ばれ、具体的な DOM API の呼び出しやデータバインディングの更新処理などを隠蔽している。
 
-![image](/images/angular-ivy-library-compilation-design-in-depth/ivy-app-compilation.png)
+![image](/images/angular-ivy-library-compilation-design-in-depth/ivy-app-compilation.a5c1bf7c3d614f69.png)
 
 このようなアプリケーションのコンパイルは、内部的には 2 つのステップに分かれている。解析ステップとコード生成ステップだ。
 
@@ -133,7 +133,7 @@ VE コンパイラは生成コードを元のファイルから独立した `*.n
 
 直接のコンパイル結果である `parent.component.js` は `child.component.js`と`child.component.ngfactory.js`どちらも参照していないため、いつ再コンパイルされる必要があるのか決定できない。 よって、ViewEngine では差分ビルド時に毎回アプリケーション全体をコンパイルし直す必要があった。
 
-![image](/images/angular-ivy-library-compilation-design-in-depth/ngfactory-dependency-link.png)
+![image](/images/angular-ivy-library-compilation-design-in-depth/ngfactory-dependency-link.ae468cfddf4ba4b1.png)
 
 この問題を解決するために、Ivy コンパイラは生成コードをそのクラスの static フィールドとして生成する。 生成コードには、そのテンプレート内で参照されているディレクティブのクラスも列挙される。 これによって、そのファイルが変更されたときにどのファイルへ影響するのかを簡単に決定できるようになった。
 
@@ -169,7 +169,7 @@ monorepo 内でローカルに利用されるライブラリが以前から Ivy 
 
 ここからが本題だ。まずは v11 現在の推奨設定である `enableIvy: false` でのライブラリのコンパイルについて見てみよう。 Ivy を無効化したライブラリのコンパイルは、解析ステップで収集した**メタデータをインライン化**するだけである。 次のように、static フィールドの中にそのクラスに付与されていた Angular デコレータのメタデータが埋め込まれている。
 
-![image](/images/angular-ivy-library-compilation-design-in-depth/library-compilation-ivy-false-1.png)
+![image](/images/angular-ivy-library-compilation-design-in-depth/library-compilation-ivy-false-1.6fd41277c88ecd15.png)
 
 ライブラリコンパイルは NPM に公開可能な JavaScript の形にメタデータを変換する役割を果たしているが、 これはまだメタデータの状態であり、このままアプリケーションから読み込まれてもコンポーネントとして実行はできない。 このメタデータを元に、もう一度コンパイルが必要である。それを行うのが `ngcc`、**Angular Compatibility Compiler**である。
 
@@ -179,7 +179,7 @@ monorepo 内でローカルに利用されるライブラリが以前から Ivy 
 
 `ngcc`のコンパイル結果はライブラリを直接コンパイルしたものと同じになる。 違うのは`ngc`が TypeScript 内のデコレータをメタデータとしてコンパイルするのに対して、`ngcc`は JavaScript 内の`.decorators`をメタデータとしてコンパイルすることだ。
 
-![image](/images/angular-ivy-library-compilation-design-in-depth/library-compilation-ivy-false-2.png)
+![image](/images/angular-ivy-library-compilation-design-in-depth/library-compilation-ivy-false-2.d28849369b1e0f53.png)
 
 互換性を保った状態でライブラリを NPM に公開可能にする目的は果たした`ngcc`だったが、頻発するコンパイルは開発者体験を損ねることにもなった。 ライブラリをインストールするたびに何度も`ngcc`が走りストレスを感じた人も多いだろう。 `ngcc`は NPM からインストールした`node_modules`内のライブラリコードに対して上書きしてコンパイルを行うため、`npm install` コマンドなどで`node_modules`の中身が変更されたら再コンパイルしなければならない。
 
@@ -208,7 +208,7 @@ NPM に公開する前に行う LTO コンパイルは、コンパイル全体�
 
 コンパイル後の JavaScript には次のようなコードが生成されている。 普通のコンパイル結果と同じように見えるが、注目すべきは**テンプレートが文字列のまま残されている**ことと、**Locality を備えている**ことだ。
 
-![image](/images/angular-ivy-library-compilation-design-in-depth/library-compilation-ivy-1.png)
+![image](/images/angular-ivy-library-compilation-design-in-depth/library-compilation-ivy-1.d7abdb8c54e086be.png)
 
 解析ステップにより決定された情報を _Declaration_ という形でインライン化する。 ここには依存しているディレクティブが列挙されており、そのファイルだけの情報でコード生成ステップを実行できる Locality を備えている。 そしてリンクされるまでテンプレート関数のコード生成を先送りすることで、ライブラリはランタイム互換性を担保できる。
 
@@ -218,7 +218,7 @@ NPM に公開する前に行う LTO コンパイルは、コンパイル全体�
 
 LTO コンパイルされたライブラリをインストールしたアプリケーションは、ビルド時にライブラリのリンクを Just-in-Time で行う。 リンクを行う**Linker**は LTO コンパイルで生成された Declaration を元にコード生成ステップを実行して、アプリケーションから呼び出し可能な Definition へ置き換える。
 
-![image](/images/angular-ivy-library-compilation-design-in-depth/library-compilation-ivy-2.png)
+![image](/images/angular-ivy-library-compilation-design-in-depth/library-compilation-ivy-2.41c4240973e757b6.png)
 
 解析ステップが必要だった`ngcc`と違い、リンク処理は LTO コンパイルの Locality によりファイルごとに独立して実行できるため、webpack のようなモジュール解決の中でプラグインとして機能できるようになった。Angular CLI によるビルドでは、`AngularLinker` という Babel プラグインとして実装されている。
 
@@ -231,3 +231,4 @@ LTO コンパイルされたライブラリをインストールしたアプリ�
 - もうひとつはアプリケーションビルド時にコード生成を行い、ライブラリのコンパイルを完了させる**リンク**処理
 
 この記事を読むことで、コンパイルにおけるアプリケーションとライブラリの違い、そして現在使われている`ngcc`の課題を踏まえた上で、新しく導入される Ivy ライブラリコンパイルがどのような目的で設計されたのかを読者が理解できればと思う。
+

@@ -4,12 +4,12 @@ slug: 'angular-single-state-stream-pattern'
 icon: ''
 created_time: '2019-07-11T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - '設計'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Single-State-Stream-f1218e5c51904cf5b6e1c27896a9862a'
 features:
   katex: false
@@ -31,49 +31,48 @@ https://www.youtube.com/watch?v=Z76QlSpYcck
 
 コードを見て理解するのが一番早い。次の例ではコンポーネントが直接BehaviorSubjectで状態を管理しているが、これはSingle State Streamパターンをわかりやすく説明するためである。まともなアプリケーションであれば適切に状態管理のサービスに移譲する。そのパターンのコード例は後述する。
 
-```ts
+```typescript
 type AppComponentState = {
   user: User | null;
   userFetching: boolean;
-};
+}
 
 const initialState: AppComponentState = {
-  user: null,
-  userFetching: false,
+    user: null,
+    userFetching: false,
 };
 
 @Component({
   template: `
-    <ng-container *ngIf="state$ | async as state">
-      <ng-container *ngIf="state.userFetching; else showUser">
-        <loading-spinner></loading-spinner>
-      </ng-container>
+<ng-container *ngIf="state$ | async as state">
 
-      <ng-template #showUser>
-        <user-display [user]="state.user"></user-display>
-      </ng-template>
+    <ng-container *ngIf="state.userFetching; else showUser">
+        <loading-spinner></loading-spinner>
     </ng-container>
-  `,
+
+    <ng-template #showUser>
+        <user-display [user]="state.user"></user-display>
+    </ng-template>
+
+</ng-container>
+  `
 })
 export class AppComponent {
   readonly state$ = new BehaviorSubject<AppComponentState>(initialState);
 
-  fetchUser() {
-    this.setState({ user: null, userFetching: true });
+    fetchUser() {
+        this.setState({ user: null, userFetching: true });
 
-    this.userService.fetchUser().subscribe(
-      (user) => {
-        this.setState({ user, userFetching: false });
-      },
-      (error) => {
-        this.setState({ user: null, userFetching: false });
-      },
-    );
-  }
+        this.userService.fetchUser().subscribe(user => {
+            this.setState({ user, userFetching: false });
+        }, error => {
+            this.setState({ user: null, userFetching: false });
+        });
+    }
 
   setState(state: AppComponentState) {
-    this.state$.next(state);
-  }
+        this.state$.next(state);
+    }
 }
 ```
 
@@ -87,7 +86,7 @@ export class AppComponent {
 
 この実装パターンは、テンプレート全体をひとつのStatelessな関数のように捉えることができるところが良い。いわばReactの `render` 関数のように、引数として `state` が与えられることでその状態に対応したビューを描画する。いわゆる `UI = f(State)` 的なアーキテクチャと相性がいい。
 
-```ts
+```typescript
 // 擬似的な再現コード
 const AppComponent = (state: AppComponentState) => {
     if (state.userFetching) {
@@ -102,81 +101,82 @@ const AppComponent = (state: AppComponentState) => {
 
 上述の例ではコンポーネントが直接BehaviorSubjectを管理していたが、NgRxのStoreのような状態管理レイヤーのサービスと併用すると次のような実装パターンになる。テンプレートはまったく変わらず、 `state$` の作り方が変わるだけである。
 
-```ts
+```typescript
 type AppComponentState = {
   user: User | null;
   userFetching: boolean;
-};
+}
 
 @Component({
   template: `
-    <ng-container *ngIf="state$ | async as state">
-      <ng-container *ngIf="state.userFetching; else showUser">
-        <loading-spinner></loading-spinner>
-      </ng-container>
+<ng-container *ngIf="state$ | async as state">
 
-      <ng-template #showUser>
-        <user-display [user]="state.user"></user-display>
-      </ng-template>
+    <ng-container *ngIf="state.userFetching; else showUser">
+        <loading-spinner></loading-spinner>
     </ng-container>
-  `,
+
+    <ng-template #showUser>
+        <user-display [user]="state.user"></user-display>
+    </ng-template>
+
+</ng-container>
+  `
 })
 export class AppComponent {
   readonly state$: Observable<AppComponentState>;
 
-  constructor(private store: Store<AppState>) {
-    // ComponentStateへのマッピング
-    this.state$ = this.store.select((state) => ({
-      user: state.user.value,
-      userFetching: state.user.fetching,
-    }));
-  }
+    constructor(private store: Store<AppState>) {
+        // ComponentStateへのマッピング
+        this.state$ = this.store.select(state => ({
+            user: state.user.value,
+            userFetching: state.user.fetching,
+        }));
+    }
 
-  fetchUser() {
-    this.store.dispatch(startUserFetching());
+    fetchUser() {
+        this.store.dispatch(startUserFetching());
 
-    this.userService.fetchUser().subscribe(
-      (user) => {
-        this.store.dispatch(finishUserFetching(user));
-      },
-      (error) => {
-        this.store.dispatch(finishUserFetching(null));
-      },
-    );
-  }
+        this.userService.fetchUser().subscribe(user => {
+            this.store.dispatch(finishUserFetching(user));
+        }, error => {
+            this.store.dispatch(finishUserFetching(null));
+        });
+    }
 }
 ```
 
 あるいは、単一データストアではなく分散型の場合は、 `combineLatest` を使った形にもできる。（この例では不自然だが）もし `user$` と `userFetching$` を別々に管理しているなら次の例のように合成すれば、これもテンプレートには全く影響がない。
 
-```ts
+```typescript
 type AppComponentState = {
   user: User | null;
   userFetching: boolean;
-};
+}
 
 @Component({
   template: `
-    <ng-container *ngIf="state$ | async as state">
-      <ng-container *ngIf="state.userFetching; else showUser">
-        <loading-spinner></loading-spinner>
-      </ng-container>
+<ng-container *ngIf="state$ | async as state">
 
-      <ng-template #showUser>
-        <user-display [user]="state.user"></user-display>
-      </ng-template>
+    <ng-container *ngIf="state.userFetching; else showUser">
+        <loading-spinner></loading-spinner>
     </ng-container>
-  `,
+
+    <ng-template #showUser>
+        <user-display [user]="state.user"></user-display>
+    </ng-template>
+
+</ng-container>
+  `
 })
 export class AppComponent {
   readonly state$: Observable<AppComponentState>;
 
-  constructor() {
-    this.state$ = combineLatest(
-      [user$, userFetching$],
-      ([user, userFetching]) => ({ user, userFetching }), // Destructuring
-    );
-  }
+    constructor() {
+        this.state$ = combineLatest(
+            [user$, userFetching$],
+            ([user, userFetching]) => ({ user, userFetching }), // Destructuring
+        );
+    }
 }
 ```
 
@@ -194,10 +194,13 @@ ComponentStateが複雑になる、つまり `state$` のプロパティが増�
 
 ```html
 <ng-container *ngIf="state$ | async as state">
-  <foo-display [value]="state.foo"></foo-display>
 
-  <bar-display [value]="state.bar"></bar-display>
+    <foo-display [value]="state.foo"></foo-display>
 
-  <baz-display [value]="state.baz"></baz-display>
+    <bar-display [value]="state.bar"></bar-display>
+
+    <baz-display [value]="state.baz"></baz-display>
+
 </ng-container>
 ```
+

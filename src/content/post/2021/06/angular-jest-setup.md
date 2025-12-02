@@ -4,12 +4,12 @@ slug: 'angular-jest-setup'
 icon: ''
 created_time: '2021-06-13T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Testing'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Jest-1ed8c3e38fee458b81fe67202edc5a1c'
 features:
   katex: false
@@ -43,14 +43,14 @@ import 'jest-preset-angular/setup-jest';
 
 ```json
 {
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "outDir": "./out-tsc/spec",
-    "types": ["jest"]
-  },
-  "files": ["src/setup-jest.ts"],
-  "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
-}
+   "extends": "./tsconfig.json",
+   "compilerOptions": {
+     "outDir": "./out-tsc/spec",
+     "types": ["jest"]
+   },
+   "files": ["src/setup-jest.ts"],
+   "include": ["src/**/*.spec.ts", "src/**/*.d.ts"]
+ }
 ```
 
 - `npx jest`
@@ -172,3 +172,4 @@ README.md を読めばわかるがこのパッケージも導入自体の自動�
 この記事のサンプルコードは GitHub で公開している。
 
 [https://github.com/lacolaco/angular-jest-playground](https://github.com/lacolaco/angular-jest-playground)
+

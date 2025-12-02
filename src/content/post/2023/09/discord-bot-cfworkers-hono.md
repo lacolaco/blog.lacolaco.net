@@ -4,13 +4,13 @@ slug: 'discord-bot-cfworkers-hono'
 icon: ''
 created_time: '2023-09-22T23:17:00.000Z'
 last_edited_time: '2023-12-30T10:00:00.000Z'
-category: 'Tech'
 tags:
   - 'Discord'
   - 'Cloudflare'
   - 'Hono'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Cloudflare-Workers-Hono-Discord-bot-41e326de5455488cb731732e45de6e0e'
 features:
   katex: false
@@ -40,7 +40,7 @@ https://github.com/discord/discord-interactions-js
 
 Cloudflare Workersはリクエストのたびに実行するモデルなので、サーバーを起動しっぱなしにしてイベントをストリーミングすることができない。なので必然的にBotはInteractions Endpoint URLを介してクライアントとやりとりするしかない。
 
-![image](/images/discord-bot-cfworkers-hono/Untitled.png)
+![image](/images/discord-bot-cfworkers-hono/Untitled.4c18ca192d8174d3.png)
 
 つまり、結局POSTリクエストを受け取ってレスポンスを返すにはWebサーバーを作る必要があり、Cloudflare WorkersでそれをやるならぜひHonoを使いたい。めっちゃ書きやすいので。
 
@@ -56,18 +56,22 @@ https://discord.com/developers/docs/interactions/receiving-and-responding#securi
 
 ということで、Honoで使えるミドルウェアは自作する必要がある。やることは `X-Signature-Ed25519` ヘッダと `X-Signature-Timestamp` ヘッダの値を取り出し、それとリクエストのボディをあわせてBotのPublic Keyとともに `verifyKey` 関数を呼び出すこと。実装は次のようになった。
 
-```ts
-const verifyKeyMiddleware = (): MiddlewareHandler<{ Bindings: Env }> => async (c, next) => {
-  const signature = c.req.header('X-Signature-Ed25519');
-  const timestamp = c.req.header('X-Signature-Timestamp');
-  const body = await c.req.raw.clone().text();
-  const isValidRequest = signature && timestamp && verifyKey(body, signature, timestamp, c.env.DISCORD_PUBLIC_KEY);
-  if (!isValidRequest) {
-    console.log('Invalid request signature');
-    return c.text('Bad request signature', 401);
-  }
-  return await next();
-};
+```typescript
+const verifyKeyMiddleware =
+  (): MiddlewareHandler<{ Bindings: Env }> => async (c, next) => {
+    const signature = c.req.header('X-Signature-Ed25519');
+    const timestamp = c.req.header('X-Signature-Timestamp');
+    const body = await c.req.raw.clone().text();
+    const isValidRequest =
+      signature &&
+      timestamp &&
+      verifyKey(body, signature, timestamp, c.env.DISCORD_PUBLIC_KEY);
+    if (!isValidRequest) {
+      console.log('Invalid request signature');
+      return c.text('Bad request signature', 401);
+    }
+    return await next();
+  };
 ```
 
 ここでポイントは、ミドルウェアでそのまま `c.req.text()` のようにボディを読んでしまうと、後続のリクエストハンドラでボディを読もうとしたときにエラーになるため、一度 `clone()` してからボディを読むこと。 `c.req` の HonoRequest オブジェクトは `clone()` を持っていないので、内部の `c.req.raw` をクローンしている。これは `c.req.clone()` ができるとスッキリするなあと思ったのでHonoにIssueを上げようかと思っている。
@@ -87,3 +91,4 @@ https://github.com/honojs/hono/pull/1393
 なので、DiscordのBotでできることはクライアントからのInteractionsに対して即レスポンスを返すだけで、Deferred Messageを返しておいて時間差でFollow upするような振る舞いは厳しい。だいたいタイムアウトする。
 
 1つのリクエストに対して1つのレスポンスを返して終わるタイプのBotじゃないとCloudflare Workersで実装するのは難しいだろう
+

@@ -4,13 +4,13 @@ slug: 'signals-memo-20230621'
 icon: ''
 created_time: '2023-06-08T00:09:00.000Z'
 last_edited_time: '2023-12-30T10:04:00.000Z'
-category: 'Tech'
 tags:
   - '雑記'
   - 'Signals'
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Signals-2023-06-21-83989f98b8c5470db41490f097702ea3'
 features:
   katex: false
@@ -40,8 +40,8 @@ https://twitter.com/laco2net/status/1671343903453364224
     - Store パターンの本質はオブジェクトに対する変更(mutation)経路の制限
     - 変更経路を絞ることで、変更されたときに確実に通知できる
   - Store パターンを再利用可能な部品として実装しようとすると、あるひとまとまりのオブジェクトに対するポリモーフィックな設計になる
-    - `Store<T>`
-    - この `T` がすなわち State
+    - `Store<T>` 
+    - この `T` がすなわち State 
     - Store パターンが State という分節単位を要求する
   - ところが、Signalsはオブジェクトそれ自体が変更を通知する、「物言うオブジェクト」
     - 変更を追跡するために追加の仕組みを必要としない
@@ -56,3 +56,4 @@ https://twitter.com/laco2net/status/1671343903453364224
     - 分離可能な関心事ではなくなる
   - Signals以後に残るのは、自律分散的に存在するそれぞれの状態オブジェクトが、互いにどのように関係するかというネットワークの構築か
     - オブジェクト同士のP2P的な依存マップを設計する
+

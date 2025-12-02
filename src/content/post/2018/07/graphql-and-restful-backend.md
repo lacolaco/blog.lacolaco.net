@@ -4,13 +4,13 @@ slug: 'graphql-and-restful-backend'
 icon: ''
 created_time: '2018-07-13T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - '雑記'
   - 'GraphQL'
   - '設計'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/GraphQL-RESTful-Backend-for-Usecase-Resource-d55bc2a74dc7443199247ff1d5610666'
 features:
   katex: false
@@ -73,3 +73,4 @@ BFU は「ユースケースに対するデータプロバイダー」として�
 ---
 
 とりあえずここまで。今日 10 分くらい会社で ryopeko さんと雑談してたネタなのであまりしっかり練った考えではないけど、こんな感じのシステムを作って試してみたい。
+

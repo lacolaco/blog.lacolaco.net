@@ -2,14 +2,14 @@
 title: 'GitHub Actions: github/command でIssueOpsを実装する'
 slug: 'issueops-by-github-command-action'
 icon: ''
-created_time: '2025-04-27T13:04:00.000Z'
+created_time: '2025-04-27T13:33:00.000Z'
 last_edited_time: '2025-04-27T13:33:00.000Z'
-category: 'Tech'
 tags:
   - 'GitHub Actions'
   - 'GitHub'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/GitHub-Actions-github-command-IssueOps-1e23521b014a80eea293c9a03f195b00'
 features:
   katex: false
@@ -21,11 +21,11 @@ GitHubが公開している `github/command` アクションを使うと、自�
 
 https://github.com/github/command
 
-## “IssueOps”
+## “IssueOps” 
 
 `github/command` のREADMEにかかれている説明を引用するとこう定義されている。
 
-> Its like ChatOps but instead of using a chat bot, commands are invoked by commenting on a pull request (PRs are issues under the hood)
+> Its like ChatOps but instead of using a chat bot, commands are invoked by commenting on a pull request (PRs are issues under the hood) 
 
 Slackメッセージでワークフローを操作する “ChatOps” のように、GitHubのイシューコメントによってワークフローを操作するのがIssueOpsだ。
 
@@ -38,7 +38,7 @@ https://github.com/github/branch-deploy
 READMEを見れば全部書いてあるが、次のようなワークフローが基本になる。
 
 ```yaml
-name: 'command demo'
+name: "command demo"
 
 # the workflow to execute on is comments that are newly created
 on:
@@ -61,7 +61,7 @@ jobs:
       - uses: github/command@vX.X.X
         id: command
         with:
-          command: '.ping'
+          command: ".ping"
           allowed_contexts: issue,pull_request # run on issues AND pull requests
 
       # run your custom logic for your project here - example seen below
@@ -127,7 +127,7 @@ jobs:
             })
 ```
 
-![image](/images/issueops-by-github-command-action/CleanShot_2025-04-27_at_22.17.422x.png)
+![image](/images/issueops-by-github-command-action/CleanShot_2025-04-27_at_22.17.422x.844730e887e8f186.png)
 
 もともとは別のサードパーティのアクションを使ってイシューコメントからのワークフロー実行をしていたが、GitHub謹製のものがあるなら信頼性も高いので載せ替えた。
 
@@ -136,3 +136,4 @@ jobs:
 トリガーの後ろのコメント本文も後続ステップで取得できるため、`actions/ai-inference`のようなアクションにつなげて自然言語でAIに指示を与えるワークフローを組むのも楽そうだ。
 
 https://github.com/actions/ai-inference
+

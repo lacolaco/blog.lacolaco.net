@@ -4,12 +4,12 @@ slug: 'ask-than-wish'
 icon: ''
 created_time: '2021-09-21T09:16:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Idea'
 tags:
   - '雑記'
   - '言語化'
 published: true
 locale: 'ja'
+category: 'Idea'
 notion_url: 'https://www.notion.so/10032eb777334b78a1467bacbd58a9ae'
 features:
   katex: false
@@ -45,3 +45,4 @@ features:
 状態をアピールして相手のアクションへの期待を匂わせる隠喩的なコミュニケーションをしない。特に仕事の場では気をつけている。
 
 参考: 非暴力コミュニケーション [http://nvc-japan.net/nvc/](http://nvc-japan.net/nvc/)
+

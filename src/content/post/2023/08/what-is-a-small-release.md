@@ -4,12 +4,12 @@ slug: 'what-is-a-small-release'
 icon: ''
 created_time: '2023-08-08T09:15:00.000Z'
 last_edited_time: '2023-12-30T10:01:00.000Z'
-category: 'Idea'
 tags:
   - '言語化'
   - '雑記'
 published: true
 locale: 'ja'
+category: 'Idea'
 notion_url: 'https://www.notion.so/98e52895d1b54fb18efb80a8b35ce940'
 features:
   katex: false
@@ -28,3 +28,4 @@ features:
 リリースの大小という共通の尺度を手に入れることができれば、「この尺度において、リリースはこの程度小さくなければわれわれには不都合だ」と言えるような条件を作ることができる。そうしてようやく「どのように小さくリリースするか」という問題設定にたどり着く。
 
 議論の前提となる尺度を定立し、その尺度をもとに満たさねばならない条件を発見し、その条件を制約として方法を考える。これが方法について議論するための基本構造である。
+

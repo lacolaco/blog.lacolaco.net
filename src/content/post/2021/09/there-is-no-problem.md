@@ -4,12 +4,12 @@ slug: 'there-is-no-problem'
 icon: ''
 created_time: '2021-09-16T02:59:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Idea'
 tags:
   - '言語化'
   - '哲学'
 published: true
 locale: 'ja'
+category: 'Idea'
 canonical_url: 'https://lacolaco.hatenablog.com/entry/2021/09/16/115912'
 notion_url: 'https://www.notion.so/e2d773efb710471396b40f35e263f0f6'
 features:
@@ -47,3 +47,4 @@ QuestionではなくProblemとしての「問題」についてのlacolacoの考
   - 「われわれ」の欲望を共有することが、問題意識を共有するための前提になる
     - 「われわれは何を実現したいんだっけ？」
     - つまりインセプションデッキの1枚目
+

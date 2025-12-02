@@ -4,12 +4,12 @@ slug: 'ngconf2020-day2-note'
 icon: ''
 created_time: '2020-04-03T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'ng-conf'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/ng-conf-2020-Day-2-Note-35867cc9ff22410788d8cafe3e17f010'
 features:
   katex: false
@@ -96,16 +96,13 @@ http://bit.ly/strictTemplates
   - similar to `strict` flag
 - Outline
 - in v8
-
   - Basic / fullTemplateTypeCheck
   - Basic
     - ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/4027df59-45f6-4645-a140-f5ed866393b0.png)
   - `user.name.last` is ignored
   - Full
     - ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/c03e1c94-58b2-4578-b1fa-a827e2cdf5c6.png)
-
 - Ivy improvements
-
   - ngFor loop
     - v8
       - ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/a327ed29-9c1d-4f22-88ca-216342b3206f.png)
@@ -113,17 +110,14 @@ http://bit.ly/strictTemplates
     - strict
       - ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/156a6fd4-2eec-486f-89c8-c5289b600e61.png)
   - Inputs
-
     - v8
-
-      - ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/06257608-1520-400c-96fd-aad509ac0cbd.png)
+      - 
+        ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/06257608-1520-400c-96fd-aad509ac0cbd.png)
 
         - `[user]` is not type-checked
         - Problem with non-null input with `| async`
-
     - strict
       - ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/5a67a308-c26e-483f-9bf7-a5c89e7ab948.png)
-
 - $event
   - ![image](https://img.esa.io/uploads/production/attachments/14362/2020/04/03/50720/2c5fb689-0d96-4993-8aad-7a9ef44450e6.png)
 - Safe navigation
@@ -368,3 +362,4 @@ Eric Simons
 # Session #6 Q&A
 
 Jorge Cano Anthony Humes Craig Spence Eric Simons
+

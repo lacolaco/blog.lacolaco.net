@@ -4,12 +4,12 @@ slug: 'translation-template-driven-form-in-angular-2'
 icon: ''
 created_time: '2016-04-10T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'translation'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Template-driven-Forms-in-Angular-2-3f8c4b9e854245a2b428a333076afb0a'
 features:
   katex: false
@@ -36,19 +36,19 @@ Angularはフォームを組み立てるのに3つの異なる方法を用意し
 ```html
 <form>
   <label>Firstname:</label>
-  <input type="text" />
+  <input type="text">
 
   <label>Lastname:</label>
-  <input type="text" />
+  <input type="text">
 
   <label>Street:</label>
-  <input type="text" />
+  <input type="text">
 
   <label>Zip:</label>
-  <input type="text" />
+  <input type="text">
 
   <label>City:</label>
-  <input type="text" />
+  <input type="text">
 
   <button type="submit">Submit</button>
 </form>
@@ -86,7 +86,7 @@ class Draggable {
 これがどうして面白いのか不思議に思うかもしれません。 そう、`ngForm`ディレクティブが`ngForm`として露出されていること、 それは一切アプリケーションコードを書かずに次のようにフォームのインスタンスにアクセスできるということなのです。
 
 ```html
-<form #form="ngForm">...</form>
+<form #form="ngForm">  ...</form>
 ```
 
 ### フォームの送信と、値へのアクセス
@@ -102,7 +102,7 @@ class Draggable {
 これでもうまく動きますが、`ngForm`が送信時に発火しているもう一つのイベントがあります。それが`ngSubmit`です。 `ngSubmit`は`submit`と一見すると全く同じです。 しかし、`ngSubmit`はイベントハンドラーがエラーを出したときには(デフォルトの`form`要素と同じように)`submit`されないことと、 HTTPのPOSTリクエストを発生させることが保証されています。 ベストプラクティスとして、`submit`の代わりに`ngSubmit`を使ってみましょう！
 
 ```html
-<form #form="ngForm" (ngSubmit)="logForm(form.value)">...</form>
+<form #form="ngForm" (ngSubmit)="logForm(form.value)">  ...</form>
 ```
 
 さらに、次のようなコンポーネントを用意します。
@@ -251,3 +251,4 @@ Angular 2における`ngModel`は双方向データバインディングを実�
 ## もっと知りたい方は
 
 もちろんここで述べたのはフォームを作る方法の氷山の一角です。 バリデーションについてや、入力されたデータに対してエラーメッセージをどう表示するかなど、話していないことがたくさんあります。 それらについてはまた別の記事で紹介します。 ただしカスタムバリデーターを作る方法については[この記事](http://blog.thoughtram.io/angular/2016/03/14/custom-validators-in-angular-2.html)を見てください。
+

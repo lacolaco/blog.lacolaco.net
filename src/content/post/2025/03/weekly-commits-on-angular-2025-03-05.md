@@ -4,11 +4,11 @@ slug: 'weekly-commits-on-angular-2025-03-05'
 icon: ''
 created_time: '2025-03-05T09:21:00.000Z'
 last_edited_time: '2025-03-12T06:35:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/weekly-commits-on-angular-2025-03-05'
 notion_url: 'https://www.notion.so/Weekly-Commits-on-Angular-2025-03-05-1b43521b014a80448298efca294f5fde'
 features:
@@ -39,10 +39,11 @@ https://x.com/Jean__Meche/status/1894176836239724874
 
 上記のツイートのサンプルコードにおける `map` オプションの部分が次のように書けるはずです。
 
-```ts
-swPersonResource = httpResource(() => `https://swapi.dev/api/people/${this.id()}`, {
-  parse: starWarsPersonSchema.parse,
-});
+```typescript
+swPersonResource = httpResource(
+  () => `https://swapi.dev/api/people/${this.id()}`,
+  { parse: starWarsPersonSchema.parse },
+);
 ```
 
 ### `Injector.destroy` メソッドの公開
@@ -57,9 +58,9 @@ https://github.com/angular/angular/commit/51b8ff23cefb5112937dec9727a5b5d6e913aa
 
 コンポーネントテンプレート内でタグ付きテンプレートリテラルの宣言が可能になりました。先週に引き続き、テンプレート式におけるECMAScript構文のサポートカバレッジを広げる狙いです。
 
-```ts
+```typescript
 @Component({
-  template: '{{ greet`Hello, ${name()}` }}',
+  template: '{{ greet`Hello, ${name()}` }}'
 })
 export class MyComp {
   name = input();
@@ -113,3 +114,4 @@ Commits: [https://github.com/angular/components/commits/main/?since=2025-02-27&u
 https://github.com/angular/components/commit/fc46997442b72bc1ba395fcd5f008b0358e5c91f
 
 `angular/cdk-experimental`パッケージにARIA Roleのlistboxに対応する`CdkListbox`ディレクティブの実装が追加されました。また、`CdkListbox`におけるキーボード操作やtypeahead機能など見た目とは別の振る舞いについては新たに `ui-patterns` というサブパッケージが追加されたようです。今後他のCDKディレクティブの裏側でも活用されることが予想されます。
+

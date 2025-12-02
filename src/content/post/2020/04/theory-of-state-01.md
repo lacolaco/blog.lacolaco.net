@@ -4,11 +4,11 @@ slug: 'theory-of-state-01'
 icon: ''
 created_time: '2020-04-13T05:46:00.000Z'
 last_edited_time: '2020-05-05T07:21:00.000Z'
-category: 'Tech'
 tags:
   - '状態管理'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/1-4552fa97268f4c15b088766732b2f74c'
 features:
   katex: true
@@ -48,7 +48,7 @@ $$
 
 状態管理ライブラリの Reduxは 関数 $g$ をJavaScriptの関数で表現する。Reduxではアプリケーションの状態を単一のJSONオブジェクトに集約し、アプリケーションの構造を単純化する。
 
-```ts
+```typescript
 function reducer(state: State, action: Action): State;
 currentState = actions.reduce((state, action) => reducer(state, action), initialState);
 ```
@@ -56,7 +56,7 @@ currentState = actions.reduce((state, action) => reducer(state, action), initial
 ちなみに、任意の時点の状態 $\text{State}_n$ は次のように変形できる。
 
 $$
-\begin{aligned}   \text{State}_{n} &= g(\text{Action}_n, \text{State}_{n-1}) \cr  \text{State}_{n} &= g(\text{Action}_n, g(\text{Action}_{n-1}, \text{State}_{n-2})) \cr  \text{State}_{n} &= g(\text{Action}_n, g(\text{Action}_{n-1}, g(\text{Action}_{n-2}, \text{State}_{n-3}))) \cr  ...\cr  \text{State}_{n} &= g(\text{Action}_n, g(\text{Action}_{n-1}, g(\text{Action}_{n-2}, ..., g(\text{Action}_{1}, \text{State}_0))))\end{aligned}
+\begin{aligned}   \text{State}_{n} &= g(\text{Action}_n, \text{State}_{n-1}) \cr  \text{State}_{n} &= g(\text{Action}_n, g(\text{Action}_{n-1}, \text{State}_{n-2})) \cr  \text{State}_{n} &= g(\text{Action}_n, g(\text{Action}_{n-1}, g(\text{Action}_{n-2}, \text{State}_{n-3}))) \cr  ...\cr  \text{State}_{n} &= g(\text{Action}_n, g(\text{Action}_{n-1}, g(\text{Action}_{n-2}, ..., g(\text{Action}_{1}, \text{State}_0))))\end{aligned} 
 $$
 
 つまり現在の状態は、初期状態と開始からの今までのアクションの列によって決定される。
@@ -66,7 +66,7 @@ $$
 さて、ここからは特にGUIアプリケーションに注目する。昨今のGUIアプリケーションの設計のメインストリームには関数型プログラミングのパラダイムが強く影響している。その中でも中心にあるのが、 $f(\text{State}) = \text{UI}$ の考え方だ。この考えに沿ったUI構築の設計は「宣言的UI」とも呼ばれる。利点はいくつかあるが、代表的なものは以下のものだ。
 
 1. 再現性: 同一の状態を与えれば同一のUIを再現できる（デバッグしやすい）
-2. 再利用性: 関数自身は状態を持たないため、別の関数との合成や再利用などが容易である
+1. 再利用性: 関数自身は状態を持たないため、別の関数との合成や再利用などが容易である
 
 $f(\text{State}) = \text{UI}$ とは、UIの出力が現在のアプリケーションの状態にのみ依存するということだ。この関係を先ほどの式に加えてみよう。
 
@@ -89,7 +89,7 @@ $$
 こうして、GUIアプリケーションの状態と振る舞いの関係を単純化した次の式が成り立つ。
 
 $$
-\begin{aligned}  \text{State}_{i} &= f_{\text{State}}(\text{Action}_i, \text{State}_{i-1}) \cr
+\begin{aligned}  \text{State}_{i} &= f_{\text{State}}(\text{Action}_i, \text{State}_{i-1}) \cr  
 \text{Behavior}_{i} &= f_{\text{UI}}(\text{State}_i) + f_{\text{Business}}(\text{Action}_i, \text{State}_i)\end{aligned}
 $$
 
@@ -104,7 +104,9 @@ $f_{\text{UI}}(\text{State})$ で問題となるのが、状態が変更され�
 Angularは、RxJSの `Observable` として管理された状態をテンプレートHTMLに接続することによってリアクティブなUIを構築できる。
 
 ```html
-<ng-container *ngIf="state$ | async as state"> {{ state.count }} </ng-container>
+<ng-container *ngIf="state$ | async as state">
+  {{ state.count }}
+</ng-container>
 ```
 
 `Observable#subscribe()` メソッドのコールバックでコンポーネントクラスのフィールドを更新するのは宣言的ではあるが、リアクティブではない。いったんコンポーネントクラスのフィールドを経由すると、そのUIはコンポーネントクラスの状態を投影したものになる。
@@ -137,26 +139,26 @@ $$
 このとき、バックエンドAPIがRESTfulであれば、そのレスポンスはユースケースに依存しない「情報」だ。この「情報」はどのように扱うべきだろうか？
 アプリケーションが求めているのは「プロフィール表示の対象ユーザー」だ。よってアプリケーションは「プロフィール表示の対象ユーザー」を状態として管理する必要がある。つまり、次のように状態を定義してアクションを発行する。
 
-```ts
+```typescript
 type State = {
   profileView: {
-    user: User;
-  };
-};
+    user: User
+  }
+}
 
-backendApi.getUser(userId).then((user) => {
+backendApi.getUser(userId).then(user => {
   store.dispatch(ProfileViewActions.finishFetchingUser(user));
 });
 ```
 
 次の例のように、データの型に合わせて保持するのは状態管理ではなく、情報の保持である。複数のユースケースで同じユーザーのデータを何度も取得したくないという要求は、ユースケースに依存しない層でバックエンドAPIのキャッシュなどで解決するものだ。
 
-```ts
+```typescript
 type State = {
   users: {
-    [id: string]: User;
-  };
-};
+    [id: string]: User
+  }
+}
 ```
 
 ### 例2. URL変化と状態
@@ -168,27 +170,25 @@ type State = {
 例えば、プロフィール画面が `/profile/:userId` のようなパスで表示されるシングルページアプリケーションであれば、次のように状態を定義し、URL中のパラメータの変更イベントを購読してアクションを発行することで状態を更新する。
 そうして更新された状態をもとにアプリケーションは振る舞いを決定できる。
 
-```ts
+```typescript
 type State = {
   profileView: {
     params: {
       userId: string;
     };
-    user: User;
-  };
-};
+    user: User
+  }
+}
 
-routeParams.subscribe((routeParams) => {
-  store.dispatch(ProfileViewActions.changeParams({ userId: routeParams['userId'] }));
+routeParams.subscribe(routeParams => {
+  store.dispatch(ProfileViewActions.changeParams({userId: routeParams['userId']}))
 });
 
-store
-  .select((state) => state.profileView.params)
-  .subscribe((params) => {
-    backendApi.getUser(params.userId).then((user) => {
-      store.dispatch(ProfileViewActions.finishFetchingUser(user));
-    });
+store.select(state => state.profileView.params).subscribe(params => {
+  backendApi.getUser(params.userId).then(user => {
+    store.dispatch(ProfileViewActions.finishFetchingUser(user));
   });
+})
 ```
 
 ### 例3. フォーム入力変化と状態
@@ -205,3 +205,4 @@ store
 そして状態と情報の違いについては、そのデータがユースケースによる解釈を受けているかどうかが大きな違いであることに着目した。外部から与えられる「情報」をアプリケーションがユースケースに沿って解釈することで、振る舞いに影響を与える「状態」になる。
 
 なお、今回はサンプルコードにはRedux形式のインターフェースを使った。しかしReduxは状態管理の王道ではあるが唯一の正解ではない。中央集権的な状態管理、分散型の状態管理など状態管理にもいろいろなアプローチがある。これに関しては状態論 (2) に続く予定。
+

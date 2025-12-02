@@ -4,13 +4,13 @@ slug: 'cloudflare-image-transform-for-image-optimization'
 icon: ''
 created_time: '2024-06-23T00:52:00.000Z'
 last_edited_time: '2024-07-10T12:15:00.000Z'
-category: 'Tech'
 tags:
   - 'Cloudflare'
   - 'Blog Dev'
   - 'Astro'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Cloudflare-Image-Transformation-6d1b50f2cb2442fb94d87a1fc04688b6'
 features:
   katex: false
@@ -40,7 +40,7 @@ https://developers.cloudflare.com/images/transform-images/
 
 まず、CDNによる画像変換はキャッシュさせることが前提になるので、ローカルや未公開時点での画像を食わせてはいけない。そもそもプレビュー環境にはCloudflare Accessで保護をかけているので変換サーバーからアクセスできない。そういうことで本番環境でだけImage TransformationのURLに向けている。`env.PRODUCTION`は自分で追加した環境変数で、ビルド自体は本番相当でもプレビュー環境用の場合は`false`になる。
 
-```ts
+```typescript
 function imageLoader(config: { src: string; width: number }): string {
   const { src, width } = config;
   if (!env.PRODUCTION) {
@@ -58,7 +58,7 @@ function imageLoader(config: { src: string; width: number }): string {
 
 あとはこのURLを`img`タグの`src`に指定するだけだが、せっかくなのでレスポンシブに適切なサイズの画像をダウンロードするように`srcset`を指定した。また、画像ファイルはビルド時に存在するので、元画像の縦横のサイズだけは取得して`width`属性と`height`属性を設定した。これにより縦横比が確定し、レスポンシブであっても横幅を基準にして高さが決まるのでレイアウトシフトが起こらない。Astro（Vite）の環境で画像ファイルをモジュールとしてインポートするとサイズが手に入るのは非常に便利だ。
 
-```ts
+```typescript
       <img
         class:list="object-contain w-full md:max-w-screen-md max-h-[50vh]"
         src={`/images/${image.path}`}
@@ -74,7 +74,7 @@ function imageLoader(config: { src: string; width: number }): string {
       />
 ```
 
-```ts
+```typescript
 async function getLocalImageSize(src: string): Promise<{ width: number; height: number }> {
   const getImage = localImages[`/public/images/${src}`];
   if (!getImage) {
@@ -92,4 +92,5 @@ async function getLocalImageSize(src: string): Promise<{ width: number; height: 
 
 最後に画像最適化のサンプルとして、これは昨日の隅田川である。
 
-![image](/images/cloudflare-image-transform-for-image-optimization/Untitled.png)
+![image](/images/cloudflare-image-transform-for-image-optimization/Untitled.d32838ef5aff1d69.png)
+

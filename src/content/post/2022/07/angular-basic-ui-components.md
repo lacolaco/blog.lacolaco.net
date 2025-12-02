@@ -4,13 +4,13 @@ slug: 'angular-basic-ui-components'
 icon: ''
 created_time: '2022-07-20T02:25:00.000Z'
 last_edited_time: '2022-07-20T00:00:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'アクセシビリティ'
   - 'HTML'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-4518985f136b48118aefe72b464720a4'
 features:
   katex: false
@@ -30,7 +30,7 @@ https://developer.mozilla.org/ja/docs/Web/HTML/Element/button
 
 そのため、次のように `<button>` 要素をラップしたボタンコンポーネントはアクセシビリティの確保に苦労することになる。
 
-```ts
+```typescript
 @Component({
   selector: 'app-fancy-button',
   template: `
@@ -45,16 +45,15 @@ export class FancyButtonComponent {}
 
 たとえば、 `<button>` 要素には `type` 属性がある。フォームの中に組み込まれる場合は任意の指定ができなければ不便だ。また、 `disabled` 属性や `aria-hidden` のようなARIA属性も考えると、 `<app-fancy-button>` コンポーネントは `<button>` タグが受け取ることのできるすべての属性を橋渡ししなければならない。
 
-```ts
+```typescript
 @Component({
   selector: 'app-fancy-button',
   template: `
-    <button
-      class="fancy-button"
+    <button 
+      class="fancy-button" 
       [attr.type]="type"
-      　　　　　　　　　　　　[attr.aria-hidden]="ariaHidden"
-      [disabled]="disabled"
-    >
+　　　　　　　　　　　　[attr.aria-hidden]="ariaHidden"
+      [disabled]="disabled">
       <ng-content></ng-content>
     </button>
   `,
@@ -80,7 +79,7 @@ https://material.angular.io/components/button/overview
 
 先ほどの `FancyButtonComponent` を次のように書き換えよう。注目すべき点は `selector` プロパティが、 `app-fancy-button` という要素セレクタから、 `button[app-fancy-button]` という要素と属性の合成セレクタになっていることだ。
 
-```ts
+```typescript
 @Component({
   selector: 'button[app-fancy-button]',
   template: `<ng-content></ng-content>`,
@@ -106,3 +105,4 @@ https://stackblitz.com/edit/angular-ivy-qxbz13?embed=1&file=src/app/fancy-button
 リッチかつアクセシブルなボタンコンポーネントの実装テクニックをまとめている次の記事も、汎用的なボタンコンポーネントが備えるべき振る舞いを知るためのいい資料になるだろう。
 
 https://web.dev/building-a-button-component/
+

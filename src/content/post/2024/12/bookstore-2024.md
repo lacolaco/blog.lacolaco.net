@@ -4,11 +4,11 @@ slug: 'bookstore-2024'
 icon: ''
 created_time: '2024-12-06T15:00:00.000Z'
 last_edited_time: '2024-12-11T05:22:00.000Z'
-category: 'Diary'
 tags:
   - '本屋'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/1523521b014a80af9ba3c39c2a20e510'
 features:
   katex: false
@@ -79,3 +79,4 @@ https://x.com/mochikoAsTech/status/1864185776772403297
 アドベントカレンダー、明日はNkznさんです。
 
 https://adventar.org/calendars/10958
+

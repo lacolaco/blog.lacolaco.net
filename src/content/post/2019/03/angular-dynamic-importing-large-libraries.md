@@ -4,11 +4,11 @@ slug: 'angular-dynamic-importing-large-libraries'
 icon: ''
 created_time: '2019-03-06T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Dynamic-Importing-Large-Libraries-d3b13513d4e34d4abccf1f286f55a32b'
 features:
   katex: false
@@ -52,12 +52,12 @@ export class AppComponent {
 As you can expect easily, this import makes `main.bundle.js` large. Increasing the initial payload size is one of what we want most to avoid.
 
 <figure>
-  <img src="/images/angular-dynamic-importing-large-libraries/1__P7kR4JOftK2sOO43PCSLdw.png" alt="Build result">
+  <img src="/images/angular-dynamic-importing-large-libraries/1__P7kR4JOftK2sOO43PCSLdw.912921933ac01bb7.png" alt="Build result">
   <figcaption>Build result</figcaption>
 </figure>
 
 <figure>
-  <img src="/images/angular-dynamic-importing-large-libraries/1__bdvPHFVhblVx3JsiGjxTwQ.png" alt="Chart.js: ~500KB">
+  <img src="/images/angular-dynamic-importing-large-libraries/1__bdvPHFVhblVx3JsiGjxTwQ.9e3c3016ce5a96bd.png" alt="Chart.js: ~500KB">
   <figcaption>Chart.js: ~500KB</figcaption>
 </figure>
 
@@ -71,7 +71,7 @@ As you can expect easily, this import makes `main.bundle.js` large. Increasing t
 
 [webpack: Dynamic Imports](https://webpack.js.org/guides/code-splitting#dynamic-imports)
 
-Because Angular CLI uses webpack, we can use it, even in Angular CLI-based applications. **There is no “\*\***_eject”_\*\*. Don’t worry! :)
+Because Angular CLI uses webpack, we can use it, even in Angular CLI-based applications. **There is no “****_eject”_**. Don’t worry! :)
 
 ### Preparation: Edit tsconfig.json
 
@@ -137,19 +137,19 @@ export function normalizeCommonJSImport<T>(
 
 For details about module compatibility, please read this.
 
-**[webpack 4: import() and CommonJs](https://medium.com/webpack/webpack-4-import-and-commonjs-d619d626b655)**
+[**webpack 4: import() and CommonJs**](https://medium.com/webpack/webpack-4-import-and-commonjs-d619d626b655)
 
 In this case, TypeScript’s `import()` returns `Promise<typeof Chart>` as well as `import * as Chart from ‘chart.js’`. This is a problem because `chart.js` is a CommonJS module. Without any helpers,`default` doesn’t exist in the result of `import()` . So we have to mark it as `any` temporary and remark `default` as the original type. This is a small hack for correct typing.
 
 As the result, you can see separated bundles like below. `chart.<hash>.js` is not marked as **[initial]**; it means this bundle is loaded lazily and doesn’t affect initial bootstrapping.
 
 <figure>
-  <img src="/images/angular-dynamic-importing-large-libraries/1__FY__MPUG__xp4BXeWVfZaTXg.png" alt="Build result">
+  <img src="/images/angular-dynamic-importing-large-libraries/1__FY__MPUG__xp4BXeWVfZaTXg.ccfc73ae8d72d3f1.png" alt="Build result">
   <figcaption>Build result</figcaption>
 </figure>
 
 <figure>
-  <img src="/images/angular-dynamic-importing-large-libraries/1__aKkqoplA1K2wEBuhfBCBpQ.png" alt="Dynamic loading in the browser">
+  <img src="/images/angular-dynamic-importing-large-libraries/1__aKkqoplA1K2wEBuhfBCBpQ.bb45a953f0c2df64.png" alt="Dynamic loading in the browser">
   <figcaption>Dynamic loading in the browser</figcaption>
 </figure>
 
@@ -161,4 +161,5 @@ As the result, you can see separated bundles like below. `chart.<hash>.js` is no
 
 The full code example is here. Thanks.
 
-**[lacolaco/angular-chartjs-dynamic-import](https://github.com/lacolaco/angular-chartjs-dynamic-import)**
+[**lacolaco/angular-chartjs-dynamic-import**](https://github.com/lacolaco/angular-chartjs-dynamic-import)
+

@@ -4,12 +4,12 @@ slug: 'aot-compilation-with-webpack'
 icon: ''
 created_time: '2016-10-23T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'webpack'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-AoT-Compilation-with-webpack-655c55b569cc4063860844d8f10ec88b'
 features:
   katex: false
@@ -209,3 +209,4 @@ Final Project: [https://github.com/laco0416/ngtools-webpack-example/tree/aot-plu
 - Switch build mode with webpack’s environment options: –env.MODE
 - Install @ngtools/webpack
 - Use NgcLoader and add AotPlugin in prod mode
+

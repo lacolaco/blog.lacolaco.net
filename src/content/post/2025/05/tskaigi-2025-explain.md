@@ -2,15 +2,15 @@
 title: 'TSKaigi 2025「SignalとObservable ― 新たなデータモデルを解きほぐす」補足解説'
 slug: 'tskaigi-2025-explain'
 icon: ''
-created_time: '2025-05-30T23:44:00.000Z'
+created_time: '2025-05-31T02:05:00.000Z'
 last_edited_time: '2025-05-31T02:12:00.000Z'
-category: 'Tech'
 tags:
   - 'TypeScript'
   - 'Signals'
   - 'パターン'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/TSKaigi-2025-Signal-Observable-2033521b014a80d98b70f882faed196e'
 features:
   katex: false
@@ -38,15 +38,15 @@ https://blog.lacolaco.net/posts/tskaigi-2025-slide/
 
 発表中にも少しだけ触れたが、現状ではEffectにあたる機能を標準化するのはなかなか困難だ。[現在のSignalsの提案](https://github.com/tc39/proposal-signals)の中でも、`effect` についてはスコープ外で、他のSignalプリミティブをベースに各ライブラリやフレームワークが`effect`に相当するものを実装することを想定している。
 
-```ts
+```typescript
 const counter = new Signal.State(0);
 const isEven = new Signal.Computed(() => (counter.get() & 1) == 0);
-const parity = new Signal.Computed(() => (isEven.get() ? 'even' : 'odd'));
+const parity = new Signal.Computed(() => isEven.get() ? "even" : "odd");
 
 // A library or framework defines effects based on other Signal primitives
-declare function effect(cb: () => void): () => void;
+declare function effect(cb: () => void): (() => void);
 
-effect(() => (element.innerText = parity.get()));
+effect(() => element.innerText = parity.get());
 
 // Simulate external updates to counter...
 setInterval(() => counter.set(counter.get() + 1), 1000);
@@ -96,13 +96,13 @@ JavaScriptの`Iterable<T>`に相当するC#のインターフェースは`IEnume
 
 次の例では、配列 `numbers` に対して `.Where` と `.Select` という値をクエリするメソッドをつなげて`results`を生成している。これは配列型固有のメソッドではなく、`IEnumerable<T>` インターフェースに対して共通に後付けされる**拡張メソッド**である。
 
-![image](/images/tskaigi-2025-explain/image.png)
+![image](/images/tskaigi-2025-explain/image.73fadffb5b730a29.png)
 
 C#の拡張メソッド（メンバー）というのは、次のように特定の型に対してメンバー変数を追加できる機能である。以下の例では、文字列型`string`に対して`WordCount`メソッドを追加する拡張を加えている。
 
 https://learn.microsoft.com/ja-jp/dotnet/csharp/programming-guide/classes-and-structs/extension-methods
 
-```c#
+```csharp
 namespace CustomExtensionMembers;
 
 public static class MyExtensions
@@ -117,11 +117,11 @@ public static class MyExtensions
 
 これと同じことが`IEnumerable<T>`にも行われている。さっきの配列をクエリするコードは、データソースをジェネレータに変えても全く同じである。
 
-![image](/images/tskaigi-2025-explain/image.png)
+![image](/images/tskaigi-2025-explain/image.78121d959d81f7d6.png)
 
 この考えを非同期データソースにも適用しようということで生まれたのがReactive Extensionsと`IObservable<T>`だ。データソースが非同期的に値が流れてくるストリームであっても、`results`を作る宣言的なクエリの部分はほとんど変わっていないことがわかる。
 
-![image](/images/tskaigi-2025-explain/image.png)
+![image](/images/tskaigi-2025-explain/image.76fbe5f8bed19204.png)
 
 ### 標準化への道
 
@@ -151,7 +151,7 @@ Signalと同じくブラウザに組み込まれることによるパフォー�
 
 発表スライドでは次の図を使って、SignalとObservableがそれぞれ現在のECMAScriptにおける「不在」を埋める抽象化モデルであると話した。だが、これらが「不在」だからといって、「必要」であるかどうかとはまったく別の話だ。
 
-![image](/images/tskaigi-2025-explain/image.png)
+![image](/images/tskaigi-2025-explain/image.664c583e82fd553e.png)
 
 むしろ「不要」だからこそ、これまで不在だったのだと考えることもできる。つまり、JavaScriptという言語が適用される問題領域に対して、今の仕様で十分に解を与えられているならそれ以上に広げる必要はないということだ。
 
@@ -162,3 +162,4 @@ https://blog.lacolaco.net/posts/there-is-no-problem/
 ## まとめ
 
 以上、発表で話せなかった、伝わりにくかったと思われる部分の補足解説をした。結局のところ、この発表を通じて言いたかったことは2つ。具体的な物だけを見るのではなく構造とパターンを取り出し、そのパターンの背後にある原則や原理、そして価値観を把握することで、はじめて意味が見えてくるということ。もうひとつは、そのようにパターンは、言語を超えて紡がれている通時的な系譜の連続性と、共時的な発展の多様性の両方に視野を広げておくことで見つけやすくなるということ。やはり『達人プログラマー』の教えのとおり、毎年新しいプログラミング言語をひとつ習得するのは大事なことだ。
+

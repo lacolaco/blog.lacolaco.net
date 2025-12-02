@@ -4,13 +4,13 @@ slug: 'proposal-angular-partial-form-injection-pattern'
 icon: ''
 created_time: '2020-02-03T00:00:00.000Z'
 last_edited_time: '2020-05-05T00:00:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Forms'
   - '設計'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Forms-Partial-Form-Injection-e4ec3823e1e448d7a3900387a87e3095'
 features:
   katex: false
@@ -66,7 +66,7 @@ export class AppComponent {
   });
 
   workoutsForm = new FormArray([]);
-
+  
   addWorkout() {
     this.workoutsForm.push(
       new FormGroup({
@@ -88,7 +88,7 @@ export class AppComponent {
 })
 export class AppComponent {
   ...
-
+    
   activityInputForm = new FormGroup({
     activityTimes: this.activityTimesForm,
     workouts: this.workoutsForm
@@ -101,7 +101,8 @@ export class AppComponent {
 
 ```html
 <form [formGroup]="activityInputForm">
-  <app-activity-times-form [model]="activityTimesForm"> </app-activity-times-form>
+	<app-activity-times-form [model]="activityTimesForm">
+	</app-activity-times-form>
 </form>
 ```
 
@@ -125,18 +126,18 @@ export class ActivityTimesFormComponent {
   <div formGroupName="awokeAt">
     <span>Awoke at:</span>
     <span>
-      <input type="number" formControlName="hour" />
-      :
-      <input type="number" formControlName="name" />
+    <input type="number" formControlName="hour"> 
+    : 
+    <input type="number" formControlName="name" >
     </span>
   </div>
 
   <div formGroupName="sleptAt">
     <span>Slept at:</span>
     <span>
-      <input type="number" formControlName="hour" />
-      :
-      <input type="number" formControlName="name" />
+    <input type="number" formControlName="hour"> 
+    : 
+    <input type="number" formControlName="name" >
     </span>
   </div>
 </ng-container>
@@ -188,3 +189,4 @@ Partial Form Injectionによって作られるフォームには以下の特徴�
 - 部分フォームコンポーネントのインターフェースを定義できないだろうか
   - あるコンポーネントが部分フォームコンポーネントであることを型レベルで静的に表明できないだろうか
     - 例えば `class ActivityTimesForm extends PartialForm<FormGroup>`のような
+

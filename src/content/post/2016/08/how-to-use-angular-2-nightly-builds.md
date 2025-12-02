@@ -4,11 +4,11 @@ slug: 'how-to-use-angular-2-nightly-builds'
 icon: ''
 created_time: '2016-08-05T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/How-to-Use-Angular-2-Nightly-Builds-fce69b908ffc4369a68bb56f02e16320'
 features:
   katex: false
@@ -48,9 +48,9 @@ or `dependencies` field in `package.json`.
 
 ```json
 {
-  "dependencies": {
-    "@angular/core": "angular/core-builds"
-  }
+    "dependencies": {
+        "@angular/core": "angular/core-builds"
+    }
 }
 ```
 
@@ -80,3 +80,4 @@ npm supports dependencies from GitHub. My dependencies are below:
 - All Angular 2 modules have its own nightly-builds repo
 - Nightly-builds are synchronized with `angular/angular` master
 - We can use these via npm GitHub dependencies
+

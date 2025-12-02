@@ -4,11 +4,11 @@ slug: 'network-aware-preloading-strategy-for-angular-lazy-loading.en'
 icon: ''
 created_time: '2019-05-11T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'en'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Network-aware-Preloading-Strategy-for-Angular-Lazy-Loading-4cdbdec6e74c4ea486e26c899e5369af'
 features:
   katex: false
@@ -96,7 +96,7 @@ I call that “**Network-aware Preloading Strategy**”.
 
 # Using Network Information API
 
-**[Network Information API](https://developer.mozilla.org/en-US/docs/Web/API/NetworkInformation)** is a new Web standard API proposal. The Network Information API provides information about the system’s connection.
+[**Network Information API**](https://developer.mozilla.org/en-US/docs/Web/API/NetworkInformation) is a new Web standard API proposal. The Network Information API provides information about the system’s connection.
 
 https://www.youtube.com/watch?v=jO8iVc4hEe8
 
@@ -179,3 +179,4 @@ Network Information API has also several other properties like `rtt` (RTT, round
 - It’s very easy to make network-aware preloading strategy.
 
 Thank you for reading!
+

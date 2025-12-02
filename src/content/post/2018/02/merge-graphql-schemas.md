@@ -4,11 +4,11 @@ slug: 'merge-graphql-schemas'
 icon: ''
 created_time: '2018-02-18T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'GraphQL'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/merge-graphql-schemas-GraphQL-bc3234bd380a4b3b9f5ad78c9b784cbe'
 features:
   katex: false
@@ -109,3 +109,4 @@ interface Character {
 この方法で作成したスキーマから TypeScript の型定義を生成してクライアントサイドで利用するのを仕事で試しているので、いい感じに知見が溜まったらまた記事を書きます。
 
 だんだん API 仕様中心開発っぽくなってきたぞ！さらばバックエンド実装にブロックされるフロントエンド開発！
+

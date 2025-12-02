@@ -4,13 +4,13 @@ slug: 'poc-trace-via-service-worker'
 icon: ''
 created_time: '2024-06-26T06:21:00.000Z'
 last_edited_time: '2024-06-26T08:39:00.000Z'
-category: 'Tech'
 tags:
   - 'Web'
   - 'OpenTelemetry'
   - 'Service Worker'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Web-OpenTelemetry-PoC-Trace-via-Service-Worker-1add2e31b2224912bd322faab675cc5d'
 features:
   katex: false
@@ -45,28 +45,43 @@ https://www.youtube.com/live/ATlbJnc4d3o?si=V97dld8w92wiLqxw&t=5804
 
 今回のPoCの本質ではないが、技術的な制約のために自作せざるを得なかった `FetchTraceExporter` について解説する。まずはコードの全文を見てもらおう。
 
-```ts
-import { OTLPExporterBrowserBase, OTLPExporterConfigBase, OTLPExporterError } from '@opentelemetry/otlp-exporter-base';
-import { IExportTraceServiceResponse, JsonTraceSerializer } from '@opentelemetry/otlp-transformer';
-import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+```typescript
+import {
+  OTLPExporterBrowserBase,
+  OTLPExporterConfigBase,
+  OTLPExporterError,
+} from "@opentelemetry/otlp-exporter-base";
+import {
+  IExportTraceServiceResponse,
+  JsonTraceSerializer,
+} from "@opentelemetry/otlp-transformer";
+import { ReadableSpan } from "@opentelemetry/sdk-trace-base";
 
 /**
  * Custom OTLPTraceExporter implementation for Fetch API
  */
-export class FetchTraceExporter extends OTLPExporterBrowserBase<ReadableSpan, IExportTraceServiceResponse> {
+export class FetchTraceExporter extends OTLPExporterBrowserBase<
+  ReadableSpan,
+  IExportTraceServiceResponse
+> {
   constructor(config: OTLPExporterConfigBase) {
     // same as OTLPTraceExporter in @opentelemetry/exporter-trace-otlp-http
-    super(config, JsonTraceSerializer, 'application/json');
+    super(config, JsonTraceSerializer, "application/json");
   }
 
-  override send(items: ReadableSpan[], onSuccess: () => void, onError: (error: OTLPExporterError) => void): void {
-    const body = JsonTraceSerializer.serializeRequest(items) ?? new Uint8Array();
+  override send(
+    items: ReadableSpan[],
+    onSuccess: () => void,
+    onError: (error: OTLPExporterError) => void
+  ): void {
+    const body =
+      JsonTraceSerializer.serializeRequest(items) ?? new Uint8Array();
     const request = new Request(this.url, {
-      method: 'POST',
+      method: "POST",
       body,
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
         ...this._headers,
       },
     });
@@ -80,19 +95,20 @@ export class FetchTraceExporter extends OTLPExporterBrowserBase<ReadableSpan, IE
   }
 
   override getDefaultUrl(config: OTLPExporterConfigBase): string {
-    if (typeof config.url !== 'string') {
-      throw new OTLPExporterError('config.url is not a string');
+    if (typeof config.url !== "string") {
+      throw new OTLPExporterError("config.url is not a string");
     }
     return config.url;
   }
 }
+
 ```
 
 ここで実装している内容に入る前に、まずはこのクラスのインターフェースと継承関係について説明しておこう。もっとも基本的なインターフェースとして`SpanProcessor`というものがある。これはトレーサーがスパンを開始・終了したときのフック処理を行うためのインターフェースで、`TracerProvider`の`addSpanProcessor`メソッドで登録できる。`SpanProcessor`のインターフェース定義は`sdk-trace-base`に含まれている。
 
-[https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/SpanProcessor.ts](https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/SpanProcessor.ts)
+https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/SpanProcessor.ts
 
-```ts
+```typescript
 /**
  * SpanProcessor is the interface Tracer SDK uses to allow synchronous hooks
  * for when a {@link Span} is started or when a {@link Span} is ended.
@@ -127,9 +143,9 @@ export interface SpanProcessor {
 
 見て分かるとおり`SpanProcessor`の用途は自由だが、その用途のひとつがスパンの外部送信（**エクスポート**）であり、もっともシンプルな実装として提供されているのが `sdk-trace-base`の `SimpleSpanProcessor`である。長いので詳細は割愛するが、ここで重要なのはコンストラクタ引数に`SpanExporter`というインターフェースを要求することである。
 
-[https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/export/SimpleSpanProcessor.ts](https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/export/SimpleSpanProcessor.ts)
+https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/export/SimpleSpanProcessor.ts
 
-```ts
+```typescript
 /**
  * An implementation of the {@link SpanProcessor} that converts the {@link Span}
  * to {@link ReadableSpan} and passes it to the configured exporter.
@@ -151,9 +167,9 @@ export class SimpleSpanProcessor implements SpanProcessor {
 
 というわけで`SpanExporter`の実装が必要になるわけだが、これもインターフェースは`sdk-trace-base`で定義されている。`SpanExporter`には`export`メソッドが要求され、このメソッドで実際にスパンを外部送信する方法を記述することになる。
 
-[https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/export/SpanExporter.ts](https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/export/SpanExporter.ts)
+https://github.com/open-telemetry/opentelemetry-js/blob/main/packages/opentelemetry-sdk-trace-base/src/export/SpanExporter.ts
 
-```ts
+```typescript
 /**
  * An interface that allows different tracing services to export recorded data
  * for sampled spans in their own format.
@@ -166,7 +182,10 @@ export interface SpanExporter {
    * Called to export sampled {@link ReadableSpan}s.
    * @param spans the list of sampled Spans to be exported.
    */
-  export(spans: ReadableSpan[], resultCallback: (result: ExportResult) => void): void;
+  export(
+    spans: ReadableSpan[],
+    resultCallback: (result: ExportResult) => void
+  ): void;
 
   /** Stops the exporter. */
   shutdown(): Promise<void>;
@@ -184,9 +203,9 @@ export interface SpanExporter {
 
 とはいえ実験的とはいえ実装があるにはあるので使うことはできる。今回はHTTP通信でJSON形式のエクスポートをするために`@opentelemetry/exporter-trace-otlp-http` を参考にする。このパッケージはブラウザとNode.jsの両方向けの実装を含んでおり`package.json`で読み込むモジュールを分岐させているがそこは今回のテーマではないので割愛する。重要なのは、このパッケージからは`OTLPTraceExporter`というクラスが提供されることである。
 
-[https://github.com/open-telemetry/opentelemetry-js/blob/main/experimental/packages/exporter-trace-otlp-http/src/platform/browser/OTLPTraceExporter.ts](https://github.com/open-telemetry/opentelemetry-js/blob/main/experimental/packages/exporter-trace-otlp-http/src/platform/browser/OTLPTraceExporter.ts)
+https://github.com/open-telemetry/opentelemetry-js/blob/main/experimental/packages/exporter-trace-otlp-http/src/platform/browser/OTLPTraceExporter.ts
 
-```ts
+```typescript
 export class OTLPTraceExporter
   extends OTLPExporterBrowserBase<ReadableSpan, IExportTraceServiceResponse>
   implements SpanExporter
@@ -201,31 +220,32 @@ export class OTLPTraceExporter
 
 `OTLPTraceExporter`は`SpanExporter`を実装しているが、コードを見ればわかるようにその具体的な実装はこのクラスではなく継承元の`OTLPExporterBrowserBase`に移譲している。`OTLPExporterBrowserBase` は`@opentelemetry/otlp-exporter-base`から提供されているのでそちらを読みに行くと、ようやくスパンを送信している処理にたどりつく。
 
-[https://github.com/open-telemetry/opentelemetry-js/blob/main/experimental/packages/otlp-exporter-base/src/platform/browser/OTLPExporterBrowserBase.ts](https://github.com/open-telemetry/opentelemetry-js/blob/main/experimental/packages/otlp-exporter-base/src/platform/browser/OTLPExporterBrowserBase.ts)
+https://github.com/open-telemetry/opentelemetry-js/blob/main/experimental/packages/otlp-exporter-base/src/platform/browser/OTLPExporterBrowserBase.ts
 
-```ts
+```typescript
 /**
  * Collector Metric Exporter abstract base class
  */
-export abstract class OTLPExporterBrowserBase<ExportItem, ServiceResponse> extends OTLPExporterBase<
-  OTLPExporterConfigBase,
-  ExportItem
-> {
+export abstract class OTLPExporterBrowserBase<ExportItem, ServiceResponse> 
+  extends OTLPExporterBase<OTLPExporterConfigBase, ExportItem> {
   //...
   constructor(
     config: OTLPExporterConfigBase = {},
     serializer: ISerializer<ExportItem[], ServiceResponse>,
-    contentType: string,
+    contentType: string
   ) {
     super(config);
     this._serializer = serializer;
     this._contentType = contentType;
-    this._useXHR = !!config.headers || typeof navigator.sendBeacon !== 'function';
+    this._useXHR =
+      !!config.headers || typeof navigator.sendBeacon !== 'function';
     if (this._useXHR) {
       this._headers = Object.assign(
         {},
         parseHeaders(config.headers),
-        baggageUtils.parseKeyPairsIntoRecord(getEnv().OTEL_EXPORTER_OTLP_HEADERS),
+        baggageUtils.parseKeyPairsIntoRecord(
+          getEnv().OTEL_EXPORTER_OTLP_HEADERS
+        )
       );
     } else {
       this._headers = {};
@@ -234,7 +254,11 @@ export abstract class OTLPExporterBrowserBase<ExportItem, ServiceResponse> exten
 
   //...
 
-  send(items: ExportItem[], onSuccess: () => void, onError: (error: otlpTypes.OTLPExporterError) => void): void {
+  send(
+    items: ExportItem[],
+    onSuccess: () => void,
+    onError: (error: otlpTypes.OTLPExporterError) => void
+  ): void {
     //...
     const body = this._serializer.serializeRequest(items) ?? new Uint8Array();
 
@@ -249,10 +273,16 @@ export abstract class OTLPExporterBrowserBase<ExportItem, ServiceResponse> exten
           },
           this.timeoutMillis,
           resolve,
-          reject,
+          reject
         );
       } else {
-        sendWithBeacon(body, this.url, { type: this._contentType }, resolve, reject);
+        sendWithBeacon(
+          body,
+          this.url,
+          { type: this._contentType },
+          resolve,
+          reject
+        );
       }
     }).then(onSuccess, onError);
 
@@ -270,28 +300,43 @@ export abstract class OTLPExporterBrowserBase<ExportItem, ServiceResponse> exten
 
 まずクラス宣言は`OTLPExporterBrowserBase` を継承する形にしているが、実際は無駄な実装を多く含むので真面目に作るならゼロから作ったほうがいい。コンストラクタで`super`コンストラクタを呼び出しているところの引数は実際にはまったく意味がないが、コンパイルを通すためだけに渡している。本質的なのは`send`メソッドで行っているスパン配列のシリアライズと`fetch`関数でのPOSTリクエスト送信である。ここまでの流れを踏まえたうえでならこのコードの意味がわかってもらえるだろう。
 
-```ts
-import { OTLPExporterBrowserBase, OTLPExporterConfigBase, OTLPExporterError } from '@opentelemetry/otlp-exporter-base';
-import { IExportTraceServiceResponse, JsonTraceSerializer } from '@opentelemetry/otlp-transformer';
-import { ReadableSpan } from '@opentelemetry/sdk-trace-base';
+```typescript
+import {
+  OTLPExporterBrowserBase,
+  OTLPExporterConfigBase,
+  OTLPExporterError,
+} from "@opentelemetry/otlp-exporter-base";
+import {
+  IExportTraceServiceResponse,
+  JsonTraceSerializer,
+} from "@opentelemetry/otlp-transformer";
+import { ReadableSpan } from "@opentelemetry/sdk-trace-base";
 
 /**
  * Custom OTLPTraceExporter implementation for Fetch API
  */
-export class FetchTraceExporter extends OTLPExporterBrowserBase<ReadableSpan, IExportTraceServiceResponse> {
+export class FetchTraceExporter extends OTLPExporterBrowserBase<
+  ReadableSpan,
+  IExportTraceServiceResponse
+> {
   constructor(config: OTLPExporterConfigBase) {
     // same as OTLPTraceExporter in @opentelemetry/exporter-trace-otlp-http
-    super(config, JsonTraceSerializer, 'application/json');
+    super(config, JsonTraceSerializer, "application/json");
   }
 
-  override send(items: ReadableSpan[], onSuccess: () => void, onError: (error: OTLPExporterError) => void): void {
-    const body = JsonTraceSerializer.serializeRequest(items) ?? new Uint8Array();
+  override send(
+    items: ReadableSpan[],
+    onSuccess: () => void,
+    onError: (error: OTLPExporterError) => void
+  ): void {
+    const body =
+      JsonTraceSerializer.serializeRequest(items) ?? new Uint8Array();
     const request = new Request(this.url, {
-      method: 'POST',
+      method: "POST",
       body,
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
+        Accept: "application/json",
+        "Content-Type": "application/json",
         ...this._headers,
       },
     });
@@ -305,8 +350,8 @@ export class FetchTraceExporter extends OTLPExporterBrowserBase<ReadableSpan, IE
   }
 
   override getDefaultUrl(config: OTLPExporterConfigBase): string {
-    if (typeof config.url !== 'string') {
-      throw new OTLPExporterError('config.url is not a string');
+    if (typeof config.url !== "string") {
+      throw new OTLPExporterError("config.url is not a string");
     }
     return config.url;
   }
@@ -315,18 +360,21 @@ export class FetchTraceExporter extends OTLPExporterBrowserBase<ReadableSpan, IE
 
 このように実装した`FetchTraceExporter`を`TracerProvider`のセットアップに組み込むのは簡単で、引数に`SpanExporter`を受け取る`SpanProcessor`クラスに渡せばよい。今回はデモなので雑にhoneycombに送信する作りにしており、そのエンドポイントと認証ヘッダ設定を加えた`honeycombExporter` としてインスタンス化し、`SimpleSpanProcessor`に渡している。
 
-```ts
-import { W3CTraceContextPropagator } from '@opentelemetry/core';
-import { Resource } from '@opentelemetry/resources';
-import { BasicTracerProvider, SimpleSpanProcessor } from '@opentelemetry/sdk-trace-base';
-import { StackContextManager } from '@opentelemetry/sdk-trace-web';
-import { SEMRESATTRS_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
-import { FetchTraceExporter } from './exporter';
+```typescript
+import { W3CTraceContextPropagator } from "@opentelemetry/core";
+import { Resource } from "@opentelemetry/resources";
+import {
+  BasicTracerProvider,
+  SimpleSpanProcessor,
+} from "@opentelemetry/sdk-trace-base";
+import { StackContextManager } from "@opentelemetry/sdk-trace-web";
+import { SEMRESATTRS_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
+import { FetchTraceExporter } from "./exporter";
 
 const honeycombExporter = new FetchTraceExporter({
-  url: 'https://api.honeycomb.io/v1/traces',
+  url: "https://api.honeycomb.io/v1/traces",
   headers: {
-    'X-Honeycomb-Team': '...',
+    "X-Honeycomb-Team": "...",
   },
 });
 
@@ -353,12 +401,18 @@ export function registerTraceProvider(serviceName: string) {
 
 次に、Service Worker上でトレースの計装を行う上で考慮した点を解説する。PoCでのserviceWorker.tsの実装全文は以下のとおりである。
 
-```ts
+```typescript
 /// <reference lib="WebWorker" />
-import { SpanKind, SpanOptions, context, propagation, trace } from '@opentelemetry/api';
+import {
+  SpanKind,
+  SpanOptions,
+  context,
+  propagation,
+  trace,
+} from "@opentelemetry/api";
 
-import * as SemanticAttributes from '@opentelemetry/semantic-conventions';
-import { registerTraceProvider } from '../opentelemetry/trace-provider';
+import * as SemanticAttributes from "@opentelemetry/semantic-conventions";
+import { registerTraceProvider } from "../opentelemetry/trace-provider";
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -366,7 +420,7 @@ declare const self: ServiceWorkerGlobalScope;
  * Setup Otel tracer for fetch events
  */
 function setupTracer() {
-  registerTraceProvider('browser-service-worker');
+  registerTraceProvider("browser-service-worker");
 }
 
 function getRequestSpanOptions(request: Request): SpanOptions {
@@ -380,47 +434,62 @@ function getRequestSpanOptions(request: Request): SpanOptions {
 }
 
 // setup tracer on activate
-self.addEventListener('activate', (event) => {
-  console.log('Service worker activated');
+self.addEventListener("activate", (event) => {
+  console.log("Service worker activated");
   setupTracer();
 });
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener("fetch", (event) => {
   const { request } = event;
   // trace only requests from the same origin APIs
   const reqURL = new URL(request.url);
-  const isApiRequest = reqURL.origin === self.location.origin && reqURL.pathname.startsWith('/api');
+  const isApiRequest =
+    reqURL.origin === self.location.origin &&
+    reqURL.pathname.startsWith("/api");
   if (!isApiRequest) {
     return;
   }
 
   // extract context from main thread
-  const traceContext = propagation.extract<Headers>(context.active(), request.headers, {
-    keys: (carrier) => Object.keys(carrier),
-    get: (carrier, key) => carrier.get(key) ?? undefined,
-  });
+  const traceContext = propagation.extract<Headers>(
+    context.active(),
+    request.headers,
+    {
+      keys: (carrier) => Object.keys(carrier),
+      get: (carrier, key) => carrier.get(key) ?? undefined,
+    }
+  );
 
   // start fetch span
-  const tracer = trace.getTracer('sw-fetch');
+  const tracer = trace.getTracer("sw-fetch");
   const spanOptions = getRequestSpanOptions(request);
-  const promise = tracer.startActiveSpan('fetch', spanOptions, traceContext, async (span) => {
-    // propagate trace context to the server
-    const headers = new Headers(request.headers);
-    propagation.inject<Headers>(context.active(), headers, {
-      set: (carrier, key, value) => carrier.set(key, value),
-    });
-
-    return fetch(new Request(request, { headers }))
-      .then((resp) => {
-        span.setAttribute(SemanticAttributes.SEMATTRS_HTTP_STATUS_CODE, resp.status);
-        return resp;
-      })
-      .finally(() => {
-        span.end();
+  const promise = tracer.startActiveSpan(
+    "fetch",
+    spanOptions,
+    traceContext,
+    async (span) => {
+      // propagate trace context to the server
+      const headers = new Headers(request.headers);
+      propagation.inject<Headers>(context.active(), headers, {
+        set: (carrier, key, value) => carrier.set(key, value),
       });
-  });
+
+      return fetch(new Request(request, { headers }))
+        .then((resp) => {
+          span.setAttribute(
+            SemanticAttributes.SEMATTRS_HTTP_STATUS_CODE,
+            resp.status
+          );
+          return resp;
+        })
+        .finally(() => {
+          span.end();
+        });
+    }
+  );
   event.respondWith(promise);
 });
+
 ```
 
 ### setupTracer関数
@@ -445,14 +514,18 @@ self.addEventListener('fetch', (event) => {
 
 `propagation.extract`メソッドは、引数に渡したコンテキストにヘッダから取り出したトレースコンテキストをマージした新しいコンテキストを返してくれる。第2引数に渡したオブジェクトから第3引数に渡した関数を使って値を取り出してくれるのだが、この処理で具体的にどのヘッダをどう解釈するのかについては、`TracerProvider`の定義で**Propagator**を設定しておく必要がある。今回は標準的な`traceparent`ヘッダをW3Cの仕様通りに解釈したいので、`@opentelemetry/core`から提供される`W3CTraceContextPropagator`を利用している。
 
-```ts
-const traceContext = propagation.extract<Headers>(context.active(), request.headers, {
-  keys: (carrier) => Object.keys(carrier),
-  get: (carrier, key) => carrier.get(key) ?? undefined,
-});
+```typescript
+  const traceContext = propagation.extract<Headers>(
+    context.active(),
+    request.headers,
+    {
+      keys: (carrier) => Object.keys(carrier),
+      get: (carrier, key) => carrier.get(key) ?? undefined,
+    }
+  );
 ```
 
-```ts
+```typescript
 provider.register({
   propagator: new W3CTraceContextPropagator(),
 });
@@ -460,23 +533,31 @@ provider.register({
 
 ここまで準備ができたら、Service Worker内でスパンを開始する。先ほど抽出したコンテキストをもとに`startActiveSpan`すれば、親が存在すれば子スパンとなるし、なければここがルートスパンとなる。また、バックエンドへ送るリクエストヘッダにはこのスパンを作成したあとのアクティブコンテキスト `context.active()` を注入することで、バックエンド側のスパンとの間に親子関係を指定できる。大事なのはかならずスパンを完了させることで、リクエストの成功・失敗にかかわらず`finally`メソッドで`span.end()`を呼び出している。また、メインスレッドにレスポンスを返すのも忘れないようにしよう。
 
-```ts
-const promise = tracer.startActiveSpan('fetch', spanOptions, traceContext, async (span) => {
-  // propagate trace context to the server
-  const headers = new Headers(request.headers);
-  propagation.inject<Headers>(context.active(), headers, {
-    set: (carrier, key, value) => carrier.set(key, value),
-  });
-
-  return fetch(new Request(request, { headers }))
-    .then((resp) => {
-      span.setAttribute(SemanticAttributes.SEMATTRS_HTTP_STATUS_CODE, resp.status);
-      return resp;
-    })
-    .finally(() => {
-      span.end();
+```typescript
+const promise = tracer.startActiveSpan(
+  "fetch",
+  spanOptions,
+  traceContext,
+  async (span) => {
+    // propagate trace context to the server
+    const headers = new Headers(request.headers);
+    propagation.inject<Headers>(context.active(), headers, {
+      set: (carrier, key, value) => carrier.set(key, value),
     });
-});
+
+    return fetch(new Request(request, { headers }))
+      .then((resp) => {
+        span.setAttribute(
+          SemanticAttributes.SEMATTRS_HTTP_STATUS_CODE,
+          resp.status
+        );
+        return resp;
+      })
+      .finally(() => {
+        span.end();
+      });
+  }
+);
 event.respondWith(promise);
 ```
 
@@ -486,20 +567,26 @@ event.respondWith(promise);
 
 今回のPoCの本質ではないが、分散トレースのサンプルとしてバックエンドAPIをCloudflare Workerで用意した。この環境もブラウザでもNode.jsでもない特殊な環境で、結果的にはService Workerのために作った`FetchTraceExporter`が役立つ結果になった。PoCで使った`echo`エンドポイントのコード全文は以下のとおりである。
 
-```ts
-import { SpanKind, SpanOptions, context, propagation, trace } from '@opentelemetry/api';
-import * as SemanticAttributes from '@opentelemetry/semantic-conventions';
-import { registerTraceProvider } from '../../opentelemetry/trace-provider';
+```typescript
+import {
+  SpanKind,
+  SpanOptions,
+  context,
+  propagation,
+  trace,
+} from "@opentelemetry/api";
+import * as SemanticAttributes from "@opentelemetry/semantic-conventions";
+import { registerTraceProvider } from "../../opentelemetry/trace-provider";
 
 /**
  * Setup Otel tracer for fetch events
  */
 function setupTracer() {
-  registerTraceProvider('worker-api');
+  registerTraceProvider("worker-api");
 }
 
 function getTracer() {
-  return trace.getTracer('worker-api');
+  return trace.getTracer("worker-api");
 }
 
 function getRequestSpanOptions(request: Request): SpanOptions {
@@ -519,44 +606,54 @@ export const onRequest: PagesFunction = async (event) => {
   setupTracer();
 
   const { request } = event;
-  console.log('headers', request.headers);
+  console.log("headers", request.headers);
   // extract context from client
-  const traceContext = propagation.extract<Headers>(context.active(), request.headers, {
-    keys: (carrier) => Array.from(carrier.keys()),
-    get: (carrier, key) => carrier.get(key) ?? undefined,
-  });
+  const traceContext = propagation.extract<Headers>(
+    context.active(),
+    request.headers,
+    {
+      keys: (carrier) => Array.from(carrier.keys()),
+      get: (carrier, key) => carrier.get(key) ?? undefined,
+    }
+  );
 
   // start onRequest span
-  const tracer = trace.getTracer('worker-api');
+  const tracer = trace.getTracer("worker-api");
   const spanOptions = getRequestSpanOptions(request);
-  return tracer.startActiveSpan('onRequest', spanOptions, traceContext, async (span) => {
-    try {
-      const message = await generateMessage();
-      const respBody = { message };
-      span.setAttribute(SemanticAttributes.SEMATTRS_HTTP_STATUS_CODE, 200);
-      return new Response(JSON.stringify(respBody), {
-        headers: { 'content-type': 'application/json' },
-      });
-    } catch (error) {
-      span.setAttribute(SemanticAttributes.SEMATTRS_HTTP_STATUS_CODE, 500);
-      return new Response('Internal Server Error', { status: 500 });
-    } finally {
-      span.end();
+  return tracer.startActiveSpan(
+    "onRequest",
+    spanOptions,
+    traceContext,
+    async (span) => {
+      try {
+        const message = await generateMessage();
+        const respBody = { message };
+        span.setAttribute(SemanticAttributes.SEMATTRS_HTTP_STATUS_CODE, 200);
+        return new Response(JSON.stringify(respBody), {
+          headers: { "content-type": "application/json" },
+        });
+      } catch (error) {
+        span.setAttribute(SemanticAttributes.SEMATTRS_HTTP_STATUS_CODE, 500);
+        return new Response("Internal Server Error", { status: 500 });
+      } finally {
+        span.end();
+      }
     }
-  });
+  );
 };
 
 async function generateMessage(): Promise<string> {
-  return getTracer().startActiveSpan('generateMessage', (span) => {
+  return getTracer().startActiveSpan("generateMessage", (span) => {
     // simulate async operation
     return new Promise<string>((resolve) => {
       setTimeout(() => {
-        resolve('Hello, world!');
+        resolve("Hello, world!");
         span.end();
       }, 100);
     });
   });
 }
+
 ```
 
 やっていることはService Workerの`fetch`ハンドラとほとんど同じで、リクエストからトレースコンテキストを抽出し、そのコンテキストを使って新たなスパンを作成し、処理が終わったらスパンを完了しているだけである。やってることは難しくないがやはり冗長ではあるので、このあたり汎用的なインターフェースで抽象化したレイヤーが欲しくなる。
@@ -574,3 +671,4 @@ async function generateMessage(): Promise<string> {
 ---
 
 20分の発表では説明しきれなかった詳細を解説したが、もし追加で質問などがあればTwitterやMisskeyのほうでリプライをいただければ加筆するので遠慮なく声をかけてほしい。また、このPoCのアイデアはそれほど独創的でもないし、自分のアイデアだと主張するつもりももちろんないので、開発の参考にするのは自由にしてほしい。
+

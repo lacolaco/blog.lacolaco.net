@@ -4,11 +4,11 @@ slug: 'modular-graphql-schema-documentation'
 icon: ''
 created_time: '2018-02-13T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'GraphQL'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/GraphQL-Schema-cada7ee019fd4cc1b74d399d78d01d80'
 features:
   katex: false
@@ -100,3 +100,4 @@ https://lacolaco.github.io/graphdoc-example/
 サーバーサイドの実装に依存しない API 仕様 Centric な開発をしたいのだけど、 Open API Specification みたいな感じで GraphQL Schema を使う文化はあまり育っていないようで、苦労しそうな感じがあります。
 
 結局のところひとつの gql ファイルにドカドカ型定義書いていくほうが楽なのかもしれないけど、しばらく分割管理を試してみてから考えましょう。
+

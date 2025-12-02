@@ -4,12 +4,12 @@ slug: 'state-management-library'
 icon: ''
 created_time: '2018-01-12T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'TypeScript'
   - '状態管理'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/de2f47a33dcc46218f6cf56dc1b57062'
 features:
   katex: false
@@ -114,3 +114,4 @@ const store = new Store(0, [loggingMiddleware]);
 - 型安全
 
 もし興味があれば使ってみて Issue とかツイッターでフィードバックとかもらえるとうれしいです。
+

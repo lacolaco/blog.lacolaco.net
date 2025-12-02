@@ -4,12 +4,12 @@ slug: 'translation-crunchbase-and-angular-why-we-made-the-transition'
 icon: ''
 created_time: '2021-03-04T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'translation'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Crunchbase-Angular-5214f4b05e704ac69b8ebc77871a6b14'
 features:
   katex: false
@@ -64,3 +64,4 @@ features:
 この記事はオリジナルの筆者に許可を取った上で翻訳したものです。
 
 ひとつのスタートアップ企業が Angular への移行を決断し、その後もミッション達成のためプロダクトを改善し続けている事例として、より多くの人に知ってもらうのにとてもよい記事だと思い個人的に紹介させてもらいました。 4 月 22〜23 日に開催される最大の Angular カンファレンス [ng-conf 2021](https://www.2021.ng-conf.org/) でもさまざまな企業が Angular を選んでいる実際の事例と出会うことができるはずです。 基調講演だけのチケットは無料なので、興味があればぜひ Angular コミュニティの今を見に来てください。
+

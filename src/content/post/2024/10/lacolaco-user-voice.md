@@ -4,20 +4,20 @@ slug: 'lacolaco-user-voice'
 icon: ''
 created_time: '2024-10-02T14:09:00.000Z'
 last_edited_time: '2024-10-02T14:32:00.000Z'
-category: 'Diary'
 tags: []
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/lacolaco-1133521b014a80518a7ace579b5f9413'
 features:
   katex: false
   mermaid: false
-  tweet: false
+  tweet: true
 ---
 
 これはTwitter（X）のハッシュタグ `#lacolacoユーザーの声` での投稿をお願いする記事です。
 
-**[投稿はこちらから](https://x.com/intent/post?hashtags=lacolaco%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E3%81%AE%E5%A3%B0)**
+[**投稿はこちらから**](https://x.com/intent/post?hashtags=lacolaco%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E3%81%AE%E5%A3%B0)
 
 ## これは何？
 
@@ -35,7 +35,7 @@ features:
 
 これまでに lacolaco との1on1や壁打ち、アウトプットなどを通じて、何か気づきがあったり何かのきっかけになったり何かをうまく言語化できたり、なんにせよ「**lacolacoが役に立った**」と思える事例があったら、インターネットに出してもいい程度にぼかしたうえでハッシュタグ `#lacolacoユーザーの声` を添えて投稿してほしいです。
 
-**[投稿はこちらから](https://x.com/intent/post?hashtags=lacolaco%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E3%81%AE%E5%A3%B0)**
+[**投稿はこちらから**](https://x.com/intent/post?hashtags=lacolaco%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E3%81%AE%E5%A3%B0)
 
 いただいた声のなかから一部はWebサイト上に引用して掲載させていただきます。小さなことでも大きなことでも、気軽に書いてもらえるとうれしいです。「また使いたい」といった旨のことも添えられていると、かなりありがたいです。
 
@@ -45,4 +45,5 @@ features:
 
 かなり図々しいお願いですが、ぜひともよろしくお願いいたします！
 
-**[投稿はこちらから](https://x.com/intent/post?hashtags=lacolaco%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E3%81%AE%E5%A3%B0)**
+[**投稿はこちらから**](https://x.com/intent/post?hashtags=lacolaco%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E3%81%AE%E5%A3%B0)
+

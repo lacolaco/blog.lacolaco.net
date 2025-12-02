@@ -4,12 +4,12 @@ slug: 'angular-http-resource-quick-overview'
 icon: ''
 created_time: '2025-02-12T01:42:00.000Z'
 last_edited_time: '2025-02-12T02:05:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'
+category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-http-resource-quick-overview'
 notion_url: 'https://www.notion.so/Angular-httpResource-Quick-Overview-1983521b014a80d08a7cc09020dd3420'
 features:
@@ -28,15 +28,16 @@ https://github.com/angular/angular/pull/59876
 
 使い方は次のようになるだろう。すでに`resource`を使っている人からすればそれほど目新しくはない。`httpResource`関数の戻り値は`HttpResponseResource`型であり、これは`Resource`型のサブタイプである。なので`resource`関数の戻り値と同じように、`isLoading`や`value`といったシグナルを返すフィールドを持っている。シグナルなので、状態が変われば自動的にコンポーネントは再描画される。
 
-```ts
-@Component({
+```typescript
+@Component({ 
   template: `
-    @if (data.isLoading()) {
-      <p>Loading</p>
-    } @else {
-      {{ data.value() }}
-    }
-  `,
+  @if (data.isLoading()) {
+    <p>Loading</p>
+  } 
+  @else {
+    {{ data.value() }}
+  }
+  `
 })
 export class App {
   readonly data = httpResource<Data>('/api/data');
@@ -49,15 +50,16 @@ export class App {
 
 たとえば、コンポーネントが親コンポーネントから受け取ったインプット値に対応したHTTPリクエストを送るなら次のようになる。
 
-```ts
-@Component({
+```typescript
+@Component({ 
   template: `
-    @if (userData.isLoading()) {
-      <p>Loading</p>
-    } @else {
-      {{ userData.value() }}
-    }
-  `,
+  @if (userData.isLoading()) {
+    <p>Loading</p>
+  } 
+  @else {
+    {{ userData.value() }}
+  }
+  `
 })
 export class App {
   readonly userId = input.required<number>();
@@ -70,22 +72,23 @@ export class App {
 
 `resource`関数の`request`と同じように、この第一引数の関数が`undefined`を返せばリクエストを送らずにキャンセルできる。初期状態ではリクエストせず追加のイベントを待つ場合に使われるだろう。
 
-```ts
-@Component({
+```typescript
+@Component({ 
   template: `
-    @if (userData.isLoading()) {
-      <p>Loading</p>
-    } @else {
-      {{ userData.value() }}
-    }
-  `,
+  @if (userData.isLoading()) {
+    <p>Loading</p>
+  } 
+  @else {
+    {{ userData.value() }}
+  }
+  `
 })
 export class App {
   readonly userId = signal<number>(-1);
 
   readonly userData = httpResource<UserData>(
     // undefinedを返すとリクエストが送信されない
-    () => (this.userId() < 0 ? undefiend : `/api/user/${this.userId()}`),
+    () => this.userId() < 0 ? undefiend : `/api/user/${this.userId()}`,
   );
 }
 ```
@@ -94,7 +97,7 @@ export class App {
 
 あまり使わないと思われるが、GET以外のメソッドでHTTPリクエストを送ることもできる。文字列ではなく`HttpResourceRequest`型のオブジェクトを第一引数に渡すことでリクエストの内容を細かく制御できる。このオプションは`HttpClient`の`request`メソッドの引数とほとんど同じである。オブジェクトを渡す場合も静的な値と関数の両方をサポートしている。
 
-```ts
+```typescript
 @Component(...)
 export class App {
   // POST /data?fast=yes + headers + body + credentials
@@ -119,7 +122,7 @@ export class App {
 
 第二引数の`map`オプションでは、HTTPレスポンスボディに簡単な加工を加えてから`value`シグナルに格納するよう変換関数を渡すことができる。たとえばJSONオブジェクトからなんらかのクラスインスタンスへの変換をしたり、[zod](https://zod.dev/)のようなバリデーション関数を挟んだりできる。
 
-```ts
+```typescript
 @Component(...)
 export class App {
   readonly data = httpResource(`/api/user/${this.userId()}`, {
@@ -134,7 +137,7 @@ export class App {
 
 また、`resource`と同様に内部的には`effect`に依存している。つまり、依存性の注入が行えるコンテキストでなければ呼び出せない。コンポーネントのフィールド初期化、コンストラクタであれば普通に使えるが、それ以外の場所では工夫が必要になる。ちなみに、第2引数の`injector`オプションに`Injector`オブジェクトを渡せばそのコンテキストで動作するようになっている。
 
-```ts
+```typescript
 // 任意の注入コンテキストでhttpResourceを呼び出す
 const res = httpResource('/data', { injector: TestBed.inject(Injector) });
 ```
@@ -150,3 +153,4 @@ const res = httpResource('/data', { injector: TestBed.inject(Injector) });
 ## Conclusion
 
 以上見てきたように、`httpResource`は`HttpClient`と`resource`の組み合わせを簡略化する実験的APIだ。アプリケーションのリアクティブ化を進める中で、HTTPリクエストをシグナルベースで扱いたい場合に有用なツールとなるだろう。現時点では実験的な機能であるため、今後のAPIの変更には注意が必要だ。
+

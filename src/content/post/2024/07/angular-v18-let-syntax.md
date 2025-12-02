@@ -4,12 +4,12 @@ slug: 'angular-v18-let-syntax'
 icon: ''
 created_time: '2024-07-03T03:05:00.000Z'
 last_edited_time: '2024-07-03T03:05:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'TypeScript'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-v18-1-let-6de8867a98914c24b26cb45aeb3f3e32'
 features:
   katex: false
@@ -30,17 +30,17 @@ Angular v18.1で、HTMLテンプレートで使える `@let` 構文が新たに�
 <div>Hello, {{ name }}</div>
 ```
 
-[https://angular.dev/guide/templates/binding](https://angular.dev/guide/templates/binding)
+https://angular.dev/guide/templates/binding
 
 この例だとTypeScriptコードのほうにプロパティを持っておけばいい話だが、`@let` 構文が真価を発揮するのは次のようなケースである。たとえば、AsyncPipeで非同期データを購読したうえで、nullであったときにはデフォルト値にフォールバックするようなケースを考える。
 
-```ts
+```typescript
 @Component({
   template: `
-    @let user = user$ | async ?? defaultUser;
-    <div>Name: {{ user.name }}</div>
-    <div>Age: {{ user.age }}</div>
-  `,
+  @let user = user$ | async ?? defaultUser;
+	<div>Name: {{ user.name }}</div>
+	<div>Age: {{ user.age }}</div>
+	`
 })
 class Example {
   user$: Observable<User>;
@@ -52,24 +52,25 @@ class Example {
 
 ```html
 @if(user$ | async; as user) {
-<div>Name: {{ user.name }}</div>
-<div>Age: {{ user.age }}</div>
-} @else {
-<div>Name: {{ defaultUser.name }}</div>
-<div>Age: {{ defaultUser.age }}</div>
+	<div>Name: {{ user.name }}</div>
+	<div>Age: {{ user.age }}</div>
+} 
+@else {
+	<div>Name: {{ defaultUser.name }}</div>
+	<div>Age: {{ defaultUser.age }}</div>
 }
 ```
 
 Signalを使った値もgetterの呼び出しを一回にできるため、何度も呼び出されていたものをまとめれば、テンプレート中の括弧が減って見やすくなるだろう。
 
-```ts
+```typescript
 @Component({
   template: `
-    @let state = $state();
-    <div>{{ state.foo }}</div>
-    <div>{{ state.bar }}</div>
-    <div>{{ state.baz }}</div>
-  `,
+  @let state = $state();
+	<div>{{ state.foo }}</div>
+	<div>{{ state.bar }}</div>
+	<div>{{ state.baz }}</div>
+	`
 })
 class Example {
   $state: Signal<State>;
@@ -79,8 +80,10 @@ class Example {
 あとは、値の変換とその呼び出しの部分を分割することも主な用途だろう。複数の変数を宣言、変換する行をまとめておき、テンプレート全体を見通しやすくできる。
 
 ```html
-@let userName = user.displayName; @let userAge = user.age; @let userBirthday = user.birthday | date:'yyyy/MM/dd'; @let
-welcomeMessage = 'Welcome, ' + userName + '!';
+@let userName = user.displayName;
+@let userAge = user.age;
+@let userBirthday = user.birthday | date:'yyyy/MM/dd';
+@let welcomeMessage = 'Welcome, ' + userName + '!';
 
 <h1>{{ welcomeMessage }}</h1>
 <div>Name: {{ userName }}</div>
@@ -93,12 +96,13 @@ welcomeMessage = 'Welcome, ' + userName + '!';
 また、この`@let` 構文で宣言されるテンプレートローカル変数は、その宣言がなされているブロックにスコープが閉じている。クラスフィールドとして宣言するとテンプレート中のどこでも参照できるが、スコープを限定したいときに便利だ。たとえば`@for` ブロックの中で一時的な計算結果を変数に格納しておきたいときなどに役立つ。
 
 ```html
-<div>
-  @for (product of products; track product.id) { @let price = product.price | currency;
-
-  <div>Price: {{ price }}</div>
-  } {{ price }}
-  <!-- error!! -->
+<div>  
+    @for (product of products; track product.id) {
+        @let price = product.price | currency;
+        
+        <div>Price: {{ price }}</div>
+    }
+    {{ price }} <!-- error!! -->
 </div>
 ```
 
@@ -108,5 +112,6 @@ welcomeMessage = 'Welcome, ' + userName + '!';
 
 ## 参考リンク
 
-- [https://github.com/angular/angular/issues/15280](https://github.com/angular/angular/issues/15280)
-- [https://github.com/angular/angular/pull/56715](https://github.com/angular/angular/pull/56715)
+- https://github.com/angular/angular/issues/15280
+- https://github.com/angular/angular/pull/56715
+

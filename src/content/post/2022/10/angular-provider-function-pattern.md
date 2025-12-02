@@ -4,13 +4,13 @@ slug: 'angular-provider-function-pattern'
 icon: ''
 created_time: '2022-10-16T07:08:00.000Z'
 last_edited_time: '2022-10-16T00:00:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'dependency injection'
   - 'standalone component'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Provider-Function-Pattern-613bc5ddc46c4c0a8e30b0f0dc1b8d4d'
 features:
   katex: false
@@ -30,7 +30,7 @@ https://blog.lacolaco.net/2022/08/angular-new-provide-router-api/
 
 以前は `RouterModule.forRoot()` でセットアップしていた `Router` サービスを、 `provideRouter()` 関数でセットアップするようになった。
 
-```ts
+```typescript
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 import { provideRouter } from '@angular/router';
@@ -46,13 +46,15 @@ bootstrapApplication(AppComponent, {
 
 [https://angular.io/api/platform-browser/animations/provideAnimations](https://angular.io/api/platform-browser/animations/provideAnimations)
 
-```ts
+```typescript
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app/app.component';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
 bootstrapApplication(AppComponent, {
-  providers: [provideAnimations()],
+  providers: [
+    provideAnimations()
+  ]
 });
 ```
 
@@ -66,7 +68,7 @@ bootstrapApplication(AppComponent, {
 
 `provideStore()` 関数は従来の `StoreModule.forRoot()` に対応したものであり、 `Store` サービスを利用可能にする。
 
-```ts
+```typescript
 bootstrapApplication(AppComponent, {
   providers: [provideStore()],
 });
@@ -86,7 +88,7 @@ AngularのDIシステムにおいて、 `providers` 配列に追加するオブ�
 
 多くのAngularライブラリが依存性の注入を介して提供するAPIは、シングルトンである場合が多い。その場合は `providedIn: 'root'` オプションによって、自動的にプロバイダーがセットアップされる。しかしこのままでは、アプリケーションや実行環境ごとに異なる初期パラメータを渡すことができない。
 
-```ts
+```typescript
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -99,7 +101,7 @@ export class HeroService {}
 
 前者の方法では、パラメータに専用の**DIトークン**を発行し、値プロバイダーを使ってパラメータを提供する。サービス側では、そのトークンをキーにしてパラメータを注入することができる。
 
-```ts
+```typescript
 // library side
 import { Injectable, InjectionToken } from '@angular/core';
 
@@ -124,7 +126,7 @@ bootstrapApplication(AppComponent, {
 
 後者のファクトリープロバイダーを使う方法は単純で、 `providedIn: 'root'` をやめてしまい、 `useFactory` でインスタンスを生成する。コンストラクタを開発者自身が呼び出すため、DIトークンは必要ない。ただし、この場合はサービスクラスのコンストラクタが要求するすべてのパラメータを利用側が渡さなければならないため、アプリケーション側の負担が大きい。
 
-```ts
+```typescript
 // library side
 import { Injectable } from '@angular/core';
 
@@ -153,7 +155,7 @@ bootstrapApplication(AppComponent, {
 
 ちなみに `forRoot()` という名前は、シングルトンにするためにルートモジュールで一回だけ提供してほしいことを示す慣例的なものであり、それ以上の特別な意味はない。
 
-```ts
+```typescript
 // library side
 import { Injectable, InjectionToken, ModuleWithProviders } from '@angular/core';
 
@@ -193,11 +195,11 @@ export class AppModule {}
 
 **Provider Function** とはその名の通り、プロバイダーを返す関数である。つまり `forRoot()` 静的メソッドがやっていたことと同じである。違っているのは、その戻り値がNgModuleとしても機能する必要がなくなり、純粋にプロバイダーだけを返せばよくなったことである。
 
-Provider Functionは慣例的に **`provideXXX()`** という命名規則に則り、 `provide` というプレフィックスを持つ。また、 `XXX` の部分にはそのProvider Functionによって提供されることになるサービスなどの名前が入る。 `Router` サービスに対応する `provideRouter()` といった形だ。
+Provider Functionは慣例的に `provideXXX()` という命名規則に則り、 `provide` というプレフィックスを持つ。また、 `XXX` の部分にはそのProvider Functionによって提供されることになるサービスなどの名前が入る。 `Router` サービスに対応する `provideRouter()` といった形だ。
 
 ちなみに NgModule でも Standalone でも、 `providers` 配列の要素には プロバイダーの**配列**を渡してもよい。プロバイダーの配列を渡した場合は自動的にflattenされる。
 
-```ts
+```typescript
 // library side
 import { Injectable, InjectionToken, Provider } from '@angular/core';
 
@@ -237,3 +239,4 @@ bootstrapApplication(AppComponent, {
 今後、標準ライブラリや多くのサードパーティライブラリのAPIがこの形に統一されていくだろう。このようなパターンがあると知っておくことで、新たに導入されるAPIの振る舞いや利用方法が推測しやすくなるはずだ。
 
 また、このProvider Functionと対になるような **“Injector Function”** というパターンも新たに生まれようとしている。そしてこれらをセットにした **“Functional DI”** パターンについては、また別の記事で紹介したい。
+

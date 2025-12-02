@@ -4,11 +4,11 @@ slug: 'angular-ivy-experimental-note'
 icon: ''
 created_time: '2018-03-11T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:10:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/ngIvy-ecaa239cf616409c80b826b507a161f6'
 features:
   katex: false
@@ -30,11 +30,11 @@ v5 までの AoT コンパイルは、以下の流れで `greeting.component.ts`
 
 1. **Analysis phase**: AoT コンパイルのエントリポイントとなる NgModule から再帰的にすべての参照をたどり、以下の操作をおこなう。
    1. それが`.ts`ファイルである場合は、そのファイルから export されているすべてのシンボルを`.metadata.json`に記録し、関連付ける
-   2. それが`.js`ファイルである場合は、隣接する`.metadata.json`を関連付ける
-2. **Codegen phase**: 1 でコンパイルに関連付けられたすべての`.metadata.json`について、以下の操作をおこなう
+   1. それが`.js`ファイルである場合は、隣接する`.metadata.json`を関連付ける
+1. **Codegen phase**: 1 でコンパイルに関連付けられたすべての`.metadata.json`について、以下の操作をおこなう
    1. `.metadata.json`に`@Component`や`@NgModule`などの Angular デコレータが存在する場合は、それぞれについて NgFactory の TypeScript コードを生成する
-   2. 生成された TypeScript コードをコンパイルし、`.ngfactory.js`を生成するか、型チェックが通らない場合はエラーを出力する
-3. **Compilation phase**: 通常の`tsc`の挙動と同じようにすべての`.ts`ファイルをコンパイルする
+   1. 生成された TypeScript コードをコンパイルし、`.ngfactory.js`を生成するか、型チェックが通らない場合はエラーを出力する
+1. **Compilation phase**: 通常の`tsc`の挙動と同じようにすべての`.ts`ファイルをコンパイルする
 
 すべての操作が正しく完了すると、AoT コンパイルが成功します。 結果として、`GreetingComponent`に対して出力されるファイルは次の 3 つです。
 
@@ -63,9 +63,9 @@ v5 までの AoT コンパイルは、以下の流れで `greeting.component.ts`
 
 ngIvy 方式の AoT コンパイルは、以下の流れで `greeting.component.ts`をコンパイルします。
 
-1. **コンパイル対象の\*\***`.ts`\***\*ファイル**について、以下の操作をおこなう
+1. **コンパイル対象の**`.ts`**ファイル**について、以下の操作をおこなう
    1. Angular デコレータが存在する場合は、それぞれのデコレータに対応した Angular 定義を TypeScript コード中に生成し、対応するメタデータを`.metadata.json`に記録する
-   2. TypeScript コードをコンパイルし、`.js`を生成するか、型チェックが通らない場合はエラーを出力する
+   1. TypeScript コードをコンパイルし、`.js`を生成するか、型チェックが通らない場合はエラーを出力する
 
 それぞれのデコレータに対応する定義とメタデータについては [DESIGN DOC (Ivy): Separate Compilation を読む](../read-ivy-design-doc-separate-compilation/) を参照してください。
 
@@ -104,3 +104,4 @@ ngIvy では従来の AoT コンパイルの非効率性を解決することに
 ### 今後
 
 上記仕様はまだ実装されていない（定義の生成部分は見て取れるけど、まだ`.metadata.json`の生成が古いように見える）ので、分離コンパイルが最終的にどういう形になるのかはまだ観察が必要です。とはいえ、現状では ngIvy のターゲットはライブラリとアプリケーションだけでパッケージは対象外なので、実質的に`.metadata.json`は不要といえば不要なのかもしれません。
+

@@ -4,12 +4,12 @@ slug: 'enjoyable-webworkers-in-angular.ja'
 icon: ''
 created_time: '2021-05-26T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:07:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Web Worker'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Comlink-Web-Worker-1247081c70a74563886a056d3778a33f'
 features:
   katex: false
@@ -188,7 +188,7 @@ export class AppComponent {
 
 `ng serve` を使ってアプリをサーブし、ブラウザの開発者ツールを開いてみよう。Network タブを開いて“compile”ボタンをクリックすると、メインのバンドルからは分離された JavaScript ファイルがロードされ、Web Worker として実行される。
 
-![image](/images/enjoyable-webworkers-in-angular.ja/0476d21164731efa00df1ffa37c4b731.gif)
+![image](/images/enjoyable-webworkers-in-angular.ja/0476d21164731efa00df1ffa37c4b731.db5baa426e08a32c.gif)
 
 ### まとめ
 
@@ -197,3 +197,4 @@ export class AppComponent {
 サンプルコードの全体は GitHub で確認できる。
 
 [https://github.com/lacolaco/angular-comlink-example](https://github.com/lacolaco/angular-comlink-example)
+

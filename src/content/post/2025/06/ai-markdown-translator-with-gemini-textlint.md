@@ -4,7 +4,6 @@ slug: 'ai-markdown-translator-with-gemini-textlint'
 icon: ''
 created_time: '2025-06-17T12:29:00.000Z'
 last_edited_time: '2025-06-17T12:42:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
   - 'Markdown'
@@ -14,6 +13,7 @@ tags:
   - 'Textlint'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular-Gemini-Textlint-Markdown-2153521b014a80c3bea6d437b0ab1e42'
 features:
   katex: false
@@ -36,12 +36,12 @@ https://github.com/angular/angular-ja/tree/main/tools/translator
 この翻訳ツールは次の翻訳作業フローを自動的に行なってくれます。
 
 1. 入力Markdownファイルを適切なサイズにチャンク分割する
-2. チャンクをGeminiで翻訳する
-3. 翻訳結果をTextlintで自動修正する
-4. 自動修正したうえで残るTextlintエラーを元に、翻訳結果をGeminiで校正する
-5. すべての翻訳・校正済みチャンクを結合してファイルに書き出す
-6. 最終的に出力されたファイルに対して再度Textlintを実行する
-7. 翻訳前後でファイルの行数の差異がないかをバリデーションする
+1. チャンクをGeminiで翻訳する
+1. 翻訳結果をTextlintで自動修正する
+1. 自動修正したうえで残るTextlintエラーを元に、翻訳結果をGeminiで校正する
+1. すべての翻訳・校正済みチャンクを結合してファイルに書き出す
+1. 最終的に出力されたファイルに対して再度Textlintを実行する
+1. 翻訳前後でファイルの行数の差異がないかをバリデーションする
 
 いままでの翻訳スクリプトは1-2までしか自動化していなかったですが、翻訳結果とTextlintの診断結果を合わせて校正作業もGeminiにやらせることでかなりの手間を省略できました。思いつきで組んだパイプラインでしたが、GeminiはTextlintのエラーを読んでいい感じに修正するのは苦手ではないようです。
 
@@ -49,7 +49,7 @@ LangChainを使ったGemini呼び出し周りの実装は `agent.ts` にまと�
 
 https://github.com/angular/angular-ja/blob/main/tools/translator/agent.ts#L18
 
-```ts
+```typescript
 export async function createTranslationAgent(input: {
   googleApiKey: string;
   translationModelName?: string;
@@ -64,7 +64,9 @@ export async function createTranslationAgent(input: {
     temperature: 0.2, // 翻訳の一貫性を重視
     cache: false,
   });
-  const translatorPrompt = PromptTemplate.fromTemplate(translatorPromptTemplate);
+  const translatorPrompt = PromptTemplate.fromTemplate(
+    translatorPromptTemplate
+  );
 
   // 校正用モデル
   const proofreader = new ChatGoogleGenerativeAI({
@@ -73,7 +75,9 @@ export async function createTranslationAgent(input: {
     temperature: 0.8, // エラー修正への柔軟性を持たせる
     cache: false,
   });
-  const proofreaderPrompt = PromptTemplate.fromTemplate(proofreaderPromptTemplate);
+  const proofreaderPrompt = PromptTemplate.fromTemplate(
+    proofreaderPromptTemplate
+  );
 
   const textlint = await createTextlintRunnable();
 
@@ -101,8 +105,10 @@ export async function createTranslationAgent(input: {
 
 Textlintの自動修正とエラーの取得もLangChainに組み込めるよう、`Runnable`型にラップしています。Textlintのフォーマッターは何パターンか試した結果、Geminiの校正作業の成功率が高かったのは `unix` フォーマットでした。
 
-```ts
-export async function createTextlintRunnable(): Promise<Runnable<string, TextlintRunnableOutput>> {
+```typescript
+export async function createTextlintRunnable(): Promise<
+  Runnable<string, TextlintRunnableOutput>
+> {
   const descriptor = await loadTextlintrc();
   const linter = await createLinter({ descriptor });
   const linterFormatter = await loadLinterFormatter({ formatterName: 'unix' });
@@ -143,3 +149,4 @@ export async function createTextlintRunnable(): Promise<Runnable<string, Textlin
 Geminiの力を借りて、未翻訳のページを減らす0→1の翻訳作業はかなり楽になりました。完全に趣味でやっているノーギャラのメンテナンス業なので持続可能性が何よりも大事なのですが、フレームワークのアップデートに伴って増えたり変わったりするドキュメントを翻訳し直すコストが下がるのは非常に重要です。
 
 しかし**人間にとってよいドキュメント**になるかどうかは、人間による評価と改善が不可欠。なので、これまで以上にAngular日本語ドキュメントへのコントリビューションをよろしくお願いします。1文字の修正でも大歓迎です。
+

@@ -2,15 +2,15 @@
 title: '秀和システム『Looks Good To Me』を読んだ  #lgtm本'
 slug: 'book-review-looks-good-to-me'
 icon: ''
-created_time: '2025-06-04T08:50:00.000Z'
+created_time: '2025-06-04T10:45:00.000Z'
 last_edited_time: '2025-06-04T11:24:00.000Z'
-category: 'Diary'
 tags:
   - '日記'
   - '読書'
   - 'コードレビュー'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/Looks-Good-To-Me-lgtm-2083521b014a8078b103c38f323bef11'
 features:
   katex: false
@@ -33,7 +33,7 @@ https://x.com/shuwasystem_inf/status/1922109543338631239
 - Part 3 ジレンマへの対処
 - Part 4 コードレビューとその他の開発プラクティスを組み合わせる
 
-![image](/images/book-review-looks-good-to-me/CleanShot_2025-06-04_at_18.07.052x.png)
+![image](/images/book-review-looks-good-to-me/CleanShot_2025-06-04_at_18.07.052x.d7a7d5f034edc9da.png)
 
 もっとも文量が多いのはPart 1「コードレビューの基本」で、次いで Part 2「高度なコードレビューに必須の要素」も同じくらいある。付録を除けば3分の2くらいがこの2つの部で占められる。
 
@@ -57,7 +57,7 @@ https://x.com/shuwasystem_inf/status/1922109543338631239
   - Chapter 12 コードレビューとモブプログラミング
   - Chapter 13 コードレビューとAI
 
-![image](/images/book-review-looks-good-to-me/CleanShot_2025-06-04_at_18.14.032x.png)
+![image](/images/book-review-looks-good-to-me/CleanShot_2025-06-04_at_18.14.032x.759fce0adbff5be7.png)
 
 明らかに紙幅が割かれているのはChapter 2「コードレビュー徹底解剖」、次いでChapter 3 「チームの最初のコードレビュープロセスの構築」とChapter 5「自動化のメリット」だ。これは「はじめに」で書かれている対象読者像とマッチしている。まだチームにコードレビュープロセスを構築できていない人、構築されているがうまくいっていないと感じている人、もっとコードレビュープロセスを改善したい人のための本だ。そのために、まずはコードレビューとはいったい何なのか、何が目的なのかという根幹について**徹底解剖**している。
 
@@ -156,3 +156,4 @@ https://x.com/shuwasystem_inf/status/1922109543338631239
 『Looks Good To Me』は間違いなく良書。あらゆるソフトウェア開発者にとって、コードレビューで困ったらまず読むべき一冊と言っていいと思う。
 
 https://www.shuwasystem.co.jp/book/9784798071442.html
+

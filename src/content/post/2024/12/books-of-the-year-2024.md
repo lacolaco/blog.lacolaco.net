@@ -4,11 +4,11 @@ slug: 'books-of-the-year-2024'
 icon: ''
 created_time: '2024-12-18T15:00:00.000Z'
 last_edited_time: '2024-12-19T15:03:00.000Z'
-category: 'Diary'
 tags:
   - '読書'
 published: true
 locale: 'ja'
+category: 'Diary'
 notion_url: 'https://www.notion.so/2024-1603521b014a80278694dcc8096690a8'
 features:
   katex: false
@@ -18,7 +18,7 @@ features:
 
 https://adventar.org/calendars/10126
 
-この記事は2024年の推し本アドベントカレンダー20日目です。昨日はhiroki*saito*さんでした。
+この記事は2024年の推し本アドベントカレンダー20日目です。昨日はhiroki_saito_さんでした。
 
 はじめましての方には自己紹介を。
 
@@ -124,3 +124,4 @@ https://www.hanmoto.com/bd/isbn/9784907188504
 アドベントカレンダー明日はhelloyukiさんです。
 
 https://adventar.org/calendars/10126
+

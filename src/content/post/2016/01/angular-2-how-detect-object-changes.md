@@ -4,11 +4,11 @@ slug: 'angular-2-how-detect-object-changes'
 icon: ''
 created_time: '2016-01-15T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:11:00.000Z'
-category: 'Tech'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
+category: 'Tech'
 notion_url: 'https://www.notion.so/Angular2-5004a8f678b342819b4af575cdb1871b'
 features:
   katex: false
@@ -73,12 +73,12 @@ Angular2 は`$apply`がないのにどうやってオブジェクトの変更を
 `ApplicationRef_`クラスの tick()メソッドの中で呼ばれていた。ざっと上から処理を追うと、
 
 1. tick が入れ子になっていないかのチェック（1ApplicationRef につき同時に走る tick は 1 つ）
-2. `_tickScope`の呼び出し。中はプロファイリング用の処理だった。無視して OK
-3. tick 処理を開始。フラグを立てる
-4. ApplicationRef が持っている ChangeDetector すべてに`detectChanges`を実行
-5. `_enforceNoNewChanges`が true ならすべての ChangeDetector を変更がなかったものとする（`ngAfter**`系のライフサイクルが発生しないっぽい）
-6. tick 処理を終了。フラグを下ろす
-7. プロファイリングを終了する。無視して OK
+1. `_tickScope`の呼び出し。中はプロファイリング用の処理だった。無視して OK
+1. tick 処理を開始。フラグを立てる
+1. ApplicationRef が持っている ChangeDetector すべてに`detectChanges`を実行
+1. `_enforceNoNewChanges`が true ならすべての ChangeDetector を変更がなかったものとする（`ngAfter**`系のライフサイクルが発生しないっぽい）
+1. tick 処理を終了。フラグを下ろす
+1. プロファイリングを終了する。無視して OK
 
 アプリケーション全体のデータバインディングを解決するメソッドが分かった。これが AngularJS の$digest ループ相当のものらしい。あとはこれが呼ばれている場所がわかればいい。
 
@@ -130,13 +130,13 @@ subscribe の第 1 引数に渡されたこれは前述のとおり EventEmitter
 これですべての謎が解けた。まとめると以下のようになる。
 
 1. ApplicationRef が作成される（bootstrap 関数の中で作られる）
-2. Application の NgZone が作成され、tick ループが作られる
-3. 各 Component が自身の ChangeDetector を Application に登録する（これはコンポーネントツリー構築時にされている）
-4. tick が呼ばれる
-5. すべての ChangeDetector が変更チェックし、データバインディングを解決する
-6. tick 処理が終わると`onTurnDone`イベントが発火する
-7. `onTurnDone`イベントを受けて tick を実行する
-8. 4 に戻る
+1. Application の NgZone が作成され、tick ループが作られる
+1. 各 Component が自身の ChangeDetector を Application に登録する（これはコンポーネントツリー構築時にされている）
+1. tick が呼ばれる
+1. すべての ChangeDetector が変更チェックし、データバインディングを解決する
+1. tick 処理が終わると`onTurnDone`イベントが発火する
+1. `onTurnDone`イベントを受けて tick を実行する
+1. 4 に戻る
 
 イベントドリブンな再帰ループ？とでも言うのだろうか。ともかくこういう仕組みで動いている。setInterval とかではない。
 
@@ -145,3 +145,4 @@ subscribe の第 1 引数に渡されたこれは前述のとおり EventEmitter
 RxJS と Zone.js との合わせ技だが、わかってしまえばシンプルだった。ちなみに処理の追跡は全部 GitHub 上で出来たので楽だった。
 
 Zone.js についてはまた後日記事を書こうと思う。
+
