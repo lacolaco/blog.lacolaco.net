@@ -1,21 +1,12 @@
+import { syncNotionBlog, type PostMetadata, type RenderContext } from '@lacolaco/notion-sync';
 import { readFile, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
-import { syncNotionBlog, type RenderContext } from '@lacolaco/notion-sync';
-import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints';
 
 // features検出用の型定義
 type FeatureState = {
   hasMermaid?: boolean;
   hasKatex?: boolean;
   hasTweet?: boolean;
-};
-
-// メタデータの型定義
-type CustomMetadata = {
-  created_time: string;
-  slug: string;
-  icon: string;
-  [key: string]: unknown;
 };
 
 // metadata.jsonの型定義
@@ -83,20 +74,18 @@ const result = await syncNotionBlog({
   dryRun,
   filterPost: (metadata) => !!metadata.category,
   postPathResolver: (metadata) => {
-    const customMetadata = metadata as CustomMetadata;
-    const date = new Date(customMetadata.created_time);
+    const date = new Date(metadata.created_time);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
-    return `${year}/${month}/${customMetadata.slug}.md`;
+    return `${year}/${month}/${metadata.slug}.md`;
   },
   extractMetadata: (page, defaultExtractor) => {
     const metadata = defaultExtractor(page);
-    const pageObject = page as PageObjectResponse;
-    const icon = pageObject.icon && pageObject.icon.type === 'emoji' ? pageObject.icon.emoji : '';
+    const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
     return {
       ...metadata,
       icon,
-    } as CustomMetadata;
+    };
   },
   renderMarkdown: {
     blockRenderers: {
@@ -155,13 +144,12 @@ const result = await syncNotionBlog({
       },
     },
     generateFrontmatter: (baseFields, metadata, renderContext: RenderContext<FeatureState>) => {
-      const customMetadata = metadata as CustomMetadata;
       const { source_url, title, slug, ...rest } = baseFields as Record<string, unknown>;
 
       return {
         title,
         slug,
-        icon: customMetadata.icon,
+        icon: (metadata as PostMetadata & { icon: string }).icon,
         ...rest,
         notion_url: source_url,
         features: {
