@@ -57,11 +57,16 @@ const { values } = parseArgs({
       type: 'string',
       default: 'incremental',
     },
+    'dry-run': {
+      type: 'boolean',
+      default: false,
+    },
   },
 });
 
 const force = values.force;
 const mode: 'all' | 'incremental' = values.mode === 'all' ? 'all' : 'incremental';
+const dryRun = values['dry-run'];
 
 const rootDir = new URL('../..', import.meta.url).pathname;
 
@@ -75,6 +80,7 @@ const result = await syncNotionBlog({
   verbose: true,
   mode,
   force,
+  dryRun,
   filterPost: (metadata) => !!metadata.category,
   postPathResolver: (metadata) => {
     const customMetadata = metadata as CustomMetadata;
@@ -170,17 +176,21 @@ const result = await syncNotionBlog({
 
 console.log('Sync completed:', result);
 
-// metadata.jsonから tags.json と categories.json を生成
-const metadataJson = JSON.parse(await readFile(`${rootDir}/src/content/post/metadata.json`, 'utf-8')) as MetadataJson;
+if (!dryRun) {
+  // metadata.jsonから tags.json と categories.json を生成
+  const metadataJson = JSON.parse(await readFile(`${rootDir}/src/content/post/metadata.json`, 'utf-8')) as MetadataJson;
 
-// tags.json生成
-const tagsData = Object.fromEntries(metadataJson.tags.map((tag) => [tag.name, { name: tag.name, color: tag.color }]));
-await writeFile(`${rootDir}/src/content/tags/tags.json`, JSON.stringify(tagsData, null, 2) + '\n');
-console.log('Generated tags.json');
+  // tags.json生成
+  const tagsData = Object.fromEntries(metadataJson.tags.map((tag) => [tag.name, { name: tag.name, color: tag.color }]));
+  await writeFile(`${rootDir}/src/content/tags/tags.json`, JSON.stringify(tagsData, null, 2) + '\n');
+  console.log('Generated tags.json');
 
-// categories.json生成
-const categoriesData = Object.fromEntries(
-  metadataJson.categories.map((category) => [category.name, { name: category.name, color: category.color }]),
-);
-await writeFile(`${rootDir}/src/content/categories/categories.json`, JSON.stringify(categoriesData, null, 2) + '\n');
-console.log('Generated categories.json');
+  // categories.json生成
+  const categoriesData = Object.fromEntries(
+    metadataJson.categories.map((category) => [category.name, { name: category.name, color: category.color }]),
+  );
+  await writeFile(`${rootDir}/src/content/categories/categories.json`, JSON.stringify(categoriesData, null, 2) + '\n');
+  console.log('Generated categories.json');
+} else {
+  console.log('[DRY_RUN] Skipped tags.json and categories.json generation');
+}
