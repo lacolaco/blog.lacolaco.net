@@ -213,7 +213,7 @@ type FeatureState = {
 code: (block, context: RenderContext<FeatureState>, defaultRenderer) => {
   context.state.hasMermaid = true; // 型チェックされる
   return defaultRenderer(block);
-}
+};
 ```
 
 ## References
