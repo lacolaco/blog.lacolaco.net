@@ -1,6 +1,6 @@
 {
   "posts": {
-    "conventional-comments": "2025-11-30T13:28:00.000Z",
+    "conventional-comments": "2025-12-03T00:37:00.000Z",
     "use-ionic-components-as-web-components-in-angular": "2019-03-07T00:00:00.000Z",
     "ng4-feature-ngif": "2017-03-05T00:00:00.000Z",
     "spinoza-ethics": "2022-06-26T12:10:00.000Z",
@@ -880,6 +880,12 @@
     {
       "id": "58a391aa-5028-4ddc-a296-4d2a17deebb4",
       "name": "CSP",
+      "color": "gray",
+      "description": null
+    },
+    {
+      "id": "d58ea78d-e90e-47d4-9d48-d273c711d7ad",
+      "name": "Conventional Comments",
       "color": "gray",
       "description": null
     }

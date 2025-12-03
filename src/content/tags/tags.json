@@ -394,5 +394,9 @@
   "CSP": {
     "name": "CSP",
     "color": "gray"
+  },
+  "Conventional Comments": {
+    "name": "Conventional Comments",
+    "color": "gray"
   }
 }
