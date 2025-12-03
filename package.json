@@ -70,7 +70,7 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "sass": "1.93.3",
-    "tailwindcss": "4.1.16",
+    "tailwindcss": "4.1.17",
     "tsx": "4.20.6",
     "typescript-eslint": "^8.33.1",
     "vitest": "4.0.7",
