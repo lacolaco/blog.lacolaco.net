@@ -88,6 +88,14 @@ src/content/post/
 
 ### 生成されるファイル
 
+**⚠️ 警告: すべての生成ファイルは自動生成されます。手動編集しないでください。**
+
+- `src/content/post/**/*.md` - 記事Markdownファイル
+- `src/content/post/metadata.json` - Notionメタデータ
+- `src/content/tags/tags.json` - タグ定義（**DO NOT EDIT**）
+- `src/content/categories/categories.json` - カテゴリ定義（**DO NOT EDIT**）
+- `public/images/**/*` - 記事内画像
+
 #### src/content/post/metadata.json
 
 Notion datasourceから取得したメタデータ（@lacolaco/notion-sync@2.3.0以降）：
@@ -116,9 +124,9 @@ Notion datasourceから取得したメタデータ（@lacolaco/notion-sync@2.3.0
 }
 ```
 
-#### src/content/tags/tags.json
+#### src/content/tags/tags.json (**DO NOT EDIT**)
 
-metadata.jsonから生成される旧フォーマット（色情報付き）：
+metadata.jsonから自動生成される旧フォーマット（色情報付き）。**手動編集禁止**：
 
 ```json
 {
@@ -131,9 +139,9 @@ metadata.jsonから生成される旧フォーマット（色情報付き）：
 
 src/libs/post/properties.tsでインポートされ、`Tags` zodスキーマで検証される。
 
-#### src/content/categories/categories.json
+#### src/content/categories/categories.json (**DO NOT EDIT**)
 
-metadata.jsonから生成される旧フォーマット（色情報付き）：
+metadata.jsonから自動生成される旧フォーマット（色情報付き）。**手動編集禁止**：
 
 ```json
 {
