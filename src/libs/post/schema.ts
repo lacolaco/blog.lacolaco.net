@@ -4,22 +4,26 @@ export const Locale = z.enum(['ja', 'en']);
 export type Locale = z.infer<typeof Locale>;
 
 export const Tag = z.object({
+  id: z.string(),
   name: z.string(),
   color: z.string(),
+  description: z.string().nullable(),
 });
 
 export type Tag = z.infer<typeof Tag>;
 
-export const Tags = z.record(Tag);
+export const Tags = z.array(Tag);
 export type Tags = z.infer<typeof Tags>;
 
 export const Category = z.object({
+  id: z.string(),
   name: z.string(),
   color: z.string(),
+  description: z.string().nullable(),
 });
 export type Category = z.infer<typeof Category>;
 
-export const Categories = z.record(Category);
+export const Categories = z.array(Category);
 export type Categories = z.infer<typeof Categories>;
 
 export const PostFrontmatter = z
