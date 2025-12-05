@@ -237,41 +237,12 @@ When tests fail after your changes:
 
 ## Git
 
-**Git Status Information - UNRELIABLE SOURCE WARNING:**
-
-**CRITICAL: gitStatus "Main branch" field is UNRELIABLE - DO NOT TRUST IT**
-
-gitStatus may contain:
-- Outdated information (cached at session start)
-- Incorrect branch names (e.g., shows "master" when actual is "main")
-- Historical data that doesn't reflect current repository state
-
-**MANDATORY: Always verify default branch BEFORE any operation:**
-```bash
-git remote show origin | grep "HEAD branch"
-```
-
-**NEVER:**
-- Use gitStatus "Main branch" value directly for checkout/PR/branch creation
-- Assume master/main without verification
-- Trust any cached git information
-
-**ALWAYS:**
-- Run `git remote show origin` to get live repository state
-- Verify before creating branches or PRs
-- Use actual HEAD branch from command output
-
 **Git Operation Safety:**
 
 **NEVER use `git reset --hard` with uncommitted changes you need:**
 - Use `git stash` to preserve changes
 - Use `git stash pop` to restore after branch switch
 - Only use `git reset --hard` when explicitly discarding all changes
-
-**Branch verification:**
-- DO NOT trust gitStatus's "Main branch" field alone
-- ALWAYS verify with `git remote show origin`
-- When in doubt, check actual remote branches
 
 **PR/Commit Completeness Check:**
 
