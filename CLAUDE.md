@@ -191,6 +191,29 @@ When tests fail after your changes:
 - Execute next command after previous failure
 - Assume "it's fine" or "try different approach"
 - Chain multiple attempts without user feedback
+- Use destructive commands (git reset --hard) in error recovery
+
+## Package Management Protocol
+
+**Package Update Protocol:**
+- **ONLY update explicitly requested packages**
+- Use exact: `pnpm update <package>@<version>` NOT `pnpm update`
+- Verify diff BEFORE commit - check for unintended updates
+- If unintended updates found, revert and use precise command
+
+**Package Manager Flag Protocol:**
+- **Production dependencies (runtime):** `pnpm add <package>` (NO -D)
+- **Development dependencies (build/test):** `pnpm add -D <package>`
+- **Before pnpm add: Check package.json to see current location**
+  - If in dependencies → Use `pnpm add`
+  - If in devDependencies → Use `pnpm add -D`
+
+**Information Verification Protocol:**
+- **Before reporting "not found":**
+  1. Try alternative commands (e.g., `pnpm info X version` AND `pnpm info X versions`)
+  2. Try different flags (--json, -v)
+  3. THEN report
+- **NEVER run redundant commands after getting answer**
 
 ## Tools Priority
 1. mcp__ide__getDiagnostics
@@ -213,6 +236,29 @@ When tests fail after your changes:
 **User explicitly stated:** "下手なコマンド使わず自分でEditしろ"
 
 ## Git
+
+**Git Operation Safety:**
+
+**NEVER use `git reset --hard` with uncommitted changes you need:**
+- Use `git stash` to preserve changes
+- Use `git stash pop` to restore after branch switch
+- Only use `git reset --hard` when explicitly discarding all changes
+
+**PR/Commit Completeness Check:**
+
+**After creating PR/commit, IMMEDIATELY verify:**
+1. PR title matches actual changes
+2. PR body matches actual changes
+3. No stale references to reverted/removed changes
+
+**Checklist before marking "done":**
+- [ ] Read final diff
+- [ ] Verify PR title accuracy
+- [ ] Verify PR body accuracy
+- [ ] Check for stale information
+
+**If you make ANY change to PR, update PR body immediately**
+
 All git/GitHub ops→git-github-ops agent
 
 ## Content Processing

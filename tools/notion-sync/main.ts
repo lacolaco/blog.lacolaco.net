@@ -1,5 +1,4 @@
 import { syncNotionBlog, type PostMetadata, type RenderContext } from '@lacolaco/notion-sync';
-import { readFile, writeFile } from 'node:fs/promises';
 import { parseArgs } from 'node:util';
 
 // features検出用の型定義
@@ -7,23 +6,6 @@ type FeatureState = {
   hasMermaid?: boolean;
   hasKatex?: boolean;
   hasTweet?: boolean;
-};
-
-// metadata.jsonの型定義
-type MetadataJson = {
-  posts: Record<string, string>;
-  tags: Array<{
-    id: string;
-    name: string;
-    color: string;
-    description: string | null;
-  }>;
-  categories: Array<{
-    id: string;
-    name: string;
-    color: string;
-    description: string | null;
-  }>;
 };
 
 const { NOTION_AUTH_TOKEN } = process.env;
@@ -163,22 +145,3 @@ const result = await syncNotionBlog({
 });
 
 console.log('Sync completed:', result);
-
-if (!dryRun) {
-  // metadata.jsonから tags.json と categories.json を生成
-  const metadataJson = JSON.parse(await readFile(`${rootDir}/src/content/post/metadata.json`, 'utf-8')) as MetadataJson;
-
-  // tags.json生成
-  const tagsData = Object.fromEntries(metadataJson.tags.map((tag) => [tag.name, { name: tag.name, color: tag.color }]));
-  await writeFile(`${rootDir}/src/content/tags/tags.json`, JSON.stringify(tagsData, null, 2) + '\n');
-  console.log('Generated tags.json');
-
-  // categories.json生成
-  const categoriesData = Object.fromEntries(
-    metadataJson.categories.map((category) => [category.name, { name: category.name, color: category.color }]),
-  );
-  await writeFile(`${rootDir}/src/content/categories/categories.json`, JSON.stringify(categoriesData, null, 2) + '\n');
-  console.log('Generated categories.json');
-} else {
-  console.log('[DRY_RUN] Skipped tags.json and categories.json generation');
-}
