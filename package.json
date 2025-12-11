@@ -48,7 +48,7 @@
   "devDependencies": {
     "@iconify/json": "^2.2.161",
     "@iconify/tailwind": "^1.0.0",
-    "@lacolaco/notion-sync": "^2.4.1",
+    "@lacolaco/notion-sync": "^2.4.2",
     "@notionhq/client": "5.3.0",
     "@tailwindcss/vite": "^4.1.4",
     "@types/gtag.js": "^0.0.20",
