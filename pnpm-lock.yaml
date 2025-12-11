@@ -76,8 +76,8 @@ importers:
         specifier: ^1.0.0
         version: 1.2.0
       '@lacolaco/notion-sync':
-        specifier: ^2.4.1
-        version: 2.4.1
+        specifier: ^2.4.2
+        version: 2.4.2
       '@notionhq/client':
         specifier: 5.3.0
         version: 5.3.0
@@ -873,8 +873,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@lacolaco/notion-sync@2.4.1':
-    resolution: {integrity: sha512-+jZ40LliWmdZ5BDzujuB+GN9r5f9EP11BF9FIDZQ5RPG/NeeXir2Q34KjTWdKNmX+84swe7ytzBj+Vpx9n46ww==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/2.4.1/3432f79a59d688c2d0f230a3964508ff1fb1286a}
+  '@lacolaco/notion-sync@2.4.2':
+    resolution: {integrity: sha512-eNq+gVtEWSKV6qtW923GpSfYJ+g6d+TteoqxnFsJvmSN+XpnFQd54+kWVv9VjLH0O/gHSkNBFrDOiRlW1/uB0g==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/2.4.2/88fd39c45c06d32016fe548931c266728721b62f}
 
   '@mermaid-js/parser@0.6.3':
     resolution: {integrity: sha512-lnjOhe7zyHjc+If7yT4zoedx2vo4sHaTmtkl1+or8BRTnCtDmcTpAjpzDSfCZrshM5bCoz0GyidzadJAH1xobA==}
@@ -3125,8 +3125,8 @@ packages:
     resolution: {integrity: sha512-aNZ+VfjobsWryoiPnEApGGmf5WmNsCo9xu8dfaYamG5qaLP7ClhLN6NgsFe6SwJ2UbLEBK5dv9x8Mn5+RVhMWQ==}
     engines: {node: '>=18'}
 
-  p-retry@7.1.0:
-    resolution: {integrity: sha512-xL4PiFRQa/f9L9ZvR4/gUCRNus4N8YX80ku8kv9Jqz+ZokkiZLM0bcvX0gm1F3PDi9SPRsww1BDsTWgE6Y1GLQ==}
+  p-retry@7.1.1:
+    resolution: {integrity: sha512-J5ApzjyRkkf601HpEeykoiCvzHQjWxPAHhyjFcEUP2SWq0+35NKh8TLhpLw+Dkq5TZBFvUM6UigdE9hIVYTl5w==}
     engines: {node: '>=20'}
 
   p-timeout@6.1.4:
@@ -4619,14 +4619,14 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@lacolaco/notion-sync@2.4.1':
+  '@lacolaco/notion-sync@2.4.2':
     dependencies:
       '@notionhq/client': 5.3.0
       cli-progress: 3.12.0
       consola: 3.4.2
       js-yaml: 4.1.1
       p-limit: 7.2.0
-      p-retry: 7.1.0
+      p-retry: 7.1.1
       tslib: 2.8.1
       unist-util-visit: 5.0.0
       zod: 4.1.13
@@ -7286,7 +7286,7 @@ snapshots:
       eventemitter3: 5.0.1
       p-timeout: 6.1.4
 
-  p-retry@7.1.0:
+  p-retry@7.1.1:
     dependencies:
       is-network-error: 1.3.0
 
