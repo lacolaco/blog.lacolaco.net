@@ -1433,5 +1433,10 @@
     "lastModified": "2023-12-30T10:05:00.000Z",
     "slug": "angular-basic-terms-change-detection",
     "filePath": "2023/02/angular-basic-terms-change-detection.md"
+  },
+  "2c53521b-014a-80d9-8279-f5c01f43773b": {
+    "lastModified": "2025-12-12T01:13:00.000Z",
+    "slug": "angular-animations-with-motion",
+    "filePath": "2025/12/angular-animations-with-motion.md"
   }
 }
