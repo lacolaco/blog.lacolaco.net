@@ -73,7 +73,7 @@
     "tailwindcss": "4.1.17",
     "tsx": "4.20.6",
     "typescript-eslint": "^8.33.1",
-    "vitest": "4.0.7",
+    "vitest": "4.0.15",
     "zod": "^3.22.4"
   }
 }
