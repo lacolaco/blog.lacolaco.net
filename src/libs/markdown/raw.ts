@@ -27,4 +27,3 @@ export function readRawMarkdown(entry: CollectionEntry<'postsV2'>): string {
   // Frontmatter + body を結合
   return `---\n${frontmatterYaml}---\n${entry.body}`;
 }
-

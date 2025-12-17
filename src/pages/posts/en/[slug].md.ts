@@ -22,7 +22,7 @@ type Props = {
   entry: CollectionEntry<'postsV2'>;
 };
 
-export async function GET({ props }: APIContext<Props>) {
+export function GET({ props }: APIContext<Props>) {
   const { entry } = props;
 
   try {
