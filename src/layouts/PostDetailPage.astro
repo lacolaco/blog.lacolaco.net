@@ -73,11 +73,19 @@ const { Content } = await render(entry);
               }
             </span>
             <h1 class="text-2xl font-semibold leading-tight mb-1">{title}</h1>
-            <div class="py-1">
+            <div class="py-1 flex items-center justify-between">
               <TagList>
                 {category && <Tag name={category} isCategory />}
                 {tags && tags.map((tag) => <Tag name={tag} />)}
               </TagList>
+              <a
+                href={locale === 'en' ? `/posts/en/${slug}.md` : `/posts/${slug}.md`}
+                class="flex items-center px-3 py-2 md:px-2 md:py-0 text-muted hover:text-default hover:bg-gray-100 transition-colors rounded-sm"
+                title="View as Markdown"
+                aria-label="View as Markdown"
+              >
+                <span class="icon-[simple-icons--markdown] inline-block w-6 h-6"></span>
+              </a>
             </div>
           </div>
         </header>
