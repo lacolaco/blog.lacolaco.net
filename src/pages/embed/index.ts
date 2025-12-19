@@ -1,10 +1,13 @@
 import type { APIContext } from 'astro';
 import { load, type CheerioAPI } from 'cheerio';
+import pRetry, { AbortError } from 'p-retry';
+import escapeHtml from 'escape-html';
 
 export const prerender = false;
 
 // 定数
 const DEFAULT_CACHE_MAX_AGE = 60 * 60; // 1 hour
+const FETCH_TIMEOUT_MS = 10000; // 10 seconds per request
 const AMAZON_URL_PREFIXES = ['https://www.amazon.co.jp/', 'https://amzn.asia/'];
 const GOOGLEBOT_USER_AGENT =
   'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/W.X.Y.Z Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
@@ -99,26 +102,72 @@ function extractImageUrl($: CheerioAPI): string | null {
   return null;
 }
 
-async function fetchPageMetadata(url: string): Promise<PageMetadata> {
+export async function fetchPageMetadata(url: string): Promise<PageMetadata> {
   const config = getFetchConfig(url);
 
-  const response = await fetch(url, {
-    headers: {
-      'user-agent': config.userAgent,
-      accept: 'text/html',
-      'accept-charset': 'utf-8',
-    },
-  });
+  try {
+    const response = await pRetry(
+      async () => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
-  const html = await response.text();
-  const $ = load(html);
+        try {
+          const res = await fetch(url, {
+            signal: controller.signal,
+            headers: {
+              'user-agent': config.userAgent,
+              accept: 'text/html',
+              'accept-charset': 'utf-8',
+            },
+          });
 
-  return {
-    title: extractTitle($, url),
-    description: extractDescription($),
-    imageUrl: extractImageUrl($),
-    cacheControl: response.headers.get('cache-control'),
-  };
+          clearTimeout(timeoutId);
+
+          // 4xx系エラーはリトライしない
+          if (res.status >= 400 && res.status < 500) {
+            throw new AbortError(`Client error: ${res.status}`);
+          }
+
+          // 5xx系エラーはリトライ対象
+          if (!res.ok) {
+            throw new Error(`Server error: ${res.status}`);
+          }
+
+          return res;
+        } catch (error) {
+          clearTimeout(timeoutId);
+          throw error;
+        }
+      },
+      {
+        retries: 3,
+        minTimeout: 1000, // 1秒
+        maxTimeout: 4000, // 4秒
+        factor: 2, // 指数バックオフ係数 (1秒 → 2秒 → 4秒)
+        onFailedAttempt: (error) => {
+          console.warn(`Retry ${error.attemptNumber}/3: ${url}`);
+        },
+      },
+    );
+
+    const html = await response.text();
+    const $ = load(html);
+
+    return {
+      title: extractTitle($, url),
+      description: extractDescription($),
+      imageUrl: extractImageUrl($),
+      cacheControl: response.headers.get('cache-control'),
+    };
+  } catch (error) {
+    console.error(`Failed to fetch ${url}:`, error);
+    return {
+      title: url,
+      description: '',
+      imageUrl: null,
+      cacheControl: 'max-age=60, must-revalidate',
+    };
+  }
 }
 
 function getEmbedStyles(): string {
@@ -211,16 +260,16 @@ function buildEmbedHtml(metadata: PageMetadata, url: string): string {
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width" />
         <meta name="robots" content="noindex" />
-        <title>${title}</title>
+        <title>${escapeHtml(title)}</title>
         <style>${getEmbedStyles()}</style>
       </head>
       <body>
-        <a href="${url}" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">
+        <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="block-link block-link-webpage webpage-card">
           <div class="webpage-card-content">
-            <h3 class="webpage-card-title">${title}</h3>
-            <p class="webpage-card-description">${displayDescription}</p>
+            <h3 class="webpage-card-title">${escapeHtml(title)}</h3>
+            <p class="webpage-card-description">${escapeHtml(displayDescription)}</p>
           </div>
-          ${imageUrl ? `<img src="${imageUrl}" alt="Page image" class="webpage-card-image">` : ''}
+          ${imageUrl ? `<img src="${escapeHtml(imageUrl)}" alt="Page image" class="webpage-card-image">` : ''}
         </a>
       </body>
     </html>
