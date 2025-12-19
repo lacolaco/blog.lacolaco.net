@@ -604,5 +604,17 @@
     "name": "Motion",
     "color": "brown",
     "description": null
+  },
+  {
+    "id": "93e299f9-2c1a-4e14-afd0-af89f9ec0469",
+    "name": "買い物",
+    "color": "blue",
+    "description": null
+  },
+  {
+    "id": "62613dc2-71e9-47f4-878b-5fec79fbbbbf",
+    "name": "文房具",
+    "color": "blue",
+    "description": null
   }
 ]
