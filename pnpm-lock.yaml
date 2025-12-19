@@ -47,6 +47,9 @@ importers:
       date-fns:
         specifier: 4.1.0
         version: 4.1.0
+      escape-html:
+        specifier: ^1.0.3
+        version: 1.0.3
       katex:
         specifier: 0.16.27
         version: 0.16.27
@@ -87,6 +90,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.1.4
         version: 4.1.18(vite@6.4.1(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.93.3)(tsx@4.20.6)(yaml@2.8.2))
+      '@types/escape-html':
+        specifier: ^1.0.4
+        version: 1.0.4
       '@types/gtag.js':
         specifier: ^0.0.20
         version: 0.0.20
@@ -1259,6 +1265,9 @@ packages:
 
   '@types/deep-eql@4.0.2':
     resolution: {integrity: sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==}
+
+  '@types/escape-html@1.0.4':
+    resolution: {integrity: sha512-qZ72SFTgUAZ5a7Tj6kf2SHLetiH5S6f8G5frB2SPQ3EyF02kxdyBFf4Tz4banE3xCgGnKgWLt//a6VuYHKYJTg==}
 
   '@types/estree@1.0.8':
     resolution: {integrity: sha512-dWHzHa2WqEXI/O1E9OjrocMTKJl2mSrEolh1Iomrv6U+JuNwaHXsXx9bLu5gG7BUWFIN0skIQJQ/L1rIex4X6w==}
@@ -4835,6 +4844,8 @@ snapshots:
       '@types/ms': 0.7.31
 
   '@types/deep-eql@4.0.2': {}
+
+  '@types/escape-html@1.0.4': {}
 
   '@types/estree@1.0.8': {}
 
