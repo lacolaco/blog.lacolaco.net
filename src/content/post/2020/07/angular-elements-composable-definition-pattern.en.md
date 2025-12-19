@@ -1,6 +1,6 @@
 ---
 title: 'Angular Elements: Composable Definition Pattern'
-slug: 'angular-elements-composable-definition-pattern.en'
+slug: 'angular-elements-composable-definition-pattern'
 icon: ''
 created_time: '2020-07-22T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'

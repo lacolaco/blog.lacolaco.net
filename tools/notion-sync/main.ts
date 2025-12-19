@@ -59,7 +59,8 @@ const result = await syncNotionBlog({
     const date = new Date(metadata.created_time);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
-    return `${year}/${month}/${metadata.slug}.md`;
+    const localeSuffix = metadata.locale === 'en' ? '.en' : '';
+    return `${year}/${month}/${metadata.slug}${localeSuffix}.md`;
   },
   extractMetadata: (page, defaultExtractor) => {
     const metadata = defaultExtractor(page);

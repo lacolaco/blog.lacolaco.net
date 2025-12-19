@@ -1,9 +1,12 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { compareDesc, compareAsc, isPast } from 'date-fns';
 
-export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'postsV2'>>> {
+export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'postsV2' | 'postsV2En'>>> {
   const postsV2 = await getCollection('postsV2');
-  const availablePosts = postsV2
+  const postsV2En = await getCollection('postsV2En');
+  const allPosts = [...postsV2, ...postsV2En];
+
+  const availablePosts = allPosts
     .filter((entry) => {
       // import.meta.env.MODE が 'production' の場合、公開済みの投稿のみを対象とする
       if (import.meta.env.MODE === 'production') {

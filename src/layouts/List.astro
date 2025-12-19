@@ -77,6 +77,11 @@ const postsByYear = Array.from(
                         </a>
                         <div class="mt-1">
                           <TagList>
+                            {post.data.locale === 'en' && (
+                              <span class="leading-relaxed text-xs inline-block px-2 rounded-sm bg-blue-500 text-white font-semibold" title="English">
+                                🌐{' '}{post.data.locale}
+                              </span>
+                            )}
                             {getCategory(post) ? <Tag name={getCategory(post)!} isCategory /> : null}
                             {getTags(post).map((tag) => (
                               <Tag name={tag} />

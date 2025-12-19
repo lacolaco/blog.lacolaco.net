@@ -271,3 +271,216 @@ All git/GitHub ops→git-github-ops agent
 - Validate inputs
 - CSP headers
 - Sanitize user HTML
+
+## UI Component Implementation Checklist
+
+**Apply when**: Adding new UI components or elements
+
+**MANDATORY checks before implementation:**
+1. [ ] Search for similar components (same placement/function)
+2. [ ] Check existing styles, padding, and responsive design
+3. [ ] Verify project's icon library (e.g., iconify)
+4. [ ] Check accessibility requirements (tap target: 44x44px minimum for mobile)
+5. [ ] Determine responsive design needs
+
+**Search methods:**
+- Glob: `**/*Component.astro`, `**/*Button.astro` for pattern search
+- Grep: `icon-[`, `class=.*px-`, `hover:` for style pattern search
+- Read: Similar component files to understand implementation patterns
+
+## Development Workflow Priority
+
+**Apply when**: Verifying code changes
+
+**Priority order:**
+1. **FIRST**: Dev server with live reload (`pnpm dev`)
+   - Use for: UI changes, content updates, quick iterations
+2. **LAST**: Build + Preview (`pnpm build && pnpm preview`)
+   - Use for: Production build verification, final checks before commit
+
+**Rule**: Do NOT use build+preview repeatedly during development iterations
+
+## Pre-Implementation Investigation Protocol
+
+**Apply when**: Before starting implementation of new features/components
+
+**MANDATORY investigations:**
+1. **Technology Stack Check**
+   - Read `package.json` dependencies
+   - Grep for existing usage patterns of relevant libraries
+   - Check CLAUDE.md for project-specific technology choices
+
+2. **Similar Implementation Search**
+   - Glob for similar files/components
+   - Grep for similar patterns (e.g., `icon-[` for icon usage)
+   - Read similar implementations to understand patterns
+
+3. **Implementation Method Decision**
+   - Can existing library/pattern solve this? (Prefer existing)
+   - Is custom implementation truly necessary?
+   - Does the approach follow project conventions?
+
+## File Consistency Protocol
+
+**Apply when**: Adding content to existing files (config, docs, CLAUDE.md)
+
+**MANDATORY checks before adding content:**
+1. [ ] Read entire file to identify existing patterns
+2. [ ] Check language consistency (English/Japanese/mixed)
+3. [ ] Verify formatting style (headings, lists, structure)
+4. [ ] Confirm your additions match existing patterns
+
+**Priority order for consistency:**
+1. **HIGHEST**: Existing file's internal consistency
+2. **MEDIUM**: Project-wide conventions
+3. **LOWEST**: Session/command language preferences
+
+**Example**: If CLAUDE.md is entirely in English, add new sections in English, regardless of session language.
+
+## Edit/Write Tool Usage Protocol
+
+**Apply when**: Using Edit or Write tools on existing files
+
+**Before calling Edit/Write:**
+1. Read the target file first (if not already read)
+2. Analyze existing patterns:
+   - Language (English/Japanese/other)
+   - Format (heading levels, list styles, code blocks)
+   - Structure (section organization)
+3. Ensure your changes maintain consistency
+
+**Red flags that require re-verification:**
+- Adding non-English content to all-English file
+- Using different heading style than existing
+- Breaking established section organization
+
+## Rule Conflict Resolution
+
+**Apply when**: Multiple rules/instructions could apply to a single action
+
+**Resolution hierarchy:**
+1. **File-level consistency** (e.g., CLAUDE.md language uniformity)
+   - ALWAYS prioritize maintaining existing file patterns
+2. **Project-level rules** (CLAUDE.md protocols, coding standards)
+   - Follow project-specific conventions
+3. **General instructions** (command parameters, session defaults)
+   - Apply only when no higher-priority rules conflict
+
+**When uncertain:**
+- Pause and analyze the conflict
+- Ask user for clarification
+- Do NOT assume general rules override specific patterns
+
+**Example**: `/reflection` says "use session language" but CLAUDE.md is all English → Use English (file consistency wins)
+
+## Agent Output Verification Protocol
+
+**Apply when**: Receiving outputs from Task tool with subagent_type (Plan, Explore, etc.)
+
+**MANDATORY verification steps:**
+1. **NEVER trust agent outputs without verification**
+   - Agent statements about data structure, file contents, or code behavior are hypotheses
+   - Agent conclusions may be based on incomplete exploration or assumptions
+2. **Verify with actual data**
+   - Read actual files mentioned by agent
+   - Run actual commands to verify agent's claims
+   - Check multiple examples, not just one
+3. **Before proceeding with agent's plan**
+   - Confirm all factual claims with Read/Grep/Glob tools
+   - Verify data structure assumptions with real file contents
+   - Only after verification, proceed with implementation
+
+**Red flags requiring verification:**
+- Agent states "English posts have `slug: 'xxx.en'`" → Read actual English post file
+- Agent claims "Library X doesn't support Y" → Check library docs/changelog
+- Agent assumes "Current implementation works like Z" → Read actual implementation
+
+**Example violation**: Plan agent says "English posts have slug with `.en` suffix" → Proceed without reading actual post files
+**Correct approach**: Plan agent says "English posts have slug with `.en` suffix" → Read actual English post file → Verify claim → Then proceed
+
+## Experimental Verification Documentation Protocol
+
+**Apply when**: Completing any experimental verification or investigation
+
+**MANDATORY documentation steps:**
+1. **Document IMMEDIATELY after verification**
+   - Do NOT start next task before documenting results
+   - Record results in plan file or CLAUDE.md while context is fresh
+2. **Document what was tested**
+   - Exact approach/pattern tested
+   - Expected behavior
+   - Actual result
+   - Success/failure conclusion
+3. **Document for future reference**
+   - Add to plan file if related to current implementation
+   - Add to CLAUDE.md if it's a reusable technique/discovery
+   - Include enough detail to reproduce
+
+**Documentation format for plan files:**
+```markdown
+### [Step N]. [Task Name] (完了/INCOMPLETE)
+**検証結果: ✅ 成功 / ❌ 失敗**
+
+**試したパターン:**
+1. Pattern A → Result
+2. Pattern B → Result
+
+**成功パターンの詳細:**
+- Approach details
+- Key findings
+
+**実装方針確定:**
+Final decision based on results
+```
+
+**Example violation**: Complete Astro routing experiment → Start next task immediately → Forget exact params structure
+**Correct approach**: Complete Astro routing experiment → Document in plan file with exact results → Then proceed to next task
+
+## Requirement Interpretation Verification Protocol
+
+**Apply when**: Receiving abstract or ambiguous requirements from user
+
+**MANDATORY verification steps:**
+1. **Identify abstract terms**
+   - Terms like "locale identifier", "slug", "language version" can be ambiguous
+   - Don't assume your interpretation is correct
+2. **Propose concrete examples**
+   - Show specific data structure examples
+   - Show specific URL examples
+   - Show specific file/parameter examples
+3. **Get user confirmation**
+   - Present interpretation: "Does this mean X: [concrete example]?"
+   - Wait for user confirmation before implementing
+4. **If user corrects interpretation**
+   - Update understanding immediately
+   - Verify new interpretation with another concrete example if still uncertain
+
+**Example violation**: User says "don't include locale in slug" → Assume this means filename pattern → Implement wrong pattern
+**Correct approach**: User says "don't include locale in slug" → Ask: "Do you mean slug field should be 'xxx' (not 'xxx.en') for both languages, identified only by locale field?" → Get confirmation → Then implement
+
+## Session-Internal Learning Loop
+
+**Apply when**: User corrects you or points out mistakes during session
+
+**MANDATORY steps to prevent recurrence:**
+1. **Record correction immediately**
+   - Note what you did wrong
+   - Note what user corrected
+   - Note the root cause (not just surface fix)
+2. **Create session-specific checkpoint**
+   - Before similar actions, check: "Did user correct this pattern earlier?"
+   - Review recent corrections in current session
+   - Apply learnings immediately in same session
+3. **For repeated corrections**
+   - If user corrects same mistake 2+ times in one session, STOP
+   - Analyze why you're repeating the mistake
+   - Propose specific prevention mechanism to user
+   - Do NOT proceed until mechanism is in place
+
+**Example corrections to track:**
+- "Use `pnpm dev` not `pnpm build && pnpm preview`" → Check before every verification step
+- "Verify agent outputs with real data" → Check before trusting any agent statement
+- "Document results immediately" → Check after every experimental verification
+
+**Example violation**: User corrects "use pnpm dev" at 10:00 → You use "pnpm build && preview" again at 10:30 in same session
+**Correct approach**: User corrects "use pnpm dev" at 10:00 → Before next verification, recall correction → Use "pnpm dev"

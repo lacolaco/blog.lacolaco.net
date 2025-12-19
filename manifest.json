@@ -326,7 +326,7 @@
   },
   "1403521b-014a-8021-ba2c-e240f1d439e8": {
     "lastModified": "2024-11-16T01:26:00.000Z",
-    "slug": "angular-idea-resource-factory.en",
+    "slug": "angular-idea-resource-factory",
     "filePath": "2024/11/angular-idea-resource-factory.en.md"
   },
   "1293521b-014a-8073-bb02-e294780424be": {
@@ -801,7 +801,7 @@
   },
   "4cdbdec6-e74c-4ea4-86e2-6c899e5369af": {
     "lastModified": "2023-12-30T10:09:00.000Z",
-    "slug": "network-aware-preloading-strategy-for-angular-lazy-loading.en",
+    "slug": "network-aware-preloading-strategy-for-angular-lazy-loading",
     "filePath": "2019/05/network-aware-preloading-strategy-for-angular-lazy-loading.en.md"
   },
   "b989169b-f9a4-470a-9aae-9eb49a823e4a": {
@@ -826,7 +826,7 @@
   },
   "d4fdf732-3192-45b8-b5d9-1ed9f6c4c062": {
     "lastModified": "2023-12-30T10:09:00.000Z",
-    "slug": "differential-loading-a-new-feature-of-angular-cli-v8.en",
+    "slug": "differential-loading-a-new-feature-of-angular-cli-v8",
     "filePath": "2019/04/differential-loading-a-new-feature-of-angular-cli-v8.en.md"
   },
   "f1218e5c-5190-4cf5-b6e1-c27896a9862a": {
@@ -886,7 +886,7 @@
   },
   "4d172266-5b4b-488d-8049-bf2ac4fee642": {
     "lastModified": "2023-12-30T10:09:00.000Z",
-    "slug": "deep-dive-angular-components-mat-divider.en",
+    "slug": "deep-dive-angular-components-mat-divider",
     "filePath": "2020/05/deep-dive-angular-components-mat-divider.en.md"
   },
   "289a7964-b989-4c20-818f-45f429907bd1": {
@@ -896,12 +896,12 @@
   },
   "618c54c9-8689-4e02-a3ef-4db0ac7ab530": {
     "lastModified": "2023-12-30T10:09:00.000Z",
-    "slug": "async-pipe-initial-null-problem.en",
+    "slug": "async-pipe-initial-null-problem",
     "filePath": "2020/02/async-pipe-initial-null-problem.en.md"
   },
   "8e70c8ca-2d56-49b0-94b0-02c8332db5c5": {
     "lastModified": "2023-12-30T10:09:00.000Z",
-    "slug": "angular-zoneless-router-activation.en",
+    "slug": "angular-zoneless-router-activation",
     "filePath": "2020/03/angular-zoneless-router-activation.en.md"
   },
   "66159df0-e348-42f1-9a27-5319c346cdc3": {
@@ -911,7 +911,7 @@
   },
   "eb942520-a359-4704-83d7-c4ba864b7ce8": {
     "lastModified": "2023-12-30T10:09:00.000Z",
-    "slug": "angular-elements-composable-definition-pattern.en",
+    "slug": "angular-elements-composable-definition-pattern",
     "filePath": "2020/07/angular-elements-composable-definition-pattern.en.md"
   },
   "09047f7d-f09e-48ec-b004-a98745ede141": {
@@ -921,7 +921,7 @@
   },
   "e2c2dfec-0816-45ec-91da-8e3b41c704ad": {
     "lastModified": "2023-12-30T10:09:00.000Z",
-    "slug": "angular-app-reactiveness.en",
+    "slug": "angular-app-reactiveness",
     "filePath": "2020/03/angular-app-reactiveness.en.md"
   },
   "4552fa97-268f-4c15-b088-766732b2f74c": {
@@ -956,7 +956,7 @@
   },
   "8f425a78-a2da-4952-9537-29fca1cdd4ff": {
     "lastModified": "2023-12-30T10:07:00.000Z",
-    "slug": "angular-ivy-library-compilation-design-in-depth.en",
+    "slug": "angular-ivy-library-compilation-design-in-depth",
     "filePath": "2021/02/angular-ivy-library-compilation-design-in-depth.en.md"
   },
   "ab8e4521-25df-4704-bcc7-aa3da401391d": {
@@ -1073,11 +1073,6 @@
     "lastModified": "2023-12-30T10:06:00.000Z",
     "slug": "two-sides-of-tailwindcss",
     "filePath": "2022/07/two-sides-of-tailwindcss.md"
-  },
-  "bd73a6a1-faae-4e9b-b64f-0e6f4f6d1f15": {
-    "lastModified": "2023-12-30T10:06:00.000Z",
-    "slug": "bd73a6a1-faae-4e9b-b64f-0e6f4f6d1f15",
-    "filePath": "2022/05/bd73a6a1-faae-4e9b-b64f-0e6f4f6d1f15.md"
   },
   "49cd00ee-40f0-44ec-a73c-43f946510dff": {
     "lastModified": "2023-12-30T10:06:00.000Z",
@@ -1391,7 +1386,7 @@
   },
   "2baf74e5-4ee0-4629-bba3-e69952099c3d": {
     "lastModified": "2023-12-30T09:58:00.000Z",
-    "slug": "angular-expansion-directive.en",
+    "slug": "angular-expansion-directive",
     "filePath": "2023/12/angular-expansion-directive.en.md"
   },
   "5cd15f39-e63e-48b7-828e-af1224f8d884": {
@@ -1401,7 +1396,7 @@
   },
   "5ad67d6f-9feb-4970-a107-105bb88d8023": {
     "lastModified": "2023-12-30T09:58:00.000Z",
-    "slug": "angular-input-transforms-for-arrays-in-query-params.en",
+    "slug": "angular-input-transforms-for-arrays-in-query-params",
     "filePath": "2023/12/angular-input-transforms-for-arrays-in-query-params.en.md"
   },
   "b01d0937-931d-4a74-8ff3-1a416346feab": {
@@ -1413,11 +1408,6 @@
     "lastModified": "2025-12-03T10:46:00.000Z",
     "slug": "conventional-comments",
     "filePath": "2025/12/conventional-comments.md"
-  },
-  "80f5c549-39b6-4e7a-b258-25bdb35f1cae": {
-    "lastModified": "2025-11-02T16:00:00.000Z",
-    "slug": "kitchen-sink",
-    "filePath": "2022/02/kitchen-sink.md"
   },
   "15c3521b-014a-8049-92ef-d7d6da2cf925": {
     "lastModified": "2025-06-11T08:36:00.000Z",

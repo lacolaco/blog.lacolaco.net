@@ -1,6 +1,6 @@
 ---
 title: 'Angular: Input Transforms For Arrays In Query Params'
-slug: 'angular-input-transforms-for-arrays-in-query-params.en'
+slug: 'angular-input-transforms-for-arrays-in-query-params'
 icon: ''
 created_time: '2023-12-04T13:19:00.000Z'
 last_edited_time: '2023-12-30T09:58:00.000Z'
@@ -36,7 +36,7 @@ By combining this feature with **Component Input Binding** in the Angular v16 Ro
 
 [There are various patterns for representing arrays as query parameters](https://medium.com/raml-api/arrays-in-query-params-33189628fa68), but when you specify an array value as a query parameter using the `navigate()` method or `RouterLink` in the Router, Angular converts it into the format of repeating the same key parameter multiple times, like `key=param1&key=param2`.
 
-![image](/images/angular-input-transforms-for-arrays-in-query-params.en/Untitled.e0a7f813b2256a74.png)
+![image](/images/angular-input-transforms-for-arrays-in-query-params/Untitled.e0a7f813b2256a74.png)
 
 ```typescript
 @Component({
@@ -70,7 +70,7 @@ bootstrapApplication(App, {
 
 Writing an array type as a query parameter is easy, but reading it from the query parameter requires some consideration. The reason is that in this format, if there is only `query=1`, the information about whether **it was originally an array or not** is lost. In other words, the query parameters generated from a non-array value like `{ query: 1 }` and a length-1 array like `{ query: [1] }` will be the same.
 
-![image](/images/angular-input-transforms-for-arrays-in-query-params.en/Untitled.f0d6ea9c3ed5f663.png)
+![image](/images/angular-input-transforms-for-arrays-in-query-params/Untitled.f0d6ea9c3ed5f663.png)
 
 If you don't keep this in mind, the following naive implementation will throw a runtime error immediately. Although the `query` input property will be set with the value from the query parameter due to the `withComponentInputBinding()` option of the Router, even if it was an array when writing it to the query parameter, if the length is 1, it will become a simple string and the `query.join()` method will throw an error because it doesn't exist for strings.
 
@@ -89,7 +89,7 @@ export class Page {
 
 ```
 
-![image](/images/angular-input-transforms-for-arrays-in-query-params.en/Untitled.2aad59ca4a79b7ea.png)
+![image](/images/angular-input-transforms-for-arrays-in-query-params/Untitled.2aad59ca4a79b7ea.png)
 
 Also, naturally, you need to consider the case where there are no query parameters, so the actual type of this `query` input property should be `string[] | string | undefined`. However, no one wants to deal with an input property of this type. That's where Input Transforms, mentioned at the beginning, come in handy.
 

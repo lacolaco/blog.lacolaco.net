@@ -1,6 +1,6 @@
 ---
 title: 'Angular: Implementing Expansion Directive with CSS Grid'
-slug: 'angular-expansion-directive.en'
+slug: 'angular-expansion-directive'
 icon: ''
 created_time: '2023-12-18T12:53:00.000Z'
 last_edited_time: '2023-12-30T09:58:00.000Z'

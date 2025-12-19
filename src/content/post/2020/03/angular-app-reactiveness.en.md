@@ -1,6 +1,6 @@
 ---
 title: 'Angular: Test Reactiveness with OnPush strategy'
-slug: 'angular-app-reactiveness.en'
+slug: 'angular-app-reactiveness'
 icon: ''
 created_time: '2020-03-18T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'

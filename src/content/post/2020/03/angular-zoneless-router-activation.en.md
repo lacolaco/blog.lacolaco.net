@@ -1,6 +1,6 @@
 ---
 title: 'Zoneless Angular Tip: How To Detect Activated Route Change'
-slug: 'angular-zoneless-router-activation.en'
+slug: 'angular-zoneless-router-activation'
 icon: ''
 created_time: '2020-03-24T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'

@@ -1,6 +1,6 @@
 ---
 title: 'Deep Dive into Angular Components: MatDivider'
-slug: 'deep-dive-angular-components-mat-divider.en'
+slug: 'deep-dive-angular-components-mat-divider'
 icon: ''
 created_time: '2020-05-05T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
