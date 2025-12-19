@@ -1,6 +1,6 @@
 ---
 title: '"Differential Loading" - A New Feature of Angular CLI v8'
-slug: 'differential-loading-a-new-feature-of-angular-cli-v8.en'
+slug: 'differential-loading-a-new-feature-of-angular-cli-v8'
 icon: ''
 created_time: '2019-04-17T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'

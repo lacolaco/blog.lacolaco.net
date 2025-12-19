@@ -11,6 +11,8 @@ import ShareButtons from '../components/ShareButtons.astro';
 import Tag from '../components/Tag.astro';
 import TagList from '../components/TagList.astro';
 import { SITE_TITLE } from '../consts';
+import { queryAvailablePosts } from '@lib/query';
+import { getRelativePostUrl } from '../libs/compat';
 
 type Props = {
   entry: CollectionEntry<'postsV2'>;
@@ -25,6 +27,13 @@ const { slug, title, category, tags, created_time, last_edited_time, locale, can
   entry?.data;
 const isUpdated = differenceInDays(last_edited_time, created_time) > 0;
 const { Content } = await render(entry);
+
+// 言語切り替え用に同じslugの別locale記事を検索
+const allPosts = await queryAvailablePosts();
+const alternateLocalePosts = allPosts.filter(
+  (post) => post.data.slug === entry.data.slug && post.data.locale !== entry.data.locale
+);
+const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] : null;
 ---
 
 <!doctype html>
@@ -78,14 +87,28 @@ const { Content } = await render(entry);
                 {category && <Tag name={category} isCategory />}
                 {tags && tags.map((tag) => <Tag name={tag} />)}
               </TagList>
-              <a
-                href={locale === 'en' ? `/posts/en/${slug}.md` : `/posts/${slug}.md`}
-                class="flex items-center px-3 py-2 md:px-2 md:py-0 text-muted hover:text-default hover:bg-gray-100 transition-colors rounded-sm"
-                title="View as Markdown"
-                aria-label="View as Markdown"
-              >
-                <span class="icon-[simple-icons--markdown] inline-block w-6 h-6"></span>
-              </a>
+              <div class="flex items-center gap-1">
+                {
+                  alternatePost && (
+                    <a
+                      href={getRelativePostUrl(alternatePost)}
+                      class="flex items-center px-3 py-2 md:px-2 md:py-0 text-muted hover:text-default hover:bg-gray-100 transition-colors rounded-sm"
+                      title={`Read in ${alternatePost.data.locale === 'en' ? 'English' : '日本語'}`}
+                      aria-label={`Read in ${alternatePost.data.locale === 'en' ? 'English' : '日本語'}`}
+                    >
+                      <span class="icon-[mdi--translate] inline-block w-6 h-6" />
+                    </a>
+                  )
+                }
+                <a
+                  href={`${getRelativePostUrl(entry)}.md`}
+                  class="flex items-center px-3 py-2 md:px-2 md:py-0 text-muted hover:text-default hover:bg-gray-100 transition-colors rounded-sm"
+                  title="View as Markdown"
+                  aria-label="View as Markdown"
+                >
+                  <span class="icon-[simple-icons--markdown] inline-block w-6 h-6"></span>
+                </a>
+              </div>
             </div>
           </div>
         </header>

@@ -5,10 +5,10 @@ import { queryAvailablePosts, queryAdjacentPosts } from '@lib/query';
 
 export async function getStaticPaths() {
   const posts = await queryAvailablePosts();
-  // 日本語記事のみ（英語記事は [slug].en.astro で処理）
-  const jaPosts = posts.filter((post) => post.data.locale !== 'en');
+  // 英語記事のみ（日本語記事は [slug].astro で処理）
+  const enPosts = posts.filter((post) => post.data.locale === 'en');
 
-  return jaPosts.map((entry) => {
+  return enPosts.map((entry) => {
     // ビルド時に隣接記事を事前計算
     const adjacentPosts = queryAdjacentPosts(posts, entry.data.slug);
     return {

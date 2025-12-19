@@ -76,8 +76,8 @@ importers:
         specifier: ^1.0.0
         version: 1.2.0
       '@lacolaco/notion-sync':
-        specifier: ^2.4.2
-        version: 2.4.2
+        specifier: ^3.0.0
+        version: 3.0.0
       '@notionhq/client':
         specifier: 5.3.0
         version: 5.3.0
@@ -714,8 +714,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@lacolaco/notion-sync@2.4.2':
-    resolution: {integrity: sha512-eNq+gVtEWSKV6qtW923GpSfYJ+g6d+TteoqxnFsJvmSN+XpnFQd54+kWVv9VjLH0O/gHSkNBFrDOiRlW1/uB0g==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/2.4.2/88fd39c45c06d32016fe548931c266728721b62f}
+  '@lacolaco/notion-sync@3.0.0':
+    resolution: {integrity: sha512-25q430Ff0yVDGtl5nLClirUwB6sK2IESbtZ85OKKbuPZIJ+WVcy3FLcGTj5JNm+Vr3MBSJcjrq4BcxboYXJ29Q==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/3.0.0/35ffa1c7e52040c68eace094497818f8ea377de4}
 
   '@mermaid-js/parser@0.6.3':
     resolution: {integrity: sha512-lnjOhe7zyHjc+If7yT4zoedx2vo4sHaTmtkl1+or8BRTnCtDmcTpAjpzDSfCZrshM5bCoz0GyidzadJAH1xobA==}
@@ -3795,8 +3795,8 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
-  zod@4.1.13:
-    resolution: {integrity: sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==}
+  zod@4.2.1:
+    resolution: {integrity: sha512-0wZ1IRqGGhMP76gLqz8EyfBXKk0J2qo2+H3fi4mcUP/KtTocoX08nmIAHl1Z2kJIZbZee8KOpBCSNPRgauucjw==}
 
   zwitch@2.0.4:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
@@ -4352,7 +4352,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@lacolaco/notion-sync@2.4.2':
+  '@lacolaco/notion-sync@3.0.0':
     dependencies:
       '@notionhq/client': 5.3.0
       cli-progress: 3.12.0
@@ -4362,7 +4362,7 @@ snapshots:
       p-retry: 7.1.1
       tslib: 2.8.1
       unist-util-visit: 5.0.0
-      zod: 4.1.13
+      zod: 4.2.1
 
   '@mermaid-js/parser@0.6.3':
     dependencies:
@@ -7846,6 +7846,6 @@ snapshots:
 
   zod@3.25.76: {}
 
-  zod@4.1.13: {}
+  zod@4.2.1: {}
 
   zwitch@2.0.4: {}

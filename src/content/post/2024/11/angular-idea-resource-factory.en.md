@@ -1,6 +1,6 @@
 ---
 title: 'Angular implementation idea: Resource Factory '
-slug: 'angular-idea-resource-factory.en'
+slug: 'angular-idea-resource-factory'
 icon: ''
 created_time: '2024-11-16T01:24:00.000Z'
 last_edited_time: '2024-11-16T01:26:00.000Z'

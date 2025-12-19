@@ -5,7 +5,8 @@ export function getDate(post: CollectionEntry<'postsV2'>): Date {
 }
 
 export function getRelativePostUrl(post: CollectionEntry<'postsV2'>): string {
-  return `/posts/${post.data.slug}`;
+  const localeSuffix = post.data.locale === 'en' ? '.en' : '';
+  return `/posts/${post.data.slug}${localeSuffix}`;
 }
 
 export function getTitle(post: CollectionEntry<'postsV2'>): string {

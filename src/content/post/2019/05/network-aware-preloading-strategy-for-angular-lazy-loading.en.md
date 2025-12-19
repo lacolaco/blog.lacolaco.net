@@ -1,6 +1,6 @@
 ---
 title: 'Network-aware Preloading Strategy for Angular Lazy Loading'
-slug: 'network-aware-preloading-strategy-for-angular-lazy-loading.en'
+slug: 'network-aware-preloading-strategy-for-angular-lazy-loading'
 icon: ''
 created_time: '2019-05-11T00:00:00.000Z'
 last_edited_time: '2023-12-30T10:09:00.000Z'
