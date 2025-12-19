@@ -161,16 +161,8 @@ export async function fetchPageMetadata(url: string): Promise<PageMetadata> {
     };
   } catch (error) {
     console.error(`Failed to fetch ${url}:`, error);
-
-    let fallbackTitle: string;
-    try {
-      fallbackTitle = new URL(url).hostname;
-    } catch {
-      fallbackTitle = url;
-    }
-
     return {
-      title: fallbackTitle,
+      title: url,
       description: '',
       imageUrl: null,
       cacheControl: 'max-age=60, must-revalidate',

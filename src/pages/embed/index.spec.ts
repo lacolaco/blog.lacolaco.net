@@ -57,7 +57,7 @@ describe('fetchPageMetadata', () => {
     const result = await fetchPageMetadata('https://example.com/notfound');
 
     expect(result).toEqual({
-      title: 'example.com',
+      title: 'https://example.com/notfound',
       description: '',
       imageUrl: null,
       cacheControl: 'max-age=60, must-revalidate',
@@ -77,7 +77,7 @@ describe('fetchPageMetadata', () => {
     const result = await fetchPageMetadata('https://example.com');
 
     expect(result).toEqual({
-      title: 'example.com',
+      title: 'https://example.com',
       description: '',
       imageUrl: null,
       cacheControl: 'max-age=60, must-revalidate',
@@ -118,7 +118,7 @@ describe('fetchPageMetadata', () => {
 
     const result = await fetchPageMetadata('invalid-url');
 
-    // 無効なURLの場合、URLパースに失敗してもurl自体を返す
+    // エラー時はurl自体を返す
     expect(result.title).toBe('invalid-url');
     expect(result.cacheControl).toBe('max-age=60, must-revalidate');
   });
