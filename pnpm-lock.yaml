@@ -53,6 +53,9 @@ importers:
       mermaid:
         specifier: 11.12.1
         version: 11.12.1
+      p-retry:
+        specifier: ^7.1.1
+        version: 7.1.1
       react:
         specifier: 19.2.0
         version: 19.2.0

@@ -1,5 +1,6 @@
 import type { APIContext } from 'astro';
 import { load, type CheerioAPI } from 'cheerio';
+import pRetry, { AbortError } from 'p-retry';
 
 export const prerender = false;
 
@@ -102,23 +103,55 @@ function extractImageUrl($: CheerioAPI): string | null {
 async function fetchPageMetadata(url: string): Promise<PageMetadata> {
   const config = getFetchConfig(url);
 
-  const response = await fetch(url, {
-    headers: {
-      'user-agent': config.userAgent,
-      accept: 'text/html',
-      'accept-charset': 'utf-8',
-    },
-  });
+  try {
+    const response = await pRetry(
+      async () => {
+        const res = await fetch(url, {
+          headers: {
+            'user-agent': config.userAgent,
+            accept: 'text/html',
+            'accept-charset': 'utf-8',
+          },
+        });
 
-  const html = await response.text();
-  const $ = load(html);
+        // 4xx系エラーはリトライしない
+        if (res.status >= 400 && res.status < 500) {
+          throw new AbortError(`Client error: ${res.status}`);
+        }
 
-  return {
-    title: extractTitle($, url),
-    description: extractDescription($),
-    imageUrl: extractImageUrl($),
-    cacheControl: response.headers.get('cache-control'),
-  };
+        // 5xx系エラーはリトライ対象
+        if (!res.ok) {
+          throw new Error(`Server error: ${res.status}`);
+        }
+
+        return res;
+      },
+      {
+        retries: 3,
+        onFailedAttempt: (error) => {
+          console.warn(`Retry ${error.attemptNumber}/3: ${url}`);
+        },
+      },
+    );
+
+    const html = await response.text();
+    const $ = load(html);
+
+    return {
+      title: extractTitle($, url),
+      description: extractDescription($),
+      imageUrl: extractImageUrl($),
+      cacheControl: response.headers.get('cache-control'),
+    };
+  } catch (error) {
+    console.error(`Failed to fetch ${url}:`, error);
+    return {
+      title: new URL(url).hostname,
+      description: '',
+      imageUrl: null,
+      cacheControl: 'no-cache, max-age=60',
+    };
+  }
 }
 
 function getEmbedStyles(): string {
