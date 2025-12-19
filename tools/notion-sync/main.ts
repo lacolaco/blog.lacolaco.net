@@ -1,6 +1,7 @@
 import { syncNotionBlog, type PostMetadata, type RenderContext } from '@lacolaco/notion-sync';
 import { parseArgs } from 'node:util';
 import { format } from 'date-fns';
+import { TZDate } from '@date-fns/tz';
 
 // features検出用の型定義
 type FeatureState = {
@@ -70,7 +71,7 @@ const result = await syncNotionBlog({
     // category=diaryかつslugがページID（空デフォルト）の場合、作成日時をslugとする
     let slug = metadata.slug;
     if (metadata.category?.toLowerCase() === 'diary' && slug === page.id) {
-      const createdTime = new Date(metadata.created_time);
+      const createdTime = new TZDate(metadata.created_time, 'Asia/Tokyo');
       slug = format(createdTime, 'yyyyMMddHHmmss');
     }
 
