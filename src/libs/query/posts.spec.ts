@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { queryAdjacentPosts } from './posts';
+import { queryAdjacentPosts, deduplicatePosts } from './posts';
 import type { CollectionEntry } from 'astro:content';
 
 // テスト用のモックデータを作成するヘルパー関数
@@ -27,6 +27,32 @@ function createMockPost(
       notion_url: 'https://notion.so/test',
     },
   } as CollectionEntry<'postsV2'>;
+}
+
+// 英語版の投稿を作成するヘルパー関数
+function createMockEnPost(
+  slug: string,
+  category: string,
+  createdTime: Date,
+): CollectionEntry<'postsV2En'> {
+  return {
+    id: `${slug}.en.md`,
+    slug,
+    body: '',
+    collection: 'postsV2En',
+    data: {
+      slug,
+      title: `Test Post ${slug} (EN)`,
+      icon: '📝',
+      created_time: createdTime,
+      last_edited_time: createdTime,
+      category,
+      tags: [],
+      published: true,
+      locale: 'en',
+      notion_url: 'https://notion.so/test',
+    },
+  } as CollectionEntry<'postsV2En'>;
 }
 
 describe('queryAdjacentPosts', () => {
@@ -151,5 +177,81 @@ describe('queryAdjacentPosts', () => {
 
     expect(result.prev).toBeNull();
     expect(result.next).toBeNull();
+  });
+});
+
+describe('deduplicatePosts', () => {
+  it('同じslugを持つ日本語版と英語版がある場合、日本語版のみが残る', () => {
+    const posts = [
+      createMockPost('post-1', 'tech', new Date('2023-01-01'), 'ja'),
+      createMockEnPost('post-1', 'tech', new Date('2023-01-01')),
+    ];
+
+    const result = deduplicatePosts(posts);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].data.locale).toBe('ja');
+    expect(result[0].data.slug).toBe('post-1');
+  });
+
+  it('英語版のみの投稿は残る', () => {
+    const posts = [
+      createMockPost('post-1', 'tech', new Date('2023-01-01'), 'ja'),
+      createMockEnPost('post-2', 'tech', new Date('2023-01-02')),
+    ];
+
+    const result = deduplicatePosts(posts);
+
+    expect(result).toHaveLength(2);
+    expect(result.find((p) => p.data.slug === 'post-1')?.data.locale).toBe('ja');
+    expect(result.find((p) => p.data.slug === 'post-2')?.data.locale).toBe('en');
+  });
+
+  it('日本語版のみの投稿は残る', () => {
+    const posts = [
+      createMockPost('post-1', 'tech', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-2', 'tech', new Date('2023-01-02'), 'ja'),
+    ];
+
+    const result = deduplicatePosts(posts);
+
+    expect(result).toHaveLength(2);
+    expect(result[0].data.locale).toBe('ja');
+    expect(result[1].data.locale).toBe('ja');
+  });
+
+  it('複数の記事で日英両方がある場合、それぞれ日本語版のみが残る', () => {
+    const posts = [
+      createMockPost('post-1', 'tech', new Date('2023-01-01'), 'ja'),
+      createMockEnPost('post-1', 'tech', new Date('2023-01-01')),
+      createMockPost('post-2', 'tech', new Date('2023-01-02'), 'ja'),
+      createMockEnPost('post-2', 'tech', new Date('2023-01-02')),
+      createMockPost('post-3', 'tech', new Date('2023-01-03'), 'ja'),
+    ];
+
+    const result = deduplicatePosts(posts);
+
+    expect(result).toHaveLength(3);
+    expect(result.every((p) => p.data.locale === 'ja')).toBe(true);
+  });
+
+  it('空の配列の場合、空の配列が返る', () => {
+    const posts: Array<CollectionEntry<'postsV2' | 'postsV2En'>> = [];
+
+    const result = deduplicatePosts(posts);
+
+    expect(result).toHaveLength(0);
+  });
+
+  it('重複がない場合、全ての投稿が残る', () => {
+    const posts = [
+      createMockPost('post-1', 'tech', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-2', 'tech', new Date('2023-01-02'), 'ja'),
+      createMockEnPost('post-3', 'tech', new Date('2023-01-03')),
+    ];
+
+    const result = deduplicatePosts(posts);
+
+    expect(result).toHaveLength(3);
   });
 });

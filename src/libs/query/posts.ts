@@ -20,6 +20,36 @@ export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'post
 }
 
 /**
+ * 重複する記事を除外する
+ * 同じslugを持つ記事が複数ある場合、日本語版（locale: 'ja'）を優先し、英語版を除外する
+ */
+export function deduplicatePosts(
+  posts: Array<CollectionEntry<'postsV2' | 'postsV2En'>>,
+): Array<CollectionEntry<'postsV2' | 'postsV2En'>> {
+  // slugごとに記事をグループ化
+  const postsBySlug = new Map<string, Array<CollectionEntry<'postsV2' | 'postsV2En'>>>();
+
+  for (const post of posts) {
+    const slug = post.data.slug;
+    if (!postsBySlug.has(slug)) {
+      postsBySlug.set(slug, []);
+    }
+    postsBySlug.get(slug)!.push(post);
+  }
+
+  // 各slugグループから日本語版を優先的に選択
+  const deduplicatedPosts: Array<CollectionEntry<'postsV2' | 'postsV2En'>> = [];
+
+  for (const postsGroup of postsBySlug.values()) {
+    // 日本語版があればそれを使用、なければ最初の記事を使用
+    const jaPost = postsGroup.find((post) => post.data.locale === 'ja');
+    deduplicatedPosts.push(jaPost ?? postsGroup[0]);
+  }
+
+  return deduplicatedPosts;
+}
+
+/**
  * 時系列順に前後の記事を取得する
  * カテゴリやロケールは区別しない
  */

@@ -1,10 +1,11 @@
 import rss from '@astrojs/rss';
-import { queryAvailablePosts } from '@lib/query';
+import { queryAvailablePosts, deduplicatePosts } from '@lib/query';
 import type { APIContext } from 'astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 export async function GET(context: APIContext) {
-  const posts = await queryAvailablePosts();
+  const allPosts = await queryAvailablePosts();
+  const posts = deduplicatePosts(allPosts);
 
   return rss({
     title: SITE_TITLE,
