@@ -1,31 +1,36 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fetchPageMetadata } from './index';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 
-// fetchをモック
-const mockFetch = vi.fn();
-vi.stubGlobal('fetch', mockFetch);
+// undici.requestをモック
+vi.mock('undici', () => ({
+  request: vi.fn(),
+}));
+
+import { fetchPageMetadata } from './fetchPageMetadata';
+import { request } from 'undici';
+
+const mockRequest = request as unknown as Mock;
 
 describe('fetchPageMetadata', () => {
   beforeEach(() => {
-    mockFetch.mockReset();
+    mockRequest.mockReset();
     vi.clearAllTimers();
   });
 
   it('5xxエラーでリトライして成功する', async () => {
     // 1回目: 503エラー
     // 2回目: 成功
-    mockFetch
+    mockRequest
       .mockResolvedValueOnce({
-        ok: false,
-        status: 503,
-        headers: new Headers(),
+        statusCode: 503,
+        headers: {},
+        body: { text: () => Promise.resolve('') },
       })
       .mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-        headers: new Headers({ 'cache-control': 'max-age=3600' }),
-        text: () =>
-          Promise.resolve(`
+        statusCode: 200,
+        headers: { 'cache-control': 'max-age=3600' },
+        body: {
+          text: () =>
+            Promise.resolve(`
           <html>
             <head>
               <title>Test Title</title>
@@ -34,6 +39,7 @@ describe('fetchPageMetadata', () => {
             </head>
           </html>
         `),
+        },
       });
 
     const result = await fetchPageMetadata('https://example.com');
@@ -44,14 +50,14 @@ describe('fetchPageMetadata', () => {
       imageUrl: 'https://example.com/image.jpg',
       cacheControl: 'max-age=3600',
     });
-    expect(mockFetch).toHaveBeenCalledTimes(2);
+    expect(mockRequest).toHaveBeenCalledTimes(2);
   });
 
   it('4xxエラーでリトライせずAbortする', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      status: 404,
-      headers: new Headers(),
+    mockRequest.mockResolvedValueOnce({
+      statusCode: 404,
+      headers: {},
+      body: { text: () => Promise.resolve('') },
     });
 
     const result = await fetchPageMetadata('https://example.com/notfound');
@@ -63,15 +69,15 @@ describe('fetchPageMetadata', () => {
       cacheControl: 'max-age=60, must-revalidate',
     });
     // 4xxエラーなので1回のみ（リトライしない）
-    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(mockRequest).toHaveBeenCalledTimes(1);
   });
 
   it('全リトライ失敗でフォールバックする', async () => {
     // 3回とも503エラー
-    mockFetch.mockResolvedValue({
-      ok: false,
-      status: 503,
-      headers: new Headers(),
+    mockRequest.mockResolvedValue({
+      statusCode: 503,
+      headers: {},
+      body: { text: () => Promise.resolve('') },
     });
 
     const result = await fetchPageMetadata('https://example.com');
@@ -83,38 +89,35 @@ describe('fetchPageMetadata', () => {
       cacheControl: 'max-age=60, must-revalidate',
     });
     // 初回 + 3回リトライ = 4回
-    expect(mockFetch).toHaveBeenCalledTimes(4);
+    expect(mockRequest).toHaveBeenCalledTimes(4);
   });
 
   it('ネットワークエラーでリトライする', async () => {
     // 1回目: ネットワークエラー
     // 2回目: 成功
-    mockFetch.mockRejectedValueOnce(new Error('Network error')).mockResolvedValueOnce({
-      ok: true,
-      status: 200,
-      headers: new Headers(),
-      text: () =>
-        Promise.resolve(`
+    mockRequest.mockRejectedValueOnce(new Error('Network error')).mockResolvedValueOnce({
+      statusCode: 200,
+      headers: {},
+      body: {
+        text: () =>
+          Promise.resolve(`
           <html>
             <head>
               <title>Recovered Title</title>
             </head>
           </html>
         `),
+      },
     });
 
     const result = await fetchPageMetadata('https://example.com');
 
     expect(result.title).toBe('Recovered Title');
-    expect(mockFetch).toHaveBeenCalledTimes(2);
+    expect(mockRequest).toHaveBeenCalledTimes(2);
   });
 
   it('無効なURLでもエラーをスローせずフォールバックする', async () => {
-    mockFetch.mockResolvedValue({
-      ok: false,
-      status: 503,
-      headers: new Headers(),
-    });
+    mockRequest.mockRejectedValue(new Error('Invalid URL'));
 
     const result = await fetchPageMetadata('invalid-url');
 
