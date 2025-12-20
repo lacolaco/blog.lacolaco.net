@@ -1,15 +1,16 @@
 import rss from '@astrojs/rss';
-import { queryAvailablePosts, queryCategories } from '@lib/query';
+import { queryAvailablePosts, queryCategories, deduplicatePosts } from '@lib/query';
 import type { APIContext } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 import { urlize } from '../../libs/strings';
 
 export async function getStaticPaths() {
-  const posts = await queryAvailablePosts();
+  const allPosts = await queryAvailablePosts();
+  const posts = deduplicatePosts(allPosts);
   const categories = queryCategories();
 
-  function hasCategory(categoryName: string, post: CollectionEntry<'postsV2'>): boolean {
+  function hasCategory(categoryName: string, post: CollectionEntry<'postsV2' | 'postsV2En'>): boolean {
     return post.data.category === categoryName;
   }
 
@@ -25,7 +26,7 @@ export async function getStaticPaths() {
 
 type Props = {
   category: string;
-  posts: Array<CollectionEntry<'postsV2'>>;
+  posts: Array<CollectionEntry<'postsV2' | 'postsV2En'>>;
 };
 
 export async function GET(context: APIContext<Props>) {

@@ -1,12 +1,13 @@
 import rss from '@astrojs/rss';
-import { queryAvailablePosts, queryTags } from '@lib/query';
+import { queryAvailablePosts, queryTags, deduplicatePosts } from '@lib/query';
 import type { APIContext } from 'astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 import { urlize } from '../../libs/strings';
 import type { CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
-  const posts = await queryAvailablePosts();
+  const allPosts = await queryAvailablePosts();
+  const posts = deduplicatePosts(allPosts);
   const tags = queryTags();
 
   return tags.map((tag) => {
@@ -23,7 +24,7 @@ export async function getStaticPaths() {
 
 type Props = {
   tag: string;
-  posts: Array<CollectionEntry<'postsV2'>>;
+  posts: Array<CollectionEntry<'postsV2' | 'postsV2En'>>;
 };
 
 export async function GET(context: APIContext<Props>) {

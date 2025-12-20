@@ -20,6 +20,31 @@ export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'post
 }
 
 /**
+ * 重複する記事を除外する
+ * 同じslugを持つ記事が複数ある場合、日本語版（locale: 'ja'）を優先し、英語版を除外する
+ */
+export function deduplicatePosts(
+  posts: Array<CollectionEntry<'postsV2' | 'postsV2En'>>,
+): Array<CollectionEntry<'postsV2' | 'postsV2En'>> {
+  const seen = new Set<string>();
+  const deduplicatedPosts: Array<CollectionEntry<'postsV2' | 'postsV2En'>> = [];
+
+  for (const post of posts) {
+    const slug = post.data.slug;
+    if (seen.has(slug)) {
+      continue;
+    }
+    seen.add(slug);
+
+    // 同じslugの日本語版を優先して探す
+    const jaPost = posts.find((p) => p.data.slug === slug && p.data.locale === 'ja');
+    deduplicatedPosts.push(jaPost ?? post);
+  }
+
+  return deduplicatedPosts;
+}
+
+/**
  * 時系列順に前後の記事を取得する
  * カテゴリやロケールは区別しない
  */
