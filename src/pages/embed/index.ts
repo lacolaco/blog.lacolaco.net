@@ -9,8 +9,8 @@ export const prerender = false;
 const DEFAULT_CACHE_MAX_AGE = 60 * 60; // 1 hour
 const FETCH_TIMEOUT_MS = 10000; // 10 seconds per request
 const AMAZON_URL_PREFIXES = ['https://www.amazon.co.jp/', 'https://amzn.asia/'];
-const GOOGLEBOT_USER_AGENT =
-  'Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/W.X.Y.Z Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)';
+const CHROME_USER_AGENT =
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
 const DEFAULT_USER_AGENT = 'blog.lacolaco.net';
 
 // 型定義
@@ -55,7 +55,7 @@ export async function GET(context: APIContext): Promise<Response> {
 function getFetchConfig(url: string): FetchConfig {
   const isAmazonRequest = AMAZON_URL_PREFIXES.some((domain) => url.startsWith(domain));
   return {
-    userAgent: isAmazonRequest ? GOOGLEBOT_USER_AGENT : DEFAULT_USER_AGENT,
+    userAgent: isAmazonRequest ? CHROME_USER_AGENT : DEFAULT_USER_AGENT,
     cacheTtl: DEFAULT_CACHE_MAX_AGE,
   };
 }
