@@ -115,9 +115,10 @@ export async function fetchPageMetadata(url: string): Promise<PageMetadata> {
           const res = await fetch(url, {
             signal: controller.signal,
             headers: {
-              'user-agent': config.userAgent,
-              accept: 'text/html',
-              'accept-charset': 'utf-8',
+              'User-Agent': config.userAgent,
+              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+              'Accept-Language': 'ja,en-US;q=0.9,en;q=0.8',
+              'Accept-Charset': 'utf-8',
             },
           });
 
