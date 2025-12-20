@@ -26,24 +26,19 @@ export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'post
 export function deduplicatePosts(
   posts: Array<CollectionEntry<'postsV2' | 'postsV2En'>>,
 ): Array<CollectionEntry<'postsV2' | 'postsV2En'>> {
-  // slugごとに記事をグループ化
-  const postsBySlug = new Map<string, Array<CollectionEntry<'postsV2' | 'postsV2En'>>>();
+  const seen = new Set<string>();
+  const deduplicatedPosts: Array<CollectionEntry<'postsV2' | 'postsV2En'>> = [];
 
   for (const post of posts) {
     const slug = post.data.slug;
-    if (!postsBySlug.has(slug)) {
-      postsBySlug.set(slug, []);
+    if (seen.has(slug)) {
+      continue;
     }
-    postsBySlug.get(slug)!.push(post);
-  }
+    seen.add(slug);
 
-  // 各slugグループから日本語版を優先的に選択
-  const deduplicatedPosts: Array<CollectionEntry<'postsV2' | 'postsV2En'>> = [];
-
-  for (const postsGroup of postsBySlug.values()) {
-    // 日本語版があればそれを使用、なければ最初の記事を使用
-    const jaPost = postsGroup.find((post) => post.data.locale === 'ja');
-    deduplicatedPosts.push(jaPost ?? postsGroup[0]);
+    // 同じslugの日本語版を優先して探す
+    const jaPost = posts.find((p) => p.data.slug === slug && p.data.locale === 'ja');
+    deduplicatedPosts.push(jaPost ?? post);
   }
 
   return deduplicatedPosts;

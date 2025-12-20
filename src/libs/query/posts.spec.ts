@@ -30,11 +30,7 @@ function createMockPost(
 }
 
 // 英語版の投稿を作成するヘルパー関数
-function createMockEnPost(
-  slug: string,
-  category: string,
-  createdTime: Date,
-): CollectionEntry<'postsV2En'> {
+function createMockEnPost(slug: string, category: string, createdTime: Date): CollectionEntry<'postsV2En'> {
   return {
     id: `${slug}.en.md`,
     slug,
@@ -253,5 +249,24 @@ describe('deduplicatePosts', () => {
     const result = deduplicatePosts(posts);
 
     expect(result).toHaveLength(3);
+  });
+
+  it('重複除外時に元の配列の順序を維持する', () => {
+    const posts = [
+      createMockPost('post-3', 'tech', new Date('2023-01-03'), 'ja'),
+      createMockEnPost('post-3', 'tech', new Date('2023-01-03')),
+      createMockPost('post-2', 'tech', new Date('2023-01-02'), 'ja'),
+      createMockPost('post-1', 'tech', new Date('2023-01-01'), 'ja'),
+      createMockEnPost('post-1', 'tech', new Date('2023-01-01')),
+    ];
+
+    const result = deduplicatePosts(posts);
+
+    // 元の配列の順序（post-3, post-2, post-1）が維持されることを確認
+    expect(result).toHaveLength(3);
+    expect(result[0].data.slug).toBe('post-3');
+    expect(result[1].data.slug).toBe('post-2');
+    expect(result[2].data.slug).toBe('post-1');
+    expect(result.every((p) => p.data.locale === 'ja')).toBe(true);
   });
 });
