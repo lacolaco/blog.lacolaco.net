@@ -44,6 +44,7 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "satori": "^0.18.3",
+    "undici": "^7.16.0",
     "unist-util-visit": "^5.0.0",
     "yaml": "^2.8.0"
   },

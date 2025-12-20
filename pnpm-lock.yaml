@@ -68,6 +68,9 @@ importers:
       satori:
         specifier: ^0.18.3
         version: 0.18.3
+      undici:
+        specifier: ^7.16.0
+        version: 7.16.0
       unist-util-visit:
         specifier: ^5.0.0
         version: 5.0.0
