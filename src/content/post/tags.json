@@ -616,5 +616,11 @@
     "name": "文房具",
     "color": "blue",
     "description": null
+  },
+  {
+    "id": "340ca90d-dfc8-49fa-9ab5-baed5cf29977",
+    "name": "組織論",
+    "color": "green",
+    "description": null
   }
 ]
