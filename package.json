@@ -39,7 +39,7 @@
     "date-fns": "4.1.0",
     "escape-html": "^1.0.3",
     "katex": "0.16.27",
-    "mermaid": "11.12.1",
+    "mermaid": "11.12.2",
     "p-retry": "^7.1.1",
     "react": "19.2.0",
     "react-dom": "19.2.0",
