@@ -54,8 +54,8 @@ importers:
         specifier: 0.16.27
         version: 0.16.27
       mermaid:
-        specifier: 11.12.1
-        version: 11.12.1
+        specifier: 11.12.2
+        version: 11.12.2
       p-retry:
         specifier: ^7.1.1
         version: 7.1.1
@@ -2733,8 +2733,8 @@ packages:
       playwright:
         optional: true
 
-  mermaid@11.12.1:
-    resolution: {integrity: sha512-UlIZrRariB11TY1RtTgUWp65tphtBv4CSq7vyS2ZZ2TgoMjs2nloq+wFqxiwcxlhHUvs7DPGgMjs2aeQxz5h9g==}
+  mermaid@11.12.2:
+    resolution: {integrity: sha512-n34QPDPEKmaeCG4WDMGy0OT6PSyxKCfy2pJgShP+Qow2KLrvWjclwbc3yXfSIf4BanqWEhQEpngWwNp/XhZt6w==}
 
   micromark-core-commonmark@2.0.0:
     resolution: {integrity: sha512-jThOz/pVmAYUtkroV3D5c1osFXAMv9e0ypGDOIZuCeAe91/sD6BoE2Sjzt30yuXtwOYUmySOhMas/PVyh02itA==}
@@ -6608,13 +6608,13 @@ snapshots:
   mermaid-isomorphic@3.0.4(playwright@1.55.0):
     dependencies:
       '@fortawesome/fontawesome-free': 6.7.2
-      mermaid: 11.12.1
+      mermaid: 11.12.2
     optionalDependencies:
       playwright: 1.55.0
     transitivePeerDependencies:
       - supports-color
 
-  mermaid@11.12.1:
+  mermaid@11.12.2:
     dependencies:
       '@braintree/sanitize-url': 7.1.1
       '@iconify/utils': 3.0.2
