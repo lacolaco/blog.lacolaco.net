@@ -622,5 +622,11 @@
     "name": "組織論",
     "color": "green",
     "description": null
+  },
+  {
+    "id": "142b0b70-3300-4039-bed6-0e97cd063bc6",
+    "name": "アドベントカレンダー",
+    "color": "yellow",
+    "description": null
   }
 ]
