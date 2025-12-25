@@ -41,8 +41,8 @@
     "katex": "0.16.27",
     "mermaid": "11.12.2",
     "p-retry": "^7.1.1",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "satori": "^0.18.3",
     "unist-util-visit": "^5.0.0",
     "yaml": "^2.8.0"
