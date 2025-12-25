@@ -3,13 +3,14 @@ title: 'Angular: provideHttpClient はもう不要（でも必要）'
 slug: 'angular-provide-http-client-by-default'
 icon: ''
 created_time: '2025-12-24T16:12:00.000Z'
-last_edited_time: '2025-12-24T16:16:00.000Z'
+last_edited_time: '2025-12-25T00:06:00.000Z'
 tags:
   - 'Angular'
   - 'アドベントカレンダー'
 published: true
 locale: 'ja'
 category: 'Tech'
+canonical_url: 'https://zenn.dev/lacolaco/articles/angular-provide-http-client-by-default'
 notion_url: 'https://www.notion.so/Angular-provideHttpClient-2d33521b014a80b6b3aed7578424fcc0'
 features:
   katex: false
