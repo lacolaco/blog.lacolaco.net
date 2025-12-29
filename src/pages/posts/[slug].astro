@@ -23,10 +23,10 @@ export async function getStaticPaths() {
   });
 }
 type Props = {
-  entry: CollectionEntry<'postsV2'>;
+  entry: CollectionEntry<'posts'>;
   adjacentPosts: {
-    prev: CollectionEntry<'postsV2'> | null;
-    next: CollectionEntry<'postsV2'> | null;
+    prev: CollectionEntry<'posts'> | null;
+    next: CollectionEntry<'posts'> | null;
   };
 };
 const { entry, adjacentPosts } = Astro.props;

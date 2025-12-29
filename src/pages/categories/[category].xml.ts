@@ -10,7 +10,7 @@ export async function getStaticPaths() {
   const posts = deduplicatePosts(allPosts);
   const categories = queryCategories();
 
-  function hasCategory(categoryName: string, post: CollectionEntry<'postsV2' | 'postsV2En'>): boolean {
+  function hasCategory(categoryName: string, post: CollectionEntry<'posts' | 'postsEn'>): boolean {
     return post.data.category === categoryName;
   }
 
@@ -26,7 +26,7 @@ export async function getStaticPaths() {
 
 type Props = {
   category: string;
-  posts: Array<CollectionEntry<'postsV2' | 'postsV2En'>>;
+  posts: Array<CollectionEntry<'posts' | 'postsEn'>>;
 };
 
 export async function GET(context: APIContext<Props>) {

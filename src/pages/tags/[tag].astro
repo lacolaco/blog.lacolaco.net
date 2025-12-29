@@ -22,7 +22,7 @@ export async function getStaticPaths() {
 
 type Props = {
   tag: string;
-  posts: Array<CollectionEntry<'postsV2'>>;
+  posts: Array<CollectionEntry<'posts'>>;
 };
 
 const { tag, posts } = Astro.props;

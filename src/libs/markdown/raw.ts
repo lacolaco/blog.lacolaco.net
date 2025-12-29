@@ -5,7 +5,7 @@ import yaml from 'yaml';
  * Content Collectionのentryからraw Markdownを取得
  * entry.dataから必要なフィールドのみを選択してFrontmatterを構築し、entry.bodyと結合する
  */
-export function readRawMarkdown(entry: CollectionEntry<'postsV2'>): string {
+export function readRawMarkdown(entry: CollectionEntry<'posts'>): string {
   if (!entry.body) {
     throw new Error(`Entry ${entry.id} has no body`);
   }

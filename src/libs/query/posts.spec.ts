@@ -8,12 +8,12 @@ function createMockPost(
   category: string,
   createdTime: Date,
   locale: string = 'ja',
-): CollectionEntry<'postsV2'> {
+): CollectionEntry<'posts'> {
   return {
     id: `${slug}.md`,
     slug,
     body: '',
-    collection: 'postsV2',
+    collection: 'posts',
     data: {
       slug,
       title: `Test Post ${slug}`,
@@ -26,16 +26,16 @@ function createMockPost(
       locale,
       notion_url: 'https://notion.so/test',
     },
-  } as CollectionEntry<'postsV2'>;
+  } as CollectionEntry<'posts'>;
 }
 
 // 英語版の投稿を作成するヘルパー関数
-function createMockEnPost(slug: string, category: string, createdTime: Date): CollectionEntry<'postsV2En'> {
+function createMockEnPost(slug: string, category: string, createdTime: Date): CollectionEntry<'postsEn'> {
   return {
     id: `${slug}.en.md`,
     slug,
     body: '',
-    collection: 'postsV2En',
+    collection: 'postsEn',
     data: {
       slug,
       title: `Test Post ${slug} (EN)`,
@@ -48,7 +48,7 @@ function createMockEnPost(slug: string, category: string, createdTime: Date): Co
       locale: 'en',
       notion_url: 'https://notion.so/test',
     },
-  } as CollectionEntry<'postsV2En'>;
+  } as CollectionEntry<'postsEn'>;
 }
 
 describe('queryAdjacentPosts', () => {
@@ -167,7 +167,7 @@ describe('queryAdjacentPosts', () => {
   });
 
   it('空の配列の場合、両方nullになる', () => {
-    const posts: Array<CollectionEntry<'postsV2'>> = [];
+    const posts: Array<CollectionEntry<'posts'>> = [];
 
     const result = queryAdjacentPosts(posts, 'post-1');
 
@@ -232,7 +232,7 @@ describe('deduplicatePosts', () => {
   });
 
   it('空の配列の場合、空の配列が返る', () => {
-    const posts: Array<CollectionEntry<'postsV2' | 'postsV2En'>> = [];
+    const posts: Array<CollectionEntry<'posts' | 'postsEn'>> = [];
 
     const result = deduplicatePosts(posts);
 

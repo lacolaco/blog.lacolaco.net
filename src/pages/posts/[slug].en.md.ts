@@ -19,7 +19,7 @@ export async function getStaticPaths() {
 }
 
 type Props = {
-  entry: CollectionEntry<'postsV2'>;
+  entry: CollectionEntry<'posts'>;
 };
 
 export function GET({ props }: APIContext<Props>) {

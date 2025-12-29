@@ -24,7 +24,7 @@ export async function getStaticPaths() {
 
 type Props = {
   tag: string;
-  posts: Array<CollectionEntry<'postsV2' | 'postsV2En'>>;
+  posts: Array<CollectionEntry<'posts' | 'postsEn'>>;
 };
 
 export async function GET(context: APIContext<Props>) {

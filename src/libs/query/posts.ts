@@ -1,10 +1,10 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { compareDesc, compareAsc, isPast } from 'date-fns';
 
-export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'postsV2' | 'postsV2En'>>> {
-  const postsV2 = await getCollection('postsV2');
-  const postsV2En = await getCollection('postsV2En');
-  const allPosts = [...postsV2, ...postsV2En];
+export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'posts' | 'postsEn'>>> {
+  const posts = await getCollection('posts');
+  const postsEn = await getCollection('postsEn');
+  const allPosts = [...posts, ...postsEn];
 
   const availablePosts = allPosts
     .filter((entry) => {
@@ -24,10 +24,10 @@ export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'post
  * 同じslugを持つ記事が複数ある場合、日本語版（locale: 'ja'）を優先し、英語版を除外する
  */
 export function deduplicatePosts(
-  posts: Array<CollectionEntry<'postsV2' | 'postsV2En'>>,
-): Array<CollectionEntry<'postsV2' | 'postsV2En'>> {
+  posts: Array<CollectionEntry<'posts' | 'postsEn'>>,
+): Array<CollectionEntry<'posts' | 'postsEn'>> {
   const seen = new Set<string>();
-  const deduplicatedPosts: Array<CollectionEntry<'postsV2' | 'postsV2En'>> = [];
+  const deduplicatedPosts: Array<CollectionEntry<'posts' | 'postsEn'>> = [];
 
   for (const post of posts) {
     const slug = post.data.slug;
@@ -49,9 +49,9 @@ export function deduplicatePosts(
  * カテゴリやロケールは区別しない
  */
 export function queryAdjacentPosts(
-  posts: Array<CollectionEntry<'postsV2'>>,
+  posts: Array<CollectionEntry<'posts'>>,
   currentSlug: string,
-): { prev: CollectionEntry<'postsV2'> | null; next: CollectionEntry<'postsV2'> | null } {
+): { prev: CollectionEntry<'posts'> | null; next: CollectionEntry<'posts'> | null } {
   // 時系列順（古い順）にソート
   const sortedPosts = [...posts].sort((a, b) => compareAsc(a.data.created_time, b.data.created_time));
 

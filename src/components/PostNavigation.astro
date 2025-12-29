@@ -3,8 +3,8 @@ import type { CollectionEntry } from 'astro:content';
 import { getRelativePostUrl } from '../libs/compat';
 
 type Props = {
-  prev: CollectionEntry<'postsV2'> | null;
-  next: CollectionEntry<'postsV2'> | null;
+  prev: CollectionEntry<'posts'> | null;
+  next: CollectionEntry<'posts'> | null;
 };
 
 const { prev, next } = Astro.props;
