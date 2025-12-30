@@ -4,8 +4,8 @@
  */
 
 // 型定義
-export type { TTSAvailability, TTSResult, TTSSuccess, TTSError, TTSCallbacks } from './types';
-export { MAX_TEXT_LENGTH } from './types';
+export type { TTSAvailability, TTSResult, TTSSuccess, TTSError, TTSErrorCode, TTSCallbacks } from './types';
+export { MAX_TEXT_LENGTH, TTS_ERROR_CODES } from './types';
 
 // Feature Detection
 export { checkTTSAvailability } from './feature-detection';

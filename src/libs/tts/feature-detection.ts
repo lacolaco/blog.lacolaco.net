@@ -30,21 +30,25 @@ export function waitForVoices(timeoutMs = 1000): Promise<SpeechSynthesisVoice[]>
 
     // Safari対応: onvoiceschangedが発火しない場合のタイムアウト
     let resolved = false;
+
+    const handleVoicesChanged = () => {
+      if (!resolved) {
+        resolved = true;
+        clearTimeout(timeout);
+        speechSynthesis.removeEventListener('voiceschanged', handleVoicesChanged);
+        resolve(speechSynthesis.getVoices());
+      }
+    };
+
     const timeout = setTimeout(() => {
       if (!resolved) {
         resolved = true;
-        // タイムアウト後に再度取得を試みる
+        speechSynthesis.removeEventListener('voiceschanged', handleVoicesChanged);
         resolve(speechSynthesis.getVoices());
       }
     }, timeoutMs);
 
-    speechSynthesis.onvoiceschanged = () => {
-      if (!resolved) {
-        resolved = true;
-        clearTimeout(timeout);
-        resolve(speechSynthesis.getVoices());
-      }
-    };
+    speechSynthesis.addEventListener('voiceschanged', handleVoicesChanged);
   });
 }
 

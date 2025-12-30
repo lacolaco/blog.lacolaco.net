@@ -22,9 +22,18 @@ export interface TTSSuccess {
   stop: () => void;
 }
 
+/** TTSエラーコード */
+export const TTS_ERROR_CODES = {
+  EMPTY_TEXT: 'EMPTY_TEXT',
+  TEXT_TOO_LONG: 'TEXT_TOO_LONG',
+} as const;
+
+export type TTSErrorCode = (typeof TTS_ERROR_CODES)[keyof typeof TTS_ERROR_CODES];
+
 /** TTSエラー結果 */
 export interface TTSError {
   success: false;
+  errorCode: TTSErrorCode;
   error: string;
 }
 

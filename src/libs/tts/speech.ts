@@ -1,5 +1,5 @@
 import { selectVoiceForLocale, waitForVoices } from './feature-detection';
-import { getLanguageTag, MAX_TEXT_LENGTH, type TTSCallbacks, type TTSResult } from './types';
+import { getLanguageTag, MAX_TEXT_LENGTH, TTS_ERROR_CODES, type TTSCallbacks, type TTSResult } from './types';
 
 /** 音声リストのキャッシュ */
 let cachedVoices: SpeechSynthesisVoice[] | null = null;
@@ -37,12 +37,16 @@ function safariSafeCancel(): void {
 export function speak(text: string, locale: string, rate: number, callbacks?: TTSCallbacks): TTSResult {
   // 空文字チェック
   if (!text.trim()) {
-    return { success: false, error: 'Empty text' };
+    return { success: false, errorCode: TTS_ERROR_CODES.EMPTY_TEXT, error: 'Empty text' };
   }
 
   // 長文チェック
   if (text.length > MAX_TEXT_LENGTH) {
-    return { success: false, error: `Text too long (max ${MAX_TEXT_LENGTH} characters)` };
+    return {
+      success: false,
+      errorCode: TTS_ERROR_CODES.TEXT_TOO_LONG,
+      error: `Text too long (max ${MAX_TEXT_LENGTH} characters)`,
+    };
   }
 
   // 既存の再生を停止

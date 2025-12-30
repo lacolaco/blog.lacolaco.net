@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { trackEvent, ttsEvents } from '../libs/analytics';
-import { checkTTSAvailability, initVoices, speak, stopSpeaking, type TTSSuccess } from '../libs/tts';
+import { checkTTSAvailability, initVoices, speak, TTS_ERROR_CODES, type TTSSuccess } from '../libs/tts';
 
 interface Props {
   text: string;
@@ -58,7 +58,7 @@ export default function TTSControls({ text, locale }: Props) {
 
     return () => {
       isMounted.current = false;
-      stopSpeaking();
+      currentSpeech.current?.stop();
     };
   }, []);
 
@@ -94,8 +94,11 @@ export default function TTSControls({ text, locale }: Props) {
 
     // エラーチェック（長文など）
     if (!result.success) {
-      setState('error');
-      setErrorMessage(result.error.includes('too long') ? t.textTooLong : result.error);
+      if (isMounted.current) {
+        setState('error');
+        const message = result.errorCode === TTS_ERROR_CODES.TEXT_TOO_LONG ? t.textTooLong : result.error;
+        setErrorMessage(message);
+      }
       trackEvent(ttsEvents.error(result.error));
       return;
     }
@@ -122,14 +125,15 @@ export default function TTSControls({ text, locale }: Props) {
   }
 
   return (
-    <div className="mt-3 flex items-center gap-2">
+    <div className="mt-3 flex items-center gap-2" role="region" aria-label="Text-to-speech controls">
       {state === 'idle' && (
         <button
           type="button"
           onClick={handlePlay}
+          aria-label={t.play}
           className="inline-flex items-center gap-x-1 px-2 py-1 text-xs text-blue-600 border border-blue-300 rounded hover:bg-blue-100 cursor-pointer transition-colors"
         >
-          <span className="icon-[mdi--volume-high] inline-block w-3 h-3" />
+          <span className="icon-[mdi--volume-high] inline-block w-3 h-3" aria-hidden="true" />
           {t.play}
         </button>
       )}
@@ -137,21 +141,23 @@ export default function TTSControls({ text, locale }: Props) {
         <button
           type="button"
           onClick={handleStop}
+          aria-label={t.stop}
           className="inline-flex items-center gap-x-1 px-2 py-1 text-xs text-gray-600 border border-gray-300 rounded hover:bg-gray-100 cursor-pointer transition-colors"
         >
-          <span className="icon-[mdi--stop] inline-block w-3 h-3" />
+          <span className="icon-[mdi--stop] inline-block w-3 h-3" aria-hidden="true" />
           {t.stop}
         </button>
       )}
       {state === 'error' && (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" role="alert">
           <span className="text-xs text-red-600">
-            <span className="icon-[mdi--alert-circle] inline-block w-3 h-3 mr-1" />
+            <span className="icon-[mdi--alert-circle] inline-block w-3 h-3 mr-1" aria-hidden="true" />
             {errorMessage || t.error}
           </span>
           <button
             type="button"
             onClick={handleDismissError}
+            aria-label="Dismiss error"
             className="text-xs text-gray-500 hover:text-gray-700 underline cursor-pointer"
           >
             OK

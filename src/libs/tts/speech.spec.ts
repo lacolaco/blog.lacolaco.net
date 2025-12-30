@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
 import { speak, stopSpeaking } from './speech';
-import { MAX_TEXT_LENGTH } from './types';
+import { MAX_TEXT_LENGTH, TTS_ERROR_CODES } from './types';
 
 // SpeechSynthesisUtteranceのモック
 class MockUtterance {
@@ -75,6 +75,7 @@ describe('speak', () => {
 
     expect(result.success).toBe(false);
     if (!result.success) {
+      expect(result.errorCode).toBe(TTS_ERROR_CODES.EMPTY_TEXT);
       expect(result.error).toBe('Empty text');
     }
     expect(mockSpeechSynthesis.speak).not.toHaveBeenCalled();
@@ -85,6 +86,7 @@ describe('speak', () => {
 
     expect(result.success).toBe(false);
     if (!result.success) {
+      expect(result.errorCode).toBe(TTS_ERROR_CODES.EMPTY_TEXT);
       expect(result.error).toBe('Empty text');
     }
     expect(mockSpeechSynthesis.speak).not.toHaveBeenCalled();
@@ -96,6 +98,7 @@ describe('speak', () => {
 
     expect(result.success).toBe(false);
     if (!result.success) {
+      expect(result.errorCode).toBe(TTS_ERROR_CODES.TEXT_TOO_LONG);
       expect(result.error).toContain('too long');
     }
     expect(mockSpeechSynthesis.speak).not.toHaveBeenCalled();
