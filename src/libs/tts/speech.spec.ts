@@ -1,18 +1,16 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
-import { TTSController } from './speech';
+import { speak, stopSpeaking } from './speech';
+import { MAX_TEXT_LENGTH } from './types';
 
 // SpeechSynthesisUtteranceのモック
 class MockUtterance {
   text: string;
   lang: string = '';
   rate: number = 1;
-  pitch: number = 1;
   voice: SpeechSynthesisVoice | null = null;
   onstart: (() => void) | null = null;
   onend: (() => void) | null = null;
-  onpause: (() => void) | null = null;
-  onresume: (() => void) | null = null;
-  onerror: ((event: SpeechSynthesisErrorEvent) => void) | null = null;
+  onerror: ((event: { error: string }) => void) | null = null;
 
   constructor(text: string) {
     this.text = text;
@@ -26,6 +24,8 @@ type MockSpeechSynthesis = {
   pause: ReturnType<typeof vi.fn>;
   resume: ReturnType<typeof vi.fn>;
   getVoices: ReturnType<typeof vi.fn>;
+  speaking: boolean;
+  pending: boolean;
 };
 
 let mockSpeechSynthesis: MockSpeechSynthesis;
@@ -42,6 +42,8 @@ function setupMocks(): void {
     pause: vi.fn(),
     resume: vi.fn(),
     getVoices: vi.fn().mockReturnValue([]),
+    speaking: false,
+    pending: false,
   };
 
   (globalThis as unknown as { speechSynthesis: MockSpeechSynthesis }).speechSynthesis = mockSpeechSynthesis;
@@ -59,7 +61,7 @@ function clearMocks(): void {
   lastUtterance = null;
 }
 
-describe('TTSController', () => {
+describe('speak', () => {
   beforeEach(() => {
     setupMocks();
   });
@@ -68,149 +70,132 @@ describe('TTSController', () => {
     clearMocks();
   });
 
-  describe('speak', () => {
-    it('空文字の場合、何もしない', () => {
-      const controller = new TTSController();
-      controller.speak('', { locale: 'ja' });
+  it('空文字の場合、エラーを返す', () => {
+    const result = speak('', 'ja', 1.0);
 
-      expect(mockSpeechSynthesis.speak).not.toHaveBeenCalled();
-    });
-
-    it('空白のみの場合、何もしない', () => {
-      const controller = new TTSController();
-      controller.speak('   ', { locale: 'ja' });
-
-      expect(mockSpeechSynthesis.speak).not.toHaveBeenCalled();
-    });
-
-    it('テキストを渡すとSpeechSynthesisUtteranceを作成してspeakを呼ぶ', () => {
-      const controller = new TTSController();
-      controller.speak('こんにちは', { locale: 'ja' });
-
-      expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
-      expect(lastUtterance?.text).toBe('こんにちは');
-    });
-
-    it('locale=jaの場合、lang=ja-JPを設定', () => {
-      const controller = new TTSController();
-      controller.speak('テスト', { locale: 'ja' });
-
-      expect(lastUtterance?.lang).toBe('ja-JP');
-    });
-
-    it('locale=enの場合、lang=en-USを設定', () => {
-      const controller = new TTSController();
-      controller.speak('Hello', { locale: 'en' });
-
-      expect(lastUtterance?.lang).toBe('en-US');
-    });
-
-    it('rate, pitchオプションを設定', () => {
-      const controller = new TTSController();
-      controller.speak('テスト', { locale: 'ja', rate: 1.5, pitch: 0.8 });
-
-      expect(lastUtterance?.rate).toBe(1.5);
-      expect(lastUtterance?.pitch).toBe(0.8);
-    });
-
-    it('onStartコールバックが呼ばれる', () => {
-      const controller = new TTSController();
-      const onStart = vi.fn();
-      controller.speak('テスト', { locale: 'ja' }, { onStart });
-
-      expect(onStart).toHaveBeenCalled();
-    });
-
-    it('onEndコールバックが呼ばれる', () => {
-      const controller = new TTSController();
-      const onEnd = vi.fn();
-      controller.speak('テスト', { locale: 'ja' }, { onEnd });
-
-      // onendイベントをシミュレート
-      lastUtterance?.onend?.();
-
-      expect(onEnd).toHaveBeenCalled();
-    });
-
-    it('既存の読み上げをキャンセルしてから新しい読み上げを開始', () => {
-      const controller = new TTSController();
-      controller.speak('最初', { locale: 'ja' });
-      controller.speak('次', { locale: 'ja' });
-
-      expect(mockSpeechSynthesis.cancel).toHaveBeenCalled();
-    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error).toBe('Empty text');
+    }
+    expect(mockSpeechSynthesis.speak).not.toHaveBeenCalled();
   });
 
-  describe('pause', () => {
-    it('playing状態でpauseを呼ぶとspeechSynthesis.pauseが呼ばれる', () => {
-      const controller = new TTSController();
-      controller.speak('テスト', { locale: 'ja' });
+  it('空白のみの場合、エラーを返す', () => {
+    const result = speak('   ', 'ja', 1.0);
 
-      controller.pause();
-
-      expect(mockSpeechSynthesis.pause).toHaveBeenCalled();
-    });
-
-    it('idle状態では何も起きない', () => {
-      const controller = new TTSController();
-      controller.pause();
-
-      expect(mockSpeechSynthesis.pause).not.toHaveBeenCalled();
-    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error).toBe('Empty text');
+    }
+    expect(mockSpeechSynthesis.speak).not.toHaveBeenCalled();
   });
 
-  describe('resume', () => {
-    it('paused状態でresumeを呼ぶとspeechSynthesis.resumeが呼ばれる', () => {
-      const controller = new TTSController();
-      controller.speak('テスト', { locale: 'ja' });
+  it('長文の場合、エラーを返す', () => {
+    const longText = 'a'.repeat(MAX_TEXT_LENGTH + 1);
+    const result = speak(longText, 'ja', 1.0);
 
-      // pauseイベントをシミュレート
-      controller.pause();
-      lastUtterance?.onpause?.();
-
-      controller.resume();
-
-      expect(mockSpeechSynthesis.resume).toHaveBeenCalled();
-    });
-
-    it('idle状態では何も起きない', () => {
-      const controller = new TTSController();
-      controller.resume();
-
-      expect(mockSpeechSynthesis.resume).not.toHaveBeenCalled();
-    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error).toContain('too long');
+    }
+    expect(mockSpeechSynthesis.speak).not.toHaveBeenCalled();
   });
 
-  describe('stop', () => {
-    it('speechSynthesis.cancelが呼ばれる', () => {
-      const controller = new TTSController();
-      controller.speak('テスト', { locale: 'ja' });
+  it('テキストを渡すとSpeechSynthesisUtteranceを作成してspeakを呼ぶ', () => {
+    const result = speak('こんにちは', 'ja', 1.0);
 
-      controller.stop();
-
-      expect(mockSpeechSynthesis.cancel).toHaveBeenCalled();
-    });
-
-    it('状態がidleになる', () => {
-      const controller = new TTSController();
-      controller.speak('テスト', { locale: 'ja' });
-      expect(controller.state).toBe('playing');
-
-      controller.stop();
-
-      expect(controller.state).toBe('idle');
-    });
+    expect(result.success).toBe(true);
+    expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
+    expect(lastUtterance?.text).toBe('こんにちは');
   });
 
-  describe('destroy', () => {
-    it('stopが呼ばれる', () => {
-      const controller = new TTSController();
-      controller.speak('テスト', { locale: 'ja' });
+  it('locale=jaの場合、lang=ja-JPを設定', () => {
+    speak('テスト', 'ja', 1.0);
 
-      controller.destroy();
+    expect(lastUtterance?.lang).toBe('ja-JP');
+  });
 
-      expect(mockSpeechSynthesis.cancel).toHaveBeenCalled();
-      expect(controller.state).toBe('idle');
-    });
+  it('locale=enの場合、lang=en-USを設定', () => {
+    speak('Hello', 'en', 1.0);
+
+    expect(lastUtterance?.lang).toBe('en-US');
+  });
+
+  it('rateオプションを設定', () => {
+    speak('テスト', 'ja', 1.5);
+
+    expect(lastUtterance?.rate).toBe(1.5);
+  });
+
+  it('onStartコールバックが呼ばれる', () => {
+    const onStart = vi.fn();
+    speak('テスト', 'ja', 1.0, { onStart });
+
+    expect(onStart).toHaveBeenCalled();
+  });
+
+  it('onEndコールバックが呼ばれる', () => {
+    const onEnd = vi.fn();
+    speak('テスト', 'ja', 1.0, { onEnd });
+
+    // onendイベントをシミュレート
+    lastUtterance?.onend?.();
+
+    expect(onEnd).toHaveBeenCalled();
+  });
+
+  it('onErrorコールバックがcanceled以外で呼ばれる', () => {
+    const onError = vi.fn();
+    speak('テスト', 'ja', 1.0, { onError });
+
+    // onerrorイベントをシミュレート
+    lastUtterance?.onerror?.({ error: 'network' });
+
+    expect(onError).toHaveBeenCalledWith('network');
+  });
+
+  it('canceledエラーではonErrorコールバックが呼ばれない', () => {
+    const onError = vi.fn();
+    speak('テスト', 'ja', 1.0, { onError });
+
+    // canceledエラーをシミュレート
+    lastUtterance?.onerror?.({ error: 'canceled' });
+
+    expect(onError).not.toHaveBeenCalled();
+  });
+
+  it('成功時はstop関数を含むオブジェクトを返す', () => {
+    const result = speak('テスト', 'ja', 1.0);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(typeof result.stop).toBe('function');
+    }
+  });
+
+  it('stop関数を呼ぶとspeechSynthesis.cancelが呼ばれる', () => {
+    const result = speak('テスト', 'ja', 1.0);
+
+    if (result.success) {
+      result.stop();
+    }
+
+    expect(mockSpeechSynthesis.cancel).toHaveBeenCalled();
+  });
+});
+
+describe('stopSpeaking', () => {
+  beforeEach(() => {
+    setupMocks();
+  });
+
+  afterEach(() => {
+    clearMocks();
+  });
+
+  it('speechSynthesis.cancelが呼ばれる', () => {
+    stopSpeaking();
+
+    expect(mockSpeechSynthesis.cancel).toHaveBeenCalled();
   });
 });

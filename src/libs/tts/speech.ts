@@ -1,113 +1,102 @@
-import type { TTSOptions, TTSCallbacks, TTSState } from './types';
-import { getVoiceForLocale } from './feature-detection';
+import { selectVoiceForLocale, waitForVoices } from './feature-detection';
+import { getLanguageTag, MAX_TEXT_LENGTH, type TTSCallbacks, type TTSResult } from './types';
+
+/** 音声リストのキャッシュ */
+let cachedVoices: SpeechSynthesisVoice[] | null = null;
 
 /**
- * TTSコントローラークラス
- * Web Speech API (SpeechSynthesis) のラッパー
- * Play / Pause / Stop のフルコントロールを提供
+ * 音声リストを初期化（コンポーネントマウント時に呼び出す）
  */
-export class TTSController {
-  private utterance: SpeechSynthesisUtterance | null = null;
-  private _state: TTSState = 'idle';
-  private callbacks: TTSCallbacks = {};
-
-  /** 現在の再生状態 */
-  get state(): TTSState {
-    return this._state;
+export async function initVoices(): Promise<void> {
+  if (cachedVoices === null) {
+    cachedVoices = await waitForVoices();
   }
+}
 
-  /**
-   * テキストの読み上げを開始
-   * @param text 読み上げるテキスト
-   * @param options 言語・速度等のオプション
-   * @param callbacks イベントコールバック
-   */
-  speak(text: string, options: TTSOptions, callbacks?: TTSCallbacks): void {
-    // 既存の読み上げをキャンセル
-    this.stop();
-
-    if (!text.trim()) {
-      return;
-    }
-
-    this.callbacks = callbacks || {};
-    this.utterance = new SpeechSynthesisUtterance(text);
-
-    // 言語設定
-    const langCode = options.locale === 'en' ? 'en-US' : 'ja-JP';
-    this.utterance.lang = langCode;
-
-    // 音声選択（利用可能な場合）
-    const voice = getVoiceForLocale(options.locale);
-    if (voice) {
-      this.utterance.voice = voice;
-    }
-
-    // オプション設定
-    this.utterance.rate = options.rate ?? 1;
-    this.utterance.pitch = options.pitch ?? 1;
-
-    // イベントリスナー設定
-    this.utterance.onstart = () => {
-      this._state = 'playing';
-      this.callbacks.onStart?.();
-    };
-
-    this.utterance.onend = () => {
-      this._state = 'idle';
-      this.callbacks.onEnd?.();
-    };
-
-    this.utterance.onpause = () => {
-      this._state = 'paused';
-      this.callbacks.onPause?.();
-    };
-
-    this.utterance.onresume = () => {
-      this._state = 'playing';
-      this.callbacks.onResume?.();
-    };
-
-    this.utterance.onerror = (event) => {
-      this._state = 'idle';
-      this.callbacks.onError?.(event);
-    };
-
-    speechSynthesis.speak(this.utterance);
-  }
-
-  /**
-   * 一時停止
-   */
-  pause(): void {
-    if (this._state === 'playing') {
-      speechSynthesis.pause();
-    }
-  }
-
-  /**
-   * 再開
-   */
-  resume(): void {
-    if (this._state === 'paused') {
-      speechSynthesis.resume();
-    }
-  }
-
-  /**
-   * 停止（キャンセル）
-   */
-  stop(): void {
+/**
+ * Safari対応: cancel()だけでは音声がクリアされない場合の対策
+ */
+function safariSafeCancel(): void {
+  speechSynthesis.cancel();
+  // Safari workaround: pause()を呼ぶことで確実に停止
+  if (speechSynthesis.speaking || speechSynthesis.pending) {
+    speechSynthesis.pause();
+    speechSynthesis.resume();
     speechSynthesis.cancel();
-    this._state = 'idle';
-    this.utterance = null;
+  }
+}
+
+/**
+ * テキストを読み上げる
+ * @param text 読み上げるテキスト
+ * @param locale 言語コード ('ja' | 'en')
+ * @param rate 読み上げ速度（0.1-10、デフォルト1.2）
+ * @param callbacks コールバック関数
+ * @returns 停止関数を含むオブジェクト、または長文エラー時はnull
+ */
+export function speak(text: string, locale: string, rate: number, callbacks?: TTSCallbacks): TTSResult {
+  // 空文字チェック
+  if (!text.trim()) {
+    return { success: false, error: 'Empty text' };
   }
 
-  /**
-   * リソース解放
-   */
-  destroy(): void {
-    this.stop();
-    this.callbacks = {};
+  // 長文チェック
+  if (text.length > MAX_TEXT_LENGTH) {
+    return { success: false, error: `Text too long (max ${MAX_TEXT_LENGTH} characters)` };
   }
+
+  // 既存の再生を停止
+  safariSafeCancel();
+
+  const utterance = new SpeechSynthesisUtterance(text);
+
+  // 言語設定
+  utterance.lang = getLanguageTag(locale);
+
+  // 音声選択（キャッシュから）
+  if (cachedVoices && cachedVoices.length > 0) {
+    const voice = selectVoiceForLocale(cachedVoices, locale);
+    if (voice) {
+      utterance.voice = voice;
+    }
+  }
+
+  // 速度設定
+  utterance.rate = rate;
+
+  // イベントハンドラ
+  utterance.onstart = () => {
+    callbacks?.onStart?.();
+  };
+
+  utterance.onend = () => {
+    callbacks?.onEnd?.();
+  };
+
+  utterance.onerror = (event) => {
+    // エラー時は確実に停止
+    safariSafeCancel();
+    // canceledは正常な中断なのでエラー扱いしない
+    if (event.error !== 'canceled') {
+      callbacks?.onError?.(event.error);
+    }
+  };
+
+  // 再生開始
+  speechSynthesis.speak(utterance);
+
+  // 停止関数を返す
+  return {
+    success: true,
+    stop: () => {
+      safariSafeCancel();
+    },
+  };
+}
+
+/**
+ * 現在の再生を停止
+ */
+export function stopSpeaking(): void {
+  safariSafeCancel();
 }

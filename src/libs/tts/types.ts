@@ -2,27 +2,41 @@
  * TTS（Text-to-Speech）機能の型定義
  */
 
-/** TTS再生状態 */
-export type TTSState = 'idle' | 'playing' | 'paused';
-
-/** Feature Detection結果 */
+/** TTS利用可能状態 */
 export type TTSAvailability = 'available' | 'unavailable';
 
-/** TTSオプション */
-export interface TTSOptions {
-  /** 言語コード（'ja' | 'en'） */
-  locale: string;
-  /** 読み上げ速度（0.1 - 10、デフォルト: 1） */
-  rate?: number;
-  /** 音の高さ（0 - 2、デフォルト: 1） */
-  pitch?: number;
+/** 言語コード → BCP47言語タグ変換 */
+export function getLanguageTag(locale: string): string {
+  return locale === 'en' ? 'en-US' : 'ja-JP';
 }
 
-/** TTSイベントコールバック */
+/** 言語コード → 言語プレフィックス */
+export function getLanguagePrefix(locale: string): string {
+  return locale === 'en' ? 'en' : 'ja';
+}
+
+/** TTS再生成功結果 */
+export interface TTSSuccess {
+  success: true;
+  /** 再生を停止する関数 */
+  stop: () => void;
+}
+
+/** TTSエラー結果 */
+export interface TTSError {
+  success: false;
+  error: string;
+}
+
+/** TTS再生結果 */
+export type TTSResult = TTSSuccess | TTSError;
+
+/** TTS再生コールバック */
 export interface TTSCallbacks {
   onStart?: () => void;
   onEnd?: () => void;
-  onPause?: () => void;
-  onResume?: () => void;
-  onError?: (error: SpeechSynthesisErrorEvent) => void;
+  onError?: (error: string) => void;
 }
+
+/** テキスト長制限（ブラウザ依存、安全な値） */
+export const MAX_TEXT_LENGTH = 4000;

@@ -4,10 +4,11 @@
  */
 
 // 型定義
-export type { TTSState, TTSAvailability, TTSOptions, TTSCallbacks } from './types';
+export type { TTSAvailability, TTSResult, TTSSuccess, TTSError, TTSCallbacks } from './types';
+export { MAX_TEXT_LENGTH } from './types';
 
 // Feature Detection
-export { checkTTSAvailability, getVoiceForLocale, waitForVoices } from './feature-detection';
+export { checkTTSAvailability } from './feature-detection';
 
-// TTS Controller
-export { TTSController } from './speech';
+// TTS Functions
+export { initVoices, speak, stopSpeaking } from './speech';
