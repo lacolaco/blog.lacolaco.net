@@ -628,5 +628,11 @@
     "name": "アドベントカレンダー",
     "color": "yellow",
     "description": null
+  },
+  {
+    "id": "f39e69d7-88d4-4cba-8fe7-7d1e74a74237",
+    "name": "Chrome",
+    "color": "blue",
+    "description": null
   }
 ]

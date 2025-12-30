@@ -3,9 +3,10 @@ title: 'ブログにView as Markdownを実装した'
 slug: 'implement-view-as-markdown'
 icon: ''
 created_time: '2025-12-29T03:11:00.000Z'
-last_edited_time: '2025-12-29T03:11:00.000Z'
+last_edited_time: '2025-12-30T12:43:00.000Z'
 tags:
   - 'Astro'
+  - 'Blog Dev'
 published: true
 locale: 'ja'
 category: 'Tech'
