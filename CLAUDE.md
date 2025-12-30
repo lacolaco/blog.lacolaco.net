@@ -266,6 +266,34 @@ All git/GitHub ops→git-github-ops agent
 - Images: Notion auto-download, OG via /og/{slug}.png, GCS cache
 - OG: Satori+@resvg/resvg-js, Google Fonts subset
 
+## AI Summarizer Feature
+Client-side article summarization using Chrome Summarizer API (Chrome 138+, experimental).
+
+**Components:**
+- `src/components/ArticleSummarizer.tsx` - React UI component (`client:idle`)
+- `src/libs/summarizer/` - API wrapper module
+  - `feature-detection.ts` - Language-specific availability check
+  - `summarizer.ts` - Streaming summarization
+  - `types.ts` - Type definitions (uses `@types/dom-chromium-ai`)
+- `src/libs/analytics.ts` - GA event tracking factory
+
+**Design:**
+- Article content: Stored in `<script type="text/markdown" id="article-markdown">` in PostDetailPage.astro, retrieved via DOM
+- Streaming: Uses `ReadableStream` for progressive display
+- Cancellation: AbortController for cleanup on unmount/re-trigger
+- i18n: ja/en support (availability checked per language)
+- States: hidden → ready → loading → result | error
+
+**API Config:**
+- type: `tldr`, format: `plain-text`, length: `medium`
+- outputLanguage: matches article locale
+- maxLength: 50000 chars (truncated if exceeded)
+
+**Analytics Events:**
+- `summarize_start` - User clicked summarize button
+- `summarize_complete` - Summarization finished successfully
+- `summarize_error` - Summarization failed (includes error_message)
+
 ## Security
 - No secrets in commits
 - Validate inputs
