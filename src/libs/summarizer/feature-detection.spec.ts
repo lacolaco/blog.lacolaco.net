@@ -1,10 +1,15 @@
+/// <reference types="@types/dom-chromium-ai" />
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { checkSummarizerAvailability } from './feature-detection';
-import type { SummarizerConstructor } from './types';
+
+// テスト用のモック型
+type MockSummarizer = {
+  availability: ReturnType<typeof vi.fn>;
+};
 
 // テスト用にglobalThisにSummarizerを追加するヘルパー
-function setSummarizer(value: Partial<SummarizerConstructor> | null): void {
-  (globalThis as unknown as { Summarizer: Partial<SummarizerConstructor> | null }).Summarizer = value;
+function setSummarizer(value: MockSummarizer | null): void {
+  (globalThis as unknown as { Summarizer: MockSummarizer | null }).Summarizer = value;
 }
 
 function clearSummarizer(): void {
@@ -65,5 +70,39 @@ describe('checkSummarizerAvailability', () => {
 
     const result = await checkSummarizerAvailability();
     expect(result).toBe('unsupported');
+  });
+
+  it('localeを指定した場合、該当言語の利用可能状態を確認する', async () => {
+    const mockAvailability = vi.fn().mockResolvedValue('available');
+    setSummarizer({
+      availability: mockAvailability,
+    });
+
+    await checkSummarizerAvailability('ja');
+
+    expect(mockAvailability).toHaveBeenCalledWith({
+      type: 'tldr',
+      format: 'markdown',
+      length: 'medium',
+      outputLanguage: 'ja',
+      expectedInputLanguages: ['ja'],
+    });
+  });
+
+  it('locale=enの場合、英語の利用可能状態を確認する', async () => {
+    const mockAvailability = vi.fn().mockResolvedValue('available');
+    setSummarizer({
+      availability: mockAvailability,
+    });
+
+    await checkSummarizerAvailability('en');
+
+    expect(mockAvailability).toHaveBeenCalledWith({
+      type: 'tldr',
+      format: 'markdown',
+      length: 'medium',
+      outputLanguage: 'en',
+      expectedInputLanguages: ['en'],
+    });
   });
 });

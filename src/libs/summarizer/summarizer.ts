@@ -1,4 +1,4 @@
-import type { Summarizer, SummarizerCreateOptions } from './types';
+/// <reference types="@types/dom-chromium-ai" />
 
 /** 要約オプション */
 export interface SummarizeOptions {
@@ -17,18 +17,20 @@ const DEFAULT_MAX_LENGTH = 50000;
  * @param locale 出力言語
  */
 export async function createSummarizer(locale: string): Promise<Summarizer> {
-  if (!globalThis.Summarizer) {
+  if (typeof Summarizer === 'undefined') {
     throw new Error('Summarizer API is not available');
   }
 
+  const outputLanguage = locale === 'en' ? 'en' : 'ja';
   const options: SummarizerCreateOptions = {
     type: 'tldr',
     format: 'markdown',
     length: 'medium',
-    outputLanguage: locale === 'en' ? 'en' : 'ja',
+    outputLanguage,
+    expectedInputLanguages: [outputLanguage],
   };
 
-  return await globalThis.Summarizer.create(options);
+  return await Summarizer.create(options);
 }
 
 /**

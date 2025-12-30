@@ -3,14 +3,10 @@
  * @see https://developer.chrome.com/docs/ai/summarizer-api
  */
 
+/// <reference types="@types/dom-chromium-ai" />
+
 // 型定義
-export type {
-  SummarizerAvailability,
-  SummarizerCreateOptions,
-  Summarizer,
-  SummarizerConstructor,
-  AvailabilityResult,
-} from './types';
+export type { AvailabilityResult } from './types';
 
 // Feature Detection
 export { checkSummarizerAvailability } from './feature-detection';

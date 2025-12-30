@@ -40,13 +40,13 @@ export default function ArticleSummarizer({ locale, content }: Props) {
   const t = locale === 'en' ? i18n.en : i18n.ja;
 
   useEffect(() => {
-    checkSummarizerAvailability()
+    checkSummarizerAvailability(locale)
       .then((availability) => {
         if (!isMounted.current) return;
         if (availability === 'unsupported' || availability === 'unavailable') {
           return;
         }
-        if (availability === 'downloadable') {
+        if (availability === 'downloadable' || availability === 'downloading') {
           setIsDownloadable(true);
         }
         setState('ready');
@@ -59,7 +59,7 @@ export default function ArticleSummarizer({ locale, content }: Props) {
       isMounted.current = false;
       summarizeController.current?.abort();
     };
-  }, []);
+  }, [locale]);
 
   const handleSummarize = useCallback(() => {
     // 既存のストリーミングをキャンセル
