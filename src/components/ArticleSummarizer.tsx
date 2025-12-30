@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { trackEvent, summarizerEvents } from '../libs/analytics';
 import { checkSummarizerAvailability, summarizeTextStream } from '../libs/summarizer';
 
 type State = 'hidden' | 'ready' | 'loading' | 'result' | 'error';
@@ -79,6 +80,7 @@ export default function ArticleSummarizer({ locale }: Props) {
 
     setState('loading');
     setSummary('');
+    trackEvent(summarizerEvents.start());
 
     const run = async () => {
       const content = getArticleContent();
@@ -90,13 +92,19 @@ export default function ArticleSummarizer({ locale }: Props) {
         setSummary(accumulated);
         setState('result');
       });
+      // ストリーミング完了
+      if (!signal.aborted && isMounted.current) {
+        trackEvent(summarizerEvents.complete());
+      }
     };
 
     run().catch((error: unknown) => {
       // キャンセルまたはアンマウント時はエラー処理をスキップ
       if (signal.aborted || !isMounted.current) return;
-      setErrorMessage(error instanceof Error ? error.message : 'Unknown error');
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      setErrorMessage(message);
       setState('error');
+      trackEvent(summarizerEvents.error(message));
     });
   }, [locale]);
 
