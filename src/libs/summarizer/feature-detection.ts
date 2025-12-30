@@ -16,7 +16,7 @@ export async function checkSummarizerAvailability(locale?: string): Promise<Avai
     const outputLanguage = locale === 'en' ? 'en' : 'ja';
     const availability = await Summarizer.availability({
       type: 'tldr',
-      format: 'markdown',
+      format: 'plain-text',
       length: 'medium',
       outputLanguage,
       expectedInputLanguages: [outputLanguage],

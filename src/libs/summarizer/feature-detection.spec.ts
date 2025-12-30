@@ -82,7 +82,7 @@ describe('checkSummarizerAvailability', () => {
 
     expect(mockAvailability).toHaveBeenCalledWith({
       type: 'tldr',
-      format: 'markdown',
+      format: 'plain-text',
       length: 'medium',
       outputLanguage: 'ja',
       expectedInputLanguages: ['ja'],
@@ -99,7 +99,7 @@ describe('checkSummarizerAvailability', () => {
 
     expect(mockAvailability).toHaveBeenCalledWith({
       type: 'tldr',
-      format: 'markdown',
+      format: 'plain-text',
       length: 'medium',
       outputLanguage: 'en',
       expectedInputLanguages: ['en'],

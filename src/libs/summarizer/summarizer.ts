@@ -24,7 +24,7 @@ export async function createSummarizer(locale: string): Promise<Summarizer> {
   const outputLanguage = locale === 'en' ? 'en' : 'ja';
   const options: SummarizerCreateOptions = {
     type: 'tldr',
-    format: 'markdown',
+    format: 'plain-text',
     length: 'medium',
     outputLanguage,
     expectedInputLanguages: [outputLanguage],
