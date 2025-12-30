@@ -31,7 +31,7 @@ export function GET({ props }: APIContext<Props>) {
 
     return new Response(markdown, {
       headers: {
-        'content-type': 'text/plain; charset=utf-8',
+        'content-type': 'text/markdown; charset=utf-8',
         // 記事は頻繁に更新されないのでキャッシュ
         'cache-control': 'public, max-age=3600, s-maxage=3600',
       },
