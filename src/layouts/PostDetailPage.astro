@@ -111,7 +111,7 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
                 </a>
               </div>
             </div>
-            {entry.body && <ArticleSummarizer locale={locale || 'ja'} content={entry.body} client:idle />}
+            <ArticleSummarizer locale={locale || 'ja'} client:idle />
           </div>
         </header>
 
@@ -124,6 +124,8 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
         <div class="mt-8">
           <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
         </div>
+        
+        {entry.body && <script is:inline type="text/markdown" id="article-markdown" set:text={entry.body} />}
       </article>
     </MainContainer>
 

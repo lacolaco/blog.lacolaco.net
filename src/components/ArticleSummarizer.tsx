@@ -5,7 +5,6 @@ type State = 'hidden' | 'ready' | 'loading' | 'result' | 'error';
 
 interface Props {
   locale: string;
-  content: string;
 }
 
 const i18n = {
@@ -29,7 +28,18 @@ const i18n = {
   },
 };
 
-export default function ArticleSummarizer({ locale, content }: Props) {
+/**
+ * 記事本文（Markdown）をDOMから取得する
+ */
+function getArticleContent(): string {
+  const content = document.getElementById('article-markdown')?.textContent;
+  if (!content) {
+    throw new Error('Article content not found');
+  }
+  return content;
+}
+
+export default function ArticleSummarizer({ locale }: Props) {
   const [state, setState] = useState<State>('hidden');
   const [isDownloadable, setIsDownloadable] = useState(false);
   const [summary, setSummary] = useState('');
@@ -71,10 +81,7 @@ export default function ArticleSummarizer({ locale, content }: Props) {
     setSummary('');
 
     const run = async () => {
-      if (!content.trim()) {
-        throw new Error('Article content not found');
-      }
-
+      const content = getArticleContent();
       let accumulated = '';
       await summarizeTextStream(content, { locale, signal }, (chunk) => {
         // キャンセルまたはアンマウント時は状態更新をスキップ
@@ -91,7 +98,7 @@ export default function ArticleSummarizer({ locale, content }: Props) {
       setErrorMessage(error instanceof Error ? error.message : 'Unknown error');
       setState('error');
     });
-  }, [content, locale]);
+  }, [locale]);
 
   if (state === 'hidden') {
     return null;
