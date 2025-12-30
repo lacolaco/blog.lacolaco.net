@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { checkSummarizerAvailability, summarizeTextStream } from '../libs/summarizer';
 
 type State = 'hidden' | 'ready' | 'loading' | 'result' | 'error';
@@ -34,28 +34,36 @@ export default function ArticleSummarizer({ locale, content }: Props) {
   const [isDownloadable, setIsDownloadable] = useState(false);
   const [summary, setSummary] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const summarizeController = useRef<AbortController | null>(null);
 
   const t = locale === 'en' ? i18n.en : i18n.ja;
 
   useEffect(() => {
-    const init = async () => {
-      const availability = await checkSummarizerAvailability();
+    checkSummarizerAvailability()
+      .then((availability) => {
+        if (availability === 'unsupported' || availability === 'unavailable') {
+          return;
+        }
+        if (availability === 'downloadable') {
+          setIsDownloadable(true);
+        }
+        setState('ready');
+      })
+      .catch(() => {
+        // Feature detection失敗時は機能を無効化（UIは非表示のまま）
+      });
 
-      if (availability === 'unsupported' || availability === 'unavailable') {
-        return;
-      }
-
-      if (availability === 'downloadable') {
-        setIsDownloadable(true);
-      }
-
-      setState('ready');
+    return () => {
+      summarizeController.current?.abort();
     };
-
-    void init();
   }, []);
 
   const handleSummarize = useCallback(() => {
+    // 既存のストリーミングをキャンセル
+    summarizeController.current?.abort();
+    summarizeController.current = new AbortController();
+    const signal = summarizeController.current.signal;
+
     setState('loading');
     setSummary('');
 
@@ -65,7 +73,9 @@ export default function ArticleSummarizer({ locale, content }: Props) {
       }
 
       let accumulated = '';
-      await summarizeTextStream(content, { locale }, (chunk) => {
+      await summarizeTextStream(content, { locale, signal }, (chunk) => {
+        // キャンセルされた場合は状態更新をスキップ
+        if (signal.aborted) return;
         accumulated += chunk;
         setSummary(accumulated);
         setState('result');
@@ -73,6 +83,8 @@ export default function ArticleSummarizer({ locale, content }: Props) {
     };
 
     run().catch((error: unknown) => {
+      // キャンセルによるエラーは無視
+      if (signal.aborted) return;
       setErrorMessage(error instanceof Error ? error.message : 'Unknown error');
       setState('error');
     });
@@ -88,6 +100,7 @@ export default function ArticleSummarizer({ locale, content }: Props) {
       {state === 'ready' && (
         <div className="flex items-center">
           <button
+            type="button"
             onClick={handleSummarize}
             className="inline-flex items-center gap-x-1 px-2 py-0.5 text-xs text-blue-600 border border-blue-300 rounded-full hover:bg-blue-50 hover:border-blue-400 cursor-pointer transition-colors"
           >
@@ -115,6 +128,7 @@ export default function ArticleSummarizer({ locale, content }: Props) {
           </div>
           <div className="text-sm text-gray-700 leading-relaxed">{summary}</div>
           <button
+            type="button"
             onClick={() => setState('ready')}
             className="mt-2 text-xs text-muted hover:text-default hover:underline cursor-pointer"
           >
@@ -132,6 +146,7 @@ export default function ArticleSummarizer({ locale, content }: Props) {
           </div>
           <p className="text-xs text-red-600">{errorMessage}</p>
           <button
+            type="button"
             onClick={handleSummarize}
             className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer"
           >

@@ -111,7 +111,7 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
                 </a>
               </div>
             </div>
-            <ArticleSummarizer locale={locale || 'ja'} content={entry.body ?? ''} client:load />
+            <ArticleSummarizer locale={locale || 'ja'} content={entry.body ?? ''} client:idle />
           </div>
         </header>
 

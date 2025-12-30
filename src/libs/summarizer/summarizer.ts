@@ -6,8 +6,8 @@ export interface SummarizeOptions {
   locale: string;
   /** 入力テキストの最大長（デフォルト: 50000） */
   maxLength?: number;
-  /** タイムアウト時間（ミリ秒、デフォルト: 60000） */
-  timeout?: number;
+  /** キャンセル用のAbortSignal */
+  signal?: AbortSignal;
 }
 
 const DEFAULT_MAX_LENGTH = 50000;
@@ -17,6 +17,10 @@ const DEFAULT_MAX_LENGTH = 50000;
  * @param locale 出力言語
  */
 export async function createSummarizer(locale: string): Promise<Summarizer> {
+  if (!globalThis.Summarizer) {
+    throw new Error('Summarizer API is not available');
+  }
+
   const options: SummarizerCreateOptions = {
     type: 'tldr',
     format: 'markdown',
@@ -24,7 +28,7 @@ export async function createSummarizer(locale: string): Promise<Summarizer> {
     outputLanguage: locale === 'en' ? 'en' : 'ja',
   };
 
-  return await globalThis.Summarizer!.create(options);
+  return await globalThis.Summarizer.create(options);
 }
 
 /**
@@ -36,9 +40,9 @@ export async function createSummarizer(locale: string): Promise<Summarizer> {
 export async function summarizeTextStream(
   text: string,
   options: SummarizeOptions,
-  onChunk: (text: string) => void
+  onChunk: (text: string) => void,
 ): Promise<void> {
-  const { locale, maxLength = DEFAULT_MAX_LENGTH } = options;
+  const { locale, maxLength = DEFAULT_MAX_LENGTH, signal } = options;
 
   if (!text.trim()) {
     throw new Error('Text is empty');
@@ -52,6 +56,11 @@ export async function summarizeTextStream(
     const reader = stream.getReader();
 
     while (true) {
+      // キャンセルされた場合は中断
+      if (signal?.aborted) {
+        await reader.cancel();
+        break;
+      }
       const { done, value } = await reader.read();
       if (done) break;
       onChunk(value);
