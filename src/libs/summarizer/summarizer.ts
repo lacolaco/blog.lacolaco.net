@@ -1,0 +1,62 @@
+import type { Summarizer, SummarizerCreateOptions } from './types';
+
+/** 要約オプション */
+export interface SummarizeOptions {
+  /** 記事の言語（出力言語の指定に使用） */
+  locale: string;
+  /** 入力テキストの最大長（デフォルト: 50000） */
+  maxLength?: number;
+  /** タイムアウト時間（ミリ秒、デフォルト: 60000） */
+  timeout?: number;
+}
+
+const DEFAULT_MAX_LENGTH = 50000;
+
+/**
+ * Summarizerインスタンスを作成する
+ * @param locale 出力言語
+ */
+export async function createSummarizer(locale: string): Promise<Summarizer> {
+  const options: SummarizerCreateOptions = {
+    type: 'tldr',
+    format: 'markdown',
+    length: 'medium',
+    outputLanguage: locale === 'en' ? 'en' : 'ja',
+  };
+
+  return await globalThis.Summarizer!.create(options);
+}
+
+/**
+ * テキストをストリーミングで要約する
+ * @param text 要約対象のテキスト
+ * @param options 要約オプション
+ * @param onChunk チャンク受信時のコールバック（累積テキストを受け取る）
+ */
+export async function summarizeTextStream(
+  text: string,
+  options: SummarizeOptions,
+  onChunk: (text: string) => void
+): Promise<void> {
+  const { locale, maxLength = DEFAULT_MAX_LENGTH } = options;
+
+  if (!text.trim()) {
+    throw new Error('Text is empty');
+  }
+
+  const truncatedText = text.slice(0, maxLength);
+  const summarizer = await createSummarizer(locale);
+
+  try {
+    const stream = summarizer.summarizeStreaming(truncatedText);
+    const reader = stream.getReader();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      onChunk(value);
+    }
+  } finally {
+    summarizer.destroy();
+  }
+}
