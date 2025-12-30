@@ -484,3 +484,52 @@ Final decision based on results
 
 **Example violation**: User corrects "use pnpm dev" at 10:00 → You use "pnpm build && preview" again at 10:30 in same session
 **Correct approach**: User corrects "use pnpm dev" at 10:00 → Before next verification, recall correction → Use "pnpm dev"
+
+## Pre-Commit Self-Review Protocol
+
+**Apply when**: Before executing git commit
+
+**MANDATORY checks:**
+1. [ ] `git status` to confirm all changed files
+2. [ ] `git diff` to verify no unintended changes
+3. [ ] Code readability review:
+   - Redundant code (duplicate logic, unnecessary separation)
+   - Unclear naming (overuse of Ref suffix, abbreviations)
+   - Unclear syntax (void operator, unnecessary async/await)
+4. [ ] Run code-critic agent if available and changes are significant
+
+**Red flags requiring fix before commit:**
+- Multiple useEffects with same dependency array
+- `void functionCall()` pattern
+- Naming like `xxxRef` (prefer purpose-reflecting names even for useRef)
+
+## Agent Review Request Protocol
+
+**Apply when**: Using review agents like code-critic
+
+**MANDATORY in prompt:**
+1. Include "IMPORTANT: First READ all the actual files before reviewing:"
+2. Explicitly list target file paths
+3. After agent response, verify findings match actual code
+
+**Verification after agent response:**
+- Check code locations mentioned by agent against actual files
+- Always consider "already fixed" possibility
+- Re-run agent if findings are based on stale context
+
+## Proactive Code Review Protocol
+
+**Apply when**: Before commit, when ANY of these conditions are met
+
+**Trigger conditions:**
+- New feature implementation completed
+- Changes span multiple files
+- Async processing or state management logic modified
+- External API integration code
+
+**Execution order:**
+1. Complete implementation
+2. Run code-critic (file read instruction REQUIRED)
+3. Address findings
+4. Self-review
+5. Commit
