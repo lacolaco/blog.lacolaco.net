@@ -118,6 +118,7 @@ export async function fetchPageMetadata(url: string): Promise<PageMetadata> {
               'user-agent': config.userAgent,
               accept: 'text/html',
               'accept-charset': 'utf-8',
+              'accept-language': 'ja, en;q=0.9',
             },
           });
 
