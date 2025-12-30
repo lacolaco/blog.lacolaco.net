@@ -35,12 +35,14 @@ export default function ArticleSummarizer({ locale, content }: Props) {
   const [summary, setSummary] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const summarizeController = useRef<AbortController | null>(null);
+  const isMounted = useRef(true);
 
   const t = locale === 'en' ? i18n.en : i18n.ja;
 
   useEffect(() => {
     checkSummarizerAvailability()
       .then((availability) => {
+        if (!isMounted.current) return;
         if (availability === 'unsupported' || availability === 'unavailable') {
           return;
         }
@@ -54,6 +56,7 @@ export default function ArticleSummarizer({ locale, content }: Props) {
       });
 
     return () => {
+      isMounted.current = false;
       summarizeController.current?.abort();
     };
   }, []);
@@ -74,8 +77,8 @@ export default function ArticleSummarizer({ locale, content }: Props) {
 
       let accumulated = '';
       await summarizeTextStream(content, { locale, signal }, (chunk) => {
-        // キャンセルされた場合は状態更新をスキップ
-        if (signal.aborted) return;
+        // キャンセルまたはアンマウント時は状態更新をスキップ
+        if (signal.aborted || !isMounted.current) return;
         accumulated += chunk;
         setSummary(accumulated);
         setState('result');
@@ -83,8 +86,8 @@ export default function ArticleSummarizer({ locale, content }: Props) {
     };
 
     run().catch((error: unknown) => {
-      // キャンセルによるエラーは無視
-      if (signal.aborted) return;
+      // キャンセルまたはアンマウント時はエラー処理をスキップ
+      if (signal.aborted || !isMounted.current) return;
       setErrorMessage(error instanceof Error ? error.message : 'Unknown error');
       setState('error');
     });
