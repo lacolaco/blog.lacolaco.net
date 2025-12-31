@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { trackEvent, summarizerEvents } from '../libs/analytics';
 import { checkSummarizerAvailability, summarizeTextStream } from '../libs/summarizer';
+import TTSControls from './TTSControls';
 
 type State = 'hidden' | 'ready' | 'loading' | 'result' | 'error';
 
@@ -44,6 +45,7 @@ export default function ArticleSummarizer({ locale }: Props) {
   const [state, setState] = useState<State>('hidden');
   const [isDownloadable, setIsDownloadable] = useState(false);
   const [summary, setSummary] = useState('');
+  const [isStreamingComplete, setIsStreamingComplete] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const summarizeController = useRef<AbortController | null>(null);
   const isMounted = useRef(true);
@@ -80,6 +82,7 @@ export default function ArticleSummarizer({ locale }: Props) {
 
     setState('loading');
     setSummary('');
+    setIsStreamingComplete(false);
     trackEvent(summarizerEvents.start());
 
     const run = async () => {
@@ -94,6 +97,7 @@ export default function ArticleSummarizer({ locale }: Props) {
       });
       // ストリーミング完了
       if (!signal.aborted && isMounted.current) {
+        setIsStreamingComplete(true);
         trackEvent(summarizerEvents.complete());
       }
     };
@@ -147,6 +151,10 @@ export default function ArticleSummarizer({ locale }: Props) {
             <span className="text-sm font-medium text-blue-800">{t.title}</span>
           </div>
           <div className="text-sm text-gray-700 leading-relaxed">{summary}</div>
+
+          {/* TTS コントロール（ストリーミング完了後のみ表示） */}
+          {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
+
           <button
             type="button"
             onClick={() => setState('ready')}

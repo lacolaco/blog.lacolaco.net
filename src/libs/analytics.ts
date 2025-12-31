@@ -22,3 +22,13 @@ export const summarizerEvents = {
     params: { error_message: errorMessage },
   }),
 };
+
+/** TTSイベントファクトリー */
+export const ttsEvents = {
+  start: (): AnalyticsEvent => ({ name: 'tts_start' }),
+  complete: (): AnalyticsEvent => ({ name: 'tts_complete' }),
+  error: (errorMessage: string): AnalyticsEvent => ({
+    name: 'tts_error',
+    params: { error_message: errorMessage },
+  }),
+};
