@@ -634,5 +634,11 @@
     "name": "Chrome",
     "color": "blue",
     "description": null
+  },
+  {
+    "id": "10e10750-e2a0-43aa-b748-02ca1d7d45d5",
+    "name": "Gleam",
+    "color": "pink",
+    "description": null
   }
 ]
