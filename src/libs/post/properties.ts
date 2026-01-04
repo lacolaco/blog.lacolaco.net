@@ -5,7 +5,7 @@ import manualCategoriesJson from '../../content/post/categories.json';
 import { Tag, Tags, Category, Categories } from './schema';
 
 // マージ: 親ディレクトリ（manual）が同名エントリを上書き
-function mergeByName<T extends { name: string }>(base: T[], override: T[]): T[] {
+export function mergeByName<T extends { name: string }>(base: T[], override: T[]): T[] {
   const map = new Map(base.map((item) => [item.name, item]));
   for (const item of override) {
     map.set(item.name, item);
