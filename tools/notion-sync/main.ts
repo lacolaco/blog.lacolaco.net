@@ -49,7 +49,7 @@ const result = await syncNotionBlog({
   notionToken: NOTION_AUTH_TOKEN,
   datasourceId: 'a902ee6d-dc94-4301-b772-fa5fb8decc0c',
   distribution: 'blog.lacolaco.net',
-  postsDir: `${rootDir}/src/content/post`,
+  postsDir: `${rootDir}/src/content/post/notion`,
   imagesDir: `${rootDir}/public/images`,
   manifestPath: `${rootDir}/manifest.json`,
   verbose: true,
@@ -58,11 +58,8 @@ const result = await syncNotionBlog({
   dryRun,
   filterPost: (metadata) => metadata.published && !!metadata.category,
   postPathResolver: (metadata) => {
-    const date = new Date(metadata.created_time);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
     const localeSuffix = metadata.locale === 'en' ? '.en' : '';
-    return `${year}/${month}/${metadata.slug}${localeSuffix}.md`;
+    return `${metadata.slug}${localeSuffix}.md`;
   },
   extractMetadata: (page, defaultExtractor) => {
     const metadata = defaultExtractor(page);
