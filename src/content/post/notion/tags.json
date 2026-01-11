@@ -646,5 +646,11 @@
     "name": "Movie",
     "color": "purple",
     "description": null
+  },
+  {
+    "id": "270f42bf-4dd3-4580-abc9-93f916636350",
+    "name": "ゲーム",
+    "color": "blue",
+    "description": null
   }
 ]
