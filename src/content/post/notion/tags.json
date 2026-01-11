@@ -12,6 +12,12 @@
     "description": null
   },
   {
+    "id": "4ea738db-5421-4df3-a85a-447831ef7696",
+    "name": "読書",
+    "color": "brown",
+    "description": null
+  },
+  {
     "id": "fecde198-2e24-4dfe-8a0a-ae2040e7b8b4",
     "name": "言語化",
     "color": "brown",
@@ -492,12 +498,6 @@
     "description": null
   },
   {
-    "id": "4ea738db-5421-4df3-a85a-447831ef7696",
-    "name": "読書",
-    "color": "brown",
-    "description": null
-  },
-  {
     "id": "2150ac74-930b-42fa-9b86-4002accb078d",
     "name": "英語史",
     "color": "brown",
@@ -639,6 +639,12 @@
     "id": "10e10750-e2a0-43aa-b748-02ca1d7d45d5",
     "name": "Gleam",
     "color": "pink",
+    "description": null
+  },
+  {
+    "id": "2e980dfe-017b-40a7-b938-07561d1dee69",
+    "name": "Movie",
+    "color": "purple",
     "description": null
   }
 ]
