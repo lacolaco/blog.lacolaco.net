@@ -652,5 +652,11 @@
     "name": "ゲーム",
     "color": "blue",
     "description": null
+  },
+  {
+    "id": "0ba9660f-e24f-4829-8686-85ed6bd0f8ae",
+    "name": "Extensions",
+    "color": "default",
+    "description": null
   }
 ]
