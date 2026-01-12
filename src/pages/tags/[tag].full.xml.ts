@@ -1,7 +1,7 @@
 import rss from '@astrojs/rss';
 import { queryAvailablePosts, queryTags, deduplicatePosts } from '@lib/query';
 import type { APIContext } from 'astro';
-import { RSS_ITEMS_LIMIT, SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import { RSS_FULL_ITEMS_LIMIT, SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 import { urlize } from '../../libs/strings';
 import type { CollectionEntry } from 'astro:content';
 
@@ -34,12 +34,13 @@ export async function GET(context: APIContext<Props>) {
     title: `Articles with #${tag} - ${SITE_TITLE}`,
     description: SITE_DESCRIPTION,
     site: articlesUrl,
-    items: posts.slice(0, RSS_ITEMS_LIMIT).map((post) => {
+    items: posts.slice(0, RSS_FULL_ITEMS_LIMIT).map((post) => {
       return {
         title: post.data.title,
         pubDate: post.data.created_time,
         link: `/posts/${post.data.slug}`,
         categories: post.data.tags,
+        content: post.body,
       };
     }),
   });

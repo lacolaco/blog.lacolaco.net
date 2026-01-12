@@ -1,5 +1,5 @@
 import rss from '@astrojs/rss';
-import { queryAvailablePosts, queryCategories, deduplicatePosts } from '@lib/query';
+import { queryAvailablePosts, queryCategories } from '@lib/query';
 import type { APIContext } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import { RSS_ITEMS_LIMIT, SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
@@ -7,7 +7,7 @@ import { urlize } from '../../libs/strings';
 
 export async function getStaticPaths() {
   const allPosts = await queryAvailablePosts();
-  const posts = deduplicatePosts(allPosts);
+  const posts = allPosts.filter((post) => post.data.locale === 'en');
   const categories = queryCategories();
 
   function hasCategory(categoryName: string, post: CollectionEntry<'posts' | 'postsEn'>): boolean {
@@ -40,7 +40,7 @@ export async function GET(context: APIContext<Props>) {
       return {
         title: post.data.title,
         pubDate: post.data.created_time,
-        link: `/posts/${post.data.slug}`,
+        link: `/posts/${post.data.slug}.en`,
         categories: post.data.tags,
       };
     }),
