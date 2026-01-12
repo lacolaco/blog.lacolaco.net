@@ -3,7 +3,7 @@ title: 'Building Browser Extensions with WXT + Angular'
 slug: 'wxt-angular-browser-extension'
 icon: ''
 created_time: '2026-01-12T09:08:00.000Z'
-last_edited_time: '2026-01-12T09:08:00.000Z'
+last_edited_time: '2026-01-12T09:17:00.000Z'
 tags:
   - 'Angular'
   - 'TypeScript'
@@ -154,7 +154,7 @@ Separate project-wide configuration from Angular-specific configuration.
 }
 ```
 
-[`tsconfig.app`](http://tsconfig.app/)`.json` (Angular-specific):
+`tsconfig.app.json` (Angular-specific):
 
 ```json
 {
