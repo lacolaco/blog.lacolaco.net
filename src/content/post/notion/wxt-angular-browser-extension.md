@@ -3,7 +3,7 @@ title: 'WXT + Angularでブラウザ拡張を作る'
 slug: 'wxt-angular-browser-extension'
 icon: ''
 created_time: '2026-01-12T06:16:00.000Z'
-last_edited_time: '2026-01-12T06:16:00.000Z'
+last_edited_time: '2026-01-12T06:31:00.000Z'
 tags:
   - 'Angular'
   - 'TypeScript'
@@ -41,7 +41,7 @@ https://www.npmjs.com/package/@analogjs/vite-plugin-angular
 
 ## プロジェクト構成
 
-このスターターテンプレートは次のような構成になっている：
+このスターターテンプレートは次のような構成になっている:
 
 ```javascript
 ├── entrypoints/
@@ -65,7 +65,7 @@ WXTでは`entrypoints`ディレクトリ内のファイルから自動的にマ�
 
 ### 1. WXTプロジェクトの初期化
 
-まずWXTプロジェクトを作成する：
+まずWXTプロジェクトを作成する:
 
 ```bash
 pnpm dlx wxt@latest init my-extension
@@ -74,7 +74,7 @@ cd my-extension
 
 ### 2. 依存パッケージのインストール
 
-Angular本体とビルドツールをインストールする：
+Angular本体とビルドツールをインストールする:
 
 ```bash
 # Angular本体
@@ -89,7 +89,7 @@ pnpm add -D tailwindcss @tailwindcss/vite
 
 ### 3. Viteのバージョン固定
 
-`@analogjs/vite-plugin-angular`がVite 7.xを要求するため、`package.json`でバージョンを固定する：
+`@analogjs/vite-plugin-angular`がVite 7.xを要求するため、`package.json`でバージョンを固定する:
 
 ```json
 {
@@ -105,7 +105,7 @@ pnpm add -D tailwindcss @tailwindcss/vite
 
 ### 4. WXTの設定
 
-`wxt.config.ts`でViteプラグインを設定する：
+`wxt.config.ts`でViteプラグインを設定する:
 
 ```typescript
 import { defineConfig } from 'wxt';
@@ -137,7 +137,7 @@ export default defineConfig({
 
 プロジェクト全体の設定とAngular専用の設定を分ける。
 
-**tsconfig.json**（プロジェクト全体）：
+`tsconfig.json`（プロジェクト全体）:
 
 ```json
 {
@@ -154,7 +154,7 @@ export default defineConfig({
 }
 ```
 
-[**tsconfig.app**](http://tsconfig.app/)**.json**（Angular専用）：
+`tsconfig.app.json`（Angular専用）:
 
 ```json
 {
@@ -184,7 +184,7 @@ export default defineConfig({
 
 最後にAngularアプリケーションの入り口を作成する。
 
-**entrypoints/popup/index.html**：
+`entrypoints/popup/index.html`:
 
 ```html
 <!doctype html>
@@ -202,7 +202,7 @@ export default defineConfig({
 </html>
 ```
 
-**entrypoints/popup/main.ts**：
+`entrypoints/popup/main.ts`:
 
 ```typescript
 import './style.css';
@@ -215,7 +215,7 @@ bootstrapApplication(App, {
 }).catch((err: unknown) => console.error(err));
 ```
 
-**entrypoints/popup/app.ts**：
+`entrypoints/popup/app.ts`:
 
 ```typescript
 import { ChangeDetectionStrategy, Component } from '@angular/core';
@@ -231,7 +231,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 export class App {}
 ```
 
-**entrypoints/popup/style.css**：
+`entrypoints/popup/style.css`:
 
 ```css
 @import 'tailwindcss';
@@ -241,7 +241,7 @@ export class App {}
 
 ## 開発とビルド
 
-セットアップが完了したら、開発サーバーを起動できる：
+セットアップが完了したら、開発サーバーを起動できる:
 
 ```bash
 # Chrome向け開発サーバー
@@ -253,7 +253,7 @@ pnpm dev:firefox
 
 ![image](/images/wxt-angular-browser-extension/CleanShot_2026-01-12_at_13.44.302x.cdc70642ae5ed0c3.png)
 
-本番用のビルドとパッケージング：
+本番用のビルドとパッケージング:
 
 ```bash
 # Chrome向けビルド
