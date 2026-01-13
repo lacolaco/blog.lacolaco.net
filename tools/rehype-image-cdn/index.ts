@@ -1,9 +1,9 @@
-import type { Image, Root } from 'mdast';
+import type { Element, Root } from 'hast';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
 
 /**
- * 画像URLを外部CDNに書き換えるremarkプラグイン
+ * 画像URLを外部CDNに書き換えるrehypeプラグイン
  *
  * 環境変数 IMAGE_CDN_BASE_URL が設定されている場合、
  * /images/ で始まる画像パスを外部URLに書き換える
@@ -12,11 +12,11 @@ import { visit } from 'unist-util-visit';
  *     /images/foo/bar.png → https://images.blog.lacolaco.net/foo/bar.png
  */
 
-interface RemarkImageCdnOptions {
+interface RehypeImageCdnOptions {
   baseUrl?: string;
 }
 
-const remarkImageCdn: Plugin<[RemarkImageCdnOptions?], Root> = (options = {}) => {
+const rehypeImageCdn: Plugin<[RehypeImageCdnOptions?], Root> = (options = {}) => {
   const baseUrl = options.baseUrl || process.env.IMAGE_CDN_BASE_URL;
 
   // baseUrlが設定されていない場合は何もしない
@@ -28,13 +28,16 @@ const remarkImageCdn: Plugin<[RemarkImageCdnOptions?], Root> = (options = {}) =>
   const normalizedBaseUrl = baseUrl.replace(/\/$/, '');
 
   return (tree: Root) => {
-    visit(tree, 'image', (node: Image) => {
-      // /images/ で始まるローカルパスのみ変換（/images/ プレフィックスは除去）
-      if (node.url.startsWith('/images/')) {
-        node.url = `${normalizedBaseUrl}${node.url.replace('/images', '')}`;
+    visit(tree, 'element', (node: Element) => {
+      // img要素のsrc属性を変換
+      if (node.tagName === 'img' && node.properties.src) {
+        const src = String(node.properties.src);
+        if (src.startsWith('/images/')) {
+          node.properties.src = `${normalizedBaseUrl}${src.replace('/images', '')}`;
+        }
       }
     });
   };
 };
 
-export default remarkImageCdn;
+export default rehypeImageCdn;

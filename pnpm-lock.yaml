@@ -126,6 +126,9 @@ importers:
       prettier:
         specifier: 3.7.4
         version: 3.7.4
+      rehype:
+        specifier: ^13.0.2
+        version: 13.0.2
       rehype-github-alert:
         specifier: ^1.0.0
         version: 1.0.0

@@ -18,7 +18,7 @@ on:
       - 'pnpm-lock.yaml'
       # Remark plugins and tools affecting build
       - 'tools/remark-embed/**'
-      - 'tools/remark-image-cdn/**'
+      - 'tools/rehype-image-cdn/**'
       # Public assets
       - 'public/**'
       # Cloud Run files
