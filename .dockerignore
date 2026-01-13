@@ -1,2 +1,5 @@
 node_modules
 .*
+# 画像はR2 CDNから配信するためDockerイメージから除外
+dist/client/images
+public/images

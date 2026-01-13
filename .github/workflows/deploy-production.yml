@@ -42,6 +42,8 @@ jobs:
 
       - name: Build
         run: pnpm run build
+        env:
+          IMAGE_CDN_BASE_URL: ${{ vars.IMAGE_CDN_BASE_URL }}
 
       - name: Deploy to Cloud Run
         uses: ./.github/actions/deploy-cloudrun

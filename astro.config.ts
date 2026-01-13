@@ -9,6 +9,7 @@ import rehypeMermaid from 'rehype-mermaid';
 import remarkBreaks from 'remark-breaks';
 import remarkMath from 'remark-math';
 import remarkEmbed from './tools/remark-embed';
+import remarkImageCdn from './tools/remark-image-cdn';
 
 import node from '@astrojs/node';
 
@@ -47,7 +48,7 @@ export default defineConfig({
 
   markdown: {
     gfm: true,
-    remarkPlugins: [remarkBreaks, remarkMath, remarkEmbed],
+    remarkPlugins: [remarkBreaks, remarkMath, remarkEmbed, remarkImageCdn],
     rehypePlugins: [rehypeGithubEmoji, rehypeGithubAlert, rehypeKatex, [rehypeMermaid, { strategy: 'pre-mermaid' }]],
     syntaxHighlight: {
       type: 'shiki',
