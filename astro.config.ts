@@ -9,6 +9,7 @@ import rehypeMermaid from 'rehype-mermaid';
 import remarkBreaks from 'remark-breaks';
 import remarkMath from 'remark-math';
 import remarkEmbed from './tools/remark-embed';
+import { imageCdnIntegration } from './tools/astro-integration-image-cdn';
 
 import node from '@astrojs/node';
 
@@ -16,7 +17,7 @@ import node from '@astrojs/node';
 export default defineConfig({
   site: 'https://blog.lacolaco.net',
   outDir: 'dist',
-  integrations: [sitemap(), react()],
+  integrations: [sitemap(), react(), imageCdnIntegration()],
 
   vite: {
     plugins: [tailwindcss()],

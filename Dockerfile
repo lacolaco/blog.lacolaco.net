@@ -1,12 +1,12 @@
-FROM node:lts-slim AS base
+FROM node:lts-alpine AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./ 
+COPY package.json pnpm-lock.yaml ./
 
-# Install Astro runtime dependencies 
+# Install Astro runtime dependencies
 FROM base AS prod-deps
 RUN pnpm install --prod --ignore-scripts --shamefully-hoist
 
@@ -16,7 +16,11 @@ FROM base AS build
 COPY ./dist ./dist
 
 # Production image
-FROM base
+FROM node:lts-alpine
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+WORKDIR /app
+
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/ .
 
