@@ -26,20 +26,74 @@ gh run list --workflow=deploy-production.yml --limit=10 --json databaseId,starte
 
 ### 2. Dockerイメージメトリクス取得
 
-特定のRUN_IDのログからイメージメトリクスを抽出：
+デプロイアーティファクトからマニフェストJSONを取得：
 
 ```bash
-# compressed_size_mb を取得
-gh run view <RUN_ID> --log 2>&1 | grep "compressed_size_mb"
+# アーティファクトをダウンロード
+gh run download <RUN_ID> -n deploy-metrics-production -D /tmp/deploy-metrics
 
-# layer_count を取得
-gh run view <RUN_ID> --log 2>&1 | grep "layer_count"
+# マニフェストを分析
+cat /tmp/deploy-metrics/manifest.json | jq .
+```
 
-# exporting/pushing layers 時間
+#### OCI Image Manifest スキーマ (application/vnd.oci.image.manifest.v1+json)
+
+```typescript
+interface OCIImageManifest {
+  schemaVersion: 2;                    // 常に2（Docker互換性のため）
+  mediaType: string;                   // "application/vnd.oci.image.manifest.v1+json"
+  config: Descriptor;                  // イメージ設定への参照
+  layers: Descriptor[];                // レイヤー配列（index 0がベースレイヤー）
+  annotations?: Record<string, string>;// オプションのメタデータ
+}
+
+interface Descriptor {
+  mediaType: string;  // コンテンツタイプ
+  digest: string;     // "sha256:..." 形式のハッシュ
+  size: number;       // バイト単位のサイズ（圧縮後）
+  annotations?: Record<string, string>;
+}
+```
+
+**config.mediaType**: `application/vnd.oci.image.config.v1+json`
+**layers[].mediaType**:
+- `application/vnd.oci.image.layer.v1.tar+gzip` (gzip圧縮)
+- `application/vnd.oci.image.layer.v1.tar+zstd` (zstd圧縮)
+- `application/vnd.oci.image.layer.v1.tar` (非圧縮)
+
+#### 分析クエリ例
+
+```bash
+# 圧縮サイズ合計（バイト）
+jq '[.config.size, .layers[].size] | add' manifest.json
+
+# レイヤー数
+jq '.layers | length' manifest.json
+
+# レイヤーごとのサイズ（MB単位、降順でボトルネック特定）
+jq -r '.layers | to_entries | sort_by(-.value.size) | .[] | "layer \(.key): \(.value.size / 1024 / 1024 | . * 100 | floor / 100)MB"' manifest.json
+
+# 最大レイヤーの特定
+jq '.layers | max_by(.size) | {index: (. as $max | input | .layers | to_entries | map(select(.value.digest == $max.digest)) | .[0].key), size_mb: (.size / 1024 / 1024)}' manifest.json
+
+# 圧縮形式の確認
+jq -r '.layers[].mediaType' manifest.json | sort | uniq -c
+```
+
+### 3. Docker build時間取得
+
+ログからexporting/pushing時間を抽出：
+
+```bash
 gh run view <RUN_ID> --log 2>&1 | grep -E "(exporting|pushing) layers.*done"
 ```
 
-### 3. ボトルネック特定
+レイヤー分析の観点：
+- 最大レイヤーがボトルネックになりやすい
+- 頻繁に変更されるレイヤーが上位にあると毎回再ビルドが発生
+- ベースイメージ（通常layer_0）のサイズが大きい場合はベースイメージ変更を検討
+
+### 4. ボトルネック特定
 
 最も遅いデプロイのジョブ別時間を取得：
 
@@ -57,7 +111,7 @@ gh run view <RUN_ID> --json jobs
 | Cloud Run deploy | < 60秒 | > 60秒 |
 | イメージサイズ | < 300MB | > 300MB |
 
-### 4. 改善案の提示
+### 5. 改善案の提示
 
 | ボトルネック | 改善案 |
 |-------------|--------|
@@ -86,6 +140,13 @@ gh run view <RUN_ID> --json jobs
 - レイヤー数: XX
 - exporting layers: XX.Xs
 - pushing layers: XX.Xs
+
+### レイヤー別サイズ
+| Layer | Size | 備考 |
+|-------|------|------|
+| 0 | XX.XXMB | (ベースイメージ) |
+| 1 | XX.XXMB | |
+| ... | ... | |
 
 ### ボトルネック分析
 | フェーズ | 時間/サイズ | 評価 |

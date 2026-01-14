@@ -69,36 +69,32 @@ runs:
     - name: Setup crane
       uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b60be9435f6e # v0.4
 
-    # イメージサイズをログ出力（デプロイパフォーマンス分析用）
-    - name: Log image metrics
+    # イメージマニフェスト取得（デプロイパフォーマンス分析用）
+    - name: Fetch image manifest
       shell: bash
       run: |
-        echo "::group::Docker Image Metrics"
+        mkdir -p /tmp/deploy-metrics
 
         # crane に Google Cloud 認証を設定
         gcloud auth print-access-token | crane auth login ${{ inputs.registry }} -u oauth2accesstoken --password-stdin
 
-        # crane で圧縮サイズを取得（linux/amd64プラットフォーム指定）
-        echo "Fetching manifest for ${{ inputs.deploy-image }}"
-        MANIFEST=$(crane manifest --platform linux/amd64 ${{ inputs.deploy-image }} 2>&1 || echo "{}")
-        COMPRESSED_SIZE=$(echo "$MANIFEST" | jq '[.config.size // 0, (.layers // [])[].size] | add // 0')
-        COMPRESSED_MB=$(echo "scale=2; $COMPRESSED_SIZE / 1024 / 1024" | bc)
-        LAYER_COUNT=$(echo "$MANIFEST" | jq '(.layers // []) | length')
+        # マニフェストを取得してJSONファイルとして保存
+        crane manifest --platform linux/amd64 ${{ inputs.deploy-image }} > /tmp/deploy-metrics/manifest.json
 
-        echo "deploy_image=${{ inputs.deploy-image }}"
-        echo "compressed_size_bytes=$COMPRESSED_SIZE"
-        echo "compressed_size_mb=${COMPRESSED_MB}MB"
-        echo "layer_count=$LAYER_COUNT"
+        # メタデータを追加
+        jq -n \
+          --arg image "${{ inputs.deploy-image }}" \
+          --arg env "${{ inputs.environment }}" \
+          --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+          '{image: $image, environment: $env, timestamp: $timestamp}' > /tmp/deploy-metrics/metadata.json
 
-        echo "::endgroup::"
-
-        # GitHub Actions Summary に出力
-        echo "## Docker Image Metrics" >> $GITHUB_STEP_SUMMARY
-        echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
-        echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
-        echo "| Image | \`${{ inputs.deploy-image }}\` |" >> $GITHUB_STEP_SUMMARY
-        echo "| Compressed Size | ${COMPRESSED_MB}MB |" >> $GITHUB_STEP_SUMMARY
-        echo "| Layer Count | ${LAYER_COUNT} |" >> $GITHUB_STEP_SUMMARY
+    # マニフェストをアーティファクトとして保存
+    - name: Upload image manifest
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      with:
+        name: deploy-metrics-${{ inputs.environment }}
+        path: /tmp/deploy-metrics/
+        retention-days: 30
 
     # Cloud Run デプロイ（事前ビルド済みイメージを使用）
     - name: Deploy to Cloud Run
