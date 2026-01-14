@@ -75,6 +75,9 @@ runs:
       run: |
         echo "::group::Docker Image Metrics"
 
+        # crane に Google Cloud 認証を設定
+        gcloud auth print-access-token | crane auth login ${{ inputs.registry }} -u oauth2accesstoken --password-stdin
+
         # crane で圧縮サイズを取得
         MANIFEST=$(crane manifest ${{ inputs.deploy-image }} 2>/dev/null || echo "{}")
         COMPRESSED_SIZE=$(echo "$MANIFEST" | jq '[.config.size // 0, (.layers // [])[].size] | add // 0')
