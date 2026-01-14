@@ -1,7 +1,12 @@
 ---
 name: deploy-analysis
 description: GitHub Actionsのデプロイ実行履歴を分析し、デプロイ時間のトレンド把握と異常検知を行う。「デプロイ分析」「デプロイパフォーマンス」と言われた時に使用。
-allowed-tools: Bash, Read, Glob
+allowed-tools:
+  - Read
+  - Bash(gh run list:*)
+  - Bash(gh run view:*)
+  - Bash(gh run download:*)
+  - Bash(jq:*)
 ---
 
 # デプロイパフォーマンス分析

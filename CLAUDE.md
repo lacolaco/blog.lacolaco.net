@@ -31,9 +31,10 @@ Kent Beck style. Tests = spec. Fix implementation, not tests.
 
 ### Stack
 - Astro 5.x blog, Notion CMS, bilingual (ja/en)
-- Node.js 22+, pnpm 10.16.1, TS strict
+- Node.js 24+, pnpm 10.20.0, TS strict
 - Astro 5.x+React, Tailwind 4.x
 - GCP: Cloud Run, Cloud Storage (OG cache)
+- Cloudflare R2: 画像CDN (images.blog.lacolaco.net)
 
 ### Commands
 ```
@@ -47,7 +48,7 @@ pnpm test:libs    # library tests
 
 ### Architecture
 - Content: Notion→notion-sync→src/content/post/*.md (**DO NOT EDIT**)
-- Images: public/images/{slug}/ (**DO NOT EDIT**)
+- Images: public/images/{slug}/ → R2 CDN経由で配信 (**DO NOT EDIT**)
 - Components: .astro (static) / .tsx (interactive)
 - i18n: `<slug>.md` (ja), `<slug>.en.md` (en)
 
@@ -132,7 +133,15 @@ Before implementing with external libraries:
 - Components: TTSControls.tsx, src/libs/tts/
 - Analytics: tts_start, tts_complete, tts_error
 
+### Image CDN (Cloudflare R2)
+- 画像はビルド時にR2 CDN URLに書き換え
+- tools/astro-integration-image-cdn/: URL変換Astro integration
+- tools/r2-sync/: R2へのアップロードスクリプト
+- 環境変数: IMAGE_CDN_BASE_URL
+- Dockerイメージから画像除外（.dockerignore）
+
 ### Deployment
 - GCP Cloud Run via GitHub Actions
 - Production: main→deploy-production.yml
 - Preview: PR→deploy-preview.yml
+- 画像同期: sync-with-notion.yml→R2
