@@ -54,4 +54,3 @@ jobs:
             asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}
           deploy-image: 'asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}'
           revision-traffic: 'LATEST=100'
-          gcs-bucket: ${{ vars.GCS_BUCKET_NAME }}

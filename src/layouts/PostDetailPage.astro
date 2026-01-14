@@ -43,7 +43,7 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
     <BaseHead
       title={`${title} | ${SITE_TITLE}`}
       description={''}
-      image={`/og/${slug}.png`}
+      image={`/og/${slug}.png?t=${last_edited_time.getTime()}`}
       gtagProps={{
         post_slug: `${slug}`,
         post_locale: `${locale}`,

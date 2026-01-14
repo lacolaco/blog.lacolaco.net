@@ -33,10 +33,6 @@ inputs:
   revision-traffic:
     description: 'Traffic allocation (for production)'
     required: false
-  gcs-bucket:
-    description: 'GCS bucket name for environment variables'
-    required: true
-
 outputs:
   url:
     description: 'Deployed service URL'
@@ -108,5 +104,3 @@ runs:
         tag: ${{ inputs.revision-tag }}
         revision_traffic: ${{ inputs.revision-traffic }}
         flags: '--allow-unauthenticated'
-        env_vars: |-
-          GCS_BUCKET_NAME=${{ inputs.gcs-bucket }}
