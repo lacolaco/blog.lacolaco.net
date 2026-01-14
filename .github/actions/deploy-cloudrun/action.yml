@@ -80,7 +80,8 @@ runs:
 
         # crane で圧縮サイズを取得
         echo "Fetching manifest for ${{ inputs.deploy-image }}"
-        MANIFEST=$(crane manifest ${{ inputs.deploy-image }} || echo "{}")
+        MANIFEST=$(crane manifest ${{ inputs.deploy-image }} 2>&1 || echo "{}")
+        echo "Manifest: $MANIFEST"
         COMPRESSED_SIZE=$(echo "$MANIFEST" | jq '[.config.size // 0, (.layers // [])[].size] | add // 0')
         COMPRESSED_MB=$(echo "scale=2; $COMPRESSED_SIZE / 1024 / 1024" | bc)
         LAYER_COUNT=$(echo "$MANIFEST" | jq '(.layers // []) | length')
