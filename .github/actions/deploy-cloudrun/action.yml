@@ -78,10 +78,9 @@ runs:
         # crane に Google Cloud 認証を設定
         gcloud auth print-access-token | crane auth login ${{ inputs.registry }} -u oauth2accesstoken --password-stdin
 
-        # crane で圧縮サイズを取得
+        # crane で圧縮サイズを取得（linux/amd64プラットフォーム指定）
         echo "Fetching manifest for ${{ inputs.deploy-image }}"
-        MANIFEST=$(crane manifest ${{ inputs.deploy-image }} 2>&1 || echo "{}")
-        echo "Manifest: $MANIFEST"
+        MANIFEST=$(crane manifest --platform linux/amd64 ${{ inputs.deploy-image }} 2>&1 || echo "{}")
         COMPRESSED_SIZE=$(echo "$MANIFEST" | jq '[.config.size // 0, (.layers // [])[].size] | add // 0')
         COMPRESSED_MB=$(echo "scale=2; $COMPRESSED_SIZE / 1024 / 1024" | bc)
         LAYER_COUNT=$(echo "$MANIFEST" | jq '(.layers // []) | length')
