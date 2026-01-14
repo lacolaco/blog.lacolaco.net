@@ -178,8 +178,8 @@ importers:
         specifier: 4.0.16
         version: 4.0.16(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.97.2)(tsx@4.21.0)(yaml@2.8.2)
       zod:
-        specifier: ^3.22.4
-        version: 3.25.76
+        specifier: ^4.0.0
+        version: 4.2.1
 
 packages:
 
