@@ -18,6 +18,10 @@ export interface Props {
 }
 
 const { title, description, image, gtagProps } = Astro.props;
+
+// 画像CDNへのpreconnect（環境変数が設定されている場合のみ）
+const imageCdnBaseUrl = process.env.IMAGE_CDN_BASE_URL;
+const imageCdnOrigin = imageCdnBaseUrl ? new URL(imageCdnBaseUrl).origin : null;
 ---
 
 <!-- Global Metadata -->
@@ -25,6 +29,9 @@ const { title, description, image, gtagProps } = Astro.props;
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/png" href="/icons/laco.png" />
 <meta name="generator" content={Astro.generator} />
+
+<!-- Preconnect to image CDN -->
+{imageCdnOrigin && <link rel="preconnect" href={imageCdnOrigin} />}
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>
