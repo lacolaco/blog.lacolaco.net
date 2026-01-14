@@ -65,6 +65,37 @@ runs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
+    # crane セットアップ（イメージメトリクス取得用）
+    - name: Setup crane
+      uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b60be9435f6e # v0.4
+
+    # イメージマニフェスト取得（デプロイパフォーマンス分析用）
+    - name: Fetch image manifest
+      shell: bash
+      run: |
+        mkdir -p /tmp/deploy-metrics
+
+        # crane に Google Cloud 認証を設定
+        gcloud auth print-access-token | crane auth login ${{ inputs.registry }} -u oauth2accesstoken --password-stdin
+
+        # マニフェストを取得してJSONファイルとして保存
+        crane manifest --platform linux/amd64 ${{ inputs.deploy-image }} > /tmp/deploy-metrics/manifest.json
+
+        # メタデータを追加
+        jq -n \
+          --arg image "${{ inputs.deploy-image }}" \
+          --arg env "${{ inputs.environment }}" \
+          --arg timestamp "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+          '{image: $image, environment: $env, timestamp: $timestamp}' > /tmp/deploy-metrics/metadata.json
+
+    # マニフェストをアーティファクトとして保存
+    - name: Upload image manifest
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+      with:
+        name: deploy-metrics-${{ inputs.environment }}
+        path: /tmp/deploy-metrics/
+        retention-days: 30
+
     # Cloud Run デプロイ（事前ビルド済みイメージを使用）
     - name: Deploy to Cloud Run
       id: deploy
