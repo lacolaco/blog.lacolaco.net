@@ -65,6 +65,37 @@ runs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
 
+    # crane セットアップ（イメージメトリクス取得用）
+    - name: Setup crane
+      uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b60be9435f6e # v0.4
+
+    # イメージサイズをログ出力（デプロイパフォーマンス分析用）
+    - name: Log image metrics
+      shell: bash
+      run: |
+        echo "::group::Docker Image Metrics"
+
+        # crane で圧縮サイズを取得
+        MANIFEST=$(crane manifest ${{ inputs.deploy-image }} 2>/dev/null || echo "{}")
+        COMPRESSED_SIZE=$(echo "$MANIFEST" | jq '[.config.size // 0, (.layers // [])[].size] | add // 0')
+        COMPRESSED_MB=$(echo "scale=2; $COMPRESSED_SIZE / 1024 / 1024" | bc)
+        LAYER_COUNT=$(echo "$MANIFEST" | jq '(.layers // []) | length')
+
+        echo "deploy_image=${{ inputs.deploy-image }}"
+        echo "compressed_size_bytes=$COMPRESSED_SIZE"
+        echo "compressed_size_mb=${COMPRESSED_MB}MB"
+        echo "layer_count=$LAYER_COUNT"
+
+        echo "::endgroup::"
+
+        # GitHub Actions Summary に出力
+        echo "## Docker Image Metrics" >> $GITHUB_STEP_SUMMARY
+        echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+        echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Image | \`${{ inputs.deploy-image }}\` |" >> $GITHUB_STEP_SUMMARY
+        echo "| Compressed Size | ${COMPRESSED_MB}MB |" >> $GITHUB_STEP_SUMMARY
+        echo "| Layer Count | ${LAYER_COUNT} |" >> $GITHUB_STEP_SUMMARY
+
     # Cloud Run デプロイ（事前ビルド済みイメージを使用）
     - name: Deploy to Cloud Run
       id: deploy
