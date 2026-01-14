@@ -21,7 +21,6 @@ This composite action provides a reusable workflow step for building Docker imag
 | `no-traffic` | Set to true for preview deployments | No | `false` |
 | `revision-tag` | Cloud Run revision tag (for preview) | No | - |
 | `revision-traffic` | Traffic allocation (for production) | No | - |
-| `gcs-bucket` | GCS bucket name for environment variables | Yes | - |
 
 ## Outputs
 
@@ -45,7 +44,6 @@ This composite action provides a reusable workflow step for building Docker imag
     deploy-image: 'asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}'
     no-traffic: 'true'
     revision-tag: 'pr-${{ github.event.number }}'
-    gcs-bucket: ${{ vars.GCS_BUCKET_NAME }}
 ```
 
 ### Production Environment
@@ -60,7 +58,6 @@ This composite action provides a reusable workflow step for building Docker imag
       asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}
     deploy-image: 'asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}'
     revision-traffic: 'LATEST=100'
-    gcs-bucket: ${{ vars.GCS_BUCKET_NAME }}
 ```
 
 ## Implementation Details
