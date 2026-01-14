@@ -6,10 +6,10 @@ export const prerender = false;
 
 export async function GET({ params }: APIContext) {
   const { slug } = params;
-  if (!slug) return { status: 404 };
+  if (!slug) return new Response(null, { status: 404 });
 
   const post = (await queryAvailablePosts()).find((post) => post.data.slug === slug);
-  if (!post) return { status: 404 };
+  if (!post) return new Response(null, { status: 404 });
 
   const title = post.data.title;
 
