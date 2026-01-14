@@ -33,8 +33,8 @@ Kent Beck style. Tests = spec. Fix implementation, not tests.
 - Astro 5.x blog, Notion CMS, bilingual (ja/en)
 - Node.js 24+, pnpm 10.20.0, TS strict
 - Astro 5.x+React, Tailwind 4.x
-- GCP: Cloud Run, Cloud Storage (OG cache)
-- Cloudflare R2: 画像CDN (images.blog.lacolaco.net)
+- GCP: Cloud Run
+- Cloudflare: R2 (画像CDN), CDN (OG画像キャッシュ)
 
 ### Commands
 ```
