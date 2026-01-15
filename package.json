@@ -60,7 +60,7 @@
     "@types/katex": "0.16.8",
     "@types/mime-types": "^3.0.1",
     "@types/node": "24.10.6",
-    "@types/react": "19.2.7",
+    "@types/react": "19.2.8",
     "@types/react-dom": "19.2.3",
     "eslint": "^9.28.0",
     "mime-types": "^3.0.2",
