@@ -23,7 +23,7 @@
     "test": "pnpm test:tools && pnpm test:libs",
     "lint": "eslint ."
   },
-  "packageManager": "pnpm@10.20.0",
+  "packageManager": "pnpm@10.28.0",
   "dependencies": {
     "@astrojs/node": "^9.4.6",
     "@astrojs/prism": "3.3.0",
