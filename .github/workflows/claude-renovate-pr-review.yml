@@ -15,7 +15,7 @@ jobs:
       pull-requests: write # for commenting on the PR
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-      - uses: koki-develop/claude-renovate-review@e3b6fc8f6ce1460c17b70ad0e106ba774d4efc62 # v1.0.8
+      - uses: koki-develop/claude-renovate-review@ce591595051d4394070ea7422c3e8e5d3bd5a99f # v1.0.10
         with:
           claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           allowed-tools: |
