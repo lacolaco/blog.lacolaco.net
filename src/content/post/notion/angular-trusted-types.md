@@ -3,7 +3,7 @@ title: 'Angular: Trusted Typesサポートの概要'
 slug: 'angular-trusted-types'
 icon: ''
 created_time: '2020-11-03T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:07:00.000Z'
+last_edited_time: '2026-01-15T14:28:00.000Z'
 tags:
   - 'Angular'
   - 'Security'

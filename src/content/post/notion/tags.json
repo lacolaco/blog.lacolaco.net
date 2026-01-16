@@ -12,12 +12,6 @@
     "description": null
   },
   {
-    "id": "4ea738db-5421-4df3-a85a-447831ef7696",
-    "name": "読書",
-    "color": "brown",
-    "description": null
-  },
-  {
     "id": "fecde198-2e24-4dfe-8a0a-ae2040e7b8b4",
     "name": "言語化",
     "color": "brown",
@@ -495,6 +489,12 @@
     "id": "0a2b7b62-ef72-42d6-834e-3fb0e6a22753",
     "name": "コードレビュー",
     "color": "pink",
+    "description": null
+  },
+  {
+    "id": "4ea738db-5421-4df3-a85a-447831ef7696",
+    "name": "読書",
+    "color": "brown",
     "description": null
   },
   {

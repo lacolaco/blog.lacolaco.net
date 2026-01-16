@@ -965,7 +965,7 @@
     "filePath": "angular-eliminate-render-blocking-requests.md"
   },
   "a78e0e2c-f3cc-478d-ac9b-7ae6825d66c6": {
-    "lastModified": "2023-12-30T10:07:00.000Z",
+    "lastModified": "2026-01-15T14:28:00.000Z",
     "slug": "angular-trusted-types",
     "filePath": "angular-trusted-types.md"
   },
@@ -1638,5 +1638,10 @@
     "lastModified": "2026-01-13T13:12:00.000Z",
     "slug": "20260113221200",
     "filePath": "20260113221200.md"
+  },
+  "2ea3521b-014a-8043-90c3-de31672f18ea": {
+    "lastModified": "2026-01-16T09:37:00.000Z",
+    "slug": "survival-of-the-fittest-in-habits",
+    "filePath": "survival-of-the-fittest-in-habits.md"
   }
 }
