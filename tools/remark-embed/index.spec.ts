@@ -66,6 +66,63 @@ describe('remarkEmbed', () => {
       const result = await processMarkdown(markdown);
       assert.equal(result, expectedHtml);
     });
+
+    test('YouTube ShortsのURLであるとき、YouTube動画が埋め込まれる', async () => {
+      const markdown = 'https://youtube.com/shorts/0uFosrTxYCc';
+      const videoId = '0uFosrTxYCc';
+      const expectedHtml = `
+<div class="block-link block-link-youtube">
+  <iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/${videoId}"
+    style="border: none;"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+  ></iframe>
+</div>
+      `.trim();
+      const result = await processMarkdown(markdown);
+      assert.equal(result, expectedHtml);
+    });
+
+    test('YouTube ShortsのURL（クエリパラメータ付き）であるとき、YouTube動画が埋め込まれる', async () => {
+      const markdown = 'https://youtube.com/shorts/0uFosrTxYCc?feature=share';
+      const videoId = '0uFosrTxYCc';
+      const expectedHtml = `
+<div class="block-link block-link-youtube">
+  <iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/${videoId}"
+    style="border: none;"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+  ></iframe>
+</div>
+      `.trim();
+      const result = await processMarkdown(markdown);
+      assert.equal(result, expectedHtml);
+    });
+
+    test('YouTube liveのURLであるとき、YouTube動画が埋め込まれる', async () => {
+      const markdown = 'https://www.youtube.com/live/ATlbJnc4d3o';
+      const videoId = 'ATlbJnc4d3o';
+      const expectedHtml = `
+<div class="block-link block-link-youtube">
+  <iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/${videoId}"
+    style="border: none;"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen
+  ></iframe>
+</div>
+      `.trim();
+      const result = await processMarkdown(markdown);
+      assert.equal(result, expectedHtml);
+    });
   });
 
   describe('WebページURLの埋め込み', () => {
