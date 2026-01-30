@@ -1648,5 +1648,10 @@
     "lastModified": "2026-01-17T15:42:00.000Z",
     "slug": "20260118004200",
     "filePath": "20260118004200.md"
+  },
+  "2e93521b-014a-8057-9534-cd937331ad0b": {
+    "lastModified": "2026-01-30T14:15:00.000Z",
+    "slug": "angular-vitest-browser-mode-testing-library",
+    "filePath": "angular-vitest-browser-mode-testing-library.md"
   }
 }
