@@ -1653,5 +1653,10 @@
     "lastModified": "2026-01-30T14:15:00.000Z",
     "slug": "angular-vitest-browser-mode-testing-library",
     "filePath": "angular-vitest-browser-mode-testing-library.md"
+  },
+  "3c1c45e4-096f-4bd2-98c2-09b07d7be73f": {
+    "lastModified": "2026-03-16T01:41:00.000Z",
+    "slug": "angular-firestore-resource-signal",
+    "filePath": "angular-firestore-resource-signal.md"
   }
 }
