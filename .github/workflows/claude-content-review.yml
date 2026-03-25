@@ -35,7 +35,7 @@ jobs:
           CONTENT_ONLY=true
           while IFS= read -r file; do
             [[ -z "$file" ]] && continue
-            if [[ ! "$file" =~ ^src/content/ ]] && [[ ! "$file" =~ ^public/images/ ]]; then
+            if [[ ! "$file" =~ ^src/content/ ]] && [[ ! "$file" =~ ^public/images/ ]] && [[ "$file" != "manifest.json" ]]; then
               CONTENT_ONLY=false
               break
             fi
