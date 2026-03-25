@@ -1,0 +1,148 @@
+name: Content Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      should_review: ${{ steps.check.outputs.should_review }}
+      content_only: ${{ steps.check.outputs.content_only }}
+    steps:
+      - name: Classify PR
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          # sync-with-notion bot以外のPRはスキップ
+          if [[ "$PR_AUTHOR" != "lacolaco-actions-worker[bot]" ]]; then
+            echo "should_review=false" >> "$GITHUB_OUTPUT"
+            echo "content_only=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "should_review=true" >> "$GITHUB_OUTPUT"
+
+          # 変更ファイルを分類
+          FILES=$(gh pr diff "$PR_NUMBER" --name-only --repo "$REPO")
+          CONTENT_ONLY=true
+          while IFS= read -r file; do
+            [[ -z "$file" ]] && continue
+            if [[ ! "$file" =~ ^src/content/post/ ]] && [[ ! "$file" =~ ^public/images/ ]]; then
+              CONTENT_ONLY=false
+              break
+            fi
+          done <<< "$FILES"
+          echo "content_only=$CONTENT_ONLY" >> "$GITHUB_OUTPUT"
+
+  content-review:
+    needs: classify
+    if: needs.classify.outputs.should_review == 'true' && needs.classify.outputs.content_only == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 1
+
+      - name: Review content with Claude
+        id: review
+        uses: anthropics/claude-code-action@1b8ee3b94104046d71fde52ec3557651ad8c0d71 # v1.0.29
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            このPRはNotion CMSから同期されたブログ記事の変更です。
+            `gh pr diff ${{ github.event.pull_request.number }}` でdiffを取得し、記事テキストの文面チェックを行ってください。
+
+            チェック項目:
+            - 明らかな誤字脱字・typo（日本語・英語両方）
+            - 技術用語のスペルミス
+            - マークダウン構文の明らかな誤り（閉じ忘れ等）
+
+            チェック対象外（指摘しないこと）:
+            - 文体・表現の好み
+            - 内容の技術的正誤
+            - frontmatter（---で囲まれたYAML部分）の変更
+            - 画像ファイルの変更
+
+            結果をJSONで返してください。問題がなければ approved: true、問題があれば approved: false と issues 配列に具体的な指摘を入れてください。
+          claude_args: >-
+            --allowed-tools "Bash(gh pr diff:*),Bash(gh pr view:*)"
+            --json-schema '{"type":"object","properties":{"approved":{"type":"boolean"},"issues":{"type":"array","items":{"type":"object","properties":{"file":{"type":"string"},"description":{"type":"string"}},"required":["file","description"]}}},"required":["approved","issues"]}'
+
+      - name: Process review result
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REVIEW_RESULT: ${{ steps.review.outputs.structured_output }}
+        run: |
+          if [[ -z "$REVIEW_RESULT" ]]; then
+            echo "::error::structured_output is empty"
+            exit 1
+          fi
+
+          APPROVED=$(echo "$REVIEW_RESULT" | jq -r '.approved')
+
+          if [[ "$APPROVED" == "true" ]]; then
+            gh pr comment "$PR_NUMBER" --body "$(cat <<'EOF'
+          ## ✅ コンテンツレビュー OK
+
+          文面チェックで問題は見つかりませんでした。自動マージを設定します。
+          EOF
+          )"
+            gh pr merge --auto --squash "$PR_NUMBER"
+          else
+            ISSUES=$(echo "$REVIEW_RESULT" | jq -r '.issues[] | "- **\(.file)**: \(.description)"')
+            gh pr comment "$PR_NUMBER" --body "$(cat <<EOF
+          ## ❌ コンテンツレビュー NG
+
+          以下の問題が見つかりました:
+
+          ${ISSUES}
+
+          Notion側で修正後、再同期してください。
+          EOF
+          )"
+            exit 1
+          fi
+
+  maintainer-review:
+    needs: classify
+    if: needs.classify.outputs.should_review == 'true' && needs.classify.outputs.content_only == 'false'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Request maintainer review
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          gh pr edit "$PR_NUMBER" --add-reviewer lacolaco
+          gh pr comment "$PR_NUMBER" --body "$(cat <<'EOF'
+          ## ⚠️ コード変更あり
+
+          コンテンツ以外のファイルが変更されています。メンテナのレビューが必要です。
+          EOF
+          )"
+
+  ok:
+    needs: [classify, content-review, maintainer-review]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
+        with:
+          allowed-skips: content-review, maintainer-review
+          jobs: ${{ toJSON(needs) }}
