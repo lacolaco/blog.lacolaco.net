@@ -84,6 +84,7 @@ jobs:
       - name: Process review result
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           REVIEW_RESULT: ${{ steps.review.outputs.structured_output }}
         run: |
@@ -127,6 +128,7 @@ jobs:
       - name: Request maintainer review
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           gh pr edit "$PR_NUMBER" --add-reviewer lacolaco
