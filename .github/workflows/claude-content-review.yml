@@ -56,6 +56,13 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Generate App token
+        id: app-token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        with:
+          app-id: ${{ secrets.WORKER_APP_ID }}
+          private-key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}
+
       - name: Review content with Claude
         id: review
         uses: anthropics/claude-code-action@1b8ee3b94104046d71fde52ec3557651ad8c0d71 # v1.0.29
@@ -83,7 +90,7 @@ jobs:
 
       - name: Process review result
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
           GH_REPO: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           REVIEW_RESULT: ${{ steps.review.outputs.structured_output }}
