@@ -85,8 +85,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       '@notionhq/client':
-        specifier: 5.6.0
-        version: 5.6.0
+        specifier: 5.14.0
+        version: 5.14.0
       '@tailwindcss/vite':
         specifier: ^4.1.4
         version: 4.1.18(vite@6.4.1(@types/node@24.12.0)(jiti@2.6.1)(lightningcss@1.30.2)(sass@1.97.2)(tsx@4.21.0)(yaml@2.8.3))
@@ -1043,8 +1043,8 @@ packages:
   '@mermaid-js/parser@0.6.3':
     resolution: {integrity: sha512-lnjOhe7zyHjc+If7yT4zoedx2vo4sHaTmtkl1+or8BRTnCtDmcTpAjpzDSfCZrshM5bCoz0GyidzadJAH1xobA==}
 
-  '@notionhq/client@5.6.0':
-    resolution: {integrity: sha512-eA3dO87vQJhFmR59utXH8r0nnulW7C7oTcxfp3bpiiTiv59luCkOkbbALCIa8TzBDdELoRD/zJEIfKcynyFR6Q==}
+  '@notionhq/client@5.14.0':
+    resolution: {integrity: sha512-9bbH7/9M6D9YlHMYCZ1aAFxRCWiKRBpP/XOnAHFtBCFDf00PPhpWRSsGE1FfmjYCNW2BFRj19WshJFH5IFfNvg==}
     engines: {node: '>=18'}
 
   '@oslojs/encoding@1.1.0':
@@ -5103,7 +5103,7 @@ snapshots:
 
   '@lacolaco/notion-sync@3.0.0':
     dependencies:
-      '@notionhq/client': 5.6.0
+      '@notionhq/client': 5.14.0
       cli-progress: 3.12.0
       consola: 3.4.2
       js-yaml: 4.1.1
@@ -5117,7 +5117,7 @@ snapshots:
     dependencies:
       langium: 3.3.1
 
-  '@notionhq/client@5.6.0': {}
+  '@notionhq/client@5.14.0': {}
 
   '@oslojs/encoding@1.1.0': {}
 
