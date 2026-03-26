@@ -20,24 +20,20 @@
     },
     {
       "groupName": "types packages",
-      "matchPackageNames": ["@types/**"],
-      "automerge": true
+      "matchPackageNames": ["@types/**"]
     },
     {
       "groupName": "iconify packages",
-      "matchPackageNames": ["@iconify/**"],
-      "automerge": true
+      "matchPackageNames": ["@iconify/**"]
     },
     {
       "matchPackageNames": ["@fontsource/**"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "matchUpdateTypes": ["minor", "patch"]
     },
     {
       "groupName": "typescript-eslint packages",
       "matchPackageNames": ["typescript-eslint", "@typescript-eslint/**"],
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
+      "matchUpdateTypes": ["minor", "patch"]
     }
   ]
 }
