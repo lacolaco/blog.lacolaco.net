@@ -1,8 +1,41 @@
 name: CI
 
+# PR検証・レビュー・自動マージの統合ワークフロー
+#
+# フロー:
+#   ┌─ classify ─→ content-review (needs: classify)
+#   │             → code-review    (needs: classify)
+#   ├─ CI jobs (build, lint, format, test, notion-sync-dry-run)
+#   ├─ renovate-review (独立、classifyに依存しない)
+#   ↓
+#   ok (alls-green gate, 唯一のrequired check)
+#   ↓
+#   auto-merge
+#
+# レビュー条件 (排他ではない。code+content PRでは両方実行される):
+#   - renovate-review: author == renovate[bot]
+#   - content-review:  content_changed && author != renovate[bot]
+#   - code-review:     code_changed && author != renovate[bot]
+#
+# 自動マージ条件:
+#   ok成功 かつ (renovate-review成功 or (content-review成功 かつ code-review未実行))
+#   → code変更を含むPRは手動マージ
+#
+# draft PR:
+#   - CI jobsのみ実行
+#   - content-review, code-review: classifyの出力にdraft条件を組み込みスキップ
+#   - renovate-review: renovate botはdraft PRを作らないため対象外
+#   - auto-merge: reviewが全スキップで条件不成立のためスキップ
+#   - draft解除時にready_for_reviewで再実行
+#
+# claude-code-action失敗時（ワークフロー変更PR等）:
+#   - Gateステップ(if: always())がapproved=falseでfail
+#   - ok fail → 人間がレビューして手動マージ
+
 on:
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
   classify:
@@ -10,8 +43,8 @@ jobs:
     permissions:
       pull-requests: read
     outputs:
-      code_changed: ${{ steps.code-paths.outputs.code }}
-      content_changed: ${{ steps.content-paths.outputs.content }}
+      code_changed: ${{ !github.event.pull_request.draft && steps.code-paths.outputs.code == 'true' }}
+      content_changed: ${{ !github.event.pull_request.draft && steps.content-paths.outputs.content == 'true' }}
     steps:
       - uses: dorny/paths-filter@d1c1ffe0248fe513906c8e24db8ea791d46f8590 # v3.0.3
         id: content-paths
@@ -32,6 +65,17 @@ jobs:
               - '!src/content/**'
               - '!public/images/**'
               - '!manifest.json'
+
+      - name: Verify classification
+        if: ${{ !github.event.pull_request.draft }}
+        env:
+          CODE: ${{ steps.code-paths.outputs.code }}
+          CONTENT: ${{ steps.content-paths.outputs.content }}
+        run: |
+          if [[ "$CODE" != "true" && "$CONTENT" != "true" ]]; then
+            echo "::error::Classification failed: no code or content changes detected. Possible paths-filter issue."
+            exit 1
+          fi
 
   # === CI (always runs) ===
 
@@ -212,6 +256,7 @@ jobs:
 
       - name: Gate
         id: gate
+        if: always()
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -220,6 +265,9 @@ jobs:
           if [[ -z "$REVIEW_RESULT" ]]; then
             echo "::error::structured_output is empty"
             echo "approved=false" >> "$GITHUB_OUTPUT"
+            gh pr comment "$PR_NUMBER" --body "## コンテンツレビュー失敗
+
+          自動レビューを実行できませんでした。人間のレビューが必要です。"
             exit 1
           fi
 
@@ -297,6 +345,7 @@ jobs:
 
       - name: Gate
         id: gate
+        if: always()
         env:
           GH_TOKEN: ${{ github.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -305,6 +354,9 @@ jobs:
           if [[ -z "$REVIEW_RESULT" ]]; then
             echo "::error::structured_output is empty"
             echo "approved=false" >> "$GITHUB_OUTPUT"
+            gh pr comment "$PR_NUMBER" --body "## コードレビュー失敗
+
+          自動レビューを実行できませんでした。人間のレビューが必要です。"
             exit 1
           fi
 
