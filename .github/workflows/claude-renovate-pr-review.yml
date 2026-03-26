@@ -15,7 +15,16 @@ jobs:
       pull-requests: write # for commenting on the PR
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Generate App token
+        id: app-token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        with:
+          app-id: ${{ secrets.WORKER_APP_ID }}
+          private-key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}
+
       - uses: koki-develop/claude-renovate-review@03208a61638c624c36d104ed42183a95829caa35 # v1.1.0
+        id: review
         with:
           claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           allowed-tools: |
@@ -32,3 +41,10 @@ jobs:
             WebFetch(domain:playwright.dev)
             WebFetch(domain:iconify.design)
             WebFetch(domain:developers.notion.com)
+
+      - name: Auto-merge if safe
+        if: steps.review.outputs.safety-assessment == 'safe'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr merge "$PR_NUMBER" --squash --auto
