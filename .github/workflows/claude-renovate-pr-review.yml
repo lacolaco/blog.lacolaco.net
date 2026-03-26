@@ -47,4 +47,5 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-        run: gh pr merge "$PR_NUMBER" --squash --auto
+          GH_REPO: ${{ github.repository }}
+        run: gh pr merge "$PR_NUMBER" --squash --auto --repo "$GH_REPO"
