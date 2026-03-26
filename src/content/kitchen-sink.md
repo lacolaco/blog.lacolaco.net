@@ -5,7 +5,7 @@ icon: '📝'
 created_time: '2022-02-11T11:47:00.000Z'
 last_edited_time: '2025-06-08T03:34:00.000Z'
 category: 'Tech'
-tags: ['test']
+tags: ['test', 'ci-verify']
 published: false
 locale: 'ja'
 canonical_url: ''
