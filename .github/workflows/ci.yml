@@ -1,111 +1,375 @@
-name: ci
+name: CI
 
 on:
   pull_request:
     branches: [main]
-    paths-ignore:
-      - 'src/content/post/**'
-      - 'public/images/**'
 
 jobs:
+  classify:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      code_changed: ${{ steps.code-paths.outputs.code }}
+      content_changed: ${{ steps.content-paths.outputs.content }}
+    steps:
+      - uses: dorny/paths-filter@d1c1ffe0248fe513906c8e24db8ea791d46f8590 # v3.0.3
+        id: content-paths
+        with:
+          filters: |
+            content:
+              - 'src/content/**'
+              - 'public/images/**'
+              - 'manifest.json'
+
+      - uses: dorny/paths-filter@d1c1ffe0248fe513906c8e24db8ea791d46f8590 # v3.0.3
+        id: code-paths
+        with:
+          predicate-quantifier: 'every'
+          filters: |
+            code:
+              - '**'
+              - '!src/content/**'
+              - '!public/images/**'
+              - '!manifest.json'
+
+  # === CI (always runs) ===
+
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
       - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version-file: .node-version
           cache: 'pnpm'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@lacolaco'
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build
-        run: pnpm run build
+      - run: pnpm run build
 
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
       - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version-file: .node-version
           cache: 'pnpm'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@lacolaco'
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Generate Astro type definitions
-        run: pnpm astro sync
-      - name: Run lint
-        run: pnpm lint
+      - run: pnpm astro sync
+      - run: pnpm lint
 
   format:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
       - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version-file: .node-version
           cache: 'pnpm'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@lacolaco'
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Check formatting
-        run: pnpm format:check
+      - run: pnpm format:check
 
-  test: # 新しいtestジョブを追加
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
       - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version-file: .node-version
           cache: 'pnpm'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@lacolaco'
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Run tests
-        run: pnpm test:tools
+      - run: pnpm test:tools
 
   notion-sync-dry-run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: setup pnpm
-        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
       - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version-file: .node-version
           cache: 'pnpm'
           registry-url: 'https://npm.pkg.github.com'
           scope: '@lacolaco'
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create .env file
-        run: touch .env
-      - name: Run notion-sync dry-run
-        run: pnpm notion-sync -- --dry-run
+      - run: touch .env
+      - run: pnpm notion-sync -- --dry-run
         env:
           NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}
+
+  # === Reviews (standard interface: outputs.approved) ===
+
+  renovate-review:
+    if: github.event.pull_request.user.login == 'renovate[bot]'
+    runs-on: ubuntu-latest
+    outputs:
+      approved: ${{ steps.gate.outputs.approved }}
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: koki-develop/claude-renovate-review@03208a61638c624c36d104ed42183a95829caa35 # v1.1.0
+        id: review
+        with:
+          claude-code-oauth-token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          allowed-tools: |
+            WebFetch(domain:github.com)
+            WebFetch(domain:npm.pkg.github.com)
+            WebFetch(domain:raw.githubusercontent.com)
+            WebFetch(domain:www.npmjs.com)
+            WebFetch(domain:nodejs.org)
+            WebFetch(domain:www.astro.build)
+            WebFetch(domain:tailwindcss.com)
+            WebFetch(domain:docs.iconify.design)
+            WebFetch(domain:eslint.org)
+            WebFetch(domain:typescript-eslint.io)
+            WebFetch(domain:playwright.dev)
+            WebFetch(domain:iconify.design)
+            WebFetch(domain:developers.notion.com)
+
+      - name: Gate
+        id: gate
+        if: always()
+        env:
+          SAFETY: ${{ steps.review.outputs.safety-assessment }}
+        run: |
+          if [[ "$SAFETY" == "safe" ]]; then
+            echo "approved=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "approved=false" >> "$GITHUB_OUTPUT"
+            echo "::error::Renovate review: ${SAFETY:-unknown}"
+            exit 1
+          fi
+
+  content-review:
+    needs: classify
+    if: >-
+      needs.classify.outputs.content_changed == 'true' &&
+      github.event.pull_request.user.login != 'renovate[bot]'
+    runs-on: ubuntu-latest
+    outputs:
+      approved: ${{ steps.gate.outputs.approved }}
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 1
+
+      - name: Review content with Claude
+        id: review
+        uses: anthropics/claude-code-action@6062f3709600659be5e47fcddf2cf76993c235c2 # v1.0.76
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            このPRに含まれるブログ記事コンテンツの変更をレビューしてください。
+            `gh pr diff ${{ github.event.pull_request.number }}` でdiffを取得し、コンテンツファイル（src/content/**, public/images/**）の変更のみを対象に文面チェックを行ってください。
+            コード変更が含まれる場合がありますが、レビュー対象外です。
+
+            チェック項目:
+            - 明らかな誤字脱字・typo（日本語・英語両方）
+            - 技術用語のスペルミス
+            - マークダウン構文の明らかな誤り（閉じ忘れ等）
+
+            チェック対象外（指摘しないこと）:
+            - 文体・表現の好み
+            - 内容の技術的正誤
+            - frontmatter（---で囲まれたYAML部分）の変更
+            - 画像ファイルの変更
+            - コードファイルの変更
+
+            結果をJSONで返してください。問題がなければ approved: true、問題があれば approved: false。summary にレビューの要約、issues 配列に具体的な指摘を入れてください。
+          claude_args: >-
+            --allowed-tools "Bash(gh pr diff:*),Bash(gh pr view:*)"
+            --json-schema '{"type":"object","properties":{"approved":{"type":"boolean"},"summary":{"type":"string"},"issues":{"type":"array","items":{"type":"object","properties":{"file":{"type":"string"},"description":{"type":"string"}},"required":["file","description"]}}},"required":["approved","summary","issues"]}'
+
+      - name: Gate
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REVIEW_RESULT: ${{ steps.review.outputs.structured_output }}
+        run: |
+          if [[ -z "$REVIEW_RESULT" ]]; then
+            echo "::error::structured_output is empty"
+            echo "approved=false" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+
+          APPROVED=$(echo "$REVIEW_RESULT" | jq -r '.approved')
+          SUMMARY=$(echo "$REVIEW_RESULT" | jq -r '.summary')
+          echo "approved=$APPROVED" >> "$GITHUB_OUTPUT"
+
+          if [[ "$APPROVED" == "true" ]]; then
+            gh pr comment "$PR_NUMBER" --body "$(cat <<EOF
+          ## コンテンツレビュー OK
+
+          ${SUMMARY}
+          EOF
+          )"
+          else
+            ISSUES=$(echo "$REVIEW_RESULT" | jq -r '.issues[] | "- **\(.file)**: \(.description)"')
+            gh pr comment "$PR_NUMBER" --body "$(cat <<EOF
+          ## コンテンツレビュー NG
+
+          ${SUMMARY}
+
+          ${ISSUES}
+
+          問題を修正してPRを更新してください。
+          EOF
+          )"
+            exit 1
+          fi
+
+  code-review:
+    needs: classify
+    if: >-
+      needs.classify.outputs.code_changed == 'true' &&
+      github.event.pull_request.user.login != 'renovate[bot]'
+    runs-on: ubuntu-latest
+    outputs:
+      approved: ${{ steps.gate.outputs.approved }}
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 1
+
+      - name: Review code with Claude
+        id: review
+        uses: anthropics/claude-code-action@6062f3709600659be5e47fcddf2cf76993c235c2 # v1.0.76
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            このPRのコード変更をレビューしてください。
+            `gh pr diff ${{ github.event.pull_request.number }}` でdiffを取得し、コードファイルの変更のみを対象にレビューを行ってください。
+            コンテンツ変更（src/content/**, public/images/**, manifest.json）が含まれる場合がありますが、レビュー対象外です。
+
+            レビュー観点:
+            - コード品質とベストプラクティス
+            - 潜在的なバグや問題点
+            - パフォーマンスの考慮事項
+            - セキュリティの懸念
+            - テストカバレッジ
+
+            リポジトリのCLAUDE.mdを参照し、スタイルや慣例に従ってください。
+
+            結果をJSONで返してください。
+            - 重大な問題がなければ approved: true
+            - 重大な問題（バグ、セキュリティ、データ損失リスク等）があれば approved: false
+            - 軽微な指摘（スタイル、好み、改善提案）のみの場合は approved: true
+            summary にレビューの要約、issues 配列に具体的な指摘を入れてください。
+          claude_args: >-
+            --allowed-tools "Bash(gh pr diff:*),Bash(gh pr view:*)"
+            --json-schema '{"type":"object","properties":{"approved":{"type":"boolean"},"summary":{"type":"string"},"issues":{"type":"array","items":{"type":"object","properties":{"file":{"type":"string"},"description":{"type":"string"}},"required":["file","description"]}}},"required":["approved","summary","issues"]}'
+
+      - name: Gate
+        id: gate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REVIEW_RESULT: ${{ steps.review.outputs.structured_output }}
+        run: |
+          if [[ -z "$REVIEW_RESULT" ]]; then
+            echo "::error::structured_output is empty"
+            echo "approved=false" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
+
+          APPROVED=$(echo "$REVIEW_RESULT" | jq -r '.approved')
+          SUMMARY=$(echo "$REVIEW_RESULT" | jq -r '.summary')
+          echo "approved=$APPROVED" >> "$GITHUB_OUTPUT"
+
+          if [[ "$APPROVED" == "true" ]]; then
+            gh pr comment "$PR_NUMBER" --body "$(cat <<EOF
+          ## コードレビュー OK
+
+          ${SUMMARY}
+          EOF
+          )"
+          else
+            ISSUES=$(echo "$REVIEW_RESULT" | jq -r '.issues[] | "- **\(.file)**: \(.description)"')
+            gh pr comment "$PR_NUMBER" --body "$(cat <<EOF
+          ## コードレビュー NG
+
+          ${SUMMARY}
+
+          ${ISSUES}
+          EOF
+          )"
+            exit 1
+          fi
+
+  # === Gate ===
+
+  ok:
+    needs: [classify, build, lint, format, test, notion-sync-dry-run, renovate-review, content-review, code-review]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: re-actors/alls-green@05ac9388f0aebcb5727afa17fcccfecd6f8ec5fe # v1.2.2
+        with:
+          allowed-skips: renovate-review, content-review, code-review
+          jobs: ${{ toJSON(needs) }}
+
+  # === Auto-merge ===
+
+  auto-merge:
+    needs: [ok, renovate-review, content-review, code-review]
+    if: >-
+      !cancelled() &&
+      needs.ok.result == 'success' &&
+      (
+        needs.renovate-review.result == 'success' ||
+        (needs.content-review.result == 'success' && needs.code-review.result == 'skipped')
+      )
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Generate App token
+        id: app-token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        with:
+          app-id: ${{ secrets.WORKER_APP_ID }}
+          private-key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}
+
+      - name: Merge PR
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GH_REPO: ${{ github.repository }}
+        run: gh pr merge "$PR_NUMBER" --squash --auto --repo "$GH_REPO"
