@@ -86,6 +86,15 @@ pnpm test:libs    # library tests
 2. Check if library/pattern already exists
 3. Read similar implementations first
 
+### CI失敗時のログ確認（必須）
+- CI失敗時は**必ずエラーログを確認してから修正**せよ。推測で修正するな
+- ログ確認手段（優先順位）:
+  1. GitHub Check Run Annotations API: `curl -s "https://api.github.com/repos/lacolaco/blog.lacolaco.net/check-runs/{job_id}/annotations"`
+  2. CIジョブにStep Summary出力を追加して再実行
+  3. CIジョブにPRコメント出力を追加して再実行（`permissions: pull-requests: write` が必要）
+- **ログを見ずに推測で修正を繰り返すことは禁止**。エラーの原因を特定してから修正せよ
+- CIステップにデバッグ出力を追加した場合、修正完了後に必ず削除してci.ymlをmainと同一に戻せ
+
 ### Git Operations
 - Use git-github-ops agent for complex operations
 - NEVER `git reset --hard` with uncommitted changes you need
