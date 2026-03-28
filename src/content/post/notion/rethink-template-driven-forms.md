@@ -3,9 +3,8 @@ title: 'Angular: テンプレート駆動フォーム再考'
 slug: 'rethink-template-driven-forms'
 icon: '🔍'
 created_time: '2023-05-07T00:41:00.000Z'
-last_edited_time: '2026-03-28T07:55:00.000Z'
+last_edited_time: '2026-03-28T16:53:00.000Z'
 tags:
-  - 'Angular'
   - 'Forms'
 published: true
 locale: 'ja'

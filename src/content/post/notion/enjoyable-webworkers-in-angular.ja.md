@@ -3,9 +3,8 @@ title: 'Angular: Comlink を使った Web Worker の導入'
 slug: 'enjoyable-webworkers-in-angular.ja'
 icon: ''
 created_time: '2021-05-26T00:00:00.000Z'
-last_edited_time: '2026-03-28T07:24:00.000Z'
+last_edited_time: '2026-03-28T16:37:00.000Z'
 tags:
-  - 'Angular'
   - 'Web Worker'
 published: true
 locale: 'ja'

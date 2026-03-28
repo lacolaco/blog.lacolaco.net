@@ -3,9 +3,8 @@ title: 'Google I/O 2023 Angular関連セッションまとめ'
 slug: 'io2023-angular-summary'
 icon: ''
 created_time: '2023-05-15T12:09:00.000Z'
-last_edited_time: '2026-03-28T07:39:00.000Z'
+last_edited_time: '2026-03-28T16:38:00.000Z'
 tags:
-  - 'Angular'
   - 'Firebase'
   - 'Signals'
 published: true

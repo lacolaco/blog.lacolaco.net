@@ -3,10 +3,9 @@ title: 'google/typograms を触ってみた'
 slug: 'typograms'
 icon: ''
 created_time: '2023-08-10T12:11:00.000Z'
-last_edited_time: '2026-03-28T13:22:00.000Z'
+last_edited_time: '2026-03-28T16:53:00.000Z'
 tags:
   - '日記'
-  - 'Angular'
   - 'SVG'
 published: true
 locale: 'ja'

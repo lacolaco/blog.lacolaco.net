@@ -3,9 +3,8 @@ title: 'v-tokyo#22 でAngularのSignalsについて話します'
 slug: 'v-tokyo-22-pre'
 icon: ''
 created_time: '2025-03-03T23:40:00.000Z'
-last_edited_time: '2026-03-28T13:22:00.000Z'
+last_edited_time: '2026-03-28T16:53:00.000Z'
 tags:
-  - '日記'
   - '登壇'
 published: true
 locale: 'ja'

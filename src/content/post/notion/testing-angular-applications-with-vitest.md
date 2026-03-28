@@ -5,7 +5,6 @@ icon: ''
 created_time: '2023-08-05T13:19:00.000Z'
 last_edited_time: '2024-06-15T00:00:00.000Z'
 tags:
-  - 'Angular'
   - 'Testing'
   - 'Vitest'
 published: true

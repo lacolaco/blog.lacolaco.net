@@ -3,9 +3,8 @@ title: 'ng-conf 2017 1日目 Keynoteメモ'
 slug: 'ng-conf-2017-day-1-note'
 icon: ''
 created_time: '2017-04-05T00:00:00.000Z'
-last_edited_time: '2026-03-28T07:40:00.000Z'
-tags:
-  - 'Angular'
+last_edited_time: '2026-03-28T16:38:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'

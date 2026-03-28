@@ -3,10 +3,9 @@ title: '登壇ログ: 「Upgrade Angular to v8.0」@ Classi Angular Night'
 slug: 'f61ceebf-e81b-4fc9-ad5b-3cc4efd311e8'
 icon: ''
 created_time: '2019-06-15T09:13:00.000Z'
-last_edited_time: '2026-03-28T07:25:00.000Z'
+last_edited_time: '2026-03-28T16:37:00.000Z'
 tags:
   - '発表スライド'
-  - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'

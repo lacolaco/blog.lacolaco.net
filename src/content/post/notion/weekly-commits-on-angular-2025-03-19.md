@@ -3,9 +3,8 @@ title: 'Weekly Commits on Angular 2025-03-19'
 slug: 'weekly-commits-on-angular-2025-03-19'
 icon: ''
 created_time: '2025-03-19T06:08:00.000Z'
-last_edited_time: '2026-03-28T13:22:00.000Z'
-tags:
-  - 'Angular'
+last_edited_time: '2026-03-28T16:53:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'

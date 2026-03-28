@@ -3,10 +3,9 @@ title: '発表スライド『New in Angular』 #io23jp'
 slug: 'presentation-new-in-angular-io2023jp'
 icon: ''
 created_time: '2023-07-19T01:52:00.000Z'
-last_edited_time: '2026-03-28T07:54:00.000Z'
+last_edited_time: '2026-03-28T16:39:00.000Z'
 tags:
   - '発表スライド'
-  - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'

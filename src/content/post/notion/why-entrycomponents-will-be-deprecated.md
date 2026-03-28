@@ -3,9 +3,8 @@ title: 'なぜentryComponentsは非推奨になるのか'
 slug: 'why-entrycomponents-will-be-deprecated'
 icon: ''
 created_time: '2019-11-04T00:00:00.000Z'
-last_edited_time: '2026-03-28T13:22:00.000Z'
-tags:
-  - 'Angular'
+last_edited_time: '2026-03-28T17:07:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'

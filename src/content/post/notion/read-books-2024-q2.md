@@ -3,9 +3,8 @@ title: '読んだ本 2024-Q2'
 slug: 'read-books-2024-q2'
 icon: ''
 created_time: '2024-07-03T08:41:00.000Z'
-last_edited_time: '2026-03-28T07:55:00.000Z'
-tags:
-  - '読書'
+last_edited_time: '2026-03-28T16:52:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Diary'

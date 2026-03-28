@@ -3,9 +3,8 @@ title: 'AngularプロジェクトのためのRenovate設定'
 slug: 'renovate-config-for-angular-cli'
 icon: ''
 created_time: '2021-03-20T00:00:00.000Z'
-last_edited_time: '2026-03-28T07:55:00.000Z'
+last_edited_time: '2026-03-28T16:52:00.000Z'
 tags:
-  - 'Angular'
   - 'Angular CLI'
 published: true
 locale: 'ja'

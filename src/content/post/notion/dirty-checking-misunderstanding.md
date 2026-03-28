@@ -3,9 +3,8 @@ title: 'Dirty Checkingへの誤解'
 slug: 'dirty-checking-misunderstanding'
 icon: '💬'
 created_time: '2023-03-12T02:00:00.000Z'
-last_edited_time: '2026-03-28T07:24:00.000Z'
-tags:
-  - 'Angular'
+last_edited_time: '2026-03-28T16:37:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'

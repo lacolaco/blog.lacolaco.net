@@ -3,9 +3,8 @@ title: '[日本語訳] Template-driven Forms in Angular 2'
 slug: 'translation-template-driven-form-in-angular-2'
 icon: ''
 created_time: '2016-04-10T00:00:00.000Z'
-last_edited_time: '2026-03-28T13:21:00.000Z'
+last_edited_time: '2026-03-28T16:53:00.000Z'
 tags:
-  - 'Angular'
   - 'translation'
 published: true
 locale: 'ja'
