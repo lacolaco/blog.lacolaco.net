@@ -10,6 +10,17 @@ type FeatureState = {
   hasTweet?: boolean;
 };
 
+// Notion APIのpropertiesからmulti_selectの名前配列を安全に取得する
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return */
+function extractMultiSelectNames(properties: object, key: string): string[] {
+  if (!(key in properties)) return [];
+  const prop = (properties as any)[key];
+  if (prop == null || typeof prop !== 'object' || prop.type !== 'multi_select') return [];
+  if (!Array.isArray(prop.multi_select)) return [];
+  return prop.multi_select.map((item: { name: string }) => item.name);
+}
+/* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return */
+
 const { NOTION_AUTH_TOKEN } = process.env;
 if (!NOTION_AUTH_TOKEN) {
   console.error('Please set NOTION_AUTH_TOKEN');
@@ -65,6 +76,9 @@ const result = await syncNotionBlog({
     const metadata = defaultExtractor(page);
     const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
 
+    // channels マルチセレクトの読み取り
+    const channels: string[] = extractMultiSelectNames(page.properties, 'channels');
+
     // category=diaryかつslugがページID（空デフォルト）の場合、作成日時をslugとする
     let slug = metadata.slug;
     if (metadata.category?.toLowerCase() === 'diary' && slug === page.id) {
@@ -76,6 +90,7 @@ const result = await syncNotionBlog({
       ...metadata,
       slug,
       icon,
+      channels,
     };
   },
   renderMarkdown: {
@@ -136,12 +151,14 @@ const result = await syncNotionBlog({
     },
     generateFrontmatter: (baseFields, metadata, renderContext: RenderContext<FeatureState>) => {
       const { source_url, title, slug, ...rest } = baseFields as Record<string, unknown>;
+      const ext = metadata as PostMetadata & { icon: string; channels: string[] };
 
       return {
         title,
         slug,
-        icon: (metadata as PostMetadata & { icon: string }).icon,
+        icon: ext.icon,
         ...rest,
+        channels: ext.channels.length > 0 ? ext.channels : undefined,
         notion_url: source_url,
         features: {
           katex: renderContext.state.hasKatex ?? false,

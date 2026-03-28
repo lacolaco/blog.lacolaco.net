@@ -7,12 +7,13 @@ import FormattedDate from 'src/components/FormattedDate';
 import Header from 'src/components/Header.astro';
 import MainContainer from 'src/components/MainContainer.astro';
 import ShareButtons from 'src/components/ShareButtons.astro';
+import ChannelBadge from 'src/components/ChannelBadge.astro';
 import Tag from 'src/components/Tag.astro';
 import TagList from 'src/components/TagList.astro';
 import { SITE_TITLE } from 'src/consts';
 import { Content, frontmatter } from '../content/kitchen-sink.md';
 
-const { title, category, tags, created_time, last_edited_time, canonical_url, features } =
+const { title, channels, tags, created_time, last_edited_time, canonical_url, features } =
   frontmatter as PostFrontmatterOut;
 const isUpdated = last_edited_time && isAfterDate(last_edited_time, created_time);
 ---
@@ -49,7 +50,7 @@ const isUpdated = last_edited_time && isAfterDate(last_edited_time, created_time
           <h1 class="text-2xl font-semibold leading-tight mb-1">{title}</h1>
           <div class="py-1">
             <TagList>
-              {category && <Tag name={category} isCategory />}
+              {channels && channels.map((ch) => <ChannelBadge name={ch} />)}
               {tags && tags.map((tag) => <Tag name={tag} />)}
             </TagList>
           </div>

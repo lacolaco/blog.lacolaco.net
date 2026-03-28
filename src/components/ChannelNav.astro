@@ -1,0 +1,42 @@
+---
+import { queryChannels } from '@lib/query';
+import { urlize } from 'src/libs/strings';
+
+export interface Props {
+  class?: string;
+  activePath: string;
+}
+
+const { class: className, activePath } = Astro.props;
+
+const channels = queryChannels();
+const items = [
+  { name: 'すべて', path: '/' },
+  ...channels.map((channel) => ({
+    name: channel.name,
+    path: `/channels/${urlize(channel.name)}`,
+  })),
+];
+---
+
+<div
+  class:list={className}
+  class="flex flex-row gap-x-2 h-[34px] text-xs font-semibold overflow-x-auto *:flex *:items-center *:px-3 *:py-2 *:rounded-2xl *:border *:border-solid *:border-gray-300 *:leading-none *:whitespace-nowrap *:shrink-0"
+>
+  {
+    items.map((item) => {
+      if (item.path === activePath) {
+        return (
+          <a href={item.path} class="bg-gray-500 text-white">
+            {item.name}
+          </a>
+        );
+      }
+      return (
+        <a href={item.path} class="text-default bg-transparent hover:bg-gray-100">
+          {item.name}
+        </a>
+      );
+    })
+  }
+</div>

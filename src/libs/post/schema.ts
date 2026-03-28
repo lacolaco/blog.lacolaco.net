@@ -26,6 +26,17 @@ export type Category = z.infer<typeof Category>;
 export const Categories = z.array(Category);
 export type Categories = z.infer<typeof Categories>;
 
+export const Channel = z.object({
+  id: z.string(),
+  name: z.string(),
+  color: z.string(),
+  description: z.string().nullable(),
+});
+export type Channel = z.infer<typeof Channel>;
+
+export const Channels = z.array(Channel);
+export type Channels = z.infer<typeof Channels>;
+
 export const PostFrontmatter = z
   .object({
     title: z.string(),
@@ -33,7 +44,9 @@ export const PostFrontmatter = z
     icon: z.string().optional(),
     created_time: z.string().transform((val) => new Date(val)),
     last_edited_time: z.string().transform((val) => new Date(val)),
-    category: z.string(),
+    // 移行期間: category（旧）とchannels（新）を両方サポート
+    category: z.string().optional(),
+    channels: z.array(z.string()).optional(),
     tags: z.array(z.string()),
     published: z.boolean(),
     locale: z.string().optional(),

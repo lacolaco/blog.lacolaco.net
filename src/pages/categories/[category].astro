@@ -1,36 +1,34 @@
 ---
-import { queryAvailablePosts, queryCategories } from '@lib/query';
-import type { CollectionEntry } from 'astro:content';
-import CategoryNav from 'src/components/CategoryNav.astro';
-import List from '../../layouts/List.astro';
+import { queryCategories } from '@lib/query';
 import { urlize } from '../../libs/strings';
 
-export async function getStaticPaths() {
-  const posts = await queryAvailablePosts();
-  const categories = await queryCategories();
+export function getStaticPaths() {
+  // 旧カテゴリURL → Channel URLへリダイレクト
+  const categoryToChannel: Record<string, string> = {
+    Tech: 'code',
+    Idea: 'thought',
+    Diary: 'life',
+  };
 
-  function hasCategory(categoryName: string, post: CollectionEntry<'posts'>): boolean {
-    return post.data.category === categoryName;
-  }
-
-  return categories.map((category) => {
-    const matchPosts = posts.filter((post) => hasCategory(category.name, post));
-    const urlizedName = urlize(category.name);
-    return {
-      params: { category: urlizedName },
-      props: { category: category.name, posts: matchPosts },
-    };
-  });
+  const categories = queryCategories();
+  return categories.map((category) => ({
+    params: { category: urlize(category.name) },
+    props: { channelSlug: categoryToChannel[category.name] ?? urlize(category.name) },
+  }));
 }
 
-type Props = {
-  category: string;
-  posts: Array<CollectionEntry<'posts'>>;
-};
-
-const { category, posts } = Astro.props;
+const { channelSlug } = Astro.props;
+const redirectUrl = `/channels/${channelSlug}`;
 ---
 
-<List posts={posts} feedUrl={`/categories/${category}.xml`}>
-  <CategoryNav slot="title" activePath={`/categories/${urlize(category)}`} />
-</List>
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="refresh" content={`0; url=${redirectUrl}`} />
+    <link rel="canonical" href={redirectUrl} />
+    <title>Redirecting...</title>
+  </head>
+  <body>
+    <p>Redirecting to <a href={redirectUrl}>{redirectUrl}</a>...</p>
+  </body>
+</html>
