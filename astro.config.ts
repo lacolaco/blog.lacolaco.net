@@ -19,7 +19,6 @@ export default defineConfig({
   outDir: 'dist',
   integrations: [sitemap(), react(), imageCdnIntegration()],
 
-
   vite: {
     plugins: [tailwindcss()],
     resolve: {
