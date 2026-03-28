@@ -59,12 +59,12 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
     ) : null}
   </head>
 
-  <body class="font-base bg-default">
+  <body class="font-base bg-default text-default">
     <Header showDescription class="" />
 
     <MainContainer>
-      <article class="py-8 lg:py-16">
-        <header class="mb-6">
+      <article class="pt-4 pb-10 lg:pt-16 lg:pb-16">
+        <header class="mb-3 lg:mb-6">
           <div class="leading-none">
             <span class="text-sm text-muted">
               {
@@ -83,7 +83,7 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
                 )
               }
             </span>
-            <h1 class="text-2xl font-semibold leading-tight mb-1">{title}</h1>
+            <h1 class="text-2xl font-bold leading-normal mb-1">{title}</h1>
             <div class="py-1 flex items-center justify-between">
               <TagList>
                 {category && <Tag name={category} isCategory />}

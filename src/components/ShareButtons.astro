@@ -9,46 +9,49 @@ const { title, url } = Astro.props;
 const encodedTitle = encodeURIComponent(title);
 ---
 
-<section class="mt-4 flex flex-wrap justify-between content-center items-center space-x-2">
+<section class="mt-4 flex items-center gap-3">
   <a
     href={`https://twitter.com/intent/tweet?original_referer=${url}&text=${encodedTitle}&url=${url}`}
     target="_blank"
-    class="inline-flex items-center gap-x-1 px-2 py-1 text-xs leading-tight font-bold text-white bg-black rounded-md hover:bg-gray-700"
+    class="inline-flex items-center justify-center w-10 h-10 text-white bg-black rounded-full hover:bg-gray-700 transition-colors"
+    title="Xでポスト"
   >
-    <span class="icon-[bi--twitter-x] inline-block"></span>
-    ポスト
+    <span class="icon-[bi--twitter-x] inline-block text-base"></span>
   </a>
 
   <a
     href={`https://bsky.app/intent/compose?text=${encodedTitle + " "+ url}`}
     target="_blank"
-    class="inline-flex items-center gap-x-1 px-2 py-1 text-xs leading-tight font-bold text-lime-100 bg-[#1084fd] rounded-md hover:bg-blue-600"
+    class="inline-flex items-center justify-center w-10 h-10 text-white bg-[#1084fd] rounded-full hover:bg-blue-600 transition-colors"
+    title="Blueskyでシェア"
   >
-    <span class="icon-[simple-icons--bluesky] inline-block"></span>
-    share to bluesky
+    <span class="icon-[simple-icons--bluesky] inline-block text-base"></span>
   </a>
 
   <a
     href={`https://misskey-hub.net/share/?text=${encodedTitle}&url=${url}&visibility=public&localOnly=0`}
     target="_blank"
-    class="inline-flex items-center gap-x-1 px-2 py-1 text-xs leading-tight font-bold text-lime-100 bg-lime-700 rounded-md hover:bg-lime-600"
+    class="inline-flex items-center justify-center w-10 h-10 text-white bg-lime-700 rounded-full hover:bg-lime-600 transition-colors"
+    title="Misskeyでシェア"
   >
-    <span class="icon-[simple-icons--misskey] inline-block"></span>
-    share to misskey
+    <span class="icon-[simple-icons--misskey] inline-block text-base"></span>
   </a>
 
   <a
     href={`https://donshare.net/share.html?text=${encodedTitle}&url=${url}`}
     target="_blank"
-    class="inline-flex items-center gap-x-1 px-2 py-1 text-xs leading-tight font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600"
+    class="inline-flex items-center justify-center w-10 h-10 text-white bg-blue-500 rounded-full hover:bg-blue-600 transition-colors"
+    title="Mastodonでシェア"
   >
-    <span class="icon-[simple-icons--mastodon] inline-block"></span>
-    donshare
+    <span class="icon-[simple-icons--mastodon] inline-block text-base"></span>
   </a>
 
   <div class="flex-auto"></div>
   <button
-    class="px-2 py-1 text-sm leading-tight rounded-md border border-solid border-gray-700 hover:bg-muted"
-    onclick="window.scrollTo(0, 0);">Scroll to top</button
+    class="inline-flex items-center justify-center w-10 h-10 rounded-full border border-gray-300 text-muted hover:text-default hover:bg-gray-100 transition-colors"
+    onclick="window.scrollTo(0, 0);"
+    title="ページ上部へ"
   >
+    <span class="icon-[mdi--arrow-up] inline-block text-lg"></span>
+  </button>
 </section>

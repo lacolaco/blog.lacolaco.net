@@ -74,7 +74,7 @@
 
 @layer components {
   .markdown-body {
-    @apply font-base leading-loose;
+    @apply font-base leading-[1.8] md:leading-loose;
 
     & > *:first-child {
       @apply mt-0;
@@ -89,16 +89,16 @@
     h4,
     h5,
     h6 {
-      @apply mt-6 mb-4 font-semibold leading-tight;
+      @apply mt-4 mb-3 md:mt-6 md:mb-4 font-semibold leading-tight;
     }
     h1 {
-      @apply text-3xl pb-[.3em] border-b border-solid border-b-gray-200;
+      @apply text-2xl md:text-3xl pb-[.3em] border-b border-solid border-b-gray-200;
     }
     h2 {
-      @apply text-2xl pb-[.3em] border-b border-solid border-b-gray-200;
+      @apply text-[22px] md:text-2xl pb-[.3em] border-b border-solid border-b-gray-200;
     }
     h3 {
-      @apply text-xl;
+      @apply text-[19px] md:text-xl;
     }
     h4 {
       @apply text-lg;
@@ -119,7 +119,7 @@
     pre,
     details,
     figure {
-      @apply mt-0 mb-4;
+      @apply mt-0 mb-3 md:mb-4;
     }
 
     details {
@@ -147,7 +147,7 @@
 
     ul,
     ol {
-      @apply pl-8;
+      @apply pl-6 md:pl-8;
       list-style: revert;
 
       ul,
