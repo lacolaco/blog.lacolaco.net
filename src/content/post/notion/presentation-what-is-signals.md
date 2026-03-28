@@ -3,7 +3,7 @@ title: '発表スライド『Signalsとはいったい何なのか』'
 slug: 'presentation-what-is-signals'
 icon: ''
 created_time: '2023-06-22T06:20:00.000Z'
-last_edited_time: '2023-12-30T10:04:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - '発表スライド'
   - 'Angular'
@@ -11,6 +11,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Signals-d8b8774662dd48f697ad06ffb2a76604'
 features:
   katex: false

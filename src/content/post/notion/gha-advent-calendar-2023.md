@@ -3,12 +3,14 @@ title: 'GitHub ActionsのJob Outputsでハマった話'
 slug: 'gha-advent-calendar-2023'
 icon: ''
 created_time: '2023-12-20T15:00:00.000Z'
-last_edited_time: '2023-12-30T09:58:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - 'GitHub Actions'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/GitHub-Actions-Job-Outputs-b28b8ef4ebdb495fa2b51c0e89c9cded'
 features:
   katex: false

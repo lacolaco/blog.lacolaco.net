@@ -3,13 +3,15 @@ title: 'ブログにView as Markdownを実装した'
 slug: 'implement-view-as-markdown'
 icon: ''
 created_time: '2025-12-29T03:11:00.000Z'
-last_edited_time: '2025-12-30T12:43:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - 'Astro'
   - 'Blog Dev'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/View-as-Markdown-2d83521b014a80c08040d5ad86a2b965'
 features:
   katex: false

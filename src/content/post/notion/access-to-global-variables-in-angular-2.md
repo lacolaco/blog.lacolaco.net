@@ -3,7 +3,7 @@ title: 'Access to global variables in Angular 2'
 slug: 'access-to-global-variables-in-angular-2'
 icon: ''
 created_time: '2016-10-04T01:24:00.000Z'
-last_edited_time: '2026-03-28T06:25:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - 'Angular'
 published: true

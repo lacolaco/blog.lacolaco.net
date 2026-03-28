@@ -3,12 +3,15 @@ title: 'Angular: Dynamic Importing Large Libraries'
 slug: 'angular-dynamic-importing-large-libraries'
 icon: ''
 created_time: '2019-03-06T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Dynamic-Importing-Large-Libraries-d3b13513d4e34d4abccf1f286f55a32b'
 features:
   katex: false

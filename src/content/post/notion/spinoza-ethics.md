@@ -3,7 +3,7 @@ title: 'スピノザ『エチカ』とライフハック本'
 slug: 'spinoza-ethics'
 icon: ''
 created_time: '2022-06-26T12:10:00.000Z'
-last_edited_time: '2025-11-26T00:42:00.000Z'
+last_edited_time: '2026-03-28T07:55:00.000Z'
 tags:
   - '雑記'
   - '哲学'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Books'
 notion_url: 'https://www.notion.so/2b73521b014a801cb1d9da3027e1e221'
 features:
   katex: false

@@ -3,12 +3,14 @@ title: 'Gleam言語に入門する'
 slug: 'learning-gleam'
 icon: ''
 created_time: '2026-01-03T03:48:00.000Z'
-last_edited_time: '2026-01-03T03:48:00.000Z'
+last_edited_time: '2026-03-28T07:40:00.000Z'
 tags:
   - 'Gleam'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Gleam-2dd3521b014a80fcba47f58bcf8d3238'
 features:
   katex: false

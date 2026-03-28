@@ -3,12 +3,15 @@ title: 'Angular: 配列クエリパラメータのためのInput Transforms'
 slug: 'angular-input-transforms-for-arrays-in-query-params'
 icon: ''
 created_time: '2023-12-04T12:24:00.000Z'
-last_edited_time: '2023-12-30T09:58:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Input-Transforms-b01d0937931d4a748ff31a416346feab'
 features:
   katex: false

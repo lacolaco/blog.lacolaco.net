@@ -10,6 +10,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/GitHub-Actions-setup-node-Node-js-package-json-1934ffc5baff4477a7661e34e8dd45f7'
 features:
   katex: false

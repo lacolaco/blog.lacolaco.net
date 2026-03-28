@@ -3,7 +3,7 @@ title: 'Angular: httpResource Quick Overview '
 slug: 'angular-http-resource-quick-overview'
 icon: ''
 created_time: '2025-02-12T01:42:00.000Z'
-last_edited_time: '2025-02-12T02:05:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
   - 'Signals'
@@ -11,6 +11,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-http-resource-quick-overview'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-httpResource-Quick-Overview-1983521b014a80d08a7cc09020dd3420'
 features:
   katex: false

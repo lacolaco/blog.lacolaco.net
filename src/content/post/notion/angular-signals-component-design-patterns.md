@@ -3,7 +3,7 @@ title: 'SignalベースのAngularコンポーネント設計パターン'
 slug: 'angular-signals-component-design-patterns'
 icon: ''
 created_time: '2023-06-03T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:04:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - '状態管理'
@@ -13,6 +13,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-signals-component-design-patterns'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Signal-Angular-c0a2a3172b8f47ef821d9ef5e602c5f9'
 features:
   katex: false

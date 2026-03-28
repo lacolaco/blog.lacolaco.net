@@ -3,13 +3,16 @@ title: 'Forget $compile in Angular 2'
 slug: 'forget-compile-in-angular-2'
 icon: ''
 created_time: '2016-10-02T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - 'Angular'
   - 'AngularJS'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Forget-compile-in-Angular-2-b423a3edd0c94e599e1235e08c72bc64'
 features:
   katex: false

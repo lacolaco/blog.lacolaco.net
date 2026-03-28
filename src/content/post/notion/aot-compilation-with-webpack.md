@@ -3,13 +3,16 @@ title: 'Angular AoT Compilation with webpack'
 slug: 'aot-compilation-with-webpack'
 icon: ''
 created_time: '2016-10-23T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'webpack'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-AoT-Compilation-with-webpack-655c55b569cc4063860844d8f10ec88b'
 features:
   katex: false

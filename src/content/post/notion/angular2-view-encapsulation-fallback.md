@@ -3,12 +3,15 @@ title: 'ViewEncapsulationのフォールバック'
 slug: 'angular2-view-encapsulation-fallback'
 icon: ''
 created_time: '2016-04-10T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/ViewEncapsulation-5f9d3b12aa0a4be992e5c8c9e4f6f53b'
 features:
   katex: false

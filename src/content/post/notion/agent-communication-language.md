@@ -3,7 +3,7 @@ title: 'Agent Communication Language'
 slug: 'agent-communication-language'
 icon: ''
 created_time: '2025-10-09T14:33:00.000Z'
-last_edited_time: '2025-10-09T15:00:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - '雑記'
   - 'AI'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Agent-Communication-Language-2873521b014a809b9010e60a892ed141'
 features:
   katex: false

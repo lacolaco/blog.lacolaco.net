@@ -3,13 +3,15 @@ title: '計画の優先順位ではなく目標の優先順位を決める'
 slug: 'order-by-objective'
 icon: ''
 created_time: '2024-06-14T01:24:00.000Z'
-last_edited_time: '2024-06-14T03:05:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - '雑記'
   - '言語化'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/cef457cd75d54eaaa22d7824fd3cbfdb'
 features:
   katex: false

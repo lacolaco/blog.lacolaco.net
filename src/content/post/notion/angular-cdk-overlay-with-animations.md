@@ -3,7 +3,7 @@ title: 'Angular: CDK Overlay でフェードアウトするポップアップを
 slug: 'angular-cdk-overlay-with-animations'
 icon: ''
 created_time: '2025-02-05T02:34:00.000Z'
-last_edited_time: '2025-02-05T02:50:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - 'Angular'
   - 'Angular CDK'
@@ -12,6 +12,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-cdk-overlay-with-animations'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-CDK-Overlay-1913521b014a80f09c8af2b4dde093d1'
 features:
   katex: false

@@ -3,13 +3,16 @@ title: 'Angular: How to use Action Creator introduced in NgRx v7.4'
 slug: 'angular-how-to-use-action-creator-introduced-in-ngrx-v7-4'
 icon: ''
 created_time: '2019-04-03T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
   - 'NgRx'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-How-to-use-Action-Creator-introduced-in-NgRx-v7-4-acbf55eee65142b5813204835b8fdab1'
 features:
   katex: false

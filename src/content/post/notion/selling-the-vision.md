@@ -3,13 +3,15 @@ title: '「ないものを売る」とはどういうことか'
 slug: 'selling-the-vision'
 icon: ''
 created_time: '2025-11-04T07:06:00.000Z'
-last_edited_time: '2025-11-06T04:26:00.000Z'
+last_edited_time: '2026-03-28T07:55:00.000Z'
 tags:
   - '雑記'
   - '言語化'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/2a13521b014a80d5bbb8ebacad6b3a3c'
 features:
   katex: false

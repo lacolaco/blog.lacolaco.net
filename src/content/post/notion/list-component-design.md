@@ -3,13 +3,16 @@ title: 'AngularにおけるListComponent/ListItemComponentの設計'
 slug: 'list-component-design'
 icon: ''
 created_time: '2019-02-18T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:40:00.000Z'
 tags:
   - 'Angular'
   - '設計'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-ListComponent-ListItemComponent-b0a1124520914ae6a17a7291930e0970'
 features:
   katex: false

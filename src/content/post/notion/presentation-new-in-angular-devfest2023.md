@@ -3,13 +3,16 @@ title: '発表スライド『New in Angular』（GDG DevFest Tokyo 2023） '
 slug: 'presentation-new-in-angular-devfest2023'
 icon: ''
 created_time: '2023-12-20T07:38:00.000Z'
-last_edited_time: '2023-12-30T09:58:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - '発表スライド'
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/New-in-Angular-GDG-DevFest-Tokyo-2023-a2f898eb84e74ee8b7da7413c1e8902b'
 features:
   katex: false

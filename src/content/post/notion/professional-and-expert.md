@@ -10,6 +10,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/079d51b6a4d34a1aab62245e97797984'
 features:
   katex: false

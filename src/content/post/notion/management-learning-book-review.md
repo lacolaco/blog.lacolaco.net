@@ -3,12 +3,14 @@ title: '『経営学習論』読後メモ'
 slug: 'management-learning-book-review'
 icon: ''
 created_time: '2023-10-16T12:50:00.000Z'
-last_edited_time: '2023-12-30T10:00:00.000Z'
+last_edited_time: '2026-03-28T07:40:00.000Z'
 tags:
   - '読書'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Books'
 notion_url: 'https://www.notion.so/2d01249d63fb4dbf96e90f56b8662c93'
 features:
   katex: false

@@ -3,13 +3,16 @@ title: 'Angular: CSS Gridを使ったExpansionディレクティブの実装'
 slug: 'angular-expansion-directive'
 icon: ''
 created_time: '2023-12-18T12:24:00.000Z'
-last_edited_time: '2023-12-30T09:58:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
   - 'CSS'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-CSS-Grid-Expansion-5cd15f39e63e48b7828eaf1224f8d884'
 features:
   katex: false

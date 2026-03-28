@@ -3,13 +3,15 @@ title: 'Rust+wasmでSVGを生成したら10倍速くなった'
 slug: 'rust-wasm-svg-rendering'
 icon: ''
 created_time: '2022-02-26T03:29:00.000Z'
-last_edited_time: '2023-12-30T10:06:00.000Z'
+last_edited_time: '2026-03-28T07:55:00.000Z'
 tags:
   - 'Rust'
   - 'WebAssembly'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Rust-wasm-SVG-10-48a52b0559eb43a5b9046e66f64550ce'
 features:
   katex: false

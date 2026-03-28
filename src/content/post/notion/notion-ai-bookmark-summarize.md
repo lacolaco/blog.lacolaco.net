@@ -3,13 +3,15 @@ title: 'Notion AIでブックマークした記事を要約する'
 slug: 'notion-ai-bookmark-summarize'
 icon: ''
 created_time: '2023-08-20T05:28:00.000Z'
-last_edited_time: '2023-12-30T10:01:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - '雑記'
   - 'Notion'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Notion-AI-d857b4c4fa8b40868a782f2b4ab3fbf0'
 features:
   katex: false

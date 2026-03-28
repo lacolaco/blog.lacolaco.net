@@ -3,13 +3,15 @@ title: '知識の引力'
 slug: 'gravity-of-knowledge'
 icon: ''
 created_time: '2022-01-14T09:20:00.000Z'
-last_edited_time: '2023-12-30T10:07:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - '雑記'
   - '言語化'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/f73568f53267474dbbe8410a46000a9c'
 features:
   katex: false

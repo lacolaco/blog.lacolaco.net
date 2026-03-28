@@ -3,7 +3,7 @@ title: 'npmサプライチェーン攻撃からユーザーを保護するため
 slug: 'csp-for-npm-supply-chain-attacks'
 icon: ''
 created_time: '2025-10-15T01:14:00.000Z'
-last_edited_time: '2025-10-15T01:14:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - 'Web'
   - 'セキュリティ'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/npm-Content-Security-Policy-28c3521b014a8055ae27e56dcf158ee3'
 features:
   katex: false

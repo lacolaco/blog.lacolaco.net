@@ -3,12 +3,15 @@ title: 'Understanding Angular Ivy Library Compilation'
 slug: 'angular-ivy-library-compilation-design-in-depth'
 icon: ''
 created_time: '2021-02-24T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:07:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'en'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Understanding-Angular-Ivy-Library-Compilation-8f425a78a2da4952953729fca1cdd4ff'
 features:
   katex: false

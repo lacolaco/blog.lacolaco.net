@@ -3,12 +3,14 @@ title: '転職のお知らせ'
 slug: 'job-change-2026'
 icon: ''
 created_time: '2026-03-25T15:00:00.000Z'
-last_edited_time: '2026-03-25T15:19:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - '日記'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/32d3521b014a8085a87dd649b3934cb4'
 features:
   katex: false

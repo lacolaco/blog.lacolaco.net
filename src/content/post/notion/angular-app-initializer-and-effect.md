@@ -3,13 +3,16 @@ title: 'Angular: APP_INITIALIZERとEffectの用法'
 slug: 'angular-app-initializer-and-effect'
 icon: ''
 created_time: '2023-09-08T10:20:00.000Z'
-last_edited_time: '2023-12-30T10:01:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-APP_INITIALIZER-Effect-3d881d0fdcf44c19ada86ceb05f8e874'
 features:
   katex: false

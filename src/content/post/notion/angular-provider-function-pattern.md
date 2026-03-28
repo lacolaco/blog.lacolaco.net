@@ -11,6 +11,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Provider-Function-Pattern-613bc5ddc46c4c0a8e30b0f0dc1b8d4d'
 features:
   katex: false

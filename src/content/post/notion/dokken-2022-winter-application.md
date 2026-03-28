@@ -3,12 +3,14 @@ title: '独検2022冬の4級に出願した'
 slug: 'dokken-2022-winter-application'
 icon: ''
 created_time: '2022-10-22T12:38:00.000Z'
-last_edited_time: '2023-12-30T10:05:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - '日記'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/2022-4-72dc78166db04536a947d93054f9386e'
 features:
   katex: false

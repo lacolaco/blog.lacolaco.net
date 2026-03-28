@@ -3,12 +3,14 @@ title: 'opentelemetry-js レポジトリの歩き方'
 slug: 'opentelemetry-js-repository-walkthrough'
 icon: ''
 created_time: '2024-04-14T00:37:00.000Z'
-last_edited_time: '2024-04-14T03:45:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - 'OpenTelemetry'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/opentelemetry-js-1a5a4c7ea7844aca8cf5ef394fe0564c'
 features:
   katex: false

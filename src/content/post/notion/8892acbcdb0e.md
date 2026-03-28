@@ -3,7 +3,7 @@ title: 'Astroの画像最適化を利用する'
 slug: '8892acbcdb0e'
 icon: ''
 created_time: '2023-12-27T05:34:00.000Z'
-last_edited_time: '2026-03-28T06:25:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - 'Astro'
   - 'Blog Dev'

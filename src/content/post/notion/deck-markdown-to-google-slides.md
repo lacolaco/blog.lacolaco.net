@@ -3,12 +3,14 @@ title: 'k1LoW/deck: MarkdownでGoogleスライドを作る'
 slug: 'deck-markdown-to-google-slides'
 icon: ''
 created_time: '2025-05-28T01:09:00.000Z'
-last_edited_time: '2025-05-28T06:50:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - '雑記'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/k1LoW-deck-Markdown-Google-1ff3521b014a80ceac20c9e6e608bc43'
 features:
   katex: false

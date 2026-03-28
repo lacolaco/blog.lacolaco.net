@@ -3,13 +3,16 @@ title: 'Angular Testing: TestBedにはdeclarationsではなくimportsを設定�
 slug: 'angular-component-testing-declarations'
 icon: ''
 created_time: '2021-07-07T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:07:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - 'Angular'
   - 'Testing'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Testing-TestBed-declarations-imports-49b8a62610b540be869b0a39ab002ff9'
 features:
   katex: false

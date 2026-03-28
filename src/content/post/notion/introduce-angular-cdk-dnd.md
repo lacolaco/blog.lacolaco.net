@@ -3,13 +3,16 @@ title: 'Angular CDK drag-and-drop の紹介'
 slug: 'introduce-angular-cdk-dnd'
 icon: ''
 created_time: '2018-08-29T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - 'Angular'
   - 'Angular CDK'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-CDK-drag-and-drop-a3993f7db21f4b38a87e6c15cb98c825'
 features:
   katex: false

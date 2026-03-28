@@ -3,12 +3,14 @@ title: '読んだ本 2024-Q2'
 slug: 'read-books-2024-q2'
 icon: ''
 created_time: '2024-07-03T08:41:00.000Z'
-last_edited_time: '2024-07-03T09:01:00.000Z'
+last_edited_time: '2026-03-28T07:55:00.000Z'
 tags:
   - '読書'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Books'
 notion_url: 'https://www.notion.so/2024-Q2-23ca824909bf4218879b45f6cdcd9ca9'
 features:
   katex: false

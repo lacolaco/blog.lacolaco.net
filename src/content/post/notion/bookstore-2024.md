@@ -3,12 +3,14 @@ title: '今年はじめた本屋活動のまとめ'
 slug: 'bookstore-2024'
 icon: ''
 created_time: '2024-12-06T15:00:00.000Z'
-last_edited_time: '2024-12-11T05:22:00.000Z'
+last_edited_time: '2026-03-28T07:10:00.000Z'
 tags:
   - '本屋'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/1523521b014a80af9ba3c39c2a20e510'
 features:
   katex: false

@@ -3,12 +3,14 @@ title: '2024年の読書と推し本'
 slug: 'books-of-the-year-2024'
 icon: ''
 created_time: '2024-12-18T15:00:00.000Z'
-last_edited_time: '2024-12-19T15:03:00.000Z'
+last_edited_time: '2026-03-28T07:10:00.000Z'
 tags:
   - '読書'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Books'
 notion_url: 'https://www.notion.so/2024-1603521b014a80278694dcc8096690a8'
 features:
   katex: false

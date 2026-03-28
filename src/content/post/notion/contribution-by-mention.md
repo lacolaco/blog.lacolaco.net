@@ -3,12 +3,14 @@ title: '「話題にする」という貢献'
 slug: 'contribution-by-mention'
 icon: ''
 created_time: '2024-11-20T02:53:00.000Z'
-last_edited_time: '2024-11-20T03:08:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - 'OSS'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/1443521b014a80f2a3c9e4a8873c3171'
 features:
   katex: false

@@ -3,12 +3,15 @@ title: '[Angular 4.0] router/http/animationsモジュールの更新について
 slug: 'ng4-feature-libs-update'
 icon: ''
 created_time: '2017-03-13T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-4-0-router-http-animations-aa3078a5d0bb4538aa415008ca903a52'
 features:
   katex: false

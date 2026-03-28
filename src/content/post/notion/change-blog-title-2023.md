@@ -3,12 +3,14 @@ title: 'ブログのタイトルを変えた'
 slug: 'change-blog-title-2023'
 icon: ''
 created_time: '2023-05-09T15:39:00.000Z'
-last_edited_time: '2023-12-30T10:05:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - '雑記'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/bfac9356b695446db5431bd67d943a16'
 features:
   katex: false

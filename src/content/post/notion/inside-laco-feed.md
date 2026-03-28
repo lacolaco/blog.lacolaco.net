@@ -3,7 +3,7 @@ title: 'ブックマークをSNSに投稿する #laco_feed を支える仕組み
 slug: 'inside-laco-feed'
 icon: ''
 created_time: '2023-08-19T10:56:00.000Z'
-last_edited_time: '2023-12-30T10:01:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - 'Cloudflare'
   - 'Notion'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/SNS-laco_feed-69879d3d01444aa29d3b128b15689a53'
 features:
   katex: false

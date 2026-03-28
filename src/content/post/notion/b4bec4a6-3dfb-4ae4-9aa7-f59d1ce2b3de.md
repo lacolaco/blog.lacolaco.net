@@ -3,13 +3,15 @@ title: 'ギバーのジレンマ'
 slug: 'b4bec4a6-3dfb-4ae4-9aa7-f59d1ce2b3de'
 icon: ''
 created_time: '2022-07-08T14:00:00.000Z'
-last_edited_time: '2026-01-11T00:32:00.000Z'
+last_edited_time: '2026-03-28T07:10:00.000Z'
 tags:
   - '雑記'
   - '哲学'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/b4bec4a63dfb4ae49aa7f59d1ce2b3de'
 features:
   katex: false

@@ -3,7 +3,7 @@ title: 'ブログに記事要約機能を実装した（Built-in AI on Chrome）
 slug: 'implement-article-summary-feature'
 icon: ''
 created_time: '2025-12-30T12:43:00.000Z'
-last_edited_time: '2025-12-30T12:43:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - 'AI'
   - 'Chrome'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Built-in-AI-on-Chrome-2d93521b014a809a8b9acc91ed59efe2'
 features:
   katex: false

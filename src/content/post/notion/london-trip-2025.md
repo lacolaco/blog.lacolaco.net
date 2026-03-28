@@ -3,12 +3,14 @@ title: 'ロンドンへの旅行 - AngularConnect 2025'
 slug: 'london-trip-2025'
 icon: ''
 created_time: '2025-09-16T13:40:00.000Z'
-last_edited_time: '2025-09-16T13:48:00.000Z'
+last_edited_time: '2026-03-28T07:40:00.000Z'
 tags:
   - '日記'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/AngularConnect-2025-2703521b014a80969603e3c924fece24'
 features:
   katex: false

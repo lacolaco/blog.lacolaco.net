@@ -10,6 +10,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Google-Cloud-Workload-Identity-GitHub-Actions-2f780bc54f7d42d789fd8149884d8233'
 features:
   katex: false

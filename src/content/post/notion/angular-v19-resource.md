@@ -3,7 +3,7 @@ title: 'Angular v19: resource() の解説'
 slug: 'angular-v19-resource'
 icon: ''
 created_time: '2024-10-29T13:38:00.000Z'
-last_edited_time: '2024-10-29T14:06:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'Signals'
@@ -11,6 +11,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-v19-resource'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-v19-resource-12e3521b014a80daa5a9ed157e6bc9b1'
 features:
   katex: false

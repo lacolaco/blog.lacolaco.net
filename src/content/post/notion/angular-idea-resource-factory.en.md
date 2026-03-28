@@ -3,7 +3,7 @@ title: 'Angular implementation idea: Resource Factory '
 slug: 'angular-idea-resource-factory'
 icon: ''
 created_time: '2024-11-16T01:24:00.000Z'
-last_edited_time: '2024-11-16T01:26:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
   - 'dependency injection'
@@ -11,6 +11,9 @@ tags:
 published: true
 locale: 'en'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-implementation-idea-Resource-Factory-1403521b014a8021ba2ce240f1d439e8'
 features:
   katex: false

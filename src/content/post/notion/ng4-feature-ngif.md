@@ -3,12 +3,15 @@ title: '[Angular 4.0] 新しいngIfの使い方'
 slug: 'ng4-feature-ngif'
 icon: ''
 created_time: '2017-03-05T00:00:00.000Z'
-last_edited_time: '2025-11-27T12:10:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-4-0-ngIf-e34eeccc4c1e4aeba1c4eb3381c58440'
 features:
   katex: false

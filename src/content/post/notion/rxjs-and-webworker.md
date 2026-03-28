@@ -3,13 +3,15 @@ title: 'RxJSによるWeb Workerの抽象化 2つのアプローチ'
 slug: 'rxjs-and-webworker'
 icon: ''
 created_time: '2019-03-26T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:55:00.000Z'
 tags:
   - 'RxJS'
   - 'Web Worker'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/RxJS-Web-Worker-2-9e5898a659e043159846fe94baa9a101'
 features:
   katex: false

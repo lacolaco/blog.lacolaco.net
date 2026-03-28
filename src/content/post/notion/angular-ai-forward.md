@@ -3,7 +3,7 @@ title: 'AngularはAI志向のフレームワークへ'
 slug: 'angular-ai-forward'
 icon: ''
 created_time: '2025-09-20T00:48:00.000Z'
-last_edited_time: '2025-09-20T01:28:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - 'Angular'
   - 'AI'
@@ -12,6 +12,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-ai-forward'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-AI-2713521b014a800cb4dded9150c0dc1c'
 features:
   katex: false

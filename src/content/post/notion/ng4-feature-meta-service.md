@@ -3,12 +3,15 @@ title: '[Angular 4.0] Metaサービスの使い方'
 slug: 'ng4-feature-meta-service'
 icon: ''
 created_time: '2017-03-07T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-4-0-Meta-fe6eb6f925344204b31ca32dbec371ba'
 features:
   katex: false

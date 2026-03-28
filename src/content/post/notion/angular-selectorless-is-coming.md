@@ -3,13 +3,16 @@ title: 'Angular: Selectorlessがもうすぐやってくる'
 slug: 'angular-selectorless-is-coming'
 icon: ''
 created_time: '2025-04-09T14:13:00.000Z'
-last_edited_time: '2025-04-09T15:04:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-selectorless-is-coming'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Selectorless-1d03521b014a8070af87dfbe63ce9c9a'
 features:
   katex: false

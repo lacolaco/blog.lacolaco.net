@@ -3,7 +3,7 @@ title: 'Angular: Using Web Worker through Resources'
 slug: 'angular-using-web-worker-through-resource'
 icon: ''
 created_time: '2025-03-26T01:33:00.000Z'
-last_edited_time: '2025-03-26T02:03:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'Web Worker'
@@ -12,6 +12,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-using-web-worker-through-resource'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Using-Web-Worker-through-Resources-1c23521b014a8006826df570a3e9e91c'
 features:
   katex: false

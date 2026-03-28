@@ -3,7 +3,7 @@ title: 'Angular: Trusted Typesサポートの概要'
 slug: 'angular-trusted-types'
 icon: ''
 created_time: '2020-11-03T00:00:00.000Z'
-last_edited_time: '2026-01-15T14:28:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'Security'
@@ -11,6 +11,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Trusted-Types-a78e0e2cf3cc478dac9b7ae6825d66c6'
 features:
   katex: false

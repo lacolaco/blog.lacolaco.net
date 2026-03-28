@@ -3,7 +3,7 @@ title: 'Angular: Tailwind CSS 4.0のセットアップ'
 slug: 'angular-tailwind-css-4-setup'
 icon: ''
 created_time: '2025-02-02T05:54:00.000Z'
-last_edited_time: '2025-02-02T06:49:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'tailwindcss'
@@ -11,6 +11,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-tailwind-css-4-setup'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Tailwind-CSS-4-0-18e3521b014a80d9af62f945ecfa18f3'
 features:
   katex: false

@@ -3,7 +3,7 @@ title: 'Angular: Animations with Motion'
 slug: 'angular-animations-with-motion'
 icon: ''
 created_time: '2025-12-20T03:34:00.000Z'
-last_edited_time: '2025-12-20T03:34:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - 'Angular'
   - 'Motion'
@@ -11,6 +11,9 @@ published: true
 locale: 'en'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-animations-with-motion'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Animations-with-Motion-2cf3521b014a80379804cfe9b0bb82e0'
 features:
   katex: false

@@ -3,12 +3,14 @@ title: '成長の条件と目標の限界'
 slug: 'cfdbe43959bd'
 icon: ''
 created_time: '2022-03-25T00:00:00.000Z'
-last_edited_time: '2025-06-11T08:38:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - '雑記'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/e0167abb296147428e0866be20024ad1'
 features:
   katex: false

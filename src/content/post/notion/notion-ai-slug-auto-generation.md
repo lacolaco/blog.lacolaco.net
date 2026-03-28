@@ -3,7 +3,7 @@ title: 'Notion AIがslugを作ってくれるらしい'
 slug: 'notion-ai-slug-auto-generation'
 icon: ''
 created_time: '2023-06-23T00:29:00.000Z'
-last_edited_time: '2023-12-30T10:04:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - '雑記'
   - 'Notion'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Notion-AI-slug-b32d2012806c4c348ecc004f9385e1c0'
 features:
   katex: false

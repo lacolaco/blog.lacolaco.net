@@ -11,6 +11,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-browserslist-v15-5d1a14f0328a4165a2e580e75aefe9ec'
 features:
   katex: false

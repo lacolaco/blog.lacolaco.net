@@ -3,7 +3,7 @@ title: 'Angular と Tailwind CSSについての所感'
 slug: 'angular-tailwindcss-styling-thoughts'
 icon: ''
 created_time: '2021-02-17T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:07:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'tailwindcss'
@@ -11,6 +11,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Tailwind-CSS-69bb91a6ecf3453fbfcd5c2e6354033a'
 features:
   katex: false

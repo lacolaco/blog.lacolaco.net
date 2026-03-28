@@ -3,7 +3,7 @@ title: 'WebブラウザにおけるOpenTelemetryの自動計装PoC: Trace via Se
 slug: 'poc-trace-via-service-worker'
 icon: ''
 created_time: '2024-06-26T06:21:00.000Z'
-last_edited_time: '2024-06-26T08:39:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - 'Web'
   - 'OpenTelemetry'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Web-OpenTelemetry-PoC-Trace-via-Service-Worker-1add2e31b2224912bd322faab675cc5d'
 features:
   katex: false

@@ -3,12 +3,15 @@ title: "【Angular個別コミット解説】feat(router): Add info property to\
 slug: 'e6b3bd69debc'
 icon: ''
 created_time: '2023-12-06T23:53:00.000Z'
-last_edited_time: '2025-06-11T08:39:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-feat-router-Add-info-property-to-NavigationExtras-d0a077fb608b42d7ad5232bbb9c37d0d'
 features:
   katex: false

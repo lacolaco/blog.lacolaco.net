@@ -3,12 +3,15 @@ title: 'Angular v6で導入されるTree-Shakable DIの紹介'
 slug: 'angular-v6-tree-shakable-di'
 icon: ''
 created_time: '2018-03-01T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-v6-Tree-Shakable-DI-73231349348240fca317e3cd68e612a3'
 features:
   katex: false

@@ -3,7 +3,7 @@ title: 'Angular Signalsとコンポーネント間通信'
 slug: 'angular-signals-and-component-communication'
 icon: ''
 created_time: '2023-08-02T03:02:00.000Z'
-last_edited_time: '2023-12-30T10:01:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'Signals'
@@ -11,6 +11,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-signals-and-component-communication'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Signals-9de77b78554f4e23b970c8ff5a57d2ce'
 features:
   katex: false

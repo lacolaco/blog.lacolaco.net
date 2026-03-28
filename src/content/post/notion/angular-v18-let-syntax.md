@@ -3,13 +3,16 @@ title: 'Angular: v18.1で @let 構文が追加される'
 slug: 'angular-v18-let-syntax'
 icon: ''
 created_time: '2024-07-03T03:05:00.000Z'
-last_edited_time: '2024-07-03T03:05:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'TypeScript'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-v18-1-let-6de8867a98914c24b26cb45aeb3f3e32'
 features:
   katex: false

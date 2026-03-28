@@ -3,12 +3,14 @@ title: '読んだ本 2023-Q3'
 slug: 'read-books-2023-q3'
 icon: ''
 created_time: '2023-09-24T11:56:00.000Z'
-last_edited_time: '2023-12-30T10:00:00.000Z'
+last_edited_time: '2026-03-28T07:55:00.000Z'
 tags:
   - '読書'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Books'
 notion_url: 'https://www.notion.so/2023-Q3-7b9d8d5b65524cdc96fd3dc21a708147'
 features:
   katex: false

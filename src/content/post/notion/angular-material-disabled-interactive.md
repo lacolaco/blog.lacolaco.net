@@ -3,7 +3,7 @@ title: 'Angular MaterialのdisabledInteractive'
 slug: 'angular-material-disabled-interactive'
 icon: ''
 created_time: '2024-09-18T02:30:00.000Z'
-last_edited_time: '2024-09-18T14:55:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular Material'
   - 'アクセシビリティ'
@@ -12,6 +12,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-material-disabled-interactive'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Material-disabledInteractive-52edeabe72e344cc9eddd2ccf9148002'
 features:
   katex: false

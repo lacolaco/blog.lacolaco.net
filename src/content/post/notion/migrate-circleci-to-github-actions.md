@@ -3,12 +3,14 @@ title: 'CircleCIからGitHub Actionsへの移行 (Node.js)'
 slug: 'migrate-circleci-to-github-actions'
 icon: ''
 created_time: '2019-09-16T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T07:40:00.000Z'
 tags:
   - 'GitHub Actions'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/CircleCI-GitHub-Actions-Node-js-b989169bf9a4470a9aae9eb49a823e4a'
 features:
   katex: false

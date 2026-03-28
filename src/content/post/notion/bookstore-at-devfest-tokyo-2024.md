@@ -3,13 +3,15 @@ title: 'GDG DevFest Tokyo 2024で本屋をやります（ぜひ来てくださ�
 slug: 'bookstore-at-devfest-tokyo-2024'
 icon: ''
 created_time: '2024-10-30T23:29:00.000Z'
-last_edited_time: '2024-10-30T23:29:00.000Z'
+last_edited_time: '2026-03-28T07:10:00.000Z'
 tags:
   - '本屋'
   - 'GDE'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/GDG-DevFest-Tokyo-2024-1293521b014a8073bb02e294780424be'
 features:
   katex: false

@@ -3,13 +3,15 @@ title: '読後メモ『エンジニアリングマネージャーのしごと』
 slug: 'engineering-manager-job-book-review'
 icon: ''
 created_time: '2022-10-02T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:05:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - '雑記'
   - '読書'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Books'
 notion_url: 'https://www.notion.so/50dc0b156bb84b899b51f142e115f8ed'
 features:
   katex: false

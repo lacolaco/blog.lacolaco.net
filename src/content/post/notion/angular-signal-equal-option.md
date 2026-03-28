@@ -3,13 +3,16 @@ title: 'Angular Signalの等値判定をカスタマイズする '
 slug: 'angular-signal-equal-option'
 icon: ''
 created_time: '2023-08-09T04:05:00.000Z'
-last_edited_time: '2023-12-30T10:01:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Signal-e6e80b9f4a394d25905f4b4711f09f37'
 features:
   katex: false

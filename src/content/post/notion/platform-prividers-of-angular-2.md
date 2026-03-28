@@ -3,12 +3,15 @@ title: 'Angular 2のPlatform Provider'
 slug: 'platform-prividers-of-angular-2'
 icon: ''
 created_time: '2016-04-22T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-2-Platform-Provider-5ae80d320b244a6bb01b7ffa6feb932a'
 features:
   katex: false

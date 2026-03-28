@@ -3,7 +3,7 @@ title: 'Angular: Model Inputsを使ったカスタムフォームコントロー
 slug: 'angular-cva-signals'
 icon: ''
 created_time: '2024-06-13T14:44:00.000Z'
-last_edited_time: '2024-06-14T01:04:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - 'Angular'
   - 'Signals'
@@ -11,6 +11,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Model-Inputs-3a28e81c63c84670af97d9e6218e2db8'
 features:
   katex: false

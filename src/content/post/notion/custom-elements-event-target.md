@@ -3,12 +3,14 @@ title: 'Custom ElementsとEventTargetの話'
 slug: 'custom-elements-event-target'
 icon: ''
 created_time: '2018-04-25T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - 'Web Components'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Custom-Elements-EventTarget-5a42f600d9194260a6a894cfdc3fbe3d'
 features:
   katex: false

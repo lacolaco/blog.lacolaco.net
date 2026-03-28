@@ -3,13 +3,16 @@ title: 'Setting up Angular Testing Environment with Karma and webpack'
 slug: 'setting-up-angular-2-testing-environment-with-karma-and-webpack'
 icon: ''
 created_time: '2016-10-25T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
+last_edited_time: '2026-03-28T07:55:00.000Z'
 tags:
   - 'Angular'
   - 'Testing'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Setting-up-Angular-Testing-Environment-with-Karma-and-webpack-ba94cfed9b6441d3862b55c25fe0cea7'
 features:
   katex: false

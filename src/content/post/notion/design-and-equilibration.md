@@ -3,13 +3,15 @@ title: '良い設計と平衡'
 slug: 'design-and-equilibration'
 icon: ''
 created_time: '2019-03-17T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - '雑記'
   - '設計'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/105a0b80ef804a6dada02ab40f4e36ef'
 features:
   katex: false
