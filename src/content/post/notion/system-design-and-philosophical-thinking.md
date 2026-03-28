@@ -3,7 +3,7 @@ title: 'システム設計と哲学的思考'
 slug: 'system-design-and-philosophical-thinking'
 icon: ''
 created_time: '2019-09-24T12:27:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T13:21:00.000Z'
 tags:
   - '雑記'
   - '言語化'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/7105948637d14723b8445a3349f49a11'
 features:
   katex: false

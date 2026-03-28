@@ -3,13 +3,16 @@ title: 'Weekly Commits on Angular 2025-04-09'
 slug: 'weekly-commits-on-angular-2025-04-09'
 icon: ''
 created_time: '2025-04-09T07:28:00.000Z'
-last_edited_time: '2025-04-09T07:36:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/weekly-commits-on-angular-2025-04-09'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Weekly-Commits-on-Angular-2025-04-09-1d03521b014a80beae58f852f4628521'
 features:
   katex: false

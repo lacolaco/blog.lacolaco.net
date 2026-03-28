@@ -3,13 +3,16 @@ title: '[翻訳] CrunchbaseとAngular: 私たちが移行した理由'
 slug: 'translation-crunchbase-and-angular-why-we-made-the-transition'
 icon: ''
 created_time: '2021-03-04T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:07:00.000Z'
+last_edited_time: '2026-03-28T13:21:00.000Z'
 tags:
   - 'Angular'
   - 'translation'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Crunchbase-Angular-5214f4b05e704ac69b8ebc77871a6b14'
 features:
   katex: false

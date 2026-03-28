@@ -3,12 +3,15 @@ title: 'なぜentryComponentsは非推奨になるのか'
 slug: 'why-entrycomponents-will-be-deprecated'
 icon: ''
 created_time: '2019-11-04T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/entryComponents-56463883d9204375a2f4f76b6fcf3c88'
 features:
   katex: false

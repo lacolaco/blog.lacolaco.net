@@ -3,13 +3,15 @@ title: '語源辞典を持ち歩き、言語学者を推す生活'
 slug: 'yurugengo-advent-calendar-2023'
 icon: ''
 created_time: '2023-12-11T00:00:00.000Z'
-last_edited_time: '2023-12-30T09:59:00.000Z'
+last_edited_time: '2026-03-28T13:23:00.000Z'
 tags:
   - '雑記'
   - '英語史'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/d840388c2dbd406fa01f14ebff50dc7e'
 features:
   katex: false

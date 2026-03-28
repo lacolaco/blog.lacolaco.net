@@ -3,12 +3,14 @@ title: '『ルールズ・オブ・プログラミング』読後メモ'
 slug: 'the-rules-of-programming-book-review'
 icon: ''
 created_time: '2024-02-18T00:21:00.000Z'
-last_edited_time: '2024-02-18T00:57:00.000Z'
+last_edited_time: '2026-03-28T13:21:00.000Z'
 tags:
   - '読書'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Books'
 notion_url: 'https://www.notion.so/ca3bf239647a4d90ad2ae9c42c8e46b3'
 features:
   katex: false

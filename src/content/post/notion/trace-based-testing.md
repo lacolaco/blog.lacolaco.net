@@ -3,13 +3,15 @@ title: 'Trace-based Testingというアイデアに感動した'
 slug: 'trace-based-testing'
 icon: ''
 created_time: '2023-08-09T11:35:00.000Z'
-last_edited_time: '2023-12-30T10:01:00.000Z'
+last_edited_time: '2026-03-28T13:21:00.000Z'
 tags:
   - '日記'
   - 'Testing'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/Trace-based-Testing-01bcb5d2a0e14ced8760bbf17db18b2f'
 features:
   katex: false

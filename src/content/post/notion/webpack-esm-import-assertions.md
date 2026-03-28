@@ -3,7 +3,7 @@ title: 'webpack と ES Module Import Assertions についての調査'
 slug: 'webpack-esm-import-assertions'
 icon: ''
 created_time: '2022-03-09T00:18:00.000Z'
-last_edited_time: '2023-12-30T10:06:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - 'webpack'
   - 'ESModule'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/webpack-ES-Module-Import-Assertions-2d15afb885274cc48b6930a395588112'
 features:
   katex: false

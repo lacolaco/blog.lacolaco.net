@@ -3,12 +3,14 @@ title: 'TODOは不快になるように残す'
 slug: 'todo-should-be-unpleasant'
 icon: ''
 created_time: '2023-10-02T13:29:00.000Z'
-last_edited_time: '2023-12-30T10:00:00.000Z'
+last_edited_time: '2026-03-28T13:21:00.000Z'
 tags:
   - '雑記'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/TODO-ffaa77445abc4ec5b2a39965065d0268'
 features:
   katex: false

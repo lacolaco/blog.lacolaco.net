@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Tailwind-CSS-6ede1797c0244d72aea305528ed253b1'
 features:
   katex: false

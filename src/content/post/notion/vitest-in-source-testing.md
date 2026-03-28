@@ -3,13 +3,15 @@ title: 'VitestのIn-source Testingを試してみた'
 slug: 'vitest-in-source-testing'
 icon: ''
 created_time: '2023-08-22T10:23:00.000Z'
-last_edited_time: '2023-12-30T10:01:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - 'Testing'
   - 'Vitest'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Vitest-In-source-Testing-579ff1eca68c4fbe9fa67d7c59f1698d'
 features:
   katex: false

@@ -3,13 +3,15 @@ title: '若手開発者の育成がAIによってむしろ有益になる理由'
 slug: 'the-bet-on-juniors-just-got-better'
 icon: ''
 created_time: '2025-12-19T01:59:00.000Z'
-last_edited_time: '2025-12-19T02:13:00.000Z'
+last_edited_time: '2026-03-28T13:21:00.000Z'
 tags:
   - '雑記'
   - 'AI'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/AI-2ce3521b014a808a9084edc59dade0d3'
 features:
   katex: false

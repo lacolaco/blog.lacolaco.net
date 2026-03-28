@@ -3,13 +3,15 @@ title: '「小さくリリースする」以前に、リリースが小さいと
 slug: 'what-is-a-small-release'
 icon: ''
 created_time: '2023-08-08T09:15:00.000Z'
-last_edited_time: '2023-12-30T10:01:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - '言語化'
   - '雑記'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/98e52895d1b54fb18efb80a8b35ce940'
 features:
   katex: false

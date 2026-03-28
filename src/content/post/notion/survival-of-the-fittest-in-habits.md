@@ -3,11 +3,13 @@ title: '習慣や文化も適者生存'
 slug: 'survival-of-the-fittest-in-habits'
 icon: ''
 created_time: '2026-01-16T09:37:00.000Z'
-last_edited_time: '2026-01-16T11:26:00.000Z'
+last_edited_time: '2026-03-28T13:21:00.000Z'
 tags: []
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/2ea3521b014a804390c3de31672f18ea'
 features:
   katex: false

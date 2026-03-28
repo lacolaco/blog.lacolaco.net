@@ -3,12 +3,14 @@ title: 'YAPC::Kyoto 2023 に参加した '
 slug: 'yapc-kyoto-2023'
 icon: '⛩️'
 created_time: '2023-03-19T15:14:00.000Z'
-last_edited_time: '2023-12-30T10:05:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - '日記'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/YAPC-Kyoto-2023-52c3af16edb2431f9cc6bba494864a53'
 features:
   katex: false

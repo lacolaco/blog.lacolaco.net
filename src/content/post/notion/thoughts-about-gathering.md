@@ -3,12 +3,14 @@ title: 'IT系勉強会のいまと、集うということについて'
 slug: 'thoughts-about-gathering'
 icon: ''
 created_time: '2023-08-02T12:43:00.000Z'
-last_edited_time: '2023-12-30T10:02:00.000Z'
+last_edited_time: '2026-03-28T13:21:00.000Z'
 tags:
   - '言語化'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/IT-1f3c7b97cba34bbd9d573b53c9b5aa4f'
 features:
   katex: false

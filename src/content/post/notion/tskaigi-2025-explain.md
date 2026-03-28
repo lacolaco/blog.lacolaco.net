@@ -3,7 +3,7 @@ title: 'TSKaigi 2025「SignalとObservable ― 新たなデータモデルを解
 slug: 'tskaigi-2025-explain'
 icon: ''
 created_time: '2025-05-31T02:05:00.000Z'
-last_edited_time: '2025-05-31T02:12:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - 'TypeScript'
   - 'Signals'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/TSKaigi-2025-Signal-Observable-2033521b014a80d98b70f882faed196e'
 features:
   katex: false

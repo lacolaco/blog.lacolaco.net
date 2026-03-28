@@ -3,7 +3,7 @@ title: 'google/typograms を触ってみた'
 slug: 'typograms'
 icon: ''
 created_time: '2023-08-10T12:11:00.000Z'
-last_edited_time: '2023-12-30T10:01:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - '日記'
   - 'Angular'
@@ -11,6 +11,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/google-typograms-012e0360174849d6bdbf141976e33385'
 features:
   katex: false

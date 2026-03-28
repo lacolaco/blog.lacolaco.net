@@ -3,12 +3,15 @@ title: 'Try Angular 2 AoT compilation'
 slug: 'try-angular-2-aot-compilation'
 icon: ''
 created_time: '2016-10-05T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Try-Angular-2-AoT-compilation-6b7d57eab6c948d98a5ac7d374d32343'
 features:
   katex: false

@@ -3,13 +3,15 @@ title: 'チームを対象として見る'
 slug: 'team-as-object'
 icon: ''
 created_time: '2023-10-24T12:10:00.000Z'
-last_edited_time: '2023-12-30T09:59:00.000Z'
+last_edited_time: '2026-03-28T13:21:00.000Z'
 tags:
   - '雑記'
   - 'チーム'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/b6496dfc55944dd8b714eb1e65ec3180'
 features:
   katex: false

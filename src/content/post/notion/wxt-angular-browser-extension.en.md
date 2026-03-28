@@ -3,7 +3,7 @@ title: 'Building Browser Extensions with WXT + Angular'
 slug: 'wxt-angular-browser-extension'
 icon: ''
 created_time: '2026-01-12T09:08:00.000Z'
-last_edited_time: '2026-01-12T09:17:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - 'Angular'
   - 'TypeScript'
@@ -12,6 +12,9 @@ tags:
 published: true
 locale: 'en'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Building-Browser-Extensions-with-WXT-Angular-fa0f4ae6945f48539c8d155af151bdfc'
 features:
   katex: false

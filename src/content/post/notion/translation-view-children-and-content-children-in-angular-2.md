@@ -3,13 +3,16 @@ title: '[日本語訳] ViewChildren and ContentChildren in Angular 2'
 slug: 'translation-view-children-and-content-children-in-angular-2'
 icon: ''
 created_time: '2016-04-16T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
+last_edited_time: '2026-03-28T13:21:00.000Z'
 tags:
   - 'Angular'
   - 'translation'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/ViewChildren-and-ContentChildren-in-Angular-2-a2178d0a22104f9b9dfc7fca9a317c9a'
 features:
   katex: false
