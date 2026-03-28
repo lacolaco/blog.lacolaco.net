@@ -132,7 +132,9 @@
 
     p > img,
     figure > img {
-      @apply max-w-full box-content place-self-center object-contain w-full md:max-w-(--breakpoint-md) max-h-[75vh];
+      @apply max-w-full block mx-auto object-contain md:max-w-(--breakpoint-md) cursor-pointer transition-opacity duration-200 hover:opacity-80;
+      max-height: 50vh;
+      max-height: 50dvh;
     }
 
     figure {
