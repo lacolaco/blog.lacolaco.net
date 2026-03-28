@@ -4,9 +4,18 @@
 ## 🚨 CRITICAL RULES (STOP IF VIOLATED)
 ---
 
-These 3 rules are NON-NEGOTIABLE. Violating any = STOP and reassess.
+These 4 rules are NON-NEGOTIABLE. Violating any = STOP and reassess.
 
-### 1. Pre-Commit Review Gate
+### 1. 症状除去の禁止
+**TRIGGER**: 修正を実装する前
+
+修正を取り消したとき、問題の発生源にまだ問題が残るなら、それは症状除去であり原因修正ではない。実装するな。
+- Content data（tags, categories, channels等）をコード側で変換・フィルタ・加工するな。データが間違っていればNotionで直せ
+- エラーをtry-catchで握りつぶすな。原因を特定して直せ
+- 下流での上書きは修正ではない
+
+### 2. Pre-Commit Review Gate
+
 **TRIGGER**: After lint/format/build pass, BEFORE `git commit`
 
 For significant changes (new features, refactoring, multi-file):
@@ -19,12 +28,12 @@ For significant changes (new features, refactoring, multi-file):
 
 **実行タイミング**: PR lifecycle等のワークフローでも、コミット直前に必ず実行する。ワークフローのコミットステップの一部として扱え。
 
-### 2. Deletion Requires Explicit Approval
+### 3. Deletion Requires Explicit Approval
 NEVER delete files/directories without user saying "yes, delete".
 - "Check compatibility" ≠ permission to delete
 - Show what will be deleted → Wait for approval → Then delete
 
-### 3. TDD is Mandatory
+### 4. TDD is Mandatory
 Kent Beck style. Tests = spec. Fix implementation, not tests.
 
 ---
