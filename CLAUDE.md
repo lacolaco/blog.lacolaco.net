@@ -27,6 +27,10 @@ NEVER delete files/directories without user saying "yes, delete".
 
 ### 3. TDD is Mandatory
 Kent Beck style. Tests = spec. Fix implementation, not tests.
+- 設計フェーズで検証方法を自然言語ではなく実行可能なテストコードとして書け
+- テストは機能レベルで書け。「変更後に何が存在し、何が存在しないか」を両方定義しろ
+- 全テストがfailすることを確認してから実装を始めろ
+- 全テストがpassしたら実装完了
 
 ---
 ## Project Info
