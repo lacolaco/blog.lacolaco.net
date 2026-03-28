@@ -3,13 +3,15 @@ title: '20 Lines Simple Store with RxJS'
 slug: '20-lines-simple-store-with-rxjs'
 icon: ''
 created_time: '2018-01-05T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T06:24:00.000Z'
 tags:
   - 'TypeScript'
   - 'RxJS'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/20-Lines-Simple-Store-with-RxJS-ca90e008810941f6a4bb889503419f3b'
 features:
   katex: false
