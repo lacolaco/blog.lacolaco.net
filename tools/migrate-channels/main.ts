@@ -263,7 +263,9 @@ if (values.apply) {
     try {
       await updateNotionPage(r.notionPageId!, r.channels, token);
       success++;
-      process.stdout.write(`\r  更新中... ${success + errors}/${needsUpdate.length} (成功: ${success}, 失敗: ${errors})`);
+      process.stdout.write(
+        `\r  更新中... ${success + errors}/${needsUpdate.length} (成功: ${success}, 失敗: ${errors})`,
+      );
       await sleep(500);
     } catch (e) {
       errors++;
