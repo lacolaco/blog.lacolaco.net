@@ -159,22 +159,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: touch .env
-      - name: notion-sync dry-run
-        id: notion-sync
-        run: |
-          set -o pipefail
-          pnpm notion-sync -- --dry-run 2>&1 | tee /tmp/notion-sync-output.txt
-        continue-on-error: true
+      - run: pnpm notion-sync -- --dry-run
         env:
           NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}
-      - name: Output notion-sync error
-        if: steps.notion-sync.outcome == 'failure'
-        run: |
-          echo '## notion-sync-dry-run Error' >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          tail -50 /tmp/notion-sync-output.txt >> $GITHUB_STEP_SUMMARY
-          echo '```' >> $GITHUB_STEP_SUMMARY
-          exit 1
 
   # === Reviews (standard interface: outputs.approved) ===
 
