@@ -253,12 +253,27 @@
       @apply flex mt-0 mb-4;
 
       &.block-link-tweet {
+        @apply justify-center;
+
         blockquote {
           @apply border-0 p-0 m-0;
         }
 
         .twitter-tweet-rendered {
           @apply !my-0;
+
+          /* ウィジェットレンダリング後、元のblockquoteを非表示にする */
+          ~ blockquote {
+            @apply hidden;
+          }
+        }
+
+        &.block-link-tweet-unavailable {
+          @apply flex-col items-center py-6 px-4 text-sm text-muted border border-gray-200 rounded-lg;
+
+          a {
+            @apply text-xs break-all;
+          }
         }
       }
 

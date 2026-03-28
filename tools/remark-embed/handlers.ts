@@ -1,3 +1,4 @@
+import { escapeHtml } from './escape-html.ts';
 import { isTweetUrl } from '../shared/embed';
 
 // 設定インターフェース
@@ -31,24 +32,60 @@ interface EmbedHandler {
   transform: (url: string) => Promise<string | undefined> | string;
 }
 
+// oEmbed APIでツイートの存在を確認する
+// 'available': 埋め込み可能, 'unavailable': 削除済み等, 'unknown': ネットワークエラー等
+async function checkTweetAvailability(tweetUrl: string): Promise<'available' | 'unavailable' | 'unknown'> {
+  const oembedUrl = `https://publish.twitter.com/oembed?url=${encodeURIComponent(tweetUrl)}`;
+  try {
+    const response = await fetch(oembedUrl);
+    if (response.ok) return 'available';
+    // 403/404はツイートが利用不可
+    if (response.status === 403 || response.status === 404) return 'unavailable';
+    // 429(レート制限)や5xxは一時的な問題の可能性
+    console.warn(`oEmbed API returned ${response.status} for ${tweetUrl}`);
+    return 'unknown';
+  } catch (error) {
+    console.warn(`oEmbed API fetch failed for ${tweetUrl}:`, error);
+    return 'unknown';
+  }
+}
+
+// ツイートが利用不可の場合のプレースホルダHTML
+function tweetUnavailablePlaceholder(url: string): string {
+  const escaped = escapeHtml(url);
+  return `
+<div class="block-link block-link-tweet block-link-tweet-unavailable">
+  <p>このポストは現在表示できません</p>
+  <a href="${escaped}" target="_blank" rel="noopener noreferrer">${escaped}</a>
+</div>`.trim();
+}
+
 // 埋め込みハンドラーファクトリ関数
 function createTweetHandler(): EmbedHandler {
   return {
     name: 'tweet',
     test: (url: string) => isTweetUrl(url),
-    transform: (url: string) => {
+    transform: async (url: string) => {
       const safeUrl = new URL(url);
       // 埋め込みウィジェットは `twitter.com` にしか対応していないため、強制的に `twitter.com` に変換
       if (safeUrl.host !== 'twitter.com') {
         safeUrl.host = 'twitter.com';
       }
+      const tweetUrl = safeUrl.toString();
+
+      const availability = await checkTweetAvailability(tweetUrl);
+      if (availability === 'unavailable') {
+        return tweetUnavailablePlaceholder(tweetUrl);
+      }
+
+      // 'available'または'unknown'(一時的エラー)の場合は通常の埋め込みを出力
+      const escaped = escapeHtml(tweetUrl);
       return `
 <div class="block-link block-link-tweet">
   <blockquote class="twitter-tweet">
-    <a href="${safeUrl.toString()}">${safeUrl.toString()}</a>
+    <a href="${escaped}">${escaped}</a>
   </blockquote>
-</div>
-      `.trim();
+</div>`.trim();
     },
   };
 }

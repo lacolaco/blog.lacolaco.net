@@ -75,6 +75,85 @@ describe('Embed Handlers', () => {
         assert.equal(tweetHandler.test('https://x.com/user/status/abc'), false);
       });
     });
+
+    describe('transform method', () => {
+      test('存在するツイートは埋め込みHTMLを返す', async () => {
+        const originalFetch = globalThis.fetch;
+        globalThis.fetch = () => Promise.resolve(new Response('{}', { status: 200 }));
+        try {
+          const result = await tweetHandler.transform('https://x.com/user/status/1234567890');
+          assert.ok(result);
+          assert.ok(result.includes('twitter-tweet'));
+          assert.ok(result.includes('block-link-tweet'));
+          assert.ok(!result.includes('block-link-tweet-unavailable'));
+        } finally {
+          globalThis.fetch = originalFetch;
+        }
+      });
+
+      test('404のツイートはプレースホルダHTMLを返す', async () => {
+        const originalFetch = globalThis.fetch;
+        globalThis.fetch = () => Promise.resolve(new Response('Not Found', { status: 404 }));
+        try {
+          const result = await tweetHandler.transform('https://x.com/user/status/9999999999999');
+          assert.ok(result);
+          assert.ok(result.includes('block-link-tweet-unavailable'));
+          assert.ok(result.includes('https://twitter.com/user/status/9999999999999'));
+        } finally {
+          globalThis.fetch = originalFetch;
+        }
+      });
+
+      test('403のツイートはプレースホルダHTMLを返す', async () => {
+        const originalFetch = globalThis.fetch;
+        globalThis.fetch = () => Promise.resolve(new Response('Forbidden', { status: 403 }));
+        try {
+          const result = await tweetHandler.transform('https://x.com/user/status/9999999999999');
+          assert.ok(result);
+          assert.ok(result.includes('block-link-tweet-unavailable'));
+        } finally {
+          globalThis.fetch = originalFetch;
+        }
+      });
+
+      test('fetchがエラーの場合は通常の埋め込みHTMLを返す', async () => {
+        const originalFetch = globalThis.fetch;
+        globalThis.fetch = () => Promise.reject(new Error('Network error'));
+        try {
+          const result = await tweetHandler.transform('https://x.com/user/status/1234567890');
+          assert.ok(result);
+          assert.ok(result.includes('twitter-tweet'));
+          assert.ok(!result.includes('block-link-tweet-unavailable'));
+        } finally {
+          globalThis.fetch = originalFetch;
+        }
+      });
+
+      test('429(レート制限)の場合は通常の埋め込みHTMLを返す', async () => {
+        const originalFetch = globalThis.fetch;
+        globalThis.fetch = () => Promise.resolve(new Response('Rate Limited', { status: 429 }));
+        try {
+          const result = await tweetHandler.transform('https://x.com/user/status/1234567890');
+          assert.ok(result);
+          assert.ok(result.includes('twitter-tweet'));
+          assert.ok(!result.includes('block-link-tweet-unavailable'));
+        } finally {
+          globalThis.fetch = originalFetch;
+        }
+      });
+
+      test('x.comのURLはtwitter.comに変換される', async () => {
+        const originalFetch = globalThis.fetch;
+        globalThis.fetch = () => Promise.resolve(new Response('{}', { status: 200 }));
+        try {
+          const result = await tweetHandler.transform('https://x.com/user/status/1234567890');
+          assert.ok(result);
+          assert.ok(result.includes('https://twitter.com/user/status/1234567890'));
+        } finally {
+          globalThis.fetch = originalFetch;
+        }
+      });
+    });
   });
 
   describe('createYouTubeHandler', () => {
