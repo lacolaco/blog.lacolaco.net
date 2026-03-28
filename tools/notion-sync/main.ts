@@ -66,11 +66,11 @@ const result = await syncNotionBlog({
     const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
 
     // channels マルチセレクトの読み取り
-    const props = page.properties as Record<string, unknown>;
-    const channelsProp = props['channels'] as
-      | { type: string; multi_select?: Array<{ name: string }> }
-      | undefined;
-    const channels = channelsProp?.multi_select?.map((item) => item.name) ?? [];
+    const channelsProp = page.properties['channels'];
+    const channels =
+      channelsProp && 'multi_select' in channelsProp
+        ? (channelsProp.multi_select as Array<{ name: string }>).map((item) => item.name)
+        : [];
 
     // category=diaryかつslugがページID（空デフォルト）の場合、作成日時をslugとする
     let slug = metadata.slug;
