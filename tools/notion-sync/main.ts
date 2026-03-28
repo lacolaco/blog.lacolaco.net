@@ -77,7 +77,12 @@ const result = await syncNotionBlog({
     const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
 
     // channels マルチセレクトの読み取り
-    const channels: string[] = extractMultiSelectNames(page.properties, 'channels');
+    let channels: string[] = [];
+    try {
+      channels = extractMultiSelectNames(page.properties, 'channels');
+    } catch {
+      // channelsプロパティが存在しない場合は空配列
+    }
 
     // category=diaryかつslugがページID（空デフォルト）の場合、作成日時をslugとする
     let slug = metadata.slug;
