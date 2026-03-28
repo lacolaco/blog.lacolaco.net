@@ -72,9 +72,7 @@ function parseFrontmatter(content: string): {
 function extractNotionPageId(notionUrl: string): string | null {
   const match = notionUrl.match(/([0-9a-f]{32})$/);
   if (match) return match[1];
-  const uuidMatch = notionUrl.match(
-    /([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/,
-  );
+  const uuidMatch = notionUrl.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/);
   if (uuidMatch) return uuidMatch[1].replace(/-/g, '');
   return null;
 }
@@ -83,11 +81,7 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function updateNotionPageTags(
-  pageId: string,
-  remainingTags: string[],
-  token: string,
-): Promise<void> {
+async function updateNotionPageTags(pageId: string, remainingTags: string[], token: string): Promise<void> {
   const url = `https://api.notion.com/v1/pages/${pageId}`;
   const body = JSON.stringify({
     properties: {
@@ -109,9 +103,7 @@ async function updateNotionPageTags(
     if (res.status === 429 && attempt < maxRetries) {
       const retryAfter = Number(res.headers.get('Retry-After') ?? '1');
       const waitMs = Math.max(retryAfter * 1000, 1000 * 2 ** attempt);
-      console.error(
-        `\n  Rate limited, waiting ${waitMs}ms (attempt ${attempt + 1}/${maxRetries})...`,
-      );
+      console.error(`\n  Rate limited, waiting ${waitMs}ms (attempt ${attempt + 1}/${maxRetries})...`);
       await sleep(waitMs);
       continue;
     }
@@ -177,9 +169,7 @@ if (values.apply) {
     try {
       await updateNotionPageTags(t.notionPageId!, remaining, token);
       success++;
-      process.stdout.write(
-        `\r  更新中... ${success + errors}/${withIds.length} (成功: ${success}, 失敗: ${errors})`,
-      );
+      process.stdout.write(`\r  更新中... ${success + errors}/${withIds.length} (成功: ${success}, 失敗: ${errors})`);
       await sleep(500);
     } catch (e) {
       errors++;
