@@ -232,6 +232,7 @@ jobs:
         uses: anthropics/claude-code-action@6062f3709600659be5e47fcddf2cf76993c235c2 # v1.0.76
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          allowed_bots: 'lacolaco-actions-worker[bot]'
           prompt: |
             このPRに含まれるブログ記事コンテンツの変更をレビューしてください。
             `gh pr diff ${{ github.event.pull_request.number }}` でdiffを取得し、コンテンツファイル（src/content/**, public/images/**）の変更のみを対象に文面チェックを行ってください。
@@ -320,6 +321,7 @@ jobs:
         uses: anthropics/claude-code-action@6062f3709600659be5e47fcddf2cf76993c235c2 # v1.0.76
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          allowed_bots: 'lacolaco-actions-worker[bot]'
           prompt: |
             このPRのコード変更をレビューしてください。
             `gh pr diff ${{ github.event.pull_request.number }}` でdiffを取得し、コードファイルの変更のみを対象にレビューを行ってください。
