@@ -1,3 +1,4 @@
+import type { CollectionEntry } from 'astro:content';
 import rss from '@astrojs/rss';
 import { queryAvailablePosts, queryChannels } from '@lib/query';
 import type { APIContext } from 'astro';
@@ -21,7 +22,7 @@ export async function getStaticPaths() {
 
 type Props = {
   channel: string;
-  posts: Array<Awaited<ReturnType<typeof queryAvailablePosts>>[number]>;
+  posts: Array<CollectionEntry<'posts' | 'postsEn'>>;
 };
 
 export async function GET(context: APIContext<Props>) {

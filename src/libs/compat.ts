@@ -18,7 +18,7 @@ export function getCategory(post: CollectionEntry<'posts'>): string | undefined 
   return post.data.category;
 }
 
-export function getChannels(post: CollectionEntry<'posts' | 'postsEn'>): string[] {
+export function getChannels(post: CollectionEntry<'posts'>): string[] {
   return post.data.channels ?? [];
 }
 
