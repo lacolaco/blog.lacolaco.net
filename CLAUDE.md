@@ -29,8 +29,14 @@ NEVER delete files/directories without user saying "yes, delete".
 Kent Beck style. Tests = spec. Fix implementation, not tests.
 - 設計フェーズで検証方法を自然言語ではなく実行可能なテストコードとして書け
 - テストは機能レベルで書け。「変更後に何が存在し、何が存在しないか」を両方定義しろ
+- テストはデータの発生源で検証しろ。下流（表示層、API層）で検証するな
 - 全テストがfailすることを確認してから実装を始めろ
 - 全テストがpassしたら実装完了
+
+失敗例（#1367 Channel再設計）:
+- ❌ 自然言語の検証項目「Channelページに記事が表示されること」→ 昇格タグの除去漏れを検出できなかった
+- ❌ getTags()の戻り値をフィルタするテスト → 表示層のテストでありNotionデータの問題を検出できない
+- ✅ markdownのfrontmatterにAngularタグが存在しないことを検証するテスト → データ発生源で検証、表示フィルタでは通らない
 
 ---
 ## Project Info
