@@ -156,14 +156,14 @@ const result = await syncNotionBlog({
     },
     generateFrontmatter: (baseFields, metadata, renderContext: RenderContext<FeatureState>) => {
       const { source_url, title, slug, ...rest } = baseFields as Record<string, unknown>;
-      const ext = metadata as PostMetadata & { icon: string; channels: string[] };
+      const ext = metadata as PostMetadata & { icon: string; channels?: string[] };
 
       return {
         title,
         slug,
         icon: ext.icon,
         ...rest,
-        channels: ext.channels?.length > 0 ? ext.channels : undefined,
+        channels: ext.channels != null && ext.channels.length > 0 ? ext.channels : undefined,
         notion_url: source_url,
         features: {
           katex: renderContext.state.hasKatex ?? false,

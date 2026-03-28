@@ -88,11 +88,20 @@ pnpm test:libs    # library tests
 
 ### CI失敗時のログ確認（必須）
 - CI失敗時は**必ずエラーログを確認してから修正**せよ。推測で修正するな
-- ログ確認手段（優先順位）:
-  1. GitHub Check Run Annotations API: `curl -s "https://api.github.com/repos/lacolaco/blog.lacolaco.net/check-runs/{job_id}/annotations"`
-  2. CIジョブにStep Summary出力を追加して再実行
-  3. CIジョブにPRコメント出力を追加して再実行（`permissions: pull-requests: write` が必要）
-- **ログを見ずに推測で修正を繰り返すことは禁止**。エラーの原因を特定してから修正せよ
+- **ログを見ずに推測で修正を繰り返すことは禁止**
+- ログ確認方法:
+  ```bash
+  # JAVA_TOOL_OPTIONSからegress proxyを設定してGitHub APIにアクセス
+  PROXY_USER=$(echo "$JAVA_TOOL_OPTIONS" | grep -oP '(?<=Dhttps.proxyUser=)[^ ]+')
+  PROXY_PASS=$(echo "$JAVA_TOOL_OPTIONS" | grep -oP '(?<=Dhttps.proxyPassword=)[^ ]+')
+  PROXY_HOST=$(echo "$JAVA_TOOL_OPTIONS" | grep -oP '(?<=Dhttps.proxyHost=)[^ ]+')
+  PROXY_PORT=$(echo "$JAVA_TOOL_OPTIONS" | grep -oP '(?<=Dhttps.proxyPort=)[^ ]+')
+  export https_proxy="http://${PROXY_USER}:${PROXY_PASS}@${PROXY_HOST}:${PROXY_PORT}"
+
+  # check run IDはmcp__github__pull_request_readのget_check_runsで取得
+  curl -s "https://api.github.com/repos/lacolaco/blog.lacolaco.net/check-runs/{job_id}/annotations" \
+    -H "Accept: application/vnd.github+json"
+  ```
 - CIステップにデバッグ出力を追加した場合、修正完了後に必ず削除してci.ymlをmainと同一に戻せ
 
 ### Git Operations
