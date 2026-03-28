@@ -94,7 +94,18 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Migrate channels (dry-run)
-        run: pnpm migrate-channels
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          OUTPUT=$(pnpm --silent migrate-channels 2>&1)
+          echo "$OUTPUT"
+          gh pr comment ${{ github.event.pull_request.number }} --body "## Channel Migration Dry-Run
+          <details><summary>結果を展開</summary>
+
+          \`\`\`
+          ${OUTPUT}
+          \`\`\`
+          </details>"
       - run: pnpm run build
 
   lint:
