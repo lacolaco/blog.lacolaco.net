@@ -99,8 +99,6 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
@@ -114,25 +112,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: pnpm astro sync
-      - name: Lint
-        id: lint
-        run: |
-          set -o pipefail
-          pnpm lint 2>&1 | tee /tmp/lint-output.txt
-        continue-on-error: true
-      - name: Comment lint error on PR
-        if: steps.lint.outcome == 'failure'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          BODY=$(tail -50 /tmp/lint-output.txt)
-          gh pr comment ${{ github.event.pull_request.number }} --body "## Lint Error
-          \`\`\`
-          ${BODY}
-          \`\`\`"
-      - name: Fail if lint failed
-        if: steps.lint.outcome == 'failure'
-        run: exit 1
+      - run: pnpm lint
 
   format:
     runs-on: ubuntu-latest

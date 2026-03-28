@@ -10,6 +10,15 @@ type FeatureState = {
   hasTweet?: boolean;
 };
 
+// Notion APIのpropertiesからmulti_selectの名前配列を安全に取得する
+function extractMultiSelectNames(properties: Record<string, unknown>, key: string): string[] {
+  const prop = properties[key];
+  if (prop == null || typeof prop !== 'object') return [];
+  const obj = prop as Record<string, unknown>;
+  if (obj['type'] !== 'multi_select' || !Array.isArray(obj['multi_select'])) return [];
+  return (obj['multi_select'] as Array<Record<string, unknown>>).map((item) => String(item['name'] ?? ''));
+}
+
 const { NOTION_AUTH_TOKEN } = process.env;
 if (!NOTION_AUTH_TOKEN) {
   console.error('Please set NOTION_AUTH_TOKEN');
@@ -66,11 +75,10 @@ const result = await syncNotionBlog({
     const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
 
     // channels マルチセレクトの読み取り
-    const channelsProp = page.properties['channels'];
-    const channels =
-      channelsProp && 'multi_select' in channelsProp
-        ? (channelsProp.multi_select as Array<{ name: string }>).map((item) => item.name)
-        : [];
+    const channels: string[] = extractMultiSelectNames(
+      page.properties as unknown as Record<string, unknown>,
+      'channels',
+    );
 
     // category=diaryかつslugがページID（空デフォルト）の場合、作成日時をslugとする
     let slug = metadata.slug;
