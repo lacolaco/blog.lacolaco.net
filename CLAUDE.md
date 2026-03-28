@@ -4,20 +4,9 @@
 ## 🚨 CRITICAL RULES (STOP IF VIOLATED)
 ---
 
-These 4 rules are NON-NEGOTIABLE. Violating any = STOP and reassess.
+These 3 rules are NON-NEGOTIABLE. Violating any = STOP and reassess.
 
-### 1. 事後条件の定義と検証
-**TRIGGER**: 変更を実装する前
-
-1. 変更後にシステムがどうあるべきか（事後条件）を定義しろ
-2. 実装後に事後条件を検証しろ。満たさなければ修正は未完了
-3. 事後条件を満たさない解決策は実装するな
-
-例: 「タグをChannelに昇格」→ 事後条件「昇格元タグがどの記事にも存在しない」
-→ 表示フィルタではNotionにタグが残るため事後条件未達 → 不可
-→ Notionからタグを除去すれば事後条件達成 → 正しい解決策
-
-### 2. Pre-Commit Review Gate
+### 1. Pre-Commit Review Gate
 
 **TRIGGER**: After lint/format/build pass, BEFORE `git commit`
 
@@ -31,12 +20,12 @@ For significant changes (new features, refactoring, multi-file):
 
 **実行タイミング**: PR lifecycle等のワークフローでも、コミット直前に必ず実行する。ワークフローのコミットステップの一部として扱え。
 
-### 3. Deletion Requires Explicit Approval
+### 2. Deletion Requires Explicit Approval
 NEVER delete files/directories without user saying "yes, delete".
 - "Check compatibility" ≠ permission to delete
 - Show what will be deleted → Wait for approval → Then delete
 
-### 4. TDD is Mandatory
+### 3. TDD is Mandatory
 Kent Beck style. Tests = spec. Fix implementation, not tests.
 
 ---
