@@ -94,18 +94,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Migrate channels (dry-run)
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          OUTPUT=$(pnpm --silent migrate-channels 2>&1)
-          echo "$OUTPUT"
-          gh pr comment ${{ github.event.pull_request.number }} --body "## Channel Migration Dry-Run
-          <details><summary>結果を展開</summary>
-
-          \`\`\`
-          ${OUTPUT}
-          \`\`\`
-          </details>"
+        run: pnpm migrate-channels
       - run: pnpm run build
 
   lint:
@@ -123,23 +112,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: pnpm astro sync
-      - name: Lint
-        id: lint
-        run: pnpm lint 2>&1 | tee /tmp/lint-output.txt
-        continue-on-error: true
-      - name: Comment lint error on PR
-        if: steps.lint.outcome == 'failure'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          BODY=$(tail -50 /tmp/lint-output.txt)
-          gh pr comment ${{ github.event.pull_request.number }} --body "## Lint Error
-          \`\`\`
-          ${BODY}
-          \`\`\`"
-      - name: Fail if lint failed
-        if: steps.lint.outcome == 'failure'
-        run: exit 1
+      - run: pnpm lint
 
   format:
     runs-on: ubuntu-latest
