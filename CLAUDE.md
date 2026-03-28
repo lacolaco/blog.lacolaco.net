@@ -7,6 +7,7 @@
 These 3 rules are NON-NEGOTIABLE. Violating any = STOP and reassess.
 
 ### 1. Pre-Commit Review Gate
+
 **TRIGGER**: After lint/format/build pass, BEFORE `git commit`
 
 For significant changes (new features, refactoring, multi-file):
@@ -26,6 +27,16 @@ NEVER delete files/directories without user saying "yes, delete".
 
 ### 3. TDD is Mandatory
 Kent Beck style. Tests = spec. Fix implementation, not tests.
+- 設計フェーズで検証方法を自然言語ではなく実行可能なテストコードとして書け
+- テストは機能レベルで書け。「変更後に何が存在し、何が存在しないか」を両方定義しろ
+- テストはデータの発生源で検証しろ。下流（表示層、API層）で検証するな
+- 全テストがfailすることを確認してから実装を始めろ
+- 全テストがpassしたら実装完了
+
+失敗例（#1367 Channel再設計）:
+- ❌ 自然言語の検証項目「Channelページに記事が表示されること」→ 昇格タグの除去漏れを検出できなかった
+- ❌ getTags()の戻り値をフィルタするテスト → 表示層のテストでありNotionデータの問題を検出できない
+- ✅ markdownのfrontmatterにAngularタグが存在しないことを検証するテスト → データ発生源で検証、表示フィルタでは通らない
 
 ---
 ## Project Info
@@ -82,9 +93,12 @@ pnpm test:libs    # library tests
 - Test failures after your changes = assume your fault until proven otherwise
 
 ### Before Implementation
-1. Search for similar existing code (Glob/Grep)
-2. Check if library/pattern already exists
-3. Read similar implementations first
+1. 変更の期待結果をテストコードで書け（何が存在し、何が存在しないか）
+2. テストを実行して全て失敗することを確認しろ
+3. Search for similar existing code (Glob/Grep)
+4. Check if library/pattern already exists
+5. Read similar implementations first
+6. テストを通す実装を書け
 
 ### CI失敗時のログ確認（必須）
 - CI失敗時は**必ずエラーログを確認してから修正**せよ。推測で修正するな
@@ -102,6 +116,7 @@ pnpm test:libs    # library tests
   curl -s "https://api.github.com/repos/lacolaco/blog.lacolaco.net/check-runs/{job_id}/annotations" \
     -H "Accept: application/vnd.github+json"
   ```
+- GITHUB_TOKENが環境変数に設定されていれば `gh run view --log` で直接ログ取得可能（#1386参照）
 - CIステップにデバッグ出力を追加した場合、修正完了後に必ず削除してci.ymlをmainと同一に戻せ
 
 ### Git Operations
