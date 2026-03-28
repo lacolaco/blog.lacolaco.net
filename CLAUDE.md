@@ -71,6 +71,10 @@ pnpm test:libs    # library tests
 - UI変更は必ず自分でブラウザ確認（chrome-devtools等）まで完了させること
 - ユーザーに確認を委ねるな。「確認してください」は禁止
 
+### クリーンアップ
+- 自分が生成したファイル（スクリーンショット、一時ファイル等）はタスク完了時に必ず削除せよ。放置するな
+- 長時間実行コマンド（CI watch、devサーバー等）は常に`run_in_background`で実行すること
+
 ### Error Handling
 - ANY error = STOP immediately, analyze, report to user
 - NEVER chain failed attempts
