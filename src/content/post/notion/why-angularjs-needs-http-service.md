@@ -3,13 +3,16 @@ title: 'なぜAngularJSに$httpが必要だったのか（あるいはAngular Ht
 slug: 'why-angularjs-needs-http-service'
 icon: ''
 created_time: '2018-04-20T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - 'Angular'
   - 'AngularJS'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/AngularJS-http-Angular-HttpClient-b5de8f3306b24e58bb12009345948aa7'
 features:
   katex: false

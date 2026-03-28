@@ -3,13 +3,16 @@ title: '[日本語訳] Angular 2 Component Styles'
 slug: 'translation-angular-2-component-styles'
 icon: ''
 created_time: '2016-04-16T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
+last_edited_time: '2026-03-28T13:21:00.000Z'
 tags:
   - 'Angular'
   - 'translation'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-2-Component-Styles-448489093c084dc8986a050b8741eaff'
 features:
   katex: false

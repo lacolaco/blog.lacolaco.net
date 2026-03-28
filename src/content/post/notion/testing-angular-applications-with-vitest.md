@@ -11,6 +11,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Vitest-7b14ed47693347978ef0c29e83922a49'
 features:
   katex: false

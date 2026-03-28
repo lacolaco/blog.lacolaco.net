@@ -3,13 +3,15 @@ title: '昨日よりいいコードを書こう'
 slug: 'write-better-code'
 icon: ''
 created_time: '2022-02-17T02:00:00.000Z'
-last_edited_time: '2023-12-30T10:07:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - '雑記'
   - '言語化'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/b81b02a5843e43c78a204f020179061f'
 features:
   katex: false

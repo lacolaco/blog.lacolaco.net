@@ -3,13 +3,15 @@ title: 'チームのレベルは目標にあらわれる'
 slug: 'team-level-and-objective'
 icon: ''
 created_time: '2023-08-28T06:02:00.000Z'
-last_edited_time: '2023-12-30T10:01:00.000Z'
+last_edited_time: '2026-03-28T13:21:00.000Z'
 tags:
   - '雑記'
   - '言語化'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/faa943241ab44608a94dccbee6328928'
 features:
   katex: false

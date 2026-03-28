@@ -3,7 +3,7 @@ title: '問題はどこにもない'
 slug: 'there-is-no-problem'
 icon: ''
 created_time: '2021-09-16T02:59:00.000Z'
-last_edited_time: '2023-12-30T10:07:00.000Z'
+last_edited_time: '2026-03-28T13:21:00.000Z'
 tags:
   - '言語化'
   - '哲学'
@@ -11,6 +11,8 @@ published: true
 locale: 'ja'
 category: 'Idea'
 canonical_url: 'https://lacolaco.hatenablog.com/entry/2021/09/16/115912'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/e2d773efb710471396b40f35e263f0f6'
 features:
   katex: false

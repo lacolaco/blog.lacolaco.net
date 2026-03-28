@@ -3,7 +3,7 @@ title: 'WXT + Angularでブラウザ拡張を作る'
 slug: 'wxt-angular-browser-extension'
 icon: ''
 created_time: '2026-01-12T06:16:00.000Z'
-last_edited_time: '2026-01-12T06:31:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - 'Angular'
   - 'TypeScript'
@@ -12,6 +12,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/WXT-Angular-2e63521b014a80179e50e04f8a4e6e3b'
 features:
   katex: false
@@ -25,8 +28,6 @@ https://github.com/lacolaco/wxt-angular-starter
 
 ## WXTとは
 
-https://wxt.dev/
-
 **WXT**はブラウザ拡張機能の開発を効率化するためのフレームワークだ。Viteをベースにしており、高速なHMR（Hot Module Replacement）による快適な開発体験と、ファイルベースでマニフェストを自動生成する仕組みを提供している。
 
 特に便利なのは、Chrome、Firefox、Edge、Safariなど複数のブラウザに対応した拡張機能を単一のコードベースから生成できる点だ。Manifest V2とV3の両方をサポートしており、ブラウザごとの差異を吸収してくれる。
@@ -36,8 +37,6 @@ https://wxt.dev/
 ブラウザ拡張のUI部分はHTMLを読み込むことになるが、WXTでは公式にいくつかのライブラリをサポートしている。`wxt init`コマンドを実行すると、VanillaやReact, Vueなどのテンプレートを選べるが、まだAngularのテンプレートはない。しかしやることはそれほど難しくないため、VanillaをベースにAngularを使う構成をセットアップすればよい。
 
 ただし、AngularをViteで動かすには`@analogjs/vite-plugin-angular`というプラグインが必要になる。このプラグインはAnalogJSプロジェクトが提供しており、AngularをViteエコシステムで使えるようにしてくれる。
-
-https://www.npmjs.com/package/@analogjs/vite-plugin-angular
 
 ## プロジェクト構成
 

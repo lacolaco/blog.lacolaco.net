@@ -3,13 +3,15 @@ title: '謙遜しないと決めている話'
 slug: 'why-i-dont-humblebrag'
 icon: ''
 created_time: '2020-08-25T23:56:00.000Z'
-last_edited_time: '2023-12-30T10:07:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - '雑記'
   - '言語化'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/5cc1860433a543dcbd1b5787bd0c978b'
 features:
   katex: false

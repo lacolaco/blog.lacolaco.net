@@ -3,13 +3,16 @@ title: 'Use Ionic components as Web Components in Angular'
 slug: 'use-ionic-components-as-web-components-in-angular'
 icon: ''
 created_time: '2019-03-07T00:00:00.000Z'
-last_edited_time: '2025-11-28T15:05:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - 'Angular'
   - 'Ionic'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Use-Ionic-components-as-Web-Components-in-Angular-5abcd25b94664e91a124bb3a3026bc78'
 features:
   katex: false

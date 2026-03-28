@@ -3,7 +3,7 @@ title: 'DOMのXSSを防ぐTrusted TypesとAngularのセキュリティ機構'
 slug: 'trusted-types-and-angular-security'
 icon: ''
 created_time: '2019-05-13T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T13:22:00.000Z'
 tags:
   - 'Angular'
   - 'Trusted Types'
@@ -12,6 +12,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/DOM-XSS-Trusted-Types-Angular-7de35a8fb66b43c2ac9af009f211efd1'
 features:
   katex: false

@@ -1,6 +1,6 @@
 {
   "5abcd25b-9466-4e91-a124-bb3a3026bc78": {
-    "lastModified": "2025-11-28T15:05:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "use-ionic-components-as-web-components-in-angular",
     "filePath": "use-ionic-components-as-web-components-in-angular.md"
   },
@@ -65,12 +65,12 @@
     "filePath": "output-your-experiences.md"
   },
   "2353521b-014a-8036-8960-d57494b84243": {
-    "lastModified": "2025-07-19T08:35:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "technocrat-failure",
     "filePath": "technocrat-failure.md"
   },
   "2303521b-014a-8086-af98-d4b2b9cf0763": {
-    "lastModified": "2025-07-19T03:57:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "trust-and-trustworthy",
     "filePath": "trust-and-trustworthy.md"
   },
@@ -215,7 +215,7 @@
     "filePath": "book-review-looks-good-to-me.md"
   },
   "2033521b-014a-80d9-8b70-f882faed196e": {
-    "lastModified": "2025-05-31T02:12:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "tskaigi-2025-explain",
     "filePath": "tskaigi-2025-explain.md"
   },
@@ -225,7 +225,7 @@
     "filePath": "deck-markdown-to-google-slides.md"
   },
   "1fc3521b-014a-806e-b1b8-e154f6b3507a": {
-    "lastModified": "2025-05-23T12:54:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "tskaigi-2025-slide",
     "filePath": "tskaigi-2025-slide.md"
   },
@@ -240,7 +240,7 @@
     "filePath": "angular-selectorless-is-coming.md"
   },
   "1d03521b-014a-80be-ae58-f852f4628521": {
-    "lastModified": "2025-04-09T07:36:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "weekly-commits-on-angular-2025-04-09",
     "filePath": "weekly-commits-on-angular-2025-04-09.md"
   },
@@ -255,27 +255,27 @@
     "filePath": "angular-using-web-worker-through-resource.md"
   },
   "1bb3521b-014a-80de-aa71-c45e578737b9": {
-    "lastModified": "2025-03-19T06:09:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "weekly-commits-on-angular-2025-03-19",
     "filePath": "weekly-commits-on-angular-2025-03-19.md"
   },
   "1ad3521b-014a-80e5-bde2-e61a84634c57": {
-    "lastModified": "2025-03-12T09:00:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "weekly-commits-on-angular-2025-03-12",
     "filePath": "weekly-commits-on-angular-2025-03-12.md"
   },
   "1b43521b-014a-8044-8298-efca294f5fde": {
-    "lastModified": "2025-03-12T06:35:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "weekly-commits-on-angular-2025-03-05",
     "filePath": "weekly-commits-on-angular-2025-03-05.md"
   },
   "1ab3521b-014a-80fb-b2b3-edfd08438071": {
-    "lastModified": "2025-03-03T23:40:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "v-tokyo-22-pre",
     "filePath": "v-tokyo-22-pre.md"
   },
   "1a63521b-014a-808f-9266-e92dc6f86dfc": {
-    "lastModified": "2025-02-26T10:09:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "weekly-commits-on-angular-2025-02-26",
     "filePath": "weekly-commits-on-angular-2025-02-26.md"
   },
@@ -410,7 +410,7 @@
     "filePath": "angular-rendering-effects-and-business-effects.md"
   },
   "7b14ed47-6933-4797-8ef0-c29e83922a49": {
-    "lastModified": "2024-06-15T00:46:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "testing-angular-applications-with-vitest",
     "filePath": "testing-angular-applications-with-vitest.md"
   },
@@ -435,7 +435,7 @@
     "filePath": "opentelemetry-js-repository-walkthrough.md"
   },
   "6b94501f-9bf4-457b-8080-ee4e007b2f55": {
-    "lastModified": "2024-03-17T03:19:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "ya8-2024",
     "filePath": "ya8-2024.md"
   },
@@ -445,7 +445,7 @@
     "filePath": "angular-model-inputs.md"
   },
   "ca3bf239-647a-4d90-ad2a-e9c42c8e46b3": {
-    "lastModified": "2024-02-18T00:57:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "the-rules-of-programming-book-review",
     "filePath": "the-rules-of-programming-book-review.md"
   },
@@ -475,32 +475,32 @@
     "filePath": "initial.md"
   },
   "6b7d57ea-b6c9-48d9-8a5a-c7d374d32343": {
-    "lastModified": "2023-12-30T10:11:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "try-angular-2-aot-compilation",
     "filePath": "try-angular-2-aot-compilation.md"
   },
   "a2178d0a-2210-4f9b-9dfc-7fca9a317c9a": {
-    "lastModified": "2023-12-30T10:11:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "translation-view-children-and-content-children-in-angular-2",
     "filePath": "translation-view-children-and-content-children-in-angular-2.md"
   },
   "3f8c4b9e-8542-45a2-b428-a333076afb0a": {
-    "lastModified": "2023-12-30T10:11:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "translation-template-driven-form-in-angular-2",
     "filePath": "translation-template-driven-form-in-angular-2.md"
   },
   "44848909-3c08-4dc8-986a-050b8741eaff": {
-    "lastModified": "2023-12-30T10:11:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "translation-angular-2-component-styles",
     "filePath": "translation-angular-2-component-styles.md"
   },
   "6a6d79b6-ae74-4c49-82a9-5804cc0b5e0f": {
-    "lastModified": "2023-12-30T10:11:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "translation-angular-2-change-detection-explained",
     "filePath": "translation-angular-2-change-detection-explained.md"
   },
   "8d9ba74a-f57a-443d-b493-69454c9916c8": {
-    "lastModified": "2023-12-30T10:11:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "template-syntax-in-angular-2",
     "filePath": "template-syntax-in-angular-2.md"
   },
@@ -590,12 +590,12 @@
     "filePath": "access-to-global-variables-in-angular-2.md"
   },
   "b5de8f33-06b2-4e58-bb12-009345948aa7": {
-    "lastModified": "2023-12-30T10:10:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "why-angularjs-needs-http-service",
     "filePath": "why-angularjs-needs-http-service.md"
   },
   "de2f47a3-3dcc-4621-8f6c-f56dc1b57062": {
-    "lastModified": "2023-12-30T10:10:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "state-management-library",
     "filePath": "state-management-library.md"
   },
@@ -675,7 +675,7 @@
     "filePath": "design-and-equilibration.md"
   },
   "dd51c920-26ab-47ba-8982-23ae64a2a1f0": {
-    "lastModified": "2023-12-30T10:10:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "why-angular-has-not-static-site-generators",
     "filePath": "why-angular-has-not-static-site-generators.md"
   },
@@ -760,7 +760,7 @@
     "filePath": "angular-strict-property-initialization-best-practice.md"
   },
   "71059486-37d1-4723-b844-5a3349f49a11": {
-    "lastModified": "2023-12-30T10:09:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "system-design-and-philosophical-thinking",
     "filePath": "system-design-and-philosophical-thinking.md"
   },
@@ -770,22 +770,22 @@
     "filePath": "inner-speech.md"
   },
   "56463883-d920-4375-a2f4-f76b6fcf3c88": {
-    "lastModified": "2023-12-30T10:09:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "why-entrycomponents-will-be-deprecated",
     "filePath": "why-entrycomponents-will-be-deprecated.md"
   },
   "71bd2be8-bc25-4bf6-92ae-57848af085ef": {
-    "lastModified": "2023-12-30T10:09:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "webbundles-with-angular",
     "filePath": "webbundles-with-angular.md"
   },
   "f19ec171-8d0c-4245-becb-ad06777044f5": {
-    "lastModified": "2023-12-30T10:09:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "upgrading-angularjs-app-with-angular-elements",
     "filePath": "upgrading-angularjs-app-with-angular-elements.md"
   },
   "7de35a8f-b66b-43c2-ac9a-f009f211efd1": {
-    "lastModified": "2023-12-30T10:09:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "trusted-types-and-angular-security",
     "filePath": "trusted-types-and-angular-security.md"
   },
@@ -925,17 +925,17 @@
     "filePath": "angular-app-reactiveness.en.md"
   },
   "4552fa97-268f-4c15-b088-766732b2f74c": {
-    "lastModified": "2023-12-30T10:09:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "theory-of-state-01",
     "filePath": "theory-of-state-01.md"
   },
   "5214f4b0-5e70-4ac6-9b8e-bc77871a6b14": {
-    "lastModified": "2023-12-30T10:07:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "translation-crunchbase-and-angular-why-we-made-the-transition",
     "filePath": "translation-crunchbase-and-angular-why-we-made-the-transition.md"
   },
   "c3927100-7462-4b3e-acb7-75d58b6b9652": {
-    "lastModified": "2023-12-30T10:07:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "state-of-angular-elements-2020-summer",
     "filePath": "state-of-angular-elements-2020-summer.md"
   },
@@ -975,7 +975,7 @@
     "filePath": "angular-using-ngrx-with-redux-toolkit.md"
   },
   "5cc18604-33a5-43dc-bd1b-5787bd0c978b": {
-    "lastModified": "2023-12-30T10:07:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "why-i-dont-humblebrag",
     "filePath": "why-i-dont-humblebrag.md"
   },
@@ -1020,12 +1020,12 @@
     "filePath": "ask-than-wish.md"
   },
   "e2d773ef-b710-4713-96b4-0f35e263f0f6": {
-    "lastModified": "2023-12-30T10:07:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "there-is-no-problem",
     "filePath": "there-is-no-problem.md"
   },
   "b81b02a5-843e-43c7-8a20-4f020179061f": {
-    "lastModified": "2023-12-30T10:07:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "write-better-code",
     "filePath": "write-better-code.md"
   },
@@ -1055,7 +1055,7 @@
     "filePath": "notion-headless-cms-1.md"
   },
   "2d15afb8-8527-4cc4-8b69-30a395588112": {
-    "lastModified": "2023-12-30T10:06:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "webpack-esm-import-assertions",
     "filePath": "webpack-esm-import-assertions.md"
   },
@@ -1070,7 +1070,7 @@
     "filePath": "github-actions-oidc-google-cloud.md"
   },
   "6ede1797-c024-4d72-aea3-05528ed253b1": {
-    "lastModified": "2023-12-30T10:06:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "two-sides-of-tailwindcss",
     "filePath": "two-sides-of-tailwindcss.md"
   },
@@ -1140,7 +1140,7 @@
     "filePath": "dokken-2022-winter-success.md"
   },
   "52c3af16-edb2-431f-9cc6-bba494864a53": {
-    "lastModified": "2023-12-30T10:05:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "yapc-kyoto-2023",
     "filePath": "yapc-kyoto-2023.md"
   },
@@ -1150,7 +1150,7 @@
     "filePath": "angular-16-jest.md"
   },
   "23c54aef-56ff-4d4c-99b0-35e052b80056": {
-    "lastModified": "2023-12-30T10:05:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "why-inject-function-wins",
     "filePath": "why-inject-function-wins.md"
   },
@@ -1235,12 +1235,12 @@
     "filePath": "read-books-2023-q2.md"
   },
   "1f3c7b97-cba3-4bbd-9d57-3b53c9b5aa4f": {
-    "lastModified": "2023-12-30T10:02:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "thoughts-about-gathering",
     "filePath": "thoughts-about-gathering.md"
   },
   "98e52895-d1b5-4fb1-8efb-80a8b35ce940": {
-    "lastModified": "2023-12-30T10:01:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "what-is-a-small-release",
     "filePath": "what-is-a-small-release.md"
   },
@@ -1255,12 +1255,12 @@
     "filePath": "angular-signals-and-component-communication.md"
   },
   "01bcb5d2-a0e1-4ced-8760-bbf17db18b2f": {
-    "lastModified": "2023-12-30T10:01:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "trace-based-testing",
     "filePath": "trace-based-testing.md"
   },
   "012e0360-1748-49d6-bdbf-141976e33385": {
-    "lastModified": "2023-12-30T10:01:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "typograms",
     "filePath": "typograms.md"
   },
@@ -1275,7 +1275,7 @@
     "filePath": "finish-plato-series.md"
   },
   "faa94324-1ab4-4608-a94d-ccbee6328928": {
-    "lastModified": "2023-12-30T10:01:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "team-level-and-objective",
     "filePath": "team-level-and-objective.md"
   },
@@ -1295,7 +1295,7 @@
     "filePath": "button-and-link.md"
   },
   "579ff1ec-a68c-4fbe-9fa6-7d7c59f1698d": {
-    "lastModified": "2023-12-30T10:01:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "vitest-in-source-testing",
     "filePath": "vitest-in-source-testing.md"
   },
@@ -1325,7 +1325,7 @@
     "filePath": "discord-bot-cfworkers-hono.md"
   },
   "331292ed-743a-41ca-a3d7-5e039b9af412": {
-    "lastModified": "2023-12-30T10:00:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "why-angular-is-not-popular",
     "filePath": "why-angular-is-not-popular.md"
   },
@@ -1335,7 +1335,7 @@
     "filePath": "read-books-2023-q3.md"
   },
   "ffaa7744-5abc-4ec5-b2a3-9965065d0268": {
-    "lastModified": "2023-12-30T10:00:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "todo-should-be-unpleasant",
     "filePath": "todo-should-be-unpleasant.md"
   },
@@ -1355,7 +1355,7 @@
     "filePath": "make-icon-badge.md"
   },
   "b6496dfc-5594-4dd8-b714-eb1e65ec3180": {
-    "lastModified": "2023-12-30T09:59:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "team-as-object",
     "filePath": "team-as-object.md"
   },
@@ -1365,7 +1365,7 @@
     "filePath": "angular-ssr-docker.md"
   },
   "d840388c-2dbd-406f-a01f-14ebff50dc7e": {
-    "lastModified": "2023-12-30T09:59:00.000Z",
+    "lastModified": "2026-03-28T13:23:00.000Z",
     "slug": "yurugengo-advent-calendar-2023",
     "filePath": "yurugengo-advent-calendar-2023.md"
   },
@@ -1430,7 +1430,7 @@
     "filePath": "angular-animations-with-motion.md"
   },
   "2ce3521b-014a-808a-9084-edc59dade0d3": {
-    "lastModified": "2025-12-19T02:13:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "the-bet-on-juniors-just-got-better",
     "filePath": "the-bet-on-juniors-just-got-better.md"
   },
@@ -1625,12 +1625,12 @@
     "filePath": "20260111212600.md"
   },
   "2e63521b-014a-8017-9e50-e04f8a4e6e3b": {
-    "lastModified": "2026-01-12T06:31:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "wxt-angular-browser-extension",
     "filePath": "wxt-angular-browser-extension.md"
   },
   "fa0f4ae6-945f-4853-9c8d-155af151bdfc": {
-    "lastModified": "2026-01-12T09:17:00.000Z",
+    "lastModified": "2026-03-28T13:22:00.000Z",
     "slug": "wxt-angular-browser-extension",
     "filePath": "wxt-angular-browser-extension.en.md"
   },
@@ -1640,7 +1640,7 @@
     "filePath": "20260113221200.md"
   },
   "2ea3521b-014a-8043-90c3-de31672f18ea": {
-    "lastModified": "2026-01-16T11:26:00.000Z",
+    "lastModified": "2026-03-28T13:21:00.000Z",
     "slug": "survival-of-the-fittest-in-habits",
     "filePath": "survival-of-the-fittest-in-habits.md"
   },
