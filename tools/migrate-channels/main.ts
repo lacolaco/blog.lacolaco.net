@@ -81,9 +81,10 @@ function parseFrontmatter(content: string): {
   title: string;
   slug: string;
   notionUrl: string;
+  existingChannels: string[];
 } {
   const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
-  if (!fmMatch) return { category: '', tags: [], title: '', slug: '', notionUrl: '' };
+  if (!fmMatch) return { category: '', tags: [], title: '', slug: '', notionUrl: '', existingChannels: [] };
   const fm = fmMatch[1];
 
   const categoryMatch = fm.match(/^category:\s*'(.+?)'/m);
