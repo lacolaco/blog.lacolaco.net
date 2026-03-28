@@ -223,7 +223,7 @@ async function ensureChannelsProperty(token: string): Promise<void> {
   if (!dbRes.ok) throw new Error(`DB取得失敗: ${dbRes.status}`);
   const db = (await dbRes.json()) as { properties: Record<string, { type: string }> };
 
-  if (db.properties.channels) {
+  if ('channels' in db.properties) {
     console.log('  channelsプロパティは既に存在');
     return;
   }
@@ -288,7 +288,7 @@ if (values.apply) {
       await sleep(350);
     } catch (e) {
       errors++;
-      console.error(`\n  Error: ${r.file} (${r.notionPageId}): ${e}`);
+      console.error(`\n  Error: ${r.file} (${r.notionPageId}): ${String(e)}`);
     }
   }
 

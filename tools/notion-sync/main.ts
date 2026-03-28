@@ -11,15 +11,15 @@ type FeatureState = {
 };
 
 // Notion APIのpropertiesからmulti_selectの名前配列を安全に取得する
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return */
 function extractMultiSelectNames(properties: object, key: string): string[] {
   if (!(key in properties)) return [];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
   const prop = (properties as any)[key];
   if (prop == null || typeof prop !== 'object' || prop.type !== 'multi_select') return [];
   if (!Array.isArray(prop.multi_select)) return [];
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return
   return prop.multi_select.map((item: { name: string }) => item.name);
 }
+/* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return */
 
 const { NOTION_AUTH_TOKEN } = process.env;
 if (!NOTION_AUTH_TOKEN) {
