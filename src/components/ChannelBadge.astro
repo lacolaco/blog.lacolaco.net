@@ -1,0 +1,19 @@
+---
+import { getChannelByName } from '@lib/post';
+import { urlize } from '../libs/strings';
+
+export interface Props {
+  name: string;
+}
+
+const { name } = Astro.props;
+const urlizedName = urlize(name);
+const color = getChannelByName(name)?.color ?? 'default';
+---
+
+<a
+  style={`--color-channel: var(--color-tag-text-${color}); --color-channel-border: var(--color-tag-bg-${color});`}
+  class="leading-relaxed text-xs inline-flex items-center gap-0.5 px-2 rounded-sm border border-solid border-[var(--color-channel-border)] text-[var(--color-channel)] bg-transparent hover:bg-[var(--color-channel-border)]"
+  href={`/channels/${urlizedName}`}
+  ><span class="icon-[material-symbols--rss-feed-rounded] text-[12px]"></span>{name}</a
+>
