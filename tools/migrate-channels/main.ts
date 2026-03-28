@@ -119,28 +119,36 @@ function extractNotionPageId(notionUrl: string): string | null {
   return null;
 }
 
-// Notion API でページの channels プロパティを更新
+// Notion API でページの channels プロパティを更新（リトライ付き）
 async function updateNotionPage(pageId: string, channels: string[], token: string): Promise<void> {
   const url = `https://api.notion.com/v1/pages/${pageId}`;
-  const body = {
+  const body = JSON.stringify({
     properties: {
       channels: {
         multi_select: channels.map((name) => ({ name })),
       },
     },
+  });
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json',
+    'Notion-Version': '2022-06-28',
   };
 
-  const res = await fetch(url, {
-    method: 'PATCH',
-    headers: {
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json',
-      'Notion-Version': '2022-06-28',
-    },
-    body: JSON.stringify(body),
-  });
+  const maxRetries = 5;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const res = await fetch(url, { method: 'PATCH', headers, body });
 
-  if (!res.ok) {
+    if (res.ok) return;
+
+    if (res.status === 429 && attempt < maxRetries) {
+      const retryAfter = Number(res.headers.get('Retry-After') ?? '1');
+      const waitMs = Math.max(retryAfter * 1000, 1000 * 2 ** attempt);
+      console.error(`\n  Rate limited, waiting ${waitMs}ms (attempt ${attempt + 1}/${maxRetries})...`);
+      await sleep(waitMs);
+      continue;
+    }
+
     const text = await res.text();
     throw new Error(`Notion API error ${res.status}: ${text}`);
   }
@@ -235,8 +243,7 @@ if (values.apply) {
       await updateNotionPage(r.notionPageId!, r.channels, token);
       success++;
       process.stdout.write(`\r  更新中... ${success + errors}/${targets.length} (成功: ${success}, 失敗: ${errors})`);
-      // Notion APIレート制限: 3リクエスト/秒
-      await sleep(350);
+      await sleep(500);
     } catch (e) {
       errors++;
       console.error(`\n  Error: ${r.file} (${r.notionPageId}): ${String(e)}`);
@@ -244,4 +251,7 @@ if (values.apply) {
   }
 
   console.log(`\n\n=== 完了: 成功 ${success}件, 失敗 ${errors}件 ===`);
+  if (errors > 0) {
+    process.exit(1);
+  }
 }
