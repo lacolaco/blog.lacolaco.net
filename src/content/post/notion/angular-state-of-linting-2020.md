@@ -3,13 +3,16 @@ title: 'Angular: ESLintサポートの現状 2020 Autumn'
 slug: 'angular-state-of-linting-2020'
 icon: ''
 created_time: '2020-11-12T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:07:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'ESLint'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-ESLint-2020-Autumn-2d6a637a1d094e33b18128d0f15c450e'
 features:
   katex: false

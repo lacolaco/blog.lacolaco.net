@@ -3,12 +3,15 @@ title: 'Angularの追いかけ方'
 slug: 'how-to-trace-angular'
 icon: ''
 created_time: '2019-12-25T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-70f6f715a71d47adadc08aca8916c1c7'
 features:
   katex: false

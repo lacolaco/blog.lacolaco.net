@@ -3,12 +3,15 @@ title: 'DESIGN DOC (Ivy): Separate Compilationを読む'
 slug: 'read-ivy-design-doc-separate-compilation'
 icon: ''
 created_time: '2018-03-03T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:55:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/DESIGN-DOC-Ivy-Separate-Compilation-f6bcdb7096ae42f184bf94651422e9b7'
 features:
   katex: false

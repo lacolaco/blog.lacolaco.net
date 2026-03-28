@@ -3,13 +3,16 @@ title: 'Angular Elements: Composable Definition Pattern'
 slug: 'angular-elements-composable-definition-pattern'
 icon: ''
 created_time: '2020-07-22T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - 'Angular'
   - 'Angular Elements'
 published: true
 locale: 'en'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Elements-Composable-Definition-Pattern-eb942520a359470483d7c4ba864b7ce8'
 features:
   katex: false

@@ -11,6 +11,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Standalone-based-Angular-App-48d047d843834029a49a35e649f01a9d'
 features:
   katex: false

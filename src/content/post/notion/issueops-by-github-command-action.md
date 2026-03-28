@@ -3,13 +3,15 @@ title: 'GitHub Actions: github/command でIssueOpsを実装する'
 slug: 'issueops-by-github-command-action'
 icon: ''
 created_time: '2025-04-27T13:33:00.000Z'
-last_edited_time: '2025-04-27T13:33:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - 'GitHub Actions'
   - 'GitHub'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/GitHub-Actions-github-command-IssueOps-1e23521b014a80eea293c9a03f195b00'
 features:
   katex: false

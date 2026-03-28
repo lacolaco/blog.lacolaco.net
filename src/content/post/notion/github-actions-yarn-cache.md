@@ -9,6 +9,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/GitHub-Actions-Yarn-387ce9b4867047719be1dbcc920250f6'
 features:
   katex: false

@@ -3,12 +3,14 @@ title: 'Hugoでブログを作りなおしました'
 slug: 'initial'
 icon: ''
 created_time: '2016-04-10T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - '雑記'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/Hugo-252e8627540a4d33a6f9a3852e0c41d4'
 features:
   katex: false

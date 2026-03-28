@@ -3,12 +3,15 @@ title: 'Angularとaxiosを使ったHTTP通信'
 slug: 'angular-http-with-axios'
 icon: ''
 created_time: '2018-04-20T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-axios-HTTP-e6735cdf159e4c34be00a20927cdb7a1'
 features:
   katex: false

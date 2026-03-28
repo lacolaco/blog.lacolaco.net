@@ -3,7 +3,7 @@ title: 'Angular: Angular CLI の Jest サポートを試す'
 slug: 'angular-16-jest'
 icon: '🃏'
 created_time: '2023-05-06T01:37:00.000Z'
-last_edited_time: '2023-12-30T10:05:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - 'Angular'
   - 'Testing'
@@ -12,6 +12,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-16-jest'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Angular-CLI-Jest-aa5b128387fb4b2fbc916ec77c9f5d2a'
 features:
   katex: false

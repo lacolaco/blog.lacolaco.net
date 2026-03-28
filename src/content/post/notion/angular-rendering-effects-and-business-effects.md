@@ -3,13 +3,16 @@ title: 'Angular: Rendering EffectsとBusiness Effects'
 slug: 'angular-rendering-effects-and-business-effects'
 icon: ''
 created_time: '2024-06-20T15:00:00.000Z'
-last_edited_time: '2024-06-20T23:52:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Rendering-Effects-Business-Effects-9be76b98487943be8422fa29fd0a884a'
 features:
   katex: false

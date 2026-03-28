@@ -3,12 +3,15 @@ title: '[Angular 4.0] formsモジュールの更新について'
 slug: 'ng4-feature-forms-update'
 icon: ''
 created_time: '2017-03-08T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
+last_edited_time: '2026-03-28T07:40:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-4-0-forms-e87dce047a3243d2b14be546a741e9d9'
 features:
   katex: false

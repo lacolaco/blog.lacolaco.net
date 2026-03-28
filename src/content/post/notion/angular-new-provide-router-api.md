@@ -9,6 +9,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-provideRouter-v14-2-df74379c5f804dff9fb816ae978af4a8'
 features:
   katex: false

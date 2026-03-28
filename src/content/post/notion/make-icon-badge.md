@@ -3,12 +3,14 @@ title: '自分のアイコンの缶バッジを作ると便利'
 slug: 'make-icon-badge'
 icon: ''
 created_time: '2023-10-23T10:30:00.000Z'
-last_edited_time: '2023-12-30T09:59:00.000Z'
+last_edited_time: '2026-03-28T07:40:00.000Z'
 tags:
   - '雑記'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/8c03042001574f7493976b60a0814c15'
 features:
   katex: false

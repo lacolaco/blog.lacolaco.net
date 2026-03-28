@@ -3,12 +3,15 @@ title: 'Dirty Checkingへの誤解'
 slug: 'dirty-checking-misunderstanding'
 icon: '💬'
 created_time: '2023-03-12T02:00:00.000Z'
-last_edited_time: '2023-12-30T10:05:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Dirty-Checking-92bf97dd802c4b39b7527a50b5875273'
 features:
   katex: false

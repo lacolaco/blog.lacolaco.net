@@ -3,13 +3,16 @@ title: 'Angular CDKのPortalを使ったローディングラッパーの実装'
 slug: 'angular-loading-with-cdk-portal'
 icon: ''
 created_time: '2018-07-01T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
   - 'Angular CDK'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-CDK-Portal-4218a5a9be5f46b9b852033819cb87da'
 features:
   katex: false

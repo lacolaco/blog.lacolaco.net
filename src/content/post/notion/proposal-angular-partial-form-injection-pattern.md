@@ -11,6 +11,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Forms-Partial-Form-Injection-e4ec3823e1e448d7a3900387a87e3095'
 features:
   katex: false

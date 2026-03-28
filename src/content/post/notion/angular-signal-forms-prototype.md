@@ -3,7 +3,7 @@ title: 'AngularのSignal Forms（プロトタイプ）をチラ見する'
 slug: 'angular-signal-forms-prototype'
 icon: ''
 created_time: '2024-12-24T15:00:00.000Z'
-last_edited_time: '2025-01-09T13:02:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
   - 'Signals'
@@ -12,6 +12,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-signal-forms-prototype'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Signal-Forms-14d3521b014a803ea815c7030c8e4287'
 features:
   katex: false

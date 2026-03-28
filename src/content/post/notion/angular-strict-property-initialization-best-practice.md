@@ -3,13 +3,16 @@ title: 'AngularにおけるstrictPropertyInitializationのベストプラクテ�
 slug: 'angular-strict-property-initialization-best-practice'
 icon: ''
 created_time: '2018-06-27T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'TypeScript'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-strictPropertyInitialization-f798bd04a39e46d2a75a6266c2ee468d'
 features:
   katex: false

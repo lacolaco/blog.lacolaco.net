@@ -3,13 +3,15 @@ title: 'JavaScript Primer 改訂2版が発売されます'
 slug: 'jsprimer-2nd'
 icon: ''
 created_time: '2023-06-06T09:42:00.000Z'
-last_edited_time: '2023-12-30T10:05:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - 'js-primer'
   - '雑記'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/JavaScript-Primer-2-03ccefe835944857a531ae0beceb1622'
 features:
   katex: false

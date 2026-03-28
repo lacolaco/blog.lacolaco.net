@@ -3,12 +3,14 @@ title: '読んだ本 2025-Q1'
 slug: 'read-books-2025-q1'
 icon: ''
 created_time: '2025-04-02T09:15:00.000Z'
-last_edited_time: '2025-04-02T09:15:00.000Z'
+last_edited_time: '2026-03-28T07:55:00.000Z'
 tags:
   - '読書'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Books'
 notion_url: 'https://www.notion.so/2025-Q1-1c93521b014a80bfb779eb623edab9e1'
 features:
   katex: false

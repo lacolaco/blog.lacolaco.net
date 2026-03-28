@@ -3,12 +3,14 @@ title: 'Managing Key-Value Constants in TypeScript'
 slug: 'managing-key-value-constants-in-typescript'
 icon: ''
 created_time: '2019-08-20T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T07:40:00.000Z'
 tags:
   - 'TypeScript'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Managing-Key-Value-Constants-in-TypeScript-aa9c6eae0193468f8855ea5a38f72e0d'
 features:
   katex: false

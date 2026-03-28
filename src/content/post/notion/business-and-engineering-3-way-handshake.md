@@ -3,13 +3,15 @@ title: 'ビジネスとエンジニアリングの3wayハンドシェイク'
 slug: 'business-and-engineering-3-way-handshake'
 icon: ''
 created_time: '2022-11-01T00:00:00.000Z'
-last_edited_time: '2025-11-06T01:41:00.000Z'
+last_edited_time: '2026-03-28T07:10:00.000Z'
 tags:
   - '雑記'
   - '言語化'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/3way-83efd4c0a070498badd9149d96ab564f'
 features:
   katex: false

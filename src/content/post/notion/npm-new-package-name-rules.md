@@ -3,12 +3,14 @@ title: 'npmの新しいパッケージ名ルールについて'
 slug: 'npm-new-package-name-rules'
 icon: ''
 created_time: '2018-01-04T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - 'npm'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/npm-281f136b6bbe4581b7daae8db0af3c61'
 features:
   katex: false
@@ -26,7 +28,7 @@ http://blog.npmjs.org/post/168978377570/new-package-moniker-rules
 
 まとめると、
 
-- `` `.` `_` を無視して結合した文字列でパッケージ名のユニーク性を検証します
+-  `.` `_` を無視して結合した文字列でパッケージ名のユニーク性を検証します
 
 `react-native` は `reactnative` というキーで扱われ、以下の名前のパッケージを publish することはできません
 

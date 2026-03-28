@@ -3,7 +3,7 @@ title: 'NotionヘッドレスCMS化記録 (1) Notion APIとTypeScript'
 slug: 'notion-headless-cms-1'
 icon: ''
 created_time: '2022-02-13T10:22:00.000Z'
-last_edited_time: '2023-12-30T10:06:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - 'Notion'
   - 'TypeScript'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Notion-CMS-1-Notion-API-TypeScript-0d887003a8d1457fa6bec484dfcb2346'
 features:
   katex: false

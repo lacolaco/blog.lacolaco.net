@@ -3,7 +3,7 @@ title: 'NotionヘッドレスCMS化記録 (3) GitHub Actionsと自動デプロ�
 slug: 'notion-headless-cms-3'
 icon: ''
 created_time: '2022-02-15T23:13:00.000Z'
-last_edited_time: '2023-12-30T10:06:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - 'Notion'
   - 'GitHub Actions'
@@ -12,6 +12,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Notion-CMS-3-GitHub-Actions-47d8a28980af4cd7a9432091d4335b30'
 features:
   katex: false

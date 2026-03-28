@@ -3,12 +3,14 @@ title: 'PHPカンファレンス福岡遠征を終えて #phpconfuk'
 slug: 'php-conference-fukuoka-2023'
 icon: ''
 created_time: '2023-06-25T12:11:00.000Z'
-last_edited_time: '2023-12-30T10:04:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - '日記'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/PHP-phpconfuk-00edd73625bd4fcabe5bfa414a75b745'
 features:
   katex: false

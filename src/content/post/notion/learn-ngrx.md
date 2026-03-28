@@ -3,12 +3,14 @@ title: 'Learn NgRx'
 slug: 'learn-ngrx'
 icon: ''
 created_time: '2019-02-11T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:40:00.000Z'
 tags:
   - 'NgRx'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Learn-NgRx-4812cf7d681e4a7aa2ceb9091267791b'
 features:
   katex: false

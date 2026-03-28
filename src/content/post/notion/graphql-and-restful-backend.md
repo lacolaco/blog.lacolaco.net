@@ -3,7 +3,7 @@ title: 'GraphQLとRESTfulについて今日考えてたこと　Backend for Usec
 slug: 'graphql-and-restful-backend'
 icon: ''
 created_time: '2018-07-13T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - '雑記'
   - 'GraphQL'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/GraphQL-RESTful-Backend-for-Usecase-Resource-d55bc2a74dc7443199247ff1d5610666'
 features:
   katex: false

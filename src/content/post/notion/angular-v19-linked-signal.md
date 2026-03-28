@@ -3,7 +3,7 @@ title: 'Angular v19: linkedSignal() の解説'
 slug: 'angular-v19-linked-signal'
 icon: ''
 created_time: '2024-10-28T14:10:00.000Z'
-last_edited_time: '2024-10-28T14:22:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'Signals'
@@ -11,6 +11,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-v19-linked-signal'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-v19-linkedSignal-12d3521b014a80f395ffd9c289dd689e'
 features:
   katex: false

@@ -3,11 +3,13 @@ title: 'DrunkDeerのキーボードを買った'
 slug: 'drunkdeer-a75-pro'
 icon: ''
 created_time: '2024-08-03T02:39:00.000Z'
-last_edited_time: '2024-08-03T02:39:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags: []
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/DrunkDeer-c981b185000b427eb15e561f0a881bf5'
 features:
   katex: false

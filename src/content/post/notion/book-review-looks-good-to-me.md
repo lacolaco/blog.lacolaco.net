@@ -3,7 +3,7 @@ title: '秀和システム『Looks Good To Me』を読んだ  #lgtm本'
 slug: 'book-review-looks-good-to-me'
 icon: ''
 created_time: '2025-06-04T10:45:00.000Z'
-last_edited_time: '2025-06-04T11:24:00.000Z'
+last_edited_time: '2026-03-28T07:10:00.000Z'
 tags:
   - '日記'
   - '読書'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Books'
 notion_url: 'https://www.notion.so/Looks-Good-To-Me-lgtm-2083521b014a8078b103c38f323bef11'
 features:
   katex: false

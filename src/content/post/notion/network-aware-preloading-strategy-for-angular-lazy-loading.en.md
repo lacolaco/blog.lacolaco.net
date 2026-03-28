@@ -3,12 +3,15 @@ title: 'Network-aware Preloading Strategy for Angular Lazy Loading'
 slug: 'network-aware-preloading-strategy-for-angular-lazy-loading'
 icon: ''
 created_time: '2019-05-11T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T07:40:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'en'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Network-aware-Preloading-Strategy-for-Angular-Lazy-Loading-4cdbdec6e74c4ea486e26c899e5369af'
 features:
   katex: false

@@ -12,6 +12,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Component-Visual-Testing-with-Cypress-06291552322a41529379de518e857222'
 features:
   katex: false

@@ -3,7 +3,7 @@ title: 'Cloudflare Workers + HonoでDiscord botを作る際のポイント'
 slug: 'discord-bot-cfworkers-hono'
 icon: ''
 created_time: '2023-09-22T23:17:00.000Z'
-last_edited_time: '2023-12-30T10:00:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - 'Discord'
   - 'Cloudflare'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Cloudflare-Workers-Hono-Discord-bot-41e326de5455488cb731732e45de6e0e'
 features:
   katex: false

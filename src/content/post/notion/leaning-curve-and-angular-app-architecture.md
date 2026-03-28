@@ -3,7 +3,7 @@ title: 'システムの学習曲線とAngularアプリケーションの設計'
 slug: 'leaning-curve-and-angular-app-architecture'
 icon: ''
 created_time: '2019-07-24T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T07:40:00.000Z'
 tags:
   - 'Angular'
   - '設計'
@@ -11,6 +11,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-f6c7a5b10d5c495c90b2924d788cb3c2'
 features:
   katex: false

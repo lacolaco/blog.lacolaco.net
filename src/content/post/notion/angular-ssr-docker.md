@@ -3,13 +3,17 @@ title: 'Angular SSR on Docker'
 slug: 'angular-ssr-docker'
 icon: ''
 created_time: '2023-11-12T14:38:00.000Z'
-last_edited_time: '2023-12-30T09:59:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'Docker'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Code'
+  - 'Angular'
+  - 'Thought'
 notion_url: 'https://www.notion.so/Angular-SSR-on-Docker-ee8cd85b3e4f48ddb84db63d473cc5d7'
 features:
   katex: false

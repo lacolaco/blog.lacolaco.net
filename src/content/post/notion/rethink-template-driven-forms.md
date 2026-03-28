@@ -3,7 +3,7 @@ title: 'Angular: テンプレート駆動フォーム再考'
 slug: 'rethink-template-driven-forms'
 icon: '🔍'
 created_time: '2023-05-07T00:41:00.000Z'
-last_edited_time: '2023-12-30T10:04:00.000Z'
+last_edited_time: '2026-03-28T07:55:00.000Z'
 tags:
   - 'Angular'
   - 'Forms'
@@ -11,6 +11,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/rethink-template-driven-forms'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-4e8bcf7e4c2c4d31806bff592edf4232'
 features:
   katex: false

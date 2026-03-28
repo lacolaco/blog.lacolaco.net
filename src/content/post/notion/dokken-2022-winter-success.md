@@ -3,12 +3,14 @@ title: 'ドイツ語技能検定の4級に合格した'
 slug: 'dokken-2022-winter-success'
 icon: ''
 created_time: '2023-01-14T05:02:00.000Z'
-last_edited_time: '2023-12-30T10:05:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - '日記'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/4-93f70a4bf638435293b2376076d9a62c'
 features:
   katex: false

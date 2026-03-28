@@ -3,12 +3,15 @@ title: 'AngularのDeferred Viewで時限式ビューを作る'
 slug: 'angular-defer-scheduled-view'
 icon: ''
 created_time: '2024-08-27T12:13:00.000Z'
-last_edited_time: '2024-09-04T09:48:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Deferred-View-50321da164af49878a8f24041e7761af'
 features:
   katex: false

@@ -3,7 +3,7 @@ title: 'Angular: Signal Inputsで何が変わるのか'
 slug: 'angular-signal-inputs'
 icon: ''
 created_time: '2024-01-11T05:48:00.000Z'
-last_edited_time: '2024-01-11T06:50:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
   - 'Signals'
@@ -11,6 +11,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-signal-inputs'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Signal-Inputs-190478da4fdf4db6a71f4942d2011d2a'
 features:
   katex: false

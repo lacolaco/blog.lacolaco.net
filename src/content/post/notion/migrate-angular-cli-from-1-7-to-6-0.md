@@ -3,12 +3,15 @@ title: 'Angular CLI v1.7からv6.0へのマイグレーションについて (fo
 slug: 'migrate-angular-cli-from-1-7-to-6-0'
 icon: ''
 created_time: '2018-04-09T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:40:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-CLI-v1-7-v6-0-for-v6-0-0-rc-2-9dab9594a41d4af69f3536e029edd915'
 features:
   katex: false

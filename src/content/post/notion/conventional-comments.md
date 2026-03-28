@@ -3,13 +3,15 @@ title: 'Conventional Comments'
 slug: 'conventional-comments'
 icon: ''
 created_time: '2025-12-03T00:37:00.000Z'
-last_edited_time: '2025-12-03T10:46:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - 'コードレビュー'
   - 'Conventional Comments'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/Conventional-Comments-2bb3521b014a80b88b48d68bef7324ce'
 features:
   katex: false

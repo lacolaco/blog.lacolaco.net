@@ -3,12 +3,14 @@ title: 'Merging objects with Partial type'
 slug: 'merging-objects-with-partial-type'
 icon: ''
 created_time: '2017-11-16T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:11:00.000Z'
+last_edited_time: '2026-03-28T07:40:00.000Z'
 tags:
   - 'TypeScript'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Merging-objects-with-Partial-type-eb888a6f797f4562907a2adb7ea9d36a'
 features:
   katex: false

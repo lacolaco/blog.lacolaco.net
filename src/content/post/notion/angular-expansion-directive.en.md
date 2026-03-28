@@ -3,13 +3,16 @@ title: 'Angular: Implementing Expansion Directive with CSS Grid'
 slug: 'angular-expansion-directive'
 icon: ''
 created_time: '2023-12-18T12:53:00.000Z'
-last_edited_time: '2023-12-30T09:58:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
   - 'CSS'
 published: true
 locale: 'en'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Implementing-Expansion-Directive-with-CSS-Grid-2baf74e54ee04629bba3e69952099c3d'
 features:
   katex: false

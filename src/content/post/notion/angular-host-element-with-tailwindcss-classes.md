@@ -3,7 +3,7 @@ title: 'Angular: ホスト要素にTailwindCSSのクラスを付与する'
 slug: 'angular-host-element-with-tailwindcss-classes'
 icon: ''
 created_time: '2023-09-06T03:58:00.000Z'
-last_edited_time: '2023-12-30T10:01:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
   - 'tailwindcss'
@@ -11,6 +11,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-host-element-with-tailwindcss-classes'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-TailwindCSS-4b13c6c076da42c381d181affb15f518'
 features:
   katex: false

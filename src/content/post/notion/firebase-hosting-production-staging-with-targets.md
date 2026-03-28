@@ -3,12 +3,14 @@ title: 'Firebase HostingのDeploy Targetsを使ってproduction/staging環境を
 slug: 'firebase-hosting-production-staging-with-targets'
 icon: ''
 created_time: '2020-08-17T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T07:25:00.000Z'
 tags:
   - 'Firebase'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Firebase-Hosting-Deploy-Targets-production-staging-f6287c7268f94adcbe2470f401207886'
 features:
   katex: false

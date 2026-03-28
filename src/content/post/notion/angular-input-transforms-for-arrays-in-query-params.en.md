@@ -3,12 +3,15 @@ title: 'Angular: Input Transforms For Arrays In Query Params'
 slug: 'angular-input-transforms-for-arrays-in-query-params'
 icon: ''
 created_time: '2023-12-04T13:19:00.000Z'
-last_edited_time: '2023-12-30T09:58:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'en'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Input-Transforms-For-Arrays-In-Query-Params-5ad67d6f9feb4970a107105bb88d8023'
 features:
   katex: false

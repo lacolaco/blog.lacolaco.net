@@ -3,12 +3,15 @@ title: 'AngularアプリケーションでのAssertion in Production'
 slug: 'angular-with-assertion-in-production'
 icon: ''
 created_time: '2024-02-17T13:29:00.000Z'
-last_edited_time: '2024-02-17T14:03:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Assertion-in-Production-94d2bdf2cdf742f3b988539639f95d27'
 features:
   katex: false

@@ -3,13 +3,16 @@ title: 'How to Try Angular CLI with Bazel'
 slug: 'how-to-try-angular-cli-with-bazel'
 icon: ''
 created_time: '2019-01-01T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - 'Angular'
   - 'Bazel'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/How-to-Try-Angular-CLI-with-Bazel-b3355b6fa9f94b0da35d23b772427c5b'
 features:
   katex: false

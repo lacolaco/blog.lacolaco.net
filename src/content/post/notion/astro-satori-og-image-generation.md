@@ -3,13 +3,15 @@ title: 'satoriを使ったAstroのOGP画像生成メモ'
 slug: 'astro-satori-og-image-generation'
 icon: ''
 created_time: '2023-06-06T23:35:00.000Z'
-last_edited_time: '2023-12-30T10:04:00.000Z'
+last_edited_time: '2026-03-28T07:10:00.000Z'
 tags:
   - 'Astro'
   - 'Blog Dev'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/satori-Astro-OGP-d23a2cfd5a4647f6a4300533e00371a6'
 features:
   katex: false

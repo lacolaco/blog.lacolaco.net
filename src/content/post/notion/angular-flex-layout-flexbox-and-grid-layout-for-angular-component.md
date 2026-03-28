@@ -3,12 +3,15 @@ title: 'Angular Flex-Layout: Flexbox and Grid Layout for Angular Component'
 slug: 'angular-flex-layout-flexbox-and-grid-layout-for-angular-component'
 icon: ''
 created_time: '2018-09-28T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Flex-Layout-Flexbox-and-Grid-Layout-for-Angular-Component-20719d161ba045e989264d36f993b77e'
 features:
   katex: false

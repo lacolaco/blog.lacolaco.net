@@ -3,13 +3,16 @@ title: 'Nx: Angular+Nest.jsアプリをDockerビルドする'
 slug: 'nx-dockerize-angular-nest-app'
 icon: ''
 created_time: '2020-04-29T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - 'Angular'
   - 'Nx'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Nx-Angular-Nest-js-Docker-eb5832c419094ad19bfad5ed2f86a16b'
 features:
   katex: false

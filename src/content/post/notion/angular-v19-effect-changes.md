@@ -3,7 +3,7 @@ title: 'Angular v19: effect() の変更点'
 slug: 'angular-v19-effect-changes'
 icon: ''
 created_time: '2024-10-09T09:14:00.000Z'
-last_edited_time: '2024-10-09T09:32:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'Signals'
@@ -11,6 +11,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-v19-effect-changes'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-v19-effect-11a3521b014a8026b45efb2c2fc99ee0'
 features:
   katex: false

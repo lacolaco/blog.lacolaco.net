@@ -3,7 +3,7 @@ title: 'Angular MatSuffixをフォーカス中だけ表示する'
 slug: 'angular-mat-suffix-show-only-when-focused'
 icon: ''
 created_time: '2023-10-18T02:50:00.000Z'
-last_edited_time: '2023-12-30T10:00:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
   - 'Angular Material'
@@ -12,6 +12,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-mat-suffix-show-only-when-focused'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-MatSuffix-40f4e1df5de545b9b837f96a36605ba9'
 features:
   katex: false

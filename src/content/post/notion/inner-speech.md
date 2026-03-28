@@ -3,13 +3,15 @@ title: '内言と外言　言語化による自己対話と継続的アウトプ
 slug: 'inner-speech'
 icon: ''
 created_time: '2019-10-04T06:38:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - '雑記'
   - '言語化'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/dd7d97b921324c4496a67a423853cfcc'
 features:
   katex: false

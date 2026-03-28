@@ -10,6 +10,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Enjoyable-WebWorkers-in-Angular-d98e8a7e98534346b12bcc4bec8a0cb7'
 features:
   katex: false

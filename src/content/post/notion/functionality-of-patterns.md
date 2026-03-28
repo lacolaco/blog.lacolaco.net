@@ -3,12 +3,14 @@ title: 'パターンが機能するとはどういうことか'
 slug: 'functionality-of-patterns'
 icon: ''
 created_time: '2024-02-14T23:35:00.000Z'
-last_edited_time: '2024-02-14T23:45:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags:
   - 'パターン'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/61a8dc1272fb4e08abc340051de4f75f'
 features:
   katex: false

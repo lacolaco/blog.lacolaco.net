@@ -3,13 +3,16 @@ title: 'Deep Dive into Angular Components: MatDivider'
 slug: 'deep-dive-angular-components-mat-divider'
 icon: ''
 created_time: '2020-05-05T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - 'Angular'
   - 'Angular Material'
 published: true
 locale: 'en'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Deep-Dive-into-Angular-Components-MatDivider-4d1722665b4b488d8049bf2ac4fee642'
 features:
   katex: false

@@ -3,7 +3,7 @@ title: 'Angular v19のプリレンダリングと静的サイト構築'
 slug: 'angular-v19-prerendering'
 icon: ''
 created_time: '2024-09-25T03:01:00.000Z'
-last_edited_time: '2024-09-25T06:02:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'SSG'
@@ -11,6 +11,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-v19-prerendering'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-v19-d98c0b65806e4a10a239b329958ab674'
 features:
   katex: false

@@ -3,12 +3,14 @@ title: 'merge-graphql-schemasを使ってGraphQLのスキーマファイルを�
 slug: 'merge-graphql-schemas'
 icon: ''
 created_time: '2018-02-18T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:40:00.000Z'
 tags:
   - 'GraphQL'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/merge-graphql-schemas-GraphQL-bc3234bd380a4b3b9f5ad78c9b784cbe'
 features:
   katex: false

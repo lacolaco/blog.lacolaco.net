@@ -3,13 +3,16 @@ title: '"Differential Loading" - A New Feature of Angular CLI v8'
 slug: 'differential-loading-a-new-feature-of-angular-cli-v8'
 icon: ''
 created_time: '2019-04-17T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - 'Angular'
   - 'Angular CLI'
 published: true
 locale: 'en'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Differential-Loading-A-New-Feature-of-Angular-CLI-v8-d4fdf732319245b8b5d91ed9f6c4c062'
 features:
   katex: false

@@ -3,13 +3,15 @@ title: '『SREをはじめよう』（オライリー・ジャパン）を献本
 slug: 'f0c70b7fbba8'
 icon: ''
 created_time: '2024-09-28T05:34:00.000Z'
-last_edited_time: '2025-06-11T08:40:00.000Z'
+last_edited_time: '2026-03-28T07:25:00.000Z'
 tags:
   - '読書'
   - 'SRE'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Books'
 notion_url: 'https://www.notion.so/SRE-10f3521b014a80c99fa3fba715751ea4'
 features:
   katex: false

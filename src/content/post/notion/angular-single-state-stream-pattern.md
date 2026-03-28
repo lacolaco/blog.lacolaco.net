@@ -3,13 +3,16 @@ title: 'AngularコンポーネントにおけるSingle State Streamパターン'
 slug: 'angular-single-state-stream-pattern'
 icon: ''
 created_time: '2019-07-11T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - '設計'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Single-State-Stream-f1218e5c51904cf5b6e1c27896a9862a'
 features:
   katex: false

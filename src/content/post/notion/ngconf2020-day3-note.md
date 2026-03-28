@@ -3,13 +3,16 @@ title: 'ng-conf 2020 Day3 Note'
 slug: 'ngconf2020-day3-note'
 icon: ''
 created_time: '2020-04-04T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - 'Angular'
   - 'ng-conf'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/ng-conf-2020-Day3-Note-696576eb42b44c2683442a1ef14f2515'
 features:
   katex: false
@@ -206,7 +209,7 @@ https://docs.google.com/presentation/d/1pqbojTcQGUiQ6b-aA7bGl2rmboChsZQnR-LZ1cDp
   - `resetOnSuccess` option
 - `scheduled()` and `obserbeOn()`
   - deprecate scheduler
-- `deperecate`subscribe(next, error, complete)``next`only or observer object - same on`tap`
+- `deperecate`subscribe(next, error, complete)next`only or observer object - same on`tap`
 - Reducing payload
   - scheduler code was not tree-shaked
 - `TimestampProvider`: Date or `performance` or …

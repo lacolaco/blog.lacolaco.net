@@ -10,6 +10,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-v15-hostDirectives-8921bbca9dc243128119845110ae380e'
 features:
   katex: false

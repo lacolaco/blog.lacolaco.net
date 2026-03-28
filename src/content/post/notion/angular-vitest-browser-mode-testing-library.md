@@ -3,7 +3,7 @@ title: 'Angular: Vitest Browser Modeへの移行とTesting Library Custom Matche
 slug: 'angular-vitest-browser-mode-testing-library'
 icon: ''
 created_time: '2026-01-30T14:03:00.000Z'
-last_edited_time: '2026-01-30T14:15:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'Testing'
@@ -13,6 +13,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-vitest-browser-mode-testing-library'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Vitest-Browser-Mode-Testing-Library-Custom-Matcher-2e93521b014a80579534cd937331ad0b'
 features:
   katex: false

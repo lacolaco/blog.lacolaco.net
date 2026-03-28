@@ -3,13 +3,16 @@ title: 'Angular: 新しい Enter/Leave アニメーションAPIの解説'
 slug: 'angular-animations-enter-leave'
 icon: ''
 created_time: '2025-07-26T10:15:00.000Z'
-last_edited_time: '2025-07-26T10:19:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-animations-enter-leave'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Enter-Leave-API-23c3521b014a80369152cc3d38813adf'
 features:
   katex: false

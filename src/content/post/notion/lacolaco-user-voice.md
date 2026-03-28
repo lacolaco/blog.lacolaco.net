@@ -3,11 +3,13 @@ title: 'lacolacoユーザーの声を募集しています'
 slug: 'lacolaco-user-voice'
 icon: ''
 created_time: '2024-10-02T14:09:00.000Z'
-last_edited_time: '2024-10-02T14:32:00.000Z'
+last_edited_time: '2026-03-28T07:39:00.000Z'
 tags: []
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Life'
 notion_url: 'https://www.notion.so/lacolaco-1133521b014a80518a7ace579b5f9413'
 features:
   katex: false

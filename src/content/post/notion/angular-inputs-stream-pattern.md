@@ -3,7 +3,7 @@ title: 'Angular: Input を Observable で扱えるようにする Inputs Stream 
 slug: 'angular-inputs-stream-pattern'
 icon: ''
 created_time: '2023-02-14T00:40:00.000Z'
-last_edited_time: '2023-12-30T10:05:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
   - 'RxJS'
@@ -12,6 +12,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-inputs-stream-pattern'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Input-Observable-Inputs-Stream-02ff5a3536af4d6996091ea3f818ad95'
 features:
   katex: false

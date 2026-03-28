@@ -3,13 +3,16 @@ title: 'Firebase App HostingでAngularのSSRを試す'
 slug: 'firebase-app-hosting-angular-ssr-tryout'
 icon: ''
 created_time: '2024-05-15T07:52:00.000Z'
-last_edited_time: '2024-05-15T08:18:00.000Z'
+last_edited_time: '2026-03-28T07:25:00.000Z'
 tags:
   - 'Angular'
   - 'Firebase'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Firebase-App-Hosting-Angular-SSR-a2c74ee085a2495090f5f4a968192faf'
 features:
   katex: false

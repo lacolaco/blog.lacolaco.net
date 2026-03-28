@@ -3,13 +3,15 @@ title: 'ECMAScriptのimport/exportについてのメモ'
 slug: 'esmodule-export-import'
 icon: ''
 created_time: '2018-06-26T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:25:00.000Z'
 tags:
   - 'ECMAScript'
   - 'JavaScript'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/ECMAScript-import-export-4a2c1ab7cb284e92a201925dee868227'
 features:
   katex: false

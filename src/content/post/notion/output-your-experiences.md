@@ -3,13 +3,15 @@ title: '情報ではなく経験をアウトプットすること'
 slug: 'output-your-experiences'
 icon: ''
 created_time: '2021-03-08T01:02:00.000Z'
-last_edited_time: '2025-07-23T03:15:00.000Z'
+last_edited_time: '2026-03-28T07:54:00.000Z'
 tags:
   - '言語化'
   - '雑記'
 published: true
 locale: 'ja'
 category: 'Idea'
+channels:
+  - 'Thought'
 notion_url: 'https://www.notion.so/e51abef41d4744c980784e13059e6506'
 features:
   katex: false

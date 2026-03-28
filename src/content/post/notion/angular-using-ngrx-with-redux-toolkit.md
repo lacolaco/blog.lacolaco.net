@@ -3,7 +3,7 @@ title: 'Angular: Using NgRx Store with Redux Toolkit 🚀'
 slug: 'angular-using-ngrx-with-redux-toolkit'
 icon: ''
 created_time: '2020-12-16T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:07:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'NgRx'
@@ -11,6 +11,9 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Using-NgRx-Store-with-Redux-Toolkit-0bbe31d5b26e4cc9802d80dd2ff17ecb'
 features:
   katex: false

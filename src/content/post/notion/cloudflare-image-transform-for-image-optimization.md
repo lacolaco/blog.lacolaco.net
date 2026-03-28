@@ -3,7 +3,7 @@ title: 'Cloudflare Image Transformationで画像最適化した'
 slug: 'cloudflare-image-transform-for-image-optimization'
 icon: ''
 created_time: '2024-06-23T00:52:00.000Z'
-last_edited_time: '2024-07-10T12:15:00.000Z'
+last_edited_time: '2026-03-28T07:24:00.000Z'
 tags:
   - 'Cloudflare'
   - 'Blog Dev'
@@ -11,6 +11,8 @@ tags:
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
 notion_url: 'https://www.notion.so/Cloudflare-Image-Transformation-6d1b50f2cb2442fb94d87a1fc04688b6'
 features:
   katex: false

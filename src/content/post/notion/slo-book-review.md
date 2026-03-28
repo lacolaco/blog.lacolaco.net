@@ -3,12 +3,14 @@ title: '『SLO サービスレベル目標』読後メモ'
 slug: 'slo-book-review'
 icon: ''
 created_time: '2023-09-18T11:27:00.000Z'
-last_edited_time: '2023-12-30T10:00:00.000Z'
+last_edited_time: '2026-03-28T07:55:00.000Z'
 tags:
   - '読書'
 published: true
 locale: 'ja'
 category: 'Diary'
+channels:
+  - 'Books'
 notion_url: 'https://www.notion.so/SLO-636cb161ad904d9bacf1aab96a58416d'
 features:
   katex: false

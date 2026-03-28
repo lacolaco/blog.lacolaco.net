@@ -3,13 +3,16 @@ title: 'AngularのContent Projectionの基本'
 slug: 'angular-content-projection-101'
 icon: ''
 created_time: '2020-02-10T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:09:00.000Z'
+last_edited_time: '2026-03-28T06:55:00.000Z'
 tags:
   - 'Angular'
   - 'Web Components'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Content-Projection-09047f7df09e48ecb004a98745ede141'
 features:
   katex: false

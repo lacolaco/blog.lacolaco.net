@@ -3,12 +3,15 @@ title: 'ngIvyメモ'
 slug: 'angular-ivy-experimental-note'
 icon: ''
 created_time: '2018-03-11T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T06:56:00.000Z'
 tags:
   - 'Angular'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/ngIvy-ecaa239cf616409c80b826b507a161f6'
 features:
   katex: false

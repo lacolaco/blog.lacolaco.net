@@ -3,13 +3,16 @@ title: 'FlutterのBLoCパターンをAngularで理解する'
 slug: 'bloc-design-pattern-with-angular'
 icon: ''
 created_time: '2018-05-22T00:00:00.000Z'
-last_edited_time: '2023-12-30T10:10:00.000Z'
+last_edited_time: '2026-03-28T07:10:00.000Z'
 tags:
   - 'Angular'
   - '設計'
 published: true
 locale: 'ja'
 category: 'Tech'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Flutter-BLoC-Angular-6bbc2bc05d0f4e2eadfb010e6d45fa4b'
 features:
   katex: false

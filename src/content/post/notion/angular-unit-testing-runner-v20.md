@@ -3,7 +3,7 @@ title: 'Angular CLIの新しいUnit Testing Runnerを試す'
 slug: 'angular-unit-testing-runner-v20'
 icon: ''
 created_time: '2025-06-25T09:56:00.000Z'
-last_edited_time: '2025-06-25T10:02:00.000Z'
+last_edited_time: '2026-03-28T07:09:00.000Z'
 tags:
   - 'Angular'
   - 'Angular CLI'
@@ -12,6 +12,9 @@ published: true
 locale: 'ja'
 category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-unit-testing-runner-v20'
+channels:
+  - 'Code'
+  - 'Angular'
 notion_url: 'https://www.notion.so/Angular-CLI-Unit-Testing-Runner-21d3521b014a80e0a40bcb6943377b34'
 features:
   katex: false
