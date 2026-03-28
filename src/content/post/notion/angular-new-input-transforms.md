@@ -3,9 +3,8 @@ title: 'Angular: 属性値からの型変換が書きやすくなるinput transf
 slug: 'angular-new-input-transforms'
 icon: ''
 created_time: '2023-05-10T15:31:00.000Z'
-last_edited_time: '2026-03-28T06:56:00.000Z'
+last_edited_time: '2026-03-28T16:17:00.000Z'
 tags:
-  - 'Angular'
   - 'commit note'
 published: true
 locale: 'ja'

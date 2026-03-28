@@ -3,9 +3,8 @@ title: 'AngularのSignal Forms（プロトタイプ）をチラ見する'
 slug: 'angular-signal-forms-prototype'
 icon: ''
 created_time: '2024-12-24T15:00:00.000Z'
-last_edited_time: '2026-03-28T06:56:00.000Z'
+last_edited_time: '2026-03-28T16:17:00.000Z'
 tags:
-  - 'Angular'
   - 'Signals'
   - 'Forms'
 published: true

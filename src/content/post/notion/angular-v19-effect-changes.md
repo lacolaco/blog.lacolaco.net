@@ -3,9 +3,8 @@ title: 'Angular v19: effect() の変更点'
 slug: 'angular-v19-effect-changes'
 icon: ''
 created_time: '2024-10-09T09:14:00.000Z'
-last_edited_time: '2026-03-28T07:09:00.000Z'
+last_edited_time: '2026-03-28T16:22:00.000Z'
 tags:
-  - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'

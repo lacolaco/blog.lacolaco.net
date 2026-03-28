@@ -3,9 +3,8 @@ title: 'AngularにおけるstrictPropertyInitializationのベストプラクテ�
 slug: 'angular-strict-property-initialization-best-practice'
 icon: ''
 created_time: '2018-06-27T00:00:00.000Z'
-last_edited_time: '2026-03-28T07:09:00.000Z'
+last_edited_time: '2026-03-28T16:22:00.000Z'
 tags:
-  - 'Angular'
   - 'TypeScript'
 published: true
 locale: 'ja'

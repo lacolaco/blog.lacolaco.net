@@ -3,9 +3,8 @@ title: 'Angularの学習コストは本当に高いのか？'
 slug: 'angular-learning-costs'
 icon: ''
 created_time: '2019-02-19T00:00:00.000Z'
-last_edited_time: '2026-03-28T06:56:00.000Z'
+last_edited_time: '2026-03-28T16:17:00.000Z'
 tags:
-  - 'Angular'
   - '言語化'
 published: true
 locale: 'ja'

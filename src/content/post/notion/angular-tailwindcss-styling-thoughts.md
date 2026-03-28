@@ -3,9 +3,8 @@ title: 'Angular と Tailwind CSSについての所感'
 slug: 'angular-tailwindcss-styling-thoughts'
 icon: ''
 created_time: '2021-02-17T00:00:00.000Z'
-last_edited_time: '2026-03-28T07:09:00.000Z'
+last_edited_time: '2026-03-28T16:22:00.000Z'
 tags:
-  - 'Angular'
   - 'tailwindcss'
   - '言語化'
 published: true

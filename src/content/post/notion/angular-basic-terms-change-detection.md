@@ -3,9 +3,8 @@ title: 'Angularの基本語彙: 変更検知'
 slug: 'angular-basic-terms-change-detection'
 icon: ''
 created_time: '2023-02-22T11:10:00.000Z'
-last_edited_time: '2026-03-28T06:55:00.000Z'
-tags:
-  - 'Angular'
+last_edited_time: '2026-03-28T16:16:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'

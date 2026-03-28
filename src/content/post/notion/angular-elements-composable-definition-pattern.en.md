@@ -3,9 +3,8 @@ title: 'Angular Elements: Composable Definition Pattern'
 slug: 'angular-elements-composable-definition-pattern'
 icon: ''
 created_time: '2020-07-22T00:00:00.000Z'
-last_edited_time: '2026-03-28T06:55:00.000Z'
+last_edited_time: '2026-03-28T16:16:00.000Z'
 tags:
-  - 'Angular'
   - 'Angular Elements'
 published: true
 locale: 'en'

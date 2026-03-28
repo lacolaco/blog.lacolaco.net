@@ -3,9 +3,8 @@ title: 'AngularはAI志向のフレームワークへ'
 slug: 'angular-ai-forward'
 icon: ''
 created_time: '2025-09-20T00:48:00.000Z'
-last_edited_time: '2026-03-28T06:55:00.000Z'
+last_edited_time: '2026-03-28T16:15:00.000Z'
 tags:
-  - 'Angular'
   - 'AI'
   - 'MCP'
 published: true

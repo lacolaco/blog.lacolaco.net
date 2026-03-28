@@ -5,7 +5,6 @@ icon: ''
 created_time: '2022-07-20T02:25:00.000Z'
 last_edited_time: '2022-07-20T00:00:00.000Z'
 tags:
-  - 'Angular'
   - 'アクセシビリティ'
   - 'HTML'
 published: true

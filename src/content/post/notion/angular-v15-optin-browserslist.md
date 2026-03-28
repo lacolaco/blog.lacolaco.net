@@ -5,7 +5,6 @@ icon: ''
 created_time: '2022-09-15T00:09:00.000Z'
 last_edited_time: '2022-09-15T00:00:00.000Z'
 tags:
-  - 'Angular'
   - 'browserslist'
   - 'commit note'
 published: true

@@ -3,9 +3,8 @@ title: 'Angular: Using NgRx Store with Redux Toolkit 🚀'
 slug: 'angular-using-ngrx-with-redux-toolkit'
 icon: ''
 created_time: '2020-12-16T00:00:00.000Z'
-last_edited_time: '2026-03-28T07:09:00.000Z'
+last_edited_time: '2026-03-28T16:22:00.000Z'
 tags:
-  - 'Angular'
   - 'NgRx'
   - '状態管理'
 published: true

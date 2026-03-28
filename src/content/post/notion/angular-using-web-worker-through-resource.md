@@ -3,9 +3,8 @@ title: 'Angular: Using Web Worker through Resources'
 slug: 'angular-using-web-worker-through-resource'
 icon: ''
 created_time: '2025-03-26T01:33:00.000Z'
-last_edited_time: '2026-03-28T07:09:00.000Z'
+last_edited_time: '2026-03-28T16:22:00.000Z'
 tags:
-  - 'Angular'
   - 'Web Worker'
   - 'Signals'
 published: true

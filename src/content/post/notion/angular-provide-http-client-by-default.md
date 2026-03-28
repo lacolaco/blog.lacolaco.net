@@ -3,9 +3,8 @@ title: 'Angular: provideHttpClient はもう不要（でも必要）'
 slug: 'angular-provide-http-client-by-default'
 icon: ''
 created_time: '2025-12-24T16:12:00.000Z'
-last_edited_time: '2026-03-28T06:56:00.000Z'
+last_edited_time: '2026-03-28T16:17:00.000Z'
 tags:
-  - 'Angular'
   - 'アドベントカレンダー'
 published: true
 locale: 'ja'

@@ -3,10 +3,9 @@ title: 'Google Developers Expert (Angular) になりました'
 slug: 'angular-gde'
 icon: ''
 created_time: '2018-10-05T00:00:00.000Z'
-last_edited_time: '2026-03-28T06:56:00.000Z'
+last_edited_time: '2026-03-28T16:16:00.000Z'
 tags:
   - 'GDE'
-  - 'Angular'
 published: true
 locale: 'ja'
 category: 'Diary'

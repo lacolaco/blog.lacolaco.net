@@ -3,9 +3,8 @@ title: 'Angular CLIの新しいUnit Testing Runnerを試す'
 slug: 'angular-unit-testing-runner-v20'
 icon: ''
 created_time: '2025-06-25T09:56:00.000Z'
-last_edited_time: '2026-03-28T07:09:00.000Z'
+last_edited_time: '2026-03-28T16:22:00.000Z'
 tags:
-  - 'Angular'
   - 'Angular CLI'
   - 'Testing'
 published: true
