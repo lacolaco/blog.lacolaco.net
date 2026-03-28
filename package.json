@@ -22,7 +22,8 @@
     "test:libs": "vitest run",
     "test": "pnpm test:tools && pnpm test:libs",
     "lint": "eslint .",
-    "migrate-channels": "tsx tools/migrate-channels/main.ts"
+    "migrate-channels": "tsx tools/migrate-channels/main.ts",
+    "migrate-channels:apply": "tsx --env-file .env tools/migrate-channels/main.ts -- --apply"
   },
   "packageManager": "pnpm@10.32.1",
   "dependencies": {

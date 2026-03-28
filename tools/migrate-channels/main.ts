@@ -2,11 +2,11 @@
  * マイグレーションスクリプト: category + tags → channels マッピング
  *
  * 既存のfrontmatterを読み取り、マッピングルールに従ってchannels値を生成する。
- * dry-runモードでは差分を出力し、実行モードではNotion APIで一括更新する。
+ * dry-runモードでは差分を出力し、--applyモードではNotion APIで一括更新する。
  *
  * Usage:
- *   npx tsx tools/migrate-channels/main.ts              # dry-run（デフォルト）
- *   npx tsx tools/migrate-channels/main.ts --apply       # Notion API更新
+ *   npx tsx tools/migrate-channels/main.ts                              # dry-run
+ *   NOTION_AUTH_TOKEN=xxx npx tsx tools/migrate-channels/main.ts --apply # Notion更新
  */
 
 import { readFileSync, readdirSync } from 'node:fs';
@@ -36,6 +36,7 @@ type PostMeta = {
   category: string;
   tags: string[];
   channels: Channel[];
+  notionPageId: string | null;
 };
 
 // マッピングルール: category + tags → channels
@@ -73,14 +74,21 @@ function deriveChannels(category: string, tags: string[]): Channel[] {
 }
 
 // frontmatterを簡易パース
-function parseFrontmatter(content: string): { category: string; tags: string[]; title: string; slug: string } {
+function parseFrontmatter(content: string): {
+  category: string;
+  tags: string[];
+  title: string;
+  slug: string;
+  notionUrl: string;
+} {
   const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
-  if (!fmMatch) return { category: '', tags: [], title: '', slug: '' };
+  if (!fmMatch) return { category: '', tags: [], title: '', slug: '', notionUrl: '' };
   const fm = fmMatch[1];
 
   const categoryMatch = fm.match(/^category:\s*'(.+?)'/m);
   const titleMatch = fm.match(/^title:\s*'(.+?)'/m);
   const slugMatch = fm.match(/^slug:\s*'(.+?)'/m);
+  const notionUrlMatch = fm.match(/^notion_url:\s*'(.+?)'/m);
 
   const tags: string[] = [];
   const tagsSection = fm.match(/^tags:\n((?:\s+-\s+'.+?'\n)*)/m);
@@ -96,7 +104,51 @@ function parseFrontmatter(content: string): { category: string; tags: string[]; 
     tags,
     title: titleMatch?.[1] ?? '',
     slug: slugMatch?.[1] ?? '',
+    notionUrl: notionUrlMatch?.[1] ?? '',
   };
+}
+
+// notion_url からページIDを抽出
+function extractNotionPageId(notionUrl: string): string | null {
+  // https://www.notion.so/タイトル-<32文字のID>
+  const match = notionUrl.match(/([0-9a-f]{32})$/);
+  if (match) return match[1];
+  // UUID形式
+  const uuidMatch = notionUrl.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/);
+  if (uuidMatch) return uuidMatch[1].replace(/-/g, '');
+  return null;
+}
+
+// Notion API でページの channels プロパティを更新
+async function updateNotionPage(pageId: string, channels: string[], token: string): Promise<void> {
+  const url = `https://api.notion.com/v1/pages/${pageId}`;
+  const body = {
+    properties: {
+      channels: {
+        multi_select: channels.map((name) => ({ name })),
+      },
+    },
+  };
+
+  const res = await fetch(url, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'Notion-Version': '2022-06-28',
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Notion API error ${res.status}: ${text}`);
+  }
+}
+
+// レート制限対応の待機
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 // メイン処理
@@ -109,15 +161,15 @@ const unmapped: PostMeta[] = [];
 
 for (const file of files) {
   const content = readFileSync(join(postsDir, file), 'utf-8');
-  const { category, tags, title, slug } = parseFrontmatter(content);
+  const { category, tags, title, slug, notionUrl } = parseFrontmatter(content);
 
   if (!category) continue;
 
   const channels = deriveChannels(category, tags);
-  const meta: PostMeta = { file, title, slug, category, tags, channels };
+  const notionPageId = extractNotionPageId(notionUrl);
+  const meta: PostMeta = { file, title, slug, category, tags, channels, notionPageId };
   results.push(meta);
 
-  // ルールで意図通りか怪しいケースを検出
   if (channels.length === 0) {
     unmapped.push(meta);
   }
@@ -126,7 +178,6 @@ for (const file of files) {
 // 結果出力
 console.log('=== Channel マッピング結果 ===\n');
 
-// Channel別の記事数
 const channelCounts = new Map<string, number>();
 for (const r of results) {
   for (const ch of r.channels) {
@@ -140,14 +191,12 @@ for (const ch of CHANNELS) {
 console.log(`  合計（重複込み）: ${Array.from(channelCounts.values()).reduce((a, b) => a + b, 0)}`);
 console.log(`  記事数（ユニーク）: ${results.length}\n`);
 
-// 複数Channelに属する記事
 const multiChannel = results.filter((r) => r.channels.length > 1);
 console.log(`=== 複数Channel所属（${multiChannel.length}件） ===`);
 for (const r of multiChannel) {
   console.log(`  [${r.channels.join(', ')}] ${r.title} (${r.file})`);
 }
 
-// マッピングできなかった記事
 if (unmapped.length > 0) {
   console.log(`\n=== マッピング不能（${unmapped.length}件、要手動設定） ===`);
   for (const r of unmapped) {
@@ -155,12 +204,44 @@ if (unmapped.length > 0) {
   }
 }
 
-// 全記事の詳細
 console.log('\n=== 全記事マッピング ===');
 for (const r of results) {
   console.log(`  ${r.category.padEnd(6)} → [${r.channels.join(', ').padEnd(20)}] ${r.title}`);
 }
 
+// --apply: Notion API で一括更新
 if (values.apply) {
-  console.log('\n--apply は未実装です。Notion API連携は別途実装してください。');
+  const token = process.env.NOTION_AUTH_TOKEN;
+  if (!token) {
+    console.error('\nError: NOTION_AUTH_TOKEN が設定されていません');
+    process.exit(1);
+  }
+
+  const missingIds = results.filter((r) => !r.notionPageId);
+  if (missingIds.length > 0) {
+    console.warn(`\n警告: ${missingIds.length}件のNotion page IDが取得できません:`);
+    for (const r of missingIds) {
+      console.warn(`  ${r.file} - ${r.title}`);
+    }
+  }
+
+  const targets = results.filter((r) => r.notionPageId);
+  console.log(`\n=== Notion API 更新開始（${targets.length}件） ===`);
+
+  let success = 0;
+  let errors = 0;
+  for (const r of targets) {
+    try {
+      await updateNotionPage(r.notionPageId!, r.channels, token);
+      success++;
+      process.stdout.write(`\r  更新中... ${success + errors}/${targets.length} (成功: ${success}, 失敗: ${errors})`);
+      // Notion APIレート制限: 3リクエスト/秒
+      await sleep(350);
+    } catch (e) {
+      errors++;
+      console.error(`\n  Error: ${r.file} (${r.notionPageId}): ${e}`);
+    }
+  }
+
+  console.log(`\n\n=== 完了: 成功 ${success}件, 失敗 ${errors}件 ===`);
 }
