@@ -99,8 +99,9 @@ pnpm test:libs    # library tests
 
 ### When User Corrects You
 1. 即座にCLAUDE.mdに反映せよ。口頭宣言（「今後は〜します」）は学習ではない。CLAUDE.mdに書いて初めて学習
-2. 同じパターンがこのセッション内で再発していないか確認
-3. 2回以上同じ指摘を受けた場合: STOP して原因分析
+2. CLAUDE.mdを変更したらコミット→push→CI watchまで一気に実行せよ。途中で止めるな
+3. 同じパターンがこのセッション内で再発していないか確認
+4. 2回以上同じ指摘を受けた場合: STOP して原因分析
 
 ---
 ## Reference (Look Up When Needed)
