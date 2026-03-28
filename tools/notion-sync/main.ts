@@ -11,12 +11,14 @@ type FeatureState = {
 };
 
 // Notion APIのpropertiesからmulti_selectの名前配列を安全に取得する
-function extractMultiSelectNames(properties: Record<string, unknown>, key: string): string[] {
-  const prop = properties[key];
-  if (prop == null || typeof prop !== 'object') return [];
-  const obj = prop as Record<string, unknown>;
-  if (obj['type'] !== 'multi_select' || !Array.isArray(obj['multi_select'])) return [];
-  return (obj['multi_select'] as Array<Record<string, unknown>>).map((item) => String(item['name'] ?? ''));
+function extractMultiSelectNames(properties: object, key: string): string[] {
+  if (!(key in properties)) return [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
+  const prop = (properties as any)[key];
+  if (prop == null || typeof prop !== 'object' || prop.type !== 'multi_select') return [];
+  if (!Array.isArray(prop.multi_select)) return [];
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-return
+  return prop.multi_select.map((item: { name: string }) => item.name);
 }
 
 const { NOTION_AUTH_TOKEN } = process.env;
@@ -75,10 +77,7 @@ const result = await syncNotionBlog({
     const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
 
     // channels マルチセレクトの読み取り
-    const channels: string[] = extractMultiSelectNames(
-      page.properties as unknown as Record<string, unknown>,
-      'channels',
-    );
+    const channels: string[] = extractMultiSelectNames(page.properties, 'channels');
 
     // category=diaryかつslugがページID（空デフォルト）の場合、作成日時をslugとする
     let slug = metadata.slug;
