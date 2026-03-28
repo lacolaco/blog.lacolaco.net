@@ -93,6 +93,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Migrate channels (dry-run)
+        run: pnpm migrate-channels
       - run: pnpm run build
 
   lint:
