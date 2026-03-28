@@ -1,0 +1,36 @@
+<!-- 記事画像のクリック拡大ビュー -->
+<dialog id="image-lightbox" aria-label="画像の拡大表示" class="m-0 p-0 border-none bg-transparent max-w-full max-h-full w-screen h-screen">
+  <img class="w-full h-full object-contain p-4" alt="" />
+</dialog>
+
+<style>
+  #image-lightbox::backdrop {
+    background: rgba(0, 0, 0, 0.8);
+  }
+</style>
+
+<script>
+  const dialog = document.getElementById('image-lightbox') as HTMLDialogElement;
+  const dialogImg = dialog.querySelector('img')!;
+
+  // backdrop クリックで閉じる
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog) {
+      dialog.close();
+    }
+  });
+
+  // 画像クリックでも閉じる
+  dialogImg.addEventListener('click', () => {
+    dialog.close();
+  });
+
+  // 記事内画像にクリックハンドラを付与
+  document.querySelectorAll<HTMLImageElement>('.markdown-body :is(p, figure) > img').forEach((img) => {
+    img.addEventListener('click', () => {
+      dialogImg.src = img.src;
+      dialogImg.alt = img.alt;
+      dialog.showModal();
+    });
+  });
+</script>
