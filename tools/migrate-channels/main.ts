@@ -37,6 +37,7 @@ type PostMeta = {
   tags: string[];
   channels: Channel[];
   notionPageId: string | null;
+  existingChannels: string[];
 };
 
 // マッピングルール: category + tags → channels
@@ -80,9 +81,10 @@ function parseFrontmatter(content: string): {
   title: string;
   slug: string;
   notionUrl: string;
+  existingChannels: string[];
 } {
   const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
-  if (!fmMatch) return { category: '', tags: [], title: '', slug: '', notionUrl: '' };
+  if (!fmMatch) return { category: '', tags: [], title: '', slug: '', notionUrl: '', existingChannels: [] };
   const fm = fmMatch[1];
 
   const categoryMatch = fm.match(/^category:\s*'(.+?)'/m);
@@ -99,12 +101,22 @@ function parseFrontmatter(content: string): {
     }
   }
 
+  const existingChannels: string[] = [];
+  const channelsSection = fm.match(/^channels:\n((?:\s+-\s+'.+?'\n)*)/m);
+  if (channelsSection) {
+    const chLines = channelsSection[1].matchAll(/^\s+-\s+'(.+?)'/gm);
+    for (const match of chLines) {
+      existingChannels.push(match[1]);
+    }
+  }
+
   return {
     category: categoryMatch?.[1] ?? '',
     tags,
     title: titleMatch?.[1] ?? '',
     slug: slugMatch?.[1] ?? '',
     notionUrl: notionUrlMatch?.[1] ?? '',
+    existingChannels,
   };
 }
 
@@ -169,13 +181,13 @@ const unmapped: PostMeta[] = [];
 
 for (const file of files) {
   const content = readFileSync(join(postsDir, file), 'utf-8');
-  const { category, tags, title, slug, notionUrl } = parseFrontmatter(content);
+  const { category, tags, title, slug, notionUrl, existingChannels } = parseFrontmatter(content);
 
   if (!category) continue;
 
   const channels = deriveChannels(category, tags);
   const notionPageId = extractNotionPageId(notionUrl);
-  const meta: PostMeta = { file, title, slug, category, tags, channels, notionPageId };
+  const meta: PostMeta = { file, title, slug, category, tags, channels, notionPageId, existingChannels };
   results.push(meta);
 
   if (channels.length === 0) {
@@ -234,15 +246,27 @@ if (values.apply) {
   }
 
   const targets = results.filter((r) => r.notionPageId);
-  console.log(`\n=== Notion API 更新開始（${targets.length}件） ===`);
+
+  // 既にfrontmatterのchannelsが期待値と一致 → Notion側も更新済みなのでスキップ
+  const needsUpdate = targets.filter((r) => {
+    const expected = [...r.channels].sort().join(',');
+    const existing = [...r.existingChannels].sort().join(',');
+    return expected !== existing;
+  });
+  const skipped = targets.length - needsUpdate.length;
+
+  console.log(`\n=== Notion API 更新開始 ===`);
+  console.log(`  対象: ${targets.length}件, スキップ（更新済み）: ${skipped}件, 更新: ${needsUpdate.length}件`);
 
   let success = 0;
   let errors = 0;
-  for (const r of targets) {
+  for (const r of needsUpdate) {
     try {
       await updateNotionPage(r.notionPageId!, r.channels, token);
       success++;
-      process.stdout.write(`\r  更新中... ${success + errors}/${targets.length} (成功: ${success}, 失敗: ${errors})`);
+      process.stdout.write(
+        `\r  更新中... ${success + errors}/${needsUpdate.length} (成功: ${success}, 失敗: ${errors})`,
+      );
       await sleep(500);
     } catch (e) {
       errors++;
@@ -250,7 +274,7 @@ if (values.apply) {
     }
   }
 
-  console.log(`\n\n=== 完了: 成功 ${success}件, 失敗 ${errors}件 ===`);
+  console.log(`\n\n=== 完了: 更新 ${success}件, スキップ ${skipped}件, 失敗 ${errors}件 ===`);
   if (errors > 0) {
     process.exit(1);
   }
