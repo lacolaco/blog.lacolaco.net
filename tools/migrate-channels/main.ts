@@ -58,23 +58,15 @@ function deriveChannels(category: string, tags: string[]): Channel[] {
     channels.add('Books');
   }
 
-  // Idea カテゴリ
+  // Idea カテゴリ → 常にThought（他のChannelがあっても追加）
   if (category === 'Idea') {
-    if (tags.includes('言語化') || tags.includes('哲学')) {
-      channels.add('Thought');
-    }
-    // Ideaのデフォルト
-    if (channels.size === 0) {
-      channels.add('Thought');
-    }
+    channels.add('Thought');
   }
 
-  // Diary カテゴリ
-  if (category === 'Diary') {
-    // まだ何もChannelが付いてなければLifeをデフォルトに
-    if (channels.size === 0) {
-      channels.add('Life');
-    }
+  // Diary カテゴリ → Booksのみの場合はLifeを付けない（書評はBooks購読者向け）
+  // それ以外のDiary記事にはLifeを付与
+  if (category === 'Diary' && !channels.has('Books')) {
+    channels.add('Life');
   }
 
   return Array.from(channels);
