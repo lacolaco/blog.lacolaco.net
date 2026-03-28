@@ -3,9 +3,8 @@ title: 'Angular: Prototyping afterNextChange for Signals'
 slug: 'angular-prototyping-afternextchange-for-signals'
 icon: ''
 created_time: '2025-01-19T09:44:00.000Z'
-last_edited_time: '2026-03-28T06:56:00.000Z'
+last_edited_time: '2026-03-28T16:17:00.000Z'
 tags:
-  - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'

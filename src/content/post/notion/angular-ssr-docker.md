@@ -3,9 +3,8 @@ title: 'Angular SSR on Docker'
 slug: 'angular-ssr-docker'
 icon: ''
 created_time: '2023-11-12T14:38:00.000Z'
-last_edited_time: '2026-03-28T07:09:00.000Z'
+last_edited_time: '2026-03-28T16:18:00.000Z'
 tags:
-  - 'Angular'
   - 'Docker'
 published: true
 locale: 'ja'

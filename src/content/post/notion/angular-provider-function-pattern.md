@@ -5,7 +5,6 @@ icon: ''
 created_time: '2022-10-16T07:08:00.000Z'
 last_edited_time: '2022-10-16T00:00:00.000Z'
 tags:
-  - 'Angular'
   - 'dependency injection'
   - 'standalone component'
 published: true

@@ -3,9 +3,8 @@ title: 'Angular: Vitest Browser Modeへの移行とTesting Library Custom Matche
 slug: 'angular-vitest-browser-mode-testing-library'
 icon: ''
 created_time: '2026-01-30T14:03:00.000Z'
-last_edited_time: '2026-03-28T07:09:00.000Z'
+last_edited_time: '2026-03-28T16:23:00.000Z'
 tags:
-  - 'Angular'
   - 'Testing'
   - 'Vitest'
   - 'Testing Library'

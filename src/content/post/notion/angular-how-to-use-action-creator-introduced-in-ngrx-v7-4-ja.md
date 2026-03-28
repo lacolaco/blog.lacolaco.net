@@ -3,9 +3,8 @@ title: 'NgRx v7.4で導入されるAction Creatorの使い方'
 slug: 'angular-how-to-use-action-creator-introduced-in-ngrx-v7-4-ja'
 icon: ''
 created_time: '2019-04-03T00:00:00.000Z'
-last_edited_time: '2026-03-28T06:56:00.000Z'
+last_edited_time: '2026-03-28T16:16:00.000Z'
 tags:
-  - 'Angular'
   - 'NgRx'
 published: true
 locale: 'ja'

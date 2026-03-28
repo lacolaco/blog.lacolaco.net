@@ -3,9 +3,8 @@ title: 'Angular Flex-Layout: Flexbox and Grid Layout for Angular Component'
 slug: 'angular-flex-layout-flexbox-and-grid-layout-for-angular-component'
 icon: ''
 created_time: '2018-09-28T00:00:00.000Z'
-last_edited_time: '2026-03-28T06:56:00.000Z'
-tags:
-  - 'Angular'
+last_edited_time: '2026-03-28T16:16:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'

@@ -3,9 +3,8 @@ title: 'Angular Signalの等値判定をカスタマイズする '
 slug: 'angular-signal-equal-option'
 icon: ''
 created_time: '2023-08-09T04:05:00.000Z'
-last_edited_time: '2026-03-28T06:56:00.000Z'
+last_edited_time: '2026-03-28T16:17:00.000Z'
 tags:
-  - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'

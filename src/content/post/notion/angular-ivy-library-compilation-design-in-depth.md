@@ -3,9 +3,8 @@ title: 'Angular Ivyライブラリコンパイルを理解する'
 slug: 'angular-ivy-library-compilation-design-in-depth'
 icon: ''
 created_time: '2021-02-24T00:00:00.000Z'
-last_edited_time: '2026-03-28T06:56:00.000Z'
-tags:
-  - 'Angular'
+last_edited_time: '2026-03-28T16:17:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'

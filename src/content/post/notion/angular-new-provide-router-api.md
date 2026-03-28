@@ -4,8 +4,7 @@ slug: 'angular-new-provide-router-api'
 icon: ''
 created_time: '2022-08-29T12:18:00.000Z'
 last_edited_time: '2022-08-29T00:00:00.000Z'
-tags:
-  - 'Angular'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'

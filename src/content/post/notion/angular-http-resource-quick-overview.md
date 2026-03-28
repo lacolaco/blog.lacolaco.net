@@ -3,9 +3,8 @@ title: 'Angular: httpResource Quick Overview '
 slug: 'angular-http-resource-quick-overview'
 icon: ''
 created_time: '2025-02-12T01:42:00.000Z'
-last_edited_time: '2026-03-28T06:56:00.000Z'
+last_edited_time: '2026-03-28T16:17:00.000Z'
 tags:
-  - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'

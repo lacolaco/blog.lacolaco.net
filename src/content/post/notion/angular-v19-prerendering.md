@@ -3,9 +3,8 @@ title: 'Angular v19のプリレンダリングと静的サイト構築'
 slug: 'angular-v19-prerendering'
 icon: ''
 created_time: '2024-09-25T03:01:00.000Z'
-last_edited_time: '2026-03-28T07:09:00.000Z'
+last_edited_time: '2026-03-28T16:23:00.000Z'
 tags:
-  - 'Angular'
   - 'SSG'
 published: true
 locale: 'ja'

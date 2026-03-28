@@ -3,9 +3,8 @@ title: 'Angular: Model Inputsで何が変わるのか'
 slug: 'angular-model-inputs'
 icon: ''
 created_time: '2024-02-24T03:18:00.000Z'
-last_edited_time: '2026-03-28T06:56:00.000Z'
+last_edited_time: '2026-03-28T16:17:00.000Z'
 tags:
-  - 'Angular'
   - 'Signals'
 published: true
 locale: 'ja'

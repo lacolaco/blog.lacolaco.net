@@ -3,9 +3,8 @@ title: 'Angular: Firestore ResourceでリアルタイムデータをSignal化す
 slug: 'angular-firestore-resource-signal'
 icon: ''
 created_time: '2026-03-16T01:41:00.000Z'
-last_edited_time: '2026-03-28T06:56:00.000Z'
+last_edited_time: '2026-03-28T16:16:00.000Z'
 tags:
-  - 'Angular'
   - 'Signals'
   - 'Firebase'
   - '設計'

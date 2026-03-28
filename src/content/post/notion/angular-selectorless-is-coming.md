@@ -3,9 +3,8 @@ title: 'Angular: Selectorlessがもうすぐやってくる'
 slug: 'angular-selectorless-is-coming'
 icon: ''
 created_time: '2025-04-09T14:13:00.000Z'
-last_edited_time: '2026-03-28T06:56:00.000Z'
-tags:
-  - 'Angular'
+last_edited_time: '2026-03-28T16:17:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'

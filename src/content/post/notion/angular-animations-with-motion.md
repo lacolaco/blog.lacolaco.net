@@ -3,9 +3,8 @@ title: 'Angular: Motionを使ったアニメーション'
 slug: 'angular-animations-with-motion'
 icon: ''
 created_time: '2025-12-12T01:13:00.000Z'
-last_edited_time: '2026-03-28T06:55:00.000Z'
+last_edited_time: '2026-03-28T16:15:00.000Z'
 tags:
-  - 'Angular'
   - 'Motion'
 published: true
 locale: 'ja'

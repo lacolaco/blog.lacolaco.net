@@ -3,9 +3,8 @@ title: 'Angularでのボタンコンポーネントの作成'
 slug: 'angular-advent-calendar-2023'
 icon: ''
 created_time: '2023-12-24T15:00:00.000Z'
-last_edited_time: '2026-03-28T06:55:00.000Z'
-tags:
-  - 'Angular'
+last_edited_time: '2026-03-28T16:15:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'

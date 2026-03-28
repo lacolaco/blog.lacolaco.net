@@ -5,7 +5,6 @@ icon: ''
 created_time: '2022-10-08T01:26:00.000Z'
 last_edited_time: '2022-10-08T00:00:00.000Z'
 tags:
-  - 'Angular'
   - 'Testing'
   - 'Visual Testing'
   - 'Cypress'
