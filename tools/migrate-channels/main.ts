@@ -209,6 +209,51 @@ for (const r of results) {
   console.log(`  ${r.category.padEnd(6)} → [${r.channels.join(', ').padEnd(20)}] ${r.title}`);
 }
 
+// Notion DBにchannelsプロパティを作成（存在しなければ）
+const NOTION_DATABASE_ID = 'a902ee6d-dc94-4301-b772-fa5fb8decc0c';
+
+async function ensureChannelsProperty(token: string): Promise<void> {
+  // DB情報を取得してchannelsプロパティの存在を確認
+  const dbRes = await fetch(`https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Notion-Version': '2022-06-28',
+    },
+  });
+  if (!dbRes.ok) throw new Error(`DB取得失敗: ${dbRes.status}`);
+  const db = (await dbRes.json()) as { properties: Record<string, { type: string }> };
+
+  if (db.properties.channels) {
+    console.log('  channelsプロパティは既に存在');
+    return;
+  }
+
+  // channelsマルチセレクトプロパティを作成
+  console.log('  channelsプロパティを作成中...');
+  const updateRes = await fetch(`https://api.notion.com/v1/databases/${NOTION_DATABASE_ID}`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'Notion-Version': '2022-06-28',
+    },
+    body: JSON.stringify({
+      properties: {
+        channels: {
+          multi_select: {
+            options: CHANNELS.map((name) => ({ name })),
+          },
+        },
+      },
+    }),
+  });
+  if (!updateRes.ok) {
+    const text = await updateRes.text();
+    throw new Error(`プロパティ作成失敗: ${updateRes.status} ${text}`);
+  }
+  console.log('  channelsプロパティを作成完了');
+}
+
 // --apply: Notion API で一括更新
 if (values.apply) {
   const token = process.env.NOTION_AUTH_TOKEN;
@@ -216,6 +261,10 @@ if (values.apply) {
     console.error('\nError: NOTION_AUTH_TOKEN が設定されていません');
     process.exit(1);
   }
+
+  // DBにchannelsプロパティがなければ作成
+  console.log('\n=== Notion DB プロパティ確認 ===');
+  await ensureChannelsProperty(token);
 
   const missingIds = results.filter((r) => !r.notionPageId);
   if (missingIds.length > 0) {
