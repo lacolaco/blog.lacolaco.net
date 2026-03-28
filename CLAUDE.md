@@ -17,6 +17,8 @@ For significant changes (new features, refactoring, multi-file):
 
 **"lint/build passed" ≠ "ready to commit"**
 
+**実行タイミング**: PR lifecycle等のワークフローでも、コミット直前に必ず実行する。ワークフローのコミットステップの一部として扱え。
+
 ### 2. Deletion Requires Explicit Approval
 NEVER delete files/directories without user saying "yes, delete".
 - "Check compatibility" ≠ permission to delete
@@ -46,6 +48,9 @@ pnpm test:tools   # all tests
 pnpm test:libs    # library tests
 ```
 
+### Caveats
+- `.astro/data-store.json`: Astroのコンテンツキャッシュ。remarkプラグイン等のビルドパイプライン変更時は削除してdevサーバーを再起動しないと反映されない
+
 ### Architecture
 - Content: Notion→notion-sync→src/content/post/*.md (**DO NOT EDIT**)
 - Images: public/images/{slug}/ → R2 CDN経由で配信 (**DO NOT EDIT**)
@@ -62,6 +67,14 @@ pnpm test:libs    # library tests
 ## Standard Procedures
 ---
 
+### UI変更の動作確認
+- UI変更は必ず自分でブラウザ確認（chrome-devtools等）まで完了させること
+- ユーザーに確認を委ねるな。「確認してください」は禁止
+
+### クリーンアップ
+- 自分が生成したファイル（スクリーンショット、一時ファイル等）はタスク完了時に必ず削除せよ。放置するな
+- 長時間実行コマンド（CI watch、devサーバー等）は常に`run_in_background`で実行すること
+
 ### Error Handling
 - ANY error = STOP immediately, analyze, report to user
 - NEVER chain failed attempts
@@ -76,7 +89,8 @@ pnpm test:libs    # library tests
 ### Git Operations
 - Use git-github-ops agent for complex operations
 - NEVER `git reset --hard` with uncommitted changes you need
-- After PR creation: verify title/body match actual changes
+- pushするとCIは再実行される。古いCI watchの結果は無効
+- push後は必ず `gh pr checks --watch` をバックグラウンドで新たに開始せよ。完了したらユーザーに報告すること
 
 ### Tool Usage Priority
 1. mcp__ide__getDiagnostics (for errors)
@@ -84,9 +98,10 @@ pnpm test:libs    # library tests
 3. Bash (last resort, NOT for file editing)
 
 ### When User Corrects You
-1. Note what was wrong and why
-2. Check for same pattern before similar actions in this session
-3. If corrected 2+ times for same thing: STOP and analyze why
+1. 即座にCLAUDE.mdに反映せよ。口頭宣言（「今後は〜します」）は学習ではない。CLAUDE.mdに書いて初めて学習
+2. CLAUDE.mdを変更したらコミット→push→CI watchまで一気に実行せよ。途中で止めるな
+3. 同じパターンがこのセッション内で再発していないか確認
+4. 2回以上同じ指摘を受けた場合: STOP して原因分析
 
 ---
 ## Reference (Look Up When Needed)
