@@ -3,9 +3,8 @@ title: 'Angular 2の * シンタックス'
 slug: 'template-syntax-in-angular-2'
 icon: ''
 created_time: '2016-04-11T00:00:00.000Z'
-last_edited_time: '2026-03-28T13:21:00.000Z'
-tags:
-  - 'Angular'
+last_edited_time: '2026-03-28T16:53:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'

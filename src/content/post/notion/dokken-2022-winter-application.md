@@ -3,9 +3,8 @@ title: '独検2022冬の4級に出願した'
 slug: 'dokken-2022-winter-application'
 icon: ''
 created_time: '2022-10-22T12:38:00.000Z'
-last_edited_time: '2026-03-28T07:24:00.000Z'
-tags:
-  - '日記'
+last_edited_time: '2026-03-28T16:37:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Diary'

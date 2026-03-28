@@ -3,9 +3,8 @@ title: '『ルールズ・オブ・プログラミング』読後メモ'
 slug: 'the-rules-of-programming-book-review'
 icon: ''
 created_time: '2024-02-18T00:21:00.000Z'
-last_edited_time: '2026-03-28T13:21:00.000Z'
-tags:
-  - '読書'
+last_edited_time: '2026-03-28T16:53:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Diary'

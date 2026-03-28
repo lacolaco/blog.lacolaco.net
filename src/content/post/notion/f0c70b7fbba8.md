@@ -3,9 +3,8 @@ title: '『SREをはじめよう』（オライリー・ジャパン）を献本
 slug: 'f0c70b7fbba8'
 icon: ''
 created_time: '2024-09-28T05:34:00.000Z'
-last_edited_time: '2026-03-28T07:25:00.000Z'
+last_edited_time: '2026-03-28T16:37:00.000Z'
 tags:
-  - '読書'
   - 'SRE'
 published: true
 locale: 'ja'

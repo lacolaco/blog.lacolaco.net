@@ -1,16 +1,16 @@
 {
   "5abcd25b-9466-4e91-a124-bb3a3026bc78": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "use-ionic-components-as-web-components-in-angular",
     "filePath": "use-ionic-components-as-web-components-in-angular.md"
   },
   "e34eeccc-4c1e-4aeb-a1c4-eb3381c58440": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "ng4-feature-ngif",
     "filePath": "ng4-feature-ngif.md"
   },
   "2b73521b-014a-801c-b1d9-da3027e1e221": {
-    "lastModified": "2026-03-28T07:55:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "spinoza-ethics",
     "filePath": "spinoza-ethics.md"
   },
@@ -50,7 +50,7 @@
     "filePath": "angular-ai-forward.md"
   },
   "2703521b-014a-8096-9603-e3c924fece24": {
-    "lastModified": "2026-03-28T07:40:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "london-trip-2025",
     "filePath": "london-trip-2025.md"
   },
@@ -65,12 +65,12 @@
     "filePath": "output-your-experiences.md"
   },
   "2353521b-014a-8036-8960-d57494b84243": {
-    "lastModified": "2026-03-28T13:21:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "technocrat-failure",
     "filePath": "technocrat-failure.md"
   },
   "2303521b-014a-8086-af98-d4b2b9cf0763": {
-    "lastModified": "2026-03-28T13:21:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "trust-and-trustworthy",
     "filePath": "trust-and-trustworthy.md"
   },
@@ -110,7 +110,7 @@
     "filePath": "f1122f25c01a.md"
   },
   "10f3521b-014a-80c9-9fa3-fba715751ea4": {
-    "lastModified": "2026-03-28T07:25:00.000Z",
+    "lastModified": "2026-03-28T16:37:00.000Z",
     "slug": "f0c70b7fbba8",
     "filePath": "f0c70b7fbba8.md"
   },
@@ -125,7 +125,7 @@
     "filePath": "e030fe9ff885.md"
   },
   "d0a077fb-608b-42d7-ad52-32bbb9c37d0d": {
-    "lastModified": "2026-03-28T07:24:00.000Z",
+    "lastModified": "2026-03-28T16:37:00.000Z",
     "slug": "e6b3bd69debc",
     "filePath": "e6b3bd69debc.md"
   },
@@ -240,12 +240,12 @@
     "filePath": "angular-selectorless-is-coming.md"
   },
   "1d03521b-014a-80be-ae58-f852f4628521": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T17:07:00.000Z",
     "slug": "weekly-commits-on-angular-2025-04-09",
     "filePath": "weekly-commits-on-angular-2025-04-09.md"
   },
   "1c93521b-014a-80bf-b779-eb623edab9e1": {
-    "lastModified": "2026-03-28T07:55:00.000Z",
+    "lastModified": "2026-03-28T16:52:00.000Z",
     "slug": "read-books-2025-q1",
     "filePath": "read-books-2025-q1.md"
   },
@@ -255,27 +255,27 @@
     "filePath": "angular-using-web-worker-through-resource.md"
   },
   "1bb3521b-014a-80de-aa71-c45e578737b9": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "weekly-commits-on-angular-2025-03-19",
     "filePath": "weekly-commits-on-angular-2025-03-19.md"
   },
   "1ad3521b-014a-80e5-bde2-e61a84634c57": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "weekly-commits-on-angular-2025-03-12",
     "filePath": "weekly-commits-on-angular-2025-03-12.md"
   },
   "1b43521b-014a-8044-8298-efca294f5fde": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "weekly-commits-on-angular-2025-03-05",
     "filePath": "weekly-commits-on-angular-2025-03-05.md"
   },
   "1ab3521b-014a-80fb-b2b3-edfd08438071": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "v-tokyo-22-pre",
     "filePath": "v-tokyo-22-pre.md"
   },
   "1a63521b-014a-808f-9266-e92dc6f86dfc": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "weekly-commits-on-angular-2025-02-26",
     "filePath": "weekly-commits-on-angular-2025-02-26.md"
   },
@@ -355,7 +355,7 @@
     "filePath": "lacolaco-user-voice.md"
   },
   "1123521b-014a-8007-a56e-ea4e916ca7f4": {
-    "lastModified": "2026-03-28T07:55:00.000Z",
+    "lastModified": "2026-03-28T16:52:00.000Z",
     "slug": "read-books-2024-q3",
     "filePath": "read-books-2024-q3.md"
   },
@@ -390,7 +390,7 @@
     "filePath": "cloudflare-image-transform-for-image-optimization.md"
   },
   "23ca8249-09bf-4218-879b-45f6cdcd9ca9": {
-    "lastModified": "2026-03-28T07:55:00.000Z",
+    "lastModified": "2026-03-28T16:52:00.000Z",
     "slug": "read-books-2024-q2",
     "filePath": "read-books-2024-q2.md"
   },
@@ -410,7 +410,7 @@
     "filePath": "angular-rendering-effects-and-business-effects.md"
   },
   "7b14ed47-6933-4797-8ef0-c29e83922a49": {
-    "lastModified": "2026-03-28T13:21:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "testing-angular-applications-with-vitest",
     "filePath": "testing-angular-applications-with-vitest.md"
   },
@@ -425,7 +425,7 @@
     "filePath": "angular-cva-signals.md"
   },
   "a2c74ee0-85a2-4950-90f5-f4a968192faf": {
-    "lastModified": "2026-03-28T07:25:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "firebase-app-hosting-angular-ssr-tryout",
     "filePath": "firebase-app-hosting-angular-ssr-tryout.md"
   },
@@ -445,7 +445,7 @@
     "filePath": "angular-model-inputs.md"
   },
   "ca3bf239-647a-4d90-ad2a-e9c42c8e46b3": {
-    "lastModified": "2026-03-28T13:21:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "the-rules-of-programming-book-review",
     "filePath": "the-rules-of-programming-book-review.md"
   },
@@ -475,22 +475,22 @@
     "filePath": "initial.md"
   },
   "6b7d57ea-b6c9-48d9-8a5a-c7d374d32343": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "try-angular-2-aot-compilation",
     "filePath": "try-angular-2-aot-compilation.md"
   },
   "a2178d0a-2210-4f9b-9dfc-7fca9a317c9a": {
-    "lastModified": "2026-03-28T13:21:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "translation-view-children-and-content-children-in-angular-2",
     "filePath": "translation-view-children-and-content-children-in-angular-2.md"
   },
   "3f8c4b9e-8542-45a2-b428-a333076afb0a": {
-    "lastModified": "2026-03-28T13:21:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "translation-template-driven-form-in-angular-2",
     "filePath": "translation-template-driven-form-in-angular-2.md"
   },
   "44848909-3c08-4dc8-986a-050b8741eaff": {
-    "lastModified": "2026-03-28T13:21:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "translation-angular-2-component-styles",
     "filePath": "translation-angular-2-component-styles.md"
   },
@@ -500,47 +500,47 @@
     "filePath": "translation-angular-2-change-detection-explained.md"
   },
   "8d9ba74a-f57a-443d-b493-69454c9916c8": {
-    "lastModified": "2026-03-28T13:21:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "template-syntax-in-angular-2",
     "filePath": "template-syntax-in-angular-2.md"
   },
   "ba94cfed-9b64-41d3-862b-55c25fe0cea7": {
-    "lastModified": "2026-03-28T07:55:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "setting-up-angular-2-testing-environment-with-karma-and-webpack",
     "filePath": "setting-up-angular-2-testing-environment-with-karma-and-webpack.md"
   },
   "5ae80d32-0b24-4a6b-b01b-7ffa6feb932a": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:39:00.000Z",
     "slug": "platform-prividers-of-angular-2",
     "filePath": "platform-prividers-of-angular-2.md"
   },
   "fe6eb6f9-2534-4204-b31c-a32dbec371ba": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "ng4-feature-meta-service",
     "filePath": "ng4-feature-meta-service.md"
   },
   "aa3078a5-d0bb-4538-aa41-5008ca903a52": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "ng4-feature-libs-update",
     "filePath": "ng4-feature-libs-update.md"
   },
   "e87dce04-7a32-43d2-b14b-e546a741e9d9": {
-    "lastModified": "2026-03-28T07:40:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "ng4-feature-forms-update",
     "filePath": "ng4-feature-forms-update.md"
   },
   "de7ff9bc-e847-4322-bc47-d3f686b88db6": {
-    "lastModified": "2026-03-28T07:40:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "ng4-feature-core-update",
     "filePath": "ng4-feature-core-update.md"
   },
   "5b8306d1-a3ce-4927-8181-888a10c958eb": {
-    "lastModified": "2026-03-28T07:40:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "ng-conf-2017-day-3-note",
     "filePath": "ng-conf-2017-day-3-note.md"
   },
   "b0f5f2b3-0601-4805-b6f3-32feed870c3c": {
-    "lastModified": "2026-03-28T07:40:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "ng-conf-2017-day-1-note",
     "filePath": "ng-conf-2017-day-1-note.md"
   },
@@ -550,22 +550,22 @@
     "filePath": "merging-objects-with-partial-type.md"
   },
   "5d985bb5-3b53-41d8-b097-d2f5cf8ddb57": {
-    "lastModified": "2026-03-28T07:40:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "local-variables-and-exportas-of-angular-2",
     "filePath": "local-variables-and-exportas-of-angular-2.md"
   },
   "fce69b90-8ffc-4369-a68b-b56f02e16320": {
-    "lastModified": "2026-03-28T07:39:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "how-to-use-angular-2-nightly-builds",
     "filePath": "how-to-use-angular-2-nightly-builds.md"
   },
   "b423a3ed-d0c9-4e59-9e12-35e08c72bc64": {
-    "lastModified": "2026-03-28T07:39:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "forget-compile-in-angular-2",
     "filePath": "forget-compile-in-angular-2.md"
   },
   "3af033c8-da56-47f1-9adf-4eef3310067f": {
-    "lastModified": "2026-03-28T07:25:00.000Z",
+    "lastModified": "2026-03-28T16:37:00.000Z",
     "slug": "event-broadcasting-in-angular-2",
     "filePath": "event-broadcasting-in-angular-2.md"
   },
@@ -590,7 +590,7 @@
     "filePath": "access-to-global-variables-in-angular-2.md"
   },
   "b5de8f33-06b2-4e58-bb12-009345948aa7": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T17:07:00.000Z",
     "slug": "why-angularjs-needs-http-service",
     "filePath": "why-angularjs-needs-http-service.md"
   },
@@ -600,7 +600,7 @@
     "filePath": "state-management-library.md"
   },
   "f6bcdb70-96ae-42f1-84bf-94651422e9b7": {
-    "lastModified": "2026-03-28T07:55:00.000Z",
+    "lastModified": "2026-03-28T16:52:00.000Z",
     "slug": "read-ivy-design-doc-separate-compilation",
     "filePath": "read-ivy-design-doc-separate-compilation.md"
   },
@@ -615,7 +615,7 @@
     "filePath": "modular-graphql-schema-documentation.md"
   },
   "9dab9594-a41d-4af6-9f35-36e029edd915": {
-    "lastModified": "2026-03-28T07:40:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "migrate-angular-cli-from-1-7-to-6-0",
     "filePath": "migrate-angular-cli-from-1-7-to-6-0.md"
   },
@@ -630,7 +630,7 @@
     "filePath": "graphql-schema-thought.md"
   },
   "c4159f8a-2131-4c7a-bd1f-fc0bdec1a71b": {
-    "lastModified": "2026-03-28T07:25:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "for-sustainable-angular-development",
     "filePath": "for-sustainable-angular-development.md"
   },
@@ -675,7 +675,7 @@
     "filePath": "design-and-equilibration.md"
   },
   "dd51c920-26ab-47ba-8982-23ae64a2a1f0": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T17:07:00.000Z",
     "slug": "why-angular-has-not-static-site-generators",
     "filePath": "why-angular-has-not-static-site-generators.md"
   },
@@ -685,7 +685,7 @@
     "filePath": "rxjs-and-webworker.md"
   },
   "b0a11245-2091-4ae6-a17a-7291930e0970": {
-    "lastModified": "2026-03-28T07:40:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "list-component-design",
     "filePath": "list-component-design.md"
   },
@@ -700,17 +700,17 @@
     "filePath": "introducing-contributors-img-keep-contributors-in-readme-md.md"
   },
   "5116a5ea-ca93-4e2c-8c5d-3e492a935c1c": {
-    "lastModified": "2026-03-28T07:39:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "introduce-router-scroller-in-angular-v6-1",
     "filePath": "introduce-router-scroller-in-angular-v6-1.md"
   },
   "a3993f7d-b21f-4b38-a87e-6c15cb98c825": {
-    "lastModified": "2026-03-28T07:39:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "introduce-angular-cdk-dnd",
     "filePath": "introduce-angular-cdk-dnd.md"
   },
   "b3355b6f-a9f9-4b0d-a35d-23b772427c5b": {
-    "lastModified": "2026-03-28T07:39:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "how-to-try-angular-cli-with-bazel",
     "filePath": "how-to-try-angular-cli-with-bazel.md"
   },
@@ -720,7 +720,7 @@
     "filePath": "graphql-and-restful-backend.md"
   },
   "d98e8a7e-9853-4346-b12b-cc4bec8a0cb7": {
-    "lastModified": "2026-03-28T07:24:00.000Z",
+    "lastModified": "2026-03-28T16:37:00.000Z",
     "slug": "enjoyable-webworkers-in-angular",
     "filePath": "enjoyable-webworkers-in-angular.md"
   },
@@ -770,37 +770,37 @@
     "filePath": "inner-speech.md"
   },
   "56463883-d920-4375-a2f4-f76b6fcf3c88": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T17:07:00.000Z",
     "slug": "why-entrycomponents-will-be-deprecated",
     "filePath": "why-entrycomponents-will-be-deprecated.md"
   },
   "71bd2be8-bc25-4bf6-92ae-57848af085ef": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "webbundles-with-angular",
     "filePath": "webbundles-with-angular.md"
   },
   "f19ec171-8d0c-4245-becb-ad06777044f5": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "upgrading-angularjs-app-with-angular-elements",
     "filePath": "upgrading-angularjs-app-with-angular-elements.md"
   },
   "7de35a8f-b66b-43c2-ac9a-f009f211efd1": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "trusted-types-and-angular-security",
     "filePath": "trusted-types-and-angular-security.md"
   },
   "e4ec3823-e1e4-48d7-a390-0387a87e3095": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:52:00.000Z",
     "slug": "proposal-angular-partial-form-injection-pattern",
     "filePath": "proposal-angular-partial-form-injection-pattern.md"
   },
   "6c416ea1-7a9c-4a04-8435-2c68031918af": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:39:00.000Z",
     "slug": "perspective-of-angular-in-2020",
     "filePath": "perspective-of-angular-in-2020.md"
   },
   "4cdbdec6-e74c-4ea4-86e2-6c899e5369af": {
-    "lastModified": "2026-03-28T07:40:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "network-aware-preloading-strategy-for-angular-lazy-loading",
     "filePath": "network-aware-preloading-strategy-for-angular-lazy-loading.en.md"
   },
@@ -815,12 +815,12 @@
     "filePath": "managing-key-value-constants-in-typescript.md"
   },
   "f6c7a5b1-0d5c-495c-90b2-924d788cb3c2": {
-    "lastModified": "2026-03-28T07:40:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "leaning-curve-and-angular-app-architecture",
     "filePath": "leaning-curve-and-angular-app-architecture.md"
   },
   "70f6f715-a71d-47ad-adc0-8aca8916c1c7": {
-    "lastModified": "2026-03-28T07:39:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "how-to-trace-angular",
     "filePath": "how-to-trace-angular.md"
   },
@@ -860,22 +860,22 @@
     "filePath": "pre-order-jsprimer.md"
   },
   "eb5832c4-1909-4ad1-9bfa-d5ed2f86a16b": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:39:00.000Z",
     "slug": "nx-dockerize-angular-nest-app",
     "filePath": "nx-dockerize-angular-nest-app.md"
   },
   "696576eb-42b4-4c26-8344-2a1ef14f2515": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "ngconf2020-day3-note",
     "filePath": "ngconf2020-day3-note.md"
   },
   "35867cc9-ff22-4107-88d8-cafe3e17f010": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "ngconf2020-day2-note",
     "filePath": "ngconf2020-day2-note.md"
   },
   "e1cd81aa-c8d3-4ccd-8eb9-01261b18f7fd": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "ngconf2020-day1-note",
     "filePath": "ngconf2020-day1-note.md"
   },
@@ -930,12 +930,12 @@
     "filePath": "theory-of-state-01.md"
   },
   "5214f4b0-5e70-4ac6-9b8e-bc77871a6b14": {
-    "lastModified": "2026-03-28T13:21:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "translation-crunchbase-and-angular-why-we-made-the-transition",
     "filePath": "translation-crunchbase-and-angular-why-we-made-the-transition.md"
   },
   "c3927100-7462-4b3e-acb7-75d58b6b9652": {
-    "lastModified": "2026-03-28T13:21:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "state-of-angular-elements-2020-summer",
     "filePath": "state-of-angular-elements-2020-summer.md"
   },
@@ -980,7 +980,7 @@
     "filePath": "why-i-dont-humblebrag.md"
   },
   "7bdac4fe-30d9-4ae2-a780-81cbbb21b3c7": {
-    "lastModified": "2026-03-28T07:55:00.000Z",
+    "lastModified": "2026-03-28T16:52:00.000Z",
     "slug": "renovate-config-for-angular-cli",
     "filePath": "renovate-config-for-angular-cli.md"
   },
@@ -990,7 +990,7 @@
     "filePath": "github-actions-yarn-cache.md"
   },
   "1247081c-70a7-4563-886a-056d3778a33f": {
-    "lastModified": "2026-03-28T07:24:00.000Z",
+    "lastModified": "2026-03-28T16:37:00.000Z",
     "slug": "enjoyable-webworkers-in-angular.ja",
     "filePath": "enjoyable-webworkers-in-angular.ja.md"
   },
@@ -1060,7 +1060,7 @@
     "filePath": "webpack-esm-import-assertions.md"
   },
   "7513b1f4-e7e6-4b10-ba15-e54411a3deb6": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:52:00.000Z",
     "slug": "read-books-2022-q2",
     "filePath": "read-books-2022-q2.md"
   },
@@ -1085,7 +1085,7 @@
     "filePath": "reverse-conways-law.md"
   },
   "50dc0b15-6bb8-4b89-9b51-f142e115f8ed": {
-    "lastModified": "2026-03-28T07:24:00.000Z",
+    "lastModified": "2026-03-28T16:37:00.000Z",
     "slug": "engineering-manager-job-book-review",
     "filePath": "engineering-manager-job-book-review.md"
   },
@@ -1095,7 +1095,7 @@
     "filePath": "angular-provider-function-pattern.md"
   },
   "48d047d8-4383-4029-a49a-35e649f01a9d": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:39:00.000Z",
     "slug": "presentation-angular-standalone-based-app",
     "filePath": "presentation-angular-standalone-based-app.md"
   },
@@ -1120,12 +1120,12 @@
     "filePath": "angular-new-provide-router-api.md"
   },
   "72dc7816-6db0-4536-a947-d93054f9386e": {
-    "lastModified": "2026-03-28T07:24:00.000Z",
+    "lastModified": "2026-03-28T16:37:00.000Z",
     "slug": "dokken-2022-winter-application",
     "filePath": "dokken-2022-winter-application.md"
   },
   "e7898e37-3304-4482-8657-dff38ca1f349": {
-    "lastModified": "2026-03-28T07:55:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "rx-angular-component-state-management",
     "filePath": "rx-angular-component-state-management.md"
   },
@@ -1135,12 +1135,12 @@
     "filePath": "angular-host-directives-observer-directive.md"
   },
   "93f70a4b-f638-4352-93b2-376076d9a62c": {
-    "lastModified": "2026-03-28T07:24:00.000Z",
+    "lastModified": "2026-03-28T16:37:00.000Z",
     "slug": "dokken-2022-winter-success",
     "filePath": "dokken-2022-winter-success.md"
   },
   "52c3af16-edb2-431f-9cc6-bba494864a53": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T17:07:00.000Z",
     "slug": "yapc-kyoto-2023",
     "filePath": "yapc-kyoto-2023.md"
   },
@@ -1150,7 +1150,7 @@
     "filePath": "angular-16-jest.md"
   },
   "23c54aef-56ff-4d4c-99b0-35e052b80056": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T17:07:00.000Z",
     "slug": "why-inject-function-wins",
     "filePath": "why-inject-function-wins.md"
   },
@@ -1175,12 +1175,12 @@
     "filePath": "jsprimer-2nd.md"
   },
   "d8b87746-62dd-48f6-97ad-06ffb2a76604": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:52:00.000Z",
     "slug": "presentation-what-is-signals",
     "filePath": "presentation-what-is-signals.md"
   },
   "83989f98-b8c5-470d-b414-90f097702ea3": {
-    "lastModified": "2026-03-28T07:55:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "signals-memo-20230621",
     "filePath": "signals-memo-20230621.md"
   },
@@ -1195,7 +1195,7 @@
     "filePath": "angular-signals-component-design-patterns.md"
   },
   "09878dcc-7052-432c-ad3f-89c3b30ced25": {
-    "lastModified": "2026-03-28T07:39:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "io2023-angular-summary",
     "filePath": "io2023-angular-summary.md"
   },
@@ -1205,7 +1205,7 @@
     "filePath": "angular-new-input-transforms.md"
   },
   "4e8bcf7e-4c2c-4d31-806b-ff592edf4232": {
-    "lastModified": "2026-03-28T07:55:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "rethink-template-driven-forms",
     "filePath": "rethink-template-driven-forms.md"
   },
@@ -1220,17 +1220,17 @@
     "filePath": "presentation-phpconfuk-testing-dom.md"
   },
   "00edd736-25bd-4fca-be5b-fa414a75b745": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:39:00.000Z",
     "slug": "php-conference-fukuoka-2023",
     "filePath": "php-conference-fukuoka-2023.md"
   },
   "5d0c0a4d-96f7-4b24-8d84-a5250d5224bd": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:39:00.000Z",
     "slug": "presentation-new-in-angular-io2023jp",
     "filePath": "presentation-new-in-angular-io2023jp.md"
   },
   "501bc994-5fe4-4360-8a6d-c49898bfdb91": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:52:00.000Z",
     "slug": "read-books-2023-q2",
     "filePath": "read-books-2023-q2.md"
   },
@@ -1255,12 +1255,12 @@
     "filePath": "angular-signals-and-component-communication.md"
   },
   "01bcb5d2-a0e1-4ced-8760-bbf17db18b2f": {
-    "lastModified": "2026-03-28T13:21:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "trace-based-testing",
     "filePath": "trace-based-testing.md"
   },
   "012e0360-1748-49d6-bdbf-141976e33385": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "typograms",
     "filePath": "typograms.md"
   },
@@ -1270,7 +1270,7 @@
     "filePath": "books-20230811.md"
   },
   "be0af076-3ae9-4a80-9531-f1dafbaeb541": {
-    "lastModified": "2026-03-28T07:25:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "finish-plato-series",
     "filePath": "finish-plato-series.md"
   },
@@ -1315,7 +1315,7 @@
     "filePath": "angular-app-initializer-and-effect.md"
   },
   "636cb161-ad90-4d9b-acf1-aab96a58416d": {
-    "lastModified": "2026-03-28T07:55:00.000Z",
+    "lastModified": "2026-03-28T16:53:00.000Z",
     "slug": "slo-book-review",
     "filePath": "slo-book-review.md"
   },
@@ -1325,12 +1325,12 @@
     "filePath": "discord-bot-cfworkers-hono.md"
   },
   "331292ed-743a-41ca-a3d7-5e039b9af412": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T17:07:00.000Z",
     "slug": "why-angular-is-not-popular",
     "filePath": "why-angular-is-not-popular.md"
   },
   "7b9d8d5b-6552-4cdc-96fd-3dc21a708147": {
-    "lastModified": "2026-03-28T07:55:00.000Z",
+    "lastModified": "2026-03-28T16:52:00.000Z",
     "slug": "read-books-2023-q3",
     "filePath": "read-books-2023-q3.md"
   },
@@ -1340,7 +1340,7 @@
     "filePath": "todo-should-be-unpleasant.md"
   },
   "2d01249d-63fb-4dbf-96e9-0f56b8662c93": {
-    "lastModified": "2026-03-28T07:40:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "management-learning-book-review",
     "filePath": "management-learning-book-review.md"
   },
@@ -1375,7 +1375,7 @@
     "filePath": "angular-advent-calendar-2023.md"
   },
   "a2f898eb-84e7-4ee8-b7da-7413c1e8902b": {
-    "lastModified": "2026-03-28T07:54:00.000Z",
+    "lastModified": "2026-03-28T16:39:00.000Z",
     "slug": "presentation-new-in-angular-devfest2023",
     "filePath": "presentation-new-in-angular-devfest2023.md"
   },
@@ -1415,7 +1415,7 @@
     "filePath": "064fb0cc6577.md"
   },
   "92bf97dd-802c-4b39-b752-7a50b5875273": {
-    "lastModified": "2026-03-28T07:24:00.000Z",
+    "lastModified": "2026-03-28T16:37:00.000Z",
     "slug": "dirty-checking-misunderstanding",
     "filePath": "dirty-checking-misunderstanding.md"
   },
@@ -1565,7 +1565,7 @@
     "filePath": "20190820231400.md"
   },
   "f61ceebf-e81b-4fc9-ad5b-3cc4efd311e8": {
-    "lastModified": "2026-03-28T07:25:00.000Z",
+    "lastModified": "2026-03-28T16:37:00.000Z",
     "slug": "f61ceebf-e81b-4fc9-ad5b-3cc4efd311e8",
     "filePath": "f61ceebf-e81b-4fc9-ad5b-3cc4efd311e8.md"
   },
@@ -1625,12 +1625,12 @@
     "filePath": "20260111212600.md"
   },
   "2e63521b-014a-8017-9e50-e04f8a4e6e3b": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T17:07:00.000Z",
     "slug": "wxt-angular-browser-extension",
     "filePath": "wxt-angular-browser-extension.md"
   },
   "fa0f4ae6-945f-4853-9c8d-155af151bdfc": {
-    "lastModified": "2026-03-28T13:22:00.000Z",
+    "lastModified": "2026-03-28T17:07:00.000Z",
     "slug": "wxt-angular-browser-extension",
     "filePath": "wxt-angular-browser-extension.en.md"
   },
@@ -1660,12 +1660,12 @@
     "filePath": "angular-firestore-resource-signal.md"
   },
   "32d3521b-014a-806d-9707-ccc6367acef6": {
-    "lastModified": "2026-03-28T07:39:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "job-change-2020",
     "filePath": "job-change-2020.md"
   },
   "32d3521b-014a-8085-a87d-d649b3934cb4": {
-    "lastModified": "2026-03-28T07:39:00.000Z",
+    "lastModified": "2026-03-28T16:38:00.000Z",
     "slug": "job-change-2026",
     "filePath": "job-change-2026.md"
   }

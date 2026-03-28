@@ -3,9 +3,8 @@ title: 'Forget $compile in Angular 2'
 slug: 'forget-compile-in-angular-2'
 icon: ''
 created_time: '2016-10-02T00:00:00.000Z'
-last_edited_time: '2026-03-28T07:39:00.000Z'
+last_edited_time: '2026-03-28T16:38:00.000Z'
 tags:
-  - 'Angular'
   - 'AngularJS'
 published: true
 locale: 'ja'

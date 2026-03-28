@@ -5,7 +5,6 @@ icon: ''
 created_time: '2022-10-26T06:46:00.000Z'
 last_edited_time: '2022-10-26T00:00:00.000Z'
 tags:
-  - 'Angular'
   - 'rx-angular'
   - '状態管理'
 published: true

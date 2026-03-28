@@ -3,9 +3,8 @@ title: 'なぜAngularJSに$httpが必要だったのか（あるいはAngular Ht
 slug: 'why-angularjs-needs-http-service'
 icon: ''
 created_time: '2018-04-20T00:00:00.000Z'
-last_edited_time: '2026-03-28T13:22:00.000Z'
+last_edited_time: '2026-03-28T17:07:00.000Z'
 tags:
-  - 'Angular'
   - 'AngularJS'
 published: true
 locale: 'ja'

@@ -3,9 +3,8 @@ title: '[Angular 4.0] Metaサービスの使い方'
 slug: 'ng4-feature-meta-service'
 icon: ''
 created_time: '2017-03-07T00:00:00.000Z'
-last_edited_time: '2026-03-28T07:54:00.000Z'
-tags:
-  - 'Angular'
+last_edited_time: '2026-03-28T16:38:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'

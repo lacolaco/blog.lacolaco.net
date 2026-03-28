@@ -3,10 +3,9 @@ title: '読んだ本 2022-Q2'
 slug: 'read-books-2022-q2'
 icon: ''
 created_time: '2022-07-02T00:20:00.000Z'
-last_edited_time: '2026-03-28T07:54:00.000Z'
+last_edited_time: '2026-03-28T16:52:00.000Z'
 tags:
   - '日記'
-  - '読書'
 published: true
 locale: 'ja'
 category: 'Diary'

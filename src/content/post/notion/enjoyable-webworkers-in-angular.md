@@ -5,7 +5,6 @@ icon: ''
 created_time: '2018-12-22T00:00:00.000Z'
 last_edited_time: '2021-05-26T00:00:00.000Z'
 tags:
-  - 'Angular'
   - 'Web Worker'
 published: true
 locale: 'ja'

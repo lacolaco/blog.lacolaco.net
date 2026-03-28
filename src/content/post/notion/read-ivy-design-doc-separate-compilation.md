@@ -3,9 +3,8 @@ title: 'DESIGN DOC (Ivy): Separate Compilationを読む'
 slug: 'read-ivy-design-doc-separate-compilation'
 icon: ''
 created_time: '2018-03-03T00:00:00.000Z'
-last_edited_time: '2026-03-28T07:55:00.000Z'
-tags:
-  - 'Angular'
+last_edited_time: '2026-03-28T16:52:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'

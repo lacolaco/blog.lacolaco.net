@@ -5,7 +5,6 @@ icon: ''
 created_time: '2022-09-28T00:00:00.000Z'
 last_edited_time: '2022-09-28T00:00:00.000Z'
 tags:
-  - 'Angular'
   - 'standalone component'
   - '発表スライド'
 published: true

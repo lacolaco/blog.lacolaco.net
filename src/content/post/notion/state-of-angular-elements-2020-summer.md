@@ -3,9 +3,8 @@ title: 'Angular Elementsの現在地 (2020 Summer)'
 slug: 'state-of-angular-elements-2020-summer'
 icon: ''
 created_time: '2020-09-22T00:00:00.000Z'
-last_edited_time: '2026-03-28T13:21:00.000Z'
+last_edited_time: '2026-03-28T16:53:00.000Z'
 tags:
-  - 'Angular'
   - 'Angular Elements'
 published: true
 locale: 'ja'

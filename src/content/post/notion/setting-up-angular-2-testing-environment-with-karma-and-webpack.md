@@ -3,9 +3,8 @@ title: 'Setting up Angular Testing Environment with Karma and webpack'
 slug: 'setting-up-angular-2-testing-environment-with-karma-and-webpack'
 icon: ''
 created_time: '2016-10-25T00:00:00.000Z'
-last_edited_time: '2026-03-28T07:55:00.000Z'
+last_edited_time: '2026-03-28T16:53:00.000Z'
 tags:
-  - 'Angular'
   - 'Testing'
 published: true
 locale: 'ja'

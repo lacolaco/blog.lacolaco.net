@@ -3,9 +3,8 @@ title: 'Trace-based Testingというアイデアに感動した'
 slug: 'trace-based-testing'
 icon: ''
 created_time: '2023-08-09T11:35:00.000Z'
-last_edited_time: '2026-03-28T13:21:00.000Z'
+last_edited_time: '2026-03-28T16:53:00.000Z'
 tags:
-  - '日記'
   - 'Testing'
 published: true
 locale: 'ja'

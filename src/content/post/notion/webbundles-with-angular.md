@@ -3,9 +3,8 @@ title: 'AngularでWeb Bundlesを試す'
 slug: 'webbundles-with-angular'
 icon: ''
 created_time: '2019-12-25T00:00:00.000Z'
-last_edited_time: '2026-03-28T13:22:00.000Z'
+last_edited_time: '2026-03-28T16:53:00.000Z'
 tags:
-  - 'Angular'
   - 'webpackaging'
 published: true
 locale: 'ja'

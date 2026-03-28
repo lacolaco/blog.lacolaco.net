@@ -3,9 +3,8 @@ title: 'Perspective of Angular in 2020'
 slug: 'perspective-of-angular-in-2020'
 icon: ''
 created_time: '2019-12-24T00:00:00.000Z'
-last_edited_time: '2026-03-28T07:54:00.000Z'
-tags:
-  - 'Angular'
+last_edited_time: '2026-03-28T16:39:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'

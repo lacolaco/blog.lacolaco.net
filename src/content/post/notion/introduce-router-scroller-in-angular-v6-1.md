@@ -3,9 +3,8 @@ title: 'Introduce Router Scroller in Angular v6.1'
 slug: 'introduce-router-scroller-in-angular-v6-1'
 icon: ''
 created_time: '2018-06-09T00:00:00.000Z'
-last_edited_time: '2026-03-28T07:39:00.000Z'
-tags:
-  - 'Angular'
+last_edited_time: '2026-03-28T16:38:00.000Z'
+tags: []
 published: true
 locale: 'ja'
 category: 'Tech'
