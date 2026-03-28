@@ -46,7 +46,7 @@ jobs:
       code_changed: ${{ !github.event.pull_request.draft && steps.code-paths.outputs.code == 'true' }}
       content_changed: ${{ !github.event.pull_request.draft && steps.content-paths.outputs.content == 'true' }}
     steps:
-      - uses: dorny/paths-filter@d1c1ffe0248fe513906c8e24db8ea791d46f8590 # v3.0.3
+      - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4.0.1
         id: content-paths
         with:
           filters: |
@@ -55,7 +55,7 @@ jobs:
               - 'public/images/**'
               - 'manifest.json'
 
-      - uses: dorny/paths-filter@d1c1ffe0248fe513906c8e24db8ea791d46f8590 # v3.0.3
+      - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4.0.1
         id: code-paths
         with:
           predicate-quantifier: 'every'
