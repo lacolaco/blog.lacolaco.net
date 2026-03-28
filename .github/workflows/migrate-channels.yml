@@ -26,6 +26,15 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run migration
-        run: pnpm migrate-channels -- --apply 2>&1
+        run: |
+          pnpm migrate-channels -- --apply 2>&1 | tee /tmp/migrate-output.txt
+          exit ${PIPESTATUS[0]}
         env:
           NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}
+      - name: Output logs to summary
+        if: always()
+        run: |
+          echo '## Migration Log' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          tail -100 /tmp/migrate-output.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
