@@ -93,9 +93,12 @@ pnpm test:libs    # library tests
 - Test failures after your changes = assume your fault until proven otherwise
 
 ### Before Implementation
-1. Search for similar existing code (Glob/Grep)
-2. Check if library/pattern already exists
-3. Read similar implementations first
+1. 変更の期待結果をテストコードで書け（何が存在し、何が存在しないか）
+2. テストを実行して全て失敗することを確認しろ
+3. Search for similar existing code (Glob/Grep)
+4. Check if library/pattern already exists
+5. Read similar implementations first
+6. テストを通す実装を書け
 
 ### CI失敗時のログ確認（必須）
 - CI失敗時は**必ずエラーログを確認してから修正**せよ。推測で修正するな
