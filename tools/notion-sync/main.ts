@@ -163,7 +163,7 @@ const result = await syncNotionBlog({
         slug,
         icon: ext.icon,
         ...rest,
-        channels: ext.channels.length > 0 ? ext.channels : undefined,
+        channels: ext.channels?.length > 0 ? ext.channels : undefined,
         notion_url: source_url,
         features: {
           katex: renderContext.state.hasKatex ?? false,
