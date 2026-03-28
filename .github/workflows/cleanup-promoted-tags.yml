@@ -1,0 +1,37 @@
+name: Cleanup promoted tags
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths:
+      - 'tools/cleanup-promoted-tags/**'
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version-file: .node-version
+          cache: 'pnpm'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@lacolaco'
+      - run: pnpm install --frozen-lockfile
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run cleanup
+        run: |
+          set -o pipefail
+          pnpm cleanup-tags -- --apply 2>&1 | tee /tmp/cleanup-output.txt
+        env:
+          NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}
+      - name: Output logs to summary
+        if: always()
+        run: |
+          echo '## Cleanup Log' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          tail -100 /tmp/cleanup-output.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
