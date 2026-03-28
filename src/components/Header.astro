@@ -10,20 +10,20 @@ const { class: className, showDescription } = Astro.props;
 ---
 
 <header
-  class="group max-w-(--breakpoint-lg) mx-[2rem] lg:mx-auto flex flex-col py-4"
+  class="group max-w-(--breakpoint-lg) px-4 md:px-0 md:mx-[1rem] lg:mx-auto flex flex-col py-3 md:py-4 bg-white md:bg-transparent border-b border-gray-200 md:border-b-0"
   class:list={className}
 >
-  <div class="w-full grid grid-rows-[34px] grid-cols-[1fr_auto_1fr] items-center">
-    <div></div>
+  <div class="w-full flex items-center justify-between md:grid md:grid-rows-[34px] md:grid-cols-[1fr_auto_1fr]">
+    <div class="hidden md:block"></div>
     <div>
       <a
         href="/"
-        class="font-title text-center text-2xl font-semibold text-default hover:text-default-muted hover:underline"
+        class="font-title text-lg md:text-2xl font-semibold text-default hover:text-default-muted hover:underline"
       >
         {SITE_TITLE}
       </a>
     </div>
-    <div class="flex flex-row items-center justify-end gap-x-4 text-sm font-semibold">
+    <div class="flex flex-row items-center justify-end gap-x-2 md:gap-x-4 text-sm font-semibold">
       <div class="flex items-center">
         <search-toggle-button>
           <button class="text-default leading-0 rounded-full p-1" title="tags">
@@ -32,15 +32,16 @@ const { class: className, showDescription } = Astro.props;
         </search-toggle-button>
       </div>
       <div class="flex items-center">
-        <a href="/tags/" class="text-default hover:text-default-muted hover:no-underline" title="tags">Tags</a>
+        <a href="/tags/" class="text-default hover:text-default-muted hover:no-underline leading-0 rounded-full p-1" title="Tags">
+          <span class="icon-[mdi--tag-outline] text-[20px] md:hidden"></span>
+          <span class="hidden md:inline">Tags</span>
+        </a>
       </div>
       <div class="flex items-center">
         <a href="https://lacolaco.net" target="_blank" rel="noopener" title="profile">
           <img
-            class="rounded-full border border-solid border-gray-400 block"
+            class="rounded-full border border-solid border-gray-400 block w-6 h-6 md:w-8 md:h-8"
             src="/icons/laco.png"
-            height="32"
-            width="32"
           />
         </a>
       </div>
@@ -48,7 +49,7 @@ const { class: className, showDescription } = Astro.props;
   </div>
   {
     showDescription && (
-      <div class="w-full font-title flex flex-col items-center mt-3">
+      <div class="w-full font-title flex-col items-center mt-1 md:mt-3 hidden md:flex">
         <p data-description class="text-center text-xs text-default-muted">
           {SITE_DESCRIPTION}
         </p>
