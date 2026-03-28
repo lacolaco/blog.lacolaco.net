@@ -2,14 +2,14 @@
 import { queryCategories } from '@lib/query';
 import { urlize } from '../../libs/strings';
 
-// 旧カテゴリURL → Channel URLへリダイレクト
-const categoryToChannel: Record<string, string> = {
-  Tech: 'code',
-  Idea: 'thought',
-  Diary: 'life',
-};
-
 export function getStaticPaths() {
+  // 旧カテゴリURL → Channel URLへリダイレクト
+  const categoryToChannel: Record<string, string> = {
+    Tech: 'code',
+    Idea: 'thought',
+    Diary: 'life',
+  };
+
   const categories = queryCategories();
   return categories.map((category) => ({
     params: { category: urlize(category.name) },

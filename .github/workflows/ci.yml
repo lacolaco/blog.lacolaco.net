@@ -93,25 +93,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build
-        id: build
-        run: |
-          set -o pipefail
-          pnpm run build 2>&1 | tee /tmp/build-output.txt
-        continue-on-error: true
-      - name: Comment build error on PR
-        if: steps.build.outcome == 'failure'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          BODY=$(tail -100 /tmp/build-output.txt)
-          gh pr comment ${{ github.event.pull_request.number }} --body "## Build Error
-          \`\`\`
-          ${BODY}
-          \`\`\`"
-      - name: Fail if build failed
-        if: steps.build.outcome == 'failure'
-        run: exit 1
+      - run: pnpm run build
 
   lint:
     runs-on: ubuntu-latest
