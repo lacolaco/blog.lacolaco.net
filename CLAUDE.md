@@ -85,7 +85,7 @@ pnpm test:libs    # library tests
 ### Git Operations
 - Use git-github-ops agent for complex operations
 - NEVER `git reset --hard` with uncommitted changes you need
-- After PR creation: `gh pr checks --watch` でCIを監視し、結果をユーザーに報告すること。ユーザーに聞かれるまで放置するな
+- After PR creation: `gh pr checks --watch` をバックグラウンドで実行しCIを監視。完了したらユーザーに報告すること。ユーザーに聞かれるまで放置するな
 
 ### Tool Usage Priority
 1. mcp__ide__getDiagnostics (for errors)
