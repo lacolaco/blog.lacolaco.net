@@ -54,7 +54,7 @@
     "@lacolaco/notion-sync": "^3.0.0",
     "@notionhq/client": "5.14.0",
     "@tailwindcss/vite": "^4.1.4",
-    "@types/dom-chromium-ai": "^0.0.15",
+    "@types/dom-chromium-ai": "^0.0.16",
     "@types/escape-html": "^1.0.4",
     "@types/gtag.js": "^0.0.20",
     "@types/katex": "0.16.8",
