@@ -116,7 +116,7 @@ pnpm test:libs    # library tests
   curl -s "https://api.github.com/repos/lacolaco/blog.lacolaco.net/check-runs/{job_id}/annotations" \
     -H "Accept: application/vnd.github+json"
   ```
-- GITHUB_TOKENが環境変数に設定されていれば `gh run view --log` で直接ログ取得可能（#1386参照）
+
 - CIステップにデバッグ出力を追加した場合、修正完了後に必ず削除してci.ymlをmainと同一に戻せ
 
 ### Git Operations
