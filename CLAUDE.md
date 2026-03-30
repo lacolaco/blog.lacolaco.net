@@ -92,6 +92,10 @@ pnpm test:libs    # library tests
 - NEVER use workarounds (it.skip, eslint-disable)
 - Test failures after your changes = assume your fault until proven otherwise
 
+### ドキュメント精読
+- ユーザーが「読め」と指示したドキュメントは**全文精読**してから行動する。grepでの部分検索は精読の代替にならない
+- メジャーバージョンアップ時はCHANGELOG/Migration Guideを**必ず先に読む**。既存知識を前提にしない
+
 ### Before Implementation
 1. 変更の期待結果をテストコードで書け（何が存在し、何が存在しないか）
 2. テストを実行して全て失敗することを確認しろ
