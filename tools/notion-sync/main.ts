@@ -101,13 +101,13 @@ const result = await syncNotionBlog({
   },
   renderMarkdown: {
     getImageOutput: (image, metadata) => {
-      // Notion URLからファイル名を抽出
-      const urlFilename = image.url.split('?')[0].split('#')[0].split('/').pop() ?? '';
+      // Notion URLからファイル名を抽出し、URLデコード後にNFC正規化
+      const urlFilename = decodeURIComponent(
+        image.url.split('?')[0].split('#')[0].split('/').pop() ?? '',
+      ).normalize('NFC');
       const dotIndex = urlFilename.lastIndexOf('.');
-      const rawName = dotIndex > 0 ? urlFilename.substring(0, dotIndex) : urlFilename;
+      const name = dotIndex > 0 ? urlFilename.substring(0, dotIndex) : urlFilename;
       const ext = dotIndex > 0 ? urlFilename.substring(dotIndex + 1).toLowerCase() : 'png';
-      // NFC正規化でUnicode分解形（NFD）を合成形に統一
-      const name = rawName.normalize('NFC');
       const hash = createHash('sha256').update(image.blockId).digest('hex').substring(0, 16);
       const filename = `${name}.${hash}.${ext}`;
       return {
