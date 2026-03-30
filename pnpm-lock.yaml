@@ -82,8 +82,8 @@ importers:
         specifier: ^1.0.0
         version: 1.2.0
       '@lacolaco/notion-sync':
-        specifier: ^3.0.0
-        version: 3.0.0
+        specifier: ^4.0.0
+        version: 4.0.0
       '@notionhq/client':
         specifier: 5.14.0
         version: 5.14.0
@@ -900,8 +900,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@lacolaco/notion-sync@3.0.0':
-    resolution: {integrity: sha512-25q430Ff0yVDGtl5nLClirUwB6sK2IESbtZ85OKKbuPZIJ+WVcy3FLcGTj5JNm+Vr3MBSJcjrq4BcxboYXJ29Q==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/3.0.0/35ffa1c7e52040c68eace094497818f8ea377de4}
+  '@lacolaco/notion-sync@4.0.0':
+    resolution: {integrity: sha512-lpU2b8g8LV834SFfT2TMjlKJcw7QVsDOhGkfrUZ99yMNhclmV6F1vuyhDSXC2CSTx9kxyli/6lkmqEC6zfABHw==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/4.0.0/31d2cde6470530b99d456e149f7ef0db6a64a8fb}
 
   '@mermaid-js/parser@1.0.1':
     resolution: {integrity: sha512-opmV19kN1JsK0T6HhhokHpcVkqKpF+x2pPDKKM2ThHtZAB5F4PROopk0amuVYK5qMrIA4erzpNm8gmPNJgMDxQ==}
@@ -4857,7 +4857,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@lacolaco/notion-sync@3.0.0':
+  '@lacolaco/notion-sync@4.0.0':
     dependencies:
       '@notionhq/client': 5.14.0
       cli-progress: 3.12.0
