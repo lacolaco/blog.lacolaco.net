@@ -52,7 +52,7 @@
     "@iconify/json": "^2.2.161",
     "@iconify/tailwind": "^1.0.0",
     "@lacolaco/notion-sync": "^4.0.0",
-    "@notionhq/client": "5.14.0",
+    "@notionhq/client": "5.15.0",
     "@tailwindcss/vite": "^4.1.4",
     "@types/dom-chromium-ai": "^0.0.16",
     "@types/escape-html": "^1.0.4",
