@@ -62,17 +62,17 @@ const result = await syncNotionBlog({
   notionToken: NOTION_AUTH_TOKEN,
   datasourceId: 'a902ee6d-dc94-4301-b772-fa5fb8decc0c',
   distribution: 'blog.lacolaco.net',
-  postsDir: `${rootDir}/src/content/post/notion`,
   manifestPath: `${rootDir}/manifest.json`,
+  metadataFilePath: `${rootDir}/src/content/post/notion/metadata.json`,
+  propertyOutputs: {
+    tags: path.resolve(rootDir, 'src/content/post/notion/tags.json'),
+    category: path.resolve(rootDir, 'src/content/post/notion/categories.json'),
+  },
   verbose: true,
   mode,
   force,
   dryRun,
   filterPost: (metadata) => metadata.published && !!metadata.category,
-  postPathResolver: (metadata) => {
-    const localeSuffix = metadata.locale === 'en' ? '.en' : '';
-    return `${metadata.slug}${localeSuffix}.md`;
-  },
   extractMetadata: (page, defaultExtractor) => {
     const metadata = defaultExtractor(page);
     const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
@@ -100,6 +100,12 @@ const result = await syncNotionBlog({
     };
   },
   renderMarkdown: {
+    getPageOutput: (metadata) => {
+      const localeSuffix = metadata.locale === 'en' ? '.en' : '';
+      return {
+        filePath: path.resolve(rootDir, 'src/content/post/notion', `${metadata.slug}${localeSuffix}.md`),
+      };
+    },
     getImageOutput: (image, metadata) => {
       // Notion URLからファイル名を抽出し、URLデコード→NFC正規化
       const rawSegment = image.url.split('?')[0].split('#')[0].split('/').pop() ?? '';
