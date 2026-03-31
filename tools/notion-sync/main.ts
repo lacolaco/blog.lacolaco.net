@@ -1,4 +1,6 @@
 import { syncNotionBlog, type PostMetadata, type RenderContext } from '@lacolaco/notion-sync';
+import { createHash } from 'node:crypto';
+import * as path from 'node:path';
 import { parseArgs } from 'node:util';
 import { format } from 'date-fns';
 import { TZDate } from '@date-fns/tz';
@@ -61,7 +63,6 @@ const result = await syncNotionBlog({
   datasourceId: 'a902ee6d-dc94-4301-b772-fa5fb8decc0c',
   distribution: 'blog.lacolaco.net',
   postsDir: `${rootDir}/src/content/post/notion`,
-  imagesDir: `${rootDir}/public/images`,
   manifestPath: `${rootDir}/manifest.json`,
   verbose: true,
   mode,
@@ -99,6 +100,22 @@ const result = await syncNotionBlog({
     };
   },
   renderMarkdown: {
+    getImageOutput: (image, metadata) => {
+      // Notion URLからファイル名を抽出し、URLデコード→NFC正規化
+      const rawSegment = image.url.split('?')[0].split('#')[0].split('/').pop() ?? '';
+      const nfcFilename = decodeURIComponent(rawSegment).normalize('NFC');
+      const dotIndex = nfcFilename.lastIndexOf('.');
+      const name = dotIndex > 0 ? nfcFilename.substring(0, dotIndex) : nfcFilename;
+      const ext = dotIndex > 0 ? nfcFilename.substring(dotIndex + 1).toLowerCase() : 'png';
+      const hash = createHash('sha256').update(image.blockId).digest('hex').substring(0, 16);
+      const diskFilename = `${name}.${hash}.${ext}`;
+      // srcはURLエンコード（既存markdownとの互換性維持）、filePathはデコード済みNFC
+      const encodedFilename = `${encodeURIComponent(name)}.${hash}.${ext}`;
+      return {
+        src: `/images/${metadata.slug}/${encodedFilename}`,
+        filePath: path.resolve(rootDir, 'public/images', metadata.slug, diskFilename),
+      };
+    },
     blockRenderers: {
       // Mermaid図の検出
       code: (block, context: RenderContext<FeatureState>, defaultRenderer) => {
