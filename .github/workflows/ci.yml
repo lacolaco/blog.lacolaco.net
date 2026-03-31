@@ -366,23 +366,23 @@ jobs:
           SUMMARY=$(echo "$REVIEW_RESULT" | jq -r '.summary')
           echo "approved=$APPROVED" >> "$GITHUB_OUTPUT"
 
+          ISSUES=$(echo "$REVIEW_RESULT" | jq -r '.issues[] | "- **\(.file)**: \(.description)"')
+
           if [[ "$APPROVED" == "true" ]]; then
-            gh pr comment "$PR_NUMBER" --body "$(cat <<EOF
-          ## コードレビュー OK
+            BODY="${SUMMARY}"
+            if [[ -n "$ISSUES" ]]; then
+              BODY="${BODY}
 
-          ${SUMMARY}
-          EOF
-          )"
+          ### 軽微な指摘
+
+          ${ISSUES}"
+            fi
+            gh pr review "$PR_NUMBER" --approve --body "$BODY"
           else
-            ISSUES=$(echo "$REVIEW_RESULT" | jq -r '.issues[] | "- **\(.file)**: \(.description)"')
-            gh pr comment "$PR_NUMBER" --body "$(cat <<EOF
-          ## コードレビュー NG
+            BODY="${SUMMARY}
 
-          ${SUMMARY}
-
-          ${ISSUES}
-          EOF
-          )"
+          ${ISSUES}"
+            gh pr review "$PR_NUMBER" --request-changes --body "$BODY"
             exit 1
           fi
 
