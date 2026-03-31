@@ -101,18 +101,19 @@ const result = await syncNotionBlog({
   },
   renderMarkdown: {
     getImageOutput: (image, metadata) => {
-      // Notion URLからファイル名を抽出し、URLデコード後にNFC正規化
-      const urlFilename = decodeURIComponent(
-        image.url.split('?')[0].split('#')[0].split('/').pop() ?? '',
-      ).normalize('NFC');
-      const dotIndex = urlFilename.lastIndexOf('.');
-      const name = dotIndex > 0 ? urlFilename.substring(0, dotIndex) : urlFilename;
-      const ext = dotIndex > 0 ? urlFilename.substring(dotIndex + 1).toLowerCase() : 'png';
+      // Notion URLからファイル名を抽出し、URLデコード→NFC正規化
+      const rawSegment = image.url.split('?')[0].split('#')[0].split('/').pop() ?? '';
+      const nfcFilename = decodeURIComponent(rawSegment).normalize('NFC');
+      const dotIndex = nfcFilename.lastIndexOf('.');
+      const name = dotIndex > 0 ? nfcFilename.substring(0, dotIndex) : nfcFilename;
+      const ext = dotIndex > 0 ? nfcFilename.substring(dotIndex + 1).toLowerCase() : 'png';
       const hash = createHash('sha256').update(image.blockId).digest('hex').substring(0, 16);
-      const filename = `${name}.${hash}.${ext}`;
+      const diskFilename = `${name}.${hash}.${ext}`;
+      // srcはURLエンコード（既存markdownとの互換性維持）、filePathはデコード済みNFC
+      const encodedFilename = `${encodeURIComponent(name)}.${hash}.${ext}`;
       return {
-        src: `/images/${metadata.slug}/${filename}`,
-        filePath: path.resolve(rootDir, 'public/images', metadata.slug, filename),
+        src: `/images/${metadata.slug}/${encodedFilename}`,
+        filePath: path.resolve(rootDir, 'public/images', metadata.slug, diskFilename),
       };
     },
     blockRenderers: {
