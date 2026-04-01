@@ -15,9 +15,10 @@ import type { CollectionEntry } from 'astro:content';
 type Props = {
   posts: Array<CollectionEntry<'posts'>>;
   feedUrl: string;
+  showChannels?: boolean;
 };
 
-const { posts, feedUrl } = Astro.props;
+const { posts, feedUrl, showChannels = false } = Astro.props;
 const postsByYear = Array.from(
   posts
     .reduce((acc, post) => {
@@ -82,7 +83,7 @@ const postsByYear = Array.from(
                                 🌐{' '}{post.data.locale}
                               </span>
                             )}
-                            {getChannels(post).map((ch) => (
+                            {showChannels && getChannels(post).map((ch) => (
                               <ChannelBadge name={ch} />
                             ))}
                           </TagList>
