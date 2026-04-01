@@ -6,16 +6,16 @@ name: CI
 #   ┌─ classify ─→ content-review (needs: classify)
 #   │             → code-review    (needs: classify)
 #   ├─ CI jobs (build, lint, format, test, notion-sync-dry-run)
-#   ├─ renovate-review (独立、classifyに依存しない)
+#   ├─ renovate-review (needs: classify, non-renovateコミットがなければ実行)
 #   ↓
 #   ok (alls-green gate, 唯一のrequired check)
 #   ↓
 #   auto-merge
 #
 # レビュー条件 (排他ではない。code+content PRでは両方実行される):
-#   - renovate-review: author == renovate[bot]
+#   - renovate-review: author == renovate[bot] かつ non-renovateコミットなし
 #   - content-review:  content_changed && author != renovate[bot]
-#   - code-review:     code_changed && author != renovate[bot]
+#   - code-review:     code_changed && (author != renovate[bot] or non-renovateコミットあり)
 #
 # 自動マージ条件:
 #   ok成功 かつ (renovate-review成功 or (content-review成功 かつ code-review未実行))
@@ -45,6 +45,7 @@ jobs:
     outputs:
       code_changed: ${{ !github.event.pull_request.draft && steps.code-paths.outputs.code == 'true' }}
       content_changed: ${{ !github.event.pull_request.draft && steps.content-paths.outputs.content == 'true' }}
+      has_non_renovate_commits: ${{ steps.non-renovate-commits.outputs.has_non_renovate_commits == 'true' }}
     steps:
       - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4.0.1
         id: content-paths
@@ -65,6 +66,20 @@ jobs:
               - '!src/content/**'
               - '!public/images/**'
               - '!manifest.json'
+
+      - name: Check for non-renovate commits
+        id: non-renovate-commits
+        if: github.event.pull_request.user.login == 'renovate[bot]'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NON_RENOVATE=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/commits --jq '.[].author.login' | grep -v 'renovate\[bot\]' | head -1 || true)
+          if [[ -n "$NON_RENOVATE" ]]; then
+            echo "has_non_renovate_commits=true" >> "$GITHUB_OUTPUT"
+            echo "Non-renovate commits detected by: $NON_RENOVATE"
+          else
+            echo "has_non_renovate_commits=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Verify classification
         if: ${{ !github.event.pull_request.draft }}
@@ -166,7 +181,10 @@ jobs:
   # === Reviews (standard interface: outputs.approved) ===
 
   renovate-review:
-    if: github.event.pull_request.user.login == 'renovate[bot]'
+    needs: classify
+    if: >-
+      github.event.pull_request.user.login == 'renovate[bot]' &&
+      needs.classify.outputs.has_non_renovate_commits != 'true'
     runs-on: ubuntu-latest
     outputs:
       approved: ${{ steps.gate.outputs.approved }}
@@ -302,7 +320,7 @@ jobs:
     needs: classify
     if: >-
       needs.classify.outputs.code_changed == 'true' &&
-      github.event.pull_request.user.login != 'renovate[bot]'
+      (github.event.pull_request.user.login != 'renovate[bot]' || needs.classify.outputs.has_non_renovate_commits == 'true')
     runs-on: ubuntu-latest
     outputs:
       approved: ${{ steps.gate.outputs.approved }}
