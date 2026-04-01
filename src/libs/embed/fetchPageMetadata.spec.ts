@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fetchPageMetadata } from './index';
+import { fetchPageMetadata } from '../../pages/embed/index';
 
 // fetchをモック
 const mockFetch = vi.fn();
