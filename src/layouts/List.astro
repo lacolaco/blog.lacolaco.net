@@ -71,23 +71,27 @@ const postsByYear = Array.from(
                     <li class="my-4">
                       <div class="flex flex-col items-start leading-none">
                         <FormattedDate className="text-xs text-muted align-middle" date={getDate(post)} />
-                        <a class="no-underline" href={getRelativePostUrl(post)}>
-                          <span class="text-lg text-default font-semibold underline hover:text-gray-500">
-                            {getTitle(post)}
-                          </span>
-                        </a>
-                        <div class="mt-1">
-                          <TagList>
-                            {post.data.locale === 'en' && (
-                              <span class="leading-relaxed text-xs inline-block px-2 rounded-sm bg-blue-500 text-white font-semibold" title="English">
-                                🌐{' '}{post.data.locale}
-                              </span>
-                            )}
-                            {showChannels && getChannels(post).map((ch) => (
-                              <ChannelBadge name={ch} />
-                            ))}
-                          </TagList>
+                        <div class="flex flex-row items-center gap-2">
+                          <a class="no-underline" href={getRelativePostUrl(post)}>
+                            <span class="text-lg text-default font-semibold underline hover:text-gray-500">
+                              {getTitle(post)}
+                            </span>
+                          </a>
+                          {post.data.locale === 'en' && (
+                            <span class="leading-relaxed text-xs inline-block px-2 rounded-sm bg-blue-500 text-white font-semibold" title="English">
+                              🌐{' '}{post.data.locale}
+                            </span>
+                          )}
                         </div>
+                        {showChannels && getChannels(post).length > 0 && (
+                          <div class="mt-1">
+                            <TagList>
+                              {getChannels(post).map((ch) => (
+                                <ChannelBadge name={ch} />
+                              ))}
+                            </TagList>
+                          </div>
+                        )}
                       </div>
                     </li>
                   ))}
