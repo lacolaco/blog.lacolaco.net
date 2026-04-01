@@ -200,12 +200,19 @@ jobs:
         if: always()
         env:
           SAFETY: ${{ steps.review.outputs.safety-assessment }}
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           if [[ "$SAFETY" == "safe" ]]; then
             echo "approved=true" >> "$GITHUB_OUTPUT"
           else
             echo "approved=false" >> "$GITHUB_OUTPUT"
             echo "::error::Renovate review: ${SAFETY:-unknown}"
+            gh pr comment "$PR_NUMBER" --body "## Renovate Review: ${SAFETY:-unknown}
+
+          このRenovate PRは自動マージできません。
+          手動マイグレーションが必要な場合は、Renovate PRをcloseし、同じ変更を含む手動PRを作成してください。
+          \`renovate-review\` はRenovateボットのPRでのみ実行されるため、手動PRではスキップされます。"
             exit 1
           fi
 
