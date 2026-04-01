@@ -72,8 +72,10 @@ jobs:
         if: github.event.pull_request.user.login == 'renovate[bot]'
         env:
           GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          NON_RENOVATE=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/commits --jq '.[].author.login' | grep -v 'renovate\[bot\]' | head -1 || true)
+          NON_RENOVATE=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/commits" --paginate --jq '[.[].author.login // empty] | .[]' | grep -v 'renovate\[bot\]' | head -1 || true)
           if [[ -n "$NON_RENOVATE" ]]; then
             echo "has_non_renovate_commits=true" >> "$GITHUB_OUTPUT"
             echo "Non-renovate commits detected by: $NON_RENOVATE"
