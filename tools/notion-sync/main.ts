@@ -1,4 +1,4 @@
-import { syncNotionBlog, type PostMetadata, type RenderContext } from '@lacolaco/notion-sync';
+import { syncNotionDatasource, type PostMetadata, type RenderContext } from '@lacolaco/notion-sync';
 import { createHash } from 'node:crypto';
 import * as path from 'node:path';
 import { parseArgs } from 'node:util';
@@ -58,10 +58,12 @@ const dryRun = values['dry-run'];
 
 const rootDir = new URL('../..', import.meta.url).pathname;
 
-const result = await syncNotionBlog({
-  notionToken: NOTION_AUTH_TOKEN,
-  datasourceId: 'a902ee6d-dc94-4301-b772-fa5fb8decc0c',
-  distribution: 'blog.lacolaco.net',
+const result = await syncNotionDatasource({
+  notion: {
+    token: NOTION_AUTH_TOKEN,
+    datasourceId: 'a902ee6d-dc94-4301-b772-fa5fb8decc0c',
+  },
+  queryFilter: { property: 'distribution', multi_select: { contains: 'blog.lacolaco.net' } },
   manifestPath: `${rootDir}/manifest.json`,
   metadataFilePath: `${rootDir}/src/content/post/notion/metadata.json`,
   propertyOutputs: {
