@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fetchPageMetadata } from './index';
+import { fetchPageMetadata } from './fetchPageMetadata';
 
 // fetchをモック
 const mockFetch = vi.fn();
@@ -107,6 +107,48 @@ describe('fetchPageMetadata', () => {
 
     expect(result.title).toBe('Recovered Title');
     expect(mockFetch).toHaveBeenCalledTimes(2);
+  });
+
+  it('相対URLの画像パスを絶対URLに解決する', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      headers: new Headers(),
+      text: () =>
+        Promise.resolve(`
+          <html>
+            <head>
+              <title>Relative Image Test</title>
+              <meta property="og:image" content="/images/hero.jpg" />
+            </head>
+          </html>
+        `),
+    });
+
+    const result = await fetchPageMetadata('https://example.com/page');
+
+    expect(result.imageUrl).toBe('https://example.com/images/hero.jpg');
+  });
+
+  it('空文字列のog:imageをスキップする', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      headers: new Headers(),
+      text: () =>
+        Promise.resolve(`
+          <html>
+            <head>
+              <title>Empty Image Test</title>
+              <meta property="og:image" content="" />
+            </head>
+          </html>
+        `),
+    });
+
+    const result = await fetchPageMetadata('https://example.com');
+
+    expect(result.imageUrl).toBeNull();
   });
 
   it('無効なURLでもエラーをスローせずフォールバックする', async () => {
