@@ -74,7 +74,7 @@ const result = await syncNotionDatasource({
   mode,
   force,
   dryRun,
-  filterPost: (metadata) => metadata.published && !!metadata.category,
+  filterPost: (metadata) => metadata.published,
   extractMetadata: (page, defaultExtractor) => {
     const metadata = defaultExtractor(page);
     const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
