@@ -48,20 +48,22 @@ function extractDescription($: CheerioAPI): string {
   return '';
 }
 
-function extractImageUrl($: CheerioAPI): string | null {
-  const metaOgImage = $('head>meta[property="og:image"]').attr('content');
-  if (metaOgImage) return metaOgImage;
+function extractImageUrl($: CheerioAPI, baseUrl: string): string | null {
+  const candidates = [
+    $('head>meta[property="og:image"]').attr('content'),
+    $('head>meta[name="twitter:image"]').attr('content'),
+    $('head>meta[name="image"]').attr('content'),
+    $('img').first().attr('src'),
+  ];
 
-  const metaTwitterImage = $('head>meta[name="twitter:image"]').attr('content');
-  if (metaTwitterImage) return metaTwitterImage;
+  const found = candidates.find((c) => c != null);
+  if (!found) return null;
 
-  const metaImage = $('head>meta[name="image"]').attr('content');
-  if (metaImage) return metaImage;
-
-  const firstImg = $('img').first().attr('src');
-  if (firstImg) return firstImg;
-
-  return null;
+  try {
+    return new URL(found, baseUrl).href;
+  } catch {
+    return found;
+  }
 }
 
 export const DEFAULT_CACHE_MAX_AGE = 60 * 60; // 1 hour
@@ -110,7 +112,7 @@ export async function fetchPageMetadata(url: string): Promise<PageMetadata> {
         maxTimeout: 4000, // 4秒
         factor: 2, // 指数バックオフ係数 (1秒 → 2秒 → 4秒)
         onFailedAttempt: (error) => {
-          console.warn(`Retry ${error.attemptNumber}/3: ${url}`);
+          console.warn(`Attempt ${error.attemptNumber}/${error.retriesLeft + error.attemptNumber} failed: ${url}`);
         },
       },
     );
@@ -121,7 +123,7 @@ export async function fetchPageMetadata(url: string): Promise<PageMetadata> {
     return {
       title: extractTitle($, url),
       description: extractDescription($),
-      imageUrl: extractImageUrl($),
+      imageUrl: extractImageUrl($, url),
       cacheControl: response.headers.get('cache-control'),
     };
   } catch (error) {

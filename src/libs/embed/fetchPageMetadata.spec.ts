@@ -109,6 +109,27 @@ describe('fetchPageMetadata', () => {
     expect(mockFetch).toHaveBeenCalledTimes(2);
   });
 
+  it('相対URLの画像パスを絶対URLに解決する', async () => {
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      headers: new Headers(),
+      text: () =>
+        Promise.resolve(`
+          <html>
+            <head>
+              <title>Relative Image Test</title>
+              <meta property="og:image" content="/images/hero.jpg" />
+            </head>
+          </html>
+        `),
+    });
+
+    const result = await fetchPageMetadata('https://example.com/page');
+
+    expect(result.imageUrl).toBe('https://example.com/images/hero.jpg');
+  });
+
   it('無効なURLでもエラーをスローせずフォールバックする', async () => {
     mockFetch.mockResolvedValue({
       ok: false,
