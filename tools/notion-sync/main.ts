@@ -2,8 +2,9 @@ import { syncNotionDatasource, type PostMetadata, type RenderContext } from '@la
 import { createHash } from 'node:crypto';
 import * as path from 'node:path';
 import { parseArgs } from 'node:util';
-import { format } from 'date-fns';
-import { TZDate } from '@date-fns/tz';
+
+// このdatasourceのextractMetadataが返すメタデータ型
+type BlogPostMetadata = PostMetadata & { icon: string; channels: string[] };
 
 // features検出用の型定義
 type FeatureState = {
@@ -68,13 +69,15 @@ const result = await syncNotionDatasource({
   metadataFilePath: `${rootDir}/src/content/post/notion/metadata.json`,
   propertyOutputs: {
     tags: path.resolve(rootDir, 'src/content/post/notion/tags.json'),
-    category: path.resolve(rootDir, 'src/content/post/notion/categories.json'),
   },
   verbose: true,
   mode,
   force,
   dryRun,
-  filterPost: (metadata) => metadata.published && !!metadata.category,
+  filterPost: (metadata) => {
+    const m = metadata as BlogPostMetadata;
+    return m.published && m.channels.length > 0;
+  },
   extractMetadata: (page, defaultExtractor) => {
     const metadata = defaultExtractor(page);
     const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
@@ -87,16 +90,8 @@ const result = await syncNotionDatasource({
       // channelsプロパティが存在しない場合は空配列
     }
 
-    // category=diaryかつslugがページID（空デフォルト）の場合、作成日時をslugとする
-    let slug = metadata.slug;
-    if (metadata.category?.toLowerCase() === 'diary' && slug === page.id) {
-      const createdTime = new TZDate(metadata.created_time, 'Asia/Tokyo');
-      slug = format(createdTime, 'yyyyMMddHHmmss');
-    }
-
     return {
       ...metadata,
-      slug,
       icon,
       channels,
     };
@@ -181,14 +176,14 @@ const result = await syncNotionDatasource({
     },
     generateFrontmatter: (baseFields, metadata, renderContext: RenderContext<FeatureState>) => {
       const { source_url, title, slug, ...rest } = baseFields as Record<string, unknown>;
-      const ext = metadata as PostMetadata & { icon: string; channels?: string[] };
+      const ext = metadata as BlogPostMetadata;
 
       return {
         title,
         slug,
         icon: ext.icon,
         ...rest,
-        channels: ext.channels != null && ext.channels.length > 0 ? ext.channels : undefined,
+        channels: ext.channels.length > 0 ? ext.channels : undefined,
         notion_url: source_url,
         features: {
           katex: renderContext.state.hasKatex ?? false,
