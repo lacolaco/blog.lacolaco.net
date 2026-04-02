@@ -5,6 +5,9 @@ import { parseArgs } from 'node:util';
 import { format } from 'date-fns';
 import { TZDate } from '@date-fns/tz';
 
+// このdatasourceのextractMetadataが返すメタデータ型
+type BlogPostMetadata = PostMetadata & { icon: string; channels: string[] };
+
 // features検出用の型定義
 type FeatureState = {
   hasMermaid?: boolean;
@@ -74,7 +77,10 @@ const result = await syncNotionDatasource({
   mode,
   force,
   dryRun,
-  filterPost: (metadata) => metadata.published,
+  filterPost: (metadata) => {
+    const m = metadata as BlogPostMetadata;
+    return m.published && m.channels.length > 0;
+  },
   extractMetadata: (page, defaultExtractor) => {
     const metadata = defaultExtractor(page);
     const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
@@ -181,14 +187,14 @@ const result = await syncNotionDatasource({
     },
     generateFrontmatter: (baseFields, metadata, renderContext: RenderContext<FeatureState>) => {
       const { source_url, title, slug, ...rest } = baseFields as Record<string, unknown>;
-      const ext = metadata as PostMetadata & { icon: string; channels?: string[] };
+      const ext = metadata as BlogPostMetadata;
 
       return {
         title,
         slug,
         icon: ext.icon,
         ...rest,
-        channels: ext.channels != null && ext.channels.length > 0 ? ext.channels : undefined,
+        channels: ext.channels.length > 0 ? ext.channels : undefined,
         notion_url: source_url,
         features: {
           katex: renderContext.state.hasKatex ?? false,
