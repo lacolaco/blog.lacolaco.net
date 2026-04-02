@@ -56,7 +56,7 @@ function extractImageUrl($: CheerioAPI, baseUrl: string): string | null {
     $('img').first().attr('src'),
   ];
 
-  const found = candidates.find((c) => c != null);
+  const found = candidates.find(Boolean);
   if (!found) return null;
 
   try {
