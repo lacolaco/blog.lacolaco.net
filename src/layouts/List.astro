@@ -13,7 +13,12 @@ import type { CollectionEntry } from 'astro:content';
 
 type Props = {
   posts: Array<CollectionEntry<'posts'>>;
-  /** urlize済みのフィードパス（例: "/index.xml", "/channels/code.xml"） */
+  /**
+   * urlize済みのフィードパス。呼び出し元でurlize()を適用した完全なパスを渡すこと。
+   * @example "/index.xml"
+   * @example "/channels/code.xml"
+   * @see src/pages/index.astro, src/pages/channels/[channel].astro, src/pages/tags/[tag].astro
+   */
   feedUrl: string;
   showChannels?: boolean;
 };

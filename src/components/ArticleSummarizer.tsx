@@ -62,7 +62,7 @@ function ResultPanel({
 }
 
 function ErrorPanel({
-  className,
+  className = '',
   message,
   failedLabel,
   retryLabel,
@@ -75,7 +75,7 @@ function ErrorPanel({
   onRetry: () => void;
 }) {
   return (
-    <div className={['mt-3 p-4 bg-red-50 border border-red-200 rounded-lg', className].filter(Boolean).join(' ')}>
+    <div className={`mt-3 p-4 bg-red-50 border border-red-200 rounded-lg ${className}`.trim()}>
       <div className="flex items-center gap-2 mb-2">
         <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-red-600" />
         <span className="text-sm font-medium text-red-800">{failedLabel}</span>
