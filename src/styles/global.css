@@ -119,8 +119,21 @@
       @apply text-2xl md:text-3xl pb-[.3em] border-b border-solid border-b-gray-200;
     }
     h2 {
-      /* lg:text-[22px]はmd:text-2xl(24px)を22pxに戻すために必要 */
-      @apply text-[22px] md:text-2xl pb-[.3em] border-b border-solid border-b-gray-200 lg:text-[22px] lg:border-b-0 lg:pb-0 lg:mt-[2em] lg:mb-[0.75em];
+      @apply text-[22px] pb-[.3em] border-b border-solid border-b-gray-200;
+
+      /* タブレット(md)のみ24pxに拡大 */
+      @media (min-width: 768px) and (max-width: 1023px) {
+        font-size: 1.5rem;
+        line-height: 2rem;
+      }
+
+      /* PC: 下線を除去しセクション区切りのmarginに変更 */
+      @media (min-width: 1024px) {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-top: 2em;
+        margin-bottom: 0.75em;
+      }
     }
     h3 {
       @apply text-[19px] md:text-xl;

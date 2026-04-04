@@ -2,10 +2,6 @@
 import { queryChannels } from '@lib/query';
 import { urlize } from 'src/libs/strings';
 
-/**
- * チャンネルナビゲーション。モバイルではpill型、PCではタブ型で描画。
- * class propは意図的に公開しない: レイアウトはモバイル/PC各UIで完結しており、外部からのスタイル注入は不要。
- */
 export interface Props {
   activePath: string;
   /** PC用ナビ内に表示するRSSリンクのURL */

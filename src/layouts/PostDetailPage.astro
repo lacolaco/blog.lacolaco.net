@@ -86,7 +86,7 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
             </span>
             <h1 class="text-2xl font-bold leading-normal mb-1 lg:text-[28px] lg:leading-[1.4] lg:mb-3">{title}</h1>
 
-            {/* モバイル: 従来レイアウト（タグ+ツールバー） */}
+            {/* モバイル: タグ+ツールバー */}
             <div class="py-1 flex items-center justify-between lg:hidden">
               <TagList>
                 {channels && channels.map((ch) => <ChannelBadge name={ch} />)}
@@ -105,7 +105,6 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
                     </a>
                   )
                 }
-                {/* getRelativePostUrl は "/posts/{slug}" 形式（末尾スラッシュなし）を返すため、".md" を直接連結して正しいパスになる */}
                 <a
                   href={`${getRelativePostUrl(entry)}.md`}
                   class="flex items-center px-3 py-2 md:px-2 md:py-0 text-muted hover:text-default hover:bg-gray-100 transition-colors rounded-sm"

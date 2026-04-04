@@ -12,7 +12,6 @@ const urlizedName = urlize(name);
 const color = getChannelByName(name)?.color ?? 'default';
 ---
 
-{/* detailバリアント: 記事詳細ページの本文下タグ表示用。チャンネル固有色ではなく、中立的なデザイントークンで統一する意図的なデザイン判断 */}
 {variant === 'detail' ? (
   <a
     class="text-[14px] leading-[normal] font-medium py-1 px-3 rounded-2xl inline-flex items-center gap-1 border border-solid border-separator text-secondary bg-transparent hover:border-separator-hover hover:bg-surface"
