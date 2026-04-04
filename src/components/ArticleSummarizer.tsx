@@ -18,7 +18,7 @@ function ResultPanel({
   summary: string;
   title: string;
   dismissLabel: string;
-  showTTS: boolean;
+  showTTS?: boolean;
   locale?: string;
   onDismiss: () => void;
 }) {
@@ -77,7 +77,7 @@ function ErrorPanel({
   onRetry: () => void;
 }) {
   return (
-    <div className={`mt-3 p-4 bg-red-50 border border-red-200 rounded-lg ${className ?? ''}`}>
+    <div className={['mt-3 p-4 bg-red-50 border border-red-200 rounded-lg', className].filter(Boolean).join(' ')}>
       <div className="flex items-center gap-2 mb-2">
         <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-red-600" />
         <span className="text-sm font-medium text-red-800">{failedLabel}</span>
@@ -240,14 +240,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         </button>
       )}
       {state === 'result' && (
-        <ResultPanel
-          variant="toolbar"
-          summary={summary}
-          title={t.title}
-          dismissLabel={t.dismiss}
-          showTTS={false}
-          onDismiss={dismiss}
-        />
+        <ResultPanel variant="toolbar" summary={summary} title={t.title} dismissLabel={t.dismiss} onDismiss={dismiss} />
       )}
       {state === 'error' && (
         <ErrorPanel
