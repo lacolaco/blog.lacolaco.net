@@ -42,7 +42,7 @@ const postsByYear = Array.from(
     <Header showDescription />
 
     {/* ChannelNav: 1回だけ描画。モバイルではRSSアイコンと横並び、PCではMainContainer外のstickyナビ */}
-    <div class="flex flex-row items-center justify-between px-4 md:px-0 md:mx-[1rem] lg:mx-0 lg:px-0 mb-6 lg:mb-0 max-w-(--breakpoint-lg) lg:max-w-none lg:mx-auto">
+    <div class="flex flex-row items-center justify-between px-4 md:px-0 md:mx-[1rem] lg:px-0 mb-6 lg:mb-0 max-w-(--breakpoint-lg) lg:max-w-none lg:mx-auto">
       <slot name="title" />
       <a
         href={urlize(feedUrl)}

@@ -138,7 +138,7 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
                 <span class="icon-[simple-icons--markdown] inline-block w-4 h-4"></span>
                 Markdown
               </a>
-              <ArticleSummarizer locale={locale || 'ja'} variant="toolbar" client:visible />
+              <ArticleSummarizer locale={locale || 'ja'} variant="toolbar" client:idle />
             </div>
 
             {/* モバイル: AI要約（従来配置）。PC用はツールバー内に統合済み */}
