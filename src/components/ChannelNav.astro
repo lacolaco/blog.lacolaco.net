@@ -3,7 +3,9 @@ import { queryChannels } from '@lib/query';
 import { urlize } from 'src/libs/strings';
 
 export interface Props {
+  class?: string;
   activePath: string;
+  /** PC用ナビ内に表示するRSSリンクのURL */
   feedUrl?: string;
 }
 
