@@ -7,7 +7,8 @@ type State = 'hidden' | 'ready' | 'loading' | 'result' | 'error';
 
 interface Props {
   locale: string;
-  variant?: 'default' | 'toolbar';
+  /** PC用ツールバーUIを含めるか（レスポンシブ切替） */
+  includeToolbar?: boolean;
 }
 
 const i18n = {
@@ -42,7 +43,7 @@ function getArticleContent(): string {
   return content;
 }
 
-export default function ArticleSummarizer({ locale, variant = 'default' }: Props) {
+export default function ArticleSummarizer({ locale, includeToolbar = false }: Props) {
   const [state, setState] = useState<State>('hidden');
   const [isDownloadable, setIsDownloadable] = useState(false);
   const [summary, setSummary] = useState('');
@@ -117,79 +118,68 @@ export default function ArticleSummarizer({ locale, variant = 'default' }: Props
     return null;
   }
 
-  // ツールバーモード: ボタンはflex row内、結果パネルはbasis-fullで次行に展開
-  if (variant === 'toolbar') {
-    return (
-      <>
-        {/* ツールバーボタン */}
-        {state === 'ready' && (
-          <button
-            type="button"
-            onClick={handleSummarize}
-            className="flex items-center gap-1 text-tertiary px-2 py-1 rounded text-[13px] hover:bg-surface hover:text-secondary cursor-pointer border-0 bg-transparent"
-          >
-            <span className="icon-[mdi--star] inline-block w-4 h-4" />
-            {t.title}
-            {isDownloadable && <span className="text-[11px] text-tertiary ml-0.5">{t.requiresDownload}</span>}
-          </button>
-        )}
-        {state === 'loading' && (
-          <span className="flex items-center gap-1 text-tertiary px-2 py-1 text-[13px]">
-            <span className="icon-[mdi--loading] inline-block w-4 h-4 animate-spin" />
-            {t.generating}
-          </span>
-        )}
-        {(state === 'result' || state === 'error') && (
-          <button
-            type="button"
-            onClick={handleSummarize}
-            className="flex items-center gap-1 text-tertiary px-2 py-1 rounded text-[13px] hover:bg-surface hover:text-secondary cursor-pointer border-0 bg-transparent"
-          >
-            <span className="icon-[mdi--star] inline-block w-4 h-4" />
-            {t.title}
-          </button>
-        )}
-        {/* 結果パネル: basis-fullでflex-wrap改行 */}
-        {state === 'result' && (
-          <div className="basis-full mt-2.5 p-3 px-4 bg-surface border border-medium rounded-lg">
-            <div className="flex items-center justify-between mb-1.5">
-              <span className="text-[13px] font-semibold text-secondary">{t.title}</span>
-              <button
-                type="button"
-                onClick={() => setState('ready')}
-                className="text-xs text-tertiary hover:text-secondary cursor-pointer border-0 bg-transparent p-0"
-              >
-                {t.dismiss}
-              </button>
-            </div>
-            <p className="text-sm leading-[1.8] text-body-text m-0">{summary}</p>
-            {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
-          </div>
-        )}
-        {state === 'error' && (
-          <div className="basis-full mt-2.5 p-3 px-4 bg-red-50 border border-red-200 rounded-lg">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-red-600" />
-              <span className="text-sm font-medium text-red-800">{t.failed}</span>
-            </div>
-            <p className="text-xs text-red-600">{errorMessage}</p>
+  // ツールバーUI（PC用、includeToolbar=trueの場合のみ描画）
+  const toolbarUI = includeToolbar ? (
+    <>
+      {state === 'ready' && (
+        <button
+          type="button"
+          onClick={handleSummarize}
+          className="flex items-center gap-1 text-tertiary px-2 py-1 rounded text-[13px] hover:bg-surface hover:text-secondary cursor-pointer border-0 bg-transparent"
+        >
+          <span className="icon-[mdi--star] inline-block w-4 h-4" />
+          {t.title}
+          {isDownloadable && <span className="text-[11px] text-tertiary ml-0.5">{t.requiresDownload}</span>}
+        </button>
+      )}
+      {state === 'loading' && (
+        <span className="flex items-center gap-1 text-tertiary px-2 py-1 text-[13px]">
+          <span className="icon-[mdi--loading] inline-block w-4 h-4 animate-spin" />
+          {t.generating}
+        </span>
+      )}
+      {(state === 'result' || state === 'error') && (
+        <button
+          type="button"
+          onClick={handleSummarize}
+          className="flex items-center gap-1 text-tertiary px-2 py-1 rounded text-[13px] hover:bg-surface hover:text-secondary cursor-pointer border-0 bg-transparent"
+        >
+          <span className="icon-[mdi--star] inline-block w-4 h-4" />
+          {t.title}
+        </button>
+      )}
+      {state === 'result' && (
+        <div className="basis-full mt-2.5 p-3 px-4 bg-surface border border-medium rounded-lg">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[13px] font-semibold text-secondary">{t.title}</span>
             <button
               type="button"
-              onClick={handleSummarize}
-              className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer"
+              onClick={() => setState('ready')}
+              className="text-xs text-tertiary hover:text-secondary cursor-pointer border-0 bg-transparent p-0"
             >
-              {t.retry}
+              {t.dismiss}
             </button>
           </div>
-        )}
-      </>
-    );
-  }
+          <p className="text-sm leading-[1.8] text-body-text m-0">{summary}</p>
+          {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
+        </div>
+      )}
+      {state === 'error' && (
+        <div className="basis-full mt-2.5 p-3 px-4 bg-red-50 border border-red-200 rounded-lg">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-red-600" />
+            <span className="text-sm font-medium text-red-800">{t.failed}</span>
+          </div>
+          <p className="text-xs text-red-600">{errorMessage}</p>
+          <button type="button" onClick={handleSummarize} className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer">{t.retry}</button>
+        </div>
+      )}
+    </>
+  ) : null;
 
-  // デフォルトモード
-  return (
-    <div className="mt-2">
-      {/* ボタン */}
+  // デフォルトUI（モバイル用）
+  const defaultUI = (
+    <div className={includeToolbar ? 'mt-2 lg:hidden' : 'mt-2'}>
       {state === 'ready' && (
         <div className="flex items-center">
           <button
@@ -203,8 +193,6 @@ export default function ArticleSummarizer({ locale, variant = 'default' }: Props
           {isDownloadable && <span className="text-xs text-muted ml-2">{t.requiresDownload}</span>}
         </div>
       )}
-
-      {/* ローディング（ボタンと同じ高さ） */}
       {state === 'loading' && (
         <div className="flex items-center">
           <span className="inline-flex items-center gap-x-1 px-3 py-2 text-xs text-blue-600 border border-blue-300 rounded-full">
@@ -213,8 +201,6 @@ export default function ArticleSummarizer({ locale, variant = 'default' }: Props
           </span>
         </div>
       )}
-
-      {/* 結果 */}
       {state === 'result' && (
         <div className="mt-2 p-4 bg-blue-50 border border-blue-200 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
@@ -222,21 +208,10 @@ export default function ArticleSummarizer({ locale, variant = 'default' }: Props
             <span className="text-sm font-medium text-blue-800">{t.title}</span>
           </div>
           <div className="text-sm text-gray-700 leading-relaxed">{summary}</div>
-
-          {/* TTS コントロール（ストリーミング完了後のみ表示） */}
           {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
-
-          <button
-            type="button"
-            onClick={() => setState('ready')}
-            className="mt-2 text-xs text-muted hover:text-default hover:underline cursor-pointer"
-          >
-            {t.dismiss}
-          </button>
+          <button type="button" onClick={() => setState('ready')} className="mt-2 text-xs text-muted hover:text-default hover:underline cursor-pointer">{t.dismiss}</button>
         </div>
       )}
-
-      {/* エラー */}
       {state === 'error' && (
         <div className="mt-3 p-4 bg-red-50 border border-red-200 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
@@ -244,15 +219,16 @@ export default function ArticleSummarizer({ locale, variant = 'default' }: Props
             <span className="text-sm font-medium text-red-800">{t.failed}</span>
           </div>
           <p className="text-xs text-red-600">{errorMessage}</p>
-          <button
-            type="button"
-            onClick={handleSummarize}
-            className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer"
-          >
-            {t.retry}
-          </button>
+          <button type="button" onClick={handleSummarize} className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer">{t.retry}</button>
         </div>
       )}
     </div>
+  );
+
+  return (
+    <>
+      {toolbarUI}
+      {defaultUI}
+    </>
   );
 }

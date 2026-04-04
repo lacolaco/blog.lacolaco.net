@@ -4,6 +4,7 @@
 
 /* ─── PC Layout（レイヤー外で最優先） ─── */
 @media (min-width: 1024px) {
+  /* モバイルはブラウザデフォルト（subpixel）を維持し、PCのみantialiasedに変更 */
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
