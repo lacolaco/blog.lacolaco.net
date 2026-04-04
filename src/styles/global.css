@@ -55,6 +55,7 @@
   --color-hover-link: #2563eb;
   --color-text-separator: #d1d5db;
   --color-text-body: #374151;
+  --color-bg-hover: #f0f1f3;
 
   /* Notion tag colors */
   --color-tag-text: var(--color-text-default);

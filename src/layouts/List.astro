@@ -42,7 +42,9 @@ const postsByYear = Array.from(
   <body class="font-base bg-default text-default">
     <Header showDescription />
 
-    {/* PC用: ChannelNavはMainContainer外のstickyナビとして表示。モバイル用と重複するためPC非表示時はaria-hidden */}
+    {/* PC用: ChannelNavはMainContainer外のstickyナビとして表示。
+        モバイル用と重複するが、各ブレークポイントでdisplay:noneにより非表示側はスクリーンリーダーからも除外される。
+        注意: set:htmlはAstro Island hydrationを迂回する。スロットにclient:*付きコンポーネントを渡さないこと */}
     <div class="hidden lg:block" set:html={titleSlotHtml} />
 
 
