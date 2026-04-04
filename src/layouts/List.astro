@@ -19,7 +19,6 @@ type Props = {
 };
 
 const { posts, feedUrl, showChannels = false } = Astro.props;
-const titleSlotHtml = await Astro.slots.render('title');
 const postsByYear = Array.from(
   posts
     .reduce((acc, post) => {
@@ -42,25 +41,21 @@ const postsByYear = Array.from(
   <body class="font-base bg-default text-default">
     <Header showDescription />
 
-    {/* PC用: ChannelNavはMainContainer外のstickyナビとして表示。
-        モバイル用と重複するが、各ブレークポイントでdisplay:noneにより非表示側はスクリーンリーダーからも除外される。
-        注意: set:htmlはAstro Island hydrationを迂回する。スロットにclient:*付きコンポーネントを渡さないこと */}
-    <div class="hidden lg:block" set:html={titleSlotHtml} />
-
+    {/* ChannelNav: 1回だけ描画。モバイルではRSSアイコンと横並び、PCではMainContainer外のstickyナビ */}
+    <div class="flex flex-row items-center justify-between px-4 md:px-0 md:mx-[1rem] lg:mx-0 lg:px-0 mb-6 lg:mb-0 max-w-(--breakpoint-lg) lg:max-w-none lg:mx-auto">
+      <slot name="title" />
+      <a
+        href={urlize(feedUrl)}
+        title="RSS Feed"
+        target="_blank"
+        class="flex flex-row items-center text-default rounded-sm leading-0 p-1 hover:ring-2 hover:ring-gray-300 hover:text-muted lg:hidden"
+      >
+        <span class="text-[24px] icon-[material-symbols--rss-feed-rounded]"></span>
+      </a>
+    </div>
 
     <MainContainer>
       <div class="py-8 lg:py-0">
-        <div class="flex flex-row items-center justify-between mb-6 lg:hidden">
-          <div set:html={titleSlotHtml} />
-          <a
-            href={urlize(feedUrl)}
-            title="RSS Feed"
-            target="_blank"
-            class="flex flex-row items-center text-default rounded-sm leading-0 p-1 hover:ring-2 hover:ring-gray-300 hover:text-muted"
-          >
-            <span class="text-[24px] icon-[material-symbols--rss-feed-rounded]"></span>
-          </a>
-        </div>
 
         <div>
           {
