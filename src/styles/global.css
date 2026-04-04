@@ -9,7 +9,7 @@
     -moz-osx-font-smoothing: grayscale;
   }
   body {
-    background: #fff;
+    background: var(--color-bg-page);
   }
 }
 
@@ -45,6 +45,7 @@
   --color-bg-muted: #f6f8fa;
   --color-bg-subtle: #f6f8fa;
   --color-bg-surface: #fafbfc;
+  --color-bg-page: #ffffff;
 
   /* デザイントークン */
   --color-text-secondary: #6b7280;
