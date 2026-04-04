@@ -4,7 +4,7 @@ import { urlize } from '../libs/strings';
 
 export interface Props {
   name: string;
-  variant?: 'default' | 'detail';
+  variant?: 'default' | 'detail' | 'list';
 }
 
 const { name, variant = 'default' } = Astro.props;
@@ -19,6 +19,12 @@ const color = getChannelByName(name)?.color ?? 'default';
   >
     <span class="icon-[material-symbols--rss-feed-rounded] text-[12px] opacity-60"></span>{name}
   </a>
+) : variant === 'list' ? (
+  <a
+    style={`--ch-color: var(--color-tag-text-${color});`}
+    class="text-xs lg:text-[12px] font-medium text-[var(--ch-color)] lg:no-underline hover:text-secondary lg:hover:no-underline"
+    href={`/channels/${urlizedName}`}
+  >{name}</a>
 ) : (
   <a
     style={`--color-channel: var(--color-tag-text-${color}); --color-channel-border: var(--color-tag-bg-${color});`}
