@@ -3,12 +3,11 @@ import { queryChannels } from '@lib/query';
 import { urlize } from 'src/libs/strings';
 
 export interface Props {
-  class?: string;
   activePath: string;
   feedUrl?: string;
 }
 
-const { class: className, activePath, feedUrl } = Astro.props;
+const { activePath, feedUrl } = Astro.props;
 
 const channels = queryChannels();
 const items = [
@@ -22,7 +21,6 @@ const items = [
 
 {/* モバイル: pill型ナビ */}
 <div
-  class:list={className}
   class="flex flex-row gap-x-2 h-[34px] text-xs font-semibold overflow-x-auto lg:hidden"
 >
   {
