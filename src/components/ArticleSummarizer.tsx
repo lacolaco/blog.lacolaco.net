@@ -148,7 +148,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         >
           {summary}
         </div>
-        {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
+        {isStreamingComplete && (!includeToolbar || isToolbar) && <TTSControls text={summary} locale={locale} />}
         {!isToolbar && (
           <button
             type="button"
