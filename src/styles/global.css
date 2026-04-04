@@ -100,15 +100,6 @@
   .markdown-body {
     @apply font-base leading-[1.8] md:leading-loose;
 
-    /* PC: base layerで全リンクがcolor:inheritにリセットされるため、記事本文内のリンクを復元 */
-    a {
-      color: var(--color-text-accent);
-      text-decoration: none;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-
     & > *:first-child {
       @apply mt-0;
     }

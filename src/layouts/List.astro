@@ -91,7 +91,7 @@ const postsByYear = Array.from(
                                   <a
                                     href={`/channels/${urlize(ch)}`}
                                     style={`--ch-color: var(--color-tag-text-${chColor});`}
-                                    class="text-xs lg:text-[12px] font-medium text-[var(--ch-color)] lg:text-tertiary hover:text-secondary"
+                                    class="text-xs lg:text-[12px] font-medium text-[var(--ch-color)] lg:text-tertiary lg:no-underline hover:text-secondary lg:hover:no-underline"
                                   >{ch}</a>
                                 </>
                                 );
@@ -99,7 +99,7 @@ const postsByYear = Array.from(
                             </div>
                           )}
                         </div>
-                        <a href={getRelativePostUrl(post)} class="text-lg lg:text-[18px] font-semibold lg:font-bold leading-normal lg:leading-[1.45] text-default underline lg:no-underline hover:text-gray-500 lg:hover:text-hover-link group-hover:lg:text-hover-link transition-colors duration-100 lg:after:absolute lg:after:inset-0 lg:after:content-['']">
+                        <a href={getRelativePostUrl(post)} class="text-lg lg:text-[18px] font-semibold lg:font-bold leading-normal lg:leading-[1.45] text-default underline lg:no-underline hover:text-gray-500 lg:hover:text-hover-link lg:hover:no-underline group-hover:lg:text-hover-link transition-colors duration-100 lg:after:absolute lg:after:inset-0 lg:after:content-['']">
                           {getTitle(post)}
                           {post.data.locale === 'en' && (
                             <span class="inline-block text-[10px] font-bold text-white bg-blue-500 py-px px-1.5 rounded-[3px] ml-1.5 align-middle">EN</span>

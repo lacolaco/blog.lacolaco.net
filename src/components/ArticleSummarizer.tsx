@@ -18,8 +18,8 @@ function ResultPanel({
   summary: string;
   title: string;
   dismissLabel: string;
-  showTTS?: boolean;
-  locale?: string;
+  showTTS: boolean;
+  locale: string;
   onDismiss: () => void;
 }) {
   const isToolbar = variant === 'toolbar';
@@ -49,7 +49,7 @@ function ResultPanel({
       <div className={isToolbar ? 'text-sm leading-[1.8] text-body-text m-0' : 'text-sm text-gray-700 leading-relaxed'}>
         {summary}
       </div>
-      {showTTS && locale && <TTSControls text={summary} locale={locale} />}
+      {showTTS && <TTSControls text={summary} locale={locale} />}
       {!isToolbar && (
         <button
           type="button"
@@ -240,7 +240,15 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         </button>
       )}
       {state === 'result' && (
-        <ResultPanel variant="toolbar" summary={summary} title={t.title} dismissLabel={t.dismiss} onDismiss={dismiss} />
+        <ResultPanel
+          variant="toolbar"
+          summary={summary}
+          title={t.title}
+          dismissLabel={t.dismiss}
+          showTTS={false}
+          locale={locale}
+          onDismiss={dismiss}
+        />
       )}
       {state === 'error' && (
         <ErrorPanel
