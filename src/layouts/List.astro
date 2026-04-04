@@ -3,12 +3,10 @@ import { getDate, getTitle, getRelativePostUrl, getChannels } from '../libs/comp
 import { format as formatDate } from 'date-fns';
 import { urlize } from 'src/libs/strings';
 import BaseHead from '../components/BaseHead.astro';
-import ChannelBadge from '../components/ChannelBadge.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate';
 import Header from '../components/Header.astro';
 import MainContainer from '../components/MainContainer.astro';
-import TagList from '../components/TagList.astro';
 import { SITE_TITLE } from '../consts';
 import type { CollectionEntry } from 'astro:content';
 
@@ -79,47 +77,21 @@ const postsByYear = Array.from(
                     const postChannels = showChannels ? getChannels(post) : [];
                     return (
                     <li class="my-4 lg:my-0">
-                      {/* モバイル: 従来レイアウト */}
-                      <div class="flex flex-col items-start leading-none lg:hidden">
-                        <FormattedDate className="text-xs text-muted align-middle" date={getDate(post)} />
-                        <div class="flex flex-row items-center gap-2">
-                          <a class="no-underline" href={getRelativePostUrl(post)}>
-                            <span class="text-lg text-default font-semibold underline hover:text-gray-500">
-                              {getTitle(post)}
-                            </span>
-                          </a>
-                          {post.data.locale === 'en' && (
-                            <span class="leading-relaxed text-xs inline-block px-2 rounded-sm bg-blue-500 text-white font-semibold" title="English">
-                              🌐{' '}{post.data.locale}
-                            </span>
-                          )}
-                        </div>
-                        {postChannels.length > 0 && (
-                          <div class="mt-1">
-                            <TagList>
-                              {postChannels.map((ch) => (
-                                <ChannelBadge name={ch} />
-                              ))}
-                            </TagList>
-                          </div>
-                        )}
-                      </div>
-                      {/* PC: 2行構成。記事全体をクリック可能にしつつチャンネルは個別リンク */}
-                      <div class="hidden lg:block relative py-[18px] border-b border-light group">
-                        <div class="flex items-center gap-2 mb-[3px]">
-                          <FormattedDate className="text-[13px] text-secondary" date={getDate(post)} />
+                      <div class="relative lg:py-[18px] lg:border-b lg:border-light group">
+                        <div class="flex flex-col items-start leading-none lg:flex-row lg:items-center lg:gap-2 lg:mb-[3px] lg:leading-[normal]">
+                          <FormattedDate className="text-xs text-muted lg:text-[13px] lg:text-secondary" date={getDate(post)} />
                           {postChannels.length > 0 && (
-                            <div class="ml-auto flex items-center gap-1 relative z-10">
+                            <div class="mt-1 lg:mt-0 lg:ml-auto flex items-center gap-1 relative z-10">
                               {postChannels.map((ch, i) => (
                                 <>
-                                  {i > 0 && <span class="text-[10px] text-separator">/</span>}
-                                  <a href={`/channels/${urlize(ch)}`} class="text-[12px] font-medium text-tertiary hover:text-secondary">{ch}</a>
+                                  {i > 0 && <span class="hidden lg:inline text-[10px] text-separator">/</span>}
+                                  <a href={`/channels/${urlize(ch)}`} class="text-xs lg:text-[12px] font-medium text-tertiary hover:text-secondary">{ch}</a>
                                 </>
                               ))}
                             </div>
                           )}
                         </div>
-                        <a href={getRelativePostUrl(post)} class="text-[18px] font-bold leading-[1.45] text-default group-hover:text-hover-link transition-colors duration-100 after:absolute after:inset-0 after:content-['']">
+                        <a href={getRelativePostUrl(post)} class="text-lg lg:text-[18px] font-semibold lg:font-bold leading-normal lg:leading-[1.45] text-default underline lg:no-underline hover:text-gray-500 lg:hover:text-hover-link group-hover:lg:text-hover-link transition-colors duration-100 lg:after:absolute lg:after:inset-0 lg:after:content-['']">
                           {getTitle(post)}
                           {post.data.locale === 'en' && (
                             <span class="inline-block text-[10px] font-bold text-white bg-blue-500 py-px px-1.5 rounded-[3px] ml-1.5 align-middle">EN</span>
