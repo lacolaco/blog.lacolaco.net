@@ -12,12 +12,10 @@ import type { CollectionEntry } from 'astro:content';
 
 type Props = {
   posts: Array<CollectionEntry<'posts'>>;
-  /** urlize済みのフィードパス（例: "/index.xml", "/channels/code.xml"） */
-  feedUrl: string;
   showChannels?: boolean;
 };
 
-const { posts, feedUrl, showChannels = false } = Astro.props;
+const { posts, showChannels = false } = Astro.props;
 const postsByYear = Array.from(
   posts
     .reduce((acc, post) => {
@@ -40,18 +38,8 @@ const postsByYear = Array.from(
   <body class="font-base bg-default text-default">
     <Header showDescription />
 
-    {/* ChannelNav: 1回だけ描画。モバイルではRSSアイコンと横並び、PCではMainContainer外のstickyナビ */}
-    <div class="flex flex-row items-center justify-between px-4 md:px-0 md:mx-[1rem] mb-6 max-w-(--breakpoint-lg) lg:block lg:max-w-none lg:mx-0 lg:px-0 lg:mb-0">
+    <div class="lg:block lg:max-w-none lg:mx-0 lg:px-0 lg:mb-0">
       <slot name="title" />
-      <a
-        href={feedUrl}
-        title="RSS Feed"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="flex flex-row items-center text-default rounded-sm leading-0 p-1 hover:ring-2 hover:ring-gray-300 hover:text-muted lg:hidden"
-      >
-        <span class="text-[24px] icon-[material-symbols--rss-feed-rounded]"></span>
-      </a>
     </div>
 
     <MainContainer>
@@ -62,37 +50,30 @@ const postsByYear = Array.from(
             postsByYear.map(([year, posts], index) => (
               <div>
                 {index > 0 && (
-                  <>
-                    {/* モバイル: 年区切り */}
-                    <div class="my-2 text-center text-sm leading-none before:block before:h-[1px] before:bg-gray-300 before:translate-y-[0.5em] lg:hidden">
-                      <span class="inline-block font-semibold text-muted bg-white px-2 relative z-10">{year}</span>
-                    </div>
-                    {/* PC: 年区切り */}
-                    <div class="hidden lg:flex lg:items-center lg:gap-3 lg:pt-7 lg:pb-2 after:content-[''] after:flex-1 after:h-px after:bg-[var(--color-border-medium)]">
-                      <span class="text-[14px] leading-[normal] font-bold text-tertiary">{year}</span>
-                    </div>
-                  </>
+                  <div class="flex items-center gap-3 py-2 lg:pt-7 lg:pb-2 after:content-[''] after:flex-1 after:h-px after:bg-[var(--color-border-medium)]">
+                    <span class="text-[14px] leading-[normal] font-bold text-tertiary">{year}</span>
+                  </div>
                 )}
                 <ul class="list-none">
                   {posts.map((post) => {
                     const postChannels = showChannels ? getChannels(post) : [];
                     return (
-                      <li class="my-4 lg:my-0">
-                        <div class="relative lg:py-[18px] lg:border-b lg:border-light group">
-                          <div class="flex flex-col items-start leading-none lg:flex-row lg:items-center lg:gap-2 lg:mb-[3px] lg:leading-[normal]">
-                            <FormattedDate className="text-xs text-muted lg:text-[13px] lg:text-secondary" date={getDate(post)} />
+                      <li class="[&+&]:border-t [&+&]:border-[var(--color-border-light)] lg:[&+&]:border-t-0">
+                        <div class="relative py-4 lg:py-[18px] lg:border-b lg:border-light group">
+                          <div class="flex items-center gap-2 mb-1 leading-none lg:mb-[3px] lg:leading-[normal]">
+                            <FormattedDate className="text-[13px] text-muted lg:text-[13px] lg:text-secondary" date={getDate(post)} />
                             {postChannels.length > 0 && (
-                              <div class="mt-1 lg:mt-0 lg:ml-auto flex items-center gap-1 relative z-10">
+                              <div class="flex items-center gap-1 lg:ml-auto relative z-10">
                                 {postChannels.map((ch, i) => (
                                   <>
-                                    {i > 0 && <span class="hidden lg:inline text-[10px] text-separator">/</span>}
+                                    {i > 0 && <span class="text-[10px] text-[var(--color-text-separator)]">/</span>}
                                     <ChannelBadge name={ch} variant="list" />
                                   </>
                                 ))}
                               </div>
                             )}
                           </div>
-                          <a href={getRelativePostUrl(post)} class="text-lg lg:text-[18px] font-semibold lg:font-bold leading-normal lg:leading-[1.45] text-default underline lg:no-underline hover:text-gray-500 lg:hover:text-hover-link lg:hover:no-underline lg:group-hover:text-hover-link transition-colors duration-100 lg:after:absolute lg:after:inset-0 lg:after:content-['']">
+                          <a href={getRelativePostUrl(post)} class="text-base lg:text-[18px] font-semibold lg:font-bold leading-[1.5] lg:leading-[1.45] text-default no-underline hover:text-muted lg:hover:text-hover-link lg:hover:no-underline lg:group-hover:text-hover-link transition-colors duration-100 lg:after:absolute lg:after:inset-0 lg:after:content-['']">
                             {getTitle(post)}
                             {post.data.locale === 'en' && (
                               <span class="inline-block text-[10px] font-bold text-white bg-blue-500 py-px px-1.5 rounded-[3px] ml-1.5 align-middle">EN</span>

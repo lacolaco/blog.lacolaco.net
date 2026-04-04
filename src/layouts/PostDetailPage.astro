@@ -65,95 +65,67 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
 
     <MainContainer>
       <article class="pt-4 pb-10 lg:pt-10 lg:pb-12">
-        <header class="mb-3 lg:mb-8 lg:pb-5 lg:border-b lg:border-light">
+        <header class="mb-[32px] lg:mb-8">
           <div class="leading-none">
-            <span class="text-sm text-muted lg:text-[13px] lg:text-secondary lg:mb-2 lg:block lg:leading-[normal]">
-              {
-                published === false && (
-                  <div class="flex bg-gray-600 text-white justify-center py-1 mt-2">
-                    <span class="text-sm">DRAFT</span>
-                  </div>
-                )
-              }
-              <FormattedDate date={created_time} />
-              {
-                isUpdated && (
-                  <span class="text-sm text-muted">
-                    (Updated at: <FormattedDate date={last_edited_time} />)
-                  </span>
-                )
-              }
-            </span>
-            <h1 class="text-2xl font-bold leading-normal mb-1 lg:text-[28px] lg:leading-[1.4] lg:mb-3">{title}</h1>
+            {
+              published === false && (
+                <div class="flex bg-gray-600 text-white justify-center py-1 mt-2 mb-2">
+                  <span class="text-sm">DRAFT</span>
+                </div>
+              )
+            }
+            <h1 class="text-[20px] font-bold leading-[30px] mb-2 lg:text-[28px] lg:leading-[1.4] lg:mb-3">{title}</h1>
 
-            {/* モバイル: タグ+ツールバー */}
-            <div class="py-1 flex items-center justify-between lg:hidden">
-              <TagList>
-                {channels && channels.map((ch) => <ChannelBadge name={ch} />)}
-                {tags && tags.map((tag) => <Tag name={tag} />)}
-              </TagList>
-              <div class="flex items-center gap-1">
+            {/* PC/SP共通: 日付+ツール（チャンネル/タグはボトムのみ） */}
+            <div class="flex items-center justify-between mb-6 lg:mb-6">
+              <span class="text-xs lg:text-[13px] text-muted lg:text-secondary leading-[normal]">
+                <FormattedDate date={created_time} />
+                {
+                  isUpdated && (
+                    <span class="text-muted">
+                      (Updated: <FormattedDate date={last_edited_time} />)
+                    </span>
+                  )
+                }
+              </span>
+              <div class="flex items-center gap-0.5">
                 {
                   alternatePost && (
                     <a
                       href={getRelativePostUrl(alternatePost)}
-                      class="flex items-center px-3 py-2 md:px-2 md:py-0 text-muted hover:text-default hover:bg-gray-100 transition-colors rounded-sm"
+                      class="flex items-center gap-1 p-1.5 lg:px-2 lg:py-1 rounded text-muted lg:text-tertiary text-[13px] leading-[normal] no-underline hover:text-default lg:hover:text-secondary hover:bg-gray-50 lg:hover:bg-surface transition-colors"
                       title={`Read in ${alternatePost.data.locale === 'en' ? 'English' : '日本語'}`}
-                      aria-label={`Read in ${alternatePost.data.locale === 'en' ? 'English' : '日本語'}`}
                     >
-                      <span class="icon-[mdi--translate] inline-block w-6 h-6" />
+                      <span class="icon-[mdi--translate] inline-block w-5 h-5 lg:w-4 lg:h-4" />
+                      <span class="hidden lg:inline">{alternatePost.data.locale === 'en' ? 'English' : '日本語'}</span>
                     </a>
                   )
                 }
                 <a
                   href={`${getRelativePostUrl(entry)}.md`}
-                  class="flex items-center px-3 py-2 md:px-2 md:py-0 text-muted hover:text-default hover:bg-gray-100 transition-colors rounded-sm"
+                  class="flex items-center gap-1 p-1.5 lg:px-2 lg:py-1 rounded text-muted lg:text-tertiary text-[13px] leading-[normal] no-underline hover:text-default lg:hover:text-secondary hover:bg-gray-50 lg:hover:bg-surface transition-colors"
                   title="View as Markdown"
-                  aria-label="View as Markdown"
                 >
-                  <span class="icon-[simple-icons--markdown] inline-block w-6 h-6"></span>
+                  <span class="icon-[simple-icons--markdown] inline-block w-5 h-5 lg:w-4 lg:h-4"></span>
+                  <span class="hidden lg:inline">Markdown</span>
                 </a>
               </div>
-            </div>
-
-            {/* PC: ツールバー（翻訳/Markdown）。AI要約はArticleSummarizer内でレスポンシブ描画 */}
-            <div class="hidden lg:flex lg:items-center lg:gap-0.5 lg:mb-2.5">
-              {
-                alternatePost && (
-                  <a
-                    href={getRelativePostUrl(alternatePost)}
-                    class="flex items-center gap-1 text-tertiary no-underline py-1 px-2 rounded text-[13px] leading-[normal] hover:bg-surface hover:text-secondary hover:no-underline cursor-pointer"
-                    title={`Read in ${alternatePost.data.locale === 'en' ? 'English' : '日本語'}`}
-                  >
-                    <span class="icon-[mdi--translate] inline-block w-4 h-4" />
-                    {alternatePost.data.locale === 'en' ? 'English' : '日本語'}
-                  </a>
-                )
-              }
-              <a
-                href={`${getRelativePostUrl(entry)}.md`}
-                class="flex items-center gap-1 text-tertiary no-underline py-1 px-2 rounded text-[13px] leading-[normal] hover:bg-surface hover:text-secondary hover:no-underline cursor-pointer"
-                title="View as Markdown"
-              >
-                <span class="icon-[simple-icons--markdown] inline-block w-4 h-4"></span>
-                Markdown
-              </a>
             </div>
             <ArticleSummarizer locale={locale || 'ja'} includeToolbar client:idle />
           </div>
         </header>
 
-        <div class="markdown-body mb-4">
+        <div class="markdown-body">
           <Content />
         </div>
 
-        {/* PC: タグを本文下・シェアボタン上に配置 */}
-        <div class="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-1.5 lg:mt-10 lg:pt-6 lg:border-t lg:border-medium">
+        {/* PC/SP共通: タグを本文下に配置 */}
+        <div class="flex flex-wrap items-center gap-1.5 mt-[32px] lg:mt-10">
           {channels && channels.map((ch) => <ChannelBadge name={ch} variant="detail" />)}
           {tags && tags.map((tag) => <Tag name={tag} variant="detail" />)}
         </div>
 
-        <div class="mt-8 lg:mt-6">
+        <div class="mt-[32px] lg:mt-6">
           <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
         </div>
 

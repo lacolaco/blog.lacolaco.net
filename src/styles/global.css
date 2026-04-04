@@ -98,7 +98,7 @@
 
 @layer components {
   .markdown-body {
-    @apply font-base leading-[1.8] md:leading-loose;
+    @apply font-base leading-[2] md:leading-loose;
 
     & > *:first-child {
       @apply mt-0;
@@ -113,13 +113,13 @@
     h4,
     h5,
     h6 {
-      @apply mt-4 mb-3 md:mt-6 md:mb-4 font-semibold leading-tight;
+      @apply mt-[48px] mb-[15px] md:mt-6 md:mb-4 font-semibold leading-tight;
     }
     h1 {
-      @apply text-2xl md:text-3xl pb-[.3em] border-b border-solid border-b-gray-200;
+      @apply text-2xl md:text-3xl;
     }
     h2 {
-      @apply text-[22px] pb-[.3em] border-b border-solid border-b-gray-200;
+      @apply text-[20px] font-semibold mt-[48px] mb-[15px];
 
       /* タブレット(md)のみ24pxに拡大 */
       @media (min-width: 768px) and (max-width: 1023px) {
@@ -127,10 +127,9 @@
         line-height: 2rem;
       }
 
-      /* PC: 下線を除去しセクション区切りのmarginに変更 */
+      /* PC: 22pxに変更、マージン拡大 */
       @media (min-width: 1024px) {
-        border-bottom: none;
-        padding-bottom: 0;
+        font-size: 22px;
         margin-top: 2em;
         margin-bottom: 0.75em;
       }
@@ -157,7 +156,7 @@
     pre,
     details,
     figure {
-      @apply mt-0 mb-3 md:mb-4;
+      @apply mt-0 mb-[30px] md:mb-4;
     }
 
     details {

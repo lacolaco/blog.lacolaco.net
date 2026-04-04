@@ -20,9 +20,9 @@ const items = [
 ];
 ---
 
-{/* モバイル: pill型ナビ */}
-<div
-  class="flex flex-row gap-x-2 h-[34px] text-xs font-semibold overflow-x-auto lg:hidden"
+{/* モバイル: pill型ナビ（note.com準拠: 34px高, 20px radius, 12px/600） */}
+<nav
+  class="flex flex-row gap-2 items-center py-3 px-4 overflow-x-auto lg:hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
 >
   {
     items.map((item) => {
@@ -31,8 +31,10 @@ const items = [
         <a
           href={item.path}
           class:list={[
-            'flex items-center px-3 py-2 rounded-2xl border border-solid border-gray-300 leading-none whitespace-nowrap shrink-0',
-            isActive ? 'bg-gray-500 text-white' : 'text-default bg-transparent hover:bg-gray-100',
+            'flex items-center h-[34px] px-3 text-xs font-semibold rounded-[20px] border border-solid leading-[12px] whitespace-nowrap shrink-0',
+            isActive
+              ? 'bg-[var(--color-text-default)] text-white border-[var(--color-text-default)]'
+              : 'bg-white text-default border-[rgba(0,0,0,0.14)] hover:bg-gray-50',
           ]}
         >
           {item.name}
@@ -40,7 +42,7 @@ const items = [
       );
     })
   }
-</div>
+</nav>
 
 {/* PC: タブ型ナビ */}
 <nav class="hidden lg:block bg-surface border-b border-medium sticky top-0 z-10">
