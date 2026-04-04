@@ -127,6 +127,7 @@
       @apply text-2xl md:text-3xl pb-[.3em] border-b border-solid border-b-gray-200;
     }
     h2 {
+      /* lg:text-[22px]はmd:text-2xl(24px)を22pxに戻すために必要 */
       @apply text-[22px] md:text-2xl pb-[.3em] border-b border-solid border-b-gray-200 lg:text-[22px] lg:border-b-0 lg:pb-0 lg:mt-[2em] lg:mb-[0.75em];
     }
     h3 {
