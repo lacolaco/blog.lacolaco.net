@@ -238,7 +238,9 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         </button>
       )}
       {state === 'result' && (
-        <ResultPanel variant="toolbar" summary={summary} title={t.title} dismissLabel={t.dismiss} onDismiss={dismiss} />
+        <ResultPanel variant="toolbar" summary={summary} title={t.title} dismissLabel={t.dismiss} onDismiss={dismiss}>
+          {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
+        </ResultPanel>
       )}
       {state === 'error' && (
         <ErrorPanel
@@ -277,7 +279,9 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         </div>
       )}
       {state === 'result' && (
-        <ResultPanel variant="default" summary={summary} title={t.title} dismissLabel={t.dismiss} onDismiss={dismiss} />
+        <ResultPanel variant="default" summary={summary} title={t.title} dismissLabel={t.dismiss} onDismiss={dismiss}>
+          {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
+        </ResultPanel>
       )}
       {state === 'error' && (
         <ErrorPanel message={errorMessage} failedLabel={t.failed} retryLabel={t.retry} onRetry={handleSummarize} />
@@ -289,7 +293,6 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
     <>
       {toolbarUI}
       {defaultUI}
-      {state === 'result' && isStreamingComplete && <TTSControls text={summary} locale={locale} />}
     </>
   );
 }
