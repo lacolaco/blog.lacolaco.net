@@ -14,7 +14,7 @@ const color = getChannelByName(name)?.color ?? 'default';
 
 {variant === 'detail' ? (
   <a
-    class="text-[14px] leading-[normal] font-medium py-1 px-3 rounded-2xl inline-flex items-center gap-1 border border-solid border-separator text-secondary bg-transparent hover:border-tertiary hover:bg-surface"
+    class="text-[14px] leading-[normal] font-medium py-1 px-3 rounded-2xl inline-flex items-center gap-1 border border-solid border-separator text-secondary bg-transparent hover:border-separator-hover hover:bg-surface"
     href={`/channels/${urlizedName}`}
   >
     <span class="icon-[material-symbols--rss-feed-rounded] text-[12px] opacity-60"></span>{name}

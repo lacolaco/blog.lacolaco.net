@@ -7,21 +7,30 @@ type Props = {
 };
 
 const { class: className, showDescription } = Astro.props;
-
-const headerClass = 'group max-w-(--breakpoint-lg) px-4 md:px-0 md:mx-[1rem] lg:mx-auto flex flex-col py-3 md:py-4 bg-white md:bg-transparent border-b border-gray-200 md:border-b-0 lg:block lg:max-w-none lg:m-0 lg:p-0 lg:bg-surface lg:border-b lg:border-medium lg:rounded-none';
-const innerClass = 'w-full flex items-center justify-between md:grid md:grid-rows-[34px] md:grid-cols-[1fr_auto_1fr] lg:flex lg:items-baseline lg:justify-between lg:max-w-(--breakpoint-lg) lg:mx-auto lg:pt-7 lg:pr-10 lg:pb-5 lg:pl-10';
-const titleClass = 'font-title text-lg md:text-2xl font-semibold text-default hover:text-default-muted hover:underline lg:text-[20px] lg:font-bold lg:leading-[29px] lg:hover:opacity-70 lg:hover:no-underline';
-const searchBtnClass = 'text-default leading-0 rounded-full p-1 lg:flex lg:items-center lg:justify-center lg:w-8 lg:h-8 lg:rounded-md lg:text-tertiary lg:p-0 lg:leading-[normal]';
-const tagsLinkClass = 'text-default hover:text-default-muted hover:no-underline leading-0 rounded-full p-1 lg:text-[13px] lg:font-medium lg:text-secondary lg:py-1 lg:px-2.5 lg:rounded-md lg:leading-[normal] lg:hover:text-default lg:hover:bg-hover';
-const avatarClass = 'rounded-full border border-solid border-gray-400 block w-6 h-6 md:w-8 md:h-8 lg:w-7 lg:h-7 lg:border-2 lg:border-medium';
-const avatarAlt = 'Profile';
 ---
 
-<header class:list={[headerClass, className]}>
-  <div class={innerClass}>
+<header
+  class:list={[
+    'group max-w-(--breakpoint-lg) px-4 md:px-0 md:mx-[1rem] lg:mx-auto flex flex-col py-3 md:py-4 bg-white md:bg-transparent border-b border-gray-200 md:border-b-0',
+    'lg:block lg:max-w-none lg:m-0 lg:p-0 lg:bg-surface lg:border-b lg:border-medium lg:rounded-none',
+    className,
+  ]}
+>
+  <div
+    class:list={[
+      'w-full flex items-center justify-between md:grid md:grid-rows-[34px] md:grid-cols-[1fr_auto_1fr]',
+      'lg:flex lg:items-baseline lg:justify-between lg:max-w-(--breakpoint-lg) lg:mx-auto lg:pt-7 lg:pr-10 lg:pb-5 lg:pl-10',
+    ]}
+  >
     <div class="hidden md:block lg:hidden"></div>
     <div class="lg:flex lg:items-baseline lg:gap-[14px] lg:relative lg:top-[-2px]">
-      <a href="/" class={titleClass}>
+      <a
+        href="/"
+        class:list={[
+          'font-title text-lg md:text-2xl font-semibold text-default hover:text-default-muted hover:underline',
+          'lg:text-[20px] lg:font-bold lg:leading-[29px] lg:hover:opacity-70 lg:hover:no-underline',
+        ]}
+      >
         {SITE_TITLE}
       </a>
       <span class="hidden lg:inline lg:text-[13px] lg:text-tertiary">{SITE_DESCRIPTION}</span>
@@ -29,20 +38,40 @@ const avatarAlt = 'Profile';
     <div class="flex flex-row items-center justify-end gap-x-2 md:gap-x-4 lg:gap-[6px] lg:text-base lg:font-normal">
       <div class="flex items-center">
         <search-toggle-button>
-          <button class={searchBtnClass} title="tags">
+          <button
+            class:list={[
+              'text-default leading-0 rounded-full p-1',
+              'lg:flex lg:items-center lg:justify-center lg:w-8 lg:h-8 lg:rounded-md lg:text-tertiary lg:p-0 lg:leading-[normal]',
+            ]}
+            title="tags"
+          >
             <span class="icon-[material-symbols--search] text-[20px]"></span>
           </button>
         </search-toggle-button>
       </div>
       <div class="flex items-center">
-        <a href="/tags/" class={tagsLinkClass} title="Tags">
+        <a
+          href="/tags/"
+          class:list={[
+            'text-default hover:text-default-muted hover:no-underline leading-0 rounded-full p-1',
+            'lg:text-[13px] lg:font-medium lg:text-secondary lg:py-1 lg:px-2.5 lg:rounded-md lg:leading-[normal] lg:hover:text-default lg:hover:bg-hover',
+          ]}
+          title="Tags"
+        >
           <span class="icon-[mdi--tag-outline] text-[20px] md:hidden"></span>
           <span class="hidden md:inline">Tags</span>
         </a>
       </div>
       <div class="flex items-center">
         <a href="https://lacolaco.net" target="_blank" rel="noopener noreferrer" title="profile">
-          <img class={avatarClass} src="/icons/laco.png" alt={avatarAlt} />
+          <img
+            class:list={[
+              'rounded-full border border-solid border-gray-400 block w-6 h-6 md:w-8 md:h-8',
+              'lg:w-7 lg:h-7 lg:border-2 lg:border-medium',
+            ]}
+            src="/icons/laco.png"
+            alt="Profile"
+          />
         </a>
       </div>
     </div>

@@ -15,7 +15,7 @@ const color = getTagByName(name)?.color ?? 'default';
 
 {variant === 'detail' ? (
   <a
-    class="text-[14px] leading-[normal] font-medium py-1 px-3 rounded-2xl inline-flex items-center border border-solid border-separator text-default bg-transparent hover:border-tertiary hover:bg-surface"
+    class="text-[14px] leading-[normal] font-medium py-1 px-3 rounded-2xl inline-flex items-center border border-solid border-separator text-default bg-transparent hover:border-separator-hover hover:bg-surface"
     href={`/tags/${urlizedName}`}
   >{name}{count && ` (${count})`}</a>
 ) : (
