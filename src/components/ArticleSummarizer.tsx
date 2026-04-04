@@ -5,6 +5,93 @@ import TTSControls from './TTSControls';
 
 type State = 'hidden' | 'ready' | 'loading' | 'result' | 'error';
 
+function ResultPanel({
+  variant,
+  summary,
+  title,
+  dismissLabel,
+  showTTS,
+  locale,
+  onDismiss,
+}: {
+  variant: 'toolbar' | 'default';
+  summary: string;
+  title: string;
+  dismissLabel: string;
+  showTTS: boolean;
+  locale: string;
+  onDismiss: () => void;
+}) {
+  const isToolbar = variant === 'toolbar';
+  return (
+    <div
+      className={
+        isToolbar
+          ? 'basis-full mt-2.5 p-3 px-4 bg-surface border border-medium rounded-lg'
+          : 'mt-2 p-4 bg-blue-50 border border-blue-200 rounded-lg'
+      }
+    >
+      <div className={isToolbar ? 'flex items-center justify-between mb-1.5' : 'flex items-center gap-2 mb-2'}>
+        {!isToolbar && <span className="icon-[mdi--sparkles] inline-block w-4 h-4 text-blue-600" />}
+        <span className={isToolbar ? 'text-[13px] font-semibold text-secondary' : 'text-sm font-medium text-blue-800'}>
+          {title}
+        </span>
+        {isToolbar && (
+          <button
+            type="button"
+            onClick={onDismiss}
+            className="text-xs text-tertiary hover:text-secondary cursor-pointer border-0 bg-transparent p-0"
+          >
+            {dismissLabel}
+          </button>
+        )}
+      </div>
+      <div className={isToolbar ? 'text-sm leading-[1.8] text-body-text m-0' : 'text-sm text-gray-700 leading-relaxed'}>
+        {summary}
+      </div>
+      {showTTS && <TTSControls text={summary} locale={locale} />}
+      {!isToolbar && (
+        <button
+          type="button"
+          onClick={onDismiss}
+          className="mt-2 text-xs text-muted hover:text-default hover:underline cursor-pointer"
+        >
+          {dismissLabel}
+        </button>
+      )}
+    </div>
+  );
+}
+
+function ErrorPanel({
+  message,
+  failedLabel,
+  retryLabel,
+  onRetry,
+}: {
+  message: string;
+  failedLabel: string;
+  retryLabel: string;
+  onRetry: () => void;
+}) {
+  return (
+    <div className="mt-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-red-600" />
+        <span className="text-sm font-medium text-red-800">{failedLabel}</span>
+      </div>
+      <p className="text-xs text-red-600">{message}</p>
+      <button
+        type="button"
+        onClick={onRetry}
+        className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer"
+      >
+        {retryLabel}
+      </button>
+    </div>
+  );
+}
+
 interface Props {
   locale: string;
   /** PC用ツールバーUIを含めるか（レスポンシブ切替） */
@@ -114,75 +201,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
     });
   }, [locale]);
 
-  // 共通: 結果パネル
-  const renderResult = (style: 'toolbar' | 'default') => {
-    if (state !== 'result') return null;
-    const isToolbar = style === 'toolbar';
-    return (
-      <div
-        className={
-          isToolbar
-            ? 'basis-full mt-2.5 p-3 px-4 bg-surface border border-medium rounded-lg'
-            : 'mt-2 p-4 bg-blue-50 border border-blue-200 rounded-lg'
-        }
-      >
-        <div className={isToolbar ? 'flex items-center justify-between mb-1.5' : 'flex items-center gap-2 mb-2'}>
-          {!isToolbar && <span className="icon-[mdi--sparkles] inline-block w-4 h-4 text-blue-600" />}
-          <span
-            className={isToolbar ? 'text-[13px] font-semibold text-secondary' : 'text-sm font-medium text-blue-800'}
-          >
-            {t.title}
-          </span>
-          {isToolbar && (
-            <button
-              type="button"
-              onClick={() => setState('ready')}
-              className="text-xs text-tertiary hover:text-secondary cursor-pointer border-0 bg-transparent p-0"
-            >
-              {t.dismiss}
-            </button>
-          )}
-        </div>
-        <div
-          className={isToolbar ? 'text-sm leading-[1.8] text-body-text m-0' : 'text-sm text-gray-700 leading-relaxed'}
-        >
-          {summary}
-        </div>
-        {/* includeToolbar時はtoolbar結果パネルでのみTTSを表示（default側のhidden要素での重複マウント防止） */}
-        {isStreamingComplete && (!includeToolbar || isToolbar) && <TTSControls text={summary} locale={locale} />}
-        {!isToolbar && (
-          <button
-            type="button"
-            onClick={() => setState('ready')}
-            className="mt-2 text-xs text-muted hover:text-default hover:underline cursor-pointer"
-          >
-            {t.dismiss}
-          </button>
-        )}
-      </div>
-    );
-  };
-
-  // 共通: エラーパネル
-  const renderError = () => {
-    if (state !== 'error') return null;
-    return (
-      <div className="mt-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-        <div className="flex items-center gap-2 mb-2">
-          <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-red-600" />
-          <span className="text-sm font-medium text-red-800">{t.failed}</span>
-        </div>
-        <p className="text-xs text-red-600">{errorMessage}</p>
-        <button
-          type="button"
-          onClick={handleSummarize}
-          className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer"
-        >
-          {t.retry}
-        </button>
-      </div>
-    );
-  };
+  const dismiss = useCallback(() => setState('ready'), []);
 
   if (state === 'hidden') {
     return null;
@@ -218,8 +237,20 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
           {t.title}
         </button>
       )}
-      {renderResult('toolbar')}
-      {renderError()}
+      {state === 'result' && (
+        <ResultPanel
+          variant="toolbar"
+          summary={summary}
+          title={t.title}
+          dismissLabel={t.dismiss}
+          showTTS={isStreamingComplete}
+          locale={locale}
+          onDismiss={dismiss}
+        />
+      )}
+      {state === 'error' && (
+        <ErrorPanel message={errorMessage} failedLabel={t.failed} retryLabel={t.retry} onRetry={handleSummarize} />
+      )}
     </div>
   ) : null;
 
@@ -247,8 +278,20 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
           </span>
         </div>
       )}
-      {renderResult('default')}
-      {renderError()}
+      {state === 'result' && (
+        <ResultPanel
+          variant="default"
+          summary={summary}
+          title={t.title}
+          dismissLabel={t.dismiss}
+          showTTS={isStreamingComplete && !includeToolbar}
+          locale={locale}
+          onDismiss={dismiss}
+        />
+      )}
+      {state === 'error' && (
+        <ErrorPanel message={errorMessage} failedLabel={t.failed} retryLabel={t.retry} onRetry={handleSummarize} />
+      )}
     </div>
   );
 
