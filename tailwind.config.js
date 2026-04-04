@@ -72,6 +72,13 @@ module.exports = {
           '&:hover': {
             textDecoration: 'underline',
           },
+          '@media (min-width: 1024px)': {
+            color: 'inherit',
+            textDecoration: 'none',
+            '&:hover': {
+              textDecoration: 'none',
+            },
+          },
         },
       });
       addComponents({
