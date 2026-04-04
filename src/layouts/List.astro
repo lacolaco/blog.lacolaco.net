@@ -104,28 +104,28 @@ const postsByYear = Array.from(
                           </div>
                         )}
                       </div>
-                      {/* PC: 2行構成 */}
-                      <a class="hidden lg:block text-default py-[18px] border-b border-light group" href={getRelativePostUrl(post)}>
+                      {/* PC: 2行構成。記事全体をクリック可能にしつつチャンネルは個別リンク */}
+                      <div class="hidden lg:block relative py-[18px] border-b border-light group">
                         <div class="flex items-center gap-2 mb-[3px]">
                           <FormattedDate className="text-[13px] text-secondary" date={getDate(post)} />
                           {postChannels.length > 0 && (
-                            <div class="ml-auto flex items-center gap-1">
+                            <div class="ml-auto flex items-center gap-1 relative z-10">
                               {postChannels.map((ch, i) => (
                                 <>
                                   {i > 0 && <span class="text-[10px] text-separator">/</span>}
-                                  <span class="text-[12px] font-medium text-tertiary">{ch}</span>
+                                  <a href={`/channels/${urlize(ch)}`} class="text-[12px] font-medium text-tertiary hover:text-secondary">{ch}</a>
                                 </>
                               ))}
                             </div>
                           )}
                         </div>
-                        <div class="text-[18px] font-bold leading-[1.45] text-default group-hover:text-hover-link transition-colors duration-100">
+                        <a href={getRelativePostUrl(post)} class="text-[18px] font-bold leading-[1.45] text-default group-hover:text-hover-link transition-colors duration-100 after:absolute after:inset-0 after:content-['']">
                           {getTitle(post)}
                           {post.data.locale === 'en' && (
                             <span class="inline-block text-[10px] font-bold text-white bg-blue-500 py-px px-1.5 rounded-[3px] ml-1.5 align-middle">EN</span>
                           )}
-                        </div>
-                      </a>
+                        </a>
+                      </div>
                     </li>
                     );
                   })}

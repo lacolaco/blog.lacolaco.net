@@ -114,11 +114,80 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
     });
   }, [locale]);
 
+  // 共通: 結果パネル
+  const renderResult = (style: 'toolbar' | 'default') => {
+    if (state !== 'result') return null;
+    const isToolbar = style === 'toolbar';
+    return (
+      <div
+        className={
+          isToolbar
+            ? 'basis-full mt-2.5 p-3 px-4 bg-surface border border-medium rounded-lg'
+            : 'mt-2 p-4 bg-blue-50 border border-blue-200 rounded-lg'
+        }
+      >
+        <div className={isToolbar ? 'flex items-center justify-between mb-1.5' : 'flex items-center gap-2 mb-2'}>
+          {!isToolbar && <span className="icon-[mdi--sparkles] inline-block w-4 h-4 text-blue-600" />}
+          <span
+            className={isToolbar ? 'text-[13px] font-semibold text-secondary' : 'text-sm font-medium text-blue-800'}
+          >
+            {t.title}
+          </span>
+          {isToolbar && (
+            <button
+              type="button"
+              onClick={() => setState('ready')}
+              className="text-xs text-tertiary hover:text-secondary cursor-pointer border-0 bg-transparent p-0"
+            >
+              {t.dismiss}
+            </button>
+          )}
+        </div>
+        <div
+          className={isToolbar ? 'text-sm leading-[1.8] text-body-text m-0' : 'text-sm text-gray-700 leading-relaxed'}
+        >
+          {summary}
+        </div>
+        {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
+        {!isToolbar && (
+          <button
+            type="button"
+            onClick={() => setState('ready')}
+            className="mt-2 text-xs text-muted hover:text-default hover:underline cursor-pointer"
+          >
+            {t.dismiss}
+          </button>
+        )}
+      </div>
+    );
+  };
+
+  // 共通: エラーパネル
+  const renderError = () => {
+    if (state !== 'error') return null;
+    return (
+      <div className="mt-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-red-600" />
+          <span className="text-sm font-medium text-red-800">{t.failed}</span>
+        </div>
+        <p className="text-xs text-red-600">{errorMessage}</p>
+        <button
+          type="button"
+          onClick={handleSummarize}
+          className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer"
+        >
+          {t.retry}
+        </button>
+      </div>
+    );
+  };
+
   if (state === 'hidden') {
     return null;
   }
 
-  // ツールバーUI（PC用、includeToolbar=trueの場合のみ描画）
+  // ツールバーUI（PC用）
   const toolbarUI = includeToolbar ? (
     <div className="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-0.5 lg:mb-2.5">
       {state === 'ready' && (
@@ -148,38 +217,8 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
           {t.title}
         </button>
       )}
-      {state === 'result' && (
-        <div className="basis-full mt-2.5 p-3 px-4 bg-surface border border-medium rounded-lg">
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[13px] font-semibold text-secondary">{t.title}</span>
-            <button
-              type="button"
-              onClick={() => setState('ready')}
-              className="text-xs text-tertiary hover:text-secondary cursor-pointer border-0 bg-transparent p-0"
-            >
-              {t.dismiss}
-            </button>
-          </div>
-          <p className="text-sm leading-[1.8] text-body-text m-0">{summary}</p>
-          {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
-        </div>
-      )}
-      {state === 'error' && (
-        <div className="basis-full mt-2.5 p-3 px-4 bg-red-50 border border-red-200 rounded-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-red-600" />
-            <span className="text-sm font-medium text-red-800">{t.failed}</span>
-          </div>
-          <p className="text-xs text-red-600">{errorMessage}</p>
-          <button
-            type="button"
-            onClick={handleSummarize}
-            className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer"
-          >
-            {t.retry}
-          </button>
-        </div>
-      )}
+      {renderResult('toolbar')}
+      {renderError()}
     </div>
   ) : null;
 
@@ -207,39 +246,8 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
           </span>
         </div>
       )}
-      {state === 'result' && (
-        <div className="mt-2 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="icon-[mdi--sparkles] inline-block w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium text-blue-800">{t.title}</span>
-          </div>
-          <div className="text-sm text-gray-700 leading-relaxed">{summary}</div>
-          {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
-          <button
-            type="button"
-            onClick={() => setState('ready')}
-            className="mt-2 text-xs text-muted hover:text-default hover:underline cursor-pointer"
-          >
-            {t.dismiss}
-          </button>
-        </div>
-      )}
-      {state === 'error' && (
-        <div className="mt-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-red-600" />
-            <span className="text-sm font-medium text-red-800">{t.failed}</span>
-          </div>
-          <p className="text-xs text-red-600">{errorMessage}</p>
-          <button
-            type="button"
-            onClick={handleSummarize}
-            className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer"
-          >
-            {t.retry}
-          </button>
-        </div>
-      )}
+      {renderResult('default')}
+      {renderError()}
     </div>
   );
 
