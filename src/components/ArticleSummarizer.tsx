@@ -19,7 +19,7 @@ function ResultPanel({
   title: string;
   dismissLabel: string;
   showTTS: boolean;
-  locale: string;
+  locale?: string;
   onDismiss: () => void;
 }) {
   const isToolbar = variant === 'toolbar';
@@ -49,7 +49,7 @@ function ResultPanel({
       <div className={isToolbar ? 'text-sm leading-[1.8] text-body-text m-0' : 'text-sm text-gray-700 leading-relaxed'}>
         {summary}
       </div>
-      {showTTS && <TTSControls text={summary} locale={locale} />}
+      {showTTS && locale && <TTSControls text={summary} locale={locale} />}
       {!isToolbar && (
         <button
           type="button"
@@ -246,7 +246,6 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
           title={t.title}
           dismissLabel={t.dismiss}
           showTTS={false}
-          locale={locale}
           onDismiss={dismiss}
         />
       )}
