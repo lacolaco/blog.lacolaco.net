@@ -2,14 +2,11 @@
 
 @config '../../tailwind.config.js';
 
-/* ─── PC Layout: html要素のフォントレンダリング設定（レイヤー外で最優先） ─── */
+/* ─── PC Layout（レイヤー外で最優先） ─── */
 @media (min-width: 1024px) {
   html {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Tailwind preflightの1.5を上書き。PCレイアウトの各コンポーネントは
-       leading-[normal]等で明示的にline-heightを設定すること */
-    line-height: normal;
   }
   body {
     background: #fff;

@@ -42,8 +42,9 @@ const postsByYear = Array.from(
   <body class="font-base bg-default text-default">
     <Header showDescription />
 
-    {/* PC用: ChannelNavはMainContainer外のstickyナビとして表示 */}
+    {/* PC用: ChannelNavはMainContainer外のstickyナビとして表示。モバイル用と重複するためPC非表示時はaria-hidden */}
     <div class="hidden lg:block" set:html={titleSlotHtml} />
+
 
     <MainContainer>
       <div class="py-8 lg:py-0">
