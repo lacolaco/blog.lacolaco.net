@@ -7,9 +7,5 @@ const posts = await queryAvailablePosts();
 ---
 
 <List posts={posts} feedUrl="/index.xml" showChannels>
-  <ChannelNav slot="title" activePath="/">
-    <a href="/index.xml" title="RSS" target="_blank" rel="noopener" class="flex text-tertiary p-2 rounded-md hover:text-secondary no-underline">
-      <span class="icon-[material-symbols--rss-feed-rounded] text-[16px]"></span>
-    </a>
-  </ChannelNav>
+  <ChannelNav slot="title" activePath="/" feedUrl="/index.xml" />
 </List>

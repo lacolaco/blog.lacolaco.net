@@ -25,12 +25,9 @@ type Props = {
 };
 
 const { channel, posts } = Astro.props;
+const feedUrl = `/channels/${urlize(channel)}.xml`;
 ---
 
-<List posts={posts} feedUrl={`/channels/${urlize(channel)}.xml`}>
-  <ChannelNav slot="title" activePath={`/channels/${urlize(channel)}`}>
-    <a href={`/channels/${urlize(channel)}.xml`} title="RSS" target="_blank" rel="noopener" class="flex text-tertiary p-2 rounded-md hover:text-secondary no-underline">
-      <span class="icon-[material-symbols--rss-feed-rounded] text-[16px]"></span>
-    </a>
-  </ChannelNav>
+<List posts={posts} feedUrl={feedUrl}>
+  <ChannelNav slot="title" activePath={`/channels/${urlize(channel)}`} feedUrl={feedUrl} />
 </List>

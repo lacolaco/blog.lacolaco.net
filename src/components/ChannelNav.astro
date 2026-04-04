@@ -5,9 +5,10 @@ import { urlize } from 'src/libs/strings';
 export interface Props {
   class?: string;
   activePath: string;
+  feedUrl?: string;
 }
 
-const { class: className, activePath } = Astro.props;
+const { class: className, activePath, feedUrl } = Astro.props;
 
 const channels = queryChannels();
 const items = [
@@ -42,7 +43,7 @@ const items = [
   }
 </div>
 
-{/* PC: タブ型ナビ。slotはPC用ナビ内にのみ配置（モバイル用RSSアイコンはList.astro側で別途提供） */}
+{/* PC: タブ型ナビ */}
 <nav class="hidden lg:block bg-surface border-b border-medium sticky top-0 z-10">
   <div class="flex items-center max-w-(--breakpoint-lg) mx-auto px-10">
     {
@@ -64,6 +65,10 @@ const items = [
       })
     }
     <span class="flex-1"></span>
-    <slot />
+    {feedUrl && (
+      <a href={urlize(feedUrl)} title="RSS" target="_blank" rel="noopener noreferrer" class="flex text-tertiary p-2 rounded-md hover:text-secondary">
+        <span class="icon-[material-symbols--rss-feed-rounded] text-[16px]"></span>
+      </a>
+    )}
   </div>
 </nav>
