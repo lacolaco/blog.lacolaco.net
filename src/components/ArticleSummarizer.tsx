@@ -120,7 +120,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
 
   // ツールバーUI（PC用、includeToolbar=trueの場合のみ描画）
   const toolbarUI = includeToolbar ? (
-    <>
+    <div className="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-0.5 lg:mb-2.5">
       {state === 'ready' && (
         <button
           type="button"
@@ -180,7 +180,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
           </button>
         </div>
       )}
-    </>
+    </div>
   ) : null;
 
   // デフォルトUI（モバイル用）

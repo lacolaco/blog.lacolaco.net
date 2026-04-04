@@ -116,8 +116,8 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
               </div>
             </div>
 
-            {/* PC: ツールバー統合 */}
-            <div class="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-0.5 lg:mb-2.5">
+            {/* PC: ツールバー（翻訳/Markdown）。AI要約はArticleSummarizer内でレスポンシブ描画 */}
+            <div class="hidden lg:flex lg:items-center lg:gap-0.5 lg:mb-2.5">
               {
                 alternatePost && (
                   <a
@@ -138,8 +138,8 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
                 <span class="icon-[simple-icons--markdown] inline-block w-4 h-4"></span>
                 Markdown
               </a>
-              <ArticleSummarizer locale={locale || 'ja'} includeToolbar client:idle />
             </div>
+            <ArticleSummarizer locale={locale || 'ja'} includeToolbar client:idle />
           </div>
         </header>
 
