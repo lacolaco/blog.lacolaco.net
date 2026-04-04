@@ -148,6 +148,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         >
           {summary}
         </div>
+        {/* includeToolbar時はtoolbar結果パネルでのみTTSを表示（default側のhidden要素での重複マウント防止） */}
         {isStreamingComplete && (!includeToolbar || isToolbar) && <TTSControls text={summary} locale={locale} />}
         {!isToolbar && (
           <button
