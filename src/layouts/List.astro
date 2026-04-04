@@ -71,13 +71,15 @@ const postsByYear = Array.from(
                       <span class="inline-block font-semibold text-muted bg-white px-2 relative z-10">{year}</span>
                     </div>
                     {/* PC: 年区切り */}
-                    <div class="hidden lg:flex lg:items-center lg:gap-3 lg:pt-7 lg:pb-2 after:content-[''] after:flex-1 after:h-px after:bg-medium">
+                    <div class="hidden lg:flex lg:items-center lg:gap-3 lg:pt-7 lg:pb-2 after:content-[''] after:flex-1 after:h-px after:bg-[var(--color-border-medium)]">
                       <span class="text-[14px] leading-[normal] font-bold text-tertiary">{year}</span>
                     </div>
                   </>
                 )}
                 <ul class="list-none">
-                  {posts.map((post) => (
+                  {posts.map((post) => {
+                    const postChannels = showChannels ? getChannels(post) : [];
+                    return (
                     <li class="my-4 lg:my-0">
                       {/* モバイル: 従来レイアウト */}
                       <div class="flex flex-col items-start leading-none lg:hidden">
@@ -94,10 +96,10 @@ const postsByYear = Array.from(
                             </span>
                           )}
                         </div>
-                        {showChannels && getChannels(post).length > 0 && (
+                        {postChannels.length > 0 && (
                           <div class="mt-1">
                             <TagList>
-                              {getChannels(post).map((ch) => (
+                              {postChannels.map((ch) => (
                                 <ChannelBadge name={ch} />
                               ))}
                             </TagList>
@@ -105,13 +107,12 @@ const postsByYear = Array.from(
                         )}
                       </div>
                       {/* PC: 2行構成 */}
-                      {(() => { const channels = showChannels ? getChannels(post) : []; return (
                       <a class="hidden lg:block text-default py-[18px] border-b border-light group" href={getRelativePostUrl(post)}>
                         <div class="flex items-center gap-2 mb-[3px]">
                           <FormattedDate className="text-[13px] text-secondary" date={getDate(post)} />
-                          {channels.length > 0 && (
+                          {postChannels.length > 0 && (
                             <div class="ml-auto flex items-center gap-1">
-                              {channels.map((ch, i) => (
+                              {postChannels.map((ch, i) => (
                                 <>
                                   {i > 0 && <span class="text-[10px] text-separator">/</span>}
                                   <span class="text-[12px] font-medium text-tertiary">{ch}</span>
@@ -127,9 +128,9 @@ const postsByYear = Array.from(
                           )}
                         </div>
                       </a>
-                      ); })()}
                     </li>
-                  ))}
+                    );
+                  })}
                 </ul>
               </div>
             ))

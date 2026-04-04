@@ -39,7 +39,6 @@ module.exports = {
         subtle: 'var(--color-bg-subtle)',
         header: 'var(--color-header-bg)',
         surface: 'var(--color-bg-surface)',
-        medium: 'var(--color-border-medium)',
       },
       borderColor: {
         default: 'var(--color-border-default)',
