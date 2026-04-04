@@ -10,17 +10,15 @@ function ResultPanel({
   summary,
   title,
   dismissLabel,
-  showTTS,
-  locale,
   onDismiss,
+  children,
 }: {
   variant: 'toolbar' | 'default';
   summary: string;
   title: string;
   dismissLabel: string;
-  showTTS: boolean;
-  locale: string;
   onDismiss: () => void;
+  children?: React.ReactNode;
 }) {
   const isToolbar = variant === 'toolbar';
   return (
@@ -49,7 +47,7 @@ function ResultPanel({
       <div className={isToolbar ? 'text-sm leading-[1.8] text-body-text m-0' : 'text-sm text-gray-700 leading-relaxed'}>
         {summary}
       </div>
-      {showTTS && <TTSControls text={summary} locale={locale} />}
+      {children}
       {!isToolbar && (
         <button
           type="button"
@@ -240,15 +238,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         </button>
       )}
       {state === 'result' && (
-        <ResultPanel
-          variant="toolbar"
-          summary={summary}
-          title={t.title}
-          dismissLabel={t.dismiss}
-          showTTS={isStreamingComplete}
-          locale={locale}
-          onDismiss={dismiss}
-        />
+        <ResultPanel variant="toolbar" summary={summary} title={t.title} dismissLabel={t.dismiss} onDismiss={dismiss} />
       )}
       {state === 'error' && (
         <ErrorPanel
@@ -287,15 +277,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         </div>
       )}
       {state === 'result' && (
-        <ResultPanel
-          variant="default"
-          summary={summary}
-          title={t.title}
-          dismissLabel={t.dismiss}
-          showTTS={isStreamingComplete}
-          locale={locale}
-          onDismiss={dismiss}
-        />
+        <ResultPanel variant="default" summary={summary} title={t.title} dismissLabel={t.dismiss} onDismiss={dismiss} />
       )}
       {state === 'error' && (
         <ErrorPanel message={errorMessage} failedLabel={t.failed} retryLabel={t.retry} onRetry={handleSummarize} />
@@ -307,6 +289,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
     <>
       {toolbarUI}
       {defaultUI}
+      {state === 'result' && isStreamingComplete && <TTSControls text={summary} locale={locale} />}
     </>
   );
 }
