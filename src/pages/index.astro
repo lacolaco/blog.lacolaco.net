@@ -6,6 +6,6 @@ import List from '../layouts/List.astro';
 const posts = await queryAvailablePosts();
 ---
 
-<List posts={posts} showChannels>
+<List posts={posts} feedUrl="/index.xml" showChannels>
   <ChannelNav slot="title" activePath="/" feedUrl="/index.xml" />
 </List>

@@ -12,10 +12,12 @@ import type { CollectionEntry } from 'astro:content';
 
 type Props = {
   posts: Array<CollectionEntry<'posts'>>;
+  /** RSS auto-discoveryリンク用URL（例: "/index.xml", "/tags/angular.xml"） */
+  feedUrl?: string;
   showChannels?: boolean;
 };
 
-const { posts, showChannels = false } = Astro.props;
+const { posts, feedUrl, showChannels = false } = Astro.props;
 const postsByYear = Array.from(
   posts
     .reduce((acc, post) => {
@@ -33,6 +35,7 @@ const postsByYear = Array.from(
 <html lang="ja">
   <head>
     <BaseHead title={SITE_TITLE} description={''} />
+    {feedUrl && <link rel="alternate" type="application/rss+xml" title="RSS Feed" href={feedUrl} />}
   </head>
 
   <body class="font-base bg-default text-default">

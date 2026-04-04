@@ -125,6 +125,7 @@
     h1 {
       @apply text-2xl md:text-3xl;
     }
+    /* h2は各ブレークポイントでサイズ・マージンが異なるため、共通ルール(h1,h3..h6)から分離して個別に定義 */
     h2 {
       /* SP: 20px, 48px/15px margin */
       font-size: 20px;
