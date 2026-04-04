@@ -245,7 +245,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
           summary={summary}
           title={t.title}
           dismissLabel={t.dismiss}
-          showTTS={false}
+          showTTS={isStreamingComplete}
           locale={locale}
           onDismiss={dismiss}
         />
