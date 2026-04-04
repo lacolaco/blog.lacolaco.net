@@ -19,24 +19,51 @@ const items = [
 ];
 ---
 
+{/* モバイル: pill型ナビ */}
 <div
   class:list={className}
-  class="flex flex-row gap-x-2 h-[34px] text-xs font-semibold overflow-x-auto *:flex *:items-center *:px-3 *:py-2 *:rounded-2xl *:border *:border-solid *:border-gray-300 *:leading-none *:whitespace-nowrap *:shrink-0"
+  class="flex flex-row gap-x-2 h-[34px] text-xs font-semibold overflow-x-auto lg:hidden"
 >
   {
     items.map((item) => {
-      if (item.path === activePath) {
-        return (
-          <a href={item.path} class="bg-gray-500 text-white">
-            {item.name}
-          </a>
-        );
-      }
+      const isActive = item.path === activePath;
       return (
-        <a href={item.path} class="text-default bg-transparent hover:bg-gray-100">
+        <a
+          href={item.path}
+          class:list={[
+            'flex items-center px-3 py-2 rounded-2xl border border-solid border-gray-300 leading-none whitespace-nowrap shrink-0',
+            isActive ? 'bg-gray-500 text-white' : 'text-default bg-transparent hover:bg-gray-100',
+          ]}
+        >
           {item.name}
         </a>
       );
     })
   }
 </div>
+
+{/* PC: タブ型ナビ */}
+<nav class:list={className} class="hidden lg:block bg-surface border-b border-medium sticky top-0 z-10">
+  <div class="flex items-center max-w-(--breakpoint-lg) mx-auto px-10">
+    {
+      items.map((item) => {
+        const isActive = item.path === activePath;
+        return (
+          <a
+            href={item.path}
+            class:list={[
+              'flex items-center py-2.5 px-4 text-[14px] leading-[normal] whitespace-nowrap border-b-2 border-solid',
+              isActive
+                ? 'text-default font-bold border-b-current'
+                : 'text-secondary font-medium border-b-transparent hover:text-default',
+            ]}
+          >
+            {item.name}
+          </a>
+        );
+      })
+    }
+    <span class="flex-1"></span>
+    <slot />
+  </div>
+</nav>

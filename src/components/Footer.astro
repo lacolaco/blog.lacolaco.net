@@ -8,10 +8,13 @@ type Props = {
 const { class: className } = Astro.props;
 ---
 
-<footer class="max-w-(--breakpoint-lg) mx-0 px-4 md:mx-[2rem] md:px-0 lg:mx-auto" class:list={className}>
-  <div
-    class="flex flex-col items-center justify-between pt-[32px] pb-[8px] text-sm text-default border-transparent border-solid border-t-default"
-  >
+<footer class="max-w-(--breakpoint-lg) mx-0 px-4 md:mx-[2rem] md:px-0 lg:mx-auto lg:max-w-none lg:m-0 lg:p-0 lg:bg-surface lg:border-t lg:border-medium" class:list={className}>
+  <div class="flex flex-col items-center justify-between pt-[32px] pb-[8px] text-sm text-default border-transparent border-solid border-t-default lg:max-w-(--breakpoint-lg) lg:mx-auto lg:px-10 lg:py-6 lg:flex-row lg:text-xs lg:text-tertiary lg:border-none">
     <span>{SITE_COPYRIGHT}</span>
+    <div class="hidden lg:flex lg:gap-5">
+      <a href="/index.xml" class="lg:text-secondary lg:hover:text-default">RSS</a>
+      <a href="/tags/" class="lg:text-secondary lg:hover:text-default">Tags</a>
+      <a href="https://lacolaco.net" class="lg:text-secondary lg:hover:text-default">Profile</a>
+    </div>
   </div>
 </footer>

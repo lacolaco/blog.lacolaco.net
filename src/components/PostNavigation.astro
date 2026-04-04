@@ -9,20 +9,19 @@ type Props = {
 
 const { prev, next } = Astro.props;
 
-// 前後の記事が両方存在しない場合は何も表示しない
 if (!prev && !next) {
   return null;
 }
 ---
 
-<nav aria-label="記事ナビゲーション" class="py-6 my-8">
+<nav aria-label="記事ナビゲーション" class="py-6 my-8 lg:mt-12 lg:mb-0 lg:pt-6 lg:pb-0 lg:border-t lg:border-light">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
     {
       next ? (
         <a
           href={getRelativePostUrl(next)}
           aria-label={`次の記事: ${next.data.title}`}
-          class="group block p-4 md:p-6 rounded-lg border border-gray-200 bg-white transition-colors hover:bg-gray-50"
+          class="group block p-4 md:p-6 rounded-lg border border-medium bg-white transition-colors hover:bg-surface"
         >
           <div class="flex items-center gap-2 md:gap-3">
             <span
@@ -45,7 +44,7 @@ if (!prev && !next) {
         <a
           href={getRelativePostUrl(prev)}
           aria-label={`前の記事: ${prev.data.title}`}
-          class="group block p-4 md:p-6 rounded-lg border border-gray-200 bg-white transition-colors hover:bg-gray-50"
+          class="group block p-4 md:p-6 rounded-lg border border-medium bg-white transition-colors hover:bg-surface"
         >
           <div class="flex items-center gap-2 md:gap-3 md:flex-row-reverse">
             <span

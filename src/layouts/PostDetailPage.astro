@@ -64,10 +64,10 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
     <Header showDescription class="" />
 
     <MainContainer>
-      <article class="pt-4 pb-10 lg:pt-16 lg:pb-16">
-        <header class="mb-3 lg:mb-6">
+      <article class="pt-4 pb-10 lg:pt-10 lg:pb-12">
+        <header class="mb-3 lg:mb-8 lg:pb-5 lg:border-b lg:border-light">
           <div class="leading-none">
-            <span class="text-sm text-muted">
+            <span class="text-sm text-muted lg:text-[13px] lg:text-secondary lg:mb-2 lg:block lg:leading-[normal]">
               {
                 published === false && (
                   <div class="flex bg-gray-600 text-white justify-center py-1 mt-2">
@@ -84,8 +84,10 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
                 )
               }
             </span>
-            <h1 class="text-2xl font-bold leading-normal mb-1">{title}</h1>
-            <div class="py-1 flex items-center justify-between">
+            <h1 class="text-2xl font-bold leading-normal mb-1 lg:text-[28px] lg:leading-[1.4] lg:mb-3">{title}</h1>
+
+            {/* モバイル: 従来レイアウト（タグ+ツールバー） */}
+            <div class="py-1 flex items-center justify-between lg:hidden">
               <TagList>
                 {channels && channels.map((ch) => <ChannelBadge name={ch} />)}
                 {tags && tags.map((tag) => <Tag name={tag} />)}
@@ -113,7 +115,36 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
                 </a>
               </div>
             </div>
-            <ArticleSummarizer locale={locale || 'ja'} client:idle />
+
+            {/* PC: ツールバー統合 */}
+            <div class="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-0.5 lg:mb-2.5">
+              {
+                alternatePost && (
+                  <a
+                    href={getRelativePostUrl(alternatePost)}
+                    class="flex items-center gap-1 text-tertiary py-1 px-2 rounded text-[13px] leading-[normal] hover:bg-surface hover:text-secondary cursor-pointer"
+                    title={`Read in ${alternatePost.data.locale === 'en' ? 'English' : '日本語'}`}
+                  >
+                    <span class="icon-[mdi--translate] inline-block w-4 h-4" />
+                    翻訳版
+                  </a>
+                )
+              }
+              <a
+                href={`${getRelativePostUrl(entry)}.md`}
+                class="flex items-center gap-1 text-tertiary py-1 px-2 rounded text-[13px] leading-[normal] hover:bg-surface hover:text-secondary cursor-pointer"
+                title="View as Markdown"
+              >
+                <span class="icon-[simple-icons--markdown] inline-block w-4 h-4"></span>
+                Markdown
+              </a>
+              <ArticleSummarizer locale={locale || 'ja'} variant="toolbar" client:idle />
+            </div>
+
+            {/* モバイル: AI要約（従来配置） */}
+            <div class="lg:hidden">
+              <ArticleSummarizer locale={locale || 'ja'} client:idle />
+            </div>
           </div>
         </header>
 
@@ -121,17 +152,23 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
           <Content />
         </div>
 
-        <PostNavigation prev={adjacentPosts.prev} next={adjacentPosts.next} />
+        {/* PC: タグを本文下・シェアボタン上に配置 */}
+        <div class="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-1.5 lg:mt-10 lg:pt-6 lg:border-t lg:border-medium">
+          {channels && channels.map((ch) => <ChannelBadge name={ch} variant="detail" />)}
+          {tags && tags.map((tag) => <Tag name={tag} variant="detail" />)}
+        </div>
 
-        <div class="mt-8">
+        <div class="mt-8 lg:mt-6">
           <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
         </div>
-        
+
+        <PostNavigation prev={adjacentPosts.prev} next={adjacentPosts.next} />
+
         {entry.body && <script is:inline type="text/markdown" id="article-markdown" set:text={entry.body} />}
       </article>
     </MainContainer>
 
-    <Footer class="py-4" />
+    <Footer class="py-4 lg:py-0" />
 
     <ImageLightbox />
 

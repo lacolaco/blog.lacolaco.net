@@ -2,6 +2,20 @@
 
 @config '../../tailwind.config.js';
 
+/* ─── PC Layout: html要素のフォントレンダリング設定（レイヤー外で最優先） ─── */
+@media (min-width: 1024px) {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Tailwind preflightの1.5を上書き。PCレイアウトの各コンポーネントは
+       leading-[normal]等で明示的にline-heightを設定すること */
+    line-height: normal;
+  }
+  body {
+    background: #fff;
+  }
+}
+
 @theme {
   --text-3xl: 2rem;
 }
@@ -22,6 +36,7 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
   }
+
 }
 
 :root {
@@ -33,6 +48,16 @@
   --color-bg-default: var(--color-gray-100);
   --color-bg-muted: #f6f8fa;
   --color-bg-subtle: #f6f8fa;
+  --color-bg-surface: #fafbfc;
+
+  /* デザイントークン */
+  --color-text-secondary: #6b7280;
+  --color-text-tertiary: #9ca3af;
+  --color-border-light: #f3f4f6;
+  --color-border-medium: #e5e7eb;
+  --color-hover-link: #2563eb;
+  --color-text-separator: #d1d5db;
+  --color-text-body: #374151;
 
   /* Notion tag colors */
   --color-tag-text: var(--color-text-default);
@@ -76,6 +101,15 @@
   .markdown-body {
     @apply font-base leading-[1.8] md:leading-loose;
 
+    /* PC: base layerで全リンクがcolor:inheritにリセットされるため、記事本文内のリンクを復元 */
+    a {
+      color: var(--color-text-accent);
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
     & > *:first-child {
       @apply mt-0;
     }
@@ -95,7 +129,7 @@
       @apply text-2xl md:text-3xl pb-[.3em] border-b border-solid border-b-gray-200;
     }
     h2 {
-      @apply text-[22px] md:text-2xl pb-[.3em] border-b border-solid border-b-gray-200;
+      @apply text-[22px] md:text-2xl pb-[.3em] border-b border-solid border-b-gray-200 lg:text-[22px] lg:border-b-0 lg:pb-0 lg:mt-[2em] lg:mb-[0.75em];
     }
     h3 {
       @apply text-[19px] md:text-xl;

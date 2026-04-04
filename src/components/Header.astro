@@ -7,58 +7,55 @@ type Props = {
 };
 
 const { class: className, showDescription } = Astro.props;
+
+const headerClass = 'group max-w-(--breakpoint-lg) px-4 md:px-0 md:mx-[1rem] lg:mx-auto flex flex-col py-3 md:py-4 bg-white md:bg-transparent border-b border-gray-200 md:border-b-0 lg:block lg:max-w-none lg:m-0 lg:p-0 lg:bg-surface lg:border-b lg:border-medium lg:rounded-none';
+const innerClass = 'w-full flex items-center justify-between md:grid md:grid-rows-[34px] md:grid-cols-[1fr_auto_1fr] lg:flex lg:items-baseline lg:justify-between lg:max-w-(--breakpoint-lg) lg:mx-auto lg:pt-7 lg:pr-10 lg:pb-5 lg:pl-10';
+const titleClass = 'font-title text-lg md:text-2xl font-semibold text-default hover:text-default-muted hover:underline lg:text-[20px] lg:font-bold lg:leading-[29px] lg:hover:opacity-70 lg:hover:no-underline';
+const searchBtnClass = 'text-default leading-0 rounded-full p-1 lg:flex lg:items-center lg:justify-center lg:w-8 lg:h-8 lg:rounded-md lg:text-tertiary lg:p-0 lg:leading-[normal]';
+const tagsLinkClass = 'text-default hover:text-default-muted hover:no-underline leading-0 rounded-full p-1 lg:text-[13px] lg:font-medium lg:text-secondary lg:py-1 lg:px-2.5 lg:rounded-md lg:leading-[normal] lg:hover:text-default lg:hover:bg-[#f0f1f3]';
+const avatarClass = 'rounded-full border border-solid border-gray-400 block w-6 h-6 md:w-8 md:h-8 lg:w-7 lg:h-7 lg:border-2 lg:border-medium';
 ---
 
-<header
-  class="group max-w-(--breakpoint-lg) px-4 md:px-0 md:mx-[1rem] lg:mx-auto flex flex-col py-3 md:py-4 bg-white md:bg-transparent border-b border-gray-200 md:border-b-0"
-  class:list={className}
->
-  <div class="w-full flex items-center justify-between md:grid md:grid-rows-[34px] md:grid-cols-[1fr_auto_1fr]">
-    <div class="hidden md:block"></div>
-    <div>
-      <a
-        href="/"
-        class="font-title text-lg md:text-2xl font-semibold text-default hover:text-default-muted hover:underline"
-      >
+<header class:list={[headerClass, className]}>
+  <div class={innerClass}>
+    <div class="hidden md:block lg:hidden"></div>
+    <div class="lg:flex lg:items-baseline lg:gap-[14px] lg:relative lg:top-[-2px]">
+      <a href="/" class={titleClass}>
         {SITE_TITLE}
       </a>
+      <span class="hidden lg:inline lg:text-[13px] lg:text-tertiary">{SITE_DESCRIPTION}</span>
     </div>
-    <div class="flex flex-row items-center justify-end gap-x-2 md:gap-x-4 text-sm font-semibold">
+    <div class="flex flex-row items-center justify-end gap-x-2 md:gap-x-4 lg:gap-[6px] lg:text-base lg:font-normal">
       <div class="flex items-center">
         <search-toggle-button>
-          <button class="text-default leading-0 rounded-full p-1" title="tags">
+          <button class={searchBtnClass} title="tags">
             <span class="icon-[material-symbols--search] text-[20px]"></span>
           </button>
         </search-toggle-button>
       </div>
       <div class="flex items-center">
-        <a href="/tags/" class="text-default hover:text-default-muted hover:no-underline leading-0 rounded-full p-1" title="Tags">
+        <a href="/tags/" class={tagsLinkClass} title="Tags">
           <span class="icon-[mdi--tag-outline] text-[20px] md:hidden"></span>
           <span class="hidden md:inline">Tags</span>
         </a>
       </div>
       <div class="flex items-center">
         <a href="https://lacolaco.net" target="_blank" rel="noopener" title="profile">
-          <img
-            class="rounded-full border border-solid border-gray-400 block w-6 h-6 md:w-8 md:h-8"
-            src="/icons/laco.png"
-          />
+          <img class={avatarClass} src="/icons/laco.png" />
         </a>
       </div>
     </div>
   </div>
   {
     showDescription && (
-      <div class="w-full font-title flex-col items-center mt-1 md:mt-3 hidden md:flex">
+      <div class="w-full font-title flex-col items-center mt-1 md:mt-3 hidden md:flex lg:hidden">
         <p data-description class="text-center text-xs text-default-muted">
           {SITE_DESCRIPTION}
         </p>
       </div>
     )
   }
-  <div
-    class="grid grid-rows-[0fr] group-data-search-open:grid-rows-[1fr] transition-[grid-template-rows] ease-in-out duration-200"
-  >
+  <div class="grid grid-rows-[0fr] group-data-search-open:grid-rows-[1fr] transition-[grid-template-rows] ease-in-out duration-200">
     <div class="overflow-hidden">
       <div class="p-2 mt-3 bg-white border border-solid border-gray-200 rounded-sm">
         <div class="gcse-search"></div>

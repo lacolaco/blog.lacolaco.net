@@ -27,15 +27,26 @@ module.exports = {
         header: 'var(--color-header-text)',
         'header-muted': 'var(--color-header-text-muted)',
         'code-inline': 'var(--color-text-code-inline)',
+        secondary: 'var(--color-text-secondary)',
+        tertiary: 'var(--color-text-tertiary)',
+        'hover-link': 'var(--color-hover-link)',
+        separator: 'var(--color-text-separator)',
+        'body-text': 'var(--color-text-body)',
       },
       backgroundColor: {
         default: 'var(--color-bg-default)',
         muted: 'var(--color-bg-muted)',
         subtle: 'var(--color-bg-subtle)',
         header: 'var(--color-header-bg)',
+        surface: 'var(--color-bg-surface)',
+        medium: 'var(--color-border-medium)',
       },
       borderColor: {
         default: 'var(--color-border-default)',
+        light: 'var(--color-border-light)',
+        medium: 'var(--color-border-medium)',
+        separator: 'var(--color-text-separator)',
+        tertiary: 'var(--color-text-tertiary)',
       },
       container: {
         center: true,
@@ -60,6 +71,13 @@ module.exports = {
           color: theme('textColor.accent'),
           '&:hover': {
             textDecoration: 'underline',
+          },
+          '@media (min-width: 1024px)': {
+            color: 'inherit',
+            textDecoration: 'none',
+            '&:hover': {
+              textDecoration: 'none',
+            },
           },
         },
       });

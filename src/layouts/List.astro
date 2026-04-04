@@ -19,6 +19,7 @@ type Props = {
 };
 
 const { posts, feedUrl, showChannels = false } = Astro.props;
+const titleSlotHtml = await Astro.slots.render('title');
 const postsByYear = Array.from(
   posts
     .reduce((acc, post) => {
@@ -41,12 +42,13 @@ const postsByYear = Array.from(
   <body class="font-base bg-default text-default">
     <Header showDescription />
 
+    {/* PC用: ChannelNavはMainContainer外のstickyナビとして表示 */}
+    <div class="hidden lg:block" set:html={titleSlotHtml} />
+
     <MainContainer>
-      <div class="py-8">
-        <div class="flex flex-row items-center justify-between mb-6">
-          <div>
-            <slot name="title" />
-          </div>
+      <div class="py-8 lg:py-0">
+        <div class="flex flex-row items-center justify-between mb-6 lg:hidden">
+          <div set:html={titleSlotHtml} />
           <a
             href={urlize(feedUrl)}
             title="RSS Feed"
@@ -62,14 +64,22 @@ const postsByYear = Array.from(
             postsByYear.map(([year, posts], index) => (
               <div>
                 {index > 0 && (
-                  <div class="my-2 text-center text-sm leading-none before:block before:h-[1px] before:bg-gray-300 before:translate-y-[0.5em]">
-                    <span class="inline-block font-semibold text-muted bg-white px-2 relative z-10">{year}</span>
-                  </div>
+                  <>
+                    {/* モバイル: 年区切り */}
+                    <div class="my-2 text-center text-sm leading-none before:block before:h-[1px] before:bg-gray-300 before:translate-y-[0.5em] lg:hidden">
+                      <span class="inline-block font-semibold text-muted bg-white px-2 relative z-10">{year}</span>
+                    </div>
+                    {/* PC: 年区切り */}
+                    <div class="hidden lg:flex lg:items-center lg:gap-3 lg:pt-7 lg:pb-2 after:content-[''] after:flex-1 after:h-px after:bg-medium">
+                      <span class="text-[14px] leading-[normal] font-bold text-tertiary">{year}</span>
+                    </div>
+                  </>
                 )}
                 <ul class="list-none">
                   {posts.map((post) => (
-                    <li class="my-4">
-                      <div class="flex flex-col items-start leading-none">
+                    <li class="my-4 lg:my-0">
+                      {/* モバイル: 従来レイアウト */}
+                      <div class="flex flex-col items-start leading-none lg:hidden">
                         <FormattedDate className="text-xs text-muted align-middle" date={getDate(post)} />
                         <div class="flex flex-row items-center gap-2">
                           <a class="no-underline" href={getRelativePostUrl(post)}>
@@ -93,6 +103,28 @@ const postsByYear = Array.from(
                           </div>
                         )}
                       </div>
+                      {/* PC: 2行構成 */}
+                      <a class="hidden lg:block text-default py-[18px] border-b border-light group" href={getRelativePostUrl(post)}>
+                        <div class="flex items-center gap-2 mb-[3px]">
+                          <FormattedDate className="text-[13px] text-secondary" date={getDate(post)} />
+                          {showChannels && getChannels(post).length > 0 && (
+                            <div class="ml-auto flex items-center gap-1">
+                              {getChannels(post).map((ch, i) => (
+                                <>
+                                  {i > 0 && <span class="text-[10px] text-separator">/</span>}
+                                  <span class="text-[12px] font-medium text-tertiary">{ch}</span>
+                                </>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                        <div class="text-[18px] font-bold leading-[1.45] text-default group-hover:text-hover-link transition-colors duration-100">
+                          {getTitle(post)}
+                          {post.data.locale === 'en' && (
+                            <span class="inline-block text-[10px] font-bold text-white bg-blue-500 py-px px-1.5 rounded-[3px] ml-1.5 align-middle">EN</span>
+                          )}
+                        </div>
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -103,6 +135,6 @@ const postsByYear = Array.from(
       </div>
     </MainContainer>
 
-    <Footer class="py-4" />
+    <Footer class="py-4 lg:py-0" />
   </body>
 </html>
