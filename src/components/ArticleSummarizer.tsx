@@ -171,7 +171,13 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
             <span className="text-sm font-medium text-red-800">{t.failed}</span>
           </div>
           <p className="text-xs text-red-600">{errorMessage}</p>
-          <button type="button" onClick={handleSummarize} className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer">{t.retry}</button>
+          <button
+            type="button"
+            onClick={handleSummarize}
+            className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer"
+          >
+            {t.retry}
+          </button>
         </div>
       )}
     </>
@@ -209,7 +215,13 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
           </div>
           <div className="text-sm text-gray-700 leading-relaxed">{summary}</div>
           {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
-          <button type="button" onClick={() => setState('ready')} className="mt-2 text-xs text-muted hover:text-default hover:underline cursor-pointer">{t.dismiss}</button>
+          <button
+            type="button"
+            onClick={() => setState('ready')}
+            className="mt-2 text-xs text-muted hover:text-default hover:underline cursor-pointer"
+          >
+            {t.dismiss}
+          </button>
         </div>
       )}
       {state === 'error' && (
@@ -219,7 +231,13 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
             <span className="text-sm font-medium text-red-800">{t.failed}</span>
           </div>
           <p className="text-xs text-red-600">{errorMessage}</p>
-          <button type="button" onClick={handleSummarize} className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer">{t.retry}</button>
+          <button
+            type="button"
+            onClick={handleSummarize}
+            className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer"
+          >
+            {t.retry}
+          </button>
         </div>
       )}
     </div>
