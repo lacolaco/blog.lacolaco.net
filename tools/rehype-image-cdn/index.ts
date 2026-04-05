@@ -31,7 +31,6 @@ const rehypeImageCdn: Plugin<[Options?], Root> = (options = {}) => {
       // width/height（CLS 防止）
       try {
         const filePath = join(publicDir, decodeURIComponent(src));
-        // ヘッダのみ読み込み（image-size v2 はバッファのみ受付）
         const dimensions = imageSize(readFileSync(filePath));
         if (dimensions.width && dimensions.height) {
           node.properties.width = dimensions.width;
