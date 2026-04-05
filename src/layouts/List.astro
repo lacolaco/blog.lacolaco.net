@@ -56,17 +56,17 @@ const postsByYear = Array.from(
               {posts.map((post) => {
                 const postChannels = showChannels ? getChannels(post) : [];
                 return (
-                  <li class="[&+&]:border-t [&+&]:border-[var(--color-border-light)] lg:[&+&]:border-t-0">
-                    <div class="relative py-4 lg:py-[18px] lg:border-b lg:border-light [li:last-child>&]:lg:border-b-0 group">
+                  <li class="[&+&]:border-t [&+&]:border-[var(--color-border-light)]">
+                    <div class="relative py-4 lg:py-[18px] group">
                       <div class="flex items-center gap-2 mb-1 leading-none lg:mb-[3px] lg:leading-[normal] relative z-10">
                         <FormattedDate className="text-[13px] text-muted lg:text-[13px] lg:text-secondary" date={getDate(post)} />
                         {postChannels.length > 0 && (
                           <div class="flex items-center gap-1 lg:ml-auto relative z-10">
                             {postChannels.map((ch, i) => (
-                              <Fragment>
+                              <>
                                 {i > 0 && <span class="text-[10px] text-[var(--color-border-separator)]">/</span>}
                                 <ChannelBadge name={ch} variant="list" />
-                              </Fragment>
+                              </>
                             ))}
                           </div>
                         )}

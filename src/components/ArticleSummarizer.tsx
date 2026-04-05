@@ -208,6 +208,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         >
           <span className="icon-[mdi--star] inline-block w-4 h-4" />
           {t.title}
+          {isDownloadable && <span className="text-[11px] text-tertiary ml-0.5">{t.requiresDownload}</span>}
         </button>
       )}
       {state === 'result' && (
