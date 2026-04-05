@@ -16,18 +16,18 @@ type ResultPanelProps = {
 function ToolbarResultPanel({ summary, title, dismissLabel, onDismiss, children }: ResultPanelProps) {
   return (
     <div className="basis-full mt-2.5 p-3 px-4 bg-surface border border-medium rounded-lg">
-      <div className="flex items-center justify-between mb-1.5">
+      <div className="flex items-center mb-1.5">
         <span className="text-[13px] font-semibold text-secondary">{title}</span>
-        <button
-          type="button"
-          onClick={onDismiss}
-          className="text-xs text-tertiary hover:text-secondary cursor-pointer border-0 bg-transparent p-0"
-        >
-          {dismissLabel}
-        </button>
       </div>
       <div className="text-sm leading-[1.8] text-body-text m-0">{summary}</div>
       {children}
+      <button
+        type="button"
+        onClick={onDismiss}
+        className="mt-1.5 text-xs text-tertiary hover:text-secondary cursor-pointer border-0 bg-transparent p-0"
+      >
+        {dismissLabel}
+      </button>
     </div>
   );
 }

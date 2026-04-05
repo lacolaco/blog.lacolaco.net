@@ -128,9 +128,7 @@
     /* h2は各ブレークポイントでサイズ・マージンが異なるため、共通ルール(h1,h3..h6)から分離して個別に定義 */
     h2 {
       /* SP: 20px, 48px/15px margin */
-      font-size: 20px;
-      margin-top: 48px;
-      margin-bottom: 15px;
+      @apply text-[20px] mt-[48px] mb-[15px];
 
       /* タブレット(md〜lg未満): 24px */
       @media (min-width: theme(--breakpoint-md)) and (max-width: calc(theme(--breakpoint-lg) - 1px)) {
