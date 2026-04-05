@@ -211,7 +211,13 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         </button>
       )}
       {state === 'result' && (
-        <ResultPanel className="basis-full mt-2.5" summary={summary} title={t.title} dismissLabel={t.dismiss} onDismiss={dismiss}>
+        <ResultPanel
+          className="basis-full mt-2.5"
+          summary={summary}
+          title={t.title}
+          dismissLabel={t.dismiss}
+          onDismiss={dismiss}
+        >
           {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
         </ResultPanel>
       )}
