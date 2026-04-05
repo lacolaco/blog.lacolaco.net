@@ -6,9 +6,10 @@ export interface Props {
   activePath: string;
   /** PC用ナビ内に表示するRSSリンクのURL */
   feedUrl?: string;
+  class?: string;
 }
 
-const { activePath, feedUrl } = Astro.props;
+const { activePath, feedUrl, class: className } = Astro.props;
 
 const channels = queryChannels();
 const items = [
@@ -44,8 +45,8 @@ const items = [
   }
 </nav>
 
-{/* PC: タブ型ナビ */}
-<nav class="hidden lg:block bg-surface border-b border-medium sticky top-0 z-10">
+{/* PC: タブ型ナビ（リスト系ページ専用。z-10はページ内最上位。詳細ページでは使用しない） */}
+<nav class:list={["hidden lg:block bg-surface border-b border-medium sticky top-0 z-10", className]}>
   <div class="flex items-center max-w-(--breakpoint-lg) mx-auto px-10">
     {
       items.map((item) => {
