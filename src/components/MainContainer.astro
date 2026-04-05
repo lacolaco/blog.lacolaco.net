@@ -5,7 +5,7 @@ type Props = {
 
 const { class: className } = Astro.props;
 
-const mainClass = 'max-w-(--breakpoint-lg) mx-0 md:mx-[1rem] lg:mx-auto px-4 lg:px-10 bg-white rounded-none md:rounded-lg shadow-none md:shadow-lg lg:bg-transparent lg:rounded-none lg:shadow-none';
+const mainClass = 'max-w-(--breakpoint-lg) mx-auto px-4 lg:px-10';
 ---
 
 <main class:list={[mainClass, className]}>

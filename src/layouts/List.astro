@@ -41,12 +41,10 @@ const postsByYear = Array.from(
   <body class="font-base bg-default text-default">
     <Header showDescription />
 
-    <div class="lg:block lg:max-w-none lg:mx-0 lg:px-0 lg:mb-0">
-      <slot name="title" />
-    </div>
+    <slot name="title" />
 
     <MainContainer>
-      <div class="py-8 lg:py-0">
+      <div>
 
         <div>
           {
