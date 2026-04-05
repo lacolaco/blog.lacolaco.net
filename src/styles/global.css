@@ -99,7 +99,8 @@
 
 @layer components {
   .markdown-body {
-    @apply font-base leading-[2] md:leading-loose;
+    /* note.com実測: SP/PC共にline-height 2.0 */
+    @apply font-base leading-[2];
 
     & > *:first-child {
       @apply mt-0;
