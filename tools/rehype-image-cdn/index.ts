@@ -1,7 +1,7 @@
 import type { Element, Root } from 'hast';
 import { imageSize } from 'image-size';
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { extname, join } from 'node:path';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
 
@@ -17,6 +17,7 @@ interface Options {
 const rehypeImageCdn: Plugin<[Options?], Root> = (options = {}) => {
   const baseUrl = (options.baseUrl || process.env.IMAGE_CDN_BASE_URL)?.replace(/\/$/, '');
   const publicDir = options.publicDir || join(process.cwd(), 'public');
+  const dimensionCache = new Map<string, { width: number; height: number }>();
 
   return (tree: Root) => {
     visit(tree, 'element', (node: Element) => {
@@ -25,16 +26,23 @@ const rehypeImageCdn: Plugin<[Options?], Root> = (options = {}) => {
       const src = node.properties.src;
       if (typeof src !== 'string' || !src.startsWith('/images/')) return;
 
-      const ext = src.substring(src.lastIndexOf('.')).toLowerCase();
+      const ext = extname(src).toLowerCase();
       const cdnPath = src.slice('/images'.length);
 
       // width/height（CLS 防止）
       try {
         const filePath = join(publicDir, decodeURIComponent(src));
-        const dimensions = imageSize(readFileSync(filePath));
-        if (dimensions.width && dimensions.height) {
-          node.properties.width = dimensions.width;
-          node.properties.height = dimensions.height;
+        let cached = dimensionCache.get(filePath);
+        if (!cached) {
+          const dimensions = imageSize(readFileSync(filePath));
+          if (dimensions.width && dimensions.height) {
+            cached = { width: dimensions.width, height: dimensions.height };
+            dimensionCache.set(filePath, cached);
+          }
+        }
+        if (cached) {
+          node.properties.width = cached.width;
+          node.properties.height = cached.height;
         }
       } catch {
         console.warn(`[rehype-image-cdn] Could not read image: ${join(publicDir, decodeURIComponent(src))}`);
