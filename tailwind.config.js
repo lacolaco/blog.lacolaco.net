@@ -46,7 +46,7 @@ module.exports = {
         light: 'var(--color-border-light)',
         medium: 'var(--color-border-medium)',
         separator: 'var(--color-border-separator)',
-        'separator-hover': 'var(--color-text-tertiary)',
+        'separator-hover': 'var(--color-border-separator-hover)',
       },
       container: {
         center: true,

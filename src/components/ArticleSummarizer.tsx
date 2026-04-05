@@ -53,18 +53,20 @@ function DefaultResultPanel({ summary, title, dismissLabel, onDismiss, children 
 }
 
 function ErrorPanel({
+  className,
   message,
   failedLabel,
   retryLabel,
   onRetry,
 }: {
+  className?: string;
   message: string;
   failedLabel: string;
   retryLabel: string;
   onRetry: () => void;
 }) {
   return (
-    <div className="mt-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+    <div className={`mt-3 p-4 bg-red-50 border border-red-200 rounded-lg ${className ?? ''}`}>
       <div className="flex items-center gap-2 mb-2">
         <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-red-600" />
         <span className="text-sm font-medium text-red-800">{failedLabel}</span>
@@ -232,9 +234,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         </ToolbarResultPanel>
       )}
       {state === 'error' && (
-        <div className="basis-full">
-          <ErrorPanel message={errorMessage} failedLabel={t.failed} retryLabel={t.retry} onRetry={handleSummarize} />
-        </div>
+        <ErrorPanel className="basis-full" message={errorMessage} failedLabel={t.failed} retryLabel={t.retry} onRetry={handleSummarize} />
       )}
     </div>
   ) : null;
