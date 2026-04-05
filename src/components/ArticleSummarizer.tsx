@@ -183,7 +183,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
   // ツールバーUI（PC用）
   const toolbarUI = includeToolbar ? (
     <div className="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-0.5 lg:mb-2.5">
-      {state === 'ready' && (
+      {state !== 'loading' && (
         <button
           type="button"
           onClick={handleSummarize}
@@ -199,17 +199,6 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
           <span className="icon-[mdi--loading] inline-block w-4 h-4 animate-spin" />
           {t.generating}
         </span>
-      )}
-      {(state === 'result' || state === 'error') && (
-        <button
-          type="button"
-          onClick={handleSummarize}
-          className="flex items-center gap-1 text-tertiary px-2 py-1 rounded text-[13px] hover:bg-surface hover:text-secondary cursor-pointer border-0 bg-transparent"
-        >
-          <span className="icon-[mdi--star] inline-block w-4 h-4" />
-          {t.title}
-          {isDownloadable && <span className="text-[11px] text-tertiary ml-0.5">{t.requiresDownload}</span>}
-        </button>
       )}
       {state === 'result' && (
         <ResultPanel

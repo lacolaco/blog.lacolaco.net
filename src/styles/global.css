@@ -2,37 +2,35 @@
 
 @config '../../tailwind.config.js';
 
-/* ─── PC Layout（レイヤー外で最優先） ─── */
-@media (min-width: 1024px) {
-  /* モバイルはブラウザデフォルト（subpixel）を維持し、PCのみantialiasedに変更 */
-  html {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  body {
-    background: var(--color-bg-page);
-  }
-}
-
 @theme {
   --text-3xl: 2rem;
 }
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
+  /*
+    The default border color has changed to `currentcolor` in Tailwind CSS v4,
+    so we've added these compatibility styles to make sure everything still
+    looks the same as it did with Tailwind CSS v3.
+
+    If we ever want to remove these styles, we need to add an explicit border
+    color utility to any element that depends on these defaults.
+  */
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  @media (min-width: 1024px) {
+    body {
+      background: var(--color-bg-page);
+    }
   }
 }
 
