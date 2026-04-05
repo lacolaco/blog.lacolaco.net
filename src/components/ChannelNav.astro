@@ -4,9 +4,8 @@ import { urlize } from 'src/libs/strings';
 
 export interface Props {
   activePath: string;
-  /** PC用ナビ内に表示するRSSリンクのURL */
+  /** RSSリンクのURL（PC表示時のみアイコン表示） */
   feedUrl?: string;
-  /** モバイル・PC両方のnavに適用されるクラス */
   class?: string;
 }
 
@@ -22,10 +21,13 @@ const items = [
 ];
 ---
 
-{/* モバイル: pill型ナビ（note.com準拠: 34px高, 20px radius, 12px/600） */}
 <nav
   aria-label="チャンネルナビゲーション"
-  class:list={["flex flex-row gap-2 items-center py-3 px-4 overflow-x-auto lg:hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden", className]}
+  class:list={[
+    'flex flex-row gap-2 items-center py-3 px-4 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden',
+    'lg:max-w-(--breakpoint-lg) lg:mx-auto lg:px-10 lg:py-4 lg:border-b lg:border-medium lg:sticky lg:top-0 lg:z-10 lg:bg-surface',
+    className,
+  ]}
 >
   {
     items.map((item) => {
@@ -45,33 +47,9 @@ const items = [
       );
     })
   }
-</nav>
-
-{/* PC: タブ型ナビ（リスト系ページ専用。z-10はページ内最上位。詳細ページでは使用しない） */}
-<nav aria-label="チャンネルナビゲーション" class:list={["hidden lg:block bg-surface border-b border-medium sticky top-0 z-10", className]}>
-  <div class="flex items-center max-w-(--breakpoint-lg) mx-auto px-10">
-    {
-      items.map((item) => {
-        const isActive = item.path === activePath;
-        return (
-          <a
-            href={item.path}
-            class:list={[
-              'flex items-center py-2.5 px-4 text-[14px] leading-[normal] whitespace-nowrap border-b-2 border-solid',
-              isActive
-                ? 'text-default font-bold border-b-current'
-                : 'text-secondary font-medium border-b-transparent hover:text-default',
-            ]}
-          >
-            {item.name}
-          </a>
-        );
-      })
-    }
-    {feedUrl && (
-      <a href={feedUrl} title="RSS" target="_blank" rel="noopener noreferrer" class="flex text-tertiary p-2 rounded-md hover:text-secondary ml-auto">
-        <span class="icon-[material-symbols--rss-feed-rounded] text-[16px]"></span>
-      </a>
-    )}
-  </div>
+  {feedUrl && (
+    <a href={feedUrl} title="RSS" target="_blank" rel="noopener noreferrer" class="hidden lg:flex text-tertiary p-2 rounded-md hover:text-secondary ml-auto">
+      <span class="icon-[material-symbols--rss-feed-rounded] text-[16px]"></span>
+    </a>
+  )}
 </nav>
