@@ -153,6 +153,7 @@ pnpm test:libs    # library tests
 - CIステップにデバッグ出力を追加した場合、修正完了後に必ず削除してci.ymlをmainと同一に戻せ
 
 ### Git Operations
+- **コミット→push→PR作成→CI watchは不可分の単位。途中で止めるな。コミットだけで完了報告するな**
 - Use git-github-ops agent for complex operations
 - NEVER `git reset --hard` with uncommitted changes you need
 - **push前に`git fetch origin main`してブランチがmainの最新に追従しているか確認せよ**。outdatedなブランチをpushするな
