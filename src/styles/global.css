@@ -117,19 +117,19 @@
       @apply font-semibold leading-tight;
     }
     h1,
+    h2,
     h3,
     h4,
     h5,
     h6 {
-      @apply mt-[48px] mb-[15px] md:mt-6 md:mb-4;
+      @apply mt-[45px] mb-[15px] md:mt-6 md:mb-4;
     }
     /* h1/h2のborder-bottomはnote.com準拠のデザインで意図的に除去 */
     h1 {
       @apply text-2xl md:text-3xl;
     }
     h2 {
-      /* SP: 20px / md: 24px / lg: 22px。共通ルール(h1,h3..h6)とマージンが異なるため分離 */
-      @apply text-[20px] mt-[48px] mb-[15px] md:text-2xl md:leading-8 md:mt-6 md:mb-4 lg:text-[22px] lg:mt-[2em] lg:mb-[0.75em];
+      @apply text-[20px] md:text-2xl md:leading-8 lg:text-[22px];
     }
     h3 {
       @apply text-[19px] md:text-xl;
