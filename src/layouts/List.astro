@@ -44,9 +44,6 @@ const postsByYear = Array.from(
     <slot name="title" />
 
     <MainContainer>
-      <div>
-
-        <div>
           {
             postsByYear.map(([year, posts], index) => (
               <div>
@@ -88,8 +85,6 @@ const postsByYear = Array.from(
               </div>
             ))
           }
-        </div>
-      </div>
     </MainContainer>
 
     <Footer class="py-4 lg:py-0" />
