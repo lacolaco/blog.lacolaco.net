@@ -358,9 +358,9 @@ jobs:
             リポジトリのCLAUDE.mdを参照し、スタイルや慣例に従ってください。
 
             結果をJSONで返してください。
-            - 重大な問題がなければ approved: true
-            - 重大な問題（バグ、セキュリティ、データ損失リスク等）があれば approved: false
-            - 軽微な指摘（スタイル、好み、改善提案）のみの場合は approved: true
+            - issues が空（このPRで修正すべき問題がない）の場合のみ approved: true
+            - このPRで修正可能な問題があれば、重大度を問わず issues に含め、approved: false とする
+            - このPRのスコープ外の問題（既存コードの技術的負債等）は issues に含めない
             summary にレビューの要約、issues 配列に具体的な指摘を入れてください。
           claude_args: >-
             --allowed-tools "Bash(gh pr diff:*),Bash(gh pr view:*)"
@@ -389,20 +389,18 @@ jobs:
 
           ISSUES=$(echo "$REVIEW_RESULT" | jq -r '.issues[] | "- **\(.file)**: \(.description)"')
 
-          if [[ "$APPROVED" == "true" ]]; then
+          if [[ "$APPROVED" == "true" && -z "$ISSUES" ]]; then
+            # 指摘ゼロの場合のみapprove
+            gh pr review "$PR_NUMBER" --approve --body "$SUMMARY"
+          else
             BODY="${SUMMARY}"
             if [[ -n "$ISSUES" ]]; then
               BODY="${BODY}
 
-          ### 軽微な指摘
+          ### 指摘
 
           ${ISSUES}"
             fi
-            gh pr review "$PR_NUMBER" --approve --body "$BODY"
-          else
-            BODY="${SUMMARY}
-
-          ${ISSUES}"
             gh pr review "$PR_NUMBER" --request-changes --body "$BODY"
             exit 1
           fi
