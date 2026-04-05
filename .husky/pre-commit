@@ -1,2 +1,2 @@
-pnpm format:check
+prettier --check 'src' 'tools'
 pnpm lint
