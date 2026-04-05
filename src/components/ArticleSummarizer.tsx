@@ -48,7 +48,7 @@ function ErrorPanel({
   onRetry: () => void;
 }) {
   return (
-    <div className={['mt-3 p-4 bg-red-50 border border-red-200 rounded-lg', className].filter(Boolean).join(' ')}>
+    <div className={['p-4 bg-red-50 border border-red-200 rounded-lg', className].filter(Boolean).join(' ')}>
       <div className="flex items-center gap-2 mb-2">
         <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-red-600" />
         <span className="text-sm font-medium text-red-800">{failedLabel}</span>
@@ -224,7 +224,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
       )}
       {state === 'error' && (
         <ErrorPanel
-          className="basis-full"
+          className="basis-full mt-2.5"
           message={errorMessage}
           failedLabel={t.failed}
           retryLabel={t.retry}
@@ -264,7 +264,13 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         </ResultPanel>
       )}
       {state === 'error' && (
-        <ErrorPanel message={errorMessage} failedLabel={t.failed} retryLabel={t.retry} onRetry={handleSummarize} />
+        <ErrorPanel
+          className="mt-2"
+          message={errorMessage}
+          failedLabel={t.failed}
+          retryLabel={t.retry}
+          onRetry={handleSummarize}
+        />
       )}
     </div>
   );
