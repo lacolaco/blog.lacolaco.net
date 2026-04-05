@@ -34,12 +34,12 @@ function ToolbarResultPanel({ summary, title, dismissLabel, onDismiss, children 
 
 function DefaultResultPanel({ summary, title, dismissLabel, onDismiss, children }: ResultPanelProps) {
   return (
-    <div className="mt-2 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+    <div className="mt-2 p-4 bg-surface border border-medium rounded-lg">
       <div className="flex items-center gap-2 mb-2">
-        <span className="icon-[mdi--sparkles] inline-block w-4 h-4 text-blue-600" />
-        <span className="text-sm font-medium text-blue-800">{title}</span>
+        <span className="icon-[mdi--sparkles] inline-block w-4 h-4 text-secondary" />
+        <span className="text-sm font-medium text-default">{title}</span>
       </div>
-      <div className="text-sm text-gray-700 leading-relaxed">{summary}</div>
+      <div className="text-sm text-body-text leading-relaxed">{summary}</div>
       {children}
       <button
         type="button"
@@ -75,7 +75,7 @@ function ErrorPanel({
       <button
         type="button"
         onClick={onRetry}
-        className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer"
+        className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer border-0 bg-transparent p-0"
       >
         {retryLabel}
       </button>
