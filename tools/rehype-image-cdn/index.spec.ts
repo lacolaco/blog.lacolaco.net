@@ -52,6 +52,7 @@ before(() => {
   writeFileSync(join(fixturesDir, 'images', 'test', 'photo.jpeg'), MINIMAL_PNG);
   writeFileSync(join(fixturesDir, 'images', 'test', 'animation.gif'), MINIMAL_GIF);
   writeFileSync(join(fixturesDir, 'images', 'test', 'テスト.png'), MINIMAL_PNG);
+  writeFileSync(join(fixturesDir, 'images', 'test', 'photo.webp'), MINIMAL_PNG); // image-size はヘッダで判定
 });
 
 after(() => {
@@ -216,7 +217,7 @@ describe('rehypeImageCdn', () => {
     });
   });
 
-  describe('JPG/JPEG 対応', () => {
+  describe('JPG/JPEG/WebP 対応', () => {
     test('.jpg で srcset が生成される', async () => {
       const output = await processHtml('<img src="/images/test/photo.jpg" alt="test">', {
         baseUrl: CDN_BASE_URL,
@@ -231,6 +232,14 @@ describe('rehypeImageCdn', () => {
       });
       assert.ok(output.includes('srcset'));
       assert.ok(output.includes('/cdn-cgi/image/width=480,format=auto/test/photo.jpeg 480w'));
+    });
+
+    test('.webp で srcset が生成される', async () => {
+      const output = await processHtml('<img src="/images/test/photo.webp" alt="test">', {
+        baseUrl: CDN_BASE_URL,
+      });
+      assert.ok(output.includes('srcset'));
+      assert.ok(output.includes('/cdn-cgi/image/width=480,format=auto/test/photo.webp 480w'));
     });
   });
 });

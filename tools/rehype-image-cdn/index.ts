@@ -32,7 +32,7 @@ const rehypeImageCdn: Plugin<[Options?], Root> = (options = {}) => {
       try {
         const filePath = join(publicDir, decodeURIComponent(src));
         const buf = readFileSync(filePath);
-        const dimensions = imageSize(new Uint8Array(buf));
+        const dimensions = imageSize(buf);
         if (dimensions.width && dimensions.height) {
           node.properties.width = dimensions.width;
           node.properties.height = dimensions.height;
