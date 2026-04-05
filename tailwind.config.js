@@ -30,7 +30,7 @@ module.exports = {
         secondary: 'var(--color-text-secondary)',
         tertiary: 'var(--color-text-tertiary)',
         'hover-link': 'var(--color-hover-link)',
-        separator: 'var(--color-border-separator)',
+        divider: 'var(--color-border-separator)',
         'body-text': 'var(--color-text-body)',
         error: 'var(--color-text-error)',
         'error-heading': 'var(--color-text-error-heading)',

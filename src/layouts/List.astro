@@ -66,7 +66,7 @@ const postsByYear = Array.from(
                           <div class="flex items-center gap-1 lg:ml-auto relative z-10">
                             {postChannels.map((ch, i) => (
                               <>
-                                {i > 0 && <span class="text-[10px] text-[var(--color-border-separator)]" aria-hidden="true">/</span>}
+                                {i > 0 && <span class="text-[10px] text-divider" aria-hidden="true">/</span>}
                                 <ChannelBadge name={ch} variant="list" />
                               </>
                             ))}

@@ -27,10 +27,8 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  @media (min-width: 1024px) {
-    body {
-      background: var(--color-bg-default);
-    }
+  body {
+    background: var(--color-bg-default);
   }
 }
 
