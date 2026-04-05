@@ -6,6 +6,7 @@ export interface Props {
   activePath: string;
   /** PC用ナビ内に表示するRSSリンクのURL */
   feedUrl?: string;
+  /** モバイル・PC両方のnavに適用されるクラス */
   class?: string;
 }
 
@@ -21,8 +22,9 @@ const items = [
 ];
 ---
 
-{/* モバイル: pill型ナビ（note.com準拠: 34px高, 20px radius, 12px/600）。classプロップは両navに適用される */}
+{/* モバイル: pill型ナビ（note.com準拠: 34px高, 20px radius, 12px/600） */}
 <nav
+  aria-label="チャンネルナビゲーション"
   class:list={["flex flex-row gap-2 items-center py-3 px-4 overflow-x-auto lg:hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden", className]}
 >
   {
@@ -46,7 +48,7 @@ const items = [
 </nav>
 
 {/* PC: タブ型ナビ（リスト系ページ専用。z-10はページ内最上位。詳細ページでは使用しない） */}
-<nav class:list={["hidden lg:block bg-surface border-b border-medium sticky top-0 z-10", className]}>
+<nav aria-label="チャンネルナビゲーション" class:list={["hidden lg:block bg-surface border-b border-medium sticky top-0 z-10", className]}>
   <div class="flex items-center max-w-(--breakpoint-lg) mx-auto px-10">
     {
       items.map((item) => {
