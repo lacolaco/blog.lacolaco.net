@@ -153,6 +153,7 @@ pnpm test:libs    # library tests
 ### Git Operations
 - Use git-github-ops agent for complex operations
 - NEVER `git reset --hard` with uncommitted changes you need
+- **push前に`git fetch origin main`してブランチがmainの最新に追従しているか確認せよ**。outdatedなブランチをpushするな
 - pushするとCIは再実行される。古いCI watchの結果は無効
 - push後は必ず `gh pr checks --watch` をバックグラウンドで新たに開始せよ。完了したらユーザーに報告すること
 
@@ -165,6 +166,7 @@ pnpm test:libs    # library tests
 1. 即座にCLAUDE.mdに反映せよ。口頭宣言（「今後は〜します」）は学習ではない。CLAUDE.mdに書いて初めて学習
 2. CLAUDE.mdを変更したらコミット→push→CI watchまで一気に実行せよ。途中で止めるな
 3. 同じパターンがこのセッション内で再発していないか確認
+4. **CLAUDE.mdルール追加は最後の手段**。まず決定論的ガードレール（CI, hook, lint, スクリプト）で対策せよ。プロセスルールは破られる
 4. 2回以上同じ指摘を受けた場合: STOP して原因分析
 
 ---
