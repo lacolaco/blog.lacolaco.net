@@ -56,6 +56,10 @@
   --color-border-separator-hover: #9ca3af;
   --color-text-body: #374151;
   --color-bg-hover: #f0f1f3;
+  --color-bg-error: #fef2f2;
+  --color-border-error: #fecaca;
+  --color-text-error: #dc2626;
+  --color-text-error-heading: #991b1b;
 
   /* Notion tag colors */
   --color-tag-text: var(--color-text-default);

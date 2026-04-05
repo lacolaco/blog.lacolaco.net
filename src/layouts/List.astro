@@ -41,7 +41,9 @@ const postsByYear = Array.from(
   <body class="font-base bg-default text-default">
     <Header />
 
-    <slot name="title" />
+    <div class="max-w-(--breakpoint-lg) mx-auto px-4 lg:px-10">
+      <slot name="title" />
+    </div>
 
     <MainContainer>
       {
