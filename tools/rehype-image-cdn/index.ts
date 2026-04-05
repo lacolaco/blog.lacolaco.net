@@ -1,6 +1,6 @@
 import type { Element, Root } from 'hast';
 import { imageSize } from 'image-size';
-import { readFileSync } from 'node:fs';
+import { closeSync, openSync, readSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
@@ -31,8 +31,12 @@ const rehypeImageCdn: Plugin<[Options?], Root> = (options = {}) => {
       // width/height（CLS 防止）
       try {
         const filePath = join(publicDir, decodeURIComponent(src));
-        const buf = readFileSync(filePath);
-        const dimensions = imageSize(buf);
+        // ヘッダのみ読み込み（image-size v2 はバッファのみ受付）
+        const fd = openSync(filePath, 'r');
+        const header = Buffer.alloc(4096);
+        readSync(fd, header);
+        closeSync(fd);
+        const dimensions = imageSize(header);
         if (dimensions.width && dimensions.height) {
           node.properties.width = dimensions.width;
           node.properties.height = dimensions.height;
