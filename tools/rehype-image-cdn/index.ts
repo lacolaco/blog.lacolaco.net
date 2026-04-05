@@ -34,8 +34,11 @@ const rehypeImageCdn: Plugin<[Options?], Root> = (options = {}) => {
         // ヘッダのみ読み込み（image-size v2 はバッファのみ受付）
         const fd = openSync(filePath, 'r');
         const header = Buffer.alloc(4096);
-        readSync(fd, header);
-        closeSync(fd);
+        try {
+          readSync(fd, header);
+        } finally {
+          closeSync(fd);
+        }
         const dimensions = imageSize(header);
         if (dimensions.width && dimensions.height) {
           node.properties.width = dimensions.width;
