@@ -44,47 +44,47 @@ const postsByYear = Array.from(
     <slot name="title" />
 
     <MainContainer>
-          {
-            postsByYear.map(([year, posts], index) => (
-              <div>
-                {index > 0 && (
-                  <div class="flex items-center gap-3 py-2 lg:pt-7 lg:pb-2 after:content-[''] after:flex-1 after:h-px after:bg-[var(--color-border-medium)]">
-                    <span class="text-[14px] leading-[normal] font-bold text-tertiary">{year}</span>
-                  </div>
-                )}
-                <ul class="list-none">
-                  {posts.map((post) => {
-                    const postChannels = showChannels ? getChannels(post) : [];
-                    return (
-                      <li class="[&+&]:border-t [&+&]:border-[var(--color-border-light)] lg:[&+&]:border-t-0">
-                        <div class="relative py-4 lg:py-[18px] lg:border-b lg:border-light [li:last-child>&]:lg:border-b-0 group">
-                          <div class="flex items-center gap-2 mb-1 leading-none lg:mb-[3px] lg:leading-[normal] relative z-10">
-                            <FormattedDate className="text-[13px] text-muted lg:text-[13px] lg:text-secondary" date={getDate(post)} />
-                            {postChannels.length > 0 && (
-                              <div class="flex items-center gap-1 lg:ml-auto relative z-10">
-                                {postChannels.map((ch, i) => (
-                                  <Fragment>
-                                    {i > 0 && <span class="text-[10px] text-[var(--color-border-separator)]">/</span>}
-                                    <ChannelBadge name={ch} variant="list" />
-                                  </Fragment>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                          <a href={getRelativePostUrl(post)} class="text-base lg:text-[18px] font-semibold lg:font-bold leading-[1.5] lg:leading-[1.45] text-default no-underline hover:text-muted lg:hover:text-hover-link lg:hover:no-underline lg:group-hover:text-hover-link transition-colors duration-100 lg:after:absolute lg:after:inset-0 lg:after:content-['']">
-                            {getTitle(post)}
-                            {post.data.locale === 'en' && (
-                              <span class="inline-block text-[10px] font-bold text-white bg-blue-500 py-px px-1.5 rounded-[3px] ml-1.5 align-middle">EN</span>
-                            )}
-                          </a>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
+      {
+        postsByYear.map(([year, posts], index) => (
+          <div>
+            {index > 0 && (
+              <div class="flex items-center gap-3 py-2 lg:pt-7 lg:pb-2 after:content-[''] after:flex-1 after:h-px after:bg-[var(--color-border-medium)]">
+                <span class="text-[14px] leading-[normal] font-bold text-tertiary">{year}</span>
               </div>
-            ))
-          }
+            )}
+            <ul class="list-none">
+              {posts.map((post) => {
+                const postChannels = showChannels ? getChannels(post) : [];
+                return (
+                  <li class="[&+&]:border-t [&+&]:border-[var(--color-border-light)] lg:[&+&]:border-t-0">
+                    <div class="relative py-4 lg:py-[18px] lg:border-b lg:border-light [li:last-child>&]:lg:border-b-0 group">
+                      <div class="flex items-center gap-2 mb-1 leading-none lg:mb-[3px] lg:leading-[normal] relative z-10">
+                        <FormattedDate className="text-[13px] text-muted lg:text-[13px] lg:text-secondary" date={getDate(post)} />
+                        {postChannels.length > 0 && (
+                          <div class="flex items-center gap-1 lg:ml-auto relative z-10">
+                            {postChannels.map((ch, i) => (
+                              <Fragment>
+                                {i > 0 && <span class="text-[10px] text-[var(--color-border-separator)]">/</span>}
+                                <ChannelBadge name={ch} variant="list" />
+                              </Fragment>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      <a href={getRelativePostUrl(post)} class="text-base lg:text-[18px] font-semibold lg:font-bold leading-[1.5] lg:leading-[1.45] text-default no-underline hover:text-muted lg:hover:text-hover-link lg:hover:no-underline lg:group-hover:text-hover-link transition-colors duration-100 lg:after:absolute lg:after:inset-0 lg:after:content-['']">
+                        {getTitle(post)}
+                        {post.data.locale === 'en' && (
+                          <span class="inline-block text-[10px] font-bold text-white bg-blue-500 py-px px-1.5 rounded-[3px] ml-1.5 align-middle">EN</span>
+                        )}
+                      </a>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ))
+      }
     </MainContainer>
 
     <Footer class="py-4 lg:py-0" />

@@ -6,6 +6,7 @@ import TTSControls from './TTSControls';
 type State = 'hidden' | 'ready' | 'loading' | 'result' | 'error';
 
 type ResultPanelProps = {
+  className?: string;
   summary: string;
   title: string;
   dismissLabel: string;
@@ -13,38 +14,19 @@ type ResultPanelProps = {
   children?: React.ReactNode;
 };
 
-function ToolbarResultPanel({ summary, title, dismissLabel, onDismiss, children }: ResultPanelProps) {
+function ResultPanel({ className, summary, title, dismissLabel, onDismiss, children }: ResultPanelProps) {
   return (
-    <div className="basis-full mt-2.5 p-3 px-4 bg-surface border border-medium rounded-lg">
-      <div className="flex items-center mb-1.5">
-        <span className="text-[13px] font-semibold text-secondary">{title}</span>
-      </div>
-      <div className="text-sm leading-[1.8] text-body-text m-0">{summary}</div>
-      {children}
-      <button
-        type="button"
-        onClick={onDismiss}
-        className="mt-1.5 text-xs text-tertiary hover:text-secondary cursor-pointer border-0 bg-transparent p-0"
-      >
-        {dismissLabel}
-      </button>
-    </div>
-  );
-}
-
-function DefaultResultPanel({ summary, title, dismissLabel, onDismiss, children }: ResultPanelProps) {
-  return (
-    <div className="mt-2 p-4 bg-surface border border-medium rounded-lg">
+    <div className={['p-4 bg-surface border border-medium rounded-lg', className].filter(Boolean).join(' ')}>
       <div className="flex items-center gap-2 mb-2">
         <span className="icon-[mdi--sparkles] inline-block w-4 h-4 text-secondary" />
-        <span className="text-sm font-medium text-default">{title}</span>
+        <span className="text-sm font-medium text-secondary">{title}</span>
       </div>
-      <div className="text-sm text-body-text leading-relaxed">{summary}</div>
+      <div className="text-sm leading-[1.8] text-body-text">{summary}</div>
       {children}
       <button
         type="button"
         onClick={onDismiss}
-        className="mt-2 text-xs text-muted hover:text-default hover:underline cursor-pointer border-0 bg-transparent p-0"
+        className="mt-2 text-xs text-tertiary hover:text-secondary cursor-pointer border-0 bg-transparent p-0"
       >
         {dismissLabel}
       </button>
@@ -229,9 +211,9 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         </button>
       )}
       {state === 'result' && (
-        <ToolbarResultPanel summary={summary} title={t.title} dismissLabel={t.dismiss} onDismiss={dismiss}>
+        <ResultPanel className="basis-full mt-2.5" summary={summary} title={t.title} dismissLabel={t.dismiss} onDismiss={dismiss}>
           {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
-        </ToolbarResultPanel>
+        </ResultPanel>
       )}
       {state === 'error' && (
         <ErrorPanel
@@ -270,9 +252,9 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         </div>
       )}
       {state === 'result' && (
-        <DefaultResultPanel summary={summary} title={t.title} dismissLabel={t.dismiss} onDismiss={dismiss}>
+        <ResultPanel className="mt-2" summary={summary} title={t.title} dismissLabel={t.dismiss} onDismiss={dismiss}>
           {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
-        </DefaultResultPanel>
+        </ResultPanel>
       )}
       {state === 'error' && (
         <ErrorPanel message={errorMessage} failedLabel={t.failed} retryLabel={t.retry} onRetry={handleSummarize} />
