@@ -234,7 +234,13 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
         </ToolbarResultPanel>
       )}
       {state === 'error' && (
-        <ErrorPanel className="basis-full" message={errorMessage} failedLabel={t.failed} retryLabel={t.retry} onRetry={handleSummarize} />
+        <ErrorPanel
+          className="basis-full"
+          message={errorMessage}
+          failedLabel={t.failed}
+          retryLabel={t.retry}
+          onRetry={handleSummarize}
+        />
       )}
     </div>
   ) : null;
