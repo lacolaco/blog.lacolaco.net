@@ -44,7 +44,7 @@ function DefaultResultPanel({ summary, title, dismissLabel, onDismiss, children 
       <button
         type="button"
         onClick={onDismiss}
-        className="mt-2 text-xs text-muted hover:text-default hover:underline cursor-pointer"
+        className="mt-2 text-xs text-muted hover:text-default hover:underline cursor-pointer border-0 bg-transparent p-0"
       >
         {dismissLabel}
       </button>
@@ -66,7 +66,7 @@ function ErrorPanel({
   onRetry: () => void;
 }) {
   return (
-    <div className={`mt-3 p-4 bg-red-50 border border-red-200 rounded-lg ${className ?? ''}`}>
+    <div className={`mt-3 p-4 bg-red-50 border border-red-200 rounded-lg${className ? ` ${className}` : ''}`}>
       <div className="flex items-center gap-2 mb-2">
         <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-red-600" />
         <span className="text-sm font-medium text-red-800">{failedLabel}</span>
