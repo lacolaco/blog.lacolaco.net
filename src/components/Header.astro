@@ -10,15 +10,11 @@ const { class: className } = Astro.props;
 
 <header
   class:list={[
-    'group max-w-(--breakpoint-lg) mx-auto px-4 lg:px-10 flex flex-col py-3 md:py-4 border-b border-gray-200',
+    'group border-b border-gray-200',
     className,
   ]}
 >
-  <div
-    class:list={[
-      'w-full flex items-center justify-between',
-    ]}
-  >
+  <div class="max-w-(--breakpoint-lg) mx-auto px-4 lg:px-10 flex items-center justify-between py-3 md:py-4">
     <div>
       <a
         href="/"
