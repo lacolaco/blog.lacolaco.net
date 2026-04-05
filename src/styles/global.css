@@ -122,7 +122,8 @@
     h4,
     h5,
     h6 {
-      @apply mt-[45px] mb-[15px] md:mt-6 md:mb-4;
+      /* note.com実測: SP mt:45px/mb:15px, PC mt:54px/mb:18px（負マージン相殺後） */
+      @apply mt-[45px] mb-[15px] lg:mt-[54px] lg:mb-[18px];
     }
     /* h1/h2のborder-bottomはnote.com準拠のデザインで意図的に除去 */
     h1 {
@@ -153,7 +154,8 @@
     pre,
     details,
     figure {
-      @apply mt-0 mb-[30px] md:mb-4;
+      /* note.com実測: SP mb:30px, PC mb:36px */
+      @apply mt-0 mb-[30px] lg:mb-[36px];
     }
 
     details {
