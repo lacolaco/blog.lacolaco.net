@@ -189,7 +189,7 @@ export default function ArticleSummarizer({ locale, includeToolbar = false }: Pr
           onClick={handleSummarize}
           className="flex items-center gap-1 text-tertiary px-2 py-1 rounded text-[13px] hover:bg-surface hover:text-secondary cursor-pointer border-0 bg-transparent"
         >
-          <span className="icon-[mdi--star] inline-block w-4 h-4" />
+          <span className="icon-[mdi--sparkles] inline-block w-4 h-4" />
           {t.title}
           {isDownloadable && <span className="text-[11px] text-tertiary ml-0.5">{t.requiresDownload}</span>}
         </button>
