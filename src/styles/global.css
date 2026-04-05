@@ -115,16 +115,8 @@
     h4,
     h5,
     h6 {
-      @apply font-semibold leading-tight;
-    }
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
       /* note.com実測: SP mt:45px/mb:15px, PC mt:54px/mb:18px（負マージン相殺後） */
-      @apply mt-[45px] mb-[15px] lg:mt-[54px] lg:mb-[18px];
+      @apply font-semibold leading-tight mt-[45px] mb-[15px] lg:mt-[54px] lg:mb-[18px];
     }
     /* h1/h2のborder-bottomはnote.com準拠のデザインで意図的に除去 */
     h1 {

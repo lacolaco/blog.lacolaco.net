@@ -18,9 +18,7 @@ const { class: className } = Astro.props;
     <div>
       <a
         href="/"
-        class:list={[
-          'font-title text-lg font-bold text-default no-underline hover:opacity-70',
-        ]}
+        class="font-title text-lg font-bold text-default no-underline hover:opacity-70"
       >
         {SITE_TITLE}
       </a>
@@ -30,9 +28,7 @@ const { class: className } = Astro.props;
       <div class="flex items-center">
         <search-toggle-button>
           <button
-            class:list={[
-              'text-default leading-0 rounded-full p-1',
-            ]}
+            class="text-default leading-0 rounded-full p-1"
             title="tags"
           >
             <span class="icon-[material-symbols--search] text-[20px]"></span>
@@ -42,9 +38,7 @@ const { class: className } = Astro.props;
       <div class="flex items-center">
         <a
           href="/tags/"
-          class:list={[
-            'text-default hover:text-default-muted hover:no-underline leading-0 rounded-full p-1',
-          ]}
+          class="text-default hover:text-default-muted hover:no-underline leading-0 rounded-full p-1"
           title="Tags"
         >
           <span class="icon-[mdi--tag-outline] text-[20px]"></span>
@@ -53,9 +47,7 @@ const { class: className } = Astro.props;
       <div class="flex items-center">
         <a href="https://lacolaco.net" target="_blank" rel="noopener noreferrer" title="profile">
           <img
-            class:list={[
-              'rounded-full border border-solid border-gray-400 block w-6 h-6',
-            ]}
+            class="rounded-full border border-solid border-gray-400 block w-6 h-6"
             src="/icons/laco.png"
             alt="Profile"
           />
