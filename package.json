@@ -39,6 +39,7 @@
     "cheerio": "1.2.0",
     "date-fns": "4.1.0",
     "escape-html": "^1.0.3",
+    "image-size": "^2.0.2",
     "katex": "0.16.44",
     "mermaid": "11.13.0",
     "p-retry": "^8.0.0",

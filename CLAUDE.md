@@ -216,7 +216,7 @@ Before implementing with external libraries:
 
 ### Image CDN (Cloudflare R2)
 - 画像はビルド時にR2 CDN URLに書き換え
-- tools/astro-integration-image-cdn/: URL変換Astro integration
+- tools/rehype-image-cdn/: 画像CDN URL変換・srcset/width/height付与rehypeプラグイン
 - tools/r2-sync/: R2へのアップロードスクリプト
 - 環境変数: IMAGE_CDN_BASE_URL
 - Dockerイメージから画像除外（.dockerignore）
