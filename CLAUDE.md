@@ -167,7 +167,7 @@ pnpm test:libs    # library tests
 2. CLAUDE.mdを変更したらコミット→push→CI watchまで一気に実行せよ。途中で止めるな
 3. 同じパターンがこのセッション内で再発していないか確認
 4. **CLAUDE.mdルール追加は最後の手段**。まず決定論的ガードレール（CI, hook, lint, スクリプト）で対策せよ。プロセスルールは破られる
-4. 2回以上同じ指摘を受けた場合: STOP して原因分析
+5. 2回以上同じ指摘を受けた場合: STOP して原因分析
 
 ---
 ## Reference (Look Up When Needed)
