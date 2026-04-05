@@ -30,7 +30,7 @@ module.exports = {
         secondary: 'var(--color-text-secondary)',
         tertiary: 'var(--color-text-tertiary)',
         'hover-link': 'var(--color-hover-link)',
-        separator: 'var(--color-text-separator)',
+        separator: 'var(--color-border-separator)',
         'body-text': 'var(--color-text-body)',
       },
       backgroundColor: {
@@ -45,7 +45,7 @@ module.exports = {
         default: 'var(--color-border-default)',
         light: 'var(--color-border-light)',
         medium: 'var(--color-border-medium)',
-        separator: 'var(--color-text-separator)',
+        separator: 'var(--color-border-separator)',
         'separator-hover': 'var(--color-text-tertiary)',
       },
       container: {

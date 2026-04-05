@@ -54,7 +54,7 @@
   --color-border-light: #f3f4f6;
   --color-border-medium: #e5e7eb;
   --color-hover-link: #2563eb;
-  --color-text-separator: #d1d5db;
+  --color-border-separator: #d1d5db;
   --color-text-body: #374151;
   --color-bg-hover: #f0f1f3;
 
@@ -132,8 +132,8 @@
       margin-top: 48px;
       margin-bottom: 15px;
 
-      /* タブレット(md): 24px */
-      @media (min-width: 768px) and (max-width: 1023px) {
+      /* タブレット(md〜lg未満): 24px */
+      @media (min-width: theme(--breakpoint-md)) and (max-width: calc(theme(--breakpoint-lg) - 1px)) {
         font-size: 1.5rem;
         line-height: 2rem;
         margin-top: 1.5rem;
@@ -141,7 +141,7 @@
       }
 
       /* PC(lg): 22px */
-      @media (min-width: 1024px) {
+      @media (min-width: theme(--breakpoint-lg)) {
         font-size: 22px;
         margin-top: 2em;
         margin-bottom: 0.75em;
