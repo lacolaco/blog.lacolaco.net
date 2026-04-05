@@ -5,8 +5,70 @@ import TTSControls from './TTSControls';
 
 type State = 'hidden' | 'ready' | 'loading' | 'result' | 'error';
 
+type ResultPanelProps = {
+  className?: string;
+  summary: string;
+  title: string;
+  dismissLabel: string;
+  onDismiss: () => void;
+  children?: React.ReactNode;
+};
+
+function ResultPanel({ className, summary, title, dismissLabel, onDismiss, children }: ResultPanelProps) {
+  return (
+    <div className={['p-4 bg-surface border border-medium rounded-lg', className].filter(Boolean).join(' ')}>
+      <div className="flex items-center gap-2 mb-2">
+        <span className="icon-[mdi--sparkles] inline-block w-4 h-4 text-secondary" />
+        <span className="text-sm font-medium text-secondary">{title}</span>
+      </div>
+      <div className="text-sm leading-[1.8] text-body-text">{summary}</div>
+      {children}
+      <button
+        type="button"
+        onClick={onDismiss}
+        className="mt-2 text-xs text-tertiary hover:text-secondary cursor-pointer border-0 bg-transparent p-0"
+      >
+        {dismissLabel}
+      </button>
+    </div>
+  );
+}
+
+function ErrorPanel({
+  className,
+  message,
+  failedLabel,
+  retryLabel,
+  onRetry,
+}: {
+  className?: string;
+  message: string;
+  failedLabel: string;
+  retryLabel: string;
+  onRetry: () => void;
+}) {
+  return (
+    <div className={['p-4 bg-error border border-error rounded-lg', className].filter(Boolean).join(' ')}>
+      <div className="flex items-center gap-2 mb-2">
+        <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-error" />
+        <span className="text-sm font-medium text-error-heading">{failedLabel}</span>
+      </div>
+      <p className="text-xs text-error">{message}</p>
+      <button
+        type="button"
+        onClick={onRetry}
+        className="mt-2 text-xs text-error hover:text-error-heading hover:underline cursor-pointer border-0 bg-transparent p-0"
+      >
+        {retryLabel}
+      </button>
+    </div>
+  );
+}
+
 interface Props {
   locale: string;
+  /** PC用ツールバーUIを含めるか（レスポンシブ切替） */
+  includeToolbar?: boolean;
 }
 
 const i18n = {
@@ -41,7 +103,7 @@ function getArticleContent(): string {
   return content;
 }
 
-export default function ArticleSummarizer({ locale }: Props) {
+export default function ArticleSummarizer({ locale, includeToolbar = false }: Props) {
   const [state, setState] = useState<State>('hidden');
   const [isDownloadable, setIsDownloadable] = useState(false);
   const [summary, setSummary] = useState('');
@@ -112,13 +174,58 @@ export default function ArticleSummarizer({ locale }: Props) {
     });
   }, [locale]);
 
+  const dismiss = useCallback(() => setState('ready'), []);
+
   if (state === 'hidden') {
     return null;
   }
 
-  return (
-    <div className="mt-2">
-      {/* ボタン */}
+  // ツールバーUI（PC用）
+  const toolbarUI = includeToolbar ? (
+    <div className="hidden lg:flex lg:flex-wrap lg:items-center lg:gap-0.5 lg:mb-2.5">
+      {state === 'ready' && (
+        <button
+          type="button"
+          onClick={handleSummarize}
+          className="flex items-center gap-1 text-tertiary px-2 py-1 rounded text-[13px] hover:bg-surface hover:text-secondary cursor-pointer border-0 bg-transparent"
+        >
+          <span className="icon-[mdi--sparkles] inline-block w-4 h-4" />
+          {t.title}
+          {isDownloadable && <span className="text-[11px] text-tertiary ml-0.5">{t.requiresDownload}</span>}
+        </button>
+      )}
+      {state === 'loading' && (
+        <span className="flex items-center gap-1 text-tertiary px-2 py-1 text-[13px]">
+          <span className="icon-[mdi--loading] inline-block w-4 h-4 animate-spin" />
+          {t.generating}
+        </span>
+      )}
+      {state === 'result' && (
+        <ResultPanel
+          className="basis-full mt-2.5"
+          summary={summary}
+          title={t.title}
+          dismissLabel={t.dismiss}
+          onDismiss={dismiss}
+        >
+          {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
+        </ResultPanel>
+      )}
+      {state === 'error' && (
+        <ErrorPanel
+          className="basis-full mt-2.5"
+          message={errorMessage}
+          failedLabel={t.failed}
+          retryLabel={t.retry}
+          onRetry={handleSummarize}
+        />
+      )}
+    </div>
+  ) : null;
+
+  // デフォルトUI（モバイル用）
+  const defaultUI = (
+    <div className={includeToolbar ? 'mt-2 lg:hidden' : 'mt-2'}>
       {state === 'ready' && (
         <div className="flex items-center">
           <button
@@ -132,8 +239,6 @@ export default function ArticleSummarizer({ locale }: Props) {
           {isDownloadable && <span className="text-xs text-muted ml-2">{t.requiresDownload}</span>}
         </div>
       )}
-
-      {/* ローディング（ボタンと同じ高さ） */}
       {state === 'loading' && (
         <div className="flex items-center">
           <span className="inline-flex items-center gap-x-1 px-3 py-2 text-xs text-blue-600 border border-blue-300 rounded-full">
@@ -142,46 +247,27 @@ export default function ArticleSummarizer({ locale }: Props) {
           </span>
         </div>
       )}
-
-      {/* 結果 */}
       {state === 'result' && (
-        <div className="mt-2 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="icon-[mdi--sparkles] inline-block w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium text-blue-800">{t.title}</span>
-          </div>
-          <div className="text-sm text-gray-700 leading-relaxed">{summary}</div>
-
-          {/* TTS コントロール（ストリーミング完了後のみ表示） */}
+        <ResultPanel className="mt-2" summary={summary} title={t.title} dismissLabel={t.dismiss} onDismiss={dismiss}>
           {isStreamingComplete && <TTSControls text={summary} locale={locale} />}
-
-          <button
-            type="button"
-            onClick={() => setState('ready')}
-            className="mt-2 text-xs text-muted hover:text-default hover:underline cursor-pointer"
-          >
-            {t.dismiss}
-          </button>
-        </div>
+        </ResultPanel>
       )}
-
-      {/* エラー */}
       {state === 'error' && (
-        <div className="mt-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-red-600" />
-            <span className="text-sm font-medium text-red-800">{t.failed}</span>
-          </div>
-          <p className="text-xs text-red-600">{errorMessage}</p>
-          <button
-            type="button"
-            onClick={handleSummarize}
-            className="mt-2 text-xs text-red-600 hover:text-red-800 hover:underline cursor-pointer"
-          >
-            {t.retry}
-          </button>
-        </div>
+        <ErrorPanel
+          className="mt-2"
+          message={errorMessage}
+          failedLabel={t.failed}
+          retryLabel={t.retry}
+          onRetry={handleSummarize}
+        />
       )}
     </div>
+  );
+
+  return (
+    <>
+      {toolbarUI}
+      {defaultUI}
+    </>
   );
 }

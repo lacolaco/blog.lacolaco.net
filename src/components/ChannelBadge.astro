@@ -4,16 +4,33 @@ import { urlize } from '../libs/strings';
 
 export interface Props {
   name: string;
+  variant?: 'default' | 'detail' | 'list';
 }
 
-const { name } = Astro.props;
+const { name, variant = 'default' } = Astro.props;
 const urlizedName = urlize(name);
 const color = getChannelByName(name)?.color ?? 'default';
 ---
 
-<a
-  style={`--color-channel: var(--color-tag-text-${color}); --color-channel-border: var(--color-tag-bg-${color});`}
-  class="leading-relaxed text-xs inline-flex items-center gap-0.5 px-2 rounded-sm border border-solid border-[var(--color-channel-border)] text-[var(--color-channel)] bg-transparent hover:bg-[var(--color-channel-border)]"
-  href={`/channels/${urlizedName}`}
-  ><span class="icon-[material-symbols--rss-feed-rounded] text-[12px]"></span>{name}</a
->
+{variant === 'detail' ? (
+  <a
+    class="text-[14px] leading-[normal] font-medium py-1 px-3 rounded-2xl inline-flex items-center gap-1 border border-solid border-separator text-secondary bg-transparent hover:border-separator-hover hover:bg-surface"
+    href={`/channels/${urlizedName}`}
+  >
+    <span class="icon-[material-symbols--rss-feed-rounded] text-[12px] opacity-60"></span>{name}
+  </a>
+) : variant === 'list' ? (
+  <a
+    style={`--color-channel: var(--color-tag-text-${color});`}
+    class="text-xs font-medium text-[var(--color-channel)] no-underline hover:opacity-80"
+    href={`/channels/${urlizedName}`}
+  >{name}</a>
+) : (
+  <a
+    style={`--color-channel: var(--color-tag-text-${color}); --color-channel-border: var(--color-tag-bg-${color});`}
+    class="leading-relaxed text-xs inline-flex items-center gap-0.5 px-2 rounded-sm border border-solid border-[var(--color-channel-border)] text-[var(--color-channel)] bg-transparent hover:bg-[var(--color-channel-border)]"
+    href={`/channels/${urlizedName}`}
+  >
+    <span class="icon-[material-symbols--rss-feed-rounded] text-[12px]"></span>{name}
+  </a>
+)}

@@ -7,5 +7,5 @@ const posts = await queryAvailablePosts();
 ---
 
 <List posts={posts} feedUrl="/index.xml" showChannels>
-  <ChannelNav slot="title" activePath="/" />
+  <ChannelNav slot="title" activePath="/" feedUrl="/index.xml" />
 </List>

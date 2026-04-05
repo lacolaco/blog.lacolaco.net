@@ -28,6 +28,6 @@ type Props = {
 const { tag, posts } = Astro.props;
 ---
 
-<List posts={posts} feedUrl={`/tags/${tag}.xml`}>
-  <h1 slot="title" class="leading-none text-2xl font-semibold">#{tag}</h1>
+<List posts={posts} feedUrl={`/tags/${urlize(tag)}.xml`}>
+  <h1 slot="title" class="leading-none text-2xl font-semibold pt-3 lg:pt-5 lg:pb-2">#{tag}</h1>
 </List>

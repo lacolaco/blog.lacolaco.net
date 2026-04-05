@@ -3,11 +3,13 @@ import { queryChannels } from '@lib/query';
 import { urlize } from 'src/libs/strings';
 
 export interface Props {
-  class?: string;
   activePath: string;
+  /** RSSリンクのURL（PC表示時のみアイコン表示） */
+  feedUrl?: string;
+  class?: string;
 }
 
-const { class: className, activePath } = Astro.props;
+const { activePath, feedUrl, class: className } = Astro.props;
 
 const channels = queryChannels();
 const items = [
@@ -19,24 +21,34 @@ const items = [
 ];
 ---
 
-<div
-  class:list={className}
-  class="flex flex-row gap-x-2 h-[34px] text-xs font-semibold overflow-x-auto *:flex *:items-center *:px-3 *:py-2 *:rounded-2xl *:border *:border-solid *:border-gray-300 *:leading-none *:whitespace-nowrap *:shrink-0"
+<nav
+  aria-label="チャンネルナビゲーション"
+  class:list={[
+    'flex flex-row gap-2 items-center py-3 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden',
+    className,
+  ]}
 >
   {
     items.map((item) => {
-      if (item.path === activePath) {
-        return (
-          <a href={item.path} class="bg-gray-500 text-white">
-            {item.name}
-          </a>
-        );
-      }
+      const isActive = item.path === activePath;
       return (
-        <a href={item.path} class="text-default bg-transparent hover:bg-gray-100">
+        <a
+          href={item.path}
+          class:list={[
+            'flex items-center h-[34px] px-3 text-xs font-semibold rounded-[20px] border border-solid leading-[12px] whitespace-nowrap shrink-0',
+            isActive
+              ? 'bg-[var(--color-text-default)] text-white border-[var(--color-text-default)]'
+              : 'bg-default text-default border-[rgba(0,0,0,0.14)] hover:bg-surface',
+          ]}
+        >
           {item.name}
         </a>
       );
     })
   }
-</div>
+  {feedUrl && (
+    <a href={feedUrl} title="RSS" target="_blank" rel="noopener noreferrer" class="hidden lg:flex text-tertiary p-2 rounded-md hover:text-secondary ml-auto">
+      <span class="icon-[material-symbols--rss-feed-rounded] text-[16px]"></span>
+    </a>
+  )}
+</nav>
