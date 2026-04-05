@@ -32,6 +32,8 @@ module.exports = {
         'hover-link': 'var(--color-hover-link)',
         separator: 'var(--color-border-separator)',
         'body-text': 'var(--color-text-body)',
+        error: 'var(--color-text-error)',
+        'error-heading': 'var(--color-text-error-heading)',
       },
       backgroundColor: {
         default: 'var(--color-bg-default)',
@@ -40,6 +42,7 @@ module.exports = {
         header: 'var(--color-header-bg)',
         surface: 'var(--color-bg-surface)',
         hover: 'var(--color-bg-hover)',
+        error: 'var(--color-bg-error)',
       },
       borderColor: {
         default: 'var(--color-border-default)',
@@ -47,6 +50,7 @@ module.exports = {
         medium: 'var(--color-border-medium)',
         separator: 'var(--color-border-separator)',
         'separator-hover': 'var(--color-border-separator-hover)',
+        error: 'var(--color-border-error)',
       },
       container: {
         center: true,

@@ -48,20 +48,16 @@ function ErrorPanel({
   onRetry: () => void;
 }) {
   return (
-    <div
-      className={['p-4 bg-[var(--color-bg-error)] border border-[var(--color-border-error)] rounded-lg', className]
-        .filter(Boolean)
-        .join(' ')}
-    >
+    <div className={['p-4 bg-error border border-error rounded-lg', className].filter(Boolean).join(' ')}>
       <div className="flex items-center gap-2 mb-2">
-        <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-[var(--color-text-error)]" />
-        <span className="text-sm font-medium text-[var(--color-text-error-heading)]">{failedLabel}</span>
+        <span className="icon-[mdi--alert-circle] inline-block w-4 h-4 text-error" />
+        <span className="text-sm font-medium text-error-heading">{failedLabel}</span>
       </div>
-      <p className="text-xs text-[var(--color-text-error)]">{message}</p>
+      <p className="text-xs text-error">{message}</p>
       <button
         type="button"
         onClick={onRetry}
-        className="mt-2 text-xs text-[var(--color-text-error)] hover:text-[var(--color-text-error-heading)] hover:underline cursor-pointer border-0 bg-transparent p-0"
+        className="mt-2 text-xs text-error hover:text-error-heading hover:underline cursor-pointer border-0 bg-transparent p-0"
       >
         {retryLabel}
       </button>
