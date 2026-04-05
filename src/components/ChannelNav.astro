@@ -21,7 +21,7 @@ const items = [
 ];
 ---
 
-{/* モバイル: pill型ナビ（note.com準拠: 34px高, 20px radius, 12px/600） */}
+{/* モバイル: pill型ナビ（note.com準拠: 34px高, 20px radius, 12px/600）。classプロップは両navに適用される */}
 <nav
   class:list={["flex flex-row gap-2 items-center py-3 px-4 overflow-x-auto lg:hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden", className]}
 >
@@ -66,9 +66,8 @@ const items = [
         );
       })
     }
-    <span class="flex-1"></span>
     {feedUrl && (
-      <a href={feedUrl} title="RSS" target="_blank" rel="noopener noreferrer" class="flex text-tertiary p-2 rounded-md hover:text-secondary">
+      <a href={feedUrl} title="RSS" target="_blank" rel="noopener noreferrer" class="flex text-tertiary p-2 rounded-md hover:text-secondary ml-auto">
         <span class="icon-[material-symbols--rss-feed-rounded] text-[16px]"></span>
       </a>
     )}
