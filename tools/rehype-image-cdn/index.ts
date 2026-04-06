@@ -26,7 +26,7 @@ const rehypeImageCdn: Plugin<[Options?], Root> = (options = {}) => {
       const src = node.properties.src;
       if (typeof src !== 'string' || !src.startsWith('/images/')) return;
 
-      const ext = extname(src).toLowerCase();
+      const ext = extname(new URL(src, 'http://x').pathname).toLowerCase();
       const cdnPath = src.slice('/images'.length);
 
       // width/height（CLS 防止）
