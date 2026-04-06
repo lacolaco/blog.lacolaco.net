@@ -250,7 +250,7 @@ jobs:
 
       - name: Review content with Claude
         id: review
-        uses: anthropics/claude-code-action@bee87b3258c251f9279e5371b0cc3660f37f3f77 # v1.0.83
+        uses: anthropics/claude-code-action@408a40e7c283816edd884ce7e99d7b535a396d89 # v1.0.84
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           allowed_bots: 'lacolaco-actions-worker[bot]'
@@ -339,7 +339,7 @@ jobs:
 
       - name: Review code with Claude
         id: review
-        uses: anthropics/claude-code-action@bee87b3258c251f9279e5371b0cc3660f37f3f77 # v1.0.83
+        uses: anthropics/claude-code-action@408a40e7c283816edd884ce7e99d7b535a396d89 # v1.0.84
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           allowed_bots: 'lacolaco-actions-worker[bot]'
