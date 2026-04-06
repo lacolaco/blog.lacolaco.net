@@ -263,7 +263,8 @@ export default function LikeButton({ slug, variant = 'compact' }: Props) {
         transition: 'color 0.2s',
         lineHeight: 1,
       }}
-      aria-label={liked ? 'スキを取り消す' : 'スキ'}
+      aria-label="スキ"
+      aria-pressed={liked}
     >
       <span style={{ position: 'relative', display: 'inline-flex' }}>
         {liked ? <HeartFilled /> : <HeartOutline />}

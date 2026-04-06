@@ -26,6 +26,7 @@ vi.mock('./firestore', () => ({
       }),
       runTransaction: mockRunTransaction,
     }),
+  getFieldValue: () => Promise.resolve({ serverTimestamp: () => 'mock-timestamp' }),
 }));
 
 describe('getLikeStatus', () => {

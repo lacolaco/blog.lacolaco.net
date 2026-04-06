@@ -3,7 +3,7 @@
  * トランザクションベースのカウント管理・重複防止
  */
 
-import { getFirestore } from './firestore';
+import { getFieldValue, getFirestore } from './firestore';
 import type { LikeResponse, PostLikeDoc } from './types';
 
 const COLLECTION = 'post_likes';
@@ -33,8 +33,7 @@ export async function getLikeStatus(slug: string, clientId: string): Promise<Lik
  * reaction未存在 → 作成 + count+1
  */
 export async function toggleLike(slug: string, clientId: string): Promise<LikeResponse> {
-  const { FieldValue } = await import('@google-cloud/firestore');
-  const db = await getFirestore();
+  const [FieldValue, db] = await Promise.all([getFieldValue(), getFirestore()]);
   const postRef = db.collection(COLLECTION).doc(slug);
   const reactionRef = postRef.collection(SUB_COLLECTION).doc(clientId);
 

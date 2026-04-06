@@ -107,6 +107,16 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  @keyframes firework-particle {
+    0%,
+    100% {
+      transform: none;
+      opacity: 0;
+    }
+  }
+}
+
 @layer components {
   .markdown-body {
     /* note.com実測: SP/PC共にline-height 2.0 */
