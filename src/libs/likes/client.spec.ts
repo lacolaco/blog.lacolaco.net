@@ -54,19 +54,21 @@ describe('fetchLikeStatus', () => {
     vi.resetModules();
   });
 
-  it('正しいURLでGETリクエストを送信する', async () => {
+  it('X-Client-IdヘッダでGETリクエストを送信する', async () => {
     const { fetchLikeStatus } = await import('./client');
     const result = await fetchLikeStatus('test-slug', 'client-123');
 
-    expect(fetch).toHaveBeenCalledWith('/api/likes/test-slug?clientId=client-123');
+    expect(fetch).toHaveBeenCalledWith('/api/likes/test-slug', {
+      headers: { 'X-Client-Id': 'client-123' },
+    });
     expect(result).toEqual({ count: 5, liked: true });
   });
 
-  it('clientIdが空の場合はクエリパラメータなし', async () => {
+  it('clientIdが空の場合はヘッダなし', async () => {
     const { fetchLikeStatus } = await import('./client');
     await fetchLikeStatus('test-slug', '');
 
-    expect(fetch).toHaveBeenCalledWith('/api/likes/test-slug');
+    expect(fetch).toHaveBeenCalledWith('/api/likes/test-slug', { headers: {} });
   });
 
   it('非OKレスポンスでエラーをスローする', async () => {

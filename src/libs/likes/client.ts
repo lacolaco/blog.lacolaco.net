@@ -20,8 +20,11 @@ export function getOrCreateClientId(): string {
 
 /** スキ状態を取得する */
 export async function fetchLikeStatus(slug: string, clientId: string): Promise<LikeResponse> {
-  const url = clientId ? `/api/likes/${slug}?clientId=${encodeURIComponent(clientId)}` : `/api/likes/${slug}`;
-  const res = await fetch(url);
+  const headers: Record<string, string> = {};
+  if (clientId) {
+    headers['X-Client-Id'] = clientId;
+  }
+  const res = await fetch(`/api/likes/${slug}`, { headers });
   if (!res.ok) {
     throw new Error('Failed to fetch like status');
   }
