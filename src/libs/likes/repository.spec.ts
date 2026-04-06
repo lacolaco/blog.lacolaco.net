@@ -175,4 +175,31 @@ describe('toggleLike', () => {
 
     expect(result).toEqual({ count: 1, liked: true });
   });
+
+  it('Firestoreトランザクションエラーが伝播する', async () => {
+    mockRunTransaction.mockRejectedValue(new Error('Firestore unavailable'));
+
+    await expect(toggleLike('test-slug', VALID_CLIENT_ID)).rejects.toThrow('Firestore unavailable');
+  });
+
+  it('不正なslugでエラーをスローする', async () => {
+    await expect(toggleLike('a/b', VALID_CLIENT_ID)).rejects.toThrow('Invalid slug format');
+    await expect(toggleLike('', VALID_CLIENT_ID)).rejects.toThrow('Invalid slug format');
+  });
+});
+
+describe('getLikeStatus - エラーケース', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('Firestoreエラーが伝播する', async () => {
+    mockGet.mockRejectedValue(new Error('Permission denied'));
+
+    await expect(getLikeStatus('test-slug', VALID_CLIENT_ID)).rejects.toThrow('Permission denied');
+  });
+
+  it('不正なslugでエラーをスローする', async () => {
+    await expect(getLikeStatus('a/b', VALID_CLIENT_ID)).rejects.toThrow('Invalid slug format');
+  });
 });

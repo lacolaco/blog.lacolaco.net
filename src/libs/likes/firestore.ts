@@ -34,11 +34,13 @@ async function initialize(): Promise<void> {
 export async function getFirestore(): Promise<Firestore> {
   _initPromise ??= initialize();
   await _initPromise;
-  return _db!;
+  if (!_db) throw new Error('Firestore initialization failed');
+  return _db;
 }
 
 export async function getFieldValue(): Promise<typeof FieldValueType> {
   _initPromise ??= initialize();
   await _initPromise;
-  return _FieldValue!;
+  if (!_FieldValue) throw new Error('Firestore initialization failed');
+  return _FieldValue;
 }

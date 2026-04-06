@@ -9,6 +9,14 @@ import { UUID_V4_REGEX } from './types';
 
 const COLLECTION = 'post_likes';
 const SUB_COLLECTION = 'reactions';
+/** FirestoreドキュメントIDとして安全なslug形式 */
+const SLUG_REGEX = /^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/;
+
+function validateSlug(slug: string): void {
+  if (!slug || !SLUG_REGEX.test(slug)) {
+    throw new Error('Invalid slug format');
+  }
+}
 
 /**
  * スキ状態を取得する
@@ -16,6 +24,7 @@ const SUB_COLLECTION = 'reactions';
  * @param clientId クライアントID（空文字の場合 liked: false）
  */
 export async function getLikeStatus(slug: string, clientId: string): Promise<LikeResponse> {
+  validateSlug(slug);
   if (clientId && !UUID_V4_REGEX.test(clientId)) {
     throw new Error('Invalid clientId format');
   }
@@ -37,6 +46,7 @@ export async function getLikeStatus(slug: string, clientId: string): Promise<Lik
  * reaction未存在 → 作成 + count+1
  */
 export async function toggleLike(slug: string, clientId: string): Promise<LikeResponse> {
+  validateSlug(slug);
   if (!clientId || !UUID_V4_REGEX.test(clientId)) {
     throw new Error('Valid clientId is required');
   }
