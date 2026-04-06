@@ -8,13 +8,13 @@ export const prerender = false;
  * 有効なslug一覧をキャッシュ（初回リクエスト時に生成）
  * 記事追加にはNotion sync→ビルド→デプロイが必要なため、インスタンス再起動で自動更新される
  */
-let _validSlugs: Set<string> | null = null;
-async function getValidSlugs(): Promise<Set<string>> {
-  if (!_validSlugs) {
+let _validSlugsPromise: Promise<Set<string>> | null = null;
+function getValidSlugs(): Promise<Set<string>> {
+  _validSlugsPromise ??= (async () => {
     const [posts, postsEn] = await Promise.all([getCollection('posts'), getCollection('postsEn')]);
-    _validSlugs = new Set([...posts, ...postsEn].map((p) => p.data.slug));
-  }
-  return _validSlugs;
+    return new Set([...posts, ...postsEn].map((p) => p.data.slug));
+  })();
+  return _validSlugsPromise;
 }
 
 const UUID_V4_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
