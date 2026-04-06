@@ -34,6 +34,8 @@
     "@date-fns/tz": "^1.2.0",
     "@fontsource/source-code-pro": "5.2.7",
     "@fontsource/zen-kaku-gothic-new": "5.2.7",
+    "@google-cloud/firestore": "^7.11.6",
+    "@google-cloud/firestore": "^7.11.6",
     "@resvg/resvg-js": "2.6.2",
     "astro": "6.1.2",
     "cheerio": "1.2.0",

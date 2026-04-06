@@ -12,6 +12,7 @@ import ChannelBadge from '../components/ChannelBadge.astro';
 import Tag from '../components/Tag.astro';
 import TagList from '../components/TagList.astro';
 import ArticleSummarizer from '../components/ArticleSummarizer';
+import LikeButton from '../components/LikeButton';
 import ImageLightbox from '../components/ImageLightbox.astro';
 import { SITE_TITLE } from '../consts';
 import { queryAvailablePosts } from '@lib/query';
@@ -113,6 +114,9 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
                 </a>
               </div>
             </div>
+            <div class="mb-4">
+              <LikeButton slug={slug} client:idle />
+            </div>
             <ArticleSummarizer locale={locale || 'ja'} includeToolbar client:idle />
           </div>
         </header>
@@ -128,6 +132,10 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
         </div>
 
         <div class="mt-[32px] lg:mt-6">
+          <LikeButton slug={slug} client:idle />
+        </div>
+
+        <div class="mt-4 lg:mt-6">
           <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
         </div>
 
