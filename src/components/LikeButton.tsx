@@ -4,7 +4,7 @@ import { trackEvent, likeEvents } from '../libs/analytics';
 
 interface Props {
   slug: string;
-  /** compact: タイトル下（高さ20px, gap 12px）, standard: 記事下（高さ40px, gap 22px） */
+  /** compact: タイトル下（高さ20px, gap 12px）, standard: 記事下（高さ40px, gap 12px, 丸枠） */
   variant?: 'compact' | 'standard';
   /** aria-labelの言語切り替え */
   locale?: string;
@@ -104,8 +104,8 @@ function FireworkParticles({ onComplete }: { onComplete: () => void }) {
   );
 }
 
-/** ハートアイコン（アウトライン） */
-function HeartOutline() {
+/** ハートアイコン（note.com準拠: 丸みのある形状、常にアウトライン、色で状態表現） */
+function HeartIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -113,19 +113,9 @@ function HeartOutline() {
       height="20"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
+      strokeWidth="1.5"
       strokeLinejoin="round"
     >
-      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-    </svg>
-  );
-}
-
-/** ハートアイコン（塗りつぶし） */
-function HeartFilled() {
-  return (
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
       <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
     </svg>
   );
@@ -133,8 +123,8 @@ function HeartFilled() {
 
 /** variant別スタイル定数（note.com実測値） */
 const VARIANT_STYLES = {
-  compact: { height: '20px', gap: '12px' },
-  standard: { height: '40px', gap: '22px' },
+  compact: { height: '20px', gap: '12px', circle: false },
+  standard: { height: '40px', gap: '12px', circle: true },
 } as const;
 
 export default function LikeButton({ slug, variant = 'compact', locale = 'ja' }: Props) {
@@ -266,8 +256,24 @@ export default function LikeButton({ slug, variant = 'compact', locale = 'ja' }:
       aria-label={locale === 'en' ? 'Like' : 'スキ'}
       aria-pressed={liked}
     >
-      <span style={{ position: 'relative', display: 'inline-flex' }}>
-        {liked ? <HeartFilled /> : <HeartOutline />}
+      <span
+        style={{
+          position: 'relative',
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          ...(styles.circle
+            ? {
+                width: '40px',
+                height: '40px',
+                borderRadius: '40px',
+                border: '2px solid currentColor',
+                backgroundColor: '#fff',
+              }
+            : {}),
+        }}
+      >
+        <HeartIcon />
         {isAnimating && <FireworkParticles onComplete={handleAnimationComplete} />}
       </span>
       <span style={{ color: 'rgba(8, 19, 26, 0.66)', fontSize: '16px' }}>

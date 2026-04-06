@@ -131,12 +131,11 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
           {tags && tags.map((tag) => <Tag name={tag} variant="detail" />)}
         </div>
 
-        <div class="mt-[32px] lg:mt-6">
+        <div class="mt-[32px] lg:mt-6 flex flex-wrap items-center gap-x-8 gap-y-4">
           <LikeButton slug={slug} variant="standard" locale={locale || 'ja'} client:idle />
-        </div>
-
-        <div class="mt-[32px] lg:mt-6">
-          <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
+          <div class="flex-1 min-w-0">
+            <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
+          </div>
         </div>
 
         <PostNavigation prev={adjacentPosts.prev} next={adjacentPosts.next} />

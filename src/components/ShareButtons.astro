@@ -9,7 +9,7 @@ const { title, url } = Astro.props;
 const encodedTitle = encodeURIComponent(title);
 ---
 
-<section class="mt-4 flex items-center gap-3">
+<section class="flex items-center gap-3">
   <a
     href={`https://twitter.com/intent/tweet?original_referer=${url}&text=${encodedTitle}&url=${url}`}
     target="_blank"
