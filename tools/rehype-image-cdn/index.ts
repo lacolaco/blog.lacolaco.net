@@ -33,6 +33,7 @@ const rehypeImageCdn: Plugin<[Options?], Root> = (options = {}) => {
       const filePath = join(publicDir, decodeURIComponent(src));
       if (!dimensionCache.has(filePath)) {
         try {
+          // image-size v2 はファイルパスを受け付けない（Buffer/Uint8Array のみ）
           const dimensions = imageSize(readFileSync(filePath));
           dimensionCache.set(
             filePath,
