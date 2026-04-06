@@ -25,6 +25,10 @@ async function initialize(): Promise<void> {
   }
 }
 
+/**
+ * ??=はJSシングルスレッドで原子的に動作するため、失敗後のリトライでも
+ * 最初の呼び出しだけがinitialize()を開始し、後続は同じPromiseを共有する。
+ */
 export async function getFirestore(): Promise<Firestore> {
   _initPromise ??= initialize();
   await _initPromise;

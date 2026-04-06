@@ -47,6 +47,12 @@ function isRateLimited(key: string): boolean {
   return false;
 }
 
+/**
+ * クライアントIPを取得する
+ * cf-connecting-ip（Cloudflare設定、改ざん不可）を最優先。
+ * ヘッダなし接続は'unknown'バケットを共有するため、slug単位で1秒1回に制限される。
+ * 正規ユーザーはCloudflare経由なのでcf-connecting-ipが常に存在する。
+ */
 function getClientIP(context: APIContext): string {
   return (
     context.request.headers.get('cf-connecting-ip') ||

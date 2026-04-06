@@ -22,11 +22,21 @@ describe('getOrCreateClientId', () => {
     vi.resetModules();
   });
 
-  it('localStorage に既存IDがあればそれを返す', async () => {
-    mockStorage.set('likes_client_id', 'existing-id');
+  it('localStorage に有効なUUID v4があればそれを返す', async () => {
+    mockStorage.set('likes_client_id', 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d');
 
     const { getOrCreateClientId } = await import('./client');
-    expect(getOrCreateClientId()).toBe('existing-id');
+    expect(getOrCreateClientId()).toBe('a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d');
+  });
+
+  it('localStorage に不正な値があれば再生成して上書き', async () => {
+    mockStorage.set('likes_client_id', 'invalid-not-uuid');
+
+    const { getOrCreateClientId } = await import('./client');
+    const id = getOrCreateClientId();
+
+    expect(id).toBe('test-uuid-1234');
+    expect(mockStorage.get('likes_client_id')).toBe('test-uuid-1234');
   });
 
   it('localStorage に未存在ならUUID生成して保存・返却', async () => {
@@ -59,7 +69,7 @@ describe('fetchLikeStatus', () => {
     const result = await fetchLikeStatus('test-slug', 'client-123');
 
     expect(fetch).toHaveBeenCalledWith('/api/likes/test-slug', {
-      headers: { 'X-Client-Id': 'client-123' },
+      headers: { 'x-client-id': 'client-123' },
     });
     expect(result).toEqual({ count: 5, liked: true });
   });
