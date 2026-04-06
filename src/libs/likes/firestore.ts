@@ -8,21 +8,29 @@ import type { Firestore, FieldValue as FieldValueType } from '@google-cloud/fire
 
 let _db: Firestore | null = null;
 let _FieldValue: typeof FieldValueType | null = null;
+let _initPromise: Promise<void> | null = null;
 
-export async function getFirestore(): Promise<Firestore> {
-  if (!_db) {
+async function initialize(): Promise<void> {
+  try {
     const mod = await import('@google-cloud/firestore');
     _db = new mod.Firestore({
       projectId: process.env.GCP_PROJECT_ID || 'blog-lacolaco-net',
     });
     _FieldValue = mod.FieldValue;
+  } catch (err) {
+    _initPromise = null; // 次の呼び出しでリトライ可能にする
+    throw err;
   }
-  return _db;
+}
+
+export async function getFirestore(): Promise<Firestore> {
+  _initPromise ??= initialize();
+  await _initPromise;
+  return _db!;
 }
 
 export async function getFieldValue(): Promise<typeof FieldValueType> {
-  if (!_FieldValue) {
-    await getFirestore();
-  }
+  _initPromise ??= initialize();
+  await _initPromise;
   return _FieldValue!;
 }

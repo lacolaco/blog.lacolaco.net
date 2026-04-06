@@ -5,8 +5,13 @@ export const prerender = false;
 
 const UUID_V4_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const SLUG_REGEX = /^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/;
+const SLUG_MAX_LENGTH = 200;
 
-/** in-memoryレート制限: IP+slug単位、1秒に1回まで */
+/**
+ * in-memoryレート制限: IP+slug単位、1秒に1回まで
+ * 制約: Cloud Runマルチインスタンス環境では各インスタンスが独立したMapを保持するため、
+ * インスタンスをまたいだレート制限は機能しない。単一インスタンス内での連打防止が目的。
+ */
 const RATE_LIMIT_WINDOW_MS = 1000;
 const rateLimitMap = new Map<string, number>();
 
@@ -48,7 +53,7 @@ function jsonResponse(data: unknown, status = 200): Response {
 
 export async function GET(context: APIContext): Promise<Response> {
   const slug = context.params.slug;
-  if (!slug || !SLUG_REGEX.test(slug)) {
+  if (!slug || slug.length > SLUG_MAX_LENGTH || !SLUG_REGEX.test(slug)) {
     return jsonResponse({ error: 'Invalid slug' }, 400);
   }
 
@@ -69,7 +74,7 @@ export async function GET(context: APIContext): Promise<Response> {
 
 export async function POST(context: APIContext): Promise<Response> {
   const slug = context.params.slug;
-  if (!slug || !SLUG_REGEX.test(slug)) {
+  if (!slug || slug.length > SLUG_MAX_LENGTH || !SLUG_REGEX.test(slug)) {
     return jsonResponse({ error: 'Invalid slug' }, 400);
   }
 
