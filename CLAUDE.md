@@ -86,6 +86,7 @@ pnpm test:libs    # library tests
 - **未完成品を提示するな。提示は完了宣言と同義**。セルフレビューで発見可能な問題を残したまま見せると信頼を失う。DevToolsの数値一致だけでなくレンダリング結果（font-smoothing、line-height等の視覚的影響）まで検証してから提示せよ
 - **ビューポート設定**: `mcp__chrome-devtools__emulate`の`viewport`パラメータを使用すること。`resize_page`はDevToolsパネル分ビューポートが狭くなる
 - **全幅検証必須**: UI変更後は最低4幅（375px, 768px, 1024px, 1440px）で確認せよ。1幅だけの確認は検証ではない。変更したコンポーネントだけでなく、それを使う全ページで確認する
+- **定量計測必須**: 変更が影響する品質指標（CLS, LCP, アクセシビリティ等）は目視ではなくツール（Lighthouse, Performance trace等）で計測せよ。スクリーンショットは定量計測の代替にならない
 
 ### クリーンアップ
 - 自分が生成したファイル（スクリーンショット、一時ファイル等）はタスク完了時に必ず削除せよ。放置するな
@@ -104,18 +105,21 @@ pnpm test:libs    # library tests
 ### 既存コードの修正ルール
 - **既存コードの設計意図を問え**。「なぜそうなっているか」が不明なまま修正するな。根拠がレファレンスに基づくか、根拠がないかで対応が変わる
 - 根拠不明の設計を表面的な修正（コメント追加等）で済ませない。根拠を確認し、正当ならそのまま、不当なら根本から修正する
+- **既存の動作を変更する前に、構成要素間の依存関係を分析せよ**。1つの要素だけ変えて「うまくいくか試す」のは設計ではなく試行錯誤。全組み合わせの挙動を事前に把握してから変更する
 
 ### Before Implementation
-1. 変更の期待結果をテストコードで書け（何が存在し、何が存在しないか）
-2. テストを実行して全て失敗することを確認しろ
-3. Search for similar existing code (Glob/Grep)
-4. Check if library/pattern already exists
-5. Read similar implementations first
-6. テストを通す実装を書け
-7. **変換・生成ロジックは実データで入出力を検証せよ**。型チェックやビルド成功は変換の正しさを保証しない
-8. **仕様書（モックアップ・デザインカンプ・APIスキーマ等）が存在する場合、全プロパティを抽出し実装対象との対応表を作成してから着手せよ**。部分参照で「だいたいこう」で実装に入るな
-9. **CSSフレームワーク（Tailwind等）の出力値を暗黙に前提とするな**。DevToolsで実測してから設計判断する。特にメジャーバージョン間で出力が変わる（例: Tailwind 4のoklch色空間、text-smの暗黙line-height）
-10. **既存CSSフレームワークとカスタムデザインが衝突する場合、フレームワークの上書き（lg:等）より、カスタムCSS（data属性セレクタ等）で直接記述せよ**。上書きチェーンは予測不能な副作用を生む
+1. **外部サービス・APIの機能可否を推測で断定するな**。「使えない」「できない」と回答する前に実際にリクエストして確認しろ。推測は検証の代替にならない
+2. **変更の影響範囲を設計フェーズで網羅的に列挙せよ**。1つの側面（例: 表示サイズ）だけで設計に入るな。関連する全側面（パフォーマンス、CLS、アクセシビリティ、既存機能との互換性、キャッシュ等）を初期設計で洗い出してから着手する
+3. 変更の期待結果をテストコードで書け（何が存在し、何が存在しないか）
+4. テストを実行して全て失敗することを確認しろ
+5. Search for similar existing code (Glob/Grep)
+6. Check if library/pattern already exists
+7. Read similar implementations first
+8. テストを通す実装を書け
+9. **変換・生成ロジックは実データで入出力を検証せよ**。型チェックやビルド成功は変換の正しさを保証しない
+10. **仕様書（モックアップ・デザインカンプ・APIスキーマ等）が存在する場合、全プロパティを抽出し実装対象との対応表を作成してから着手せよ**。部分参照で「だいたいこう」で実装に入るな
+11. **CSSフレームワーク（Tailwind等）の出力値を暗黙に前提とするな**。DevToolsで実測してから設計判断する。特にメジャーバージョン間で出力が変わる（例: Tailwind 4のoklch色空間、text-smの暗黙line-height）
+12. **既存CSSフレームワークとカスタムデザインが衝突する場合、フレームワークの上書き（lg:等）より、カスタムCSS（data属性セレクタ等）で直接記述せよ**。上書きチェーンは予測不能な副作用を生む
 
 ### UI設計の原則
 - **レファレンス駆動設計**: UIの設計値は自分で決めない。レファレンスサイトの実測値（DevToolsで取得）をベースに設計する。「だいたい合っている」は許容しない
@@ -151,6 +155,7 @@ pnpm test:libs    # library tests
 - CIステップにデバッグ出力を追加した場合、修正完了後に必ず削除してci.ymlをmainと同一に戻せ
 
 ### Git Operations
+- **コミット→push→PR作成→CI watchは不可分の単位。途中で止めるな。コミットだけで完了報告するな**
 - Use git-github-ops agent for complex operations
 - NEVER `git reset --hard` with uncommitted changes you need
 - **push前に`git fetch origin main`してブランチがmainの最新に追従しているか確認せよ**。outdatedなブランチをpushするな
@@ -216,7 +221,7 @@ Before implementing with external libraries:
 
 ### Image CDN (Cloudflare R2)
 - 画像はビルド時にR2 CDN URLに書き換え
-- tools/astro-integration-image-cdn/: URL変換Astro integration
+- tools/rehype-image-cdn/: 画像CDN URL変換・srcset/width/height付与rehypeプラグイン
 - tools/r2-sync/: R2へのアップロードスクリプト
 - 環境変数: IMAGE_CDN_BASE_URL
 - Dockerイメージから画像除外（.dockerignore）

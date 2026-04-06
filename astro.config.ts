@@ -9,7 +9,7 @@ import rehypeMermaid from 'rehype-mermaid';
 import remarkBreaks from 'remark-breaks';
 import remarkMath from 'remark-math';
 import remarkEmbed from './tools/remark-embed';
-import { imageCdnIntegration } from './tools/astro-integration-image-cdn';
+import rehypeImageCdn from './tools/rehype-image-cdn';
 
 import node from '@astrojs/node';
 
@@ -17,7 +17,7 @@ import node from '@astrojs/node';
 export default defineConfig({
   site: 'https://blog.lacolaco.net',
   outDir: 'dist',
-  integrations: [sitemap(), react(), imageCdnIntegration()],
+  integrations: [sitemap(), react()],
 
   vite: {
     plugins: [tailwindcss()],
@@ -44,7 +44,7 @@ export default defineConfig({
   markdown: {
     gfm: true,
     remarkPlugins: [remarkBreaks, remarkMath, remarkEmbed],
-    rehypePlugins: [rehypeGithubEmoji, rehypeGithubAlert, rehypeKatex, [rehypeMermaid, { strategy: 'pre-mermaid' }]],
+    rehypePlugins: [rehypeGithubEmoji, rehypeGithubAlert, rehypeKatex, [rehypeMermaid, { strategy: 'pre-mermaid' }], rehypeImageCdn],
     syntaxHighlight: {
       type: 'shiki',
       excludeLangs: ['mermaid', 'math'],

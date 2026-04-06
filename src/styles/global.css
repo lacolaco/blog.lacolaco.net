@@ -163,6 +163,8 @@
       @apply max-w-full block mx-auto object-contain md:max-w-(--breakpoint-md) cursor-pointer transition-opacity duration-200 hover:opacity-80;
       max-height: 50vh;
       max-height: 50dvh;
+      /* Notionのaltは常に"image"で情報価値がないため、ロード中の表示を抑制 */
+      color: transparent;
     }
 
     figure {
