@@ -39,4 +39,8 @@ export const likeEvents = {
     name: 'like_toggle',
     params: { action, slug },
   }),
+  error: (slug: string, errorMessage: string): AnalyticsEvent => ({
+    name: 'like_error',
+    params: { slug, error_message: errorMessage },
+  }),
 };

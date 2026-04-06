@@ -217,13 +217,14 @@ export default function LikeButton({ slug, variant = 'compact', locale = 'ja' }:
           }),
         );
       }
-    } catch {
+    } catch (error) {
       // ロールバック
       if (isMounted.current) {
         setCount(prevCount);
         setLiked(prevLiked);
         setIsAnimating(false);
       }
+      trackEvent(likeEvents.error(slug, error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       isTogglingRef.current = false;
     }

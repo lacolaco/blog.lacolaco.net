@@ -49,8 +49,8 @@ function isRateLimited(key: string): boolean {
 
 function getClientIP(context: APIContext): string {
   return (
-    context.request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
     context.request.headers.get('cf-connecting-ip') ||
+    context.request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
     'unknown'
   );
 }
