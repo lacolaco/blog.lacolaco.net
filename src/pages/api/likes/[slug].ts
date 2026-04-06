@@ -1,6 +1,7 @@
 import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
 import { getLikeStatus, toggleLike } from '../../../libs/likes/repository';
+import { UUID_V4_REGEX } from '../../../libs/likes/types';
 
 export const prerender = false;
 
@@ -16,8 +17,6 @@ function getValidSlugs(): Promise<Set<string>> {
   })();
   return _validSlugsPromise;
 }
-
-const UUID_V4_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const SLUG_REGEX = /^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/;
 const SLUG_MAX_LENGTH = 200;
 

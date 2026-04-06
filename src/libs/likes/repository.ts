@@ -38,8 +38,7 @@ export async function toggleLike(slug: string, clientId: string): Promise<LikeRe
   const reactionRef = postRef.collection(SUB_COLLECTION).doc(clientId);
 
   return db.runTransaction(async (tx) => {
-    const postSnap = await tx.get(postRef);
-    const reactionSnap = await tx.get(reactionRef);
+    const [postSnap, reactionSnap] = await Promise.all([tx.get(postRef), tx.get(reactionRef)]);
 
     const currentCount = postSnap.exists ? ((postSnap.data() as PostLikeDoc).count ?? 0) : 0;
 
