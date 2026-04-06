@@ -23,7 +23,7 @@ export async function getLikeStatus(slug: string, clientId: string): Promise<Lik
     clientId ? postRef.collection(SUB_COLLECTION).doc(clientId).get() : Promise.resolve(null),
   ]);
 
-  const count = postSnap.exists ? (postSnap.data() as PostLikeDoc).count : 0;
+  const count = postSnap.exists ? ((postSnap.data() as PostLikeDoc).count ?? 0) : 0;
   return { count, liked: reactionSnap?.exists ?? false };
 }
 
@@ -41,7 +41,7 @@ export async function toggleLike(slug: string, clientId: string): Promise<LikeRe
     const postSnap = await tx.get(postRef);
     const reactionSnap = await tx.get(reactionRef);
 
-    const currentCount = postSnap.exists ? (postSnap.data() as PostLikeDoc).count : 0;
+    const currentCount = postSnap.exists ? ((postSnap.data() as PostLikeDoc).count ?? 0) : 0;
 
     if (reactionSnap.exists) {
       // スキ取り消し

@@ -13,9 +13,11 @@ let _initPromise: Promise<void> | null = null;
 async function initialize(): Promise<void> {
   try {
     const mod = await import('@google-cloud/firestore');
-    _db = new mod.Firestore({
-      projectId: process.env.GCP_PROJECT_ID || 'blog-lacolaco-net',
-    });
+    const projectId = process.env.GCP_PROJECT_ID;
+    if (!projectId) {
+      throw new Error('GCP_PROJECT_ID environment variable is required');
+    }
+    _db = new mod.Firestore({ projectId });
     _FieldValue = mod.FieldValue;
   } catch (err) {
     _initPromise = null; // 次の呼び出しでリトライ可能にする

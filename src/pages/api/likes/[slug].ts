@@ -15,6 +15,16 @@ const SLUG_MAX_LENGTH = 200;
 const RATE_LIMIT_WINDOW_MS = 1000;
 const rateLimitMap = new Map<string, number>();
 
+// クリーンアップをリクエストパスから分離（10秒間隔）
+setInterval(() => {
+  const now = Date.now();
+  for (const [k, v] of rateLimitMap) {
+    if (now - v > RATE_LIMIT_WINDOW_MS * 10) {
+      rateLimitMap.delete(k);
+    }
+  }
+}, 10_000).unref();
+
 function isRateLimited(key: string): boolean {
   const now = Date.now();
   const lastRequest = rateLimitMap.get(key);
@@ -22,14 +32,6 @@ function isRateLimited(key: string): boolean {
     return true;
   }
   rateLimitMap.set(key, now);
-  // 古いエントリを定期的にクリーンアップ（1000件超で）
-  if (rateLimitMap.size > 1000) {
-    for (const [k, v] of rateLimitMap) {
-      if (now - v > RATE_LIMIT_WINDOW_MS * 10) {
-        rateLimitMap.delete(k);
-      }
-    }
-  }
   return false;
 }
 
