@@ -40,7 +40,7 @@ const rehypeImageCdn: Plugin<[Options?], Root> = (options = {}) => {
             dimensionCache.set(filePath, cached);
           }
         }
-        if (cached && !node.properties.width && !node.properties.height) {
+        if (cached && !(node.properties.width && node.properties.height)) {
           node.properties.width = cached.width;
           node.properties.height = cached.height;
         }
