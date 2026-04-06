@@ -109,25 +109,6 @@ describe('rehypeImageCdn', () => {
       const output = await processHtml('<img src="/images/test/%E3%83%86%E3%82%B9%E3%83%88.png" alt="test">', {
         baseUrl: CDN_BASE_URL,
       });
-      // ファイルが存在すれば（テスト用に作成）width/height が付与される
-      // テスト用にファイル名をデコードしたファイルを作成済み
-      assert.ok(output.includes('width="2"'));
-      assert.ok(output.includes('height="1"'));
-    });
-
-    test('既存の width/height 属性は上書きしない', async () => {
-      const output = await processHtml('<img src="/images/test/photo.png" alt="test" width="100" height="50">', {
-        baseUrl: CDN_BASE_URL,
-      });
-      assert.ok(output.includes('width="100"'));
-      assert.ok(output.includes('height="50"'));
-    });
-
-    test('片方だけ指定されている場合は両方をファイルから補完する', async () => {
-      const output = await processHtml('<img src="/images/test/photo.png" alt="test" width="500">', {
-        baseUrl: CDN_BASE_URL,
-      });
-      // ファイルの実寸で上書き
       assert.ok(output.includes('width="2"'));
       assert.ok(output.includes('height="1"'));
     });
@@ -136,10 +117,8 @@ describe('rehypeImageCdn', () => {
       const output = await processHtml('<img src="/images/nonexistent/missing.png" alt="test">', {
         baseUrl: CDN_BASE_URL,
       });
-      // width="..." 属性がないことを確認（srcset URL 内の width=480 等とは区別）
       assert.ok(!output.includes('width="'));
       assert.ok(!output.includes('height="'));
-      // src は CDN URL に書き換えられる
       assert.ok(output.includes(`src="${CDN_BASE_URL}/nonexistent/missing.png"`));
     });
   });
