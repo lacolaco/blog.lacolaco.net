@@ -160,8 +160,8 @@
 
     p > img,
     figure > img {
-      @apply max-w-full block mx-auto object-contain md:max-w-(--breakpoint-md) cursor-pointer transition-opacity duration-200 hover:opacity-80 bg-gray-100;
-      max-height: 50vh;
+      @apply max-w-full block mx-auto md:max-w-(--breakpoint-md) cursor-pointer transition-opacity duration-200 hover:opacity-80;
+      height: auto;
       max-height: 50dvh;
       color: transparent;
     }
