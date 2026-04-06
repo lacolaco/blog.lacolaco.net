@@ -114,6 +114,14 @@ describe('rehypeImageCdn', () => {
       assert.ok(output.includes('height="1"'));
     });
 
+    test('既存の width/height 属性は上書きしない', async () => {
+      const output = await processHtml('<img src="/images/test/photo.png" alt="test" width="100" height="50">', {
+        baseUrl: CDN_BASE_URL,
+      });
+      assert.ok(output.includes('width="100"'));
+      assert.ok(output.includes('height="50"'));
+    });
+
     test('画像ファイルが存在しない場合は width/height を付与しない', async () => {
       const output = await processHtml('<img src="/images/nonexistent/missing.png" alt="test">', {
         baseUrl: CDN_BASE_URL,
