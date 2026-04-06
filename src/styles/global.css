@@ -96,6 +96,17 @@
     Noto Color Emoji;
 }
 
+@keyframes firework-particle {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(0);
+    opacity: 0;
+  }
+}
+
 @layer components {
   .markdown-body {
     /* note.com実測: SP/PC共にline-height 2.0 */

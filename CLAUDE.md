@@ -226,6 +226,14 @@ Before implementing with external libraries:
 - 環境変数: IMAGE_CDN_BASE_URL
 - Dockerイメージから画像除外（.dockerignore）
 
+### Post Likes (スキ)
+- note.com準拠のいいね機能（未ログインでもスキ可能）
+- Firestore Native mode: post_likes/{slug} + reactions/{clientId}
+- Components: LikeButton.tsx, src/libs/likes/
+- API: /api/likes/[slug] (GET/POST, prerender: false)
+- Analytics: like_toggle { action, slug }
+- clientId: localStorage UUID v4（ブラウザ単位）
+
 ### Deployment
 - GCP Cloud Run via GitHub Actions
 - Production: main→deploy-production.yml

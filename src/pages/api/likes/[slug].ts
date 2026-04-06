@@ -1,0 +1,65 @@
+import type { APIContext } from 'astro';
+import { getLikeStatus, toggleLike } from '../../../libs/likes/repository';
+
+export const prerender = false;
+
+const UUID_V4_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const SLUG_REGEX = /^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/;
+
+function jsonResponse(data: unknown, status = 200): Response {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-store',
+    },
+  });
+}
+
+export async function GET(context: APIContext): Promise<Response> {
+  const slug = context.params.slug;
+  if (!slug || !SLUG_REGEX.test(slug)) {
+    return jsonResponse({ error: 'Invalid slug' }, 400);
+  }
+
+  const clientId = context.url.searchParams.get('clientId') ?? '';
+
+  if (clientId && !UUID_V4_REGEX.test(clientId)) {
+    return jsonResponse({ error: 'Invalid clientId format' }, 400);
+  }
+
+  try {
+    const result = await getLikeStatus(slug, clientId);
+    return jsonResponse(result);
+  } catch (error) {
+    console.error('Failed to get like status:', error);
+    return jsonResponse({ error: 'Internal server error' }, 500);
+  }
+}
+
+export async function POST(context: APIContext): Promise<Response> {
+  const slug = context.params.slug;
+  if (!slug || !SLUG_REGEX.test(slug)) {
+    return jsonResponse({ error: 'Invalid slug' }, 400);
+  }
+
+  let body: { clientId?: string };
+  try {
+    body = (await context.request.json()) as { clientId?: string };
+  } catch {
+    return jsonResponse({ error: 'Invalid JSON body' }, 400);
+  }
+
+  const { clientId } = body;
+  if (!clientId || !UUID_V4_REGEX.test(clientId)) {
+    return jsonResponse({ error: 'Valid clientId is required' }, 400);
+  }
+
+  try {
+    const result = await toggleLike(slug, clientId);
+    return jsonResponse(result);
+  } catch (error) {
+    console.error('Failed to toggle like:', error);
+    return jsonResponse({ error: 'Internal server error' }, 500);
+  }
+}
