@@ -115,7 +115,7 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
               </div>
             </div>
             <div class="mb-4">
-              <LikeButton slug={slug} client:idle />
+              <LikeButton slug={slug} locale={locale || 'ja'} client:idle />
             </div>
             <ArticleSummarizer locale={locale || 'ja'} includeToolbar client:idle />
           </div>
@@ -132,7 +132,7 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
         </div>
 
         <div class="mt-[32px] lg:mt-6">
-          <LikeButton slug={slug} variant="standard" client:idle />
+          <LikeButton slug={slug} variant="standard" locale={locale || 'ja'} client:idle />
         </div>
 
         <div class="mt-[32px] lg:mt-6">

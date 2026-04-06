@@ -6,6 +6,36 @@ export const prerender = false;
 const UUID_V4_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const SLUG_REGEX = /^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/;
 
+/** in-memoryレート制限: IP+slug単位、1秒に1回まで */
+const RATE_LIMIT_WINDOW_MS = 1000;
+const rateLimitMap = new Map<string, number>();
+
+function isRateLimited(key: string): boolean {
+  const now = Date.now();
+  const lastRequest = rateLimitMap.get(key);
+  if (lastRequest && now - lastRequest < RATE_LIMIT_WINDOW_MS) {
+    return true;
+  }
+  rateLimitMap.set(key, now);
+  // 古いエントリを定期的にクリーンアップ（1000件超で）
+  if (rateLimitMap.size > 1000) {
+    for (const [k, v] of rateLimitMap) {
+      if (now - v > RATE_LIMIT_WINDOW_MS * 10) {
+        rateLimitMap.delete(k);
+      }
+    }
+  }
+  return false;
+}
+
+function getClientIP(context: APIContext): string {
+  return (
+    context.request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+    context.request.headers.get('cf-connecting-ip') ||
+    'unknown'
+  );
+}
+
 function jsonResponse(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
     status,
@@ -53,6 +83,12 @@ export async function POST(context: APIContext): Promise<Response> {
   const { clientId } = body;
   if (!clientId || !UUID_V4_REGEX.test(clientId)) {
     return jsonResponse({ error: 'Valid clientId is required' }, 400);
+  }
+
+  const ip = getClientIP(context);
+  const rateLimitKey = `${ip}:${slug}`;
+  if (isRateLimited(rateLimitKey)) {
+    return jsonResponse({ error: 'Too many requests' }, 429);
   }
 
   try {

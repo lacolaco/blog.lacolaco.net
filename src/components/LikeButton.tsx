@@ -6,6 +6,8 @@ interface Props {
   slug: string;
   /** compact: タイトル下（高さ20px, gap 12px）, standard: 記事下（高さ40px, gap 22px） */
   variant?: 'compact' | 'standard';
+  /** aria-labelの言語切り替え */
+  locale?: string;
 }
 
 /** CustomEventの型 */
@@ -135,7 +137,7 @@ const VARIANT_STYLES = {
   standard: { height: '40px', gap: '22px' },
 } as const;
 
-export default function LikeButton({ slug, variant = 'compact' }: Props) {
+export default function LikeButton({ slug, variant = 'compact', locale = 'ja' }: Props) {
   const [count, setCount] = useState(0);
   const [liked, setLiked] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -206,14 +208,12 @@ export default function LikeButton({ slug, variant = 'compact' }: Props) {
       setIsAnimating(true);
     }
 
-    // Analytics
-    trackEvent(likeEvents.toggle(newLiked ? 'like' : 'unlike', slug));
-
     try {
       const result = await sendToggleLike(slug, clientIdRef.current);
       if (isMounted.current) {
         setCount(result.count);
         setLiked(result.liked);
+        trackEvent(likeEvents.toggle(result.liked ? 'like' : 'unlike', slug));
 
         // 同期イベント発行
         window.dispatchEvent(
@@ -263,7 +263,7 @@ export default function LikeButton({ slug, variant = 'compact' }: Props) {
         transition: 'color 0.2s',
         lineHeight: 1,
       }}
-      aria-label="スキ"
+      aria-label={locale === 'en' ? 'Like' : 'スキ'}
       aria-pressed={liked}
     >
       <span style={{ position: 'relative', display: 'inline-flex' }}>
