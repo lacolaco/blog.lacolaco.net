@@ -46,13 +46,13 @@ export async function toggleLike(slug: string, clientId: string): Promise<LikeRe
       // スキ取り消し
       tx.delete(reactionRef);
       const newCount = Math.max(0, currentCount - 1);
-      tx.set(postRef, { count: newCount, updated_at: FieldValue.serverTimestamp() });
+      tx.set(postRef, { count: newCount, updated_at: FieldValue.serverTimestamp() }, { merge: true });
       return { count: newCount, liked: false };
     } else {
       // スキ追加
       tx.set(reactionRef, { created_at: FieldValue.serverTimestamp() });
       const newCount = currentCount + 1;
-      tx.set(postRef, { count: newCount, updated_at: FieldValue.serverTimestamp() });
+      tx.set(postRef, { count: newCount, updated_at: FieldValue.serverTimestamp() }, { merge: true });
       return { count: newCount, liked: true };
     }
   });

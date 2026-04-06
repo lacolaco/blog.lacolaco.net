@@ -101,7 +101,7 @@ describe('sendToggleLike', () => {
     vi.resetModules();
   });
 
-  it('正しいボディでPOSTリクエストを送信する', async () => {
+  it('x-client-idヘッダでPOSTリクエストを送信する', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn().mockResolvedValue({
@@ -115,8 +115,7 @@ describe('sendToggleLike', () => {
 
     expect(fetch).toHaveBeenCalledWith('/api/likes/test-slug', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ clientId: 'client-123' }),
+      headers: { 'x-client-id': 'client-123' },
     });
     expect(result).toEqual({ count: 6, liked: true });
   });

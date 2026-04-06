@@ -20,6 +20,8 @@ async function initialize(): Promise<void> {
     _db = new mod.Firestore({ projectId });
     _FieldValue = mod.FieldValue;
   } catch (err) {
+    _db = null;
+    _FieldValue = null;
     _initPromise = null; // 次の呼び出しでリトライ可能にする
     throw err;
   }

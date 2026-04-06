@@ -41,8 +41,7 @@ export async function fetchLikeStatus(slug: string, clientId: string): Promise<L
 export async function sendToggleLike(slug: string, clientId: string): Promise<LikeResponse> {
   const res = await fetch(`/api/likes/${slug}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ clientId }),
+    headers: { 'x-client-id': clientId },
   });
 
   if (!res.ok) {

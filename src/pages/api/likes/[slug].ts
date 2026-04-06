@@ -112,14 +112,7 @@ export async function POST(context: APIContext): Promise<Response> {
     return jsonResponse({ error: 'Post not found' }, 404);
   }
 
-  let body: { clientId?: string };
-  try {
-    body = (await context.request.json()) as { clientId?: string };
-  } catch {
-    return jsonResponse({ error: 'Invalid JSON body' }, 400);
-  }
-
-  const { clientId } = body;
+  const clientId = context.request.headers.get('x-client-id') ?? '';
   if (!clientId || !UUID_V4_REGEX.test(clientId)) {
     return jsonResponse({ error: 'Valid clientId is required' }, 400);
   }
