@@ -5,6 +5,7 @@
 
 import { getFieldValue, getFirestore } from './firestore';
 import type { LikeResponse, PostLikeDoc } from './types';
+import { UUID_V4_REGEX } from './types';
 
 const COLLECTION = 'post_likes';
 const SUB_COLLECTION = 'reactions';
@@ -15,6 +16,9 @@ const SUB_COLLECTION = 'reactions';
  * @param clientId クライアントID（空文字の場合 liked: false）
  */
 export async function getLikeStatus(slug: string, clientId: string): Promise<LikeResponse> {
+  if (clientId && !UUID_V4_REGEX.test(clientId)) {
+    throw new Error('Invalid clientId format');
+  }
   const db = await getFirestore();
   const postRef = db.collection(COLLECTION).doc(slug);
 
@@ -33,8 +37,8 @@ export async function getLikeStatus(slug: string, clientId: string): Promise<Lik
  * reaction未存在 → 作成 + count+1
  */
 export async function toggleLike(slug: string, clientId: string): Promise<LikeResponse> {
-  if (!clientId) {
-    throw new Error('clientId is required');
+  if (!clientId || !UUID_V4_REGEX.test(clientId)) {
+    throw new Error('Valid clientId is required');
   }
   const [FieldValue, db] = await Promise.all([getFieldValue(), getFirestore()]);
   const postRef = db.collection(COLLECTION).doc(slug);

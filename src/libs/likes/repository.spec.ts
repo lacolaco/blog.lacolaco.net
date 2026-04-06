@@ -29,6 +29,10 @@ vi.mock('./firestore', () => ({
   getFieldValue: () => Promise.resolve({ serverTimestamp: () => 'mock-timestamp' }),
 }));
 
+import { getLikeStatus, toggleLike } from './repository';
+
+const VALID_CLIENT_ID = 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d';
+
 describe('getLikeStatus', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -38,8 +42,7 @@ describe('getLikeStatus', () => {
     mockGet.mockResolvedValue({ exists: false });
     mockReactionDoc.mockResolvedValue({ exists: false });
 
-    const { getLikeStatus } = await import('./repository');
-    const result = await getLikeStatus('test-slug', 'test-client-id');
+    const result = await getLikeStatus('test-slug', VALID_CLIENT_ID);
 
     expect(result).toEqual({ count: 0, liked: false });
   });
@@ -48,8 +51,7 @@ describe('getLikeStatus', () => {
     mockGet.mockResolvedValue({ exists: true, data: () => ({ count: 5 }) });
     mockReactionDoc.mockResolvedValue({ exists: false });
 
-    const { getLikeStatus } = await import('./repository');
-    const result = await getLikeStatus('test-slug', 'test-client-id');
+    const result = await getLikeStatus('test-slug', VALID_CLIENT_ID);
 
     expect(result).toEqual({ count: 5, liked: false });
   });
@@ -58,8 +60,7 @@ describe('getLikeStatus', () => {
     mockGet.mockResolvedValue({ exists: true, data: () => ({ count: 10 }) });
     mockReactionDoc.mockResolvedValue({ exists: true });
 
-    const { getLikeStatus } = await import('./repository');
-    const result = await getLikeStatus('test-slug', 'test-client-id');
+    const result = await getLikeStatus('test-slug', VALID_CLIENT_ID);
 
     expect(result).toEqual({ count: 10, liked: true });
   });
@@ -67,10 +68,13 @@ describe('getLikeStatus', () => {
   it('clientId未指定時は liked: false を返す', async () => {
     mockGet.mockResolvedValue({ exists: true, data: () => ({ count: 3 }) });
 
-    const { getLikeStatus } = await import('./repository');
     const result = await getLikeStatus('test-slug', '');
 
     expect(result).toEqual({ count: 3, liked: false });
+  });
+
+  it('不正なclientId形式でエラーをスローする', async () => {
+    await expect(getLikeStatus('test-slug', 'invalid-id')).rejects.toThrow('Invalid clientId format');
   });
 });
 
@@ -80,8 +84,11 @@ describe('toggleLike', () => {
   });
 
   it('空のclientIdでエラーをスローする', async () => {
-    const { toggleLike } = await import('./repository');
-    await expect(toggleLike('test-slug', '')).rejects.toThrow('clientId is required');
+    await expect(toggleLike('test-slug', '')).rejects.toThrow('Valid clientId is required');
+  });
+
+  it('不正なclientId形式でエラーをスローする', async () => {
+    await expect(toggleLike('test-slug', 'not-a-uuid')).rejects.toThrow('Valid clientId is required');
   });
 
   it('未スキ → reaction作成 + count+1', async () => {
@@ -100,8 +107,7 @@ describe('toggleLike', () => {
       return fn(tx);
     });
 
-    const { toggleLike } = await import('./repository');
-    const result = await toggleLike('test-slug', 'test-client-id');
+    const result = await toggleLike('test-slug', VALID_CLIENT_ID);
 
     expect(result).toEqual({ count: 6, liked: true });
     expect(mockTxSet).toHaveBeenCalledTimes(2); // post_likes + reaction
@@ -122,8 +128,7 @@ describe('toggleLike', () => {
       return fn(tx);
     });
 
-    const { toggleLike } = await import('./repository');
-    const result = await toggleLike('test-slug', 'test-client-id');
+    const result = await toggleLike('test-slug', VALID_CLIENT_ID);
 
     expect(result).toEqual({ count: 4, liked: false });
     expect(mockTxDelete).toHaveBeenCalledTimes(1);
@@ -145,8 +150,7 @@ describe('toggleLike', () => {
       return fn(tx);
     });
 
-    const { toggleLike } = await import('./repository');
-    const result = await toggleLike('test-slug', 'test-client-id');
+    const result = await toggleLike('test-slug', VALID_CLIENT_ID);
 
     expect(result).toEqual({ count: 0, liked: false });
   });
@@ -167,8 +171,7 @@ describe('toggleLike', () => {
       return fn(tx);
     });
 
-    const { toggleLike } = await import('./repository');
-    const result = await toggleLike('test-slug', 'test-client-id');
+    const result = await toggleLike('test-slug', VALID_CLIENT_ID);
 
     expect(result).toEqual({ count: 1, liked: true });
   });
