@@ -33,6 +33,9 @@ export async function getLikeStatus(slug: string, clientId: string): Promise<Lik
  * reaction未存在 → 作成 + count+1
  */
 export async function toggleLike(slug: string, clientId: string): Promise<LikeResponse> {
+  if (!clientId) {
+    throw new Error('clientId is required');
+  }
   const [FieldValue, db] = await Promise.all([getFieldValue(), getFirestore()]);
   const postRef = db.collection(COLLECTION).doc(slug);
   const reactionRef = postRef.collection(SUB_COLLECTION).doc(clientId);

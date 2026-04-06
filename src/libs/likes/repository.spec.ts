@@ -79,6 +79,11 @@ describe('toggleLike', () => {
     vi.clearAllMocks();
   });
 
+  it('空のclientIdでエラーをスローする', async () => {
+    const { toggleLike } = await import('./repository');
+    await expect(toggleLike('test-slug', '')).rejects.toThrow('clientId is required');
+  });
+
   it('未スキ → reaction作成 + count+1', async () => {
     const mockTxGet = vi.fn();
     const mockTxSet = vi.fn();
