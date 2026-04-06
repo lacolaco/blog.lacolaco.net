@@ -17,7 +17,7 @@ interface Options {
 const rehypeImageCdn: Plugin<[Options?], Root> = (options = {}) => {
   const baseUrl = (options.baseUrl || process.env.IMAGE_CDN_BASE_URL)?.replace(/\/$/, '');
   const publicDir = options.publicDir || join(process.cwd(), 'public');
-  const dimensionCache = new Map<string, { width: number; height: number }>();
+  const dimensionCache = new Map<string, { width: number; height: number } | null>();
 
   return (tree: Root) => {
     visit(tree, 'element', (node: Element) => {
@@ -30,22 +30,23 @@ const rehypeImageCdn: Plugin<[Options?], Root> = (options = {}) => {
       const cdnPath = src.slice('/images'.length);
 
       // width/height（CLS 防止）
-      try {
-        const filePath = join(publicDir, decodeURIComponent(src));
-        let cached = dimensionCache.get(filePath);
-        if (!cached) {
+      const filePath = join(publicDir, decodeURIComponent(src));
+      if (!dimensionCache.has(filePath)) {
+        try {
           const dimensions = imageSize(readFileSync(filePath));
-          if (dimensions.width && dimensions.height) {
-            cached = { width: dimensions.width, height: dimensions.height };
-            dimensionCache.set(filePath, cached);
-          }
+          dimensionCache.set(
+            filePath,
+            dimensions.width && dimensions.height ? { width: dimensions.width, height: dimensions.height } : null,
+          );
+        } catch {
+          console.warn(`[rehype-image-cdn] Could not read image: ${filePath}`);
+          dimensionCache.set(filePath, null);
         }
-        if (cached && !(node.properties.width && node.properties.height)) {
-          node.properties.width = cached.width;
-          node.properties.height = cached.height;
-        }
-      } catch {
-        console.warn(`[rehype-image-cdn] Could not read image: ${join(publicDir, decodeURIComponent(src))}`);
+      }
+      const cached = dimensionCache.get(filePath);
+      if (cached && !(node.properties.width && node.properties.height)) {
+        node.properties.width = cached.width;
+        node.properties.height = cached.height;
       }
 
       // loading/decoding
