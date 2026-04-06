@@ -8,7 +8,6 @@ import { visit } from 'unist-util-visit';
 const SRCSET_WIDTHS = [480, 768, 1024, 1536];
 const SIZES = '(min-width: 768px) 768px, calc(100vw - 32px)';
 const RESIZABLE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp']);
-const dimensionCache = new Map<string, { width: number; height: number } | null>();
 
 interface Options {
   baseUrl?: string;
@@ -18,6 +17,7 @@ interface Options {
 const rehypeImageCdn: Plugin<[Options?], Root> = (options = {}) => {
   const baseUrl = (options.baseUrl || process.env.IMAGE_CDN_BASE_URL)?.replace(/\/$/, '');
   const publicDir = options.publicDir || join(process.cwd(), 'public');
+  const dimensionCache = new Map<string, { width: number; height: number } | null>();
 
   return (tree: Root) => {
     visit(tree, 'element', (node: Element) => {
