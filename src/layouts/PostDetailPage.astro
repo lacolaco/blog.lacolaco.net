@@ -79,16 +79,19 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
 
             {/* PC/SP共通: 日付+ツール（チャンネル/タグはボトムのみ） */}
             <div class="flex items-center justify-between mb-6 lg:mb-6">
-              <span class="text-xs lg:text-[13px] text-muted lg:text-secondary leading-[normal]">
-                <FormattedDate date={created_time} />
-                {
-                  isUpdated && (
-                    <span class="text-muted">
-                      (Updated: <FormattedDate date={last_edited_time} />)
-                    </span>
-                  )
-                }
-              </span>
+              <div class="flex items-center gap-4">
+                <span class="text-xs lg:text-[13px] text-muted lg:text-secondary leading-[normal]">
+                  <FormattedDate date={created_time} />
+                  {
+                    isUpdated && (
+                      <span class="text-muted">
+                        (Updated: <FormattedDate date={last_edited_time} />)
+                      </span>
+                    )
+                  }
+                </span>
+                <LikeButton slug={slug} locale={locale || 'ja'} client:idle />
+              </div>
               <div class="flex items-center gap-0.5">
                 {
                   alternatePost && (
@@ -113,9 +116,6 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
                   <span class="hidden lg:inline">Markdown</span>
                 </a>
               </div>
-            </div>
-            <div class="mb-4">
-              <LikeButton slug={slug} locale={locale || 'ja'} client:idle />
             </div>
             <ArticleSummarizer locale={locale || 'ja'} includeToolbar client:idle />
           </div>
