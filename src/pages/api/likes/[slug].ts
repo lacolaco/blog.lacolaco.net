@@ -12,8 +12,13 @@ export const prerender = false;
 let _validSlugsPromise: Promise<Set<string>> | null = null;
 function getValidSlugs(): Promise<Set<string>> {
   _validSlugsPromise ??= (async () => {
-    const [posts, postsEn] = await Promise.all([getCollection('posts'), getCollection('postsEn')]);
-    return new Set([...posts, ...postsEn].map((p) => p.data.slug));
+    try {
+      const [posts, postsEn] = await Promise.all([getCollection('posts'), getCollection('postsEn')]);
+      return new Set([...posts, ...postsEn].map((p) => p.data.slug));
+    } catch (err) {
+      _validSlugsPromise = null;
+      throw err;
+    }
   })();
   return _validSlugsPromise;
 }

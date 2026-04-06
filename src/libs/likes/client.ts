@@ -8,15 +8,20 @@ import { UUID_V4_REGEX } from './types';
 
 const STORAGE_KEY = 'likes_client_id';
 
-/** clientIdを取得または生成する（不正な値はlocalStorageから削除して再生成） */
+/** clientIdを取得または生成する（不正な値は再生成、localStorage無効時はセッション限定UUID） */
 export function getOrCreateClientId(): string {
-  const existing = localStorage.getItem(STORAGE_KEY);
-  if (existing && UUID_V4_REGEX.test(existing)) {
-    return existing;
+  try {
+    const existing = localStorage.getItem(STORAGE_KEY);
+    if (existing && UUID_V4_REGEX.test(existing)) {
+      return existing;
+    }
+    const id = crypto.randomUUID();
+    localStorage.setItem(STORAGE_KEY, id);
+    return id;
+  } catch {
+    // Safari プライベートブラウジング等でlocalStorageが無効な場合
+    return crypto.randomUUID();
   }
-  const id = crypto.randomUUID();
-  localStorage.setItem(STORAGE_KEY, id);
-  return id;
 }
 
 /** スキ状態を取得する */
