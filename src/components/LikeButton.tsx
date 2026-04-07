@@ -139,7 +139,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
           setLoading(false);
         }
       });
-  }, [state, loading, dispatchSync]);
+  }, [state, dispatchSync]);
 
   if (variant === 'compact') {
     return (
@@ -171,32 +171,30 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
 
   // standard variant
   return (
-    <div className="flex items-center gap-3">
-      <button
-        type="button"
-        onClick={handleToggle}
-        disabled={loading}
+    <button
+      type="button"
+      onClick={handleToggle}
+      disabled={loading}
+      className={[
+        'relative inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-colors cursor-pointer',
+        state.liked
+          ? 'text-pink-500 border border-pink-300 bg-pink-50 hover:bg-pink-100'
+          : 'text-muted border border-gray-300 hover:text-default hover:border-gray-400 hover:bg-gray-50 bg-transparent',
+      ].join(' ')}
+      aria-label={state.liked ? t.liked : t.like}
+      aria-pressed={state.liked}
+    >
+      <span
         className={[
-          'relative inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-colors cursor-pointer',
-          state.liked
-            ? 'text-pink-500 border border-pink-300 bg-pink-50 hover:bg-pink-100'
-            : 'text-muted border border-gray-300 hover:text-default hover:border-gray-400 hover:bg-gray-50 bg-transparent',
+          'inline-block w-5 h-5 transition-transform',
+          state.liked ? 'icon-[mdi--heart] scale-110' : 'icon-[mdi--heart-outline]',
         ].join(' ')}
-        aria-label={state.liked ? t.liked : t.like}
-        aria-pressed={state.liked}
-      >
-        <span
-          className={[
-            'inline-block w-5 h-5 transition-transform',
-            state.liked ? 'icon-[mdi--heart] scale-110' : 'icon-[mdi--heart-outline]',
-          ].join(' ')}
-          aria-hidden="true"
-        />
-        <span>{state.liked ? t.liked : t.like}</span>
-        {state.count > 0 && <span>{state.count}</span>}
-        {showParticles && <ParticleEffect />}
-      </button>
-    </div>
+        aria-hidden="true"
+      />
+      <span>{state.liked ? t.liked : t.like}</span>
+      {state.count > 0 && <span>{state.count}</span>}
+      {showParticles && <ParticleEffect />}
+    </button>
   );
 }
 
