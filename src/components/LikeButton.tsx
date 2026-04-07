@@ -188,22 +188,24 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
         type="button"
         onClick={handleToggle}
         disabled={loading}
-        className="relative inline-flex items-center gap-3 border-0 bg-transparent p-0 cursor-pointer disabled:cursor-not-allowed"
+        className="inline-flex items-center gap-3 border-0 bg-transparent p-0 cursor-pointer disabled:cursor-not-allowed"
         aria-label={ariaLabel}
         aria-pressed={state.liked}
       >
-        <span
-          className={[
-            'inline-block w-5 h-5 transition-transform',
-            state.liked ? 'icon-[mdi--heart] scale-110' : 'icon-[mdi--heart-outline]',
-          ].join(' ')}
-          style={{ color: state.liked ? ACCENT_COLOR : COMPACT_UNLIKED_COLOR }}
-          aria-hidden="true"
-        />
+        <span className="relative">
+          <span
+            className={[
+              'inline-block w-5 h-5 transition-transform',
+              state.liked ? 'icon-[mdi--heart] scale-110' : 'icon-[mdi--heart-outline]',
+            ].join(' ')}
+            style={{ color: state.liked ? ACCENT_COLOR : COMPACT_UNLIKED_COLOR }}
+            aria-hidden="true"
+          />
+          {showParticles && <ParticleEffect />}
+        </span>
         <span className="text-[16px] leading-[normal]" style={{ color: COUNT_COLOR }}>
           {state.count}
         </span>
-        {showParticles && <ParticleEffect />}
       </button>
     );
   }
@@ -214,12 +216,12 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
       type="button"
       onClick={handleToggle}
       disabled={loading}
-      className="relative inline-flex items-center gap-3 border-0 bg-transparent p-0 cursor-pointer disabled:cursor-not-allowed"
+      className="inline-flex items-center gap-3 border-0 bg-transparent p-0 cursor-pointer disabled:cursor-not-allowed"
       aria-label={ariaLabel}
       aria-pressed={state.liked}
     >
       <span
-        className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white"
+        className="relative inline-flex items-center justify-center w-10 h-10 rounded-full bg-white"
         style={{ border: `2px solid ${ACCENT_COLOR}` }}
       >
         <span
