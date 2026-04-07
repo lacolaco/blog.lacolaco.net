@@ -4,6 +4,7 @@
 
 @theme {
   --text-3xl: 2rem;
+  /* 変更時は LikeButton.tsx の PARTICLE_DURATION_MS も更新すること */
   --animate-like-particle: like-particle 0.6s ease-out forwards;
 }
 

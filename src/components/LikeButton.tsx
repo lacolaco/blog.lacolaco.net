@@ -15,6 +15,9 @@ interface Props {
 /** compact/standard間の状態同期用CustomEvent名 */
 const SYNC_EVENT = 'like-state-sync';
 
+/** パーティクルアニメーション時間（global.css の like-particle 0.6s と対応） */
+const PARTICLE_DURATION_MS = 600;
+
 interface LikeSyncDetail {
   slug: string;
   state: LikeState;
@@ -128,7 +131,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
       particleTimerRef.current = setTimeout(() => {
         particleTimerRef.current = null;
         if (isMounted.current) setShowParticles(false);
-      }, 600);
+      }, PARTICLE_DURATION_MS);
     }
 
     sendToggleLike(slugRef.current, clientIdRef.current)
