@@ -251,5 +251,18 @@ describe('likes client', () => {
       expect(trackSpy).toHaveBeenCalledWith(expect.objectContaining({ name: 'like_error' }));
       trackSpy.mockRestore();
     });
+
+    // レスポンスボディが不正な場合 → ZodError + analytics
+    it('不正なレスポンスボディでlike_errorを発火しエラーをスローする', async () => {
+      const trackSpy = vi.spyOn(analytics, 'trackEvent');
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ count: 'NaN', liked: 1 }),
+      });
+
+      await expect(fetchLikeStatus(testSlug, testClientId)).rejects.toThrow();
+      expect(trackSpy).toHaveBeenCalledWith(expect.objectContaining({ name: 'like_error' }));
+      trackSpy.mockRestore();
+    });
   });
 });
