@@ -155,6 +155,9 @@ pnpm test:libs    # library tests
   ```
 - CIステップにデバッグ出力を追加した場合、修正完了後に必ず削除してci.ymlをmainと同一に戻せ
 
+### PRのマージ順序
+- **デプロイ時の依存関係でマージ順序を決定せよ**。実装着手順序とマージ順序は異なる。環境変数・インフラ設定は、それを使うコードより先にマージ・デプロイする。「コードがデプロイされた時点で依存リソースが存在するか」を基準にする
+
 ### Git Operations
 - **コミット→push→PR作成→CI watchは不可分の単位。途中で止めるな。コミットだけで完了報告するな**
 - Use git-github-ops agent for complex operations
