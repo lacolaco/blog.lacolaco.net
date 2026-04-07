@@ -6,6 +6,11 @@ export const SLUG_MAX_LENGTH = 200;
 /** clientIdがFirestoreフィールドパスとして安全な文字種かを検証するパターン */
 const CLIENT_ID_PATTERN = /^[0-9a-f-]{1,128}$/i;
 
+/** slugの形式が有効かを返す */
+export function isValidSlug(slug: string): boolean {
+  return SLUG_PATTERN.test(slug) && slug.length <= SLUG_MAX_LENGTH;
+}
+
 export function validateSlug(slug: string): void {
   if (!SLUG_PATTERN.test(slug) || slug.length > SLUG_MAX_LENGTH) {
     throw new Error(`不正なslug: ${slug}`);

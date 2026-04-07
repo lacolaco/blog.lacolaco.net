@@ -1,6 +1,6 @@
 import type { APIContext } from 'astro';
 import { FirestoreClient, MetadataService } from '../../../libs/firestore';
-import { isValidClientId, LikesRepository, SLUG_MAX_LENGTH, SLUG_PATTERN } from '../../../libs/likes';
+import { isValidClientId, isValidSlug, LikesRepository } from '../../../libs/likes';
 
 export const prerender = false;
 
@@ -22,10 +22,6 @@ function getRepository(): LikesRepository {
     repository = new LikesRepository(new FirestoreClient(database, new MetadataService()));
   }
   return repository;
-}
-
-function validateSlug(slug: string): boolean {
-  return SLUG_PATTERN.test(slug) && slug.length <= SLUG_MAX_LENGTH;
 }
 
 /** レート制限チェック。制限中ならtrueを返す */
@@ -57,7 +53,7 @@ function jsonResponse(data: unknown, status = 200, extraHeaders?: Record<string,
 
 export async function GET(context: APIContext): Promise<Response> {
   const slug = context.params.slug!;
-  if (!validateSlug(slug)) {
+  if (!isValidSlug(slug)) {
     return jsonResponse({ error: 'Invalid slug' }, 400);
   }
 
@@ -79,7 +75,7 @@ export async function GET(context: APIContext): Promise<Response> {
 
 export async function POST(context: APIContext): Promise<Response> {
   const slug = context.params.slug!;
-  if (!validateSlug(slug)) {
+  if (!isValidSlug(slug)) {
     return jsonResponse({ error: 'Invalid slug' }, 400);
   }
 
