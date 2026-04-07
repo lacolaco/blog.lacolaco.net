@@ -230,5 +230,9 @@ describe('LikeButton', () => {
     });
     expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false');
     expect(mockFetchLikeStatus).not.toHaveBeenCalled();
+
+    // クリックしてもAPIが呼ばれないことを確認
+    screen.getByRole('button').click();
+    expect(mockSendToggleLike).not.toHaveBeenCalled();
   });
 });
