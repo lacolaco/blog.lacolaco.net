@@ -3,8 +3,6 @@ import type { FirestoreValue } from '../firestore/types';
 import { CLIENT_ID_PATTERN, SLUG_MAX_LENGTH, SLUG_PATTERN } from './constants';
 import type { LikeStatus } from './types';
 
-export { CLIENT_ID_PATTERN, SLUG_MAX_LENGTH, SLUG_PATTERN };
-
 /** reactionsマップからclientIdのキーを抽出する */
 function extractReactions(fields: Record<string, FirestoreValue> | undefined): Record<string, boolean> {
   if (!fields) return {};
