@@ -4,10 +4,7 @@ import type { LikeStatus } from './types';
 
 const CLIENT_ID_KEY = 'likes_client_id';
 
-/** セッション限定UUID（localStorage不可時のフォールバック） */
-let sessionClientId: string | null = null;
-
-/** clientIdを取得または生成する */
+/** clientIdを取得または生成する。localStorage不可時は毎回新規生成（呼び出し側でキャッシュすること） */
 export function getOrCreateClientId(): string {
   try {
     const stored = localStorage.getItem(CLIENT_ID_KEY);
@@ -18,11 +15,9 @@ export function getOrCreateClientId(): string {
     localStorage.setItem(CLIENT_ID_KEY, newId);
     return newId;
   } catch {
-    // localStorage不可（Safari Private等）: セッション限定UUID
-    if (!sessionClientId) {
-      sessionClientId = crypto.randomUUID();
-    }
-    return sessionClientId;
+    // localStorage不可（Safari Private等）: 毎回生成。
+    // セッション内での一貫性はUI層（React state等）で担保する。
+    return crypto.randomUUID();
   }
 }
 
