@@ -62,6 +62,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
 
   // 初期化: clientId取得 + いいね状態フェッチ
   useEffect(() => {
+    let active = true;
     isMounted.current = true;
 
     try {
@@ -79,7 +80,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
     setLoading(true);
     fetchLikeStatus(slugRef.current, clientId)
       .then((result) => {
-        if (isMounted.current) {
+        if (active) {
           setState({ count: result.count, liked: result.liked });
         }
       })
@@ -88,12 +89,13 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
       })
       .finally(() => {
         loadingRef.current = false;
-        if (isMounted.current) {
+        if (active) {
           setLoading(false);
         }
       });
 
     return () => {
+      active = false;
       isMounted.current = false;
       if (particleTimerRef.current) clearTimeout(particleTimerRef.current);
     };
@@ -173,7 +175,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
       });
   }, [state, dispatchSync]);
 
-  const ariaLabel = `${state.liked ? t.liked : t.like}${state.count > 0 ? ` (${state.count})` : ''}`;
+  const ariaLabel = `${state.liked ? t.liked : t.like} (${state.count})`;
 
   if (variant === 'compact') {
     return (
