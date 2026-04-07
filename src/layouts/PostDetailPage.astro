@@ -77,7 +77,11 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
             }
             <h1 class="text-[20px] font-bold leading-[30px] mb-2 lg:text-[28px] lg:leading-[1.4] lg:mb-3">{title}</h1>
 
-            {/* PC/SP共通: 日付+ツール（チャンネル/タグはボトムのみ） */}
+            <div class="mb-3">
+              <LikeButton slug={slug} locale={locale || 'ja'} variant="compact" client:idle />
+            </div>
+
+            {/* PC/SP共通: 日付+ツール */}
             <div class="flex items-center justify-between mb-6 lg:mb-6">
               <span class="text-xs lg:text-[13px] text-muted lg:text-secondary leading-[normal]">
                 <FormattedDate date={created_time} />
@@ -112,7 +116,6 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
                   <span class="icon-[simple-icons--markdown] inline-block w-5 h-5 lg:w-4 lg:h-4"></span>
                   <span class="hidden lg:inline">Markdown</span>
                 </a>
-                <LikeButton slug={slug} locale={locale || 'ja'} variant="compact" client:idle />
               </div>
             </div>
             <ArticleSummarizer locale={locale || 'ja'} includeToolbar client:idle />
@@ -130,11 +133,11 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
         </div>
 
         <div class="mt-[32px] lg:mt-6">
-          <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
+          <LikeButton slug={slug} locale={locale || 'ja'} variant="standard" client:idle />
         </div>
 
-        <div class="mt-6 flex justify-center">
-          <LikeButton slug={slug} locale={locale || 'ja'} variant="standard" client:idle />
+        <div class="mt-6">
+          <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
         </div>
 
         <PostNavigation prev={adjacentPosts.prev} next={adjacentPosts.next} />

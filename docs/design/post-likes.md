@@ -176,6 +176,47 @@ FIRESTORE_EMULATOR_HOST=localhost:8080 pnpm dev
 - compact/standard 2インスタンス間の同期: CustomEvent
 - localStorage不可時のclientIdキャッシュ: React stateで担保（client.tsは毎回新規生成する設計）
 
+#### デザイン数値仕様（note.comスキボタン実測値準拠）
+
+レファレンス: note.com 記事ページのスキボタン（PC 1440px、isolated context で実測）
+
+##### compact（タイトル下）
+
+| 属性 | 値 |
+|------|-----|
+| コンテナ | 20x20px、装飾なし（border: 0、background: transparent） |
+| アイコン | ハート 20x20px |
+| unliked時アイコン色 | `rgba(8, 19, 26, 0.5)` |
+| liked時アイコン色 | `rgb(209, 62, 92)` |
+| カウント文字サイズ | 16px |
+| カウント色 | `rgba(8, 19, 26, 0.66)`（liked状態に関わらず固定） |
+| アイコン-カウント間隔 | margin-left 12px |
+
+##### standard（記事下）
+
+| 属性 | 値 |
+|------|-----|
+| コンテナ | **40x40px、border: 2px solid rgb(209,62,92)、border-radius: 40px、background: white** |
+| アイコン | ハート 20x20px（コンテナ内 flex center） |
+| アイコン色 | **`rgb(209, 62, 92)` 固定**（liked/unliked問わず常に赤） |
+| カウント文字サイズ | 16px |
+| カウント色 | `rgba(8, 19, 26, 0.66)`（liked状態に関わらず固定） |
+| アイコン-カウント間隔 | margin-left 12px |
+
+##### 配置
+
+- **compact**: タイトル直下に独立行として配置
+- **standard**: 記事下、タグの下・ShareButtonsの上に左寄せで配置
+
+##### 状態表現
+
+- **unliked**: ハート線画アイコン（outline）
+  - compact: `rgba(8, 19, 26, 0.5)`
+  - standard: `rgb(209, 62, 92)`（赤outline）
+- **liked**: ハート塗りアイコン（filled）、`rgb(209, 62, 92)`
+- テキストラベル（「いいね」「いいね済み」）は表示しない。アイコン + カウント数のみ
+- カウントは0を含め常に表示
+
 ## アナリティクス (`src/libs/analytics.ts`)
 
 | イベント | 関数 | パラメータ |

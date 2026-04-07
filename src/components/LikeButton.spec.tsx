@@ -52,7 +52,7 @@ describe('LikeButton', () => {
     expect(screen.getByRole('button')).toHaveTextContent('5');
   });
 
-  it('compact variantでカウントが0のときカウント表示なし', async () => {
+  it('compact variantでカウントが0のとき0が表示される', async () => {
     mockFetchLikeStatus.mockResolvedValueOnce({ count: 0, liked: false });
     const LikeButton = await importLikeButton();
 
@@ -62,7 +62,7 @@ describe('LikeButton', () => {
       expect(screen.getByRole('button')).not.toBeDisabled();
     });
     expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false');
-    expect(screen.getByRole('button')).not.toHaveTextContent(/\d/);
+    expect(screen.getByRole('button')).toHaveTextContent('0');
   });
 
   it('クリック時に楽観的UI更新が発生する', async () => {

@@ -29,6 +29,13 @@ const i18n = {
   en: { like: 'Like', liked: 'Liked' },
 };
 
+/** note.com実測値準拠の赤色（liked色、standardボーダー色） */
+const ACCENT_COLOR = 'rgb(209, 62, 92)';
+/** note.com実測値準拠のcompact unliked色 */
+const COMPACT_UNLIKED_COLOR = 'rgba(8, 19, 26, 0.5)';
+/** note.com実測値準拠のカウント色（liked状態に関わらず固定） */
+const COUNT_COLOR = 'rgba(8, 19, 26, 0.66)';
+
 /** localStorage不可時にcompact/standard間でclientIdを共有するためのモジュールレベルキャッシュ */
 let cachedClientId: ClientId | null = null;
 function getClientId(): ClientId {
@@ -173,53 +180,53 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
         type="button"
         onClick={handleToggle}
         disabled={loading}
-        className={[
-          'relative inline-flex items-center gap-1 p-1.5 lg:px-2 lg:py-1 rounded text-[13px] leading-[normal] no-underline transition-colors cursor-pointer border-0 bg-transparent',
-          state.liked
-            ? 'text-pink-500 hover:text-pink-600 hover:bg-pink-50'
-            : 'text-muted lg:text-tertiary hover:text-default lg:hover:text-secondary hover:bg-gray-50 lg:hover:bg-surface',
-        ].join(' ')}
+        className="relative inline-flex items-center gap-3 border-0 bg-transparent p-0 cursor-pointer"
         aria-label={ariaLabel}
         aria-pressed={state.liked}
       >
         <span
           className={[
-            'inline-block w-5 h-5 lg:w-4 lg:h-4 transition-transform',
+            'inline-block w-5 h-5 transition-transform',
             state.liked ? 'icon-[mdi--heart] scale-110' : 'icon-[mdi--heart-outline]',
           ].join(' ')}
+          style={{ color: state.liked ? ACCENT_COLOR : COMPACT_UNLIKED_COLOR }}
           aria-hidden="true"
         />
-        {state.count > 0 && <span className="hidden lg:inline">{state.count}</span>}
+        <span className="text-[16px] leading-[normal]" style={{ color: COUNT_COLOR }}>
+          {state.count}
+        </span>
         {showParticles && <ParticleEffect />}
       </button>
     );
   }
 
-  // standard variant
+  // standard variant: 40x40円形ボーダーコンテナ内にハートアイコンを中央配置
   return (
     <button
       type="button"
       onClick={handleToggle}
       disabled={loading}
-      className={[
-        'relative inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-colors cursor-pointer',
-        state.liked
-          ? 'text-pink-500 border border-pink-300 bg-pink-50 hover:bg-pink-100'
-          : 'text-muted border border-gray-300 hover:text-default hover:border-gray-400 hover:bg-gray-50 bg-transparent',
-      ].join(' ')}
+      className="relative inline-flex items-center gap-3 border-0 bg-transparent p-0 cursor-pointer"
       aria-label={ariaLabel}
       aria-pressed={state.liked}
     >
       <span
-        className={[
-          'inline-block w-5 h-5 transition-transform',
-          state.liked ? 'icon-[mdi--heart] scale-110' : 'icon-[mdi--heart-outline]',
-        ].join(' ')}
-        aria-hidden="true"
-      />
-      <span>{state.liked ? t.liked : t.like}</span>
-      {state.count > 0 && <span>{state.count}</span>}
-      {showParticles && <ParticleEffect />}
+        className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white"
+        style={{ border: `2px solid ${ACCENT_COLOR}` }}
+      >
+        <span
+          className={[
+            'inline-block w-5 h-5 transition-transform',
+            state.liked ? 'icon-[mdi--heart] scale-110' : 'icon-[mdi--heart-outline]',
+          ].join(' ')}
+          style={{ color: ACCENT_COLOR }}
+          aria-hidden="true"
+        />
+        {showParticles && <ParticleEffect />}
+      </span>
+      <span className="text-[16px] leading-[normal]" style={{ color: COUNT_COLOR }}>
+        {state.count}
+      </span>
     </button>
   );
 }
