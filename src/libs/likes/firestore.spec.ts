@@ -1,86 +1,118 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { TokenManager, FirestoreClient } from './firestore';
+import { MetadataService, FirestoreClient } from './firestore';
 
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);
 
-const METADATA_URL = 'http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token';
+const METADATA_BASE = 'http://metadata.google.internal/computeMetadata/v1';
+const TOKEN_URL = `${METADATA_BASE}/instance/service-accounts/default/token`;
+const PROJECT_ID_URL = `${METADATA_BASE}/project/project-id`;
 
 /** mockFetchの指定呼び出しからheadersを取得するヘルパー */
 function getCallHeaders(callIndex: number): Record<string, string> {
   return (mockFetch.mock.calls[callIndex]?.[1] as { headers?: Record<string, string> })?.headers ?? {};
 }
 
-describe('TokenManager', () => {
-  let tokenManager: TokenManager;
+describe('MetadataService', () => {
+  let metadata: MetadataService;
 
   beforeEach(() => {
     mockFetch.mockReset();
-    tokenManager = new TokenManager();
+    metadata = new MetadataService();
   });
 
-  // テスト1: メタデータサーバーからトークン取得
-  it('メタデータサーバーからトークンを取得する', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve({ access_token: 'test-token', expires_in: 3600 }),
-    });
-
-    await tokenManager.getToken();
-
-    expect(mockFetch).toHaveBeenCalledWith(METADATA_URL, {
-      headers: { 'Metadata-Flavor': 'Google' },
-    });
-  });
-
-  // テスト2: キャッシュ有効期間内は再取得しない
-  it('キャッシュ有効期間内は再取得しない', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve({ access_token: 'cached-token', expires_in: 3600 }),
-    });
-
-    const token1 = await tokenManager.getToken();
-    const token2 = await tokenManager.getToken();
-
-    expect(token1).toBe('cached-token');
-    expect(token2).toBe('cached-token');
-    expect(mockFetch).toHaveBeenCalledTimes(1);
-  });
-
-  // テスト3: キャッシュ期限切れで再取得
-  it('キャッシュ期限切れで再取得する', async () => {
-    mockFetch
-      .mockResolvedValueOnce({
+  describe('getToken', () => {
+    // テスト1: メタデータサーバーからトークン取得
+    it('メタデータサーバーからトークンを取得する', async () => {
+      mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ access_token: 'token-1', expires_in: 0 }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ access_token: 'token-2', expires_in: 3600 }),
+        json: () => Promise.resolve({ access_token: 'test-token', expires_in: 3600 }),
       });
 
-    const token1 = await tokenManager.getToken();
-    const token2 = await tokenManager.getToken();
+      await metadata.getToken();
 
-    expect(token1).toBe('token-1');
-    expect(token2).toBe('token-2');
-    expect(mockFetch).toHaveBeenCalledTimes(2);
-  });
-
-  // テスト4: メタデータサーバー障害
-  it('メタデータサーバー障害でエラーをスローする', async () => {
-    mockFetch.mockResolvedValueOnce({
-      ok: false,
-      status: 500,
+      expect(mockFetch).toHaveBeenCalledWith(TOKEN_URL, {
+        headers: { 'Metadata-Flavor': 'Google' },
+      });
     });
 
-    await expect(tokenManager.getToken()).rejects.toThrow();
+    // テスト2: キャッシュ有効期間内は再取得しない
+    it('キャッシュ有効期間内は再取得しない', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ access_token: 'cached-token', expires_in: 3600 }),
+      });
+
+      const token1 = await metadata.getToken();
+      const token2 = await metadata.getToken();
+
+      expect(token1).toBe('cached-token');
+      expect(token2).toBe('cached-token');
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+    });
+
+    // テスト3: キャッシュ期限切れで再取得
+    it('キャッシュ期限切れで再取得する', async () => {
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ access_token: 'token-1', expires_in: 0 }),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ access_token: 'token-2', expires_in: 3600 }),
+        });
+
+      const token1 = await metadata.getToken();
+      const token2 = await metadata.getToken();
+
+      expect(token1).toBe('token-1');
+      expect(token2).toBe('token-2');
+      expect(mockFetch).toHaveBeenCalledTimes(2);
+    });
+
+    // テスト4: メタデータサーバー障害
+    it('メタデータサーバー障害でエラーをスローする', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: false, status: 500 });
+
+      await expect(metadata.getToken()).rejects.toThrow();
+    });
+  });
+
+  describe('getProjectId', () => {
+    // テスト4b: project ID取得
+    it('メタデータサーバーからproject IDを取得する', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: true, text: () => Promise.resolve('test-project') });
+
+      const projectId = await metadata.getProjectId();
+
+      expect(projectId).toBe('test-project');
+      expect(mockFetch).toHaveBeenCalledWith(PROJECT_ID_URL, {
+        headers: { 'Metadata-Flavor': 'Google' },
+      });
+    });
+
+    // テスト4c: project IDキャッシュ
+    it('project IDをキャッシュする', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: true, text: () => Promise.resolve('test-project') });
+
+      await metadata.getProjectId();
+      await metadata.getProjectId();
+
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+    });
+
+    // テスト4d: project ID取得失敗
+    it('project ID取得失敗でエラーをスローする', async () => {
+      mockFetch.mockResolvedValueOnce({ ok: false, status: 500 });
+
+      await expect(metadata.getProjectId()).rejects.toThrow();
+    });
   });
 });
 
 describe('FirestoreClient', () => {
-  let tokenManager: TokenManager;
+  let metadata: MetadataService;
   let invalidateSpy: ReturnType<typeof vi.spyOn>;
   let client: FirestoreClient;
   const projectId = 'test-project';
@@ -89,10 +121,11 @@ describe('FirestoreClient', () => {
 
   beforeEach(() => {
     mockFetch.mockReset();
-    tokenManager = new TokenManager();
-    vi.spyOn(tokenManager, 'getToken').mockResolvedValue('mock-token');
-    invalidateSpy = vi.spyOn(tokenManager, 'invalidate').mockImplementation(() => {});
-    client = new FirestoreClient(projectId, database, tokenManager);
+    metadata = new MetadataService();
+    vi.spyOn(metadata, 'getToken').mockResolvedValue('mock-token');
+    vi.spyOn(metadata, 'getProjectId').mockResolvedValue(projectId);
+    invalidateSpy = vi.spyOn(metadata, 'invalidate').mockImplementation(() => {});
+    client = new FirestoreClient(database, metadata);
   });
 
   describe('getDocument', () => {
@@ -137,10 +170,7 @@ describe('FirestoreClient', () => {
 
     // テスト7: 存在しないドキュメント (404)
     it('存在しないドキュメントでnullを返す', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 404,
-      });
+      mockFetch.mockResolvedValueOnce({ ok: false, status: 404 });
 
       const doc = await client.getDocument('post_likes/nonexistent');
 
@@ -149,10 +179,7 @@ describe('FirestoreClient', () => {
 
     // テスト8: サーバーエラー (500)
     it('サーバーエラーでエラーをスローする', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-      });
+      mockFetch.mockResolvedValueOnce({ ok: false, status: 500 });
 
       await expect(client.getDocument('post_likes/test-slug')).rejects.toThrow();
     });
@@ -165,7 +192,7 @@ describe('FirestoreClient', () => {
         json: () => Promise.resolve({ fields: {} }),
       });
 
-      vi.spyOn(tokenManager, 'getToken').mockResolvedValueOnce('expired-token').mockResolvedValueOnce('new-token');
+      vi.spyOn(metadata, 'getToken').mockResolvedValueOnce('expired-token').mockResolvedValueOnce('new-token');
 
       const doc = await client.getDocument('post_likes/test-slug');
 
@@ -181,10 +208,7 @@ describe('FirestoreClient', () => {
 
     // テスト9: 正しいURLとbodyでPOST
     it('正しいURLとbodyでPOSTする', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-      });
+      mockFetch.mockResolvedValueOnce({ ok: true, status: 200 });
 
       const writes = [
         {
@@ -200,7 +224,7 @@ describe('FirestoreClient', () => {
 
       expect(mockFetch).toHaveBeenCalledTimes(1);
       expect(mockFetch.mock.calls[0]?.[0]).toBe(commitUrl);
-      const init = mockFetch.mock.calls[0]?.[1] as RequestInit;
+      const init = mockFetch.mock.calls[0]?.[1] as { method?: string; body?: string };
       expect(init.method).toBe('POST');
       expect(getCallHeaders(0)).toMatchObject({
         Authorization: 'Bearer mock-token',
@@ -211,10 +235,7 @@ describe('FirestoreClient', () => {
 
     // テスト10: 成功
     it('成功時に正常終了する', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        status: 200,
-      });
+      mockFetch.mockResolvedValueOnce({ ok: true, status: 200 });
 
       await expect(
         client.commit([
@@ -230,10 +251,7 @@ describe('FirestoreClient', () => {
 
     // テスト11: 失敗 (500)
     it('サーバーエラーでエラーをスローする', async () => {
-      mockFetch.mockResolvedValueOnce({
-        ok: false,
-        status: 500,
-      });
+      mockFetch.mockResolvedValueOnce({ ok: false, status: 500 });
 
       await expect(client.commit([{ update: { name: 'dummy', fields: {} } }])).rejects.toThrow();
     });
@@ -242,7 +260,7 @@ describe('FirestoreClient', () => {
     it('401エラーでトークン再取得しリトライする', async () => {
       mockFetch.mockResolvedValueOnce({ ok: false, status: 401 }).mockResolvedValueOnce({ ok: true, status: 200 });
 
-      vi.spyOn(tokenManager, 'getToken').mockResolvedValueOnce('expired-token').mockResolvedValueOnce('new-token');
+      vi.spyOn(metadata, 'getToken').mockResolvedValueOnce('expired-token').mockResolvedValueOnce('new-token');
 
       await client.commit([{ update: { name: 'dummy', fields: {} } }]);
 

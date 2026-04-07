@@ -24,7 +24,9 @@ function createMockClient(): {
   return {
     getDocument: vi.fn(),
     commit: vi.fn(),
-    buildDocumentName: vi.fn((path: string) => `projects/test-project/databases/test-db/documents/${path}`),
+    buildDocumentName: vi.fn((path: string) =>
+      Promise.resolve(`projects/test-project/databases/test-db/documents/${path}`),
+    ),
   };
 }
 

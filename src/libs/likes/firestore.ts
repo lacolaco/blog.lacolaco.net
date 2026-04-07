@@ -1,14 +1,16 @@
 import type { FirestoreDocument, FirestoreWrite } from './types';
 
-const METADATA_URL = 'http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token';
+const METADATA_BASE = 'http://metadata.google.internal/computeMetadata/v1';
+const METADATA_HEADERS = { 'Metadata-Flavor': 'Google' } as const;
 
-/** メタデータサーバーからアクセストークンを取得するクラス */
-export class TokenManager {
+/** GCPメタデータサーバーからトークンとproject IDを取得するクラス */
+export class MetadataService {
   #cachedToken: string | null = null;
   #expiresAt: number = 0;
   #pendingFetch: Promise<string> | null = null;
+  #projectId: string | null = null;
 
-  /** トークンを取得する。キャッシュ有効期間内はキャッシュを返す */
+  /** アクセストークンを取得する。キャッシュ有効期間内はキャッシュを返す */
   async getToken(): Promise<string> {
     if (this.#cachedToken && Date.now() < this.#expiresAt) {
       return this.#cachedToken;
@@ -22,21 +24,35 @@ export class TokenManager {
     return this.#pendingFetch;
   }
 
+  /** GCPプロジェクトIDを取得する。一度取得したらキャッシュ */
+  async getProjectId(): Promise<string> {
+    if (this.#projectId) {
+      return this.#projectId;
+    }
+    const response = await fetch(`${METADATA_BASE}/project/project-id`, {
+      headers: METADATA_HEADERS,
+    });
+    if (!response.ok) {
+      throw new Error(`メタデータサーバーエラー (project-id): ${response.status}`);
+    }
+    this.#projectId = await response.text();
+    return this.#projectId;
+  }
+
   async #fetchToken(): Promise<string> {
-    const response = await fetch(METADATA_URL, {
-      headers: { 'Metadata-Flavor': 'Google' },
+    const response = await fetch(`${METADATA_BASE}/instance/service-accounts/default/token`, {
+      headers: METADATA_HEADERS,
     });
     if (!response.ok) {
       throw new Error(`メタデータサーバーエラー: ${response.status}`);
     }
     const data = (await response.json()) as { access_token: string; expires_in: number };
     this.#cachedToken = data.access_token;
-    // expires_in秒前にマージンを設けてキャッシュ
     this.#expiresAt = Date.now() + (data.expires_in - 60) * 1000;
     return this.#cachedToken;
   }
 
-  /** キャッシュを無効化する */
+  /** トークンキャッシュを無効化する */
   invalidate(): void {
     this.#cachedToken = null;
     this.#expiresAt = 0;
@@ -52,37 +68,44 @@ interface FetchOptions {
 
 /** Firestore REST APIクライアント */
 export class FirestoreClient {
-  #baseUrl: string;
-  #namePrefix: string;
-  #tokenManager: TokenManager;
+  #database: string;
+  #metadata: MetadataService;
 
-  constructor(projectId: string, database: string, tokenManager: TokenManager) {
-    this.#namePrefix = `projects/${projectId}/databases/${database}/documents`;
-    this.#baseUrl = `https://firestore.googleapis.com/v1/${this.#namePrefix}`;
-    this.#tokenManager = tokenManager;
+  constructor(database: string, metadata: MetadataService) {
+    this.#database = database;
+    this.#metadata = metadata;
+  }
+
+  /** ベースURLを構築する（project IDはメタデータサーバーから取得） */
+  async #getBasePath(): Promise<{ url: string; namePrefix: string }> {
+    const projectId = await this.#metadata.getProjectId();
+    const namePrefix = `projects/${projectId}/databases/${this.#database}/documents`;
+    return { url: `https://firestore.googleapis.com/v1/${namePrefix}`, namePrefix };
   }
 
   /** 401リトライ付きfetch */
   async #fetchWithRetry(url: string, init: FetchOptions): Promise<Response> {
-    const token = await this.#tokenManager.getToken();
+    const token = await this.#metadata.getToken();
     const headers = { ...init.headers, Authorization: `Bearer ${token}` };
     const response = await fetch(url, { ...init, headers });
     if (response.status === 401) {
-      this.#tokenManager.invalidate();
-      const newToken = await this.#tokenManager.getToken();
+      this.#metadata.invalidate();
+      const newToken = await this.#metadata.getToken();
       return fetch(url, { ...init, headers: { ...init.headers, Authorization: `Bearer ${newToken}` } });
     }
     return response;
   }
 
   /** ドキュメントのフルリソース名を構築する */
-  buildDocumentName(path: string): string {
-    return `${this.#namePrefix}/${path}`;
+  async buildDocumentName(path: string): Promise<string> {
+    const { namePrefix } = await this.#getBasePath();
+    return `${namePrefix}/${path}`;
   }
 
   /** ドキュメントを取得する */
   async getDocument(path: string): Promise<FirestoreDocument | null> {
-    const response = await this.#fetchWithRetry(`${this.#baseUrl}/${path}`, {});
+    const { url } = await this.#getBasePath();
+    const response = await this.#fetchWithRetry(`${url}/${path}`, {});
     if (response.status === 404) {
       return null;
     }
@@ -94,7 +117,8 @@ export class FirestoreClient {
 
   /** バッチ書き込み（commit）を実行する */
   async commit(writes: FirestoreWrite[]): Promise<void> {
-    const response = await this.#fetchWithRetry(`${this.#baseUrl}:commit`, {
+    const { url } = await this.#getBasePath();
+    const response = await this.#fetchWithRetry(`${url}:commit`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ writes }),

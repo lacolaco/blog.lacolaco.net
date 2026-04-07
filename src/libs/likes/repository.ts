@@ -69,7 +69,7 @@ export class LikesRepository {
     const doc = await this.#client.getDocument(`post_likes/${slug}`);
     const reactions = doc ? extractReactions(doc.fields) : {};
     const isCurrentlyLiked = clientId in reactions;
-    const docName = this.#client.buildDocumentName(`post_likes/${slug}`);
+    const docName = await this.#client.buildDocumentName(`post_likes/${slug}`);
 
     if (isCurrentlyLiked) {
       // Unlike: maskにフィールドを含めbodyから除外することでFirestoreがフィールドを削除
