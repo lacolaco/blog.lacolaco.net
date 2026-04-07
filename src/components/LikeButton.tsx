@@ -27,8 +27,8 @@ interface LikeSyncDetail {
 }
 
 const i18n = {
-  ja: { like: 'いいね', liked: 'いいね済み' },
-  en: { like: 'Like', liked: 'Liked' },
+  ja: { like: 'いいね' },
+  en: { like: 'Like' },
 };
 
 /** note.com実測値準拠の赤色（liked色、standardボーダー色） */
@@ -175,7 +175,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
       });
   }, [state, dispatchSync]);
 
-  const ariaLabel = `${state.liked ? t.liked : t.like} (${state.count})`;
+  const ariaLabel = `${t.like} (${state.count})`;
 
   if (variant === 'compact') {
     return (
