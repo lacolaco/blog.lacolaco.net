@@ -165,24 +165,30 @@ describe('likes client', () => {
   });
 
   describe('エラーハンドリング', () => {
-    // テスト42: fetchLikeStatusエラーレスポンス → エラーthrow
-    it('fetchLikeStatusのエラーレスポンスでエラーをスローする', async () => {
+    // テスト42: fetchLikeStatusエラーレスポンス → エラーthrow + analytics
+    it('fetchLikeStatusのエラーレスポンスでエラーをスローしlike_errorを発火する', async () => {
+      const trackSpy = vi.spyOn(analytics, 'trackEvent');
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
       });
 
       await expect(fetchLikeStatus('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow();
+      expect(trackSpy).toHaveBeenCalledWith(expect.objectContaining({ name: 'like_error' }));
+      trackSpy.mockRestore();
     });
 
-    // sendToggleLikeエラーレスポンス → エラーthrow
-    it('sendToggleLikeのエラーレスポンスでエラーをスローする', async () => {
+    // sendToggleLikeエラーレスポンス → エラーthrow + analytics
+    it('sendToggleLikeのエラーレスポンスでエラーをスローしlike_errorを発火する', async () => {
+      const trackSpy = vi.spyOn(analytics, 'trackEvent');
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
       });
 
       await expect(sendToggleLike('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow();
+      expect(trackSpy).toHaveBeenCalledWith(expect.objectContaining({ name: 'like_error' }));
+      trackSpy.mockRestore();
     });
 
     // ネットワークエラー → エラーthrow (fetchLikeStatus)

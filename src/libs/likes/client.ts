@@ -1,20 +1,8 @@
 import { likeEvents, trackEvent } from '../analytics';
-import { CLIENT_ID_PATTERN, SLUG_MAX_LENGTH, SLUG_PATTERN } from './constants';
+import { CLIENT_ID_PATTERN, validateClientId, validateSlug } from './constants';
 import type { LikeStatus } from './types';
 
 const CLIENT_ID_KEY = 'likes_client_id';
-
-function validateSlug(slug: string): void {
-  if (!SLUG_PATTERN.test(slug) || slug.length > SLUG_MAX_LENGTH) {
-    throw new Error(`不正なslug: ${slug}`);
-  }
-}
-
-function validateClientId(clientId: string): void {
-  if (!clientId || !CLIENT_ID_PATTERN.test(clientId)) {
-    throw new Error(`不正なclientId: ${clientId}`);
-  }
-}
 
 /** clientIdを取得または生成する。localStorage不可時は毎回新規生成（呼び出し側でキャッシュすること） */
 export function getOrCreateClientId(): string {

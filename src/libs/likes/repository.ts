@@ -1,6 +1,6 @@
 import type { FirestoreClient } from '../firestore/client';
 import type { FirestoreValue } from '../firestore/types';
-import { CLIENT_ID_PATTERN, SLUG_MAX_LENGTH, SLUG_PATTERN } from './constants';
+import { validateClientId, validateSlug } from './constants';
 import type { LikeStatus } from './types';
 
 /** reactionsマップからclientIdのキーを抽出する */
@@ -17,21 +17,6 @@ function extractReactions(fields: Record<string, FirestoreValue> | undefined): R
     }
   }
   return result;
-}
-
-function validateSlug(slug: string): void {
-  if (!SLUG_PATTERN.test(slug) || slug.length > SLUG_MAX_LENGTH) {
-    throw new Error(`不正なslug: ${slug}`);
-  }
-}
-
-function validateClientId(clientId: string): void {
-  if (!clientId) {
-    throw new Error('clientIdは必須です');
-  }
-  if (!CLIENT_ID_PATTERN.test(clientId)) {
-    throw new Error(`不正なclientId形式: ${clientId}`);
-  }
 }
 
 export class LikesRepository {
