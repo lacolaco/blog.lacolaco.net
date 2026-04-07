@@ -1,3 +1,10 @@
+/**
+ * src/pages/api/likes/[slug].ts のテスト
+ *
+ * このファイルはsrc/pages/ではなくsrc/libs/likes/に配置している。
+ * 理由: Astroはsrc/pages/内の全ファイルをルートとして処理するため、
+ * specファイルをsrc/pages/に置くとビルドが失敗する。
+ */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import type { APIContext } from 'astro';
 
