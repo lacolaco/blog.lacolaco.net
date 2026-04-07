@@ -32,3 +32,15 @@ export const ttsEvents = {
     params: { error_message: errorMessage },
   }),
 };
+
+/** いいねイベントファクトリー */
+export const likeEvents = {
+  toggle: (slug: string, liked: boolean): AnalyticsEvent => ({
+    name: 'like_toggle',
+    params: { slug, liked },
+  }),
+  error: (errorMessage: string): AnalyticsEvent => ({
+    name: 'like_error',
+    params: { error_message: errorMessage },
+  }),
+};

@@ -1,0 +1,6 @@
+/** slugのバリデーション正規表現 */
+export const SLUG_PATTERN = /^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/;
+/** slugの最大長 */
+export const SLUG_MAX_LENGTH = 200;
+/** clientIdの許可文字パターン（hex + ハイフン、最大128文字） */
+export const CLIENT_ID_PATTERN = /^[0-9a-f-]{1,128}$/i;
