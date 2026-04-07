@@ -9,6 +9,7 @@ export class MetadataService {
   #expiresAt: number = 0;
   #pendingFetch: Promise<string> | null = null;
   #projectId: string | null = null;
+  #pendingProjectId: Promise<string> | null = null;
 
   /** アクセストークンを取得する。キャッシュ有効期間内はキャッシュを返す */
   async getToken(): Promise<string> {
@@ -29,6 +30,16 @@ export class MetadataService {
     if (this.#projectId) {
       return this.#projectId;
     }
+    if (this.#pendingProjectId) {
+      return this.#pendingProjectId;
+    }
+    this.#pendingProjectId = this.#fetchProjectId().finally(() => {
+      this.#pendingProjectId = null;
+    });
+    return this.#pendingProjectId;
+  }
+
+  async #fetchProjectId(): Promise<string> {
     const response = await fetch(`${METADATA_BASE}/project/project-id`, {
       headers: METADATA_HEADERS,
     });
