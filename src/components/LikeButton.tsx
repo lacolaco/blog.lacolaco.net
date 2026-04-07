@@ -15,8 +15,10 @@ interface Props {
 /** compact/standard間の状態同期用CustomEvent名 */
 const SYNC_EVENT = 'like-state-sync';
 
-/** パーティクルアニメーション時間（global.css の like-particle 0.6s と対応） */
-const PARTICLE_DURATION_MS = 600;
+/** global.css の --like-particle-duration から取得 */
+function getParticleDurationMs(): number {
+  return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--like-particle-duration'), 10) || 600;
+}
 
 interface LikeSyncDetail {
   slug: string;
@@ -144,7 +146,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
       particleTimerRef.current = setTimeout(() => {
         particleTimerRef.current = null;
         if (isMounted.current) setShowParticles(false);
-      }, PARTICLE_DURATION_MS);
+      }, getParticleDurationMs());
     }
 
     let finalState = newState;
