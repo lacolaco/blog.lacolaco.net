@@ -108,6 +108,12 @@ describe('LikeButton', () => {
 
     screen.getByRole('button').click();
 
+    // 楽観的更新が発生したことを確認
+    await waitFor(() => {
+      expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
+    });
+
+    // ロールバック後を確認
     await waitFor(() => {
       expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false');
     });

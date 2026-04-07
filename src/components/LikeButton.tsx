@@ -94,7 +94,6 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
     return () => {
       isMounted.current = false;
       if (particleTimerRef.current) clearTimeout(particleTimerRef.current);
-      setShowParticles(false);
     };
   }, [slug]);
 
