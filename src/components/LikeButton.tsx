@@ -154,6 +154,8 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
       });
   }, [state, dispatchSync]);
 
+  const ariaLabel = `${state.liked ? t.liked : t.like}${state.count > 0 ? ` (${state.count})` : ''}`;
+
   if (variant === 'compact') {
     return (
       <button
@@ -166,7 +168,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
             ? 'text-pink-500 hover:text-pink-600 hover:bg-pink-50'
             : 'text-muted lg:text-tertiary hover:text-default lg:hover:text-secondary hover:bg-gray-50 lg:hover:bg-surface',
         ].join(' ')}
-        aria-label={state.liked ? t.liked : t.like}
+        aria-label={ariaLabel}
         aria-pressed={state.liked}
       >
         <span
@@ -194,7 +196,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
           ? 'text-pink-500 border border-pink-300 bg-pink-50 hover:bg-pink-100'
           : 'text-muted border border-gray-300 hover:text-default hover:border-gray-400 hover:bg-gray-50 bg-transparent',
       ].join(' ')}
-      aria-label={state.liked ? t.liked : t.like}
+      aria-label={ariaLabel}
       aria-pressed={state.liked}
     >
       <span
