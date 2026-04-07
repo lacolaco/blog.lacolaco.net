@@ -34,6 +34,9 @@ function validateClientId(clientId: string): boolean {
 function isRateLimited(key: string, now: number): boolean {
   const lastTime = rateLimitMap.get(key);
   if (lastTime !== undefined && now - lastTime < RATE_LIMIT_WINDOW_MS) {
+    // LRU: 制限中でもエントリを末尾に移動してエビクションを防止
+    rateLimitMap.delete(key);
+    rateLimitMap.set(key, lastTime);
     return true;
   }
   // LRU: 既存キーを末尾に移動するため削除→再挿入
@@ -44,11 +47,6 @@ function isRateLimited(key: string, now: number): boolean {
   }
   rateLimitMap.set(key, now);
   return false;
-}
-
-/** テスト用: レート制限マップをクリアする */
-export function _clearRateLimitMapForTesting(): void {
-  rateLimitMap.clear();
 }
 
 function jsonResponse(data: unknown, status = 200, extraHeaders?: Record<string, string>): Response {

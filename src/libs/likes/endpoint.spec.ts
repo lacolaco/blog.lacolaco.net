@@ -18,7 +18,7 @@ vi.mock('../firestore', () => ({
   FirestoreClient: vi.fn(function () {}),
 }));
 
-import { GET, POST, _clearRateLimitMapForTesting } from '../../pages/api/likes/[slug]';
+import { GET, POST } from '../../pages/api/likes/[slug]';
 
 /** テスト用のAPIContextを生成する */
 function createContext(
@@ -39,7 +39,8 @@ describe('API /api/likes/[slug]', () => {
     vi.useFakeTimers();
     mockGetLikeStatus.mockReset();
     mockToggleLike.mockReset();
-    _clearRateLimitMapForTesting();
+    // レート制限ウィンドウ(1秒)を超えて時間を進め、既存エントリをexpireさせる
+    vi.advanceTimersByTime(1100);
     import.meta.env.FIRESTORE_DATABASE = 'test-db';
   });
 
