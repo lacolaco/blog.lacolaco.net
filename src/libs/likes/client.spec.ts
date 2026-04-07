@@ -26,8 +26,9 @@ import { getOrCreateClientId, fetchLikeStatus, sendToggleLike } from './client';
 describe('likes client', () => {
   beforeEach(() => {
     localStorageMock.clear();
-    localStorageMock.getItem.mockReset();
-    localStorageMock.setItem.mockReset();
+    // mockClear: 呼び出し履歴のみクリアし、storeクロージャ実装は保持する
+    localStorageMock.getItem.mockClear();
+    localStorageMock.setItem.mockClear();
     mockFetch.mockReset();
     vi.stubGlobal('localStorage', localStorageMock);
     vi.stubGlobal('fetch', mockFetch);
