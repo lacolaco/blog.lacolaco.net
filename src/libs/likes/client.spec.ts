@@ -22,6 +22,7 @@ const localStorageMock = (() => {
 const mockFetch = vi.fn();
 
 import { getOrCreateClientId, fetchLikeStatus, sendToggleLike } from './client';
+import { createClientId, createSlug } from './constants';
 
 describe('likes client', () => {
   beforeEach(() => {
@@ -103,7 +104,7 @@ describe('likes client', () => {
       });
       let callCount = 0;
       vi.stubGlobal('crypto', {
-        randomUUID: () => `uuid-${++callCount}`,
+        randomUUID: () => `aaaaaaaa-bbbb-4ccc-9ddd-${String(++callCount).padStart(12, '0')}`,
       });
 
       const result1 = getOrCreateClientId();
@@ -113,6 +114,10 @@ describe('likes client', () => {
     });
   });
 
+  // テスト用のbranded type値
+  const testSlug = createSlug('test-slug');
+  const testClientId = createClientId('aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee');
+
   describe('fetchLikeStatus', () => {
     // テスト40: x-client-idヘッダ付きGET
     it('x-client-idヘッダ付きでGETリクエストを送る', async () => {
@@ -121,7 +126,7 @@ describe('likes client', () => {
         json: () => Promise.resolve({ count: 3, liked: true }),
       });
 
-      const result = await fetchLikeStatus('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee');
+      const result = await fetchLikeStatus(testSlug, testClientId);
 
       expect(mockFetch).toHaveBeenCalledWith('/api/likes/test-slug', {
         headers: { 'x-client-id': 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee' },
@@ -138,7 +143,7 @@ describe('likes client', () => {
         json: () => Promise.resolve({ count: 1, liked: true }),
       });
 
-      const result = await sendToggleLike('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee');
+      const result = await sendToggleLike(testSlug, testClientId);
 
       expect(mockFetch).toHaveBeenCalledWith('/api/likes/test-slug', {
         method: 'POST',
@@ -154,8 +159,9 @@ describe('likes client', () => {
         ok: true,
         json: () => Promise.resolve({ count: 1, liked: true }),
       });
+      const analyticsSlug = createSlug('test-slug-analytics');
 
-      await sendToggleLike('test-slug-analytics', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee');
+      await sendToggleLike(analyticsSlug, testClientId);
 
       expect(trackSpy).toHaveBeenCalledWith(
         expect.objectContaining({ name: 'like_toggle', params: { slug: 'test-slug-analytics', liked: true } }),
@@ -171,7 +177,8 @@ describe('likes client', () => {
         json: () => Promise.resolve({ count: 0, liked: false }),
       });
 
-      await sendToggleLike('test-slug-unlike', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee');
+      const unlikeSlug = createSlug('test-slug-unlike');
+      await sendToggleLike(unlikeSlug, testClientId);
 
       expect(trackSpy).toHaveBeenCalledWith(
         expect.objectContaining({ name: 'like_toggle', params: { slug: 'test-slug-unlike', liked: false } }),
@@ -180,25 +187,21 @@ describe('likes client', () => {
     });
   });
 
-  describe('バリデーション', () => {
-    it('fetchLikeStatusに不正slugでエラーをスローする', async () => {
-      await expect(fetchLikeStatus('INVALID SLUG!', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow();
-      expect(mockFetch).not.toHaveBeenCalled();
+  describe('バリデーション (createSlug/createClientId)', () => {
+    it('不正slugでcreateSlugがエラーをスローする', () => {
+      expect(() => createSlug('INVALID SLUG!')).toThrow();
     });
 
-    it('fetchLikeStatusに不正clientIdでエラーをスローする', async () => {
-      await expect(fetchLikeStatus('valid-slug', 'bad!id')).rejects.toThrow();
-      expect(mockFetch).not.toHaveBeenCalled();
+    it('slug長すぎでcreateSlugがエラーをスローする', () => {
+      expect(() => createSlug('a'.repeat(201))).toThrow();
     });
 
-    it('sendToggleLikeに不正slugでエラーをスローする', async () => {
-      await expect(sendToggleLike('INVALID SLUG!', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow();
-      expect(mockFetch).not.toHaveBeenCalled();
+    it('不正clientIdでcreateClientIdがエラーをスローする', () => {
+      expect(() => createClientId('bad!id')).toThrow();
     });
 
-    it('sendToggleLikeに不正clientIdでエラーをスローする', async () => {
-      await expect(sendToggleLike('valid-slug', 'bad!id')).rejects.toThrow();
-      expect(mockFetch).not.toHaveBeenCalled();
+    it('空clientIdでcreateClientIdがエラーをスローする', () => {
+      expect(() => createClientId('')).toThrow();
     });
   });
 
@@ -211,7 +214,7 @@ describe('likes client', () => {
         status: 500,
       });
 
-      await expect(fetchLikeStatus('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow();
+      await expect(fetchLikeStatus(testSlug, testClientId)).rejects.toThrow();
       expect(trackSpy).toHaveBeenCalledWith(expect.objectContaining({ name: 'like_error' }));
       trackSpy.mockRestore();
     });
@@ -224,7 +227,7 @@ describe('likes client', () => {
         status: 500,
       });
 
-      await expect(sendToggleLike('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow();
+      await expect(sendToggleLike(testSlug, testClientId)).rejects.toThrow();
       expect(trackSpy).toHaveBeenCalledWith(expect.objectContaining({ name: 'like_error' }));
       trackSpy.mockRestore();
     });
@@ -234,9 +237,7 @@ describe('likes client', () => {
       const trackSpy = vi.spyOn(analytics, 'trackEvent');
       mockFetch.mockRejectedValueOnce(new TypeError('Failed to fetch'));
 
-      await expect(fetchLikeStatus('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow(
-        'Failed to fetch',
-      );
+      await expect(fetchLikeStatus(testSlug, testClientId)).rejects.toThrow('Failed to fetch');
       expect(trackSpy).toHaveBeenCalledWith(expect.objectContaining({ name: 'like_error' }));
       trackSpy.mockRestore();
     });
@@ -246,9 +247,7 @@ describe('likes client', () => {
       const trackSpy = vi.spyOn(analytics, 'trackEvent');
       mockFetch.mockRejectedValueOnce(new TypeError('Failed to fetch'));
 
-      await expect(sendToggleLike('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow(
-        'Failed to fetch',
-      );
+      await expect(sendToggleLike(testSlug, testClientId)).rejects.toThrow('Failed to fetch');
       expect(trackSpy).toHaveBeenCalledWith(expect.objectContaining({ name: 'like_error' }));
       trackSpy.mockRestore();
     });

@@ -1,23 +1,24 @@
 import { likeEvents, trackEvent } from '../analytics';
-import { isValidClientId, validateClientId, validateSlug } from './constants';
-import type { LikeStatus } from './types';
+import { createClientId, tryCreateClientId } from './constants';
+import type { ClientId, LikeStatus, Slug } from './types';
 
 const CLIENT_ID_KEY = 'likes_client_id';
 
 /** clientIdを取得または生成する。localStorage不可時は毎回新規生成（呼び出し側でキャッシュすること） */
-export function getOrCreateClientId(): string {
+export function getOrCreateClientId(): ClientId {
   try {
     const stored = localStorage.getItem(CLIENT_ID_KEY);
-    if (stored && isValidClientId(stored)) {
-      return stored;
+    const existing = stored ? tryCreateClientId(stored) : null;
+    if (existing) {
+      return existing;
     }
-    const newId = crypto.randomUUID();
+    const newId = createClientId(crypto.randomUUID());
     localStorage.setItem(CLIENT_ID_KEY, newId);
     return newId;
   } catch {
     // localStorage不可（Safari Private等）: 毎回生成。
     // セッション内での一貫性はUI層（React state等）で担保する。
-    return crypto.randomUUID();
+    return createClientId(crypto.randomUUID());
   }
 }
 
@@ -34,9 +35,7 @@ async function fetchWithTracking(url: string, init?: RequestInit): Promise<Respo
 }
 
 /** いいね状態を取得する */
-export async function fetchLikeStatus(slug: string, clientId: string): Promise<LikeStatus> {
-  validateSlug(slug);
-  validateClientId(clientId);
+export async function fetchLikeStatus(slug: Slug, clientId: ClientId): Promise<LikeStatus> {
   const response = await fetchWithTracking(`/api/likes/${slug}`, {
     headers: { 'x-client-id': clientId },
   });
@@ -48,9 +47,7 @@ export async function fetchLikeStatus(slug: string, clientId: string): Promise<L
 }
 
 /** いいねをトグルする */
-export async function sendToggleLike(slug: string, clientId: string): Promise<LikeStatus> {
-  validateSlug(slug);
-  validateClientId(clientId);
+export async function sendToggleLike(slug: Slug, clientId: ClientId): Promise<LikeStatus> {
   const response = await fetchWithTracking(`/api/likes/${slug}`, {
     method: 'POST',
     headers: { 'x-client-id': clientId },

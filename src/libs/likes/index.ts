@@ -1,10 +1,11 @@
-export type { LikeStatus } from './types';
+export type { ClientId, LikeStatus, Slug } from './types';
 export { LikesRepository } from './repository';
 export {
   SLUG_PATTERN,
   SLUG_MAX_LENGTH,
   isValidSlug,
   isValidClientId,
-  validateClientId,
-  validateSlug,
+  createSlug,
+  createClientId,
+  tryCreateClientId,
 } from './constants';

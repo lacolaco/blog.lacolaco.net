@@ -1,7 +1,6 @@
 import type { FirestoreClient } from '../firestore/client';
 import type { FirestoreValue } from '../firestore/types';
-import { validateClientId, validateSlug } from './constants';
-import type { LikeStatus } from './types';
+import type { ClientId, LikeStatus, Slug } from './types';
 
 /** reactionsマップからclientIdのキーを抽出する */
 function extractReactions(fields: Record<string, FirestoreValue> | undefined): Record<string, boolean> {
@@ -26,9 +25,8 @@ export class LikesRepository {
     this.#client = client;
   }
 
-  /** いいね状態を取得する */
-  async getLikeStatus(slug: string, clientId: string): Promise<LikeStatus> {
-    validateSlug(slug);
+  /** いいね状態を取得する。clientIdが空文字の場合liked=false */
+  async getLikeStatus(slug: Slug, clientId: ClientId | ''): Promise<LikeStatus> {
     const doc = await this.#client.getDocument(`post_likes/${slug}`);
     if (!doc) {
       return { count: 0, liked: false };
@@ -40,12 +38,7 @@ export class LikesRepository {
   }
 
   /** いいねをトグルする */
-  async toggleLike(slug: string, clientId: string): Promise<LikeStatus> {
-    validateSlug(slug);
-    validateClientId(clientId);
-
-    // 楽観的カウント: commit前のスナップショットから±1で計算。
-    // クライアント側の楽観的UIが即座にカウントを表示し、正確な値は次回GETで取得される。
+  async toggleLike(slug: Slug, clientId: ClientId): Promise<LikeStatus> {
     const doc = await this.#client.getDocument(`post_likes/${slug}`);
     const reactions = doc ? extractReactions(doc.fields) : {};
     const isCurrentlyLiked = clientId in reactions;

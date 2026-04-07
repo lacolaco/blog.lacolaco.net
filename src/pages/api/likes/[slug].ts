@@ -1,6 +1,7 @@
 import type { APIContext } from 'astro';
 import { FirestoreClient, MetadataService } from '../../../libs/firestore';
-import { isValidClientId, isValidSlug, LikesRepository } from '../../../libs/likes';
+import { createClientId, createSlug, isValidClientId, isValidSlug, LikesRepository } from '../../../libs/likes';
+import type { ClientId } from '../../../libs/likes/types';
 
 export const prerender = false;
 
@@ -52,16 +53,17 @@ function jsonResponse(data: unknown, status = 200, extraHeaders?: Record<string,
 }
 
 export async function GET(context: APIContext): Promise<Response> {
-  const slug = context.params.slug!;
-  if (!isValidSlug(slug)) {
+  const rawSlug = context.params.slug!;
+  if (!isValidSlug(rawSlug)) {
     return jsonResponse({ error: 'Invalid slug' }, 400);
   }
+  const slug = createSlug(rawSlug);
 
   const rawClientId = context.request.headers.get('x-client-id') ?? '';
   if (rawClientId !== '' && !isValidClientId(rawClientId)) {
     return jsonResponse({ error: 'Invalid client ID' }, 400);
   }
-  const clientId = rawClientId.toLowerCase();
+  const clientId = rawClientId ? createClientId(rawClientId.toLowerCase()) : ('' as ClientId | '');
 
   try {
     const repo = getRepository();
@@ -74,10 +76,11 @@ export async function GET(context: APIContext): Promise<Response> {
 }
 
 export async function POST(context: APIContext): Promise<Response> {
-  const slug = context.params.slug!;
-  if (!isValidSlug(slug)) {
+  const rawSlug = context.params.slug!;
+  if (!isValidSlug(rawSlug)) {
     return jsonResponse({ error: 'Invalid slug' }, 400);
   }
+  const slug = createSlug(rawSlug);
 
   const rawClientId = context.request.headers.get('x-client-id') ?? '';
   if (!rawClientId) {
@@ -86,7 +89,7 @@ export async function POST(context: APIContext): Promise<Response> {
   if (!isValidClientId(rawClientId)) {
     return jsonResponse({ error: 'Invalid client ID' }, 400);
   }
-  const clientId = rawClientId.toLowerCase();
+  const clientId = createClientId(rawClientId.toLowerCase());
 
   // レート制限チェック
   // Cloud Runに直接接続されるためclientAddressは実クライアントIP
