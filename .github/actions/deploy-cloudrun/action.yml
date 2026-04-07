@@ -23,6 +23,9 @@ inputs:
     description: 'Docker registry URL'
     required: true
     default: 'asia-northeast1-docker.pkg.dev'
+  env-vars:
+    description: 'Environment variables to set on the Cloud Run service (multiline KEY=VALUE)'
+    required: false
   no-traffic:
     description: 'Set to true for preview deployments'
     required: false
@@ -103,4 +106,5 @@ runs:
         no_traffic: ${{ inputs.no-traffic }}
         tag: ${{ inputs.revision-tag }}
         revision_traffic: ${{ inputs.revision-traffic }}
+        env_vars: ${{ inputs.env-vars }}
         flags: '--allow-unauthenticated'

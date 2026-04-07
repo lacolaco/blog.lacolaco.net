@@ -55,3 +55,6 @@ jobs:
             asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}
           deploy-image: 'asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}'
           revision-traffic: 'LATEST=100'
+          env-vars: |
+            GCP_PROJECT_ID=blog-lacolaco-net
+            FIRESTORE_DATABASE=likes-production
