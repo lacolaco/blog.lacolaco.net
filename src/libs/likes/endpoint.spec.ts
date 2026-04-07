@@ -82,7 +82,7 @@ describe('API /api/likes/[slug]', () => {
 
       expect(response.status).toBe(200);
       expect(body).toEqual({ count: 5, liked: false });
-      expect(mockGetLikeStatus).toHaveBeenCalledWith(expect.stringContaining('valid-slug'), null);
+      expect(mockGetLikeStatus).toHaveBeenCalledWith('valid-slug', null);
     });
 
     // テスト29: GET 不正slug
