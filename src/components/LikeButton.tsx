@@ -2,9 +2,22 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { getOrCreateClientId, fetchLikeStatus, sendToggleLike } from '../libs/likes/client';
 import { optimisticToggle, type LikeState } from '../libs/likes/optimistic';
 import { createSlug } from '../libs/likes/constants';
-import type { ClientId, Slug } from '../libs/likes/types';
+import type { ClientId, LikeStatus, Slug } from '../libs/likes/types';
 
 type Variant = 'compact' | 'standard';
+
+/** 同一slugの初期fetchを1本化するためのPromiseキャッシュ */
+const fetchCache = new Map<string, Promise<LikeStatus>>();
+function fetchLikeStatusOnce(slug: Slug, clientId: ClientId): Promise<LikeStatus> {
+  const key = String(slug);
+  if (!fetchCache.has(key)) {
+    const promise = fetchLikeStatus(slug, clientId).finally(() => {
+      fetchCache.delete(key);
+    });
+    fetchCache.set(key, promise);
+  }
+  return fetchCache.get(key)!;
+}
 
 interface Props {
   slug: string;
@@ -79,7 +92,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
 
     loadingRef.current = true;
     setLoading(true);
-    fetchLikeStatus(slugRef.current, clientId)
+    fetchLikeStatusOnce(slugRef.current, clientId)
       .then((result) => {
         if (active) {
           setState({ count: result.count, liked: result.liked });
