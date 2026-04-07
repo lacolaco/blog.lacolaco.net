@@ -141,23 +141,24 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
       }, PARTICLE_DURATION_MS);
     }
 
+    let finalState = newState;
     sendToggleLike(slugRef.current, clientIdRef.current)
       .then((result) => {
+        finalState = { count: result.count, liked: result.liked };
         if (isMounted.current) {
-          const serverState = { count: result.count, liked: result.liked };
-          setState(serverState);
-          dispatchSync(serverState, false);
+          setState(finalState);
         }
       })
       .catch(() => {
-        // ロールバック
+        finalState = previousState;
         if (isMounted.current) {
-          setState(previousState);
-          dispatchSync(previousState, false);
+          setState(finalState);
         }
       })
       .finally(() => {
         loadingRef.current = false;
+        // 他インスタンスのloading解除は自身のunmount有無に関わらず実行
+        dispatchSync(finalState, false);
         if (isMounted.current) {
           setLoading(false);
         }
