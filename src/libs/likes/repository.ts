@@ -5,8 +5,8 @@ import type { FirestoreValue, LikeStatus } from './types';
 export const SLUG_PATTERN = /^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/;
 /** slugの最大長 */
 export const SLUG_MAX_LENGTH = 200;
-/** clientIdの許可文字パターン（hex + ハイフン、最大36文字） */
-export const CLIENT_ID_PATTERN = /^[0-9a-f-]{1,36}$/i;
+/** clientIdの許可文字パターン（hex + ハイフン、最大128文字） */
+export const CLIENT_ID_PATTERN = /^[0-9a-f-]{1,128}$/i;
 
 /** reactionsマップからclientIdのキーを抽出する */
 function extractReactions(fields: Record<string, FirestoreValue> | undefined): Record<string, boolean> {
