@@ -17,8 +17,8 @@ function extractReactions(fields: Record<string, FirestoreValue> | undefined): R
   if (!mapFields) return {};
   const result: Record<string, boolean> = {};
   for (const [key, value] of Object.entries(mapFields)) {
-    if ('booleanValue' in value) {
-      result[key] = value.booleanValue;
+    if ('booleanValue' in value && value.booleanValue) {
+      result[key] = true;
     }
   }
   return result;

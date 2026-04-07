@@ -35,23 +35,21 @@ export class TokenManager {
 /** Firestore REST APIクライアント */
 export class FirestoreClient {
   #basePath: string;
+  #tokenManager: TokenManager;
 
-  constructor(
-    private projectId: string,
-    private database: string,
-    private tokenManager: TokenManager,
-  ) {
+  constructor(projectId: string, database: string, tokenManager: TokenManager) {
     this.#basePath = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/${database}/documents`;
+    this.#tokenManager = tokenManager;
   }
 
   /** 401リトライ付きfetch */
   async #fetchWithRetry(url: string, init: RequestInit): Promise<Response> {
-    const token = await this.tokenManager.getToken();
+    const token = await this.#tokenManager.getToken();
     const headers = { ...init.headers, Authorization: `Bearer ${token}` };
     const response = await fetch(url, { ...init, headers });
     if (response.status === 401) {
-      this.tokenManager.invalidate();
-      const newToken = await this.tokenManager.getToken();
+      this.#tokenManager.invalidate();
+      const newToken = await this.#tokenManager.getToken();
       return fetch(url, { ...init, headers: { ...init.headers, Authorization: `Bearer ${newToken}` } });
     }
     return response;
