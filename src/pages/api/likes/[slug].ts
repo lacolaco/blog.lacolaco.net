@@ -5,6 +5,8 @@ import { CLIENT_ID_PATTERN, LikesRepository, SLUG_MAX_LENGTH, SLUG_PATTERN } fro
 export const prerender = false;
 
 // レート制限: IP+slug単位、1秒1回、LRU Map上限1000
+// プロセスメモリ上の状態のため、Cloud Runスケールアウト時はインスタンス間で共有されない。
+// 個人ブログの同時アクセス頻度では実質的に問題にならない。
 const RATE_LIMIT_WINDOW_MS = 1000;
 const RATE_LIMIT_MAX_ENTRIES = 1000;
 const rateLimitMap = new Map<string, number>();
@@ -73,7 +75,8 @@ export async function GET(context: APIContext): Promise<Response> {
     const repo = getRepository();
     const status = await repo.getLikeStatus(slug, clientId);
     return jsonResponse(status);
-  } catch {
+  } catch (error) {
+    console.error('[likes API] unexpected error:', error);
     return jsonResponse({ error: 'Internal server error' }, 500);
   }
 }
@@ -107,7 +110,8 @@ export async function POST(context: APIContext): Promise<Response> {
     const repo = getRepository();
     const status = await repo.toggleLike(slug, clientId);
     return jsonResponse(status);
-  } catch {
+  } catch (error) {
+    console.error('[likes API] unexpected error:', error);
     return jsonResponse({ error: 'Internal server error' }, 500);
   }
 }
