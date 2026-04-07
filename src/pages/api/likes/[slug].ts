@@ -1,0 +1,103 @@
+import type { APIContext } from 'astro';
+import { FirestoreClient, MetadataService } from '../../../libs/firestore';
+import { CLIENT_ID_PATTERN, LikesRepository, SLUG_MAX_LENGTH, SLUG_PATTERN } from '../../../libs/likes';
+
+export const prerender = false;
+
+// レート制限: IP+slug単位、1秒1回、LRU Map上限1000
+const RATE_LIMIT_WINDOW_MS = 1000;
+const RATE_LIMIT_MAX_ENTRIES = 1000;
+const rateLimitMap = new Map<string, number>();
+
+let repository: LikesRepository | null = null;
+
+function getRepository(): LikesRepository {
+  if (!repository) {
+    const database = import.meta.env.FIRESTORE_DATABASE as string | undefined;
+    if (!database) {
+      throw new Error('FIRESTORE_DATABASE is not set');
+    }
+    repository = new LikesRepository(new FirestoreClient(database, new MetadataService()));
+  }
+  return repository;
+}
+
+function validateSlug(slug: string): boolean {
+  return SLUG_PATTERN.test(slug) && slug.length <= SLUG_MAX_LENGTH;
+}
+
+function validateClientId(clientId: string): boolean {
+  return CLIENT_ID_PATTERN.test(clientId);
+}
+
+/** レート制限チェック。制限中ならtrueを返す */
+function isRateLimited(key: string, now: number): boolean {
+  const lastTime = rateLimitMap.get(key);
+  if (lastTime !== undefined && now - lastTime < RATE_LIMIT_WINDOW_MS) {
+    return true;
+  }
+  // LRU: 既存キーを末尾に移動するため削除→再挿入
+  rateLimitMap.delete(key);
+  if (rateLimitMap.size >= RATE_LIMIT_MAX_ENTRIES) {
+    const firstKey = rateLimitMap.keys().next().value as string;
+    rateLimitMap.delete(firstKey);
+  }
+  rateLimitMap.set(key, now);
+  return false;
+}
+
+function jsonResponse(data: unknown, status = 200): Response {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+export async function GET(context: APIContext): Promise<Response> {
+  const slug = context.params.slug!;
+  if (!validateSlug(slug)) {
+    return jsonResponse({ error: 'Invalid slug' }, 400);
+  }
+
+  const clientId = context.request.headers.get('x-client-id') ?? '';
+  if (clientId !== '' && !validateClientId(clientId)) {
+    return jsonResponse({ error: 'Invalid client ID' }, 400);
+  }
+
+  try {
+    const repo = getRepository();
+    const status = await repo.getLikeStatus(slug, clientId);
+    return jsonResponse(status);
+  } catch {
+    return jsonResponse({ error: 'Internal server error' }, 500);
+  }
+}
+
+export async function POST(context: APIContext): Promise<Response> {
+  const slug = context.params.slug!;
+  if (!validateSlug(slug)) {
+    return jsonResponse({ error: 'Invalid slug' }, 400);
+  }
+
+  const clientId = context.request.headers.get('x-client-id') ?? '';
+  if (!clientId) {
+    return jsonResponse({ error: 'x-client-id header is required' }, 400);
+  }
+  if (!validateClientId(clientId)) {
+    return jsonResponse({ error: 'Invalid client ID' }, 400);
+  }
+
+  // レート制限チェック
+  const rateLimitKey = `${context.clientAddress}:${slug}`;
+  if (isRateLimited(rateLimitKey, Date.now())) {
+    return jsonResponse({ error: 'Too many requests' }, 429);
+  }
+
+  try {
+    const repo = getRepository();
+    const status = await repo.toggleLike(slug, clientId);
+    return jsonResponse(status);
+  } catch {
+    return jsonResponse({ error: 'Internal server error' }, 500);
+  }
+}
