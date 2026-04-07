@@ -146,11 +146,20 @@ describe('likes client', () => {
       await expect(sendToggleLike('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow();
     });
 
-    // ネットワークエラー → エラーthrow
-    it('ネットワークエラーでエラーをスローする', async () => {
+    // ネットワークエラー → エラーthrow (fetchLikeStatus)
+    it('fetchLikeStatusのネットワークエラーでエラーをスローする', async () => {
       mockFetch.mockRejectedValueOnce(new Error('Network Error'));
 
       await expect(fetchLikeStatus('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow(
+        'Network Error',
+      );
+    });
+
+    // ネットワークエラー → エラーthrow (sendToggleLike)
+    it('sendToggleLikeのネットワークエラーでエラーをスローする', async () => {
+      mockFetch.mockRejectedValueOnce(new Error('Network Error'));
+
+      await expect(sendToggleLike('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow(
         'Network Error',
       );
     });
