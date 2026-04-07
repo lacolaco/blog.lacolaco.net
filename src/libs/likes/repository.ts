@@ -5,8 +5,8 @@ import type { FirestoreValue, LikeStatus } from './types';
 export const SLUG_PATTERN = /^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/;
 /** slugの最大長 */
 export const SLUG_MAX_LENGTH = 200;
-/** UUID v4の正規表現 */
-export const UUID_V4_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+/** clientIdの許可文字パターン（hex + ハイフン、最大36文字） */
+export const CLIENT_ID_PATTERN = /^[0-9a-f-]{1,36}$/i;
 
 /** reactionsマップからclientIdのキーを抽出する */
 function extractReactions(fields: Record<string, FirestoreValue> | undefined): Record<string, boolean> {
@@ -34,7 +34,7 @@ function validateClientId(clientId: string): void {
   if (!clientId) {
     throw new Error('clientIdは必須です');
   }
-  if (!UUID_V4_PATTERN.test(clientId)) {
+  if (!CLIENT_ID_PATTERN.test(clientId)) {
     throw new Error(`不正なclientId形式: ${clientId}`);
   }
 }
