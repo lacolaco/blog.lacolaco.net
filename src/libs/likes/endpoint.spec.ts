@@ -143,6 +143,15 @@ describe('API /api/likes/[slug]', () => {
       expect(response.status).toBe(400);
     });
 
+    // POST 不正clientId
+    it('不正clientIdで 400 を返す', async () => {
+      const ctx = createContext('POST', 'post-invalid-client', { 'x-client-id': 'invalid!@#$' });
+
+      const response = await POST(ctx);
+
+      expect(response.status).toBe(400);
+    });
+
     // テスト34: POST レート制限超過
     it('レート制限超過で 429 を返す', async () => {
       mockToggleLike.mockResolvedValue({ count: 1, liked: true });

@@ -97,7 +97,9 @@ export async function POST(context: APIContext): Promise<Response> {
   // レート制限チェック
   const rateLimitKey = `${context.clientAddress}:${slug}`;
   if (isRateLimited(rateLimitKey, Date.now())) {
-    return jsonResponse({ error: 'Too many requests' }, 429, { 'Retry-After': '1' });
+    return jsonResponse({ error: 'Too many requests' }, 429, {
+      'Retry-After': String(Math.ceil(RATE_LIMIT_WINDOW_MS / 1000)),
+    });
   }
 
   try {
