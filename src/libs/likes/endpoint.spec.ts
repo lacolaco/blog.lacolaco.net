@@ -4,14 +4,15 @@ import type { APIContext } from 'astro';
 const mockGetLikeStatus = vi.fn();
 const mockToggleLike = vi.fn();
 
-vi.mock('./', () => ({
-  LikesRepository: vi.fn(function () {
-    return { getLikeStatus: mockGetLikeStatus, toggleLike: mockToggleLike };
-  }),
-  SLUG_PATTERN: /^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/,
-  SLUG_MAX_LENGTH: 200,
-  CLIENT_ID_PATTERN: /^[0-9a-f-]{1,128}$/i,
-}));
+vi.mock('./', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('./')>();
+  return {
+    ...actual,
+    LikesRepository: vi.fn(function () {
+      return { getLikeStatus: mockGetLikeStatus, toggleLike: mockToggleLike };
+    }),
+  };
+});
 
 vi.mock('../firestore', () => ({
   MetadataService: vi.fn(function () {}),
