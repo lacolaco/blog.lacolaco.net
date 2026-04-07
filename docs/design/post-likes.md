@@ -1,8 +1,8 @@
-# Post Likes (スキ) 機能設計書
+# Post Likes (いいね) 機能設計書
 
 ## 概要
 
-note.com準拠のいいね(スキ)機能。未ログインでもスキ可能。
+いいね機能。未ログインでもいいね可能。
 
 ## 制約
 
@@ -75,7 +75,7 @@ GCPプロジェクトIDはCloud Runメタデータサーバーから取得。環
 
 ### GET /api/likes/{slug}
 
-スキ状態を取得する。
+いいね状態を取得する。
 
 - Request Header: `x-client-id: {uuid v4}` (任意。空の場合 liked=false)
 - Response: `{ count: number, liked: boolean }`
@@ -83,7 +83,7 @@ GCPプロジェクトIDはCloud Runメタデータサーバーから取得。環
 
 ### POST /api/likes/{slug}
 
-スキをトグルする。
+いいねをトグルする。
 
 - Request Header: `x-client-id: {uuid v4}` (必須)
 - Response: `{ count: number, liked: boolean }`
