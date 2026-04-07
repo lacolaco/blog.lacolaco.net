@@ -126,14 +126,24 @@ describe('likes client', () => {
   });
 
   describe('エラーハンドリング', () => {
-    // テスト42: エラーレスポンス → エラーthrow
-    it('エラーレスポンスでエラーをスローする', async () => {
+    // テスト42: fetchLikeStatusエラーレスポンス → エラーthrow
+    it('fetchLikeStatusのエラーレスポンスでエラーをスローする', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 500,
       });
 
       await expect(fetchLikeStatus('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow();
+    });
+
+    // sendToggleLikeエラーレスポンス → エラーthrow
+    it('sendToggleLikeのエラーレスポンスでエラーをスローする', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+      });
+
+      await expect(sendToggleLike('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow();
     });
   });
 });
