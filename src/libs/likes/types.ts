@@ -21,7 +21,7 @@ export type FirestoreValue =
 export interface FirestoreWrite {
   update: {
     name: string;
-    fields: Record<string, FirestoreValue> | Record<string, never>;
+    fields: Record<string, FirestoreValue>;
   };
   updateMask?: {
     fieldPaths: string[];

@@ -64,6 +64,8 @@ export class LikesRepository {
     validateSlug(slug);
     validateClientId(clientId);
 
+    // 楽観的カウント: commit前のスナップショットから±1で計算。
+    // クライアント側の楽観的UIが即座にカウントを表示し、正確な値は次回GETで取得される。
     const doc = await this.#client.getDocument(`post_likes/${slug}`);
     const reactions = doc ? extractReactions(doc.fields) : {};
     const isCurrentlyLiked = clientId in reactions;
