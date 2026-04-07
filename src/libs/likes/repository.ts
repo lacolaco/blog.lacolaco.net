@@ -46,7 +46,7 @@ export class LikesRepository {
     this.#client = client;
   }
 
-  /** スキ状態を取得する */
+  /** いいね状態を取得する */
   async getLikeStatus(slug: string, clientId: string): Promise<LikeStatus> {
     validateSlug(slug);
     const doc = await this.#client.getDocument(`post_likes/${slug}`);
@@ -59,7 +59,7 @@ export class LikesRepository {
     return { count, liked };
   }
 
-  /** スキをトグルする */
+  /** いいねをトグルする */
   async toggleLike(slug: string, clientId: string): Promise<LikeStatus> {
     validateSlug(slug);
     validateClientId(clientId);
