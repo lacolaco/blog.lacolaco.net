@@ -34,11 +34,6 @@ function getClientId(): ClientId {
   return cachedClientId;
 }
 
-/** テスト用: モジュールレベルキャッシュをリセットする */
-export function _resetClientIdCacheForTesting(): void {
-  cachedClientId = null;
-}
-
 export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
   const [state, setState] = useState<LikeState>({ count: 0, liked: false });
   const [loading, setLoading] = useState(true);
@@ -48,6 +43,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
   const isMounted = useRef(true);
   const isDispatching = useRef(false);
   const loadingRef = useRef(false);
+  const particleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const t = locale === 'en' ? i18n.en : i18n.ja;
 
@@ -58,6 +54,8 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
     try {
       slugRef.current = createSlug(slug);
     } catch {
+      loadingRef.current = false;
+      setLoading(false);
       return;
     }
 
@@ -83,6 +81,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
 
     return () => {
       isMounted.current = false;
+      if (particleTimerRef.current) clearTimeout(particleTimerRef.current);
     };
   }, [slug]);
 
@@ -125,7 +124,9 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
     // パーティクル（likeの場合のみ）
     if (newState.liked) {
       setShowParticles(true);
-      setTimeout(() => {
+      if (particleTimerRef.current) clearTimeout(particleTimerRef.current);
+      particleTimerRef.current = setTimeout(() => {
+        particleTimerRef.current = null;
         if (isMounted.current) setShowParticles(false);
       }, 600);
     }

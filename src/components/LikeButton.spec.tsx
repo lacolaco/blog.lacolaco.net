@@ -6,8 +6,7 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import LikeButton, { _resetClientIdCacheForTesting } from './LikeButton';
+import { render, screen, waitFor, cleanup } from '@testing-library/react';
 
 // client.ts のモック
 vi.mock('../libs/likes/client', () => ({
@@ -33,17 +32,25 @@ const mockSendToggleLike = vi.mocked(sendToggleLike);
 describe('LikeButton', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    _resetClientIdCacheForTesting();
+    // モジュールキャッシュをリセットしてcachedClientIdを初期化
+    vi.resetModules();
     mockFetchLikeStatus.mockResolvedValue({ count: 0, liked: false });
     mockSendToggleLike.mockResolvedValue({ count: 1, liked: true });
   });
 
   afterEach(() => {
+    cleanup();
     vi.restoreAllMocks();
   });
 
+  async function importLikeButton() {
+    const mod = await import('./LikeButton');
+    return mod.default;
+  }
+
   it('初期フェッチの結果がUIに反映される', async () => {
     mockFetchLikeStatus.mockResolvedValueOnce({ count: 5, liked: true });
+    const LikeButton = await importLikeButton();
 
     render(<LikeButton slug="test-post" variant="standard" />);
 
@@ -55,6 +62,7 @@ describe('LikeButton', () => {
 
   it('compact variantでカウントが0のときカウント表示なし', async () => {
     mockFetchLikeStatus.mockResolvedValueOnce({ count: 0, liked: false });
+    const LikeButton = await importLikeButton();
 
     render(<LikeButton slug="test-post" variant="compact" />);
 
@@ -74,23 +82,21 @@ describe('LikeButton', () => {
         }),
     );
     mockFetchLikeStatus.mockResolvedValueOnce({ count: 3, liked: false });
+    const LikeButton = await importLikeButton();
 
     render(<LikeButton slug="test-post" variant="standard" />);
 
-    // 初期フェッチ完了を待つ
     await waitFor(() => {
       expect(screen.getByRole('button')).not.toBeDisabled();
     });
 
     screen.getByRole('button').click();
 
-    // API応答前に楽観的にliked=trueになる
     await waitFor(() => {
       expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
     });
     expect(screen.getByRole('button')).toHaveTextContent('4');
 
-    // API応答後も維持
     resolveToggle!({ count: 4, liked: true });
     await waitFor(() => {
       expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
@@ -100,6 +106,7 @@ describe('LikeButton', () => {
   it('APIエラー時にロールバックが動作する', async () => {
     mockSendToggleLike.mockRejectedValueOnce(new Error('Server error'));
     mockFetchLikeStatus.mockResolvedValueOnce({ count: 2, liked: false });
+    const LikeButton = await importLikeButton();
 
     render(<LikeButton slug="test-post" variant="standard" />);
 
@@ -109,7 +116,6 @@ describe('LikeButton', () => {
 
     screen.getByRole('button').click();
 
-    // ロールバック後は元の状態に戻る
     await waitFor(() => {
       expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false');
     });
@@ -118,6 +124,7 @@ describe('LikeButton', () => {
 
   it('初期フェッチ失敗時はデフォルト状態（count:0, liked:false）', async () => {
     mockFetchLikeStatus.mockRejectedValueOnce(new Error('Network error'));
+    const LikeButton = await importLikeButton();
 
     render(<LikeButton slug="test-post" variant="standard" />);
 
@@ -127,9 +134,9 @@ describe('LikeButton', () => {
     expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false');
   });
 
-  it('初期fetch中はボタンが無効化される', () => {
-    // fetchを未解決のままにする
+  it('初期fetch中はボタンが無効化される', async () => {
     mockFetchLikeStatus.mockReturnValue(new Promise(() => {}));
+    const LikeButton = await importLikeButton();
 
     render(<LikeButton slug="test-post" variant="standard" />);
 
@@ -139,6 +146,7 @@ describe('LikeButton', () => {
   it('compact/standard間のCustomEvent同期が動作する', async () => {
     mockFetchLikeStatus.mockResolvedValue({ count: 3, liked: false });
     mockSendToggleLike.mockResolvedValueOnce({ count: 4, liked: true });
+    const LikeButton = await importLikeButton();
 
     render(
       <div>
@@ -147,7 +155,6 @@ describe('LikeButton', () => {
       </div>,
     );
 
-    // 両方の初期フェッチ完了を待つ
     const buttons = await waitFor(() => {
       const btns = screen.getAllByRole('button');
       expect(btns).toHaveLength(2);
@@ -155,10 +162,8 @@ describe('LikeButton', () => {
       return btns;
     });
 
-    // compact（最初のボタン）をクリック
     buttons[0].click();
 
-    // 両方が楽観的にliked=trueになる
     await waitFor(() => {
       buttons.forEach((btn) => {
         expect(btn).toHaveAttribute('aria-pressed', 'true');
