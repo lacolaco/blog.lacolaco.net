@@ -1,6 +1,6 @@
 import type { APIContext } from 'astro';
 import { FirestoreClient, MetadataService } from '../../../libs/firestore';
-import { CLIENT_ID_PATTERN, LikesRepository, SLUG_MAX_LENGTH, SLUG_PATTERN } from '../../../libs/likes';
+import { isValidClientId, LikesRepository, SLUG_MAX_LENGTH, SLUG_PATTERN } from '../../../libs/likes';
 
 export const prerender = false;
 
@@ -28,8 +28,8 @@ function validateSlug(slug: string): boolean {
   return SLUG_PATTERN.test(slug) && slug.length <= SLUG_MAX_LENGTH;
 }
 
-function validateClientId(clientId: string): boolean {
-  return CLIENT_ID_PATTERN.test(clientId);
+function validateClientIdFormat(clientId: string): boolean {
+  return isValidClientId(clientId);
 }
 
 /** レート制限チェック。制限中ならtrueを返す */
@@ -66,7 +66,7 @@ export async function GET(context: APIContext): Promise<Response> {
   }
 
   const rawClientId = context.request.headers.get('x-client-id') ?? '';
-  if (rawClientId !== '' && !validateClientId(rawClientId)) {
+  if (rawClientId !== '' && !validateClientIdFormat(rawClientId)) {
     return jsonResponse({ error: 'Invalid client ID' }, 400);
   }
   const clientId = rawClientId.toLowerCase();
@@ -91,7 +91,7 @@ export async function POST(context: APIContext): Promise<Response> {
   if (!rawClientId) {
     return jsonResponse({ error: 'x-client-id header is required' }, 400);
   }
-  if (!validateClientId(rawClientId)) {
+  if (!validateClientIdFormat(rawClientId)) {
     return jsonResponse({ error: 'Invalid client ID' }, 400);
   }
   const clientId = rawClientId.toLowerCase();

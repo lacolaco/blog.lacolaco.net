@@ -1,5 +1,5 @@
 import { likeEvents, trackEvent } from '../analytics';
-import { CLIENT_ID_PATTERN, validateClientId, validateSlug } from './constants';
+import { isValidClientId, validateClientId, validateSlug } from './constants';
 import type { LikeStatus } from './types';
 
 const CLIENT_ID_KEY = 'likes_client_id';
@@ -8,7 +8,7 @@ const CLIENT_ID_KEY = 'likes_client_id';
 export function getOrCreateClientId(): string {
   try {
     const stored = localStorage.getItem(CLIENT_ID_KEY);
-    if (stored && CLIENT_ID_PATTERN.test(stored)) {
+    if (stored && isValidClientId(stored)) {
       return stored;
     }
     const newId = crypto.randomUUID();
