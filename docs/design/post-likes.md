@@ -69,7 +69,7 @@ GCPプロジェクトIDはCloud Runメタデータサーバーから取得。環
 - `count`フィールドは持たない。`Object.keys(reactions).length`で導出
   - NaN不可能、負数不可能、increment/reactionの不整合不可能
 - ドキュメントサイズ上限 1MB。UUID (36B) + メタ ≒ 40B/reaction。最大約25,000 reactions/slug
-- clientId (UUID v4) はハイフン含むがドット不含。Firestoreフィールドパスの`.`区切りと競合しない
+- clientId は `crypto.randomUUID()` で生成。バリデーションはhex+ハイフンの文字種チェック（最大128文字）。ドット不含のためFirestoreフィールドパスの`.`区切りと競合しない
 
 ## API
 
@@ -94,7 +94,7 @@ GCPプロジェクトIDはCloud Runメタデータサーバーから取得。環
 | 項目 | ルール | 違反時 |
 |------|--------|--------|
 | slug | `/^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/`, max 200文字 | 400 |
-| clientId (POST) | UUID v4正規表現 | 400 |
+| clientId (POST) | hex+ハイフンのみ、最大128文字 | 400 |
 | clientId (GET) | 空許容 | liked=false |
 | レート制限 | IP+slug単位、1秒1回、LRU Map上限1000 | 429 |
 
@@ -137,7 +137,7 @@ FIRESTORE_EMULATOR_HOST=localhost:8080 pnpm dev
 
 ## クライアント
 
-- clientId: localStorage UUID v4。不正値は再生成。localStorage不可時 (Safari Private等) はセッション限定UUID
+- clientId: localStorage に `crypto.randomUUID()` で生成・保存。不正値は再生成。localStorage不可時 (Safari Private等) はセッション限定UUID
 - liked状態: 楽観的UI更新。クリック即座に反映、API応答はバックグラウンド
 - エラー時: ロールバック + like_errorアナリティクスイベント
 - compact/standard 2インスタンス間の同期: CustomEvent
