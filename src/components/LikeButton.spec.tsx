@@ -7,6 +7,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
 import { render, screen, waitFor, cleanup } from '@testing-library/react';
+import LikeButton from './LikeButton';
 
 // client.ts のモック
 vi.mock('../libs/likes/client', () => ({
@@ -32,8 +33,6 @@ const mockSendToggleLike = vi.mocked(sendToggleLike);
 describe('LikeButton', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // モジュールキャッシュをリセットしてcachedClientIdを初期化
-    vi.resetModules();
     mockFetchLikeStatus.mockResolvedValue({ count: 0, liked: false });
     mockSendToggleLike.mockResolvedValue({ count: 1, liked: true });
   });
@@ -43,14 +42,8 @@ describe('LikeButton', () => {
     vi.restoreAllMocks();
   });
 
-  async function importLikeButton() {
-    const mod = await import('./LikeButton');
-    return mod.default;
-  }
-
   it('初期フェッチの結果がUIに反映される', async () => {
     mockFetchLikeStatus.mockResolvedValueOnce({ count: 5, liked: true });
-    const LikeButton = await importLikeButton();
 
     render(<LikeButton slug="test-post" variant="standard" />);
 
@@ -62,7 +55,6 @@ describe('LikeButton', () => {
 
   it('compact variantでカウントが0のときカウント表示なし', async () => {
     mockFetchLikeStatus.mockResolvedValueOnce({ count: 0, liked: false });
-    const LikeButton = await importLikeButton();
 
     render(<LikeButton slug="test-post" variant="compact" />);
 
@@ -82,7 +74,6 @@ describe('LikeButton', () => {
         }),
     );
     mockFetchLikeStatus.mockResolvedValueOnce({ count: 3, liked: false });
-    const LikeButton = await importLikeButton();
 
     render(<LikeButton slug="test-post" variant="standard" />);
 
@@ -106,7 +97,6 @@ describe('LikeButton', () => {
   it('APIエラー時にロールバックが動作する', async () => {
     mockSendToggleLike.mockRejectedValueOnce(new Error('Server error'));
     mockFetchLikeStatus.mockResolvedValueOnce({ count: 2, liked: false });
-    const LikeButton = await importLikeButton();
 
     render(<LikeButton slug="test-post" variant="standard" />);
 
@@ -124,7 +114,6 @@ describe('LikeButton', () => {
 
   it('初期フェッチ失敗時はデフォルト状態（count:0, liked:false）', async () => {
     mockFetchLikeStatus.mockRejectedValueOnce(new Error('Network error'));
-    const LikeButton = await importLikeButton();
 
     render(<LikeButton slug="test-post" variant="standard" />);
 
@@ -134,9 +123,8 @@ describe('LikeButton', () => {
     expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false');
   });
 
-  it('初期fetch中はボタンが無効化される', async () => {
+  it('初期fetch中はボタンが無効化される', () => {
     mockFetchLikeStatus.mockReturnValue(new Promise(() => {}));
-    const LikeButton = await importLikeButton();
 
     render(<LikeButton slug="test-post" variant="standard" />);
 
@@ -146,7 +134,6 @@ describe('LikeButton', () => {
   it('compact/standard間のCustomEvent同期が動作する', async () => {
     mockFetchLikeStatus.mockResolvedValue({ count: 3, liked: false });
     mockSendToggleLike.mockResolvedValueOnce({ count: 4, liked: true });
-    const LikeButton = await importLikeButton();
 
     render(
       <div>
