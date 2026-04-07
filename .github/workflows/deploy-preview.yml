@@ -103,7 +103,6 @@ jobs:
           no-traffic: 'true'
           revision-tag: 'pr-${{ github.event.number }}'
           env-vars: |
-            GCP_PROJECT_ID=blog-lacolaco-net
             FIRESTORE_DATABASE=likes-preview
 
       - name: Comment preview URL on PR
