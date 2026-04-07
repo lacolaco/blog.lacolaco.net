@@ -1,4 +1,4 @@
-import type { FirestoreDocument } from './types';
+import type { FirestoreDocument, FirestoreWrite } from './types';
 
 const METADATA_URL = 'http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token';
 
@@ -34,11 +34,13 @@ export class TokenManager {
 
 /** Firestore REST APIクライアント */
 export class FirestoreClient {
-  #basePath: string;
+  #baseUrl: string;
+  #namePrefix: string;
   #tokenManager: TokenManager;
 
   constructor(projectId: string, database: string, tokenManager: TokenManager) {
-    this.#basePath = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/${database}/documents`;
+    this.#namePrefix = `projects/${projectId}/databases/${database}/documents`;
+    this.#baseUrl = `https://firestore.googleapis.com/v1/${this.#namePrefix}`;
     this.#tokenManager = tokenManager;
   }
 
@@ -55,9 +57,14 @@ export class FirestoreClient {
     return response;
   }
 
+  /** ドキュメントのフルリソース名を構築する */
+  buildDocumentName(path: string): string {
+    return `${this.#namePrefix}/${path}`;
+  }
+
   /** ドキュメントを取得する */
   async getDocument(path: string): Promise<FirestoreDocument | null> {
-    const response = await this.#fetchWithRetry(`${this.#basePath}/${path}`, {});
+    const response = await this.#fetchWithRetry(`${this.#baseUrl}/${path}`, {});
     if (response.status === 404) {
       return null;
     }
@@ -68,8 +75,8 @@ export class FirestoreClient {
   }
 
   /** バッチ書き込み（commit）を実行する */
-  async commit(writes: unknown[]): Promise<void> {
-    const response = await this.#fetchWithRetry(`${this.#basePath}:commit`, {
+  async commit(writes: FirestoreWrite[]): Promise<void> {
+    const response = await this.#fetchWithRetry(`${this.#baseUrl}:commit`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ writes }),

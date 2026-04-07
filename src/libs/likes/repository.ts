@@ -41,16 +41,9 @@ function validateClientId(clientId: string): void {
 
 export class LikesRepository {
   #client: FirestoreClient;
-  #projectId: string;
-  #database: string;
 
-  constructor(client: FirestoreClient, projectId: string, database: string) {
-    if (!projectId || !database) {
-      throw new Error('projectIdとdatabaseは必須です');
-    }
+  constructor(client: FirestoreClient) {
     this.#client = client;
-    this.#projectId = projectId;
-    this.#database = database;
   }
 
   /** スキ状態を取得する */
@@ -74,7 +67,7 @@ export class LikesRepository {
     const doc = await this.#client.getDocument(`post_likes/${slug}`);
     const reactions = doc ? extractReactions(doc.fields) : {};
     const isCurrentlyLiked = clientId in reactions;
-    const docName = `projects/${this.#projectId}/databases/${this.#database}/documents/post_likes/${slug}`;
+    const docName = this.#client.buildDocumentName(`post_likes/${slug}`);
 
     if (isCurrentlyLiked) {
       // Unlike: maskにフィールドを含めbodyから除外することでFirestoreがフィールドを削除

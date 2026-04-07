@@ -16,3 +16,14 @@ export type FirestoreValue =
   | { stringValue: string }
   | { mapValue: { fields: Record<string, FirestoreValue> } }
   | { nullValue: null };
+
+/** Firestore commit APIのWriteオブジェクト */
+export interface FirestoreWrite {
+  update: {
+    name: string;
+    fields: Record<string, FirestoreValue> | Record<string, never>;
+  };
+  updateMask?: {
+    fieldPaths: string[];
+  };
+}

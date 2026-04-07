@@ -19,10 +19,12 @@ function createDocWithReactions(reactions: Record<string, boolean>): FirestoreDo
 function createMockClient(): {
   getDocument: ReturnType<typeof vi.fn>;
   commit: ReturnType<typeof vi.fn>;
+  buildDocumentName: ReturnType<typeof vi.fn>;
 } {
   return {
     getDocument: vi.fn(),
     commit: vi.fn(),
+    buildDocumentName: vi.fn((path: string) => `projects/test-project/databases/test-db/documents/${path}`),
   };
 }
 
@@ -32,17 +34,7 @@ describe('LikesRepository', () => {
 
   beforeEach(() => {
     mockClient = createMockClient();
-    repository = new LikesRepository(mockClient as unknown as FirestoreClient, 'test-project', 'test-db');
-  });
-
-  describe('constructor', () => {
-    it('空のprojectIdでエラーをスローする', () => {
-      expect(() => new LikesRepository(mockClient as unknown as FirestoreClient, '', 'test-db')).toThrow();
-    });
-
-    it('空のdatabaseでエラーをスローする', () => {
-      expect(() => new LikesRepository(mockClient as unknown as FirestoreClient, 'test-project', '')).toThrow();
-    });
+    repository = new LikesRepository(mockClient as unknown as FirestoreClient);
   });
 
   describe('getLikeStatus', () => {
@@ -169,6 +161,16 @@ describe('LikesRepository', () => {
 
       expect(mockClient.commit).toHaveBeenCalledTimes(1);
       expect(result).toEqual({ count: 2, liked: false });
+    });
+
+    // テスト19b: toggleLikeがbuildDocumentNameを使用する
+    it('buildDocumentNameでドキュメント名を構築する', async () => {
+      mockClient.getDocument.mockResolvedValueOnce(null);
+      mockClient.commit.mockResolvedValueOnce(undefined);
+
+      await repository.toggleLike('test-slug', clientId);
+
+      expect(mockClient.buildDocumentName).toHaveBeenCalledWith('post_likes/test-slug');
     });
 
     // テスト22: 空clientId
