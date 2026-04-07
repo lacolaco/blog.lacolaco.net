@@ -76,7 +76,7 @@ export class LikesRepository {
       await this.#client.commit([
         {
           update: { name: docName, fields: {} },
-          updateMask: { fieldPaths: [`reactions.${clientId}`] },
+          updateMask: { fieldPaths: [`reactions.\`${clientId}\``] },
         },
       ]);
       const newCount = Object.keys(reactions).length - 1;
@@ -93,7 +93,7 @@ export class LikesRepository {
               },
             },
           },
-          updateMask: { fieldPaths: [`reactions.${clientId}`] },
+          updateMask: { fieldPaths: [`reactions.\`${clientId}\``] },
         },
       ]);
       return { count: Object.keys(reactions).length + 1, liked: true };
