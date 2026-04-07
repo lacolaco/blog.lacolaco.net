@@ -1,6 +1,6 @@
 import type { APIContext } from 'astro';
 import { FirestoreClient, MetadataService } from '../../../libs/firestore';
-import { createClientId, createSlug, isValidClientId, isValidSlug, LikesRepository } from '../../../libs/likes';
+import { ClientId, LikesRepository, Slug } from '../../../libs/likes';
 
 export const prerender = false;
 
@@ -52,17 +52,18 @@ function jsonResponse(data: unknown, status = 200, extraHeaders?: Record<string,
 }
 
 export async function GET(context: APIContext): Promise<Response> {
-  const rawSlug = context.params.slug!;
-  if (!isValidSlug(rawSlug)) {
+  const slugResult = Slug.safeParse(context.params.slug);
+  if (!slugResult.success) {
     return jsonResponse({ error: 'Invalid slug' }, 400);
   }
-  const slug = createSlug(rawSlug);
+  const slug = slugResult.data;
 
   const rawClientId = context.request.headers.get('x-client-id') ?? '';
-  if (rawClientId !== '' && !isValidClientId(rawClientId)) {
+  const clientIdResult = rawClientId ? ClientId.safeParse(rawClientId.toLowerCase()) : null;
+  if (clientIdResult && !clientIdResult.success) {
     return jsonResponse({ error: 'Invalid client ID' }, 400);
   }
-  const clientId = rawClientId ? createClientId(rawClientId.toLowerCase()) : null;
+  const clientId = clientIdResult?.data ?? null;
 
   try {
     const repo = getRepository();
@@ -75,20 +76,21 @@ export async function GET(context: APIContext): Promise<Response> {
 }
 
 export async function POST(context: APIContext): Promise<Response> {
-  const rawSlug = context.params.slug!;
-  if (!isValidSlug(rawSlug)) {
+  const slugResult = Slug.safeParse(context.params.slug);
+  if (!slugResult.success) {
     return jsonResponse({ error: 'Invalid slug' }, 400);
   }
-  const slug = createSlug(rawSlug);
+  const slug = slugResult.data;
 
   const rawClientId = context.request.headers.get('x-client-id') ?? '';
   if (!rawClientId) {
     return jsonResponse({ error: 'x-client-id header is required' }, 400);
   }
-  if (!isValidClientId(rawClientId)) {
+  const clientIdResult = ClientId.safeParse(rawClientId.toLowerCase());
+  if (!clientIdResult.success) {
     return jsonResponse({ error: 'Invalid client ID' }, 400);
   }
-  const clientId = createClientId(rawClientId.toLowerCase());
+  const clientId = clientIdResult.data;
 
   // レート制限チェック
   // Cloud Runに直接接続されるためclientAddressは実クライアントIP
