@@ -14,7 +14,7 @@ export type FirestoreValue =
   | { booleanValue: boolean }
   | { integerValue: string }
   | { stringValue: string }
-  | { mapValue: { fields: Record<string, FirestoreValue> } }
+  | { mapValue: { fields?: Record<string, FirestoreValue> } }
   | { nullValue: null };
 
 /** Firestore commit APIのWriteオブジェクト */
