@@ -35,6 +35,16 @@ async function fetchWithTracking(url: string, init?: RequestInit): Promise<Respo
   }
 }
 
+/** レスポンスボディをLikeStatusとしてパース。失敗時はanalytics発火 */
+function parseLikeStatus(data: unknown, context: string): LikeStatus {
+  try {
+    return LikeStatus.parse(data);
+  } catch (error) {
+    trackEvent(likeEvents.error(`${context} invalid response: ${error instanceof Error ? error.message : 'unknown'}`));
+    throw error;
+  }
+}
+
 /** いいね状態を取得する */
 export async function fetchLikeStatus(slug: Slug, clientId: ClientId): Promise<LikeStatus> {
   const response = await fetchWithTracking(`/api/likes/${slug}`, {
@@ -44,7 +54,7 @@ export async function fetchLikeStatus(slug: Slug, clientId: ClientId): Promise<L
     trackEvent(likeEvents.error(`GET /api/likes/${slug} failed: ${response.status}`));
     throw new Error(`Failed to fetch like status: ${response.status}`);
   }
-  return LikeStatus.parse(await response.json());
+  return parseLikeStatus(await response.json(), `GET /api/likes/${slug}`);
 }
 
 /** いいねをトグルする */
@@ -57,7 +67,7 @@ export async function sendToggleLike(slug: Slug, clientId: ClientId): Promise<Li
     trackEvent(likeEvents.error(`POST /api/likes/${slug} failed: ${response.status}`));
     throw new Error(`Failed to toggle like: ${response.status}`);
   }
-  const result = LikeStatus.parse(await response.json());
+  const result = parseLikeStatus(await response.json(), `POST /api/likes/${slug}`);
   trackEvent(likeEvents.toggle(slug, result.liked));
   return result;
 }

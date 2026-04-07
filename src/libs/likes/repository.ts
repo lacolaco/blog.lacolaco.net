@@ -37,7 +37,7 @@ export class LikesRepository {
     return { count, liked };
   }
 
-  /** いいねをトグルする */
+  /** いいねをトグルする。戻り値はcommit前のスナップショットからの楽観的推定値。正確な値は次回GETで取得される */
   async toggleLike(slug: Slug, clientId: ClientId): Promise<LikeStatus> {
     const doc = await this.#client.getDocument(`post_likes/${slug}`);
     const reactions = doc ? extractReactions(doc.fields) : {};
