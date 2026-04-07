@@ -161,6 +161,22 @@ describe('likes client', () => {
       );
       trackSpy.mockRestore();
     });
+
+    // アンライク成功時にもlike_toggleイベントを発火する
+    it('アンライク成功時にlike_toggle(liked: false)イベントを発火する', async () => {
+      const trackSpy = vi.spyOn(analytics, 'trackEvent');
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ count: 0, liked: false }),
+      });
+
+      await sendToggleLike('test-slug-unlike', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee');
+
+      expect(trackSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ name: 'like_toggle', params: { slug: 'test-slug-unlike', liked: false } }),
+      );
+      trackSpy.mockRestore();
+    });
   });
 
   describe('バリデーション', () => {

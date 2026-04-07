@@ -28,10 +28,6 @@ function validateSlug(slug: string): boolean {
   return SLUG_PATTERN.test(slug) && slug.length <= SLUG_MAX_LENGTH;
 }
 
-function validateClientIdFormat(clientId: string): boolean {
-  return isValidClientId(clientId);
-}
-
 /** レート制限チェック。制限中ならtrueを返す */
 function isRateLimited(key: string, now: number): boolean {
   const lastTime = rateLimitMap.get(key);
@@ -66,7 +62,7 @@ export async function GET(context: APIContext): Promise<Response> {
   }
 
   const rawClientId = context.request.headers.get('x-client-id') ?? '';
-  if (rawClientId !== '' && !validateClientIdFormat(rawClientId)) {
+  if (rawClientId !== '' && !isValidClientId(rawClientId)) {
     return jsonResponse({ error: 'Invalid client ID' }, 400);
   }
   const clientId = rawClientId.toLowerCase();
@@ -91,7 +87,7 @@ export async function POST(context: APIContext): Promise<Response> {
   if (!rawClientId) {
     return jsonResponse({ error: 'x-client-id header is required' }, 400);
   }
-  if (!validateClientIdFormat(rawClientId)) {
+  if (!isValidClientId(rawClientId)) {
     return jsonResponse({ error: 'Invalid client ID' }, 400);
   }
   const clientId = rawClientId.toLowerCase();

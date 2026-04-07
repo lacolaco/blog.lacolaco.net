@@ -21,47 +21,45 @@ export function getOrCreateClientId(): string {
   }
 }
 
+/** fetch実行。ネットワークエラー（TypeError）時はanalytics発火してre-throw */
+async function fetchWithTracking(url: string, init?: RequestInit): Promise<Response> {
+  try {
+    return await fetch(url, init);
+  } catch (error) {
+    if (error instanceof TypeError) {
+      trackEvent(likeEvents.error(`${init?.method ?? 'GET'} ${url} network error: ${error.message}`));
+    }
+    throw error;
+  }
+}
+
 /** いいね状態を取得する */
 export async function fetchLikeStatus(slug: string, clientId: string): Promise<LikeStatus> {
   validateSlug(slug);
   validateClientId(clientId);
-  try {
-    const response = await fetch(`/api/likes/${slug}`, {
-      headers: { 'x-client-id': clientId },
-    });
-    if (!response.ok) {
-      trackEvent(likeEvents.error(`GET /api/likes/${slug} failed: ${response.status}`));
-      throw new Error(`Failed to fetch like status: ${response.status}`);
-    }
-    return (await response.json()) as LikeStatus;
-  } catch (error) {
-    if (error instanceof TypeError) {
-      trackEvent(likeEvents.error(`GET /api/likes/${slug} network error: ${error.message}`));
-    }
-    throw error;
+  const response = await fetchWithTracking(`/api/likes/${slug}`, {
+    headers: { 'x-client-id': clientId },
+  });
+  if (!response.ok) {
+    trackEvent(likeEvents.error(`GET /api/likes/${slug} failed: ${response.status}`));
+    throw new Error(`Failed to fetch like status: ${response.status}`);
   }
+  return (await response.json()) as LikeStatus;
 }
 
 /** いいねをトグルする */
 export async function sendToggleLike(slug: string, clientId: string): Promise<LikeStatus> {
   validateSlug(slug);
   validateClientId(clientId);
-  try {
-    const response = await fetch(`/api/likes/${slug}`, {
-      method: 'POST',
-      headers: { 'x-client-id': clientId },
-    });
-    if (!response.ok) {
-      trackEvent(likeEvents.error(`POST /api/likes/${slug} failed: ${response.status}`));
-      throw new Error(`Failed to toggle like: ${response.status}`);
-    }
-    const result = (await response.json()) as LikeStatus;
-    trackEvent(likeEvents.toggle(slug, result.liked));
-    return result;
-  } catch (error) {
-    if (error instanceof TypeError) {
-      trackEvent(likeEvents.error(`POST /api/likes/${slug} network error: ${error.message}`));
-    }
-    throw error;
+  const response = await fetchWithTracking(`/api/likes/${slug}`, {
+    method: 'POST',
+    headers: { 'x-client-id': clientId },
+  });
+  if (!response.ok) {
+    trackEvent(likeEvents.error(`POST /api/likes/${slug} failed: ${response.status}`));
+    throw new Error(`Failed to toggle like: ${response.status}`);
   }
+  const result = (await response.json()) as LikeStatus;
+  trackEvent(likeEvents.toggle(slug, result.liked));
+  return result;
 }
