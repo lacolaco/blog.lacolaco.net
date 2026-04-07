@@ -12,6 +12,7 @@ import ChannelBadge from '../components/ChannelBadge.astro';
 import Tag from '../components/Tag.astro';
 import TagList from '../components/TagList.astro';
 import ArticleSummarizer from '../components/ArticleSummarizer';
+import LikeButton from '../components/LikeButton';
 import ImageLightbox from '../components/ImageLightbox.astro';
 import { SITE_TITLE } from '../consts';
 import { queryAvailablePosts } from '@lib/query';
@@ -111,6 +112,7 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
                   <span class="icon-[simple-icons--markdown] inline-block w-5 h-5 lg:w-4 lg:h-4"></span>
                   <span class="hidden lg:inline">Markdown</span>
                 </a>
+                <LikeButton slug={slug} locale={locale || 'ja'} variant="compact" client:idle />
               </div>
             </div>
             <ArticleSummarizer locale={locale || 'ja'} includeToolbar client:idle />
@@ -129,6 +131,10 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
 
         <div class="mt-[32px] lg:mt-6">
           <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
+        </div>
+
+        <div class="mt-6 flex justify-center">
+          <LikeButton slug={slug} locale={locale || 'ja'} variant="standard" client:idle />
         </div>
 
         <PostNavigation prev={adjacentPosts.prev} next={adjacentPosts.next} />

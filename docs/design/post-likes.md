@@ -69,7 +69,29 @@ GCPプロジェクトIDはCloud Runメタデータサーバーから取得。環
 - `count`フィールドは持たない。`Object.keys(reactions).length`で導出
   - NaN不可能、負数不可能、increment/reactionの不整合不可能
 - ドキュメントサイズ上限 1MB。UUID (36B) + メタ ≒ 40B/reaction。最大約25,000 reactions/slug
-- clientId は `crypto.randomUUID()` で生成。バリデーションはhex+ハイフンの文字種チェック（最大128文字）。ドット不含のためFirestoreフィールドパスの`.`区切りと競合しない
+- clientId は `crypto.randomUUID()` で生成。ドット不含のためFirestoreフィールドパスの`.`区切りと競合しない
+
+## バリデーション
+
+zodブランド型による型安全なバリデーション。`astro/zod`からインポート。
+
+### 型定義 (`src/libs/likes/types.ts`)
+
+| 型 | スキーマ | 用途 |
+|---|---------|------|
+| `Slug` | `z.string().regex(/^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/).max(200).brand('Slug')` | 記事slug |
+| `ClientId` | `z.string().min(1).regex(/^[0-9a-f-]+$/i).max(128).brand('ClientId')` | クライアント識別子 |
+| `LikeStatus` | `z.object({ count: z.number(), liked: z.boolean() })` | APIレスポンス |
+
+### バリデーション関数 (`src/libs/likes/constants.ts`)
+
+| 関数 | 引数 | 戻り値 | 用途 |
+|------|------|--------|------|
+| `isValidSlug` | `string` | `boolean` | slug形式チェック |
+| `isValidClientId` | `string` | `boolean` | clientId形式チェック |
+| `createSlug` | `string` | `Slug` | Slug生成（無効時throw） |
+| `createClientId` | `string` | `ClientId` | ClientId生成（無効時throw） |
+| `tryCreateClientId` | `string` | `ClientId \| null` | ClientId検証（無効時null） |
 
 ## API
 
@@ -89,12 +111,12 @@ GCPプロジェクトIDはCloud Runメタデータサーバーから取得。環
 - Response: `{ count: number, liked: boolean }`
 - Firestore操作: getDoc 1回 + commit 1回
 
-## バリデーション
+### APIバリデーションルール
 
 | 項目 | ルール | 違反時 |
 |------|--------|--------|
-| slug | `/^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/`, max 200文字 | 400 |
-| clientId (POST) | hex+ハイフンのみ、最大128文字 | 400 |
+| slug | `Slug.safeParse()` | 400 |
+| clientId (POST) | `ClientId.safeParse()` | 400 |
 | clientId (GET) | 空許容 | liked=false |
 | レート制限 | IP+slug単位、1秒1回、LRU Map上限1000 | 429 |
 
@@ -137,10 +159,31 @@ FIRESTORE_EMULATOR_HOST=localhost:8080 pnpm dev
 
 ## クライアント
 
-- clientId: localStorage に `crypto.randomUUID()` で生成・保存。不正値は再生成。localStorage不可時 (Safari Private等) はセッション限定UUID
+### クライアントライブラリ (`src/libs/likes/client.ts`)
+
+- `getOrCreateClientId()`: localStorageに`crypto.randomUUID()`で生成・保存。`tryCreateClientId()`で既存値を検証し、不正値は再生成。localStorage不可時（Safari Private等）は毎回新規生成（呼び出し側でReact stateにキャッシュすること）
+- `fetchLikeStatus(slug, clientId)`: `GET /api/likes/{slug}` + `x-client-id`ヘッダ。レスポンスは`LikeStatus.parse()`でランタイム検証
+- `sendToggleLike(slug, clientId)`: `POST /api/likes/{slug}` + `x-client-id`ヘッダ。成功時に`likeEvents.toggle()`発火
+- ネットワークエラー時: `likeEvents.error()`発火してre-throw
+- APIレスポンス不正時: `likeEvents.error()`発火してre-throw
+
+**注意**: `src/libs/likes/index.ts`はサーバー側エクスポートのみ。`client.ts`はバンドリング問題回避のため含まない。ブラウザ側は`./likes/client`から直接インポートすること。
+
+### LikeButton UI
+
 - liked状態: 楽観的UI更新。クリック即座に反映、API応答はバックグラウンド
 - エラー時: ロールバック + like_errorアナリティクスイベント
 - compact/standard 2インスタンス間の同期: CustomEvent
+- localStorage不可時のclientIdキャッシュ: React stateで担保（client.tsは毎回新規生成する設計）
+
+## アナリティクス (`src/libs/analytics.ts`)
+
+| イベント | 関数 | パラメータ |
+|---------|------|-----------|
+| `like_toggle` | `likeEvents.toggle(slug, liked)` | `{ slug: string, liked: boolean }` |
+| `like_error` | `likeEvents.error(message)` | `{ error_message: string }` |
+
+既存の`summarizerEvents`/`ttsEvents`と同パターン。
 
 ## テストプラン
 
