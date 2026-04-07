@@ -30,24 +30,10 @@ gcloud firestore databases create --location=asia-northeast1 --database=likes-pr
 gcloud firestore databases create --location=asia-northeast1 --database=likes-preview --type=firestore-native --project=blog-lacolaco-net
 ```
 
-### Security Rules
+### アクセス制御
 
-全クライアントアクセスを拒否。正規のアクセスパスはCloud Run → サービスアカウント → REST APIのみ。
-サービスアカウント経由のアクセスはSecurity Rulesをバイパスするため、IAM (`roles/editor`) で制御。
-
-```
-// firestore.rules
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false;
-    }
-  }
-}
-```
-
-両データベース (`likes-production`, `likes-preview`) に適用。
+全アクセスはCloud Run サービスアカウント → REST API 経由。IAM (`roles/editor`) で制御。
+Firestore Security RulesはFirebase Client SDK向けの仕組みであり、サービスアカウント経由のアクセスはバイパスするため不使用。
 
 ### 環境変数
 
