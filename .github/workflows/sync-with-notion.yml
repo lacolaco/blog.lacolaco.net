@@ -36,6 +36,7 @@ jobs:
       - run: pnpm install
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: pnpm astro sync
       - run: touch .env # create empty .env file
       - run: pnpm run notion-sync ${{ github.event.inputs.forceUpdate && '--force' || '' }}
         env:
