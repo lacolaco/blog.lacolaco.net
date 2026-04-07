@@ -67,6 +67,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
     clientIdRef.current = clientId;
 
     loadingRef.current = true;
+    setLoading(true);
     fetchLikeStatus(slugRef.current, clientId)
       .then((result) => {
         if (isMounted.current) {
@@ -86,6 +87,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
     return () => {
       isMounted.current = false;
       if (particleTimerRef.current) clearTimeout(particleTimerRef.current);
+      setShowParticles(false);
     };
   }, [slug]);
 

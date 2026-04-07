@@ -21,14 +21,6 @@ vi.mock('../libs/likes/client', () => ({
   sendToggleLike: mockSendToggleLike,
 }));
 
-vi.mock('../libs/analytics', () => ({
-  trackEvent: vi.fn(),
-  likeEvents: {
-    toggle: vi.fn(() => ({ name: 'like_toggle', params: {} })),
-    error: vi.fn(() => ({ name: 'like_error', params: {} })),
-  },
-}));
-
 describe('LikeButton', () => {
   beforeEach(() => {
     vi.clearAllMocks();
