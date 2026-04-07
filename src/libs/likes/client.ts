@@ -1,6 +1,7 @@
 import { likeEvents, trackEvent } from '../analytics';
 import { createClientId, tryCreateClientId } from './constants';
-import type { ClientId, LikeStatus, Slug } from './types';
+import { LikeStatus } from './types';
+import type { ClientId, Slug } from './types';
 
 const CLIENT_ID_KEY = 'likes_client_id';
 
@@ -43,7 +44,7 @@ export async function fetchLikeStatus(slug: Slug, clientId: ClientId): Promise<L
     trackEvent(likeEvents.error(`GET /api/likes/${slug} failed: ${response.status}`));
     throw new Error(`Failed to fetch like status: ${response.status}`);
   }
-  return (await response.json()) as LikeStatus;
+  return LikeStatus.parse(await response.json());
 }
 
 /** いいねをトグルする */
@@ -56,7 +57,7 @@ export async function sendToggleLike(slug: Slug, clientId: ClientId): Promise<Li
     trackEvent(likeEvents.error(`POST /api/likes/${slug} failed: ${response.status}`));
     throw new Error(`Failed to toggle like: ${response.status}`);
   }
-  const result = (await response.json()) as LikeStatus;
+  const result = LikeStatus.parse(await response.json());
   trackEvent(likeEvents.toggle(slug, result.liked));
   return result;
 }
