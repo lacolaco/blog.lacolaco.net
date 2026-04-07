@@ -235,7 +235,7 @@ describe('FirestoreClient', () => {
         status: 500,
       });
 
-      await expect(client.commit([{ update: {} }])).rejects.toThrow();
+      await expect(client.commit([{ update: { name: 'dummy', fields: {} } }])).rejects.toThrow();
     });
 
     // テスト12: 401でリトライ（新トークン使用を検証）
@@ -244,7 +244,7 @@ describe('FirestoreClient', () => {
 
       vi.spyOn(tokenManager, 'getToken').mockResolvedValueOnce('expired-token').mockResolvedValueOnce('new-token');
 
-      await client.commit([{ update: {} }]);
+      await client.commit([{ update: { name: 'dummy', fields: {} } }]);
 
       expect(invalidateSpy).toHaveBeenCalled();
       expect(mockFetch).toHaveBeenCalledTimes(2);
