@@ -169,4 +169,16 @@ describe('LikeButton', () => {
       });
     });
   });
+
+  it('無効なslugの場合はAPIコールせずローディング解除', async () => {
+    const LikeButton = await importLikeButton();
+
+    render(<LikeButton slug="" variant="standard" />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button')).not.toBeDisabled();
+    });
+    expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false');
+    expect(mockFetchLikeStatus).not.toHaveBeenCalled();
+  });
 });
