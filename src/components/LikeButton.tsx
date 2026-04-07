@@ -21,6 +21,7 @@ const PARTICLE_DURATION_MS = 600;
 interface LikeSyncDetail {
   slug: string;
   state: LikeState;
+  loading: boolean;
 }
 
 const i18n = {
@@ -96,6 +97,8 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
       const detail = (e as CustomEvent<LikeSyncDetail>).detail;
       if (detail.slug === slug && isMounted.current) {
         setState(detail.state);
+        loadingRef.current = detail.loading;
+        setLoading(detail.loading);
       }
     };
     window.addEventListener(SYNC_EVENT, handler);
@@ -104,9 +107,11 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
 
   /** 他インスタンスに状態を通知する */
   const dispatchSync = useCallback(
-    (newState: LikeState) => {
+    (newState: LikeState, isLoading: boolean) => {
       isDispatching.current = true;
-      window.dispatchEvent(new CustomEvent<LikeSyncDetail>(SYNC_EVENT, { detail: { slug, state: newState } }));
+      window.dispatchEvent(
+        new CustomEvent<LikeSyncDetail>(SYNC_EVENT, { detail: { slug, state: newState, loading: isLoading } }),
+      );
       isDispatching.current = false;
     },
     [slug],
@@ -122,7 +127,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
     loadingRef.current = true;
     setState(newState);
     setLoading(true);
-    dispatchSync(newState);
+    dispatchSync(newState, true);
 
     // パーティクル（likeの場合のみ）
     if (newState.liked) {
@@ -139,14 +144,14 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
         if (isMounted.current) {
           const serverState = { count: result.count, liked: result.liked };
           setState(serverState);
-          dispatchSync(serverState);
+          dispatchSync(serverState, false);
         }
       })
       .catch(() => {
         // ロールバック
         if (isMounted.current) {
           setState(previousState);
-          dispatchSync(previousState);
+          dispatchSync(previousState, false);
         }
       })
       .finally(() => {
