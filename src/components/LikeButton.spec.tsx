@@ -81,6 +81,9 @@ describe('LikeButton', () => {
     await waitFor(() => {
       expect(screen.getByRole('button')).not.toBeDisabled();
     });
+    // 初期状態を確認
+    expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.getByRole('button')).toHaveTextContent('3');
 
     screen.getByRole('button').click();
 
@@ -159,6 +162,11 @@ describe('LikeButton', () => {
       btns.forEach((btn) => expect(btn).not.toBeDisabled());
       return btns;
     });
+    // 初期状態を確認
+    buttons.forEach((btn) => {
+      expect(btn).toHaveAttribute('aria-pressed', 'false');
+      expect(btn).toHaveTextContent('3');
+    });
 
     buttons[0].click();
 
@@ -166,6 +174,48 @@ describe('LikeButton', () => {
       buttons.forEach((btn) => {
         expect(btn).toHaveAttribute('aria-pressed', 'true');
         expect(btn).toHaveTextContent('4');
+      });
+    });
+  });
+
+  it('compact/standard間のエラーロールバック同期が動作する', async () => {
+    mockFetchLikeStatus.mockResolvedValue({ count: 3, liked: false });
+    mockSendToggleLike.mockRejectedValueOnce(new Error('Server error'));
+    const LikeButton = await importLikeButton();
+
+    render(
+      <div>
+        <LikeButton slug="test-post" variant="compact" />
+        <LikeButton slug="test-post" variant="standard" />
+      </div>,
+    );
+
+    const buttons = await waitFor(() => {
+      const btns = screen.getAllByRole('button');
+      expect(btns).toHaveLength(2);
+      btns.forEach((btn) => expect(btn).not.toBeDisabled());
+      return btns;
+    });
+    // 初期状態
+    buttons.forEach((btn) => {
+      expect(btn).toHaveAttribute('aria-pressed', 'false');
+      expect(btn).toHaveTextContent('3');
+    });
+
+    buttons[0].click();
+
+    // 楽観的更新
+    await waitFor(() => {
+      buttons.forEach((btn) => {
+        expect(btn).toHaveAttribute('aria-pressed', 'true');
+      });
+    });
+
+    // エラー後にロールバック
+    await waitFor(() => {
+      buttons.forEach((btn) => {
+        expect(btn).toHaveAttribute('aria-pressed', 'false');
+        expect(btn).toHaveTextContent('3');
       });
     });
   });
