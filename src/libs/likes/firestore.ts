@@ -6,12 +6,23 @@ const METADATA_URL = 'http://metadata.google.internal/computeMetadata/v1/instanc
 export class TokenManager {
   #cachedToken: string | null = null;
   #expiresAt: number = 0;
+  #pendingFetch: Promise<string> | null = null;
 
   /** トークンを取得する。キャッシュ有効期間内はキャッシュを返す */
   async getToken(): Promise<string> {
     if (this.#cachedToken && Date.now() < this.#expiresAt) {
       return this.#cachedToken;
     }
+    if (this.#pendingFetch) {
+      return this.#pendingFetch;
+    }
+    this.#pendingFetch = this.#fetchToken().finally(() => {
+      this.#pendingFetch = null;
+    });
+    return this.#pendingFetch;
+  }
+
+  async #fetchToken(): Promise<string> {
     const response = await fetch(METADATA_URL, {
       headers: { 'Metadata-Flavor': 'Google' },
     });
@@ -32,6 +43,13 @@ export class TokenManager {
   }
 }
 
+/** #fetchWithRetry用のリクエストオプション */
+interface FetchOptions {
+  method?: string;
+  headers?: Record<string, string>;
+  body?: string;
+}
+
 /** Firestore REST APIクライアント */
 export class FirestoreClient {
   #baseUrl: string;
@@ -45,7 +63,7 @@ export class FirestoreClient {
   }
 
   /** 401リトライ付きfetch */
-  async #fetchWithRetry(url: string, init: RequestInit): Promise<Response> {
+  async #fetchWithRetry(url: string, init: FetchOptions): Promise<Response> {
     const token = await this.#tokenManager.getToken();
     const headers = { ...init.headers, Authorization: `Bearer ${token}` };
     const response = await fetch(url, { ...init, headers });
