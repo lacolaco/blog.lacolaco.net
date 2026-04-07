@@ -68,6 +68,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
     try {
       slugRef.current = createSlug(slug);
     } catch {
+      slugRef.current = null;
       loadingRef.current = false;
       setLoading(false);
       return;
