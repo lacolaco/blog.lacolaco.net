@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { MetadataService, FirestoreClient } from './firestore';
+import { MetadataService, FirestoreClient } from './client';
 
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);

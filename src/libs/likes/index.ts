@@ -1,3 +1,2 @@
-export type { LikeStatus, FirestoreDocument, FirestoreValue, FirestoreWrite } from './types';
-export { MetadataService, FirestoreClient } from './firestore';
+export type { LikeStatus } from './types';
 export { LikesRepository, SLUG_PATTERN, SLUG_MAX_LENGTH, CLIENT_ID_PATTERN } from './repository';

@@ -1,5 +1,6 @@
-import type { FirestoreClient } from './firestore';
-import type { FirestoreValue, LikeStatus } from './types';
+import type { FirestoreClient } from '../firestore/client';
+import type { FirestoreValue } from '../firestore/types';
+import type { LikeStatus } from './types';
 
 /** slugのバリデーション正規表現 */
 export const SLUG_PATTERN = /^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/;

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { LikesRepository } from './repository';
-import type { FirestoreClient } from './firestore';
-import type { FirestoreDocument } from './types';
+import type { FirestoreClient } from '../firestore/client';
+import type { FirestoreDocument } from '../firestore/types';
 
 /** reactionsマップを持つFirestoreドキュメントを生成するヘルパー */
 function createDocWithReactions(reactions: Record<string, boolean>): FirestoreDocument {
