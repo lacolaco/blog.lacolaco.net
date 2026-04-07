@@ -89,8 +89,8 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
         // 初期取得失敗: デフォルト状態のまま
       })
       .finally(() => {
-        loadingRef.current = false;
         if (active) {
+          loadingRef.current = false;
           setLoading(false);
         }
       });
