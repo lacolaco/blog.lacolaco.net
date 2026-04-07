@@ -165,6 +165,7 @@ describe('LikeButton', () => {
     await waitFor(() => {
       buttons.forEach((btn) => {
         expect(btn).toHaveAttribute('aria-pressed', 'true');
+        expect(btn).toHaveTextContent('4');
       });
     });
   });
