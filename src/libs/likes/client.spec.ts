@@ -89,6 +89,27 @@ describe('likes client', () => {
 
       expect(result).toBe(mockUuid);
     });
+
+    // localStorage不可時は呼び出しごとに異なるIDが返る
+    it('localStorage不可時は呼び出しごとに新しいUUIDを生成する', () => {
+      vi.stubGlobal('localStorage', {
+        getItem: () => {
+          throw new Error('SecurityError');
+        },
+        setItem: () => {
+          throw new Error('SecurityError');
+        },
+      });
+      let callCount = 0;
+      vi.stubGlobal('crypto', {
+        randomUUID: () => `uuid-${++callCount}`,
+      });
+
+      const result1 = getOrCreateClientId();
+      const result2 = getOrCreateClientId();
+
+      expect(result1).not.toBe(result2);
+    });
   });
 
   describe('fetchLikeStatus', () => {
@@ -191,22 +212,28 @@ describe('likes client', () => {
       trackSpy.mockRestore();
     });
 
-    // ネットワークエラー → エラーthrow (fetchLikeStatus)
-    it('fetchLikeStatusのネットワークエラーでエラーをスローする', async () => {
-      mockFetch.mockRejectedValueOnce(new Error('Network Error'));
+    // ネットワークエラー → エラーthrow + analytics (fetchLikeStatus)
+    it('fetchLikeStatusのネットワークエラーでlike_errorを発火する', async () => {
+      const trackSpy = vi.spyOn(analytics, 'trackEvent');
+      mockFetch.mockRejectedValueOnce(new TypeError('Failed to fetch'));
 
       await expect(fetchLikeStatus('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow(
-        'Network Error',
+        'Failed to fetch',
       );
+      expect(trackSpy).toHaveBeenCalledWith(expect.objectContaining({ name: 'like_error' }));
+      trackSpy.mockRestore();
     });
 
-    // ネットワークエラー → エラーthrow (sendToggleLike)
-    it('sendToggleLikeのネットワークエラーでエラーをスローする', async () => {
-      mockFetch.mockRejectedValueOnce(new Error('Network Error'));
+    // ネットワークエラー → エラーthrow + analytics (sendToggleLike)
+    it('sendToggleLikeのネットワークエラーでlike_errorを発火する', async () => {
+      const trackSpy = vi.spyOn(analytics, 'trackEvent');
+      mockFetch.mockRejectedValueOnce(new TypeError('Failed to fetch'));
 
       await expect(sendToggleLike('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow(
-        'Network Error',
+        'Failed to fetch',
       );
+      expect(trackSpy).toHaveBeenCalledWith(expect.objectContaining({ name: 'like_error' }));
+      trackSpy.mockRestore();
     });
   });
 });

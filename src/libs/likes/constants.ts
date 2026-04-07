@@ -14,7 +14,7 @@ export function validateSlug(slug: string): void {
 
 /** clientIdの形式が有効かを返す */
 export function isValidClientId(clientId: string): boolean {
-  return clientId.length > 0 && CLIENT_ID_PATTERN.test(clientId);
+  return CLIENT_ID_PATTERN.test(clientId);
 }
 
 /** clientIdの形式を検証する。無効な場合はエラーをスロー */
