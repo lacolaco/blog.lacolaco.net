@@ -95,6 +95,8 @@ export async function POST(context: APIContext): Promise<Response> {
   const clientId = rawClientId.toLowerCase();
 
   // レート制限チェック
+  // Cloud Runに直接接続されるためclientAddressは実クライアントIP
+  // （CloudflareはR2/OG画像キャッシュのみ使用、APIはプロキシ経由ではない）
   const rateLimitKey = `${context.clientAddress}:${slug}`;
   if (isRateLimited(rateLimitKey, Date.now())) {
     return jsonResponse({ error: 'Too many requests' }, 429, {

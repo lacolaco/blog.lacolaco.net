@@ -119,6 +119,28 @@ describe('API /api/likes/[slug]', () => {
   });
 
   describe('POST', () => {
+    // POST 不正slug
+    it('不正slugで 400 を返す', async () => {
+      const ctx = createContext('POST', 'INVALID SLUG!', {
+        'x-client-id': 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee',
+      });
+
+      const response = await POST(ctx);
+
+      expect(response.status).toBe(400);
+    });
+
+    // POST slug長すぎ
+    it('slug長すぎで 400 を返す', async () => {
+      const ctx = createContext('POST', 'a'.repeat(201), {
+        'x-client-id': 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee',
+      });
+
+      const response = await POST(ctx);
+
+      expect(response.status).toBe(400);
+    });
+
     // テスト32: POST 正常系
     it('正常系: 200 + { count, liked } を返す', async () => {
       mockToggleLike.mockResolvedValueOnce({ count: 1, liked: true });
