@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import * as analytics from '../analytics';
 
 // localStorageモック
 const localStorageMock = (() => {
@@ -122,6 +123,44 @@ describe('likes client', () => {
         headers: { 'x-client-id': 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee' },
       });
       expect(result).toEqual({ count: 1, liked: true });
+    });
+
+    // 成功時にanalytics trackEventが呼ばれる
+    it('成功時にlike_toggleイベントを発火する', async () => {
+      const trackSpy = vi.spyOn(analytics, 'trackEvent');
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ count: 1, liked: true }),
+      });
+
+      await sendToggleLike('test-slug-analytics', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee');
+
+      expect(trackSpy).toHaveBeenCalledWith(
+        expect.objectContaining({ name: 'like_toggle', params: { slug: 'test-slug-analytics', liked: true } }),
+      );
+      trackSpy.mockRestore();
+    });
+  });
+
+  describe('バリデーション', () => {
+    it('fetchLikeStatusに不正slugでエラーをスローする', async () => {
+      await expect(fetchLikeStatus('INVALID SLUG!', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow();
+      expect(mockFetch).not.toHaveBeenCalled();
+    });
+
+    it('fetchLikeStatusに不正clientIdでエラーをスローする', async () => {
+      await expect(fetchLikeStatus('valid-slug', 'bad!id')).rejects.toThrow();
+      expect(mockFetch).not.toHaveBeenCalled();
+    });
+
+    it('sendToggleLikeに不正slugでエラーをスローする', async () => {
+      await expect(sendToggleLike('INVALID SLUG!', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow();
+      expect(mockFetch).not.toHaveBeenCalled();
+    });
+
+    it('sendToggleLikeに不正clientIdでエラーをスローする', async () => {
+      await expect(sendToggleLike('valid-slug', 'bad!id')).rejects.toThrow();
+      expect(mockFetch).not.toHaveBeenCalled();
     });
   });
 
