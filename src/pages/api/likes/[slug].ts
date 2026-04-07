@@ -1,7 +1,6 @@
 import type { APIContext } from 'astro';
 import { FirestoreClient, MetadataService } from '../../../libs/firestore';
 import { createClientId, createSlug, isValidClientId, isValidSlug, LikesRepository } from '../../../libs/likes';
-import type { ClientId } from '../../../libs/likes/types';
 
 export const prerender = false;
 
@@ -63,7 +62,7 @@ export async function GET(context: APIContext): Promise<Response> {
   if (rawClientId !== '' && !isValidClientId(rawClientId)) {
     return jsonResponse({ error: 'Invalid client ID' }, 400);
   }
-  const clientId = rawClientId ? createClientId(rawClientId.toLowerCase()) : ('' as ClientId | '');
+  const clientId = rawClientId ? createClientId(rawClientId.toLowerCase()) : null;
 
   try {
     const repo = getRepository();

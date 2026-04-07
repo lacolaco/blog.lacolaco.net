@@ -100,7 +100,7 @@ describe('LikesRepository', () => {
         }),
       );
 
-      const result = await repository.getLikeStatus(testSlug, '');
+      const result = await repository.getLikeStatus(testSlug, null);
 
       expect(result).toEqual({ count: 2, liked: false });
     });

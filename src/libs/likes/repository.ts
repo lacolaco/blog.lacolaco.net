@@ -25,15 +25,15 @@ export class LikesRepository {
     this.#client = client;
   }
 
-  /** いいね状態を取得する。clientIdが空文字の場合liked=false */
-  async getLikeStatus(slug: Slug, clientId: ClientId | ''): Promise<LikeStatus> {
+  /** いいね状態を取得する。clientIdがnullの場合liked=false */
+  async getLikeStatus(slug: Slug, clientId: ClientId | null): Promise<LikeStatus> {
     const doc = await this.#client.getDocument(`post_likes/${slug}`);
     if (!doc) {
       return { count: 0, liked: false };
     }
     const reactions = extractReactions(doc.fields);
     const count = Object.keys(reactions).length;
-    const liked = clientId !== '' && clientId in reactions;
+    const liked = clientId !== null && clientId in reactions;
     return { count, liked };
   }
 
