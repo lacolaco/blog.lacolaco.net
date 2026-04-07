@@ -1,6 +1,6 @@
 import type { APIContext } from 'astro';
 import { FirestoreClient, MetadataService } from '../../../libs/firestore';
-import { CLIENT_ID_PATTERN, LikesRepository, SLUG_MAX_LENGTH, SLUG_PATTERN } from '../../../libs/likes';
+import { ClientId, LikesRepository, Slug } from '../../../libs/likes';
 
 export const prerender = false;
 
@@ -22,14 +22,6 @@ function getRepository(): LikesRepository {
     repository = new LikesRepository(new FirestoreClient(database, new MetadataService()));
   }
   return repository;
-}
-
-function validateSlug(slug: string): boolean {
-  return SLUG_PATTERN.test(slug) && slug.length <= SLUG_MAX_LENGTH;
-}
-
-function validateClientId(clientId: string): boolean {
-  return CLIENT_ID_PATTERN.test(clientId);
 }
 
 /** レート制限チェック。制限中ならtrueを返す */
@@ -60,16 +52,18 @@ function jsonResponse(data: unknown, status = 200, extraHeaders?: Record<string,
 }
 
 export async function GET(context: APIContext): Promise<Response> {
-  const slug = context.params.slug!;
-  if (!validateSlug(slug)) {
+  const slugResult = Slug.safeParse(context.params.slug);
+  if (!slugResult.success) {
     return jsonResponse({ error: 'Invalid slug' }, 400);
   }
+  const slug = slugResult.data;
 
   const rawClientId = context.request.headers.get('x-client-id') ?? '';
-  if (rawClientId !== '' && !validateClientId(rawClientId)) {
+  const clientIdResult = rawClientId ? ClientId.safeParse(rawClientId.toLowerCase()) : null;
+  if (clientIdResult && !clientIdResult.success) {
     return jsonResponse({ error: 'Invalid client ID' }, 400);
   }
-  const clientId = rawClientId.toLowerCase();
+  const clientId = clientIdResult?.data ?? null;
 
   try {
     const repo = getRepository();
@@ -82,19 +76,21 @@ export async function GET(context: APIContext): Promise<Response> {
 }
 
 export async function POST(context: APIContext): Promise<Response> {
-  const slug = context.params.slug!;
-  if (!validateSlug(slug)) {
+  const slugResult = Slug.safeParse(context.params.slug);
+  if (!slugResult.success) {
     return jsonResponse({ error: 'Invalid slug' }, 400);
   }
+  const slug = slugResult.data;
 
   const rawClientId = context.request.headers.get('x-client-id') ?? '';
   if (!rawClientId) {
     return jsonResponse({ error: 'x-client-id header is required' }, 400);
   }
-  if (!validateClientId(rawClientId)) {
+  const clientIdResult = ClientId.safeParse(rawClientId.toLowerCase());
+  if (!clientIdResult.success) {
     return jsonResponse({ error: 'Invalid client ID' }, 400);
   }
-  const clientId = rawClientId.toLowerCase();
+  const clientId = clientIdResult.data;
 
   // レート制限チェック
   // Cloud Runに直接接続されるためclientAddressは実クライアントIP

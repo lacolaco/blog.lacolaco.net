@@ -1,13 +1,6 @@
 import type { FirestoreClient } from '../firestore/client';
 import type { FirestoreValue } from '../firestore/types';
-import type { LikeStatus } from './types';
-
-/** slugのバリデーション正規表現 */
-export const SLUG_PATTERN = /^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$/;
-/** slugの最大長 */
-export const SLUG_MAX_LENGTH = 200;
-/** clientIdの許可文字パターン（hex + ハイフン、最大128文字） */
-export const CLIENT_ID_PATTERN = /^[0-9a-f-]{1,128}$/i;
+import type { ClientId, LikeStatus, Slug } from './types';
 
 /** reactionsマップからclientIdのキーを抽出する */
 function extractReactions(fields: Record<string, FirestoreValue> | undefined): Record<string, boolean> {
@@ -25,21 +18,6 @@ function extractReactions(fields: Record<string, FirestoreValue> | undefined): R
   return result;
 }
 
-function validateSlug(slug: string): void {
-  if (!SLUG_PATTERN.test(slug) || slug.length > SLUG_MAX_LENGTH) {
-    throw new Error(`不正なslug: ${slug}`);
-  }
-}
-
-function validateClientId(clientId: string): void {
-  if (!clientId) {
-    throw new Error('clientIdは必須です');
-  }
-  if (!CLIENT_ID_PATTERN.test(clientId)) {
-    throw new Error(`不正なclientId形式: ${clientId}`);
-  }
-}
-
 export class LikesRepository {
   #client: FirestoreClient;
 
@@ -47,26 +25,20 @@ export class LikesRepository {
     this.#client = client;
   }
 
-  /** いいね状態を取得する */
-  async getLikeStatus(slug: string, clientId: string): Promise<LikeStatus> {
-    validateSlug(slug);
+  /** いいね状態を取得する。clientIdがnullの場合liked=false */
+  async getLikeStatus(slug: Slug, clientId: ClientId | null): Promise<LikeStatus> {
     const doc = await this.#client.getDocument(`post_likes/${slug}`);
     if (!doc) {
       return { count: 0, liked: false };
     }
     const reactions = extractReactions(doc.fields);
     const count = Object.keys(reactions).length;
-    const liked = clientId !== '' && clientId in reactions;
+    const liked = clientId !== null && clientId in reactions;
     return { count, liked };
   }
 
-  /** いいねをトグルする */
-  async toggleLike(slug: string, clientId: string): Promise<LikeStatus> {
-    validateSlug(slug);
-    validateClientId(clientId);
-
-    // 楽観的カウント: commit前のスナップショットから±1で計算。
-    // クライアント側の楽観的UIが即座にカウントを表示し、正確な値は次回GETで取得される。
+  /** いいねをトグルする。戻り値はcommit前のスナップショットからの楽観的推定値。正確な値は次回GETで取得される */
+  async toggleLike(slug: Slug, clientId: ClientId): Promise<LikeStatus> {
     const doc = await this.#client.getDocument(`post_likes/${slug}`);
     const reactions = doc ? extractReactions(doc.fields) : {};
     const isCurrentlyLiked = clientId in reactions;
