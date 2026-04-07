@@ -196,6 +196,11 @@ describe('API /api/likes/[slug]', () => {
       const response2 = await POST(createContext('POST', slug, headers));
       expect(response2.status).toBe(429);
       expect(response2.headers.get('Retry-After')).toBe('1');
+
+      // 3回目: ウィンドウ満了後は再び許可される
+      vi.advanceTimersByTime(1100);
+      const response3 = await POST(createContext('POST', slug, headers));
+      expect(response3.status).toBe(200);
     });
 
     // テスト35: POST 内部エラー
