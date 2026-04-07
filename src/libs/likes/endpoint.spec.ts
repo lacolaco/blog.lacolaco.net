@@ -104,6 +104,18 @@ describe('API /api/likes/[slug]', () => {
 
       expect(response.status).toBe(400);
     });
+
+    // GET 内部エラー
+    it('内部エラーで 500 を返す', async () => {
+      mockGetLikeStatus.mockRejectedValueOnce(new Error('Firestore error'));
+      const ctx = createContext('GET', 'get-error', {
+        'x-client-id': 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee',
+      });
+
+      const response = await GET(ctx);
+
+      expect(response.status).toBe(500);
+    });
   });
 
   describe('POST', () => {

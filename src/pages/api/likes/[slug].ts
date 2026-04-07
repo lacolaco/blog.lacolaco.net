@@ -42,8 +42,10 @@ function isRateLimited(key: string, now: number): boolean {
   // LRU: 既存キーを末尾に移動するため削除→再挿入
   rateLimitMap.delete(key);
   if (rateLimitMap.size >= RATE_LIMIT_MAX_ENTRIES) {
-    const firstKey = rateLimitMap.keys().next().value as string;
-    rateLimitMap.delete(firstKey);
+    for (const firstKey of rateLimitMap.keys()) {
+      rateLimitMap.delete(firstKey);
+      break;
+    }
   }
   rateLimitMap.set(key, now);
   return false;
@@ -62,10 +64,11 @@ export async function GET(context: APIContext): Promise<Response> {
     return jsonResponse({ error: 'Invalid slug' }, 400);
   }
 
-  const clientId = context.request.headers.get('x-client-id') ?? '';
-  if (clientId !== '' && !validateClientId(clientId)) {
+  const rawClientId = context.request.headers.get('x-client-id') ?? '';
+  if (rawClientId !== '' && !validateClientId(rawClientId)) {
     return jsonResponse({ error: 'Invalid client ID' }, 400);
   }
+  const clientId = rawClientId.toLowerCase();
 
   try {
     const repo = getRepository();
@@ -82,13 +85,14 @@ export async function POST(context: APIContext): Promise<Response> {
     return jsonResponse({ error: 'Invalid slug' }, 400);
   }
 
-  const clientId = context.request.headers.get('x-client-id') ?? '';
-  if (!clientId) {
+  const rawClientId = context.request.headers.get('x-client-id') ?? '';
+  if (!rawClientId) {
     return jsonResponse({ error: 'x-client-id header is required' }, 400);
   }
-  if (!validateClientId(clientId)) {
+  if (!validateClientId(rawClientId)) {
     return jsonResponse({ error: 'Invalid client ID' }, 400);
   }
+  const clientId = rawClientId.toLowerCase();
 
   // レート制限チェック
   const rateLimitKey = `${context.clientAddress}:${slug}`;
