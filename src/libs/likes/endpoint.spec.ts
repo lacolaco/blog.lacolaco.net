@@ -18,7 +18,7 @@ vi.mock('../firestore', () => ({
   FirestoreClient: vi.fn(function () {}),
 }));
 
-import { GET, POST } from '../../pages/api/likes/[slug]';
+import { GET, POST, _clearRateLimitMapForTesting } from '../../pages/api/likes/[slug]';
 
 /** テスト用のAPIContextを生成する */
 function createContext(
@@ -39,6 +39,7 @@ describe('API /api/likes/[slug]', () => {
     vi.useFakeTimers();
     mockGetLikeStatus.mockReset();
     mockToggleLike.mockReset();
+    _clearRateLimitMapForTesting();
     import.meta.env.FIRESTORE_DATABASE = 'test-db';
   });
 
@@ -142,6 +143,7 @@ describe('API /api/likes/[slug]', () => {
       // 2回目: レート制限（同一IP+slug、1秒以内）
       const response2 = await POST(createContext('POST', slug, headers));
       expect(response2.status).toBe(429);
+      expect(response2.headers.get('Retry-After')).toBe('1');
     });
 
     // テスト35: POST 内部エラー

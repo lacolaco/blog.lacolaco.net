@@ -46,10 +46,15 @@ function isRateLimited(key: string, now: number): boolean {
   return false;
 }
 
-function jsonResponse(data: unknown, status = 200): Response {
+/** テスト用: レート制限マップをクリアする */
+export function _clearRateLimitMapForTesting(): void {
+  rateLimitMap.clear();
+}
+
+function jsonResponse(data: unknown, status = 200, extraHeaders?: Record<string, string>): Response {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...extraHeaders },
   });
 }
 
@@ -90,7 +95,7 @@ export async function POST(context: APIContext): Promise<Response> {
   // レート制限チェック
   const rateLimitKey = `${context.clientAddress}:${slug}`;
   if (isRateLimited(rateLimitKey, Date.now())) {
-    return jsonResponse({ error: 'Too many requests' }, 429);
+    return jsonResponse({ error: 'Too many requests' }, 429, { 'Retry-After': '1' });
   }
 
   try {
