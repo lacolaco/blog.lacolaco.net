@@ -161,8 +161,13 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
       })
       .catch(() => {
         finalState = previousState;
+        if (particleTimerRef.current) {
+          clearTimeout(particleTimerRef.current);
+          particleTimerRef.current = null;
+        }
         if (isMounted.current) {
           setState(finalState);
+          setShowParticles(false);
         }
       })
       .finally(() => {
@@ -183,7 +188,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
         type="button"
         onClick={handleToggle}
         disabled={loading}
-        className="relative inline-flex items-center gap-3 border-0 bg-transparent p-0 cursor-pointer"
+        className="relative inline-flex items-center gap-3 border-0 bg-transparent p-0 cursor-pointer disabled:cursor-not-allowed"
         aria-label={ariaLabel}
         aria-pressed={state.liked}
       >
@@ -209,7 +214,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
       type="button"
       onClick={handleToggle}
       disabled={loading}
-      className="relative inline-flex items-center gap-3 border-0 bg-transparent p-0 cursor-pointer"
+      className="relative inline-flex items-center gap-3 border-0 bg-transparent p-0 cursor-pointer disabled:cursor-not-allowed"
       aria-label={ariaLabel}
       aria-pressed={state.liked}
     >
