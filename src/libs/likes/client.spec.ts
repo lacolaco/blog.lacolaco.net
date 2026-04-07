@@ -145,5 +145,14 @@ describe('likes client', () => {
 
       await expect(sendToggleLike('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow();
     });
+
+    // ネットワークエラー → エラーthrow
+    it('ネットワークエラーでエラーをスローする', async () => {
+      mockFetch.mockRejectedValueOnce(new Error('Network Error'));
+
+      await expect(fetchLikeStatus('test-slug', 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee')).rejects.toThrow(
+        'Network Error',
+      );
+    });
   });
 });

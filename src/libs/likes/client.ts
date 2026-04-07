@@ -1,8 +1,20 @@
 import { likeEvents, trackEvent } from '../analytics';
-import { CLIENT_ID_PATTERN } from './constants';
+import { CLIENT_ID_PATTERN, SLUG_MAX_LENGTH, SLUG_PATTERN } from './constants';
 import type { LikeStatus } from './types';
 
 const CLIENT_ID_KEY = 'likes_client_id';
+
+function validateSlug(slug: string): void {
+  if (!SLUG_PATTERN.test(slug) || slug.length > SLUG_MAX_LENGTH) {
+    throw new Error(`不正なslug: ${slug}`);
+  }
+}
+
+function validateClientId(clientId: string): void {
+  if (!clientId || !CLIENT_ID_PATTERN.test(clientId)) {
+    throw new Error(`不正なclientId: ${clientId}`);
+  }
+}
 
 /** clientIdを取得または生成する。localStorage不可時は毎回新規生成（呼び出し側でキャッシュすること） */
 export function getOrCreateClientId(): string {
@@ -23,6 +35,8 @@ export function getOrCreateClientId(): string {
 
 /** いいね状態を取得する */
 export async function fetchLikeStatus(slug: string, clientId: string): Promise<LikeStatus> {
+  validateSlug(slug);
+  validateClientId(clientId);
   const response = await fetch(`/api/likes/${slug}`, {
     headers: { 'x-client-id': clientId },
   });
@@ -35,6 +49,8 @@ export async function fetchLikeStatus(slug: string, clientId: string): Promise<L
 
 /** いいねをトグルする */
 export async function sendToggleLike(slug: string, clientId: string): Promise<LikeStatus> {
+  validateSlug(slug);
+  validateClientId(clientId);
   const response = await fetch(`/api/likes/${slug}`, {
     method: 'POST',
     headers: { 'x-client-id': clientId },
