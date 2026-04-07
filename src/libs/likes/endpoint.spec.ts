@@ -4,7 +4,7 @@ import type { APIContext } from 'astro';
 const mockGetLikeStatus = vi.fn();
 const mockToggleLike = vi.fn();
 
-vi.mock('../../../libs/likes', () => ({
+vi.mock('./', () => ({
   LikesRepository: vi.fn(function () {
     return { getLikeStatus: mockGetLikeStatus, toggleLike: mockToggleLike };
   }),
@@ -13,12 +13,12 @@ vi.mock('../../../libs/likes', () => ({
   CLIENT_ID_PATTERN: /^[0-9a-f-]{1,128}$/i,
 }));
 
-vi.mock('../../../libs/firestore', () => ({
+vi.mock('../firestore', () => ({
   MetadataService: vi.fn(function () {}),
   FirestoreClient: vi.fn(function () {}),
 }));
 
-import { GET, POST } from './[slug]';
+import { GET, POST } from '../../pages/api/likes/[slug]';
 
 /** テスト用のAPIContextを生成する */
 function createContext(
