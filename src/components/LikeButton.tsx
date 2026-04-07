@@ -34,9 +34,14 @@ function getClientId(): ClientId {
   return cachedClientId;
 }
 
+/** テスト用: モジュールレベルキャッシュをリセットする */
+export function _resetClientIdCacheForTesting(): void {
+  cachedClientId = null;
+}
+
 export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
   const [state, setState] = useState<LikeState>({ count: 0, liked: false });
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [showParticles, setShowParticles] = useState(false);
   const clientIdRef = useRef<ClientId | null>(null);
   const slugRef = useRef<Slug | null>(null);
@@ -59,6 +64,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
     const clientId = getClientId();
     clientIdRef.current = clientId;
 
+    loadingRef.current = true;
     fetchLikeStatus(slugRef.current, clientId)
       .then((result) => {
         if (isMounted.current) {
@@ -67,6 +73,12 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
       })
       .catch(() => {
         // 初期取得失敗: デフォルト状態のまま
+      })
+      .finally(() => {
+        loadingRef.current = false;
+        if (isMounted.current) {
+          setLoading(false);
+        }
       });
 
     return () => {

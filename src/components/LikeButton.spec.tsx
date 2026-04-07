@@ -6,8 +6,8 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { render, screen, act } from '@testing-library/react';
-import LikeButton from './LikeButton';
+import { render, screen, waitFor } from '@testing-library/react';
+import LikeButton, { _resetClientIdCacheForTesting } from './LikeButton';
 
 // client.ts のモック
 vi.mock('../libs/likes/client', () => ({
@@ -33,6 +33,7 @@ const mockSendToggleLike = vi.mocked(sendToggleLike);
 describe('LikeButton', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    _resetClientIdCacheForTesting();
     mockFetchLikeStatus.mockResolvedValue({ count: 0, liked: false });
     mockSendToggleLike.mockResolvedValue({ count: 1, liked: true });
   });
@@ -44,27 +45,24 @@ describe('LikeButton', () => {
   it('初期フェッチの結果がUIに反映される', async () => {
     mockFetchLikeStatus.mockResolvedValueOnce({ count: 5, liked: true });
 
-    // eslint-disable-next-line @typescript-eslint/require-await -- act requires async for microtask flushing
-    await act(async () => {
-      render(<LikeButton slug="test-post" variant="standard" />);
-    });
+    render(<LikeButton slug="test-post" variant="standard" />);
 
-    const button = screen.getByRole('button');
-    expect(button).toHaveAttribute('aria-pressed', 'true');
-    expect(button).toHaveTextContent('5');
+    await waitFor(() => {
+      expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
+    });
+    expect(screen.getByRole('button')).toHaveTextContent('5');
   });
 
   it('compact variantでカウントが0のときカウント表示なし', async () => {
     mockFetchLikeStatus.mockResolvedValueOnce({ count: 0, liked: false });
 
-    // eslint-disable-next-line @typescript-eslint/require-await
-    await act(async () => {
-      render(<LikeButton slug="test-post" variant="compact" />);
-    });
+    render(<LikeButton slug="test-post" variant="compact" />);
 
-    const button = screen.getByRole('button');
-    expect(button).toHaveAttribute('aria-pressed', 'false');
-    expect(button).not.toHaveTextContent(/\d/);
+    await waitFor(() => {
+      expect(screen.getByRole('button')).not.toBeDisabled();
+    });
+    expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.getByRole('button')).not.toHaveTextContent(/\d/);
   });
 
   it('クリック時に楽観的UI更新が発生する', async () => {
@@ -77,62 +75,94 @@ describe('LikeButton', () => {
     );
     mockFetchLikeStatus.mockResolvedValueOnce({ count: 3, liked: false });
 
-    // eslint-disable-next-line @typescript-eslint/require-await
-    await act(async () => {
-      render(<LikeButton slug="test-post" variant="standard" />);
+    render(<LikeButton slug="test-post" variant="standard" />);
+
+    // 初期フェッチ完了を待つ
+    await waitFor(() => {
+      expect(screen.getByRole('button')).not.toBeDisabled();
     });
 
-    const button = screen.getByRole('button');
-    expect(button).toHaveAttribute('aria-pressed', 'false');
-
-    // eslint-disable-next-line @typescript-eslint/require-await
-    await act(async () => {
-      button.click();
-    });
+    screen.getByRole('button').click();
 
     // API応答前に楽観的にliked=trueになる
-    expect(button).toHaveAttribute('aria-pressed', 'true');
-    expect(button).toHaveTextContent('4');
-
-    // eslint-disable-next-line @typescript-eslint/require-await
-    await act(async () => {
-      resolveToggle!({ count: 4, liked: true });
+    await waitFor(() => {
+      expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
     });
+    expect(screen.getByRole('button')).toHaveTextContent('4');
 
-    expect(button).toHaveAttribute('aria-pressed', 'true');
+    // API応答後も維持
+    resolveToggle!({ count: 4, liked: true });
+    await waitFor(() => {
+      expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
+    });
   });
 
   it('APIエラー時にロールバックが動作する', async () => {
     mockSendToggleLike.mockRejectedValueOnce(new Error('Server error'));
     mockFetchLikeStatus.mockResolvedValueOnce({ count: 2, liked: false });
 
-    // eslint-disable-next-line @typescript-eslint/require-await
-    await act(async () => {
-      render(<LikeButton slug="test-post" variant="standard" />);
+    render(<LikeButton slug="test-post" variant="standard" />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button')).not.toBeDisabled();
     });
 
-    const button = screen.getByRole('button');
-    expect(button).toHaveAttribute('aria-pressed', 'false');
-
-    // eslint-disable-next-line @typescript-eslint/require-await
-    await act(async () => {
-      button.click();
-    });
+    screen.getByRole('button').click();
 
     // ロールバック後は元の状態に戻る
-    expect(button).toHaveAttribute('aria-pressed', 'false');
-    expect(button).toHaveTextContent('2');
+    await waitFor(() => {
+      expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false');
+    });
+    expect(screen.getByRole('button')).toHaveTextContent('2');
   });
 
   it('初期フェッチ失敗時はデフォルト状態（count:0, liked:false）', async () => {
     mockFetchLikeStatus.mockRejectedValueOnce(new Error('Network error'));
 
-    // eslint-disable-next-line @typescript-eslint/require-await
-    await act(async () => {
-      render(<LikeButton slug="test-post" variant="standard" />);
+    render(<LikeButton slug="test-post" variant="standard" />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button')).not.toBeDisabled();
+    });
+    expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('初期fetch中はボタンが無効化される', () => {
+    // fetchを未解決のままにする
+    mockFetchLikeStatus.mockReturnValue(new Promise(() => {}));
+
+    render(<LikeButton slug="test-post" variant="standard" />);
+
+    expect(screen.getByRole('button')).toBeDisabled();
+  });
+
+  it('compact/standard間のCustomEvent同期が動作する', async () => {
+    mockFetchLikeStatus.mockResolvedValue({ count: 3, liked: false });
+    mockSendToggleLike.mockResolvedValueOnce({ count: 4, liked: true });
+
+    render(
+      <div>
+        <LikeButton slug="test-post" variant="compact" />
+        <LikeButton slug="test-post" variant="standard" />
+      </div>,
+    );
+
+    // 両方の初期フェッチ完了を待つ
+    const buttons = await waitFor(() => {
+      const btns = screen.getAllByRole('button');
+      expect(btns).toHaveLength(2);
+      btns.forEach((btn) => expect(btn).not.toBeDisabled());
+      return btns;
     });
 
-    const button = screen.getByRole('button');
-    expect(button).toHaveAttribute('aria-pressed', 'false');
+    // compact（最初のボタン）をクリック
+    buttons[0].click();
+
+    // 両方が楽観的にliked=trueになる
+    await waitFor(() => {
+      buttons.forEach((btn) => {
+        expect(btn).toHaveAttribute('aria-pressed', 'true');
+      });
+    });
   });
 });
