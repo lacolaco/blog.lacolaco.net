@@ -17,7 +17,8 @@ main:
         args:
           url: '${"https://firestore.googleapis.com/v1/projects/" + project_id + "/databases/" + database + "/documents/" + collection}'
           query:
-            pageSize: 300
+            # 個人ブログの全投稿数を十分にカバーする上限値。ページネーション未実装のため超過時はデータ欠落する
+            pageSize: 5000
           auth:
             type: OAuth2
         result: list_response
