@@ -92,4 +92,4 @@ ORDER BY pv_30d DESC
 
 - **insertId**: BigQuery streaming insertのdeduplicationはbest-effort。数分以上間隔の再実行では重複しうる。集計クエリでは`MAX(like_count)`を使用し重複の影響を軽減する
 - **ページネーション**: 投稿数5000超過でワークフローがFAILED。その場合はページネーションループの実装が必要
-- **ワークフロー状態上限**: Cloud Workflowsの状態上限は512KB。全行をall_rowsに蓄積するため、投稿数~3000件超でクラッシュする可能性あり。その場合はバッチ分割insertが必要
+- **ワークフロー状態上限**: Cloud Workflowsの状態上限は512KB。BigQuery insertは100件バッチで分割済みだが、Firestore listレスポンス（list_response.body.documents）が512KBを超える場合はクラッシュする。その場合はページネーションループの実装が必要
