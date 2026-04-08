@@ -24,10 +24,18 @@ main:
           args:
             url: '${"https://firestore.googleapis.com/v1/projects/" + project_id + "/databases/" + database + "/documents/" + collection}'
             query:
+              # ワークフロー状態512KB上限により、実際の安全な件数はドキュメントサイズに依存する
               pageSize: 5000
             auth:
               type: OAuth2
           result: list_response
+          retry:
+            predicate: ${http.default_retry_predicate}
+            max_retries: 3
+            backoff:
+              initial_delay: 2
+              max_delay: 60
+              multiplier: 2
         except:
           as: e
           raise: '${"Firestore list failed: " + json.encode_to_string(e)}'
@@ -129,6 +137,13 @@ insert_batch:
             body:
               rows: ${rows}
           result: bq_response
+          retry:
+            predicate: ${http.default_retry_predicate}
+            max_retries: 3
+            backoff:
+              initial_delay: 2
+              max_delay: 60
+              multiplier: 2
         except:
           as: e
           raise: '${"BigQuery insert failed: " + json.encode_to_string(e)}'
