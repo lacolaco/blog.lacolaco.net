@@ -51,6 +51,15 @@ describe('getChannels', () => {
     expect(getChannels(post)).toEqual(['Code', 'Unknown']);
   });
 
+  it('複数の未定義チャンネルがあってもNaNにならず安定してソートされる', async () => {
+    const { getChannels } = await import('./compat');
+    const post = createMockPost(['Zzz', 'Code', 'Aaa']);
+    const result = getChannels(post);
+    expect(result[0]).toBe('Code');
+    // 未定義チャンネル同士の相対順序は元の配列順を保持（安定ソート）
+    expect(result.slice(1)).toEqual(['Zzz', 'Aaa']);
+  });
+
   it('channelsが未定義の場合は空配列を返す', async () => {
     const { getChannels } = await import('./compat');
     const post = createMockPost(undefined);

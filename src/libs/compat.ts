@@ -25,7 +25,7 @@ export function getChannels(post: CollectionEntry<'posts'>): string[] {
   return [...postChannels].sort((a, b) => {
     const indexA = order.indexOf(a);
     const indexB = order.indexOf(b);
-    return (indexA === -1 ? Infinity : indexA) - (indexB === -1 ? Infinity : indexB);
+    return (indexA === -1 ? order.length : indexA) - (indexB === -1 ? order.length : indexB);
   });
 }
 
