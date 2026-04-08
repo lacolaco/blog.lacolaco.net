@@ -6,10 +6,10 @@ import type { ClientId, LikeStatus, Slug } from '../libs/likes/types';
 
 type Variant = 'compact' | 'standard';
 
-/** 同一slugの初期fetchを1本化するためのPromiseキャッシュ */
+/** 同一slug+clientIdの初期fetchを1本化するためのPromiseキャッシュ */
 const fetchCache = new Map<string, Promise<LikeStatus>>();
 function fetchLikeStatusOnce(slug: Slug, clientId: ClientId): Promise<LikeStatus> {
-  const key = String(slug);
+  const key = `${slug}:${clientId}`;
   if (!fetchCache.has(key)) {
     const promise = fetchLikeStatus(slug, clientId).finally(() => {
       fetchCache.delete(key);
@@ -64,6 +64,8 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
   const [state, setState] = useState<LikeState>({ count: 0, liked: false });
   const [loading, setLoading] = useState(true);
   const [showParticles, setShowParticles] = useState(false);
+  const stateRef = useRef(state);
+  stateRef.current = state;
   const clientIdRef = useRef<ClientId | null>(null);
   const slugRef = useRef<Slug | null>(null);
   const isMounted = useRef(true);
@@ -146,8 +148,8 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
   const handleToggle = useCallback(() => {
     if (loadingRef.current || !slugRef.current || !clientIdRef.current) return;
 
-    const previousState = state;
-    const newState = optimisticToggle(state);
+    const previousState = stateRef.current;
+    const newState = optimisticToggle(stateRef.current);
 
     // 楽観的UI更新
     loadingRef.current = true;
@@ -192,7 +194,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
           setLoading(false);
         }
       });
-  }, [state, dispatchSync]);
+  }, [dispatchSync]);
 
   const ariaLabel = `${t.like} (${state.count})`;
 

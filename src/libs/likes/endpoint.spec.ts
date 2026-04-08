@@ -54,6 +54,8 @@ describe('API /api/likes/[slug]', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    // 注意: [slug].tsのmodule-level repositoryシングルトンは初期化後リセットされない。
+    // FIRESTORE_DATABASE未設定時のエラーパステストを追加する場合はvi.resetModules()が必要
     delete process.env.FIRESTORE_DATABASE;
   });
 
