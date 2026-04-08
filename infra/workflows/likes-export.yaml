@@ -9,9 +9,9 @@ main:
           - collection: "post_likes"
           - dataset: "likes_analytics"
           - table: "post_likes_snapshot"
-          - snapshot_at: ${time.format(sys.now())}
-          # insertIdのデデュプリケーション用。JST(UTC+9)基準でCloud Schedulerの実行日と一致させる
+          # JST(UTC+9)基準に統一。DATE(snapshot_at)クエリがJST日付と一致するようにする
           - jst_now: ${sys.now() + 32400}
+          - snapshot_at: ${time.format(jst_now)}
           - snapshot_date: '${text.substring(time.format(jst_now), 0, 10)}'
           - all_rows: []
 
