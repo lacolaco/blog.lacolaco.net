@@ -95,6 +95,7 @@ describe('LikeButton', () => {
     resolveToggle!({ count: 4, liked: true });
     await waitFor(() => {
       expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
+      expect(screen.getByRole('button')).not.toBeDisabled();
     });
   });
 
