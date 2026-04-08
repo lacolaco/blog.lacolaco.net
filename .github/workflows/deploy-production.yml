@@ -58,3 +58,11 @@ jobs:
           # GCP_PROJECT_IDはCloud Runメタデータサーバーから取得するため不要
           env-vars: |
             FIRESTORE_DATABASE=likes-production
+
+      - name: Deploy Cloud Workflows
+        run: |
+          gcloud workflows deploy likes-export \
+            --source=infra/workflows/likes-export.yaml \
+            --location=asia-northeast1 \
+            --project=blog-lacolaco-net \
+            --service-account=348931464772-compute@developer.gserviceaccount.com
