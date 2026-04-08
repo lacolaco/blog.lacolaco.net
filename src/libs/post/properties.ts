@@ -2,7 +2,8 @@ import notionTagsJson from '../../content/post/notion/tags.json';
 import notionCategoriesJson from '../../content/post/notion/categories.json';
 import manualTagsJson from '../../content/post/tags.json';
 import manualCategoriesJson from '../../content/post/categories.json';
-import channelsJson from '../../content/post/channels.json';
+import notionChannelsJson from '../../content/post/notion/channels.json';
+import manualChannelsJson from '../../content/post/channels.json';
 import { Tag, Tags, Category, Categories, Channel, Channels } from './schema';
 
 // マージ: 親ディレクトリ（manual）が同名エントリを上書き
@@ -28,7 +29,7 @@ export function getCategoryByName(name: string): Category | undefined {
   return categories.find((category) => category.name === name);
 }
 
-export const channels = Channels.parse(channelsJson as Channel[]);
+export const channels = Channels.parse(mergeByName(notionChannelsJson as Channel[], manualChannelsJson as Channel[]));
 
 export function getChannelByName(name: string): Channel | undefined {
   return channels.find((channel) => channel.name === name);
