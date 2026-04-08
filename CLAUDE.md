@@ -115,7 +115,7 @@ pnpm test:libs    # library tests
 4. テストを実行して全て失敗することを確認しろ
 5. Search for similar existing code (Glob/Grep)
 6. Check if library/pattern already exists
-7. Read similar implementations first
+7. Read similar implementations first. **類似要素が既にあるなら、そのパターンとの一貫性を検証せよ。差異があれば問題として認識し、パターンに合わせるか根拠を示せ**
 8. テストを通す実装を書け
 9. **変換・生成ロジックは実データで入出力を検証せよ**。型チェックやビルド成功は変換の正しさを保証しない。**デプロイ先環境（Cloud Run等）での実行コンテキスト（env var、ヘッダー、認証）はローカルと異なる。プレビュー/本番デプロイ後にAPIレベルの動作確認を必ず実施せよ**
 10. **仕様書（モックアップ・デザインカンプ・APIスキーマ等）が存在する場合、全プロパティを抽出し実装対象との対応表を作成してから着手せよ**。部分参照で「だいたいこう」で実装に入るな
