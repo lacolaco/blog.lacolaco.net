@@ -13,15 +13,19 @@ main:
           - all_rows: []
 
     - list_documents:
-        call: http.get
-        args:
-          url: '${"https://firestore.googleapis.com/v1/projects/" + project_id + "/databases/" + database + "/documents/" + collection}'
-          query:
-            # 個人ブログの全投稿数を十分にカバーする上限値。ページネーション未実装のため超過時はデータ欠落する
-            pageSize: 5000
-          auth:
-            type: OAuth2
-        result: list_response
+        try:
+          call: http.get
+          args:
+            url: '${"https://firestore.googleapis.com/v1/projects/" + project_id + "/databases/" + database + "/documents/" + collection}'
+            query:
+              # 個人ブログの全投稿数を十分にカバーする上限値。ページネーション未実装のため超過時はデータ欠落する
+              pageSize: 5000
+            auth:
+              type: OAuth2
+          result: list_response
+        except:
+          as: e
+          raise: '${"Firestore list failed: " + json.encode_to_string(e)}'
 
     - process_documents:
         switch:
@@ -64,14 +68,23 @@ main:
             return: "No documents found"
 
     - insert_to_bigquery:
-        call: http.post
-        args:
-          url: '${"https://bigquery.googleapis.com/bigquery/v2/projects/" + project_id + "/datasets/" + dataset + "/tables/" + table + "/insertAll"}'
-          auth:
-            type: OAuth2
-          body:
-            rows: ${all_rows}
-        result: bq_response
+        try:
+          call: http.post
+          args:
+            url: '${"https://bigquery.googleapis.com/bigquery/v2/projects/" + project_id + "/datasets/" + dataset + "/tables/" + table + "/insertAll"}'
+            auth:
+              type: OAuth2
+            body:
+              rows: ${all_rows}
+          result: bq_response
+        except:
+          as: e
+          raise: '${"BigQuery insert failed: " + json.encode_to_string(e)}'
+
+    - check_bq_errors:
+        switch:
+          - condition: '${"insertErrors" in bq_response.body and len(bq_response.body.insertErrors) > 0}'
+            raise: ${bq_response.body.insertErrors}
 
     - done:
         return: '${"Exported " + string(len(all_rows)) + " rows at " + snapshot_at}'
