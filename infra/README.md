@@ -86,3 +86,9 @@ ORDER BY pv_30d DESC
 
 - **手動実行**: `gcloud workflows run likes-export --location=asia-northeast1 --project=blog-lacolaco-net`
 - **ログ確認**: `gcloud workflows executions list likes-export --location=asia-northeast1 --project=blog-lacolaco-net --limit=5`
+- **失敗アラート**: Cloud Monitoring → Alerting で `workflow.googleapis.com/finished_execution_count` のstatus=FAILEDに通知を設定すること。ページネーション超過やAPI障害時にワークフローがFAILEDになるため、無音で失敗しないようにする
+
+### 注意事項
+
+- **insertId**: BigQuery streaming insertのdeduplicationはbest-effort。数分以上間隔の再実行では重複しうる。集計クエリでは`MAX(like_count)`を使用し重複の影響を軽減する
+- **ページネーション**: 投稿数5000超過でワークフローがFAILED。その場合はページネーションループの実装が必要

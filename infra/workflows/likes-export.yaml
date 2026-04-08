@@ -11,7 +11,7 @@ main:
           - table: "post_likes_snapshot"
           # snapshot_atは真のUTC。クエリ側でDATE(snapshot_at, 'Asia/Tokyo')を使うこと
           - snapshot_at: ${time.format(sys.now())}
-          # insertIdデデュプリケーション用のJST日付（Cloud Schedulerの実行日と一致させる）
+          # insertIdデデュプリケーション用のJST日付。best-effortのため数分以上間隔の再実行では重複しうる
           - snapshot_date: '${text.substring(time.format(sys.now() + 32400), 0, 10)}'
           - all_rows: []
 
