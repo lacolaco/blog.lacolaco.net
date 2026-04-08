@@ -28,6 +28,7 @@ export function getCategoryByName(name: string): Category | undefined {
   return categories.find((category) => category.name === name);
 }
 
+// channelsはNotionのプロパティ定義のみで管理する（手動オーバーライド不要）
 export const channels = Channels.parse(notionChannelsJson as Channel[]);
 
 export function getChannelByName(name: string): Channel | undefined {
