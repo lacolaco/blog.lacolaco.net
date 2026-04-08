@@ -223,6 +223,35 @@ describe('LikeButton', () => {
     });
   });
 
+  it('standard→compact方向のCustomEvent同期が動作する', async () => {
+    mockFetchLikeStatus.mockResolvedValue({ count: 3, liked: false });
+    mockSendToggleLike.mockResolvedValueOnce({ count: 4, liked: true });
+    const LikeButton = await importLikeButton();
+
+    render(
+      <div>
+        <LikeButton slug="test-post" variant="compact" />
+        <LikeButton slug="test-post" variant="standard" />
+      </div>,
+    );
+
+    const buttons = await waitFor(() => {
+      const btns = screen.getAllByRole('button');
+      expect(btns).toHaveLength(2);
+      btns.forEach((btn) => expect(btn).not.toBeDisabled());
+      return btns;
+    });
+
+    buttons[1].click();
+
+    await waitFor(() => {
+      buttons.forEach((btn) => {
+        expect(btn).toHaveAttribute('aria-pressed', 'true');
+        expect(btn).toHaveTextContent('4');
+      });
+    });
+  });
+
   it('無効なslugの場合はAPIコールせずローディング解除', async () => {
     const LikeButton = await importLikeButton();
 
