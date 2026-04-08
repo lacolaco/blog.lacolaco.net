@@ -77,7 +77,13 @@ main:
                                 json: ${row_data}
                       - append_row:
                           assign:
-                            - all_rows: ${list.concat(all_rows, row_wrapper)}
+                            - all_rows: ${list.concat(all_rows, [row_wrapper])}
+
+    - log_document_count:
+        call: sys.log
+        args:
+          text: '${"Processed " + string(len(all_rows)) + " documents from Firestore"}'
+          severity: INFO
 
     - check_rows:
         switch:
@@ -102,6 +108,12 @@ main:
         switch:
           - condition: '${"insertErrors" in bq_response.body and len(bq_response.body.insertErrors) > 0}'
             raise: '${"BigQuery insertErrors: " + json.encode_to_string(bq_response.body.insertErrors)}'
+
+    - log_export_complete:
+        call: sys.log
+        args:
+          text: '${"BigQuery insert completed: " + string(len(all_rows)) + " rows"}'
+          severity: INFO
 
     - done:
         return: '${"Exported " + string(len(all_rows)) + " rows at " + snapshot_at}'
