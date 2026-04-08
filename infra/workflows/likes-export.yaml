@@ -9,8 +9,10 @@ main:
           - collection: "post_likes"
           - dataset: "likes_analytics"
           - table: "post_likes_snapshot"
-          - snapshot_at: ${time.format(sys.now())}
-          - snapshot_date: '${text.substring(time.format(sys.now()), 0, 10)}'
+          # JST(UTC+9)基準で日付を算出。Cloud SchedulerがJST 3:00に実行するため統一
+          - jst_now: ${sys.now() + 32400}
+          - snapshot_at: ${time.format(jst_now)}
+          - snapshot_date: '${text.substring(time.format(jst_now), 0, 10)}'
           - all_rows: []
 
     - list_documents:
