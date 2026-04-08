@@ -62,6 +62,7 @@ export async function sendToggleLike(slug: Slug, clientId: ClientId): Promise<Li
   const response = await fetchWithTracking(`/api/likes/${slug}`, {
     method: 'POST',
     headers: { 'x-client-id': clientId, 'Content-Type': 'application/json' },
+    body: '{}',
   });
   if (!response.ok) {
     trackEvent(likeEvents.error(`POST /api/likes/${slug} failed: ${response.status}`));

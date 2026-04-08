@@ -15,6 +15,7 @@ let repository: LikesRepository | null = null;
 
 function getRepository(): LikesRepository {
   if (!repository) {
+    // import.meta.envはViteがビルド時に静的置換するため、Cloud Runの実行時環境変数を読めない
     const database = process.env.FIRESTORE_DATABASE;
     if (!database) {
       throw new Error('FIRESTORE_DATABASE is not set');

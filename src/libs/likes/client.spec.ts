@@ -148,6 +148,7 @@ describe('likes client', () => {
       expect(mockFetch).toHaveBeenCalledWith('/api/likes/test-slug', {
         method: 'POST',
         headers: { 'x-client-id': 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee', 'Content-Type': 'application/json' },
+        body: '{}',
       });
       expect(result).toEqual({ count: 1, liked: true });
     });
