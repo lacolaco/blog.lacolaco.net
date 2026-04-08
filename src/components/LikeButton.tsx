@@ -71,7 +71,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
   const slugRef = useRef<Slug | null>(null);
   const isMounted = useRef(true);
   const isDispatching = useRef(false);
-  const loadingRef = useRef(false);
+  const loadingRef = useRef(true);
   const particleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const t = locale === 'en' ? i18n.en : i18n.ja;
