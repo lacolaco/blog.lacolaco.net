@@ -1,0 +1,76 @@
+# Firestore post_likes → BigQuery likes_analytics.post_likes_snapshot
+# Cloud Schedulerで日次実行される
+main:
+  steps:
+    - init:
+        assign:
+          - project_id: ${sys.get_env("GOOGLE_CLOUD_PROJECT_ID")}
+          - database: "likes-production"
+          - collection: "post_likes"
+          - dataset: "likes_analytics"
+          - table: "post_likes_snapshot"
+          - snapshot_at: ${time.format(sys.now())}
+          - all_rows: []
+
+    - list_documents:
+        call: http.get
+        args:
+          url: '${"https://firestore.googleapis.com/v1/projects/" + project_id + "/databases/" + database + "/documents/" + collection}'
+          query:
+            pageSize: 300
+          auth:
+            type: OAuth2
+        result: list_response
+
+    - process_documents:
+        switch:
+          - condition: '${"documents" in list_response.body}'
+            steps:
+              - iterate_docs:
+                  for:
+                    value: doc
+                    in: ${list_response.body.documents}
+                    steps:
+                      - extract_slug:
+                          assign:
+                            - name_parts: '${text.split(doc.name, "/")}'
+                            - slug: ${name_parts[len(name_parts) - 1]}
+                      - count_reactions:
+                          assign:
+                            - like_count: 0
+                      - check_reactions:
+                          switch:
+                            - condition: '${"reactions" in doc.fields and "mapValue" in doc.fields.reactions and "fields" in doc.fields.reactions.mapValue}'
+                              assign:
+                                - like_count: ${len(doc.fields.reactions.mapValue.fields)}
+                      - build_row:
+                          assign:
+                            - row_data:
+                                slug: ${slug}
+                                like_count: ${like_count}
+                                snapshot_at: ${snapshot_at}
+                      - build_row_wrapper:
+                          assign:
+                            - row_wrapper:
+                                json: ${row_data}
+                      - append_row:
+                          assign:
+                            - all_rows: ${list.concat(all_rows, row_wrapper)}
+
+    - check_rows:
+        switch:
+          - condition: ${len(all_rows) == 0}
+            return: "No documents found"
+
+    - insert_to_bigquery:
+        call: http.post
+        args:
+          url: '${"https://bigquery.googleapis.com/bigquery/v2/projects/" + project_id + "/datasets/" + dataset + "/tables/" + table + "/insertAll"}'
+          auth:
+            type: OAuth2
+          body:
+            rows: ${all_rows}
+        result: bq_response
+
+    - done:
+        return: '${"Exported " + string(len(all_rows)) + " rows at " + snapshot_at}'
