@@ -56,12 +56,12 @@ main:
                               steps:
                                 - count_loop:
                                     for:
-                                      value: reaction_value
-                                      in: '${map.values(doc.fields.reactions.mapValue.fields)}'
+                                      value: client_id
+                                      in: '${keys(doc.fields.reactions.mapValue.fields)}'
                                       steps:
                                         - check_true:
                                             switch:
-                                              - condition: '${"booleanValue" in reaction_value and reaction_value.booleanValue == true}'
+                                              - condition: '${"booleanValue" in doc.fields.reactions.mapValue.fields[client_id] and doc.fields.reactions.mapValue.fields[client_id].booleanValue == true}'
                                                 assign:
                                                   - like_count: ${like_count + 1}
                       - build_row:

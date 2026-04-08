@@ -65,4 +65,4 @@ jobs:
             --source=infra/workflows/likes-export.yaml \
             --location=asia-northeast1 \
             --project=blog-lacolaco-net \
-            --service-account=348931464772-compute@developer.gserviceaccount.com
+            --service-account=likes-export-workflow@blog-lacolaco-net.iam.gserviceaccount.com
