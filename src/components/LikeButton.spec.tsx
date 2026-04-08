@@ -167,6 +167,8 @@ describe('LikeButton', () => {
       expect(btn).toHaveAttribute('aria-pressed', 'false');
       expect(btn).toHaveTextContent('3');
     });
+    // fetchLikeStatusOnceにより同一slugの初期fetchは1回のみ
+    expect(mockFetchLikeStatus).toHaveBeenCalledTimes(1);
 
     buttons[0].click();
 
