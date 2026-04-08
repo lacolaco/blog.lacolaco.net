@@ -54,6 +54,7 @@ describe('API /api/likes/[slug]', () => {
 
   afterEach(() => {
     vi.useRealTimers();
+    delete process.env.FIRESTORE_DATABASE;
   });
 
   describe('GET', () => {
