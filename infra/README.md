@@ -48,11 +48,11 @@ BigQuery
 - データソース: `post_likes_snapshot`
 - ディメンション: `slug`
 - 指標: `like_count` (MAX)
-- フィルタ: `snapshot_at` = 最新日
+- フィルタ: `DATE(snapshot_at, 'Asia/Tokyo')` = 最新日
 
 #### いいね数推移（時系列グラフ）
 - データソース: `post_likes_snapshot`
-- ディメンション: `snapshot_at` (日付)
+- ディメンション: `DATE(snapshot_at, 'Asia/Tokyo')`
 - 指標: `like_count` (SUM)
 - 内訳: `slug`
 
@@ -62,7 +62,7 @@ BigQueryのカスタムクエリをデータソースとして使用:
 WITH latest_likes AS (
   SELECT slug, like_count
   FROM `blog-lacolaco-net.likes_analytics.post_likes_snapshot`
-  WHERE snapshot_at = (SELECT MAX(snapshot_at) FROM `blog-lacolaco-net.likes_analytics.post_likes_snapshot`)
+  WHERE DATE(snapshot_at, 'Asia/Tokyo') = (SELECT MAX(DATE(snapshot_at, 'Asia/Tokyo')) FROM `blog-lacolaco-net.likes_analytics.post_likes_snapshot`)
 ),
 page_views AS (
   SELECT

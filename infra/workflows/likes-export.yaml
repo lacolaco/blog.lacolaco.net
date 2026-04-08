@@ -9,10 +9,10 @@ main:
           - collection: "post_likes"
           - dataset: "likes_analytics"
           - table: "post_likes_snapshot"
-          # JST(UTC+9)基準に統一。DATE(snapshot_at)クエリがJST日付と一致するようにする
-          - jst_now: ${sys.now() + 32400}
-          - snapshot_at: ${time.format(jst_now)}
-          - snapshot_date: '${text.substring(time.format(jst_now), 0, 10)}'
+          # snapshot_atは真のUTC。クエリ側でDATE(snapshot_at, 'Asia/Tokyo')を使うこと
+          - snapshot_at: ${time.format(sys.now())}
+          # insertIdデデュプリケーション用のJST日付（Cloud Schedulerの実行日と一致させる）
+          - snapshot_date: '${text.substring(time.format(sys.now() + 32400), 0, 10)}'
           - all_rows: []
 
     - list_documents:
