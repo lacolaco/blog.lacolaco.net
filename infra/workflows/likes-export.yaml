@@ -10,6 +10,7 @@ main:
           - dataset: "likes_analytics"
           - table: "post_likes_snapshot"
           - snapshot_at: ${time.format(sys.now())}
+          - snapshot_date: '${text.substring(time.format(sys.now()), 0, 10)}'
           - all_rows: []
 
     - list_documents:
@@ -18,7 +19,6 @@ main:
           args:
             url: '${"https://firestore.googleapis.com/v1/projects/" + project_id + "/databases/" + database + "/documents/" + collection}'
             query:
-              # 個人ブログの全投稿数を十分にカバーする上限値。ページネーション未実装のため超過時はデータ欠落する
               pageSize: 5000
             auth:
               type: OAuth2
@@ -26,6 +26,11 @@ main:
         except:
           as: e
           raise: '${"Firestore list failed: " + json.encode_to_string(e)}'
+
+    - check_pagination:
+        switch:
+          - condition: '${"nextPageToken" in list_response.body}'
+            raise: "投稿数がpageSize(5000)を超過。ページネーション実装が必要"
 
     - process_documents:
         switch:
@@ -40,14 +45,23 @@ main:
                           assign:
                             - name_parts: '${text.split(doc.name, "/")}'
                             - slug: ${name_parts[len(name_parts) - 1]}
-                      - count_reactions:
+                      - count_true_reactions:
                           assign:
                             - like_count: 0
                       - check_reactions:
                           switch:
                             - condition: '${"reactions" in doc.fields and "mapValue" in doc.fields.reactions and "fields" in doc.fields.reactions.mapValue}'
-                              assign:
-                                - like_count: ${len(doc.fields.reactions.mapValue.fields)}
+                              steps:
+                                - count_loop:
+                                    for:
+                                      value: reaction_value
+                                      in: '${map.values(doc.fields.reactions.mapValue.fields)}'
+                                      steps:
+                                        - check_true:
+                                            switch:
+                                              - condition: '${"booleanValue" in reaction_value and reaction_value.booleanValue == true}'
+                                                assign:
+                                                  - like_count: ${like_count + 1}
                       - build_row:
                           assign:
                             - row_data:
@@ -57,6 +71,7 @@ main:
                       - build_row_wrapper:
                           assign:
                             - row_wrapper:
+                                insertId: '${slug + "_" + snapshot_date}'
                                 json: ${row_data}
                       - append_row:
                           assign:
