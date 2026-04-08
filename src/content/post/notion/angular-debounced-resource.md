@@ -3,9 +3,8 @@ title: 'Angular v22: debounced Resource の解説'
 slug: 'angular-debounced-resource'
 icon: ''
 created_time: '2026-04-08T02:03:00.000Z'
-last_edited_time: '2026-04-08T02:03:00.000Z'
+last_edited_time: '2026-04-08T02:29:00.000Z'
 tags:
-  - 'Angular'
   - 'Signals'
   - '状態管理'
 published: true
@@ -89,9 +88,9 @@ https://github.com/angular/angular/commit/24e52d450d201e3da90bb64f84358f9eccd787
 
 ## メカニズム
 
-先日書いたFirestoreをラップした例のように、Resourceはインターフェースであり、その構築方法は自由だ。組み込みのresource関数やhttpResource関数でなくても、Resourceインターフェースに従ったオブジェクトを作ることはできる。実際の`debounced`関数はフレームワーク内部の細かいエラーハンドリングなど含めて複雑な実装だが、簡易的に自作のシンプルな`debounced`関数を作りながらメカニズムを理解してみよう。
+先日書いたFirestoreをラップした例のように、`Resource`はインターフェースであり、その構築方法は自由だ。組み込みの`resource`関数や`httpResource`関数でなくても、`Resource`インターフェースに従ったオブジェクトを作ることはできる。実際の`debounced`関数はフレームワーク内部の細かいエラーハンドリングなど含めて複雑な実装だが、簡易的に自作のシンプルな`debounced`関数を作りながらメカニズムを理解してみよう。
 
-まず基本形として、何もしないResourceを返す関数を作ってみよう。Angular v21.2以降であれば、`resourceFromSnapshots`関数を使うことで、特定の型を持つSignalを元にResourceへ変換できる。
+まず基本形として、何もしない`Resource`を返す関数を作ってみよう。Angular v21.2以降であれば、`resourceFromSnapshots`関数を使うことで、特定の型を持つSignalを元にResourceへ変換できる。
 
 ```typescript
 function debounced<T>(source: () => T): Resource<T> {
@@ -195,9 +194,9 @@ function debounced<T>(source: () => T, wait: number): Resource<T> {
 }
 ```
 
-これで簡易的なdebounced関数の出来上がりだ。実際のフレームワークでの実装とは細かい部分で違うが、基本的な設計はこのようになっている。中身はただPromiseとタイマーで状態管理しているだけのシンプルなものだ。
+これで簡易的な`debounced`関数の出来上がりだ。実際のフレームワークでの実装とは細かい部分で違うが、基本的な設計はこのようになっている。中身はただPromiseとタイマーで状態管理しているだけのシンプルなものだ。
 
-何が言いたいかと言うと、Resource型を返す関数を作るのは簡単だということだ。非同期性を持つ処理をSignalに統合したいとき、組み込みのAPIが上手くフィットしなかったとしても自作するハードルは低い。そのひとつの例が前回のFirestore CollectionのResource化だった。
+何が言いたいかと言うと、`Resource`型を返す関数を作るのは簡単だということだ。非同期性を持つ処理をSignalに統合したいとき、組み込みのAPIが上手くフィットしなかったとしても自作するハードルは低い。そのひとつの例が前回のFirestore CollectionのResource化だった。
 
 https://blog.lacolaco.net/posts/angular-firestore-resource-signal
 
