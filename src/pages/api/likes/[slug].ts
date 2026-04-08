@@ -15,7 +15,7 @@ let repository: LikesRepository | null = null;
 
 function getRepository(): LikesRepository {
   if (!repository) {
-    const database = import.meta.env.FIRESTORE_DATABASE as string | undefined;
+    const database = process.env.FIRESTORE_DATABASE;
     if (!database) {
       throw new Error('FIRESTORE_DATABASE is not set');
     }

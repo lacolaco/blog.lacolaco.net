@@ -49,7 +49,7 @@ describe('API /api/likes/[slug]', () => {
     mockToggleLike.mockReset();
     // レート制限ウィンドウ(1秒)を超えて時間を進め、既存エントリをexpireさせる
     vi.advanceTimersByTime(1100);
-    import.meta.env.FIRESTORE_DATABASE = 'test-db';
+    process.env.FIRESTORE_DATABASE = 'test-db';
   });
 
   afterEach(() => {
