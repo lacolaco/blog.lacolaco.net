@@ -111,7 +111,7 @@ main:
     - check_rows:
         switch:
           - condition: ${total_rows == 0}
-            raise: "No documents found: Firestore collection may be empty or misconfigured"
+            raise: '${"No documents found in " + database + "/" + collection + ": may be empty or misconfigured"}'
 
     - log_export_complete:
         call: sys.log
