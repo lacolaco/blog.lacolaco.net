@@ -30,7 +30,8 @@ const SYNC_EVENT = 'like-state-sync';
 
 /** global.css の --like-particle-duration から取得 */
 function getParticleDurationMs(): number {
-  return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--like-particle-duration'), 10) || 600;
+  const parsed = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--like-particle-duration'), 10);
+  return Number.isNaN(parsed) ? 600 : parsed;
 }
 
 interface LikeSyncDetail {
