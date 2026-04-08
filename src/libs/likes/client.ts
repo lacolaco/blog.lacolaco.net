@@ -59,9 +59,11 @@ export async function fetchLikeStatus(slug: Slug, clientId: ClientId): Promise<L
 
 /** いいねをトグルする */
 export async function sendToggleLike(slug: Slug, clientId: ClientId): Promise<LikeStatus> {
+  // Content-Type: application/jsonがないとCloud RunがPOSTをクロスサイトフォーム送信とみなし403を返す
   const response = await fetchWithTracking(`/api/likes/${slug}`, {
     method: 'POST',
-    headers: { 'x-client-id': clientId },
+    headers: { 'x-client-id': clientId, 'Content-Type': 'application/json' },
+    body: '{}',
   });
   if (!response.ok) {
     trackEvent(likeEvents.error(`POST /api/likes/${slug} failed: ${response.status}`));

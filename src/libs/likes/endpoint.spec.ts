@@ -49,11 +49,14 @@ describe('API /api/likes/[slug]', () => {
     mockToggleLike.mockReset();
     // レート制限ウィンドウ(1秒)を超えて時間を進め、既存エントリをexpireさせる
     vi.advanceTimersByTime(1100);
-    import.meta.env.FIRESTORE_DATABASE = 'test-db';
+    process.env.FIRESTORE_DATABASE = 'test-db';
   });
 
   afterEach(() => {
     vi.useRealTimers();
+    // 注意: [slug].tsのmodule-level repositoryシングルトンは初期化後リセットされない。
+    // FIRESTORE_DATABASE未設定時のエラーパステストを追加する場合はvi.resetModules()が必要
+    delete process.env.FIRESTORE_DATABASE;
   });
 
   describe('GET', () => {
@@ -201,6 +204,23 @@ describe('API /api/likes/[slug]', () => {
       vi.advanceTimersByTime(1100);
       const response3 = await POST(createContext('POST', slug, headers));
       expect(response3.status).toBe(200);
+    });
+
+    // LRU eviction: 1000エントリ到達時に最古エントリが削除される
+    it('レート制限マップが上限に達しても新しいリクエストは許可される', async () => {
+      mockToggleLike.mockResolvedValue({ count: 1, liked: true });
+      const headers = { 'x-client-id': 'aaaaaaaa-bbbb-4ccc-9ddd-eeeeeeeeeeee' };
+
+      // 1000個の異なるslugでリクエストし、マップを埋める
+      for (let i = 0; i < 1000; i++) {
+        vi.advanceTimersByTime(1100);
+        await POST(createContext('POST', `slug-${i}`, headers));
+      }
+
+      // 1001個目: LRU evictionが発動し、新しいリクエストは許可される
+      vi.advanceTimersByTime(1100);
+      const response = await POST(createContext('POST', 'slug-overflow', headers));
+      expect(response.status).toBe(200);
     });
 
     // テスト35: POST 内部エラー

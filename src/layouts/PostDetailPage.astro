@@ -12,6 +12,7 @@ import ChannelBadge from '../components/ChannelBadge.astro';
 import Tag from '../components/Tag.astro';
 import TagList from '../components/TagList.astro';
 import ArticleSummarizer from '../components/ArticleSummarizer';
+import LikeButton from '../components/LikeButton';
 import ImageLightbox from '../components/ImageLightbox.astro';
 import { SITE_TITLE } from '../consts';
 import { queryAvailablePosts } from '@lib/query';
@@ -76,7 +77,11 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
             }
             <h1 class="text-[20px] font-bold leading-[30px] mb-2 lg:text-[28px] lg:leading-[1.4] lg:mb-3">{title}</h1>
 
-            {/* PC/SP共通: 日付+ツール（チャンネル/タグはボトムのみ） */}
+            <div class="mb-3">
+              <LikeButton slug={slug} locale={locale || 'ja'} variant="compact" client:idle />
+            </div>
+
+            {/* PC/SP共通: 日付+ツール */}
             <div class="flex items-center justify-between mb-6 lg:mb-6">
               <span class="text-xs lg:text-[13px] text-muted lg:text-secondary leading-[normal]">
                 <FormattedDate date={created_time} />
@@ -128,6 +133,10 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
         </div>
 
         <div class="mt-[32px] lg:mt-6">
+          <LikeButton slug={slug} locale={locale || 'ja'} variant="standard" client:idle />
+        </div>
+
+        <div class="mt-6">
           <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
         </div>
 

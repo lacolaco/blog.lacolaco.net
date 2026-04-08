@@ -4,6 +4,19 @@
 
 @theme {
   --text-3xl: 2rem;
+  --like-particle-duration: 600ms;
+  --animate-like-particle: like-particle var(--like-particle-duration) ease-out forwards;
+}
+
+@keyframes like-particle {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(var(--particle-angle)) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(var(--particle-angle)) translateY(calc(-1 * var(--particle-distance)));
+  }
 }
 
 @layer base {
