@@ -27,7 +27,7 @@ BigQuery
 
 - **likes-export** (`infra/workflows/likes-export.yaml`)
   - Firestore `post_likes`コレクション全件取得→BigQuery挿入
-  - サービスアカウント: `348931464772-compute@developer.gserviceaccount.com`
+  - サービスアカウント: `likes-export-workflow@blog-lacolaco-net.iam.gserviceaccount.com`（datastore.viewer + bigquery.dataEditor + logging.logWriter）
 
 ### Cloud Scheduler
 
@@ -92,3 +92,4 @@ ORDER BY pv_30d DESC
 
 - **insertId**: BigQuery streaming insertのdeduplicationはbest-effort。数分以上間隔の再実行では重複しうる。集計クエリでは`MAX(like_count)`を使用し重複の影響を軽減する
 - **ページネーション**: 投稿数5000超過でワークフローがFAILED。その場合はページネーションループの実装が必要
+- **ワークフロー状態上限**: Cloud Workflowsの状態上限は512KB。全行をall_rowsに蓄積するため、投稿数~3000件超でクラッシュする可能性あり。その場合はバッチ分割insertが必要
