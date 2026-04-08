@@ -1,0 +1,153 @@
+# Firestore post_likes → BigQuery likes_analytics.post_likes_snapshot
+# Cloud Schedulerで日次実行される
+main:
+  steps:
+    - init:
+        assign:
+          - project_id: ${sys.get_env("GOOGLE_CLOUD_PROJECT_ID")}
+          - database: "likes-production"
+          - collection: "post_likes"
+          - dataset: "likes_analytics"
+          - table: "post_likes_snapshot"
+          # snapshot_atは真のUTC。クエリ側でDATE(snapshot_at, 'Asia/Tokyo')を使うこと
+          - snapshot_at: ${time.format(sys.now())}
+          # insertIdデデュプリケーション用のJST日付。best-effortのため数分以上間隔の再実行では重複しうる
+          - snapshot_date: '${text.substring(time.format(sys.now() + 32400), 0, 10)}'
+          - batch: []
+          - total_rows: 0
+          - batch_size: 100
+          - bq_url: '${"https://bigquery.googleapis.com/bigquery/v2/projects/" + project_id + "/datasets/" + dataset + "/tables/" + table + "/insertAll"}'
+
+    - list_documents:
+        try:
+          call: http.get
+          args:
+            url: '${"https://firestore.googleapis.com/v1/projects/" + project_id + "/databases/" + database + "/documents/" + collection}'
+            query:
+              # ワークフロー状態512KB上限により、実際の安全な件数はドキュメントサイズに依存する
+              pageSize: 5000
+            auth:
+              type: OAuth2
+          result: list_response
+          retry:
+            predicate: ${http.default_retry_predicate}
+            max_retries: 3
+            backoff:
+              initial_delay: 2
+              max_delay: 60
+              multiplier: 2
+        except:
+          as: e
+          raise: '${"Firestore list failed: " + json.encode_to_string(e)}'
+
+    - check_pagination:
+        switch:
+          - condition: '${"nextPageToken" in list_response.body and list_response.body.nextPageToken != ""}'
+            raise: "投稿数がpageSize(5000)を超過。ページネーション実装が必要"
+
+    - process_documents:
+        switch:
+          - condition: '${"documents" in list_response.body}'
+            steps:
+              - iterate_docs:
+                  for:
+                    value: doc
+                    in: ${list_response.body.documents}
+                    steps:
+                      - extract_slug:
+                          assign:
+                            - name_parts: '${text.split(doc.name, "/")}'
+                            - slug: ${name_parts[len(name_parts) - 1]}
+                      - count_true_reactions:
+                          assign:
+                            - like_count: 0
+                      - check_reactions:
+                          switch:
+                            - condition: '${"reactions" in doc.fields and "mapValue" in doc.fields.reactions and "fields" in doc.fields.reactions.mapValue}'
+                              steps:
+                                - count_loop:
+                                    for:
+                                      value: client_id
+                                      in: '${keys(doc.fields.reactions.mapValue.fields)}'
+                                      steps:
+                                        - check_true:
+                                            switch:
+                                              - condition: '${"booleanValue" in doc.fields.reactions.mapValue.fields[client_id] and doc.fields.reactions.mapValue.fields[client_id].booleanValue == true}'
+                                                assign:
+                                                  - like_count: ${like_count + 1}
+                      - append_to_batch:
+                          assign:
+                            - row_wrapper:
+                                insertId: '${slug + "_" + snapshot_date}'
+                                json:
+                                  slug: ${slug}
+                                  like_count: ${like_count}
+                                  snapshot_at: ${snapshot_at}
+                            - batch: ${list.concat(batch, [row_wrapper])}
+                            - total_rows: ${total_rows + 1}
+                      - flush_batch_if_full:
+                          switch:
+                            - condition: ${len(batch) >= batch_size}
+                              steps:
+                                - flush:
+                                    call: insert_batch
+                                    args:
+                                      url: ${bq_url}
+                                      rows: ${batch}
+                                - reset_batch:
+                                    assign:
+                                      - batch: []
+
+    - flush_remaining:
+        switch:
+          - condition: ${len(batch) > 0}
+            steps:
+              - flush_last:
+                  call: insert_batch
+                  args:
+                    url: ${bq_url}
+                    rows: ${batch}
+
+    - check_rows:
+        switch:
+          - condition: ${total_rows == 0}
+            raise: '${"No documents found in " + database + "/" + collection + ": may be empty or misconfigured"}'
+
+    - log_export_complete:
+        call: sys.log
+        args:
+          text: '${"BigQuery insert completed: " + string(total_rows) + " rows"}'
+          severity: INFO
+
+    - done:
+        return: '${"Exported " + string(total_rows) + " rows at " + snapshot_at}'
+
+insert_batch:
+  params:
+    - url
+    - rows
+  steps:
+    - call_bq:
+        try:
+          call: http.post
+          args:
+            url: ${url}
+            auth:
+              type: OAuth2
+            body:
+              rows: ${rows}
+          result: bq_response
+          retry:
+            predicate: ${http.default_retry_predicate}
+            max_retries: 3
+            backoff:
+              initial_delay: 2
+              max_delay: 60
+              multiplier: 2
+        except:
+          as: e
+          raise: '${"BigQuery insert failed: " + json.encode_to_string(e)}'
+    - check_errors:
+        switch:
+          - condition: '${"insertErrors" in bq_response.body and len(bq_response.body.insertErrors) > 0}'
+            raise: '${"BigQuery insertErrors: " + json.encode_to_string(bq_response.body.insertErrors)}'
