@@ -101,7 +101,7 @@ main:
     - check_bq_errors:
         switch:
           - condition: '${"insertErrors" in bq_response.body and len(bq_response.body.insertErrors) > 0}'
-            raise: ${bq_response.body.insertErrors}
+            raise: '${"BigQuery insertErrors: " + json.encode_to_string(bq_response.body.insertErrors)}'
 
     - done:
         return: '${"Exported " + string(len(all_rows)) + " rows at " + snapshot_at}'
