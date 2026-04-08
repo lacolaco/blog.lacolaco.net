@@ -208,7 +208,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
         aria-label={ariaLabel}
         aria-pressed={state.liked}
       >
-        <span className="relative">
+        <span className="relative inline-flex items-center justify-center w-5 h-5">
           <span
             className={[
               'inline-block w-5 h-5 transition-transform',
@@ -219,7 +219,7 @@ export default function LikeButton({ slug, locale = 'ja', variant }: Props) {
           />
           {showParticles && <ParticleEffect />}
         </span>
-        <span className="text-[16px] leading-[normal]" style={{ color: COUNT_COLOR }}>
+        <span className="text-[16px] leading-none" style={{ color: COUNT_COLOR }}>
           {state.count}
         </span>
       </button>
