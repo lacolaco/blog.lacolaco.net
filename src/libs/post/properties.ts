@@ -11,10 +11,6 @@ export function getTagByName(name: string): Tag | undefined {
 
 export const categories = Categories.parse(notionCategoriesJson as Category[]);
 
-export function getCategoryByName(name: string): Category | undefined {
-  return categories.find((category) => category.name === name);
-}
-
 export const channels = Channels.parse(notionChannelsJson as Channel[]);
 
 export function getChannelByName(name: string): Channel | undefined {

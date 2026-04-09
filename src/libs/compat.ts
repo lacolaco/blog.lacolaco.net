@@ -14,11 +14,6 @@ export function getTitle(post: CollectionEntry<'posts'>): string {
   return post.data.title;
 }
 
-/** @deprecated channels への移行後に削除 */
-export function getCategory(post: CollectionEntry<'posts'>): string | undefined {
-  return post.data.category;
-}
-
 export function getChannels(post: CollectionEntry<'posts'>): string[] {
   const postChannels = post.data.channels ?? [];
   const order = channelDefinitions.map((c) => c.name);
