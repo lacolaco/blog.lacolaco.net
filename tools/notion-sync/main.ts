@@ -59,12 +59,18 @@ const dryRun = values['dry-run'];
 
 const rootDir = new URL('../..', import.meta.url).pathname;
 
-const result = await syncNotionDatasource({
+const result = await syncNotionDatasource<BlogPostMetadata>({
   notion: {
     token: NOTION_AUTH_TOKEN,
     datasourceId: 'a902ee6d-dc94-4301-b772-fa5fb8decc0c',
   },
-  queryFilter: { property: 'distribution', multi_select: { contains: 'blog.lacolaco.net' } },
+  queryFilter: {
+    and: [
+      { property: 'distribution', multi_select: { contains: 'blog.lacolaco.net' } },
+      { property: 'published', checkbox: { equals: true } },
+      { property: 'channels', multi_select: { is_not_empty: true } },
+    ],
+  },
   manifestPath: `${rootDir}/manifest.json`,
   metadataFilePath: `${rootDir}/src/content/post/notion/metadata.json`,
   propertyOutputs: {
@@ -75,10 +81,6 @@ const result = await syncNotionDatasource({
   mode,
   force,
   dryRun,
-  filterPost: (metadata) => {
-    const m = metadata as BlogPostMetadata;
-    return m.published && m.channels.length > 0;
-  },
   extractMetadata: (page, defaultExtractor) => {
     const metadata = defaultExtractor(page);
     const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
@@ -177,14 +179,13 @@ const result = await syncNotionDatasource({
     },
     generateFrontmatter: (baseFields, metadata, renderContext: RenderContext<FeatureState>) => {
       const { source_url, title, slug, ...rest } = baseFields as Record<string, unknown>;
-      const ext = metadata as BlogPostMetadata;
 
       return {
         title,
         slug,
-        icon: ext.icon,
+        icon: metadata.icon,
         ...rest,
-        channels: ext.channels.length > 0 ? ext.channels : undefined,
+        channels: metadata.channels.length > 0 ? metadata.channels : undefined,
         notion_url: source_url,
         features: {
           katex: renderContext.state.hasKatex ?? false,
