@@ -23,7 +23,3 @@ export function getChannels(post: CollectionEntry<'posts'>): string[] {
     return (indexA === -1 ? order.length : indexA) - (indexB === -1 ? order.length : indexB);
   });
 }
-
-export function getTags(post: CollectionEntry<'posts'>): string[] {
-  return post.data.tags;
-}
