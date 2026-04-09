@@ -1,32 +1,32 @@
 [
   {
-    "id": "code",
+    "id": "n>@u",
     "name": "Code",
     "color": "blue",
     "description": null
   },
   {
-    "id": "angular",
+    "id": "\\ePn",
     "name": "Angular",
     "color": "red",
     "description": null
   },
   {
-    "id": "books",
+    "id": "mUSA",
     "name": "Books",
-    "color": "brown",
-    "description": null
-  },
-  {
-    "id": "thought",
-    "name": "Thought",
-    "color": "yellow",
-    "description": null
-  },
-  {
-    "id": "life",
-    "name": "Life",
     "color": "purple",
+    "description": null
+  },
+  {
+    "id": "WPvC",
+    "name": "Thought",
+    "color": "default",
+    "description": null
+  },
+  {
+    "id": "`b;c",
+    "name": "Life",
+    "color": "yellow",
     "description": null
   }
 ]

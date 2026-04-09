@@ -69,6 +69,7 @@ const result = await syncNotionDatasource({
   metadataFilePath: `${rootDir}/src/content/post/notion/metadata.json`,
   propertyOutputs: {
     tags: path.resolve(rootDir, 'src/content/post/notion/tags.json'),
+    channels: path.resolve(rootDir, 'src/content/post/notion/channels.json'),
   },
   verbose: true,
   mode,
