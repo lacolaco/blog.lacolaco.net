@@ -3,7 +3,7 @@ title: 'Angular v22: debounced Resource の解説'
 slug: 'angular-debounced-resource'
 icon: ''
 created_time: '2026-04-08T02:03:00.000Z'
-last_edited_time: '2026-04-08T02:29:00.000Z'
+last_edited_time: '2026-04-08T23:08:00.000Z'
 tags:
   - 'Signals'
   - '状態管理'
