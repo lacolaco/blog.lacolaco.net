@@ -85,8 +85,8 @@ importers:
         specifier: ^1.0.0
         version: 1.2.0
       '@lacolaco/notion-sync':
-        specifier: ^7.0.0
-        version: 7.0.0
+        specifier: ^8.0.0
+        version: 8.0.0
       '@tailwindcss/vite':
         specifier: ^4.1.4
         version: 4.2.2(vite@7.3.1(@types/node@24.12.2)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)(yaml@2.8.3))
@@ -983,8 +983,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@lacolaco/notion-sync@7.0.0':
-    resolution: {integrity: sha512-7+WY6Iv64p0bjyxOjIkfpwwWDQeOrVI/eEj4omt35sY084lO1+Nhjx+yJEBw+V2D67+Z1NxC8L3K2BcLgQIzUg==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/7.0.0/351f8d49fef323cfe1b404f4f67f0d642058efc3}
+  '@lacolaco/notion-sync@8.0.0':
+    resolution: {integrity: sha512-PIxmKUnTPJtPFkKWk07NtWoVtwoa94thOL9vFuP9wIHOAFY9Eu/v0i5phjFcT2pYQmioj/qwxF8CE335xwvx4w==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/8.0.0/ac1743e59369e6aab6e57cf28b3441a48b376495}
 
   '@mermaid-js/parser@1.1.0':
     resolution: {integrity: sha512-gxK9ZX2+Fex5zu8LhRQoMeMPEHbc73UKZ0FQ54YrQtUxE1VVhMwzeNtKRPAu5aXks4FasbMe4xB4bWrmq6Jlxw==}
@@ -5073,7 +5073,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@lacolaco/notion-sync@7.0.0':
+  '@lacolaco/notion-sync@8.0.0':
     dependencies:
       '@notionhq/client': 5.15.0
       cli-progress: 3.12.0
