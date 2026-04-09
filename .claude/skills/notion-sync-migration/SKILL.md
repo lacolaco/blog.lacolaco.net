@@ -41,10 +41,11 @@ grep "notion-sync" package.json
 npm view @lacolaco/notion-sync version
 ```
 
-未公開の場合、バックグラウンドで30秒間隔でポーリングする。
+未公開の場合、バックグラウンドで30秒間隔・最大10分でポーリングする。
 
 ```bash
-while true; do
+DEADLINE=$((SECONDS + 600))
+while [ $SECONDS -lt $DEADLINE ]; do
   version=$(npm view @lacolaco/notion-sync version 2>/dev/null)
   if [[ "$version" == <target-major>.* ]]; then
     echo "published: $version"
@@ -52,6 +53,10 @@ while true; do
   fi
   sleep 30
 done
+if [ $SECONDS -ge $DEADLINE ]; then
+  echo "Timeout: version not published within 10 minutes"
+  exit 1
+fi
 ```
 
 ### 3. インストール
