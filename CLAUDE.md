@@ -169,7 +169,7 @@ pnpm test:libs    # library tests
 - NEVER `git reset --hard` with uncommitted changes you need
 - **push前に`git fetch origin main`してブランチがmainの最新に追従しているか確認せよ**。outdatedなブランチをpushするな
 - pushするとCIは再実行される。古いCI watchの結果は無効
-- push後は必ず `gh pr checks --watch` をバックグラウンドで新たに開始せよ。完了したらユーザーに報告すること
+- push後は必ず `gh pr checks --watch` をバックグラウンドで新たに開始せよ。完了したらユーザーに報告すること。CIの開始にはラグがあるため `sleep 15 &&` を前置する
 
 ### Tool Usage Priority
 1. mcp__ide__getDiagnostics (for errors)
