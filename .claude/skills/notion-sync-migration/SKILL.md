@@ -82,6 +82,7 @@ Breaking Changesの一覧を列挙し、現在のコード（`tools/notion-sync/
 - Migration Guideの Before/After に従う
 - 型パラメータの追加など、Breaking Change以外の改善も適用する
 - 不要になった型アサーション（`as`キャスト）は削除する
+- 外部入力からの型変換（`new Date(string)`等）は変換結果のバリデーションとフォールバックを必ず実装する
 
 ### 6. 検証
 
