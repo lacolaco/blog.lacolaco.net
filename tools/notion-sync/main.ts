@@ -1,10 +1,21 @@
-import { syncNotionDatasource, type PostMetadata, type RenderContext } from '@lacolaco/notion-sync';
+import { syncNotionDatasource, extractProperty, type PostMetadata, type RenderContext } from '@lacolaco/notion-sync';
 import { createHash } from 'node:crypto';
 import * as path from 'node:path';
 import { parseArgs } from 'node:util';
 
 // このdatasourceのextractMetadataが返すメタデータ型
-type BlogPostMetadata = PostMetadata & { icon: string; channels: string[] };
+// v10でPostMetadataからpassthroughフィールドが削除されたため、必要なフィールドを自前で定義
+type BlogPostMetadata = PostMetadata & {
+  icon: string;
+  channels: string[];
+  locale: string;
+  source_url: string;
+  category?: string;
+  tags: string[];
+  canonical_url: string | null;
+  created_time: string;
+  last_edited_time: string;
+};
 
 // features検出用の型定義
 type FeatureState = {
@@ -12,17 +23,6 @@ type FeatureState = {
   hasKatex?: boolean;
   hasTweet?: boolean;
 };
-
-// Notion APIのpropertiesからmulti_selectの名前配列を安全に取得する
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return */
-function extractMultiSelectNames(properties: object, key: string): string[] {
-  if (!(key in properties)) return [];
-  const prop = (properties as any)[key];
-  if (prop == null || typeof prop !== 'object' || prop.type !== 'multi_select') return [];
-  if (!Array.isArray(prop.multi_select)) return [];
-  return prop.multi_select.map((item: { name: string }) => item.name);
-}
-/* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-return */
 
 const { NOTION_AUTH_TOKEN } = process.env;
 if (!NOTION_AUTH_TOKEN) {
@@ -84,19 +84,19 @@ const result = await syncNotionDatasource<BlogPostMetadata>({
   extractMetadata: (page, defaultExtractor) => {
     const metadata = defaultExtractor(page);
     const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
-
-    // channels マルチセレクトの読み取り
-    let channels: string[] = [];
-    try {
-      channels = extractMultiSelectNames(page.properties, 'channels');
-    } catch {
-      // channelsプロパティが存在しない場合は空配列
-    }
+    const updatedAt = extractProperty<string>(page, 'updated_at');
 
     return {
       ...metadata,
       icon,
-      channels,
+      channels: extractProperty<string[]>(page, 'channels') ?? [],
+      locale: extractProperty<string>(page, 'locale') ?? 'ja',
+      source_url: page.url,
+      category: extractProperty<string>(page, 'category'),
+      tags: extractProperty<string[]>(page, 'tags') ?? [],
+      canonical_url: extractProperty<string>(page, 'canonical_url') ?? null,
+      created_time: metadata.date.toISOString(),
+      last_edited_time: new Date(updatedAt ?? page.last_edited_time).toISOString(),
     };
   },
   renderMarkdown: {
@@ -177,16 +177,20 @@ const result = await syncNotionDatasource<BlogPostMetadata>({
         return defaultRenderer(block);
       },
     },
-    generateFrontmatter: (baseFields, metadata, renderContext: RenderContext<FeatureState>) => {
-      const { source_url, title, slug, ...rest } = baseFields as Record<string, unknown>;
-
+    generateFrontmatter: (_baseFields, metadata, renderContext: RenderContext<FeatureState>) => {
       return {
-        title,
-        slug,
+        title: metadata.title,
+        slug: metadata.slug,
         icon: metadata.icon,
-        ...rest,
+        created_time: metadata.created_time,
+        last_edited_time: metadata.last_edited_time,
+        tags: metadata.tags,
+        published: true,
+        locale: metadata.locale,
+        category: metadata.category,
+        canonical_url: metadata.canonical_url ?? undefined,
         channels: metadata.channels.length > 0 ? metadata.channels : undefined,
-        notion_url: source_url,
+        notion_url: metadata.source_url,
         features: {
           katex: renderContext.state.hasKatex ?? false,
           mermaid: renderContext.state.hasMermaid ?? false,
