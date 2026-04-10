@@ -85,9 +85,14 @@ const result = await syncNotionDatasource<BlogPostMetadata>({
     const metadata = defaultExtractor(page);
     const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
     const updatedAt = extractProperty<string>(page, 'updated_at');
+    // v11でextractDate()がcreated_at_overrideを見なくなったため、自前でオーバーライドする
+    const createdAtOverride = extractProperty<string>(page, 'created_at_override');
+    const createdAtDate = createdAtOverride ? new Date(createdAtOverride) : null;
+    const date = createdAtDate && !isNaN(createdAtDate.getTime()) ? createdAtDate : metadata.date;
 
     return {
       ...metadata,
+      date,
       icon,
       channels: extractProperty<string[]>(page, 'channels') ?? [],
       locale: extractProperty<string>(page, 'locale') ?? 'ja',
@@ -95,7 +100,7 @@ const result = await syncNotionDatasource<BlogPostMetadata>({
       category: extractProperty<string>(page, 'category'),
       tags: extractProperty<string[]>(page, 'tags') ?? [],
       canonical_url: extractProperty<string>(page, 'canonical_url') ?? null,
-      created_time: metadata.date.toISOString(),
+      created_time: date.toISOString(),
       last_edited_time: new Date(updatedAt ?? page.last_edited_time).toISOString(),
     };
   },
