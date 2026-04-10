@@ -95,6 +95,7 @@ pnpm test:libs    # library tests
 ### Error Handling
 - ANY error = STOP immediately, analyze, report to user
 - NEVER chain failed attempts
+- **ツール拒否は診断情報である**。同じコマンドの再試行もユーザーへの委譲も正しい対応ではない。拒否の原因を特定し、原因を除去したコマンドで再試行せよ
 - NEVER use workarounds (it.skip, eslint-disable)
 - Test failures after your changes = assume your fault until proven otherwise
 
@@ -163,6 +164,7 @@ pnpm test:libs    # library tests
 
 ### Git Operations
 - **コミット→push→PR作成→CI watchは不可分の単位。途中で止めるな。コミットだけで完了報告するな**
+- **PRマージ時に`--delete-branch`を付けるな**。リモートブランチはマージ後に自動削除される（GitHub設定）
 - Use git-github-ops agent for complex operations
 - NEVER `git reset --hard` with uncommitted changes you need
 - **push前に`git fetch origin main`してブランチがmainの最新に追従しているか確認せよ**。outdatedなブランチをpushするな
