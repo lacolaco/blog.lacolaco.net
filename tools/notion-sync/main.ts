@@ -87,7 +87,8 @@ const result = await syncNotionDatasource<BlogPostMetadata>({
     const updatedAt = extractProperty<string>(page, 'updated_at');
     // v11でextractDate()がcreated_at_overrideを見なくなったため、自前でオーバーライドする
     const createdAtOverride = extractProperty<string>(page, 'created_at_override');
-    const date = createdAtOverride ? new Date(createdAtOverride) : metadata.date;
+    const createdAtDate = createdAtOverride ? new Date(createdAtOverride) : null;
+    const date = createdAtDate && !isNaN(createdAtDate.getTime()) ? createdAtDate : metadata.date;
 
     return {
       ...metadata,
