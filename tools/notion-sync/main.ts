@@ -10,7 +10,6 @@ type BlogPostMetadata = PostMetadata & {
   channels: string[];
   locale: string;
   source_url: string;
-  category?: string;
   tags: string[];
   canonical_url: string | null;
   created_time: string;
@@ -97,7 +96,6 @@ const result = await syncNotionDatasource<BlogPostMetadata>({
       channels: extractProperty<string[]>(page, 'channels') ?? [],
       locale: extractProperty<string>(page, 'locale') ?? 'ja',
       source_url: page.url,
-      category: extractProperty<string>(page, 'category'),
       tags: extractProperty<string[]>(page, 'tags') ?? [],
       canonical_url: extractProperty<string>(page, 'canonical_url') ?? null,
       created_time: date.toISOString(),
@@ -192,7 +190,6 @@ const result = await syncNotionDatasource<BlogPostMetadata>({
         tags: metadata.tags,
         published: true,
         locale: metadata.locale,
-        category: metadata.category,
         canonical_url: metadata.canonical_url ?? undefined,
         channels: metadata.channels.length > 0 ? metadata.channels : undefined,
         notion_url: metadata.source_url,

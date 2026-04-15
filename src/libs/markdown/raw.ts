@@ -16,7 +16,6 @@ export function readRawMarkdown(entry: CollectionEntry<'posts'>): string {
     slug: entry.data.slug,
     created_time: entry.data.created_time,
     last_edited_time: entry.data.last_edited_time,
-    category: entry.data.category,
     tags: entry.data.tags,
     published: entry.data.published,
     locale: entry.data.locale,
