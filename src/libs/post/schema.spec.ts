@@ -3,8 +3,7 @@ import { PostFrontmatter } from './schema';
 import * as schema from './schema';
 
 describe('PostFrontmatter', () => {
-  it('categoryフィールドがスキーマに存在しない', () => {
-    // categoryを含むfrontmatterをパースしても、categoryフィールドは残らない（passthroughで残る可能性があるため、shapeで確認）
+  it('Category/Categories型がエクスポートされていない', () => {
     expect('Category' in schema).toBe(false);
     expect('Categories' in schema).toBe(false);
   });
