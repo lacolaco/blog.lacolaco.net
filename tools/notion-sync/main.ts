@@ -1,11 +1,11 @@
-import { syncNotionDatasource, extractProperty, type PostMetadata, type RenderContext } from '@lacolaco/notion-sync';
+import { syncNotionDatasource, extractProperty, type EntryMetadata, type RenderContext } from '@lacolaco/notion-sync';
 import { createHash } from 'node:crypto';
 import * as path from 'node:path';
 import { parseArgs } from 'node:util';
 
 // このdatasourceのextractMetadataが返すメタデータ型
-// v10でPostMetadataからpassthroughフィールドが削除されたため、必要なフィールドを自前で定義
-type BlogPostMetadata = PostMetadata & {
+// v10でpassthroughフィールドが削除されたため、必要なフィールドを自前で定義
+type BlogPostMetadata = EntryMetadata & {
   icon: string;
   channels: string[];
   locale: string;
@@ -71,7 +71,6 @@ const result = await syncNotionDatasource<BlogPostMetadata>({
     ],
   },
   manifestPath: `${rootDir}/manifest.json`,
-  metadataFilePath: `${rootDir}/src/content/post/notion/metadata.json`,
   propertyOutputs: {
     tags: path.resolve(rootDir, 'src/content/post/notion/tags.json'),
     channels: path.resolve(rootDir, 'src/content/post/notion/channels.json'),
