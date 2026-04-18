@@ -3,12 +3,7 @@ import { queryAdjacentPosts, deduplicatePosts } from './posts';
 import type { CollectionEntry } from 'astro:content';
 
 // テスト用のモックデータを作成するヘルパー関数
-function createMockPost(
-  slug: string,
-  category: string,
-  createdTime: Date,
-  locale: string = 'ja',
-): CollectionEntry<'posts'> {
+function createMockPost(slug: string, createdTime: Date, locale: string = 'ja'): CollectionEntry<'posts'> {
   return {
     id: `${slug}.md`,
     slug,
@@ -20,7 +15,6 @@ function createMockPost(
       icon: '📝',
       created_time: createdTime,
       last_edited_time: createdTime,
-      category,
       tags: [],
       published: true,
       locale,
@@ -30,7 +24,7 @@ function createMockPost(
 }
 
 // 英語版の投稿を作成するヘルパー関数
-function createMockEnPost(slug: string, category: string, createdTime: Date): CollectionEntry<'postsEn'> {
+function createMockEnPost(slug: string, createdTime: Date): CollectionEntry<'postsEn'> {
   return {
     id: `${slug}.en.md`,
     slug,
@@ -42,7 +36,6 @@ function createMockEnPost(slug: string, category: string, createdTime: Date): Co
       icon: '📝',
       created_time: createdTime,
       last_edited_time: createdTime,
-      category,
       tags: [],
       published: true,
       locale: 'en',
@@ -54,9 +47,9 @@ function createMockEnPost(slug: string, category: string, createdTime: Date): Co
 describe('queryAdjacentPosts', () => {
   it('時系列順に前後の記事を正しく取得できる', () => {
     const posts = [
-      createMockPost('post-1', 'tech', new Date('2023-01-01')),
-      createMockPost('post-2', 'blog', new Date('2023-01-02')),
-      createMockPost('post-3', 'tech', new Date('2023-01-03')),
+      createMockPost('post-1', new Date('2023-01-01')),
+      createMockPost('post-2', new Date('2023-01-02')),
+      createMockPost('post-3', new Date('2023-01-03')),
     ];
 
     const result = queryAdjacentPosts(posts, 'post-2');
@@ -69,9 +62,9 @@ describe('queryAdjacentPosts', () => {
 
   it('最初の記事の場合、prevがnullになる', () => {
     const posts = [
-      createMockPost('post-1', 'tech', new Date('2023-01-01')),
-      createMockPost('post-2', 'tech', new Date('2023-01-02')),
-      createMockPost('post-3', 'tech', new Date('2023-01-03')),
+      createMockPost('post-1', new Date('2023-01-01')),
+      createMockPost('post-2', new Date('2023-01-02')),
+      createMockPost('post-3', new Date('2023-01-03')),
     ];
 
     const result = queryAdjacentPosts(posts, 'post-1');
@@ -83,9 +76,9 @@ describe('queryAdjacentPosts', () => {
 
   it('最後の記事の場合、nextがnullになる', () => {
     const posts = [
-      createMockPost('post-1', 'tech', new Date('2023-01-01')),
-      createMockPost('post-2', 'tech', new Date('2023-01-02')),
-      createMockPost('post-3', 'tech', new Date('2023-01-03')),
+      createMockPost('post-1', new Date('2023-01-01')),
+      createMockPost('post-2', new Date('2023-01-02')),
+      createMockPost('post-3', new Date('2023-01-03')),
     ];
 
     const result = queryAdjacentPosts(posts, 'post-3');
@@ -96,7 +89,7 @@ describe('queryAdjacentPosts', () => {
   });
 
   it('記事が1つしかない場合、両方nullになる', () => {
-    const posts = [createMockPost('post-1', 'tech', new Date('2023-01-01'))];
+    const posts = [createMockPost('post-1', new Date('2023-01-01'))];
 
     const result = queryAdjacentPosts(posts, 'post-1');
 
@@ -105,10 +98,7 @@ describe('queryAdjacentPosts', () => {
   });
 
   it('存在しないスラッグの場合、両方nullになる', () => {
-    const posts = [
-      createMockPost('post-1', 'tech', new Date('2023-01-01')),
-      createMockPost('post-2', 'tech', new Date('2023-01-02')),
-    ];
+    const posts = [createMockPost('post-1', new Date('2023-01-01')), createMockPost('post-2', new Date('2023-01-02'))];
 
     const result = queryAdjacentPosts(posts, 'non-existent');
 
@@ -116,29 +106,11 @@ describe('queryAdjacentPosts', () => {
     expect(result.next).toBeNull();
   });
 
-  it('カテゴリが異なる記事も含まれる', () => {
-    const posts = [
-      createMockPost('post-1', 'tech', new Date('2023-01-01')),
-      createMockPost('post-2', 'blog', new Date('2023-01-02')),
-      createMockPost('post-3', 'tech', new Date('2023-01-03')),
-    ];
-
-    const result = queryAdjacentPosts(posts, 'post-2');
-
-    // カテゴリに関係なく、時系列順で前後の記事を取得
-    expect(result.prev).not.toBeNull();
-    expect(result.prev?.data.slug).toBe('post-1');
-    expect(result.prev?.data.category).toBe('tech');
-    expect(result.next).not.toBeNull();
-    expect(result.next?.data.slug).toBe('post-3');
-    expect(result.next?.data.category).toBe('tech');
-  });
-
   it('ロケールが異なる記事も含まれる', () => {
     const posts = [
-      createMockPost('post-1', 'tech', new Date('2023-01-01'), 'ja'),
-      createMockPost('post-2', 'tech', new Date('2023-01-02'), 'en'),
-      createMockPost('post-3', 'tech', new Date('2023-01-03'), 'ja'),
+      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-2', new Date('2023-01-02'), 'en'),
+      createMockPost('post-3', new Date('2023-01-03'), 'ja'),
     ];
 
     const result = queryAdjacentPosts(posts, 'post-2');
@@ -154,9 +126,9 @@ describe('queryAdjacentPosts', () => {
 
   it('時系列順（古い順）に正しくソートされる', () => {
     const posts = [
-      createMockPost('post-3', 'tech', new Date('2023-01-03')),
-      createMockPost('post-1', 'tech', new Date('2023-01-01')),
-      createMockPost('post-2', 'blog', new Date('2023-01-02')),
+      createMockPost('post-3', new Date('2023-01-03')),
+      createMockPost('post-1', new Date('2023-01-01')),
+      createMockPost('post-2', new Date('2023-01-02')),
     ];
 
     const result = queryAdjacentPosts(posts, 'post-2');
@@ -179,8 +151,8 @@ describe('queryAdjacentPosts', () => {
 describe('deduplicatePosts', () => {
   it('同じslugを持つ日本語版と英語版がある場合、日本語版のみが残る', () => {
     const posts = [
-      createMockPost('post-1', 'tech', new Date('2023-01-01'), 'ja'),
-      createMockEnPost('post-1', 'tech', new Date('2023-01-01')),
+      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockEnPost('post-1', new Date('2023-01-01')),
     ];
 
     const result = deduplicatePosts(posts);
@@ -192,8 +164,8 @@ describe('deduplicatePosts', () => {
 
   it('英語版のみの投稿は残る', () => {
     const posts = [
-      createMockPost('post-1', 'tech', new Date('2023-01-01'), 'ja'),
-      createMockEnPost('post-2', 'tech', new Date('2023-01-02')),
+      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockEnPost('post-2', new Date('2023-01-02')),
     ];
 
     const result = deduplicatePosts(posts);
@@ -205,8 +177,8 @@ describe('deduplicatePosts', () => {
 
   it('日本語版のみの投稿は残る', () => {
     const posts = [
-      createMockPost('post-1', 'tech', new Date('2023-01-01'), 'ja'),
-      createMockPost('post-2', 'tech', new Date('2023-01-02'), 'ja'),
+      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-2', new Date('2023-01-02'), 'ja'),
     ];
 
     const result = deduplicatePosts(posts);
@@ -218,11 +190,11 @@ describe('deduplicatePosts', () => {
 
   it('複数の記事で日英両方がある場合、それぞれ日本語版のみが残る', () => {
     const posts = [
-      createMockPost('post-1', 'tech', new Date('2023-01-01'), 'ja'),
-      createMockEnPost('post-1', 'tech', new Date('2023-01-01')),
-      createMockPost('post-2', 'tech', new Date('2023-01-02'), 'ja'),
-      createMockEnPost('post-2', 'tech', new Date('2023-01-02')),
-      createMockPost('post-3', 'tech', new Date('2023-01-03'), 'ja'),
+      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockEnPost('post-1', new Date('2023-01-01')),
+      createMockPost('post-2', new Date('2023-01-02'), 'ja'),
+      createMockEnPost('post-2', new Date('2023-01-02')),
+      createMockPost('post-3', new Date('2023-01-03'), 'ja'),
     ];
 
     const result = deduplicatePosts(posts);
@@ -241,9 +213,9 @@ describe('deduplicatePosts', () => {
 
   it('重複がない場合、全ての投稿が残る', () => {
     const posts = [
-      createMockPost('post-1', 'tech', new Date('2023-01-01'), 'ja'),
-      createMockPost('post-2', 'tech', new Date('2023-01-02'), 'ja'),
-      createMockEnPost('post-3', 'tech', new Date('2023-01-03')),
+      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-2', new Date('2023-01-02'), 'ja'),
+      createMockEnPost('post-3', new Date('2023-01-03')),
     ];
 
     const result = deduplicatePosts(posts);
@@ -253,11 +225,11 @@ describe('deduplicatePosts', () => {
 
   it('重複除外時に元の配列の順序を維持する', () => {
     const posts = [
-      createMockPost('post-3', 'tech', new Date('2023-01-03'), 'ja'),
-      createMockEnPost('post-3', 'tech', new Date('2023-01-03')),
-      createMockPost('post-2', 'tech', new Date('2023-01-02'), 'ja'),
-      createMockPost('post-1', 'tech', new Date('2023-01-01'), 'ja'),
-      createMockEnPost('post-1', 'tech', new Date('2023-01-01')),
+      createMockPost('post-3', new Date('2023-01-03'), 'ja'),
+      createMockEnPost('post-3', new Date('2023-01-03')),
+      createMockPost('post-2', new Date('2023-01-02'), 'ja'),
+      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockEnPost('post-1', new Date('2023-01-01')),
     ];
 
     const result = deduplicatePosts(posts);
