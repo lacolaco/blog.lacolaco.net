@@ -90,12 +90,29 @@ Breaking Changesの一覧を列挙し、現在のコード（`tools/notion-sync/
 
 ```bash
 pnpm lint
-pnpm notion-sync -- --dry-run
+pnpm notion-sync -- --mode=all
 pnpm build
 ```
 
-dry-runの出力を確認し、queryFilterやpropertyOutputsが正しく動作していることを検証する。
+**`--dry-run` 単独は検証として不十分。** incremental modeの `--dry-run` は「前回差分なし」で `Fetched 0 pages` になりうる。その状態では新バージョンの `extractMetadata` / `generateFrontmatter` など、検証したいコードパスが一度も実行されない。
 
-### 7. コミット・PR
+`--mode=all` での実行後、以下を確認する:
+
+1. `Sync completed: { succeeded: N, failed: 0 }` のNが想定件数以上
+2. 更新された記事のfrontmatter（`git diff src/content/post/notion/*.md`）が期待通りのフィールド構成
+3. `queryFilter`、`propertyOutputs`、`getImageOutput` が正しく動作した痕跡がログに残っている
+
+「exit 0」だけで検証完了と判断しない。出力に検証対象が実行された痕跡を確認するまで次に進まない。
+
+### 7. 検証副作用の扱い
+
+`--mode=all` は manifest.json と記事mdを実際に更新する。コミット戦略:
+
+- コミット1 (`chore(deps): upgrade ...`): `package.json` / `pnpm-lock.yaml` / `main.ts` / `README.md` のみ
+- コミット2 (`chore: sync notion content`): `manifest.json` / 記事md / v12で生成されなくなった既存成果物の削除
+
+移行ロジックの変更と、Notionデータ同期の副作用を別コミットに分離する。
+
+### 8. コミット・PR
 
 通常のpr-lifecycleスキルに従う。
