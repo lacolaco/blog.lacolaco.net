@@ -3,13 +3,11 @@ title: 'FlutterのBLoCパターンをAngularで理解する'
 slug: 'bloc-design-pattern-with-angular'
 icon: ''
 created_time: '2018-05-22T00:00:00.000Z'
-last_edited_time: '2026-03-28T07:10:00.000Z'
+last_edited_time: '2026-03-28T16:23:00.000Z'
 tags:
-  - 'Angular'
   - '設計'
 published: true
 locale: 'ja'
-category: 'Tech'
 channels:
   - 'Code'
   - 'Angular'

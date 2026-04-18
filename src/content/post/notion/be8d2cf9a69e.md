@@ -3,13 +3,11 @@ title: '『スタッフエンジニア』読後メモ'
 slug: 'be8d2cf9a69e'
 icon: ''
 created_time: '2023-11-18T11:22:00.000Z'
-last_edited_time: '2026-03-28T07:10:00.000Z'
+last_edited_time: '2026-03-28T16:23:00.000Z'
 tags:
   - '雑記'
-  - '読書'
 published: true
 locale: 'ja'
-category: 'Diary'
 channels:
   - 'Books'
 notion_url: 'https://www.notion.so/998b606678f04f24b5dd6f882a6ce4e1'
