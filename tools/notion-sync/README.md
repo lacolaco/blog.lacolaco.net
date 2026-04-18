@@ -6,9 +6,9 @@ Notion CMSからブログコンテンツを同期するツール。[@lacolaco/no
 
 - Notionデータベースから記事を取得
 - Markdown + frontmatterに変換
-- src/content/post/に配置（year/monthディレクトリ構造）
-- 画像をpublic/images/に保存
-- metadata.json、tags.json、categories.jsonを生成
+- `src/content/post/notion/` に `{slug}.md`（locale=ja）または `{slug}.en.md`（locale=en）として配置
+- 画像を `public/images/{slug}/` に保存
+- `tags.json`、`channels.json` をNotion DBプロパティから生成
 
 ## Usage
 
@@ -67,133 +67,102 @@ PostNavigation.astroで使用。
 
 ### ディレクトリ構造
 
-`postPathResolver`で記事のパスを決定：
+`getPageOutput`で記事のパスを決定：
 
 ```
-src/content/post/
-  2024/
-    01/
-      my-post.md
-      my-post.en.md
-    02/
-      another-post.md
-  2025/
-    03/
-      new-post.md
+src/content/post/notion/
+  my-post.md
+  my-post.en.md
+  another-post.md
+  new-post.md
 ```
 
-`created_time`からyear/monthを抽出し、`{year}/{month}/{slug}.md`形式で保存。
+フラット構造。localeが`en`の場合のみ`.en.md`サフィックスが付く。
 
 ## Output
 
 ### 生成されるファイル
 
-#### src/content/post/metadata.json
+#### src/content/post/notion/tags.json
 
-Notion datasourceから取得したメタデータ（@lacolaco/notion-sync@2.3.0以降）：
-
-```json
-{
-  "posts": {
-    "post-slug": "2024-01-01T00:00:00.000Z"
-  },
-  "tags": [
-    {
-      "id": "uuid",
-      "name": "Angular",
-      "color": "red",
-      "description": null
-    }
-  ],
-  "categories": [
-    {
-      "id": "uuid",
-      "name": "Tech",
-      "color": "blue",
-      "description": null
-    }
-  ]
-}
-```
-
-#### src/content/tags/tags.json
-
-metadata.jsonから生成される旧フォーマット（色情報付き）：
+Notion DBの`tags`プロパティ（multi_select）のオプション一覧。`propertyOutputs`により出力される：
 
 ```json
-{
-  "Angular": {
+[
+  {
+    "id": "uuid",
     "name": "Angular",
-    "color": "red"
+    "color": "red",
+    "description": null
   }
-}
+]
 ```
 
-src/libs/post/properties.tsでインポートされ、`Tags` zodスキーマで検証される。
+`src/libs/post/properties.ts`でインポートされ、`Tags` zodスキーマで検証される。
 
-#### src/content/categories/categories.json
+#### src/content/post/notion/channels.json
 
-metadata.jsonから生成される旧フォーマット（色情報付き）：
-
-```json
-{
-  "Tech": {
-    "name": "Tech",
-    "color": "blue"
-  }
-}
-```
-
-src/libs/post/properties.tsでインポートされ、`Categories` zodスキーマで検証される。
+同じくNotion DBの`channels`プロパティ（multi_select）のオプション一覧。
 
 ## Architecture
 
 ### @lacolaco/notion-syncの使い方
 
 ```typescript
-import { syncNotionBlog, type RenderContext } from '@lacolaco/notion-sync';
+import { syncNotionDatasource, extractProperty, type EntryMetadata, type RenderContext } from '@lacolaco/notion-sync';
 
-await syncNotionBlog({
-  // 基本設定
-  notionToken: NOTION_AUTH_TOKEN,
-  datasourceId: 'database-id',
-  distribution: 'blog.lacolaco.net',
-  postsDir: './src/content/post',
-  imagesDir: './public/images',
+type BlogPostMetadata = EntryMetadata & {
+  icon: string;
+  channels: string[];
+  // ... consumer-specific fields
+};
 
-  // カスタマイズ
-  postPathResolver: (metadata) => {
-    // ディレクトリ構造の決定
-    const date = new Date(metadata.created_time);
-    return `${year}/${month}/${metadata.slug}.md`;
+await syncNotionDatasource<BlogPostMetadata>({
+  notion: {
+    token: NOTION_AUTH_TOKEN,
+    datasourceId: 'database-id',
+  },
+  queryFilter: {
+    and: [{ property: 'distribution', multi_select: { contains: 'blog.lacolaco.net' } }],
+  },
+  propertyOutputs: {
+    tags: './src/content/post/notion/tags.json',
+    channels: './src/content/post/notion/channels.json',
   },
 
   extractMetadata: (page, defaultExtractor) => {
-    // カスタムメタデータの抽出
+    // カスタムメタデータの抽出（v11以降、passthroughフィールドは自前で定義）
     const metadata = defaultExtractor(page);
-    return { ...metadata, icon: page.icon?.emoji || '' };
+    return {
+      ...metadata,
+      icon: page.icon?.type === 'emoji' ? page.icon.emoji : '',
+      channels: extractProperty<string[]>(page, 'channels') ?? [],
+    };
   },
 
   renderMarkdown: {
+    getPageOutput: (metadata) => ({
+      filePath: `./src/content/post/notion/${metadata.slug}.md`,
+    }),
+    getImageOutput: (image, metadata) => ({
+      src: `/images/${metadata.slug}/${image.blockId}.png`,
+      filePath: `./public/images/${metadata.slug}/${image.blockId}.png`,
+    }),
     blockRenderers: {
-      // ブロック毎のカスタムレンダリング
       code: (block, context, defaultRenderer) => {
-        // features検出
         if (block.code.language === 'mermaid') {
           context.state.hasMermaid = true;
         }
         return defaultRenderer(block);
       },
     },
-    generateFrontmatter: (baseFields, metadata, renderContext) => {
-      // frontmatterの生成
-      return {
-        ...baseFields,
-        features: {
-          mermaid: renderContext.state.hasMermaid ?? false,
-        },
-      };
-    },
+    generateFrontmatter: (_baseFields, metadata, renderContext) => ({
+      title: metadata.title,
+      slug: metadata.slug,
+      features: {
+        mermaid: renderContext.state.hasMermaid ?? false,
+      },
+    }),
   },
 });
 ```
