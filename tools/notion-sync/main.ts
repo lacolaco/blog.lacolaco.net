@@ -1,11 +1,25 @@
-import { syncNotionDatasource, extractProperty, type EntryMetadata, type RenderContext } from '@lacolaco/notion-sync';
+import { syncNotionDatasource, type EntryMetadata, type RenderContext } from '@lacolaco/notion-sync';
 import { createHash } from 'node:crypto';
 import * as path from 'node:path';
 import { parseArgs } from 'node:util';
 
+// Notion DBプロパティのスキーマ。get(name)の戻り値型をここで定義する
+type BlogPostDatasource = {
+  title: string;
+  date: Date;
+  slug: string | undefined;
+  channels: string[] | undefined;
+  locale: string | undefined;
+  tags: string[] | undefined;
+  canonical_url: string | undefined;
+  updated_at: string | undefined;
+  created_at_override: string | undefined;
+};
+
 // このdatasourceのextractMetadataが返すメタデータ型
-// v10でpassthroughフィールドが削除されたため、必要なフィールドを自前で定義
+// v10でpassthroughフィールドが、v13でslugがEntryMetadataから削除されたため自前で定義
 type BlogPostMetadata = EntryMetadata & {
+  slug: string;
   icon: string;
   channels: string[];
   locale: string;
@@ -58,7 +72,7 @@ const dryRun = values['dry-run'];
 
 const rootDir = new URL('../..', import.meta.url).pathname;
 
-const result = await syncNotionDatasource<BlogPostMetadata>({
+const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>({
   notion: {
     token: NOTION_AUTH_TOKEN,
     datasourceId: 'a902ee6d-dc94-4301-b772-fa5fb8decc0c',
@@ -79,26 +93,42 @@ const result = await syncNotionDatasource<BlogPostMetadata>({
   mode,
   force,
   dryRun,
-  extractMetadata: (page, defaultExtractor) => {
-    const metadata = defaultExtractor(page);
+  extractMetadata: (page, get) => {
+    // TSchemaに定義したプロパティはget(name)で型推論される。ただしオブジェクトリテラル右辺での直接利用は
+    // コンテキスト型によって`undefined`が消えるため、中間constで受けてから組み立てる
+    const title = get('title');
+    const baseDate = get('date');
+    const slugValue = get('slug');
+    const channels = get('channels');
+    const locale = get('locale');
+    const tags = get('tags');
+    const canonicalUrl = get('canonical_url');
+    const updatedAt = get('updated_at');
+    const createdAtOverride = get('created_at_override');
+
     const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
-    const updatedAt = extractProperty<string>(page, 'updated_at');
+    // v13でslugはEntryMetadataから削除。Notion DBのslugプロパティが未設定の場合はpage.idにフォールバック
+    const slug = slugValue ?? page.id;
     // v11でextractDate()がcreated_at_overrideを見なくなったため、自前でオーバーライドする
-    const createdAtOverride = extractProperty<string>(page, 'created_at_override');
     const createdAtDate = createdAtOverride ? new Date(createdAtOverride) : null;
-    const date = createdAtDate && !isNaN(createdAtDate.getTime()) ? createdAtDate : metadata.date;
+    const date = createdAtDate && !isNaN(createdAtDate.getTime()) ? createdAtDate : baseDate;
+    // last_edited_timeは更新日プロパティを優先し、不正値なら組み込みのpage.last_edited_timeにフォールバック
+    const updatedAtDate = updatedAt ? new Date(updatedAt) : null;
+    const lastEditedTime =
+      updatedAtDate && !isNaN(updatedAtDate.getTime()) ? updatedAtDate : new Date(page.last_edited_time);
 
     return {
-      ...metadata,
+      title,
       date,
+      slug,
       icon,
-      channels: extractProperty<string[]>(page, 'channels') ?? [],
-      locale: extractProperty<string>(page, 'locale') ?? 'ja',
+      channels: channels ?? [],
+      locale: locale ?? 'ja',
       source_url: page.url,
-      tags: extractProperty<string[]>(page, 'tags') ?? [],
-      canonical_url: extractProperty<string>(page, 'canonical_url') ?? null,
+      tags: tags ?? [],
+      canonical_url: canonicalUrl ?? null,
       created_time: date.toISOString(),
-      last_edited_time: new Date(updatedAt ?? page.last_edited_time).toISOString(),
+      last_edited_time: lastEditedTime.toISOString(),
     };
   },
   renderMarkdown: {
