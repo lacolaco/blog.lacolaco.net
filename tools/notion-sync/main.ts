@@ -111,7 +111,13 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
     const slug = slugValue ?? page.id;
     // v11でextractDate()がcreated_at_overrideを見なくなったため、自前でオーバーライドする
     const createdAtDate = createdAtOverride ? new Date(createdAtOverride) : null;
-    const date = createdAtDate && !isNaN(createdAtDate.getTime()) ? createdAtDate : baseDate;
+    // baseDate（= get('date')）が Invalid Date の場合の防御的フォールバック
+    const date =
+      createdAtDate && !isNaN(createdAtDate.getTime())
+        ? createdAtDate
+        : !isNaN(baseDate.getTime())
+          ? baseDate
+          : new Date(page.created_time);
     // last_edited_timeは更新日プロパティを優先し、不正値なら組み込みのpage.last_edited_timeにフォールバック
     const updatedAtDate = updatedAt ? new Date(updatedAt) : null;
     const lastEditedTime =

@@ -112,6 +112,8 @@ if (dryRun) {
 console.log(`\nWriting slugs for ${targets.length} pages...`);
 let succeeded = 0;
 let failed = 0;
+// Notion APIのレート制限（約3 req/sec）を回避するため、各リクエスト間に約350msのスリープを挟む
+const RATE_LIMIT_SLEEP_MS = 350;
 for (const { pageId, title, desiredSlug } of targets) {
   try {
     await notion.pages.update({
@@ -128,6 +130,7 @@ for (const { pageId, title, desiredSlug } of targets) {
     failed++;
     console.error(`  ✗ ${pageId} "${title}":`, err);
   }
+  await new Promise((resolve) => setTimeout(resolve, RATE_LIMIT_SLEEP_MS));
 }
 
 console.log(`\nBackfill completed: { succeeded: ${succeeded}, failed: ${failed} }`);
