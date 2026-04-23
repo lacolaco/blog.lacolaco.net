@@ -40,10 +40,26 @@ type V12ManifestEntry = { lastModified: string; slug?: string; filePath?: string
 const manifestPath = path.resolve(rootDir, 'manifest.json');
 const manifestRaw = JSON.parse(readFileSync(manifestPath, 'utf-8')) as Record<string, V12ManifestEntry>;
 const v12LastModifiedByPageId = new Map<string, string>();
+let hasV12SlugField = false;
 for (const [pageId, entry] of Object.entries(manifestRaw)) {
   v12LastModifiedByPageId.set(pageId, entry.lastModified);
+  if (entry.slug !== undefined) hasV12SlugField = true;
 }
 console.log(`Loaded ${v12LastModifiedByPageId.size} lastModified entries from manifest.json`);
+
+// v13移行後は manifest.json から slug フィールドが削除されるため、v12時代のmanifestかを
+// slugフィールドの有無で判定する。v13 manifestに対してこのスクリプトを実行すると、
+// v13移行後に編集された新記事（lastModifiedが最新、updated_atが空）がターゲット検出され、
+// 古いlastModified値がupdated_atに書き込まれるデータ破壊リスクがある。
+if (!hasV12SlugField) {
+  console.warn(
+    'Warning: manifest.json に slug フィールドが存在しない（v13移行後のmanifest）。このスクリプトは実行できない。',
+  );
+  console.warn(
+    'このスクリプトはv12→v13マイグレーション時の backfill-slug.ts 直後のみ有効。v13移行後に再実行するとlast_edited_timeが古い値に上書きされるリスクがある。',
+  );
+  process.exit(0);
+}
 
 const notion = new Client({ auth: NOTION_AUTH_TOKEN, notionVersion: '2025-09-03' });
 
