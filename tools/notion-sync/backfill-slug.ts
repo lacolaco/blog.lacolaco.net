@@ -45,6 +45,18 @@ for (const [pageId, entry] of Object.entries(manifestRaw)) {
 }
 console.log(`Loaded ${v12SlugByPageId.size} slug mappings from manifest.json`);
 
+// v13移行後は manifest.json から slug フィールドが削除されるため、このスクリプトは
+// 情報源を失う。再実行されても意味のある結果を返せないので早期終了する。
+if (v12SlugByPageId.size === 0) {
+  console.warn(
+    'Warning: manifest.json にslugフィールドが存在しない。v13移行後のmanifestに対してこのスクリプトは実行できない（情報源なし）。',
+  );
+  console.warn(
+    'このスクリプトはv12→v13マイグレーション時の1回限りのデータ復旧用途。以降の空slugページは main.ts の get("slug") ?? page.id フォールバックで処理される。',
+  );
+  process.exit(0);
+}
+
 const notion = new Client({ auth: NOTION_AUTH_TOKEN, notionVersion: '2025-09-03' });
 
 // Notion datasource全体を走査して、slugが空のページを検出
