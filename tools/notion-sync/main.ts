@@ -106,6 +106,8 @@ async function backfillMissingSlugs(): Promise<void> {
     });
     for (const p of response.results) {
       if (!isFullPage(p)) continue;
+      // datasourceによってはslugプロパティ自体が存在しないページもある（異種DB混在等）。undefinedを許容
+      if (!('slug' in p.properties)) continue;
       const slugProp = p.properties.slug;
       if (slugProp.type !== 'rich_text') continue;
       if (slugProp.rich_text.length > 0) continue;
@@ -138,7 +140,12 @@ async function backfillMissingSlugs(): Promise<void> {
   }
 }
 
-await backfillMissingSlugs();
+// backfillは準備処理なので、失敗してもsyncは継続する（extractMetadataにfallback実装済み）
+try {
+  await backfillMissingSlugs();
+} catch (err) {
+  console.warn('[slug-backfill] failed, continuing sync with fallback:', err);
+}
 
 const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>({
   notion: {
