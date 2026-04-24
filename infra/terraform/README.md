@@ -34,6 +34,11 @@ terraform plan
 terraform apply
 ```
 
+**運用上の注意**: IAM binding の変更（特に BigQuery dataset-level ⇄
+project-level のスコープ変更）を伴う apply は、create-then-destroy の順で
+実行されても一時的な権限ギャップが生じうる。likes-export workflow の実行は
+毎日 03:00 JST（18:00 UTC）なので、apply はそれ以外の時間帯に行うこと。
+
 ## 既存リソースの import（初期セットアップ済）
 
 ```bash
@@ -71,6 +76,10 @@ terraform import \
 
 # Phase 3 注: google_workflows_workflow は provider v7 時点で import 非対応のため、
 # gcloud workflows delete → terraform apply で移行した。
+
+# Phase 4 注: google_bigquery_dataset_iam_member 2件 は今PRで新規作成のため import 不要。
+#   - likes_export_workflow_likes_analytics_editor: 旧 project-level binding から移行
+#   - github_actions_likes_analytics_metadata_viewer: 同上
 ```
 
 ## Cloud Scheduler の oauth_token SA
