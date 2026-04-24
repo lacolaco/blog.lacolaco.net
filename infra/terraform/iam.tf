@@ -10,11 +10,6 @@ data "google_service_account" "github_actions" {
   account_id = "github-actions"
 }
 
-# BigQuery dataset は外部管理（手動作成）。data source で参照してリネームをfail-fast
-data "google_bigquery_dataset" "likes_analytics" {
-  dataset_id = "likes_analytics"
-}
-
 #
 # Service Accounts
 #
@@ -61,9 +56,11 @@ resource "google_project_iam_member" "likes_export_workflow_logging_writer" {
 # Resource-level IAM bindings（プロジェクトレベルより狭く最小権限化）
 #
 
+# dataset_id はハードコード: data "google_bigquery_dataset" 参照は github-actions SA に
+# bigquery.datasets.get 権限を要求するため（CI 権限を最小化する意図で避ける）
 resource "google_bigquery_dataset_iam_member" "likes_export_workflow_likes_analytics_editor" {
   project    = data.google_project.current.project_id
-  dataset_id = data.google_bigquery_dataset.likes_analytics.dataset_id
+  dataset_id = "likes_analytics"
   role       = "roles/bigquery.dataEditor"
   member     = "serviceAccount:${google_service_account.likes_export_workflow.email}"
 }
