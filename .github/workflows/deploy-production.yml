@@ -86,10 +86,20 @@ jobs:
           terraform_version: 1.14.5
           terraform_wrapper: false
 
+      - name: Terraform fmt check
+        if: steps.tf-changed.outputs.changed == 'true'
+        working-directory: infra/terraform
+        run: terraform fmt -check -recursive
+
       - name: Terraform Init
         if: steps.tf-changed.outputs.changed == 'true'
         working-directory: infra/terraform
         run: terraform init
+
+      - name: Terraform Validate
+        if: steps.tf-changed.outputs.changed == 'true'
+        working-directory: infra/terraform
+        run: terraform validate
 
       - name: Terraform Plan
         if: steps.tf-changed.outputs.changed == 'true'
