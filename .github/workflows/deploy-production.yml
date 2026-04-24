@@ -62,7 +62,10 @@ jobs:
       - name: Check Terraform changes
         id: tf-changed
         run: |
-          if git diff --name-only HEAD^ HEAD | grep -q '^infra/terraform/'; then
+          # workflow_dispatch（手動起動）時は設定ドリフト修復用途として常にapply対象
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          elif git diff --name-only HEAD^ HEAD | grep -q '^infra/terraform/'; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
