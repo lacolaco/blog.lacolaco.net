@@ -68,10 +68,12 @@ resource "google_bigquery_dataset_iam_member" "likes_export_workflow_likes_analy
   member     = "serviceAccount:${google_service_account.likes_export_workflow.email}"
 }
 
-# github-actions SA が data "google_bigquery_dataset" の read と
-# google_bigquery_dataset_iam_member の setIamPolicy の両方を実行できるよう
-# dataset-level の dataOwner を付与（minimum dataset-scoped privilege で
-# setIamPolicy / get / update を全てカバー）
+# github-actions SA が必要なのは bigquery.datasets.{get,getIamPolicy,setIamPolicy} のみだが、
+# 既定ロールには3つ全てを満たす dataset-scoped role が dataOwner しかない。
+# データ本体への read/write 権限も含むため過剰だが、現状以下の理由で許容:
+#   - dataset 内のテーブル/データは Terraform 管理外で運用上の機密性は低い
+#   - custom role 化はスコープ外（IaC運用の安定後に検討）
+# TODO: bigquery.datasets.{get,getIamPolicy,setIamPolicy} のみのカスタムロールへの置換を別途検討
 resource "google_bigquery_dataset_iam_member" "github_actions_likes_analytics_data_owner" {
   project    = data.google_project.current.project_id
   dataset_id = data.google_bigquery_dataset.likes_analytics.dataset_id
