@@ -195,6 +195,7 @@ jobs:
           filters: |
             terraform:
               - 'infra/terraform/**'
+              - 'infra/workflows/**'
 
       - name: Google Auth
         if: steps.tf-paths.outputs.terraform == 'true'

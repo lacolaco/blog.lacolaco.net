@@ -51,21 +51,14 @@ jobs:
 
       # --- Infra deploy (前段: 失敗時にCloud Runデプロイをブロックし split failure を回避) ---
 
-      - name: Deploy Cloud Workflows
-        run: |
-          gcloud workflows deploy likes-export \
-            --source=infra/workflows/likes-export.yaml \
-            --location=asia-northeast1 \
-            --project=blog-lacolaco-net \
-            --service-account=likes-export-workflow@blog-lacolaco-net.iam.gserviceaccount.com
-
       - name: Check Terraform changes
         id: tf-changed
         run: |
           # workflow_dispatch（手動起動）時は設定ドリフト修復用途として常にapply対象
+          # infra/workflows/ 配下の yaml は workflow.tf の file() で参照されるため変更検知に含める
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
-          elif git diff --name-only HEAD^ HEAD | grep -q '^infra/terraform/'; then
+          elif git diff --name-only HEAD^ HEAD | grep -qE '^infra/(terraform|workflows)/'; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
