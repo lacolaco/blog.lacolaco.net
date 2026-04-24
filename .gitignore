@@ -29,3 +29,10 @@ pnpm-debug.log*
 
 # misc
 .tmp/
+
+# terraform
+**/.terraform/
+*.tfplan
+*.tfvars
+*.tfstate
+*.tfstate.backup

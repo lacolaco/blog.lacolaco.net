@@ -19,6 +19,9 @@ jobs:
     environment: production
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          # Terraform変更検知で `git diff HEAD^ HEAD` を使うため、最低2コミット必要
+          fetch-depth: 2
 
       - name: Google Auth
         uses: 'google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093' # v3.0.0
@@ -46,6 +49,44 @@ jobs:
         env:
           IMAGE_CDN_BASE_URL: ${{ vars.IMAGE_CDN_BASE_URL }}
 
+      # --- Infra deploy (前段: 失敗時にCloud Runデプロイをブロックし split failure を回避) ---
+
+      - name: Deploy Cloud Workflows
+        run: |
+          gcloud workflows deploy likes-export \
+            --source=infra/workflows/likes-export.yaml \
+            --location=asia-northeast1 \
+            --project=blog-lacolaco-net \
+            --service-account=likes-export-workflow@blog-lacolaco-net.iam.gserviceaccount.com
+
+      - name: Check Terraform changes
+        id: tf-changed
+        run: |
+          # workflow_dispatch（手動起動）時は設定ドリフト修復用途として常にapply対象
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          elif git diff --name-only HEAD^ HEAD | grep -q '^infra/terraform/'; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Terraform
+        if: steps.tf-changed.outputs.changed == 'true'
+        uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: 1.14.5
+          terraform_wrapper: false
+
+      - name: Terraform Apply
+        if: steps.tf-changed.outputs.changed == 'true'
+        working-directory: infra/terraform
+        run: |
+          terraform init
+          terraform apply -auto-approve
+
+      # --- App deploy ---
+
       - name: Deploy to Cloud Run
         uses: ./.github/actions/deploy-cloudrun
         with:
@@ -58,11 +99,3 @@ jobs:
           # GCP_PROJECT_IDはCloud Runメタデータサーバーから取得するため不要
           env-vars: |
             FIRESTORE_DATABASE=likes-production
-
-      - name: Deploy Cloud Workflows
-        run: |
-          gcloud workflows deploy likes-export \
-            --source=infra/workflows/likes-export.yaml \
-            --location=asia-northeast1 \
-            --project=blog-lacolaco-net \
-            --service-account=likes-export-workflow@blog-lacolaco-net.iam.gserviceaccount.com
