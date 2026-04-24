@@ -48,6 +48,7 @@ resource "google_project_iam_member" "likes_export_workflow_logging_writer" {
 #
 
 resource "google_bigquery_dataset_iam_member" "likes_export_workflow_likes_analytics_editor" {
+  project    = data.google_project.current.project_id
   dataset_id = "likes_analytics"
   role       = "roles/bigquery.dataEditor"
   member     = "serviceAccount:${google_service_account.likes_export_workflow.email}"
@@ -58,7 +59,9 @@ resource "google_bigquery_dataset_iam_member" "likes_export_workflow_likes_analy
 #
 
 # Cloud Scheduler の oauth_token に scheduler-invoker SA を設定するため、
-# deploy する github-actions SA に scheduler-invoker の actAs 権限が必要
+# deploy する github-actions SA に scheduler-invoker の actAs 権限が必要。
+# github-actions SA は Terraform 管理外（CI/CD 基盤のため Terraform で循環参照になりうる）なので、
+# email を直書きする。
 resource "google_service_account_iam_member" "github_actions_can_actas_scheduler_invoker" {
   service_account_id = google_service_account.scheduler_invoker.name
   role               = "roles/iam.serviceAccountUser"
