@@ -33,6 +33,7 @@ BigQuery
 
 - **likes-export-daily**: `0 3 * * * Asia/Tokyo`
   - likes-exportワークフローを日次実行
+  - Terraform 管理下（`infra/terraform/scheduler.tf`）
 
 ### Looker Studioダッシュボード構築手順
 
