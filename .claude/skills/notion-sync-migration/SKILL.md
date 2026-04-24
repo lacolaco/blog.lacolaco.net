@@ -74,6 +74,18 @@ pnpm add @lacolaco/notion-sync@<version>
 
 Breaking Changesの一覧を列挙し、現在のコード（`tools/notion-sync/main.ts`）への影響を対応付けてからコード変更に着手する。
 
+### 4.5. データ乖離の事前調査と設計判断の分離
+
+v12→v13ではclient側で生成していた値（slug等）がNotion本体に書き戻されていないケースが顕在化した。同種の乖離が発生する可能性があれば、コード変更前に以下を実施する。
+
+1. 現在の `tools/notion-sync/main.ts` でNotionから読み取らない、client側生成の値を洗い出す
+2. 該当プロパティについて、Notion API直接クエリで**実データ**を確認し、manifest/既存成果物とNotion実態の差を定量化する
+3. 乖離がある場合、以下を**独立した設計判断**として分離してユーザー承認を得る:
+   - **一度きりのデータ復旧（既存URL保持）**: manifest等の値をNotionへ書き戻す一時スクリプト
+   - **今後の恒常ロジック**: 新規空ページに対する自動生成・書き戻しの方式。業界標準（WordPress / Hugo / Jekyll / Ghost等）の事前調査を伴う
+
+片方の同意を他方に拡大適用しない。ユーザーが「まず〜だけ」「別問題」と範囲を区切った場合、その区切りを跨ぐ実装を先行させない。
+
 ### 5. コード変更
 
 `tools/notion-sync/main.ts`を修正する。
@@ -95,6 +107,8 @@ pnpm build
 ```
 
 **`--dry-run` 単独は検証として不十分。** incremental modeの `--dry-run` は「前回差分なし」で `Fetched 0 pages` になりうる。その状態では新バージョンの `extractMetadata` / `generateFrontmatter` など、検証したいコードパスが一度も実行されない。
+
+**main.tsに書き込み系副作用（Notion APIへのPATCH等）を追加した場合、`pnpm notion-sync` 自体の破壊度が上がる。** 追加前は読み取り専用だったコマンドが本番環境変更を含むようになった時点で、実行前にユーザー承認を再取得する。
 
 `--mode=all` での実行後、以下を確認する:
 
