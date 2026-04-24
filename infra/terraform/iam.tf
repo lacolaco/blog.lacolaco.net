@@ -17,7 +17,7 @@ resource "google_service_account" "scheduler_invoker" {
 resource "google_service_account" "likes_export_workflow" {
   account_id   = "likes-export-workflow"
   display_name = "Likes Export Workflow"
-  description  = "Runtime SA for likes-export workflow (BigQuery dataEditor + Firestore viewer + logging writer)"
+  description  = "Runtime SA for likes-export workflow (likes_analytics dataset editor + Firestore viewer + logging writer)"
 }
 
 #
@@ -30,12 +30,6 @@ resource "google_project_iam_member" "scheduler_invoker_workflows_invoker" {
   member  = "serviceAccount:${google_service_account.scheduler_invoker.email}"
 }
 
-resource "google_project_iam_member" "likes_export_workflow_bigquery_data_editor" {
-  project = data.google_project.current.project_id
-  role    = "roles/bigquery.dataEditor"
-  member  = "serviceAccount:${google_service_account.likes_export_workflow.email}"
-}
-
 resource "google_project_iam_member" "likes_export_workflow_datastore_viewer" {
   project = data.google_project.current.project_id
   role    = "roles/datastore.viewer"
@@ -46,6 +40,17 @@ resource "google_project_iam_member" "likes_export_workflow_logging_writer" {
   project = data.google_project.current.project_id
   role    = "roles/logging.logWriter"
   member  = "serviceAccount:${google_service_account.likes_export_workflow.email}"
+}
+
+#
+# Dataset-level IAM bindings (BigQuery)
+# プロジェクトレベルではなく likes_analytics dataset スコープで最小権限化
+#
+
+resource "google_bigquery_dataset_iam_member" "likes_export_workflow_likes_analytics_editor" {
+  dataset_id = "likes_analytics"
+  role       = "roles/bigquery.dataEditor"
+  member     = "serviceAccount:${google_service_account.likes_export_workflow.email}"
 }
 
 #
