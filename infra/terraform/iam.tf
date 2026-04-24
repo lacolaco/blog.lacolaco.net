@@ -10,6 +10,11 @@ data "google_service_account" "github_actions" {
   account_id = "github-actions"
 }
 
+# BigQuery dataset は外部管理（手動作成）。data source で参照してリネームをfail-fast
+data "google_bigquery_dataset" "likes_analytics" {
+  dataset_id = "likes_analytics"
+}
+
 #
 # Service Accounts
 #
@@ -58,7 +63,7 @@ resource "google_project_iam_member" "likes_export_workflow_logging_writer" {
 
 resource "google_bigquery_dataset_iam_member" "likes_export_workflow_likes_analytics_editor" {
   project    = data.google_project.current.project_id
-  dataset_id = "likes_analytics"
+  dataset_id = data.google_bigquery_dataset.likes_analytics.dataset_id
   role       = "roles/bigquery.dataEditor"
   member     = "serviceAccount:${google_service_account.likes_export_workflow.email}"
 }
