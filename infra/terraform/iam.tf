@@ -1,8 +1,14 @@
 #
-# Project reference (for IAM member bindings)
+# Data sources
 #
 
 data "google_project" "current" {}
+
+# github-actions SA は CI/CD 基盤のため Terraform 管理外。data source で参照し、
+# リネーム・再作成を検出可能にする
+data "google_service_account" "github_actions" {
+  account_id = "github-actions"
+}
 
 #
 # Service Accounts
@@ -24,6 +30,10 @@ resource "google_service_account" "likes_export_workflow" {
 # Project-level IAM bindings
 #
 
+# Cloud Workflows は provider v7 時点でリソースレベル IAM (google_workflows_workflow_iam_member) を
+# サポートしていないため、プロジェクトレベルで付与せざるを得ない。
+# 現状プロジェクト内の workflow は likes-export 1本のみで実害なし。
+# 将来 workflow が追加されたら scheduler_invoker がそれらも invoke 可能になる点に注意。
 resource "google_project_iam_member" "scheduler_invoker_workflows_invoker" {
   project = data.google_project.current.project_id
   role    = "roles/workflows.invoker"
@@ -43,8 +53,7 @@ resource "google_project_iam_member" "likes_export_workflow_logging_writer" {
 }
 
 #
-# Dataset-level IAM bindings (BigQuery)
-# プロジェクトレベルではなく likes_analytics dataset スコープで最小権限化
+# Resource-level IAM bindings（プロジェクトレベルより狭く最小権限化）
 #
 
 resource "google_bigquery_dataset_iam_member" "likes_export_workflow_likes_analytics_editor" {
@@ -60,10 +69,8 @@ resource "google_bigquery_dataset_iam_member" "likes_export_workflow_likes_analy
 
 # Cloud Scheduler の oauth_token に scheduler-invoker SA を設定するため、
 # deploy する github-actions SA に scheduler-invoker の actAs 権限が必要。
-# github-actions SA は Terraform 管理外（CI/CD 基盤のため Terraform で循環参照になりうる）なので、
-# email を直書きする。
 resource "google_service_account_iam_member" "github_actions_can_actas_scheduler_invoker" {
   service_account_id = google_service_account.scheduler_invoker.name
   role               = "roles/iam.serviceAccountUser"
-  member             = "serviceAccount:github-actions@blog-lacolaco-net.iam.gserviceaccount.com"
+  member             = "serviceAccount:${data.google_service_account.github_actions.email}"
 }
