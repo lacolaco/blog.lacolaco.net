@@ -36,9 +36,44 @@ terraform apply
 ## 既存リソースの import（初期セットアップ済）
 
 ```bash
+# Phase 1
 terraform import \
   google_cloud_scheduler_job.likes_export_daily \
   projects/blog-lacolaco-net/locations/asia-northeast1/jobs/likes-export-daily
+
+# Phase 4: Service Accounts
+terraform import \
+  google_service_account.scheduler_invoker \
+  projects/blog-lacolaco-net/serviceAccounts/scheduler-invoker@blog-lacolaco-net.iam.gserviceaccount.com
+
+terraform import \
+  google_service_account.likes_export_workflow \
+  projects/blog-lacolaco-net/serviceAccounts/likes-export-workflow@blog-lacolaco-net.iam.gserviceaccount.com
+
+# Phase 4: Project IAM bindings
+terraform import \
+  google_project_iam_member.scheduler_invoker_workflows_invoker \
+  'blog-lacolaco-net roles/workflows.invoker serviceAccount:scheduler-invoker@blog-lacolaco-net.iam.gserviceaccount.com'
+
+terraform import \
+  google_project_iam_member.likes_export_workflow_bigquery_data_editor \
+  'blog-lacolaco-net roles/bigquery.dataEditor serviceAccount:likes-export-workflow@blog-lacolaco-net.iam.gserviceaccount.com'
+
+terraform import \
+  google_project_iam_member.likes_export_workflow_datastore_viewer \
+  'blog-lacolaco-net roles/datastore.viewer serviceAccount:likes-export-workflow@blog-lacolaco-net.iam.gserviceaccount.com'
+
+terraform import \
+  google_project_iam_member.likes_export_workflow_logging_writer \
+  'blog-lacolaco-net roles/logging.logWriter serviceAccount:likes-export-workflow@blog-lacolaco-net.iam.gserviceaccount.com'
+
+# Phase 4: SA-level IAM binding
+terraform import \
+  google_service_account_iam_member.github_actions_can_actas_scheduler_invoker \
+  'projects/blog-lacolaco-net/serviceAccounts/scheduler-invoker@blog-lacolaco-net.iam.gserviceaccount.com roles/iam.serviceAccountUser serviceAccount:github-actions@blog-lacolaco-net.iam.gserviceaccount.com'
+
+# Phase 3 注: google_workflows_workflow は provider v7 時点で import 非対応のため、
+# gcloud workflows delete → terraform apply で移行した。
 ```
 
 ## Cloud Scheduler の oauth_token SA

@@ -1,4 +1,10 @@
 #
+# Project reference (for IAM member bindings)
+#
+
+data "google_project" "current" {}
+
+#
 # Service Accounts
 #
 
@@ -11,6 +17,7 @@ resource "google_service_account" "scheduler_invoker" {
 resource "google_service_account" "likes_export_workflow" {
   account_id   = "likes-export-workflow"
   display_name = "Likes Export Workflow"
+  description  = "Runtime SA for likes-export workflow (BigQuery dataEditor + Firestore viewer + logging writer)"
 }
 
 #
@@ -18,25 +25,25 @@ resource "google_service_account" "likes_export_workflow" {
 #
 
 resource "google_project_iam_member" "scheduler_invoker_workflows_invoker" {
-  project = "blog-lacolaco-net"
+  project = data.google_project.current.project_id
   role    = "roles/workflows.invoker"
   member  = "serviceAccount:${google_service_account.scheduler_invoker.email}"
 }
 
 resource "google_project_iam_member" "likes_export_workflow_bigquery_data_editor" {
-  project = "blog-lacolaco-net"
+  project = data.google_project.current.project_id
   role    = "roles/bigquery.dataEditor"
   member  = "serviceAccount:${google_service_account.likes_export_workflow.email}"
 }
 
 resource "google_project_iam_member" "likes_export_workflow_datastore_viewer" {
-  project = "blog-lacolaco-net"
+  project = data.google_project.current.project_id
   role    = "roles/datastore.viewer"
   member  = "serviceAccount:${google_service_account.likes_export_workflow.email}"
 }
 
 resource "google_project_iam_member" "likes_export_workflow_logging_writer" {
-  project = "blog-lacolaco-net"
+  project = data.google_project.current.project_id
   role    = "roles/logging.logWriter"
   member  = "serviceAccount:${google_service_account.likes_export_workflow.email}"
 }
