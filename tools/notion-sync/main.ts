@@ -1,4 +1,7 @@
 import { syncNotionDatasource, type EntryMetadata, type RenderContext } from '@lacolaco/notion-sync';
+import { Client, isFullPage } from '@notionhq/client';
+import { TZDate } from '@date-fns/tz';
+import { format } from 'date-fns';
 import { createHash } from 'node:crypto';
 import * as path from 'node:path';
 import { parseArgs } from 'node:util';
@@ -71,11 +74,76 @@ const mode: 'all' | 'incremental' = values.mode === 'all' ? 'all' : 'incremental
 const dryRun = values['dry-run'];
 
 const rootDir = new URL('../..', import.meta.url).pathname;
+const DATASOURCE_ID = 'a902ee6d-dc94-4301-b772-fa5fb8decc0c';
+
+// 自動生成slug: created_time を JST の yyyyMMddHHmmss へ変換した冪等値
+// 生成方式の根拠:
+// - Notion非依存（created_timeはISO文字列、Notion離脱後も利用可能）
+// - 冪等（同じcreated_time → 同じslug）
+// - URL可読（日付がURLに現れる）
+// - v12時代の先例
+// - Japanese title slugify問題を回避
+function generateSlugFromCreatedTime(createdTimeIso: string): string {
+  return format(new TZDate(createdTimeIso, 'Asia/Tokyo'), 'yyyyMMddHHmmss');
+}
+
+// sync前処理: Notion側slugが空のページに自動生成slugを書き戻す。
+// Notionを単一の情報源にすることで、以後のmanifest/Notion間の乖離を防ぐ。
+async function backfillMissingSlugs(): Promise<void> {
+  if (dryRun) {
+    console.log('[slug-backfill] dry-run mode: skipping');
+    return;
+  }
+  const notion = new Client({ auth: NOTION_AUTH_TOKEN, notionVersion: '2025-09-03' });
+  const targets: { pageId: string; title: string; generatedSlug: string }[] = [];
+  let cursor: string | undefined;
+  do {
+    // @ts-expect-error - notionhq v5のdatasourcesクエリ型未エクスポート
+    const response = await notion.dataSources.query({
+      data_source_id: DATASOURCE_ID,
+      start_cursor: cursor,
+      page_size: 100,
+    });
+    for (const p of response.results) {
+      if (!isFullPage(p)) continue;
+      const slugProp = p.properties.slug;
+      if (slugProp.type !== 'rich_text') continue;
+      if (slugProp.rich_text.length > 0) continue;
+      const titleProp = p.properties.title;
+      const title = titleProp.type === 'title' ? titleProp.title.map((t) => t.plain_text).join('') : '(untitled)';
+      const generatedSlug = generateSlugFromCreatedTime(p.created_time);
+      targets.push({ pageId: p.id, title, generatedSlug });
+    }
+    cursor = response.has_more ? (response.next_cursor ?? undefined) : undefined;
+  } while (cursor);
+
+  if (targets.length === 0) {
+    console.log('[slug-backfill] no empty slug pages');
+    return;
+  }
+  console.log(`[slug-backfill] writing generated slug for ${targets.length} pages...`);
+  // Notion APIのレート制限（約3 req/sec）対策
+  const RATE_LIMIT_SLEEP_MS = 350;
+  for (const { pageId, title, generatedSlug } of targets) {
+    await notion.pages.update({
+      page_id: pageId,
+      properties: {
+        slug: {
+          rich_text: [{ type: 'text', text: { content: generatedSlug } }],
+        },
+      },
+    });
+    console.log(`[slug-backfill]   ✓ ${pageId} "${title}" <- "${generatedSlug}"`);
+    await new Promise((resolve) => setTimeout(resolve, RATE_LIMIT_SLEEP_MS));
+  }
+}
+
+await backfillMissingSlugs();
 
 const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>({
   notion: {
     token: NOTION_AUTH_TOKEN,
-    datasourceId: 'a902ee6d-dc94-4301-b772-fa5fb8decc0c',
+    datasourceId: DATASOURCE_ID,
   },
   queryFilter: {
     and: [
@@ -107,8 +175,9 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
     const createdAtOverride = get('created_at_override');
 
     const icon = page.icon && page.icon.type === 'emoji' ? page.icon.emoji : '';
-    // v13でslugはEntryMetadataから削除。Notion DBのslugプロパティが未設定の場合はpage.idにフォールバック
-    const slug = slugValue ?? page.id;
+    // Notion DBのslugプロパティが未設定の場合はcreated_timeから自動生成する（sync前のbackfillで
+    // 通常埋められるが、dry-runやbackfill失敗時の安全網として同じ生成関数でフォールバック）
+    const slug = slugValue ?? generateSlugFromCreatedTime(page.created_time);
     // v11でextractDate()がcreated_at_overrideを見なくなったため、自前でオーバーライドする
     const createdAtDate = createdAtOverride ? new Date(createdAtOverride) : null;
     // baseDate（= get('date')）が Invalid Date の場合の防御的フォールバック

@@ -87,6 +87,9 @@ importers:
       '@lacolaco/notion-sync':
         specifier: ^13.0.0
         version: 13.0.0
+      '@notionhq/client':
+        specifier: ^5.20.0
+        version: 5.20.0
       '@tailwindcss/vite':
         specifier: ^4.1.4
         version: 4.2.2(vite@7.3.1(@types/node@24.12.2)(jiti@2.6.1)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)(yaml@2.8.3))
