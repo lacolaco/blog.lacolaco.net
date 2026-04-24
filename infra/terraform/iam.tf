@@ -68,12 +68,14 @@ resource "google_bigquery_dataset_iam_member" "likes_export_workflow_likes_analy
   member     = "serviceAccount:${google_service_account.likes_export_workflow.email}"
 }
 
-# github-actions SA が data "google_bigquery_dataset" を読むために必要。
-# likes_analytics データセットのメタデータ read のみ（data 本体 read 不可）
-resource "google_bigquery_dataset_iam_member" "github_actions_likes_analytics_metadata_viewer" {
+# github-actions SA が data "google_bigquery_dataset" の read と
+# google_bigquery_dataset_iam_member の setIamPolicy の両方を実行できるよう
+# dataset-level の dataOwner を付与（minimum dataset-scoped privilege で
+# setIamPolicy / get / update を全てカバー）
+resource "google_bigquery_dataset_iam_member" "github_actions_likes_analytics_data_owner" {
   project    = data.google_project.current.project_id
   dataset_id = data.google_bigquery_dataset.likes_analytics.dataset_id
-  role       = "roles/bigquery.metadataViewer"
+  role       = "roles/bigquery.dataOwner"
   member     = "serviceAccount:${data.google_service_account.github_actions.email}"
 }
 
