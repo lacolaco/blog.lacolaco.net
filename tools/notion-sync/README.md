@@ -109,15 +109,26 @@ Notion DBの`tags`プロパティ（multi_select）のオプション一覧。`p
 ### @lacolaco/notion-syncの使い方
 
 ```typescript
-import { syncNotionDatasource, extractProperty, type EntryMetadata, type RenderContext } from '@lacolaco/notion-sync';
+import { syncNotionDatasource, type EntryMetadata, type RenderContext } from '@lacolaco/notion-sync';
 
+// Notion DBプロパティのスキーマ。get(name)の戻り値型をここで定義する
+type BlogPostDatasource = {
+  title: string;
+  date: Date;
+  slug: string | undefined;
+  channels: string[] | undefined;
+  // ... Notion DB propertyの型
+};
+
+// v13でslugがEntryMetadataから削除されたため、consumer側でslugを持つ型を定義する
 type BlogPostMetadata = EntryMetadata & {
+  slug: string;
   icon: string;
   channels: string[];
   // ... consumer-specific fields
 };
 
-await syncNotionDatasource<BlogPostMetadata>({
+await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>({
   notion: {
     token: NOTION_AUTH_TOKEN,
     datasourceId: 'database-id',
@@ -130,15 +141,14 @@ await syncNotionDatasource<BlogPostMetadata>({
     channels: './src/content/post/notion/channels.json',
   },
 
-  extractMetadata: (page, defaultExtractor) => {
-    // カスタムメタデータの抽出（v11以降、passthroughフィールドは自前で定義）
-    const metadata = defaultExtractor(page);
-    return {
-      ...metadata,
-      icon: page.icon?.type === 'emoji' ? page.icon.emoji : '',
-      channels: extractProperty<string[]>(page, 'channels') ?? [],
-    };
-  },
+  // v13: (page, get)シグネチャ。getは型安全なプロパティアクセサ
+  extractMetadata: (page, get) => ({
+    title: get('title'),
+    date: get('date'),
+    slug: get('slug') ?? page.id,
+    icon: page.icon?.type === 'emoji' ? page.icon.emoji : '',
+    channels: get('channels') ?? [],
+  }),
 
   renderMarkdown: {
     getPageOutput: (metadata) => ({
