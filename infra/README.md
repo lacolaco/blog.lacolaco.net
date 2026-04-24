@@ -66,7 +66,10 @@ WITH latest_likes AS (
 ),
 page_views AS (
   SELECT
-    REGEXP_EXTRACT(page_location, r'/posts/([^/?#]+)') AS slug,
+    REGEXP_EXTRACT(
+      (SELECT value.string_value FROM UNNEST(event_params) WHERE key = 'page_location'),
+      r'/posts/([^/?#]+)'
+    ) AS slug,
     COUNT(*) AS pv_count
   FROM `blog-lacolaco-net.analytics_266351853.events_*`
   WHERE event_name = 'page_view'
