@@ -78,8 +78,14 @@ terraform import \
 # gcloud workflows delete → terraform apply で移行した。
 
 # Phase 4 注: google_bigquery_dataset_iam_member 2件 は今PRで新規作成のため import 不要。
-#   - likes_export_workflow_likes_analytics_editor: 旧 project-level binding から移行
-#   - github_actions_likes_analytics_metadata_viewer: 同上
+#   - likes_export_workflow_likes_analytics_editor
+#   - github_actions_likes_analytics_metadata_viewer
+#
+# これらに対応する旧 project-level の google_project_iam_member 2件
+# (likes_export_workflow_bigquery_data_editor, github_actions_bigquery_metadata_viewer) は、
+# 事前に terraform import で state に取り込んだ上で tf ファイルから削除している。
+# よって apply 実行で Terraform が GCP 側の旧 binding を destroy する。
+# 旧 binding の手動 gcloud 削除は不要。
 ```
 
 ## Cloud Scheduler の oauth_token SA
