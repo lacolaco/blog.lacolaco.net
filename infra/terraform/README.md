@@ -14,7 +14,12 @@ Phase 1 の最小構成: Cloud Scheduler のみ。
 |---|---|
 | `google_cloud_scheduler_job.likes_export_daily` | `scheduler.tf` |
 
-## 手動 apply 手順
+## Apply 方法
+
+通常は `main` ブランチへの merge で `deploy-production.yml` 内の
+Terraform Apply ステップが自動実行される（`infra/terraform/**` 変更時のみ）。
+
+ローカルから手動 apply する場合:
 
 ```bash
 cd infra/terraform
@@ -31,8 +36,14 @@ terraform import \
   projects/blog-lacolaco-net/locations/asia-northeast1/jobs/likes-export-daily
 ```
 
+## Cloud Scheduler の oauth_token SA
+
+`scheduler-invoker@blog-lacolaco-net.iam.gserviceaccount.com` （`roles/workflows.invoker` のみ保有する専用 SA）を使用。
+
+このSAは Phase 1 bootstrap時に gcloud で作成され、IAM binding も gcloud で設定済み。
+将来 Phase 4 で Terraform 管理に取り込む予定。
+
 ## 拡張予定（別 phase）
 
-- Phase 2: GHA への terraform apply 組み込み（`infra/terraform/**` 変更時のみ）
 - Phase 3: Cloud Workflow (`likes-export`) の Terraform 化
-- Phase 4: IAM binding の Terraform 化
+- Phase 4: IAM binding + SA の Terraform 化

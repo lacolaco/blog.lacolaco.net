@@ -6,12 +6,10 @@ resource "google_cloud_scheduler_job" "likes_export_daily" {
   time_zone        = "Asia/Tokyo"
   attempt_deadline = "180s"
 
+  # リトライは意図的に無効化（冪等性担保のため、失敗時は手動調査）
   retry_config {
-    retry_count          = 0
-    max_retry_duration   = "0s"
-    min_backoff_duration = "5s"
-    max_backoff_duration = "3600s"
-    max_doublings        = 5
+    retry_count        = 0
+    max_retry_duration = "0s"
   }
 
   http_target {
@@ -20,7 +18,7 @@ resource "google_cloud_scheduler_job" "likes_export_daily" {
     body        = base64encode("{}")
 
     oauth_token {
-      service_account_email = "348931464772-compute@developer.gserviceaccount.com"
+      service_account_email = "scheduler-invoker@blog-lacolaco-net.iam.gserviceaccount.com"
       scope                 = "https://www.googleapis.com/auth/cloud-platform"
     }
   }
