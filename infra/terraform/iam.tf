@@ -45,12 +45,6 @@ resource "google_project_iam_member" "scheduler_invoker_workflows_invoker" {
   member  = "serviceAccount:${google_service_account.scheduler_invoker.email}"
 }
 
-# data "google_bigquery_dataset" 参照に必要（最小権限: dataset メタデータの read のみ）
-resource "google_project_iam_member" "github_actions_bigquery_metadata_viewer" {
-  project = data.google_project.current.project_id
-  role    = "roles/bigquery.metadataViewer"
-  member  = "serviceAccount:${data.google_service_account.github_actions.email}"
-}
 
 resource "google_project_iam_member" "likes_export_workflow_datastore_viewer" {
   project = data.google_project.current.project_id
@@ -73,6 +67,15 @@ resource "google_bigquery_dataset_iam_member" "likes_export_workflow_likes_analy
   dataset_id = data.google_bigquery_dataset.likes_analytics.dataset_id
   role       = "roles/bigquery.dataEditor"
   member     = "serviceAccount:${google_service_account.likes_export_workflow.email}"
+}
+
+# github-actions SA が data "google_bigquery_dataset" を読むために必要。
+# likes_analytics データセットのメタデータ read のみ（data 本体 read 不可）
+resource "google_bigquery_dataset_iam_member" "github_actions_likes_analytics_metadata_viewer" {
+  project    = data.google_project.current.project_id
+  dataset_id = data.google_bigquery_dataset.likes_analytics.dataset_id
+  role       = "roles/bigquery.metadataViewer"
+  member     = "serviceAccount:${data.google_service_account.github_actions.email}"
 }
 
 #

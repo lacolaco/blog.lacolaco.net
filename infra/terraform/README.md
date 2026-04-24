@@ -16,8 +16,8 @@ Phase 1 の最小構成: Cloud Scheduler のみ。
 | `google_workflows_workflow.likes_export` | `workflow.tf` |
 | `google_service_account.scheduler_invoker` | `iam.tf` |
 | `google_service_account.likes_export_workflow` | `iam.tf` |
-| `google_project_iam_member.*` (4件) | `iam.tf` |
-| `google_bigquery_dataset_iam_member.likes_export_workflow_likes_analytics_editor` | `iam.tf` |
+| `google_project_iam_member.*` (3件) | `iam.tf` |
+| `google_bigquery_dataset_iam_member.*` (2件) | `iam.tf` |
 | `google_service_account_iam_member.github_actions_can_actas_scheduler_invoker` | `iam.tf` |
 
 ## Apply 方法
@@ -63,10 +63,6 @@ terraform import \
 terraform import \
   google_project_iam_member.likes_export_workflow_logging_writer \
   'blog-lacolaco-net roles/logging.logWriter serviceAccount:likes-export-workflow@blog-lacolaco-net.iam.gserviceaccount.com'
-
-terraform import \
-  google_project_iam_member.github_actions_bigquery_metadata_viewer \
-  'blog-lacolaco-net roles/bigquery.metadataViewer serviceAccount:github-actions@blog-lacolaco-net.iam.gserviceaccount.com'
 
 # Phase 4: SA-level IAM binding
 terraform import \
