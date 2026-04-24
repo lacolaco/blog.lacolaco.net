@@ -203,7 +203,7 @@ jobs:
           workload_identity_provider: 'projects/348931464772/locations/global/workloadIdentityPools/github-actions-pool/providers/github-deploy'
           service_account: 'github-actions@blog-lacolaco-net.iam.gserviceaccount.com'
 
-      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+      - uses: hashicorp/setup-terraform@5e8dbf3c6d9deaf4193ca7a8fb23f2ac83bb6c85 # v4
         if: steps.tf-paths.outputs.terraform == 'true'
         with:
           terraform_version: 1.14.5
