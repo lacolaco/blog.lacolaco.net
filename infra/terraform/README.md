@@ -14,6 +14,10 @@ Phase 1 の最小構成: Cloud Scheduler のみ。
 |---|---|
 | `google_cloud_scheduler_job.likes_export_daily` | `scheduler.tf` |
 | `google_workflows_workflow.likes_export` | `workflow.tf` |
+| `google_service_account.scheduler_invoker` | `iam.tf` |
+| `google_service_account.likes_export_workflow` | `iam.tf` |
+| `google_project_iam_member.*` (4件) | `iam.tf` |
+| `google_service_account_iam_member.github_actions_can_actas_scheduler_invoker` | `iam.tf` |
 
 ## Apply 方法
 
@@ -40,10 +44,13 @@ terraform import \
 ## Cloud Scheduler の oauth_token SA
 
 `scheduler-invoker@blog-lacolaco-net.iam.gserviceaccount.com` （`roles/workflows.invoker` のみ保有する専用 SA）を使用。
+Phase 4 で Terraform 管理下に移行済み（`iam.tf`）。
 
-このSAは Phase 1 bootstrap時に gcloud で作成され、IAM binding も gcloud で設定済み。
-将来 Phase 4 で Terraform 管理に取り込む予定。
+## 拡張予定
 
-## 拡張予定（別 phase）
+現時点では全てのリソースが Terraform 管理下。次の候補:
 
-- Phase 4: IAM binding + SA の Terraform 化
+- Cloud Run サービス定義
+- BigQuery データセット/テーブルスキーマ
+- GA4 → BigQuery エクスポート設定
+- Workload Identity プール/プロバイダ
