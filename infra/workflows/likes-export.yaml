@@ -29,13 +29,13 @@ main:
             auth:
               type: OAuth2
           result: list_response
-          retry:
-            predicate: ${http.default_retry_predicate}
-            max_retries: 3
-            backoff:
-              initial_delay: 2
-              max_delay: 60
-              multiplier: 2
+        retry:
+          predicate: ${http.default_retry_predicate}
+          max_retries: 3
+          backoff:
+            initial_delay: 2
+            max_delay: 60
+            multiplier: 2
         except:
           as: e
           raise: '${"Firestore list failed: " + json.encode_to_string(e)}'
@@ -137,13 +137,13 @@ insert_batch:
             body:
               rows: ${rows}
           result: bq_response
-          retry:
-            predicate: ${http.default_retry_predicate}
-            max_retries: 3
-            backoff:
-              initial_delay: 2
-              max_delay: 60
-              multiplier: 2
+        retry:
+          predicate: ${http.default_retry_predicate}
+          max_retries: 3
+          backoff:
+            initial_delay: 2
+            max_delay: 60
+            multiplier: 2
         except:
           as: e
           raise: '${"BigQuery insert failed: " + json.encode_to_string(e)}'
