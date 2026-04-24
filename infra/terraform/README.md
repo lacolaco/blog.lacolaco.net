@@ -13,6 +13,7 @@ Phase 1 の最小構成: Cloud Scheduler のみ。
 | リソース | 定義ファイル |
 |---|---|
 | `google_cloud_scheduler_job.likes_export_daily` | `scheduler.tf` |
+| `google_workflows_workflow.likes_export` | `workflow.tf` |
 
 ## Apply 方法
 
@@ -45,5 +46,4 @@ terraform import \
 
 ## 拡張予定（別 phase）
 
-- Phase 3: Cloud Workflow (`likes-export`) の Terraform 化
 - Phase 4: IAM binding + SA の Terraform 化

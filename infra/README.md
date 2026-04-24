@@ -28,6 +28,7 @@ BigQuery
 - **likes-export** (`infra/workflows/likes-export.yaml`)
   - Firestore `post_likes`コレクション全件取得→BigQuery挿入
   - サービスアカウント: `likes-export-workflow@blog-lacolaco-net.iam.gserviceaccount.com`（datastore.viewer + bigquery.dataEditor + logging.logWriter）
+  - Terraform 管理下（`infra/terraform/workflow.tf`）。YAML本体は `infra/workflows/likes-export.yaml` を `file()` で参照
 
 ### Cloud Scheduler
 
