@@ -49,18 +49,7 @@ jobs:
         env:
           IMAGE_CDN_BASE_URL: ${{ vars.IMAGE_CDN_BASE_URL }}
 
-      - name: Deploy to Cloud Run
-        uses: ./.github/actions/deploy-cloudrun
-        with:
-          environment: 'production'
-          image-tags: |
-            asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:latest
-            asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}
-          deploy-image: 'asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}'
-          revision-traffic: 'LATEST=100'
-          # GCP_PROJECT_IDはCloud Runメタデータサーバーから取得するため不要
-          env-vars: |
-            FIRESTORE_DATABASE=likes-production
+      # --- Infra deploy (前段: 失敗時にCloud Runデプロイをブロックし split failure を回避) ---
 
       - name: Deploy Cloud Workflows
         run: |
@@ -92,3 +81,18 @@ jobs:
         run: |
           terraform init
           terraform apply -auto-approve
+
+      # --- App deploy ---
+
+      - name: Deploy to Cloud Run
+        uses: ./.github/actions/deploy-cloudrun
+        with:
+          environment: 'production'
+          image-tags: |
+            asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:latest
+            asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}
+          deploy-image: 'asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}'
+          revision-traffic: 'LATEST=100'
+          # GCP_PROJECT_IDはCloud Runメタデータサーバーから取得するため不要
+          env-vars: |
+            FIRESTORE_DATABASE=likes-production
