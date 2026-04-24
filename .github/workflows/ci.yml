@@ -181,6 +181,54 @@ jobs:
         env:
           NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}
 
+  terraform:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4.0.1
+        id: tf-paths
+        with:
+          filters: |
+            terraform:
+              - 'infra/terraform/**'
+
+      - name: Google Auth
+        if: steps.tf-paths.outputs.terraform == 'true'
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093 # v3.0.0
+        with:
+          workload_identity_provider: 'projects/348931464772/locations/global/workloadIdentityPools/github-actions-pool/providers/github-deploy'
+          service_account: 'github-actions@blog-lacolaco-net.iam.gserviceaccount.com'
+
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        if: steps.tf-paths.outputs.terraform == 'true'
+        with:
+          terraform_version: 1.14.5
+          terraform_wrapper: false
+
+      - name: Terraform fmt
+        if: steps.tf-paths.outputs.terraform == 'true'
+        working-directory: infra/terraform
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        if: steps.tf-paths.outputs.terraform == 'true'
+        working-directory: infra/terraform
+        run: terraform init
+
+      - name: Terraform Validate
+        if: steps.tf-paths.outputs.terraform == 'true'
+        working-directory: infra/terraform
+        run: terraform validate
+
+      - name: Terraform Plan
+        if: steps.tf-paths.outputs.terraform == 'true'
+        working-directory: infra/terraform
+        run: terraform plan -no-color
+
   # === Reviews (standard interface: outputs.approved) ===
 
   renovate-review:
@@ -408,7 +456,7 @@ jobs:
   # === Gate ===
 
   ok:
-    needs: [classify, build, lint, format, test, notion-sync-dry-run, renovate-review, content-review, code-review]
+    needs: [classify, build, lint, format, test, notion-sync-dry-run, terraform, renovate-review, content-review, code-review]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
