@@ -28,7 +28,7 @@ resource "google_service_account" "scheduler_invoker" {
 resource "google_service_account" "likes_export_workflow" {
   account_id   = "likes-export-workflow"
   display_name = "Likes Export Workflow"
-  description  = "Runtime SA for likes-export workflow (likes_analytics dataset editor + Firestore viewer + logging writer)"
+  description  = "Runtime SA for likes-export workflow (likes_analytics dataset editor + datastore viewer (Firestore) + logging writer)"
 }
 
 #
@@ -44,7 +44,6 @@ resource "google_project_iam_member" "scheduler_invoker_workflows_invoker" {
   role    = "roles/workflows.invoker"
   member  = "serviceAccount:${google_service_account.scheduler_invoker.email}"
 }
-
 
 resource "google_project_iam_member" "likes_export_workflow_datastore_viewer" {
   project = data.google_project.current.project_id
