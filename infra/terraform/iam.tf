@@ -68,12 +68,20 @@ resource "google_bigquery_dataset_iam_member" "likes_export_workflow_likes_analy
   member     = "serviceAccount:${google_service_account.likes_export_workflow.email}"
 }
 
-# github-actions SA が必要なのは bigquery.datasets.{get,getIamPolicy,setIamPolicy} のみだが、
-# 既定ロールには3つ全てを満たす dataset-scoped role が dataOwner しかない。
-# データ本体への read/write 権限も含むため過剰だが、現状以下の理由で許容:
-#   - dataset 内のテーブル/データは Terraform 管理外で運用上の機密性は低い
-#   - custom role 化はスコープ外（IaC運用の安定後に検討）
-# TODO: bigquery.datasets.{get,getIamPolicy,setIamPolicy} のみのカスタムロールへの置換を別途検討
+# github-actions SA は CI 上で Terraform を実行するため、likes_analytics dataset に対して
+# 以下3つの API call を行う必要がある:
+#   - bigquery.datasets.get        : data "google_bigquery_dataset" の refresh
+#   - bigquery.datasets.getIamPolicy: google_bigquery_dataset_iam_member の plan/refresh
+#   - bigquery.datasets.setIamPolicy: google_bigquery_dataset_iam_member の apply
+#
+# これら3つの permission を同時に持つ既定ロールは dataset-scoped では dataOwner のみ。
+# dataOwner は dataset 内のテーブル/データへの read/write も含むため、API permission 単位では
+# 過剰権限。ただし以下の理由から custom role 化はせず dataOwner を採用する:
+#   - 当該 dataset に保存されているのは公開ブログの likes 集計（個人情報・機密性なし）
+#   - 当該 dataset に書き込むのは likes-export-workflow と CI 経由の Terraform のみで、
+#     CI が誤ってデータ操作する経路は実質ない（Terraform は IAM resource しか触らない）
+#   - custom role を導入するとロール定義の維持・変更時の影響範囲拡大があり、
+#     得られる security 改善（テーブルデータ read 制限のみ）と釣り合わない
 resource "google_bigquery_dataset_iam_member" "github_actions_likes_analytics_data_owner" {
   project    = data.google_project.current.project_id
   dataset_id = data.google_bigquery_dataset.likes_analytics.dataset_id
