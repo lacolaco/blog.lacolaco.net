@@ -77,15 +77,16 @@ terraform import \
 # Phase 3 注: google_workflows_workflow は provider v7 時点で import 非対応のため、
 # gcloud workflows delete → terraform apply で移行した。
 
-# Phase 4 注: google_bigquery_dataset_iam_member 2件 は今PRで新規作成のため import 不要。
-#   - likes_export_workflow_likes_analytics_editor
-#   - github_actions_likes_analytics_metadata_viewer
-#
-# これらに対応する旧 project-level の google_project_iam_member 2件
-# (likes_export_workflow_bigquery_data_editor, github_actions_bigquery_metadata_viewer) は、
-# 事前に terraform import で state に取り込んだ上で tf ファイルから削除している。
-# よって apply 実行で Terraform が GCP 側の旧 binding を destroy する。
-# 旧 binding の手動 gcloud 削除は不要。
+# Phase 4 hotfix: 元々 metadataViewer を予定していたが、
+# Terraform で dataset IAM を更新するには bigquery.datasets.setIamPolicy が必要なため
+# dataOwner に変更。手動 (bq update --source) で binding を作成後、import で state 取り込み。
+terraform import \
+  google_bigquery_dataset_iam_member.likes_export_workflow_likes_analytics_editor \
+  'projects/blog-lacolaco-net/datasets/likes_analytics roles/bigquery.dataEditor serviceAccount:likes-export-workflow@blog-lacolaco-net.iam.gserviceaccount.com'
+
+terraform import \
+  google_bigquery_dataset_iam_member.github_actions_likes_analytics_data_owner \
+  'projects/blog-lacolaco-net/datasets/likes_analytics roles/bigquery.dataOwner serviceAccount:github-actions@blog-lacolaco-net.iam.gserviceaccount.com'
 ```
 
 ## Cloud Scheduler の oauth_token SA
