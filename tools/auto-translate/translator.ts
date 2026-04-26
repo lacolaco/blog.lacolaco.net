@@ -158,6 +158,14 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
         const titleRaw = en.frontmatter.title;
         cachedTranslatedTitle = typeof titleRaw === 'string' ? titleRaw : '';
         cachedEnBody = en.body;
+      } else {
+        // 手動翻訳された en が存在する。本来は呼び出し側 (classifyFile + main.ts) で protect-manual に
+        // 分岐され translateOne には到達しないが、defense-in-depth として API を呼ばずに失敗を返す。
+        // ここで翻訳を続行すると手動翻訳を無音で上書きしてしまう
+        return {
+          kind: 'failed',
+          reason: 'manual en detected (auto_translated_from missing) — refusing to overwrite',
+        };
       }
     } catch {
       // 既存 en がパースできない場合は新規翻訳扱い

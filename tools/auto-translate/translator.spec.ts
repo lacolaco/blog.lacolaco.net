@@ -331,6 +331,28 @@ describe('translateOne', () => {
     });
   });
 
+  describe('defense-in-depth: 手動 en の保護', () => {
+    test('enContent が手動 en（auto_translated_from なし）→ API 呼ばず failed を返す', async () => {
+      const ja = buildJaContent();
+      // 手動翻訳された en（auto_translated_from フィールドなし）
+      const manualEn = joinFrontmatter(
+        {
+          title: 'Manual Title',
+          slug: 'sample',
+          locale: 'en',
+          tags: [],
+          published: true,
+        },
+        'Manually translated body.\n',
+      );
+      const client = makeOkClient();
+      const result = await translateOne(makeArgs({ jaContent: ja, enContent: manualEn, geminiClient: client }));
+      assert.equal(result.kind, 'failed');
+      assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 0);
+      assert.ok('reason' in result && result.reason.includes('manual en detected'));
+    });
+  });
+
   describe('エラーハンドリング', () => {
     test('API throw → failed、既存温存', async () => {
       const client: GeminiClient = mock.fn(() => Promise.reject(new Error('network error')));
