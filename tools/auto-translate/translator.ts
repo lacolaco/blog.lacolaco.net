@@ -45,9 +45,11 @@ export function computeBodyHash(jaBody: string, jaTitle: string, model: string):
 }
 
 // frontmatter 境界の正規表現。
-// 前提: joinFrontmatter で常に defaultStringType='QUOTE_SINGLE' で stringify するため、
-//       YAML 値内に無インデントの `---` が現れない。stringifyYaml オプションを変更する際は
-//       この前提が破れないか確認すること（破れる場合は yaml パッケージの parseDocument に置換）
+// 前提: 本ブログ記事の frontmatter では YAML 値内に無インデントの `---` が現れないこと。
+// - en ファイル: joinFrontmatter で defaultStringType='QUOTE_SINGLE' で stringify するため成立
+// - ja ファイル: notion-sync (@lacolaco/notion-sync) の YAML シリアライズ仕様に依存。
+//   現状は string 値が常にクォートされるため成立するが、ライブラリ側の変更で破れうる
+// この前提が破れる場合は yaml パッケージの parseDocument 等で frontmatter 境界を明示的に扱う実装に置換すること
 const FRONTMATTER_RE = /^---\n([\s\S]*?)\n---\n?\n?([\s\S]*)$/;
 
 export function splitFrontmatter(content: string): { frontmatter: Frontmatter; body: string } {

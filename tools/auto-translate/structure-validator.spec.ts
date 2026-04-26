@@ -176,6 +176,8 @@ describe('validateStructure', () => {
 
   test('コードブロック内の引用符が変換されている → ng (codeBlockContent)', () => {
     const source = '```html\n<img src="x" />\n```\n';
+    // target の右引用符は Unicode RIGHT DOUBLE QUOTATION MARK (U+201D)。視覚的には ASCII " と区別困難なため
+    // 編集時に誤って ASCII " に置き換えると検証ロジックを通り抜けるテストになる
     const target = '```html\n<img src="x” />\n```\n';
     const result = validateStructure(source, target);
     assert.equal(result.ok, false);
@@ -191,6 +193,7 @@ describe('validateStructure', () => {
 
   test('インラインコードの引用符が変換されている → ng (inlineCodeContent)', () => {
     const source = 'use `decoding="async"` for X.\n';
+    // target の右引用符は Unicode RIGHT DOUBLE QUOTATION MARK (U+201D)。詳細は前テスト参照
     const target = 'X uses `decoding="async”` here.\n';
     const result = validateStructure(source, target);
     assert.equal(result.ok, false);
