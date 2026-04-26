@@ -43,6 +43,11 @@ jobs:
           NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
 
+      - name: Auto-translate ja → en for flagged articles
+        run: pnpm run auto-translate
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
       - name: Sync images to Cloudflare R2
         run: pnpm r2-sync public/images
         env:
