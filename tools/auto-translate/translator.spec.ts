@@ -256,6 +256,18 @@ describe('translateOne', () => {
       assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 1);
     });
 
+    test('2 回連続 NG → 3 回目 OK → 採用、API 呼び出し 3 回', async () => {
+      let count = 0;
+      const client: GeminiClient = mock.fn(() => {
+        count++;
+        if (count <= 2) return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN });
+        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK });
+      });
+      const result = await translateOne(makeArgs({ geminiClient: client }));
+      assert.equal(result.kind, 'translated');
+      assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 3);
+    });
+
     test('1 回目 NG → 2 回目 OK → 採用、API 呼び出し 2 回', async () => {
       let count = 0;
       const client: GeminiClient = mock.fn(() => {

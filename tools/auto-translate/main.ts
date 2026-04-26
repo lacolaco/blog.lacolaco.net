@@ -51,6 +51,10 @@ function createGeminiClient(apiKey: string): GeminiClient {
     if (typeof parsed.title_en !== 'string' || typeof parsed.body_en !== 'string') {
       throw new Error('Gemini response did not match schema');
     }
+    // 空文字列はスキーマ的には valid だが、構造検証に偶然パスして空ファイルが生成されるリスクがある
+    if (parsed.title_en.length === 0 || parsed.body_en.length === 0) {
+      throw new Error('Gemini response contains empty title_en or body_en');
+    }
     return { title_en: parsed.title_en, body_en: parsed.body_en };
   };
 }
