@@ -65,11 +65,14 @@ export function joinFrontmatter(frontmatter: Frontmatter, body: string): string 
 function buildFeedback(validation: ValidationResult): string {
   const lines = ['The translation has structural mismatches with the source:'];
   for (const m of validation.mismatches) {
-    // detail には codeBlockContent / inlineCodeContent の場合に具体的な差分内容が入る。
-    // 含めないと「source has 3, translation has 3」のような数値同値表示になり、LLM が
-    // 何を修正すべきか判断できないため必ず付加する。
-    const suffix = m.detail ? ` (${m.detail})` : '';
-    lines.push(`- ${m.kind}: source has ${m.source}, translation has ${m.target}${suffix}`);
+    // count 差異と content 差異でフォーマットを分ける:
+    // - count 差異（codeBlocks 等）: 数値で表示（"source has 3, translation has 2"）
+    // - content 差異（codeBlockContent / inlineCodeContent）: 数値は同値なので detail のみ表示
+    if (m.kind === 'codeBlockContent' || m.kind === 'inlineCodeContent') {
+      lines.push(`- ${m.kind}: ${m.detail ?? 'content modified from source'}`);
+    } else {
+      lines.push(`- ${m.kind}: source has ${m.source}, translation has ${m.target}`);
+    }
   }
   lines.push('');
   lines.push(
