@@ -159,10 +159,13 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
       { property: 'channels', multi_select: { is_not_empty: true } },
     ],
   },
-  manifestPath: `${rootDir}/manifest.json`,
+  // v14: cwd を起点に getPageOutput / getImageOutput / propertyOutputs / manifestPath で
+  // 相対パスを返すと manifest にもその相対パスがそのまま保存される（env-independent）
+  cwd: rootDir,
+  manifestPath: 'manifest.json',
   propertyOutputs: {
-    tags: path.resolve(rootDir, 'src/content/post/notion/tags.json'),
-    channels: path.resolve(rootDir, 'src/content/post/notion/channels.json'),
+    tags: 'src/content/post/notion/tags.json',
+    channels: 'src/content/post/notion/channels.json',
   },
   verbose: true,
   mode,
@@ -217,7 +220,7 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
     getPageOutput: (metadata) => {
       const localeSuffix = metadata.locale === 'en' ? '.en' : '';
       return {
-        filePath: path.resolve(rootDir, 'src/content/post/notion', `${metadata.slug}${localeSuffix}.md`),
+        filePath: path.join('src/content/post/notion', `${metadata.slug}${localeSuffix}.md`),
       };
     },
     getImageOutput: (image, metadata) => {
@@ -233,7 +236,7 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
       const encodedFilename = `${encodeURIComponent(name)}.${hash}.${ext}`;
       return {
         src: `/images/${metadata.slug}/${encodedFilename}`,
-        filePath: path.resolve(rootDir, 'public/images', metadata.slug, diskFilename),
+        filePath: path.join('public/images', metadata.slug, diskFilename),
       };
     },
     blockRenderers: {

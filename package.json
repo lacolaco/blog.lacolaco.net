@@ -53,7 +53,7 @@
     "@eslint/js": "^10.0.1",
     "@iconify/json": "^2.2.161",
     "@iconify/tailwind": "^1.0.0",
-    "@lacolaco/notion-sync": "^13.0.0",
+    "@lacolaco/notion-sync": "^14.0.0",
     "@notionhq/client": "^5.20.0",
     "@tailwindcss/vite": "^4.1.4",
     "@testing-library/jest-dom": "^6.9.1",
