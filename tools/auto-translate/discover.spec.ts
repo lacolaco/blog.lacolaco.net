@@ -63,9 +63,24 @@ describe('classifyFile', () => {
     assert.equal(action.enPath, PATHS.en);
   });
 
-  test('delete-orphan アクションは enPath を返す', () => {
+  test('evaluate-cache アクションは jaPath と enPath を返す', () => {
+    const action = classifyFile({ jaPath: PATHS.ja, enPath: PATHS.en, ja: JA_AUTO_ON, en: EN_AUTO });
+    if (action.kind !== 'evaluate-cache') throw new Error('expected evaluate-cache');
+    assert.equal(action.jaPath, PATHS.ja);
+    assert.equal(action.enPath, PATHS.en);
+  });
+
+  test('protect-manual アクションは jaPath と enPath を返す', () => {
+    const action = classifyFile({ jaPath: PATHS.ja, enPath: PATHS.en, ja: JA_AUTO_ON, en: EN_MANUAL });
+    if (action.kind !== 'protect-manual') throw new Error('expected protect-manual');
+    assert.equal(action.jaPath, PATHS.ja);
+    assert.equal(action.enPath, PATHS.en);
+  });
+
+  test('delete-orphan アクションは jaPath と enPath を返す', () => {
     const action = classifyFile({ jaPath: PATHS.ja, enPath: PATHS.en, ja: JA_AUTO_OFF, en: EN_AUTO });
     if (action.kind !== 'delete-orphan') throw new Error('expected delete-orphan');
+    assert.equal(action.jaPath, PATHS.ja);
     assert.equal(action.enPath, PATHS.en);
   });
 });
