@@ -1,9 +1,11 @@
 import { createHash } from 'node:crypto';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 import { buildEnFrontmatter, getAutoTranslatedFrom, isAutoTranslated, type Frontmatter } from './frontmatter.ts';
-import { validateStructure } from './structure-validator.ts';
+import { validateStructure, type ValidationResult } from './structure-validator.ts';
 
 export const PROMPT_VERSION = 1;
+// preview だが最新世代品質を採用。GEMINI_MODEL env で stable (gemini-2.5-flash 等) に切替可能
+// 参考: https://ai.google.dev/gemini-api/docs/models
 export const DEFAULT_MODEL = 'gemini-3-flash-preview';
 export const MAX_RETRIES = 3;
 
@@ -56,10 +58,9 @@ export function joinFrontmatter(frontmatter: Frontmatter, body: string): string 
   return `---\n${yaml}---\n\n${body}`;
 }
 
-function buildFeedback(source: string, target: string): string {
-  const result = validateStructure(source, target);
+function buildFeedback(validation: ValidationResult): string {
   const lines = ['The translation has structural mismatches with the source:'];
-  for (const m of result.mismatches) {
+  for (const m of validation.mismatches) {
     lines.push(`- ${m.kind}: source has ${m.source}, translation has ${m.target}`);
   }
   lines.push('');
@@ -92,7 +93,7 @@ async function callWithRetries(
       console.warn(
         `[auto-translate] structure mismatch (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${mismatchSummary} — retrying`,
       );
-      feedback = buildFeedback(input.body, output.body_en);
+      feedback = buildFeedback(validation);
     }
     // 最終試行失敗時は呼び出し元（main.ts）で error ログを出すため、ここでは出力しない（重複防止）
   }
