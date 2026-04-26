@@ -87,17 +87,14 @@ async function callWithRetries(
       }
       return { ok: true, output, attempts: attempt };
     }
-    const mismatchSummary = validation.mismatches.map((m) => `${m.kind} ja=${m.source} en=${m.target}`).join(', ');
     if (attempt < TOTAL_ATTEMPTS) {
+      const mismatchSummary = validation.mismatches.map((m) => `${m.kind} ja=${m.source} en=${m.target}`).join(', ');
       console.warn(
         `[auto-translate] structure mismatch (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${mismatchSummary} — retrying`,
       );
       feedback = buildFeedback(input.body, output.body_en);
-    } else {
-      console.warn(
-        `[auto-translate] structure mismatch (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${mismatchSummary}`,
-      );
     }
+    // 最終試行失敗時は呼び出し元（main.ts）で error ログを出すため、ここでは出力しない（重複防止）
   }
   return { ok: false, attempts: TOTAL_ATTEMPTS };
 }
@@ -158,7 +155,10 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
   }
 
   if (!outcome.ok) {
-    return { kind: 'failed', reason: `structure validation failed after ${outcome.attempts} attempts` };
+    return {
+      kind: 'failed',
+      reason: `structure mismatch persisted after ${outcome.attempts} attempts, keeping existing .en.md`,
+    };
   }
 
   const enFrontmatter = buildEnFrontmatter({
