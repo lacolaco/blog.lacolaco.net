@@ -4,6 +4,7 @@ import {
   computeBodyHash,
   translateOne,
   joinFrontmatter,
+  splitFrontmatter,
   PROMPT_VERSION,
   type GeminiClient,
   type TranslateOneArgs,
@@ -86,6 +87,58 @@ function buildEnContent(bodyHash: string, body = TRANSLATED_BODY_OK, extraFm: Re
 function makeOkClient(output = { title_en: 'Title', body_en: TRANSLATED_BODY_OK }): GeminiClient {
   return mock.fn(() => Promise.resolve(output));
 }
+
+describe('splitFrontmatter / joinFrontmatter', () => {
+  test('frontmatter と本文を分離する', () => {
+    const content = `---\ntitle: 'X'\nslug: 'y'\n---\n\nbody text\n`;
+    const { frontmatter, body } = splitFrontmatter(content);
+    assert.equal(frontmatter.title, 'X');
+    assert.equal(frontmatter.slug, 'y');
+    assert.equal(body, 'body text\n');
+  });
+
+  test('frontmatter なしは throw', () => {
+    assert.throws(() => splitFrontmatter('no frontmatter\n'));
+  });
+
+  test('joinFrontmatter は ---\\n で囲んだ YAML + 空行 + 本文を返す', () => {
+    const result = joinFrontmatter({ title: 'X', slug: 'y' }, 'body text\n');
+    assert.match(result, /^---\n[\s\S]+\n---\n\nbody text\n$/);
+  });
+
+  test('round-trip: split → join で frontmatter / body が保持される', () => {
+    const original = joinFrontmatter(
+      { title: 'タイトル', slug: 'slug', tags: ['a', 'b'], published: true },
+      'body content\n\n## section\n\ntext\n',
+    );
+    const { frontmatter, body } = splitFrontmatter(original);
+    const round = joinFrontmatter(frontmatter, body);
+    assert.equal(round, original);
+  });
+
+  test('round-trip: 引用符を含むタイトルでも壊れない', () => {
+    const original = joinFrontmatter({ title: "It's a 'test'" }, 'body\n');
+    const { frontmatter } = splitFrontmatter(original);
+    assert.equal(frontmatter.title, "It's a 'test'");
+    const round = joinFrontmatter(frontmatter, splitFrontmatter(original).body);
+    assert.equal(round, original);
+  });
+
+  test('round-trip: 空ボディでも壊れない', () => {
+    const original = joinFrontmatter({ title: 'X' }, '');
+    const { frontmatter, body } = splitFrontmatter(original);
+    assert.equal(body, '');
+    const round = joinFrontmatter(frontmatter, body);
+    assert.equal(round, original);
+  });
+
+  test('round-trip: ネストオブジェクト（features）でも保持される', () => {
+    const original = joinFrontmatter({ title: 'X', features: { katex: false, mermaid: true, tweet: false } }, 'body\n');
+    const { frontmatter, body } = splitFrontmatter(original);
+    const round = joinFrontmatter(frontmatter, body);
+    assert.equal(round, original);
+  });
+});
 
 describe('computeBodyHash', () => {
   test('同じ入力なら同じハッシュ', () => {

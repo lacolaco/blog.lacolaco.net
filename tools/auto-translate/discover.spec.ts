@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert';
 import { test, describe } from 'node:test';
-import { classifyFile } from './discover.ts';
+import { classifyFile, jaToEnPath } from './discover.ts';
 
 const JA_AUTO_ON = { locale: 'ja', auto_translate: true };
 const JA_AUTO_OFF = { locale: 'ja', auto_translate: false };
@@ -71,13 +71,11 @@ describe('classifyFile', () => {
 });
 
 describe('en path 算出', () => {
-  test('jaToEnPath: foo.md → foo.en.md', async () => {
-    const { jaToEnPath } = await import('./discover.ts');
+  test('jaToEnPath: foo.md → foo.en.md', () => {
     assert.equal(jaToEnPath('/some/dir/foo.md'), '/some/dir/foo.en.md');
   });
 
-  test('jaToEnPath: ネスト構造でも .en.md 拡張が付く', async () => {
-    const { jaToEnPath } = await import('./discover.ts');
+  test('jaToEnPath: ネスト構造でも .en.md 拡張が付く', () => {
     assert.equal(jaToEnPath('src/content/post/notion/abc-def.md'), 'src/content/post/notion/abc-def.en.md');
   });
 });

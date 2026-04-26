@@ -85,8 +85,13 @@ async function readEn(enPath: string): Promise<{ content: string; frontmatter: F
     if ((e as NodeJS.ErrnoException).code === 'ENOENT') return null;
     throw e;
   }
-  const { frontmatter } = splitFrontmatter(content);
-  return { content, frontmatter };
+  try {
+    const { frontmatter } = splitFrontmatter(content);
+    return { content, frontmatter };
+  } catch {
+    // パース不能な en は新規翻訳扱いとする（translator 側の挙動と整合）
+    return null;
+  }
 }
 
 async function main(): Promise<void> {
