@@ -214,7 +214,7 @@ describe('translateOne', () => {
 
     test('body_hash 一致 + frontmatter コピー結果も同一 → API 呼ばず skip', async () => {
       const ja = buildJaContent();
-      const jaBody = ja.split(/^---\n.*?\n---\n\n/s)[1];
+      const { body: jaBody } = splitFrontmatter(ja);
       const hash = computeBodyHash(jaBody, 'タイトル', MODEL);
       const en = buildEnContent(hash);
       const client = makeOkClient();
@@ -235,7 +235,7 @@ describe('translateOne', () => {
 
     test('body_hash 一致 + ja の tags 変更 → API 呼ばず frontmatter のみ更新', async () => {
       const ja = buildJaContent();
-      const jaBody = ja.split(/^---\n.*?\n---\n\n/s)[1];
+      const { body: jaBody } = splitFrontmatter(ja);
       const hash = computeBodyHash(jaBody, 'タイトル', MODEL);
       // 既存 en は古い tags を持つ
       const en = buildEnContent(hash, TRANSLATED_BODY_OK, { tags: ['old-tag'] });
