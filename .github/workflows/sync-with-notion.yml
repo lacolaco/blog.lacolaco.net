@@ -33,7 +33,7 @@ jobs:
         with:
           app-id: ${{ secrets.WORKER_APP_ID }}
           private-key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: pnpm astro sync
