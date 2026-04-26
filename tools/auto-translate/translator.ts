@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
-import { buildEnFrontmatter, isAutoTranslated, type Frontmatter } from './frontmatter.ts';
+import { buildEnFrontmatter, getAutoTranslatedFrom, isAutoTranslated, type Frontmatter } from './frontmatter.ts';
 import { validateStructure } from './structure-validator.ts';
 
 export const PROMPT_VERSION = 1;
@@ -27,6 +27,7 @@ export interface TranslateOneArgs {
   enContent: string | null;
   geminiClient: GeminiClient;
   model: string;
+  slug?: string; // ログ識別用。省略時は jaPath の basename を使う
 }
 
 export type TranslateResult =
@@ -68,29 +69,42 @@ function buildFeedback(source: string, target: string): string {
   return lines.join('\n');
 }
 
+const TOTAL_ATTEMPTS = MAX_RETRIES + 1;
+
 async function callWithRetries(
   client: GeminiClient,
   model: string,
   input: { title: string; body: string },
+  slug: string,
 ): Promise<{ ok: true; output: GeminiOutput; attempts: number } | { ok: false; attempts: number }> {
   let feedback: string | undefined;
-  for (let attempt = 1; attempt <= MAX_RETRIES + 1; attempt++) {
+  for (let attempt = 1; attempt <= TOTAL_ATTEMPTS; attempt++) {
     const output = await client({ title: input.title, body: input.body, feedback }, model);
     const validation = validateStructure(input.body, output.body_en);
     if (validation.ok) {
+      if (attempt > 1) {
+        console.info(`[auto-translate] structure validation passed on attempt ${attempt} for ${slug}`);
+      }
       return { ok: true, output, attempts: attempt };
     }
-    if (attempt > MAX_RETRIES) {
-      return { ok: false, attempts: attempt };
+    const mismatchSummary = validation.mismatches.map((m) => `${m.kind} ja=${m.source} en=${m.target}`).join(', ');
+    if (attempt < TOTAL_ATTEMPTS) {
+      console.warn(
+        `[auto-translate] structure mismatch (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${mismatchSummary} — retrying`,
+      );
+      feedback = buildFeedback(input.body, output.body_en);
+    } else {
+      console.warn(
+        `[auto-translate] structure mismatch (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${mismatchSummary}`,
+      );
     }
-    feedback = buildFeedback(input.body, output.body_en);
   }
-  // unreachable
-  return { ok: false, attempts: MAX_RETRIES + 1 };
+  return { ok: false, attempts: TOTAL_ATTEMPTS };
 }
 
 export async function translateOne(args: TranslateOneArgs): Promise<TranslateResult> {
-  const { jaContent, enContent, geminiClient, model } = args;
+  const { jaContent, enContent, geminiClient, model, jaPath } = args;
+  const slug = args.slug ?? jaPath.split('/').pop() ?? jaPath;
 
   let ja: { frontmatter: Frontmatter; body: string };
   try {
@@ -111,9 +125,8 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
     try {
       const en = splitFrontmatter(enContent);
       if (isAutoTranslated(en.frontmatter)) {
-        const hashRaw = en.frontmatter.auto_translated_from;
+        existingEnHash = getAutoTranslatedFrom(en.frontmatter);
         const titleRaw = en.frontmatter.title;
-        existingEnHash = typeof hashRaw === 'string' ? hashRaw : '';
         cachedTranslatedTitle = typeof titleRaw === 'string' ? titleRaw : '';
         cachedEnBody = en.body;
       }
@@ -139,7 +152,7 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
   // API 呼ぶ（リトライ込み）
   let outcome: Awaited<ReturnType<typeof callWithRetries>>;
   try {
-    outcome = await callWithRetries(geminiClient, model, { title: jaTitle, body: ja.body });
+    outcome = await callWithRetries(geminiClient, model, { title: jaTitle, body: ja.body }, slug);
   } catch (e) {
     return { kind: 'failed', reason: `Gemini API error: ${(e as Error).message}` };
   }

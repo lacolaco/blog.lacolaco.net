@@ -76,21 +76,27 @@ async function listJaFiles(contentDir: string): Promise<string[]> {
   return jaFiles;
 }
 
-async function readEn(enPath: string): Promise<{ content: string; frontmatter: Frontmatter } | null> {
+type ReadEnResult =
+  | { kind: 'present'; content: string; frontmatter: Frontmatter }
+  | { kind: 'absent' }
+  | { kind: 'parse-error'; error: Error };
+
+async function readEn(enPath: string): Promise<ReadEnResult> {
   let content: string;
   try {
     content = await readFile(enPath, 'utf8');
   } catch (e) {
-    // ファイル不在のみ null。それ以外（権限・I/O）は伝播
-    if ((e as NodeJS.ErrnoException).code === 'ENOENT') return null;
+    // ファイル不在は absent。それ以外（権限・I/O）は伝播
+    if ((e as NodeJS.ErrnoException).code === 'ENOENT') return { kind: 'absent' };
     throw e;
   }
   try {
     const { frontmatter } = splitFrontmatter(content);
-    return { content, frontmatter };
-  } catch {
-    // パース不能な en は新規翻訳扱いとする（translator 側の挙動と整合）
-    return null;
+    return { kind: 'present', content, frontmatter };
+  } catch (e) {
+    // パース不能な en は手動翻訳の破損か自動翻訳の破損か区別できない。
+    // 手動 en を上書きするリスクを避けるため、当該記事は failed として skip する
+    return { kind: 'parse-error', error: e as Error };
   }
 }
 
@@ -135,18 +141,25 @@ async function main(): Promise<void> {
       continue;
     }
 
-    let enFile: { content: string; frontmatter: Frontmatter } | null;
+    let enFile: ReadEnResult;
     try {
       enFile = await readEn(enPath);
     } catch (e) {
-      // 権限エラー等の I/O 異常は当該記事を失敗扱いにして継続。
-      // ENOENT は readEn 内で null 化される
+      // 権限エラー等の I/O 異常は当該記事を失敗扱いにして継続
       console.error(`[auto-translate] failed to read en for ${baseName}: ${(e as Error).message}`);
       stats.failed++;
       continue;
     }
-    const enFrontmatter = enFile ? enFile.frontmatter : null;
-    const enContent = enFile ? enFile.content : null;
+    if (enFile.kind === 'parse-error') {
+      // YAML 破損した en が手動 en か自動 en か区別できない。手動 en の保護を優先して skip
+      console.error(
+        `[auto-translate] en frontmatter parse error for ${path.basename(enPath)}: ${enFile.error.message} — skipping to protect potentially manual en`,
+      );
+      stats.failed++;
+      continue;
+    }
+    const enFrontmatter = enFile.kind === 'present' ? enFile.frontmatter : null;
+    const enContent = enFile.kind === 'present' ? enFile.content : null;
 
     const action = classifyFile({ jaPath, enPath, ja, en: enFrontmatter });
 
