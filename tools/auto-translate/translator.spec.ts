@@ -305,6 +305,27 @@ describe('translateOne', () => {
       assert.ok(feedback);
       assert.match(feedback, /code/i);
     });
+
+    test('codeBlockContent 不一致時、フィードバックに detail（具体的な差分内容）が含まれる', async () => {
+      const calls: { feedback?: string }[] = [];
+      const jaWithCode = buildJaContent({ body: '本文\n\n```\nfoo\n```\n' });
+      // ターゲットはコード数同数だが内容が違う → codeBlockContent ミスマッチ
+      const brokenWithDifferentCode = '\nParagraph.\n\n```\nbar\n```\n';
+      let count = 0;
+      const client: GeminiClient = mock.fn((input) => {
+        calls.push({ feedback: input.feedback });
+        count++;
+        if (count === 1) return Promise.resolve({ title_en: 'Title', body_en: brokenWithDifferentCode });
+        // 2 回目は source と同じ本文に直す
+        return Promise.resolve({ title_en: 'Title', body_en: '\nParagraph.\n\n```\nfoo\n```\n' });
+      });
+      await translateOne(makeArgs({ jaContent: jaWithCode, geminiClient: client }));
+      const feedback = calls[1].feedback;
+      assert.ok(feedback);
+      // 数値だけでなく具体的な差分内容（detail）が含まれている
+      assert.match(feedback, /codeBlockContent/);
+      assert.match(feedback, /code block content modified/);
+    });
   });
 
   describe('エラーハンドリング', () => {

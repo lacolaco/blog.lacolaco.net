@@ -65,11 +65,15 @@ export function joinFrontmatter(frontmatter: Frontmatter, body: string): string 
 function buildFeedback(validation: ValidationResult): string {
   const lines = ['The translation has structural mismatches with the source:'];
   for (const m of validation.mismatches) {
-    lines.push(`- ${m.kind}: source has ${m.source}, translation has ${m.target}`);
+    // detail には codeBlockContent / inlineCodeContent の場合に具体的な差分内容が入る。
+    // 含めないと「source has 3, translation has 3」のような数値同値表示になり、LLM が
+    // 何を修正すべきか判断できないため必ず付加する。
+    const suffix = m.detail ? ` (${m.detail})` : '';
+    lines.push(`- ${m.kind}: source has ${m.source}, translation has ${m.target}${suffix}`);
   }
   lines.push('');
   lines.push(
-    'Please retranslate ensuring all code blocks, links, images, and bare URL paragraphs from the source are preserved exactly. Do not omit, merge, or wrap any URL into prose.',
+    'Please retranslate ensuring all code blocks, links, images, and bare URL paragraphs from the source are preserved exactly. Do not omit, merge, or wrap any URL into prose. Code blocks and inline code must be kept BYTE-FOR-BYTE identical to the source — do not change any quotation marks, dashes, or whitespace.',
   );
   return lines.join('\n');
 }
