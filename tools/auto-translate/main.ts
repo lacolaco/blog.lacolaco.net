@@ -199,14 +199,24 @@ async function main(): Promise<void> {
         });
         switch (result.kind) {
           case 'translated':
-            await writeFile(enPath, result.enContent, 'utf8');
-            console.log(`[auto-translate] translated: ${path.basename(enPath)}`);
-            stats.translated++;
+            try {
+              await writeFile(enPath, result.enContent, 'utf8');
+              console.log(`[auto-translate] translated: ${path.basename(enPath)}`);
+              stats.translated++;
+            } catch (e) {
+              console.error(`[auto-translate] failed to write ${path.basename(enPath)}: ${(e as Error).message}`);
+              stats.failed++;
+            }
             break;
           case 'frontmatter-only':
-            await writeFile(enPath, result.enContent, 'utf8');
-            console.log(`[auto-translate] frontmatter-only: ${path.basename(enPath)}`);
-            stats.frontmatterOnly++;
+            try {
+              await writeFile(enPath, result.enContent, 'utf8');
+              console.log(`[auto-translate] frontmatter-only: ${path.basename(enPath)}`);
+              stats.frontmatterOnly++;
+            } catch (e) {
+              console.error(`[auto-translate] failed to write ${path.basename(enPath)}: ${(e as Error).message}`);
+              stats.failed++;
+            }
             break;
           case 'skipped':
             stats.skipped++;
