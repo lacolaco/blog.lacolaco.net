@@ -248,7 +248,9 @@ async function main(): Promise<void> {
 }
 
 main().catch((e) => {
-  console.error('[auto-translate] fatal error:', e);
-  // CI を落とさないため exit 0 を維持
-  process.exit(0);
+  // ループ内の per-article エラー（API 失敗等）は main 内で既に catch して stats.failed に集計している。
+  // ここに到達するのはインフラ障害（readdir ENOENT・モジュール初期化失敗等）のみ。
+  // 設定ミスをサイレントに見逃さないため exit 1 で失敗を明示する
+  console.error('[auto-translate] fatal infrastructure error:', e);
+  process.exit(1);
 });

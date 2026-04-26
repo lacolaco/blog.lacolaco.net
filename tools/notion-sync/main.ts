@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { createHash } from 'node:crypto';
 import * as path from 'node:path';
 import { parseArgs } from 'node:util';
+import { extractAutoTranslate, frontmatterAutoTranslate } from './auto-translate-flag.ts';
 
 // Notion DBプロパティのスキーマ。get(name)の戻り値型をここで定義する
 type BlogPostDatasource = {
@@ -217,7 +218,7 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
       canonical_url: canonicalUrl ?? null,
       created_time: date.toISOString(),
       last_edited_time: lastEditedTime.toISOString(),
-      auto_translate: autoTranslate ?? false,
+      auto_translate: extractAutoTranslate(autoTranslate),
     };
   },
   renderMarkdown: {
@@ -312,7 +313,7 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
         channels: metadata.channels.length > 0 ? metadata.channels : undefined,
         notion_url: metadata.source_url,
         // ja のみ意味を持つフラグ。auto-translate ツールが ja .md frontmatter を読んで判定する
-        auto_translate: metadata.locale === 'ja' && metadata.auto_translate ? true : undefined,
+        auto_translate: frontmatterAutoTranslate(metadata.locale, metadata.auto_translate),
         features: {
           katex: renderContext.state.hasKatex ?? false,
           mermaid: renderContext.state.hasMermaid ?? false,
