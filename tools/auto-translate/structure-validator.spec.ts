@@ -199,4 +199,20 @@ describe('validateStructure', () => {
     assert.equal(result.ok, false);
     assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodeContent'));
   });
+
+  test('翻訳結果に source にないインラインコードが追加されている → ng (inlineCodes count)', () => {
+    const source = 'plain text\n';
+    const target = 'translated `extra` text\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodes'));
+  });
+
+  test('翻訳結果のインラインコードが少ない → ng (inlineCodes count)', () => {
+    const source = 'use `foo` and `bar`\n';
+    const target = 'use foo and `bar`\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodes'));
+  });
 });

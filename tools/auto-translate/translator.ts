@@ -112,7 +112,15 @@ async function callWithRetries(
       return { ok: true, output, attempts: attempt };
     }
     if (attempt < TOTAL_ATTEMPTS) {
-      const mismatchSummary = validation.mismatches.map((m) => `${m.kind} ja=${m.source} en=${m.target}`).join(', ');
+      const mismatchSummary = validation.mismatches
+        .map((m) => {
+          // content 差異は数値が同値で混乱を招くため detail のみ表示
+          if (m.kind === 'codeBlockContent' || m.kind === 'inlineCodeContent') {
+            return `${m.kind}: ${m.detail ?? 'content modified'}`;
+          }
+          return `${m.kind} ja=${m.source} en=${m.target}`;
+        })
+        .join(', ');
       console.warn(
         `[auto-translate] structure mismatch (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${mismatchSummary} — retrying`,
       );

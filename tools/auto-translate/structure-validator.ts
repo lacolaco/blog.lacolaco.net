@@ -5,6 +5,7 @@ import { visit } from 'unist-util-visit';
 
 export interface StructureCounts {
   codeBlocks: number;
+  inlineCodes: number;
   images: number;
   links: number;
   bareUrlParagraphs: number;
@@ -44,6 +45,7 @@ interface StructureSnapshot {
 function snapshotStructure(markdown: string): StructureSnapshot {
   const tree = remark().use(remarkGfm).parse(markdown);
   let codeBlocks = 0;
+  let inlineCodes = 0;
   let images = 0;
   let links = 0;
   let bareUrlParagraphs = 0;
@@ -55,6 +57,7 @@ function snapshotStructure(markdown: string): StructureSnapshot {
       codeBlocks++;
       codeContents.push(node.value);
     } else if (node.type === 'inlineCode') {
+      inlineCodes++;
       inlineCodeContents.push(node.value);
     } else if (node.type === 'image') images++;
     else if (node.type === 'link') links++;
@@ -65,7 +68,7 @@ function snapshotStructure(markdown: string): StructureSnapshot {
   });
 
   return {
-    counts: { codeBlocks, images, links, bareUrlParagraphs },
+    counts: { codeBlocks, inlineCodes, images, links, bareUrlParagraphs },
     codeContents,
     inlineCodeContents,
   };
@@ -96,7 +99,7 @@ export function validateStructure(source: string, target: string): ValidationRes
   const tgt = snapshotStructure(target);
   const mismatches: StructureMismatch[] = [];
 
-  const kinds: (keyof StructureCounts)[] = ['codeBlocks', 'images', 'links', 'bareUrlParagraphs'];
+  const kinds: (keyof StructureCounts)[] = ['codeBlocks', 'inlineCodes', 'images', 'links', 'bareUrlParagraphs'];
   for (const kind of kinds) {
     if (src.counts[kind] !== tgt.counts[kind]) {
       mismatches.push({ kind, source: src.counts[kind], target: tgt.counts[kind] });
@@ -116,15 +119,17 @@ export function validateStructure(source: string, target: string): ValidationRes
     }
   }
 
-  // インラインコードも同様
-  const inlineDiff = diffMultiset(src.inlineCodeContents, tgt.inlineCodeContents);
-  if (!inlineDiff.ok) {
-    mismatches.push({
-      kind: 'inlineCodeContent',
-      source: src.inlineCodeContents.length,
-      target: tgt.inlineCodeContents.length,
-      detail: `inline code modified: ${JSON.stringify(inlineDiff.missingFromTarget[0]?.slice(0, 80))}`,
-    });
+  // インラインコードも同様（カウント一致時のみ content チェック。カウント不一致は inlineCodes で報告済み）
+  if (src.counts.inlineCodes === tgt.counts.inlineCodes) {
+    const inlineDiff = diffMultiset(src.inlineCodeContents, tgt.inlineCodeContents);
+    if (!inlineDiff.ok) {
+      mismatches.push({
+        kind: 'inlineCodeContent',
+        source: src.inlineCodeContents.length,
+        target: tgt.inlineCodeContents.length,
+        detail: `inline code modified: ${JSON.stringify(inlineDiff.missingFromTarget[0]?.slice(0, 80))}`,
+      });
+    }
   }
 
   return { ok: mismatches.length === 0, source: src.counts, target: tgt.counts, mismatches };
