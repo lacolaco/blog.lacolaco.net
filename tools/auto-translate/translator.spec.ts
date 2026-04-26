@@ -52,18 +52,21 @@ function buildJaContent(overrides: { title?: string; body?: string; auto_transla
   const title = overrides.title ?? 'タイトル';
   const body = overrides.body ?? '本文1段落目。\n\n```ts\nconst a = 1;\n```\n\nhttps://example.com\n';
   const autoTranslate = overrides.auto_translate ?? true;
-  return `---
-title: '${title}'
-slug: 'sample'
-locale: 'ja'
-auto_translate: ${autoTranslate}
-created_time: '2025-01-01T00:00:00.000Z'
-last_edited_time: '2025-01-02T00:00:00.000Z'
-tags: []
-published: true
----
-
-${body}`;
+  // テンプレート文字列で YAML を組み立てるとシングルクォート入りタイトル等で
+  // 不正な YAML になるため、joinFrontmatter で正しくエスケープする
+  return joinFrontmatter(
+    {
+      title,
+      slug: 'sample',
+      locale: 'ja',
+      auto_translate: autoTranslate,
+      created_time: '2025-01-01T00:00:00.000Z',
+      last_edited_time: '2025-01-02T00:00:00.000Z',
+      tags: [],
+      published: true,
+    },
+    body,
+  );
 }
 
 function buildEnContent(bodyHash: string, body = TRANSLATED_BODY_OK, extraFm: Record<string, unknown> = {}): string {
