@@ -332,6 +332,16 @@ describe('translateOne', () => {
   });
 
   describe('defense-in-depth: 手動 en の保護', () => {
+    test('enContent が YAML パース不能 → API 呼ばず failed を返す', async () => {
+      const ja = buildJaContent();
+      const corruptedEn = '---\n: not valid yaml :\n  - missing\n---\n\nbody\n';
+      const client = makeOkClient();
+      const result = await translateOne(makeArgs({ jaContent: ja, enContent: corruptedEn, geminiClient: client }));
+      assert.equal(result.kind, 'failed');
+      assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 0);
+      assert.ok('reason' in result && result.reason.includes('parse error'));
+    });
+
     test('enContent が手動 en（auto_translated_from なし）→ API 呼ばず failed を返す', async () => {
       const ja = buildJaContent();
       // 手動翻訳された en（auto_translated_from フィールドなし）

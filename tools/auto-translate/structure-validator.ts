@@ -42,8 +42,11 @@ interface StructureSnapshot {
   inlineCodeContents: string[];
 }
 
+// remark プロセッサはプラグイン初期化のコストがあるためモジュールレベルで一度だけ生成
+const remarkProcessor = remark().use(remarkGfm);
+
 function snapshotStructure(markdown: string): StructureSnapshot {
-  const tree = remark().use(remarkGfm).parse(markdown);
+  const tree = remarkProcessor.parse(markdown);
   let codeBlocks = 0;
   let inlineCodes = 0;
   let images = 0;

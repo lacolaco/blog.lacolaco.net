@@ -151,24 +151,28 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
   let cachedTranslatedTitle: string | undefined;
   let cachedEnBody: string | undefined;
   if (enContent !== null) {
+    let en: { frontmatter: Frontmatter; body: string };
     try {
-      const en = splitFrontmatter(enContent);
-      if (isAutoTranslated(en.frontmatter)) {
-        existingEnHash = getAutoTranslatedFrom(en.frontmatter);
-        const titleRaw = en.frontmatter.title;
-        cachedTranslatedTitle = typeof titleRaw === 'string' ? titleRaw : '';
-        cachedEnBody = en.body;
-      } else {
-        // 手動翻訳された en が存在する。本来は呼び出し側 (classifyFile + main.ts) で protect-manual に
-        // 分岐され translateOne には到達しないが、defense-in-depth として API を呼ばずに失敗を返す。
-        // ここで翻訳を続行すると手動翻訳を無音で上書きしてしまう
-        return {
-          kind: 'failed',
-          reason: 'manual en detected (auto_translated_from missing) — refusing to overwrite',
-        };
-      }
-    } catch {
-      // 既存 en がパースできない場合は新規翻訳扱い
+      en = splitFrontmatter(enContent);
+    } catch (e) {
+      // パース不能な en が手動翻訳かどうか区別できない。上書きリスクを避け失敗扱い。
+      // main.ts は parse-error を事前に検出して translateOne を呼ばないが、defense-in-depth として
+      // 直接呼び出された場合にも安全側に倒す
+      return { kind: 'failed', reason: `existing en parse error: ${(e as Error).message}` };
+    }
+    if (isAutoTranslated(en.frontmatter)) {
+      existingEnHash = getAutoTranslatedFrom(en.frontmatter);
+      const titleRaw = en.frontmatter.title;
+      cachedTranslatedTitle = typeof titleRaw === 'string' ? titleRaw : '';
+      cachedEnBody = en.body;
+    } else {
+      // 手動翻訳された en が存在する。本来は呼び出し側 (classifyFile + main.ts) で protect-manual に
+      // 分岐され translateOne には到達しないが、defense-in-depth として API を呼ばずに失敗を返す。
+      // ここで翻訳を続行すると手動翻訳を無音で上書きしてしまう
+      return {
+        kind: 'failed',
+        reason: 'manual en detected (auto_translated_from missing) — refusing to overwrite',
+      };
     }
   }
 
