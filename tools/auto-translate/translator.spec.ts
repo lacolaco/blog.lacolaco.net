@@ -312,5 +312,20 @@ describe('translateOne', () => {
       const result = await translateOne(makeArgs({ geminiClient: client }));
       assert.equal(result.kind, 'failed');
     });
+
+    test('API throw 時、reason に attempt 番号が含まれる（リトライ中の情報を保持）', async () => {
+      let count = 0;
+      const client: GeminiClient = mock.fn(() => {
+        count++;
+        if (count === 1) return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN });
+        return Promise.reject(new Error('rate limit'));
+      });
+      const result = await translateOne(makeArgs({ geminiClient: client }));
+      assert.equal(result.kind, 'failed');
+      assert.ok('reason' in result);
+      // 2 回目（リトライ）で throw したことが reason から分かる
+      assert.match(result.reason, /attempt 2\/4/);
+      assert.match(result.reason, /rate limit/);
+    });
   });
 });

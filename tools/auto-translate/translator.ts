@@ -44,6 +44,10 @@ export function computeBodyHash(jaBody: string, jaTitle: string, model: string):
   return createHash('sha256').update(input).digest('hex');
 }
 
+// frontmatter 境界の正規表現。
+// 前提: joinFrontmatter で常に defaultStringType='QUOTE_SINGLE' で stringify するため、
+//       YAML 値内に無インデントの `---` が現れない。stringifyYaml オプションを変更する際は
+//       この前提が破れないか確認すること（破れる場合は yaml パッケージの parseDocument に置換）
 const FRONTMATTER_RE = /^---\n([\s\S]*?)\n---\n?\n?([\s\S]*)$/;
 
 export function splitFrontmatter(content: string): { frontmatter: Frontmatter; body: string } {
@@ -77,10 +81,20 @@ async function callWithRetries(
   model: string,
   input: { title: string; body: string },
   slug: string,
-): Promise<{ ok: true; output: GeminiOutput; attempts: number } | { ok: false; attempts: number }> {
+): Promise<
+  | { ok: true; output: GeminiOutput; attempts: number }
+  | { ok: false; attempts: number }
+  | { ok: false; attempts: number; thrownAt: number; cause: Error }
+> {
   let feedback: string | undefined;
   for (let attempt = 1; attempt <= TOTAL_ATTEMPTS; attempt++) {
-    const output = await client({ title: input.title, body: input.body, feedback }, model);
+    let output: GeminiOutput;
+    try {
+      output = await client({ title: input.title, body: input.body, feedback }, model);
+    } catch (e) {
+      // 試行中に API がエラー（ネットワーク・5xx・429 等）。試行番号を保持して呼び出し元へ
+      return { ok: false, attempts: attempt, thrownAt: attempt, cause: e as Error };
+    }
     const validation = validateStructure(input.body, output.body_en);
     if (validation.ok) {
       if (attempt > 1) {
@@ -147,15 +161,22 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
     return { kind: 'frontmatter-only', enContent: newEnContent };
   }
 
-  // API 呼ぶ（リトライ込み）
+  // API 呼ぶ（リトライ込み）。callWithRetries は API 例外を内部 catch して outcome に変換するため、
+  // ここでの try-catch は予期せぬ例外（実装バグ等）の保険のみ
   let outcome: Awaited<ReturnType<typeof callWithRetries>>;
   try {
     outcome = await callWithRetries(geminiClient, model, { title: jaTitle, body: ja.body }, slug);
   } catch (e) {
-    return { kind: 'failed', reason: `Gemini API error: ${(e as Error).message}` };
+    return { kind: 'failed', reason: `unexpected error: ${(e as Error).message}` };
   }
 
   if (!outcome.ok) {
+    if ('thrownAt' in outcome) {
+      return {
+        kind: 'failed',
+        reason: `Gemini API error on attempt ${outcome.thrownAt}/${TOTAL_ATTEMPTS}: ${outcome.cause.message}`,
+      };
+    }
     return {
       kind: 'failed',
       reason: `structure mismatch persisted after ${outcome.attempts} attempts, keeping existing .en.md`,
