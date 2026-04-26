@@ -32,9 +32,6 @@ importers:
       '@fontsource/zen-kaku-gothic-new':
         specifier: 5.2.7
         version: 5.2.7
-      '@google/genai':
-        specifier: ^1.50.1
-        version: 1.50.1
       '@resvg/resvg-js':
         specifier: 2.6.2
         version: 2.6.2
@@ -81,6 +78,9 @@ importers:
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.2.1(jiti@2.6.1))
+      '@google/genai':
+        specifier: ^1.50.1
+        version: 1.50.1
       '@iconify/json':
         specifier: ^2.2.161
         version: 2.2.464

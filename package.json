@@ -35,7 +35,6 @@
     "@date-fns/tz": "^1.2.0",
     "@fontsource/source-code-pro": "5.2.7",
     "@fontsource/zen-kaku-gothic-new": "5.2.7",
-    "@google/genai": "^1.50.1",
     "@resvg/resvg-js": "2.6.2",
     "astro": "6.1.8",
     "cheerio": "1.2.0",
@@ -53,6 +52,7 @@
   "devDependencies": {
     "@aws-sdk/client-s3": "^3.967.0",
     "@eslint/js": "^10.0.1",
+    "@google/genai": "^1.50.1",
     "@iconify/json": "^2.2.161",
     "@iconify/tailwind": "^1.0.0",
     "@lacolaco/notion-sync": "^14.0.0",

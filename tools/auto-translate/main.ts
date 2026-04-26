@@ -155,7 +155,9 @@ async function main(): Promise<void> {
         stats.skipped++;
         break;
       case 'protect-manual':
-        console.warn(`[auto-translate] protect-manual (manual en exists): ${baseName}`);
+        console.warn(
+          `[auto-translate] protect-manual (manual en exists): ${baseName} -> ${path.basename(action.enPath)}`,
+        );
         stats.protectedManual++;
         break;
       case 'delete-orphan':

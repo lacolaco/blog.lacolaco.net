@@ -1,5 +1,4 @@
 import { remark } from 'remark';
-import remarkParse from 'remark-parse';
 import remarkGfm from 'remark-gfm';
 import type { Paragraph } from 'mdast';
 import { visit } from 'unist-util-visit';
@@ -34,7 +33,7 @@ function isBareUrlParagraph(node: Paragraph): boolean {
 }
 
 export function countStructure(markdown: string): StructureCounts {
-  const tree = remark().use(remarkParse).use(remarkGfm).parse(markdown);
+  const tree = remark().use(remarkGfm).parse(markdown);
   let codeBlocks = 0;
   let images = 0;
   let links = 0;

@@ -1,4 +1,5 @@
 import { strict as assert } from 'node:assert';
+import { createHash } from 'node:crypto';
 import { test, describe, mock } from 'node:test';
 import {
   computeBodyHash,
@@ -168,6 +169,20 @@ describe('computeBodyHash', () => {
   test('PROMPT_VERSION は定数として export されている', () => {
     assert.equal(typeof PROMPT_VERSION, 'number');
     assert.ok(Number.isInteger(PROMPT_VERSION));
+  });
+
+  test('PROMPT_VERSION 変更でハッシュが変化することの間接検証', () => {
+    // PROMPT_VERSION はモジュール定数のため差し替え困難。computeBodyHash の input 構造を再現実装で検証する。
+    // 仕様: input = [body, title, String(version), model].join('\x00')
+    const reproduce = (body: string, title: string, version: number, model: string): string =>
+      createHash('sha256')
+        .update([body, title, String(version), model].join('\x00'))
+        .digest('hex');
+    const actual = computeBodyHash('body', 'title', MODEL);
+    const sameVersion = reproduce('body', 'title', PROMPT_VERSION, MODEL);
+    const otherVersion = reproduce('body', 'title', PROMPT_VERSION + 1, MODEL);
+    assert.equal(actual, sameVersion);
+    assert.notEqual(sameVersion, otherVersion);
   });
 
   test('hex 64 文字（sha256）', () => {
