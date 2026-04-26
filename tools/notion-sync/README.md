@@ -136,9 +136,13 @@ await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>({
   queryFilter: {
     and: [{ property: 'distribution', multi_select: { contains: 'blog.lacolaco.net' } }],
   },
+  // v14: cwd を設定すると getPageOutput / getImageOutput / propertyOutputs / manifestPath で
+  // 相対パスを返せる。manifest にもその相対パスがそのまま保存され、env-independent になる
+  cwd: rootDir,
+  manifestPath: 'manifest.json',
   propertyOutputs: {
-    tags: './src/content/post/notion/tags.json',
-    channels: './src/content/post/notion/channels.json',
+    tags: 'src/content/post/notion/tags.json',
+    channels: 'src/content/post/notion/channels.json',
   },
 
   // v13: (page, get)シグネチャ。getは型安全なプロパティアクセサ
@@ -152,11 +156,11 @@ await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>({
 
   renderMarkdown: {
     getPageOutput: (metadata) => ({
-      filePath: `./src/content/post/notion/${metadata.slug}.md`,
+      filePath: `src/content/post/notion/${metadata.slug}.md`,
     }),
     getImageOutput: (image, metadata) => ({
       src: `/images/${metadata.slug}/${image.blockId}.png`,
-      filePath: `./public/images/${metadata.slug}/${image.blockId}.png`,
+      filePath: `public/images/${metadata.slug}/${image.blockId}.png`,
     }),
     blockRenderers: {
       code: (block, context, defaultRenderer) => {
