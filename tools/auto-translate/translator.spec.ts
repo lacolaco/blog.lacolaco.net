@@ -224,7 +224,8 @@ describe('translateOne', () => {
     });
 
     test('body_hash 不一致 → API 呼ぶ', async () => {
-      const ja = buildJaContent({ body: '違う本文\n\n```ts\nconst a=1;\n```\n\nhttps://example.com\n' });
+      // ja body は元と異なるが、コード内容は翻訳結果（TRANSLATED_BODY_OK）と一致させる必要がある
+      const ja = buildJaContent({ body: '違う本文\n\n```ts\nconst a = 1;\n```\n\nhttps://example.com\n' });
       const en = buildEnContent('different-hash-' + 'a'.repeat(50));
       const client = makeOkClient();
       const result = await translateOne(makeArgs({ jaContent: ja, enContent: en, geminiClient: client }));

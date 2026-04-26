@@ -3,7 +3,7 @@ import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 import { buildEnFrontmatter, getAutoTranslatedFrom, isAutoTranslated, type Frontmatter } from './frontmatter.ts';
 import { validateStructure, type ValidationResult } from './structure-validator.ts';
 
-export const PROMPT_VERSION = 1;
+export const PROMPT_VERSION = 3;
 // preview だが最新世代品質を採用。GEMINI_MODEL env で stable (gemini-2.5-flash 等) に切替可能
 // 参考: https://ai.google.dev/gemini-api/docs/models
 export const DEFAULT_MODEL = 'gemini-3-flash-preview';

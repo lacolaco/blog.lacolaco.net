@@ -158,4 +158,42 @@ describe('validateStructure', () => {
     assert.equal(result.ok, false);
     assert.ok(result.mismatches.length >= 3);
   });
+
+  test('コードブロック内容が source と一致 → ok', () => {
+    const source = '```ts\nconst a = 1;\n```\n';
+    const target = '```ts\nconst a = 1;\n```\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, true);
+  });
+
+  test('コードブロック内容が翻訳されている → ng (codeBlockContent)', () => {
+    const source = '```ts\n// 元のコメント\nconst a = 1;\n```\n';
+    const target = '```ts\n// translated comment\nconst a = 1;\n```\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'codeBlockContent'));
+  });
+
+  test('コードブロック内の引用符が変換されている → ng (codeBlockContent)', () => {
+    const source = '```html\n<img src="x" />\n```\n';
+    const target = '```html\n<img src="x” />\n```\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'codeBlockContent'));
+  });
+
+  test('インラインコードが byte 一致 → ok', () => {
+    const source = 'use `decoding="async"` for X.\n';
+    const target = 'X uses `decoding="async"` here.\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, true);
+  });
+
+  test('インラインコードの引用符が変換されている → ng (inlineCodeContent)', () => {
+    const source = 'use `decoding="async"` for X.\n';
+    const target = 'X uses `decoding="async”` here.\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodeContent'));
+  });
 });
