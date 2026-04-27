@@ -103,7 +103,7 @@ async function callWithRetries(
   slug: string,
 ): Promise<
   | { ok: true; output: GeminiOutput; attempts: number }
-  | { ok: false; attempts: number; lastFailure: RetryFailureReason }
+  | { ok: false; attempts: number; lastFailure: RetryFailureReason | undefined }
   | { ok: false; attempts: number; thrownAt: number; cause: Error }
 > {
   // ja body から code を抽出してプレースホルダ化。LLM には template だけ渡す。
@@ -125,7 +125,8 @@ async function callWithRetries(
   }
 
   let feedback: string | undefined;
-  let lastFailure: RetryFailureReason = { kind: 'structure' }; // 初期値は便宜上 structure（実際には到達前に上書きされる）
+  // lastFailure は最終試行の失敗種別を保持。失敗パスを通る前に return する場合は undefined のまま
+  let lastFailure: RetryFailureReason | undefined;
   for (let attempt = 1; attempt <= TOTAL_ATTEMPTS; attempt++) {
     let output: GeminiOutput;
     try {
@@ -287,6 +288,7 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
       };
     }
     const lastReason = (() => {
+      if (!outcome.lastFailure) return 'unknown failure';
       switch (outcome.lastFailure.kind) {
         case 'placeholder':
           return 'placeholder restoration failed';

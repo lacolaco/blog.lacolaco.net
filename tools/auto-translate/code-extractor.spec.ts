@@ -56,6 +56,16 @@ describe('extractCode', () => {
     assert.equal(codeBlocks[0], '```typescript\nconst x = 1;\n```');
   });
 
+  test('チルダフェンス (~~~) でも抽出と round-trip が成立する', () => {
+    const md = 'before\n\n~~~ts\nconst x = 1;\n~~~\n\nafter\n';
+    const { template, codeBlocks, inlineCodes } = extractCode(md);
+    assert.equal(codeBlocks.length, 1);
+    assert.equal(codeBlocks[0], '~~~ts\nconst x = 1;\n~~~');
+    assert.match(template, /⟨⟨BLOCK_0⟩⟩/);
+    // round-trip
+    assert.equal(restoreCode(template, codeBlocks, inlineCodes), md);
+  });
+
   test('コードブロック内の引用符・特殊文字をそのまま保持', () => {
     const md = '```html\n<img src="x” />\n```\n';
     const { codeBlocks } = extractCode(md);
