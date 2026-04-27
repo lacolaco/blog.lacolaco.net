@@ -83,6 +83,13 @@ const postsByYear = Array.from(
                         {post.data.locale === 'en' && (
                           <span class="inline-block text-[10px] font-bold text-white bg-blue-500 py-px px-1.5 rounded-[3px] ml-1.5 align-middle">EN</span>
                         )}
+                        {translations.en && post.data.locale !== 'en' && (
+                          <span
+                            class="inline-block text-[10px] font-bold text-white bg-blue-500 py-px px-1.5 rounded-[3px] ml-1.5 align-middle"
+                            data-translation-en-badge
+                            style="display: none;"
+                          >EN</span>
+                        )}
                       </a>
                     </div>
                   </li>
@@ -121,6 +128,10 @@ const postsByYear = Array.from(
           const titleEl = link.querySelector<HTMLElement>('[data-translation-target]');
           if (titleEl) titleEl.textContent = enTitle;
           link.setAttribute('hreflang', 'en');
+          // 翻訳済みであることを EN badge で示す。ja のままの entry には badge を出さないため
+          // 「今 en 表示の記事」と「ja のまま残った記事」が視覚的に区別できる
+          const badge = link.querySelector<HTMLElement>('[data-translation-en-badge]');
+          if (badge) badge.style.display = '';
         }
       }
     </script>
