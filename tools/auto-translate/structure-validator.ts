@@ -134,18 +134,19 @@ export function validateStructure(source: string, target: string): ValidationRes
   const tgt = snapshotStructureInternal(target);
   const mismatches: StructureMismatch[] = [];
 
-  const kinds: (keyof StructureCounts)[] = ['codeBlocks', 'inlineCodes', 'images', 'links', 'bareUrlParagraphs'];
+  // inlineCodes は count check しない: LLM は backtick 識別子を追加/補正することがあり
+  // (例: ja source の informal \`active\` → en で正規変数名 \`waiting\` に補正、TS boolean を
+  // \`true\` で wrap 等)、これらは品質改善方向の有用な変化であって corruption ではない。
+  // 識別子の semantic な改変 (例: \`Signal\` → \`Observable\`) は proofreader rule 1 が検出する
+  const kinds: (keyof StructureCounts)[] = ['codeBlocks', 'images', 'links', 'bareUrlParagraphs'];
   for (const kind of kinds) {
     if (src.counts[kind] !== tgt.counts[kind]) {
       mismatches.push({ kind, source: src.counts[kind], target: tgt.counts[kind] });
     }
   }
 
-  // コードブロック（blockquote 外）・インラインコードの内容比較は実施しない:
-  // - コードブロック: code-translator でコメントのみ翻訳されるため byte 内容は意図的に異なる
-  // - インラインコード: LLM に直接渡るため内容保証はなく、カウント検証のみ実施。識別子の改変
-  //   (例: \`Signal\` → \`Observable\`) は proofreader rule 1 (translation-induced identifier
-  //   mismatch) が semantic に検出する
+  // コードブロック（blockquote 外）の内容比較は実施しない:
+  // code-translator でコメントのみ翻訳されるため byte 内容は意図的に異なる
 
   // blockquote 内コードはプレースホルダ化されず LLM プロンプトに直接渡るため、byte 一致を検証する。
   // 順序を含めた完全一致を要求（contents 配列の長さ・各要素の byte 一致）。
