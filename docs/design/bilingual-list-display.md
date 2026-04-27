@@ -13,78 +13,79 @@
 2026-04-08  Angular v22: Explaining debounced Resource   (en, EN badge)
 ```
 
-## 解決方針の選択肢
+## 採用方針: Option D (per-entry locale-aware switch)
 
-### Option A: 現状維持 (両方表示)
+list の構造 (どの記事が並ぶか・順序・件数) は **そのまま** 維持し、bilingual な記事 (en 版が存在する記事) のみ user の locale で title / href を切り替える。
 
-- list に ja と en 両方を並べる
-- en は EN badge で識別
-- pros: シンプル、コード変更なし
-- cons: 同一記事が 2 行を消費、読み手に「別記事のようで実は同じ」混乱を与える、article count が 2 倍に
+### 動作仕様
 
-### Option B: 重複時 ja 優先で en を list から除外
+- list は ja を canonical entry として 1 記事 1 行で表示する (slug ベース dedup)
+- 各 entry は build 時に bilingual flag (en 版が存在するか) と en metadata (en title, en href) を持つ
+- client-side で `navigator.languages` を見て user locale を判定:
+  - locale が en preference (e.g., `en-*` が `ja-*` より優先): bilingual entry の表示を en に swap
+  - それ以外 (ja preference / 不明): ja 表示のまま
+- 非 bilingual entry (en 版なし) は常に ja 表示 (swap 対象外)
 
-- 同 slug が ja/en 両方ある場合、list には ja のみ表示
-- en は個別 URL (`/posts/<slug>` の en 版) では引き続き accessible
-- 既存関数 `deduplicatePosts` (`src/libs/query/posts.ts`) がこの方針を実装済み (RSS feed では既に使用)
-- pros: 簡素、現行 codebase との整合性 (RSS と同方針)、article count 維持
-- cons: en 訪問者が list 経由で en に到達できない (URL を直接知る必要がある)
+### この採用が他 option より優れる理由
 
-### Option C: locale 別に list を分離
+- **A (両方表示)**: 同一記事が list の 2 行を消費して読み手を混乱させる
+- **B (en を list から除外)**: en 訪問者が list 経由で en に到達できない (動線喪失)
+- **C (locale 別 list 分離)**: ルーティング新設 + navigation UI 追加で大規模 rework
+- **D**: list の本数も順序も変えず、各 entry が「読み手の locale に合った表示」になる。bilingual な記事だけ表示が動的に切り替わる
 
-- `/` は ja list 専用、`/en/` (新設) は en list 専用
-- 各 list は単一 locale のみ表示
-- pros: locale ごとの独立した動線、UI 上の混乱なし
-- cons: ルーティング新設 (`/en/`, `/en/channels/`, `/en/tags/` 等)、navigation UI 追加、Astro の i18n routing に依存
-- 既存実装との関係: RSS feed は既に `index.xml` (ja preferred via dedup) と `index.en.xml` (en filter) で分離されている。HTML 側の対応物がない
+### 評価軸での position
 
-### Option D: locale-aware 自動切り替え
+1. 読み手体験: ja 読者は ja のまま、en 読者は bilingual 記事を en で読める
+2. 実装コスト: build 時に metadata を attach + 小さい client-side script 追加
+3. 将来拡張性: locale 数を増やすときも metadata 追加と判定ロジック拡張で対応可能
+4. SSG 制約: build 時 HTML には ja を入れる (no-JS 環境では ja で表示される) + JS で swap する progressive enhancement
 
-- 訪問者の `Accept-Language` / 明示選択 / cookie 等で locale を判別し、対応する list を表示
-- pros: 自然な user experience
-- cons: SSG (Astro static build) では不可能 (build 時に確定する)、CDN edge / client side で工夫必要
+## 実装方針
 
-## 評価軸
+### Build-time (Astro)
 
-1. **読み手体験**: 同一記事が 2 度現れるのは混乱の元。何らかの解決必須
-2. **実装コスト**: 既存 codebase (`deduplicatePosts` 既存、RSS は分離済み) との整合性
-3. **将来拡張性**: 他言語 (zh 等) 追加時の影響
-4. **build 時静的決定**: Astro SSG 前提
+1. `queryAvailablePosts` の結果に対して `deduplicatePosts` で 1 slug 1 entry に絞る (ja 優先)
+2. 各 entry に「対応する en 版が存在するか」のフラグと、存在する場合は en title / href を計算して attach
+   - 例: `{ post: jaEntry, bilingual: { en: { title: '...', href: '...' } } | null }`
+3. List コンポーネントは、bilingual がある entry に `data-bilingual-title-en` / `data-bilingual-href-en` を埋め込む
 
-## 推奨
+### Client-side
 
-**Option B (ja 優先 dedup)** を推奨。
+1. 小さい script (no framework) を List page にロード
+2. `navigator.languages` を確認:
+   - en が ja より先 → en preference
+   - ja が先 or どちらも無し → ja のまま
+3. en preference の場合、`[data-bilingual-href-en]` を持つ要素の text content と href を data 属性の値に置換
 
-理由:
-- 既存の `deduplicatePosts` 関数で実装済み、RSS feed (`index.xml.ts`) で同方針が運用されている
-- HTML list と RSS feed で挙動を揃えることで読み手の混乱を防ぐ
-- 実装変更は 4 ページ (`index.astro` / `channels/[channel].astro` / `tags/[tag].astro` / `tags/index.astro`) に `deduplicatePosts` を追加するだけ
-- en の単独訪問は個別 URL で可能なので、SEO / 直接リンク経由の到達は維持される
+### SEO / no-JS / 直接 link 対応
 
-Option C (locale 別 list 分離) は将来の拡張として残し得るが、現時点で en への直接の流入経路 (Twitter シェア、検索等) があれば list 経由のニーズは限定的。Option C を選ぶなら Astro i18n routing への移行を含む大規模な rework になる。
+- 検索エンジンは ja の HTML を index する (canonical URL は ja)
+- en 版は個別 URL (`<slug>.en.md` 由来の en page) で別途 index される
+- no-JS 環境 (古 browser / search bot) では ja のまま表示 (機能劣化なし)
+- 英語ユーザが list の en title をクリックしたら en page に直行 (動線維持)
 
-## トレードオフ承認事項
+### 影響範囲
 
-Option B を採用する場合、ユーザに承認を求めるべき暗黙の決定:
+- `src/libs/query/posts.ts`: `queryAvailablePosts` の結果に bilingual metadata を attach する関数を追加 (新規 / 既存 dedup を再利用)
+- `src/layouts/List.astro` (または子 component): bilingual の場合 `data-*` 属性を埋め込む
+- `src/scripts/bilingual-swap.ts` (新規) or 同等の inline script: client-side swap 実装
+- `src/pages/index.astro` / `channels/[channel].astro` / `tags/[tag].astro` / `tags/index.astro`: 上記の bilingual-aware query を使用するよう変更
 
-1. **ja 優先**: 同 slug 両方ある時 ja を残す (en を残す選択もあり得る)
-2. **en の list 動線喪失**: en は個別 URL でしか辿れなくなる (英語圏の読み手が trade されている可能性)
-3. **timestamp 問題は別件**: en frontmatter の `created_time` / `last_edited_time` が ja から copy されている問題は本 design の対象外。別 design doc で扱う
+`tags/index.astro` の `usedCount` 計算は dedup 済み posts に対して行うことで `[tag].astro` の表示件数と一致する。
 
-## 実装方針 (Option B 採用時)
+## トレードオフ / 承認事項
 
-`src/libs/query/posts.ts` の `deduplicatePosts` を以下の page で適用:
+1. **client-side JS 必須**: no-JS で en preference な訪問者は ja で表示される (劣化はあるが致命的ではない、SEO 経由の en 直接リンクで補える)
+2. **ja を canonical**: HTML 初期表示は ja。これは og:title / RSS / 検索 index の挙動と整合する
+3. **locale 判定ロジック**: `navigator.languages` の最初に `en` を含む要素が `ja` より先に出現 = en preference、という単純判定で開始。明示切替 (UI による toggle) は将来の拡張
+4. **bilingual の対応関係**: ja の slug に対応する en は `<slug>.en.md` で 1:1 (複数言語に拡張する場合の対応関係は将来別 design doc)
 
-- `src/pages/index.astro`
-- `src/pages/channels/[channel].astro`
-- `src/pages/tags/[tag].astro`
-- `src/pages/tags/index.astro`
+## 関連 / 別 design doc 化対象
 
-各ページで `deduplicatePosts(await queryAvailablePosts())` の形で呼び出す。
+- en frontmatter の `created_time` / `last_edited_time` が ja から copy されている件 (timestamp 問題) は本 design の対象外
+- 明示的な language toggle UI (button / pulldown) は将来拡張として別 design doc
 
-RSS feed の `index.xml.ts` は既に dedup 適用済みなので変更不要。`index.en.xml.ts` は locale='en' フィルタなので変更不要。
+## 実装の前提
 
-## 未決事項
-
-- Option A / B / C / D のどれを採用するかは PO 判断
-- 採用 option ごとに timestamp 問題 (en の date 表示) をどう扱うかは別 doc 化
+- 本 design doc 承認後に実装 PR を出す
+- PR #1586 (Option B 実装で merged) は PR #1587 で revert 中
