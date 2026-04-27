@@ -4,7 +4,8 @@
 
 import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
-import { visit } from 'unist-util-visit';
+import type { Node, Parent } from 'unist';
+import { visitParents } from 'unist-util-visit-parents';
 
 const remarkProcessor = remark().use(remarkGfm);
 
@@ -21,18 +22,26 @@ export interface ExtractedCode {
   inlineCodes: string[];
 }
 
+// blockquote 内の code/inlineCode は markdown.slice() が `> ` プレフィックス混在の文字列を返すため、
+// プレースホルダ化すると translateCodeBlock 側の fence 検証が壊れる（silent failure を起こす）。
+// 抽出対象外として template に残し、LLM の prose 翻訳に委ねる
+function hasBlockquoteAncestor(ancestors: readonly Parent[]): boolean {
+  return ancestors.some((a) => a.type === 'blockquote');
+}
+
 export function extractCode(markdown: string): ExtractedCode {
   const tree = remarkProcessor.parse(markdown);
   const replacements: { start: number; end: number; replacement: string }[] = [];
   const codeBlocks: string[] = [];
   const inlineCodes: string[] = [];
 
-  visit(tree, (node) => {
+  visitParents(tree, (node: Node, ancestors: Parent[]) => {
     const pos = node.position;
     if (pos == null) return;
     const start = pos.start.offset;
     const end = pos.end.offset;
     if (start == null || end == null) return;
+    if (hasBlockquoteAncestor(ancestors)) return;
 
     if (node.type === 'code') {
       const idx = codeBlocks.length;

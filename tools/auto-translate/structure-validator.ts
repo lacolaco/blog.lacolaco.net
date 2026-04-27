@@ -1,7 +1,8 @@
 import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
 import type { Paragraph } from 'mdast';
-import { visit } from 'unist-util-visit';
+import type { Parent } from 'unist';
+import { visitParents } from 'unist-util-visit-parents';
 
 export interface StructureCounts {
   codeBlocks: number;
@@ -43,6 +44,10 @@ interface StructureSnapshot {
 // remark プロセッサはプラグイン初期化のコストがあるためモジュールレベルで一度だけ生成
 const remarkProcessor = remark().use(remarkGfm);
 
+function isInBlockquote(ancestors: readonly Parent[]): boolean {
+  return ancestors.some((a) => a.type === 'blockquote');
+}
+
 function snapshotStructure(markdown: string): StructureSnapshot {
   const tree = remarkProcessor.parse(markdown);
   let codeBlocks = 0;
@@ -51,7 +56,11 @@ function snapshotStructure(markdown: string): StructureSnapshot {
   let links = 0;
   let bareUrlParagraphs = 0;
 
-  visit(tree, (node, _index, parent) => {
+  visitParents(tree, (node, ancestors: Parent[]) => {
+    // blockquote 内の要素は code-extractor 側でも抽出対象外。
+    // ja/en 両方で同じ条件で数える限り、validateStructure の対称性は崩れない
+    if (isInBlockquote(ancestors)) return;
+
     if (node.type === 'code') {
       codeBlocks++;
     } else if (node.type === 'inlineCode') {
@@ -59,7 +68,11 @@ function snapshotStructure(markdown: string): StructureSnapshot {
     } else if (node.type === 'image') images++;
     else if (node.type === 'link') links++;
     // remark-embed と一致させるため、ルート直下の paragraph のみを bare URL paragraph として数える
-    else if (node.type === 'paragraph' && parent?.type === 'root' && isBareUrlParagraph(node)) {
+    else if (
+      node.type === 'paragraph' &&
+      ancestors[ancestors.length - 1]?.type === 'root' &&
+      isBareUrlParagraph(node)
+    ) {
       bareUrlParagraphs++;
     }
   });

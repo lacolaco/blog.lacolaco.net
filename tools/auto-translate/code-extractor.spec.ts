@@ -62,20 +62,34 @@ describe('extractCode', () => {
     assert.equal(codeBlocks[0], '```html\n<img src="x” />\n```');
   });
 
-  test('blockquote 内のコードブロックでも round-trip 可能', () => {
-    // 既存コードを引用しながら解説するパターン
+  test('blockquote 内のコードブロックは抽出対象外（template にそのまま残る、round-trip OK）', () => {
+    // remark は blockquote 内 code の position を `> ` プレフィックス混在の範囲として返すため、
+    // プレースホルダ化すると下流の translateCodeBlock の fence 検証が壊れて silent failure になる。
+    // よって code-extractor は blockquote 内 code を抽出対象外にし、template に残して LLM の prose 翻訳に委ねる
     const md = '前置き\n\n> ```ts\n> const x = 1;\n> ```\n\n後置き\n';
     const { template, codeBlocks, inlineCodes } = extractCode(md);
-    // 抽出されたら復元で元に戻ることを確認（remark が blockquote 内の code を扱えるかに依存）
-    const restored = restoreCode(template, codeBlocks, inlineCodes);
-    assert.equal(restored, md);
+    assert.equal(codeBlocks.length, 0);
+    assert.equal(inlineCodes.length, 0);
+    assert.equal(template, md);
+    // 念のため round-trip も確認
+    assert.equal(restoreCode(template, codeBlocks, inlineCodes), md);
   });
 
-  test('blockquote 内のインラインコードでも round-trip 可能', () => {
+  test('blockquote 内のインラインコードも抽出対象外', () => {
     const md = '> 引用文中の `foo` という識別子\n';
     const { template, codeBlocks, inlineCodes } = extractCode(md);
-    const restored = restoreCode(template, codeBlocks, inlineCodes);
-    assert.equal(restored, md);
+    assert.equal(codeBlocks.length, 0);
+    assert.equal(inlineCodes.length, 0);
+    assert.equal(template, md);
+  });
+
+  test('blockquote 外の code と blockquote 内 code が混在 → 外側のみ抽出される', () => {
+    const md = '```ts\nconst a = 1;\n```\n\n> ```ts\n> const b = 2;\n> ```\n';
+    const { template, codeBlocks } = extractCode(md);
+    assert.equal(codeBlocks.length, 1);
+    assert.equal(codeBlocks[0], '```ts\nconst a = 1;\n```');
+    // template に blockquote 内のコードはそのまま残る
+    assert.match(template, /> ```ts\n> const b = 2;\n> ```/);
   });
 });
 
