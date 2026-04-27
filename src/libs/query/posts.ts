@@ -46,17 +46,6 @@ export function deduplicatePosts(
 }
 
 /**
- * List page で表示する posts に dedup と翻訳 metadata を attach した形を返す helper。
- * 各 list page (index, channels, tags) で共通利用する
- */
-export async function queryListPagePosts(): Promise<PostWithTranslations[]> {
-  const allPosts = await queryAvailablePosts();
-  const enPosts = allPosts.filter((p): p is CollectionEntry<'postsEn'> => p.data.locale === 'en');
-  const deduped = deduplicatePosts(allPosts);
-  return attachTranslations(deduped, enPosts);
-}
-
-/**
  * Translated List Display 用に各 post に翻訳 metadata を attach する。
  * 詳細は docs/design/bilingual-list-display.md (Option D) を参照。
  *
@@ -77,10 +66,12 @@ export function attachTranslations(
   posts: Array<CollectionEntry<'posts' | 'postsEn'>>,
   enPosts: Array<CollectionEntry<'postsEn'>>,
 ): PostWithTranslations[] {
+  // slug → en post の Map を事前構築して posts.map 内 lookup を O(1) にする
+  const enBySlug = new Map(enPosts.map((p) => [p.data.slug, p]));
   return posts.map((post) => {
     const translations: PostTranslations = {};
     if (post.data.locale !== 'en') {
-      const enPost = enPosts.find((p) => p.data.slug === post.data.slug);
+      const enPost = enBySlug.get(post.data.slug);
       if (enPost) {
         translations.en = {
           title: enPost.data.title,
@@ -90,6 +81,17 @@ export function attachTranslations(
     }
     return { post, translations };
   });
+}
+
+/**
+ * List page で表示する posts に dedup と翻訳 metadata を attach した形を返す helper。
+ * 各 list page (index, channels, tags) で共通利用する
+ */
+export async function queryListPagePosts(): Promise<PostWithTranslations[]> {
+  const allPosts = await queryAvailablePosts();
+  const enPosts = allPosts.filter((p): p is CollectionEntry<'postsEn'> => p.data.locale === 'en');
+  const deduped = deduplicatePosts(allPosts);
+  return attachTranslations(deduped, enPosts);
 }
 
 /**
