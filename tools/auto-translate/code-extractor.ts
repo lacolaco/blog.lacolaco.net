@@ -54,43 +54,52 @@ export function extractCode(markdown: string): ExtractedCode {
   return { template, codeBlocks, inlineCodes };
 }
 
+function countOccurrences(haystack: string, needle: string): number {
+  if (needle.length === 0) return 0;
+  return haystack.split(needle).length - 1;
+}
+
 export function restoreCode(template: string, codeBlocks: string[], inlineCodes: string[]): string {
+  // テンプレート側で各プレースホルダが exactly 1 回現れることを検証する。
+  // - 0 回 = LLM が drop した
+  // - 2 回以上 = LLM が重複させた（同じ code が複数箇所に挿入されてしまう）
+  // 復元後の result でプレースホルダパターンを検査するのは誤り: codeBlocks[i] の内容自体が
+  // ⟨⟨BLOCK_N⟩⟩ のような文字列を含む可能性がある（このシステムを解説する記事等）
+  for (let i = 0; i < codeBlocks.length; i++) {
+    const ph = BLOCK_PLACEHOLDER(i);
+    const n = countOccurrences(template, ph);
+    if (n === 0) {
+      throw new Error(`Restore failed: placeholder ${ph} missing from template (LLM dropped it?)`);
+    }
+    if (n > 1) {
+      throw new Error(`Restore failed: placeholder ${ph} appears ${n} times in template (LLM duplicated it?)`);
+    }
+  }
+  for (let i = 0; i < inlineCodes.length; i++) {
+    const ph = INLINE_PLACEHOLDER(i);
+    const n = countOccurrences(template, ph);
+    if (n === 0) {
+      throw new Error(`Restore failed: placeholder ${ph} missing from template (LLM dropped it?)`);
+    }
+    if (n > 1) {
+      throw new Error(`Restore failed: placeholder ${ph} appears ${n} times in template (LLM duplicated it?)`);
+    }
+  }
+
   // テンプレート内のプレースホルダを順序通りに置換。
   // String#replace のコールバック形式を使い、$ を含む code が special replacement として誤解釈されないようにする
-  const result = template.replace(PLACEHOLDER_PATTERN, (_match, kind: string, idxStr: string) => {
+  return template.replace(PLACEHOLDER_PATTERN, (_match, kind: string, idxStr: string) => {
     const idx = Number(idxStr);
     if (kind === 'BLOCK') {
       if (idx >= codeBlocks.length) {
-        throw new Error(`Restore failed: placeholder ⟨⟨BLOCK_${idx}⟩⟩ has no corresponding code block`);
+        throw new Error(`Restore failed: placeholder ⟨⟨BLOCK_${idx}⟩⟩ has no corresponding code block (hallucinated?)`);
       }
       return codeBlocks[idx];
     }
     // INLINE
     if (idx >= inlineCodes.length) {
-      throw new Error(`Restore failed: placeholder ⟨⟨INLINE_${idx}⟩⟩ has no corresponding inline code`);
+      throw new Error(`Restore failed: placeholder ⟨⟨INLINE_${idx}⟩⟩ has no corresponding inline code (hallucinated?)`);
     }
     return inlineCodes[idx];
   });
-
-  // restored 後にまだプレースホルダが残っていたら何かおかしい（unexpected pattern）
-  if (PLACEHOLDER_PATTERN.test(result)) {
-    PLACEHOLDER_PATTERN.lastIndex = 0;
-    throw new Error(`Restore failed: placeholder pattern remains after restoration`);
-  }
-  PLACEHOLDER_PATTERN.lastIndex = 0;
-
-  // テンプレートに含まれていなかったプレースホルダ index があれば、LLM が drop した可能性
-  // （上の置換でカウント済みなので余り index がないか検証）
-  for (let i = 0; i < codeBlocks.length; i++) {
-    if (template.indexOf(BLOCK_PLACEHOLDER(i)) === -1) {
-      throw new Error(`Restore failed: placeholder ⟨⟨BLOCK_${i}⟩⟩ missing from template (LLM dropped it?)`);
-    }
-  }
-  for (let i = 0; i < inlineCodes.length; i++) {
-    if (template.indexOf(INLINE_PLACEHOLDER(i)) === -1) {
-      throw new Error(`Restore failed: placeholder ⟨⟨INLINE_${i}⟩⟩ missing from template (LLM dropped it?)`);
-    }
-  }
-
-  return result;
 }

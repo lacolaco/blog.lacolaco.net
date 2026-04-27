@@ -88,7 +88,7 @@ function buildFeedback(validation: ValidationResult): string {
   }
   lines.push('');
   lines.push(
-    'Please retranslate ensuring all code blocks, links, images, and bare URL paragraphs from the source are preserved exactly. Do not omit, merge, or wrap any URL into prose. Code blocks and inline code must be kept BYTE-FOR-BYTE identical to the source — do not change any quotation marks, dashes, or whitespace.',
+    'Please retranslate ensuring all links, images, and bare URL paragraphs from the source are preserved exactly. Do not omit, merge, or wrap any URL into prose. Each placeholder ⟨⟨BLOCK_N⟩⟩ and ⟨⟨INLINE_N⟩⟩ must appear exactly once in your output, verbatim — do not modify, drop, or duplicate them.',
   );
   return lines.join('\n');
 }

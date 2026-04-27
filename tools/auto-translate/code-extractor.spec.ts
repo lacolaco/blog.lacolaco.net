@@ -92,4 +92,20 @@ describe('restoreCode', () => {
     const template = '⟨⟨INLINE_0⟩⟩ ⟨⟨INLINE_5⟩⟩'; // INLINE_5 はそもそも extract されていない
     assert.throws(() => restoreCode(template, [], ['`a`']), /placeholder/i);
   });
+
+  test('プレースホルダが重複していたら throw（LLM が duplicate した場合の検知）', () => {
+    // テンプレート内で ⟨⟨BLOCK_0⟩⟩ が 2 回出現 → コード重複挿入のリスク
+    const template = '⟨⟨BLOCK_0⟩⟩\n\n再掲: ⟨⟨BLOCK_0⟩⟩';
+    assert.throws(() => restoreCode(template, ['```\nA\n```'], []), /appears 2 times/i);
+  });
+
+  test('コードブロックの内容にプレースホルダ風の文字列が含まれても誤検知しない', () => {
+    // このシステム自体を解説する記事のように、コード内に ⟨⟨BLOCK_N⟩⟩ という文字列が
+    // 含まれる場合がある。restoreCode 後の result でプレースホルダパターンを検査すると
+    // 誤って throw してしまうため、このケースで正常に復元できることを保証する
+    const template = '解説: ⟨⟨BLOCK_0⟩⟩';
+    const codeWithPlaceholderText = '```ts\n// プレースホルダ ⟨⟨BLOCK_1⟩⟩ について\n```';
+    const result = restoreCode(template, [codeWithPlaceholderText], []);
+    assert.equal(result, '解説: ' + codeWithPlaceholderText);
+  });
 });
