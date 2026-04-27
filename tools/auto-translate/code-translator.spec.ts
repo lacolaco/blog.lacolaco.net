@@ -99,4 +99,13 @@ describe('translateCodeBlock', () => {
     const result = await translateCodeBlock({ code: original, client, model: MODEL });
     assert.equal(result, original);
   });
+
+  test('LLM が fence の言語タグを書き換えた場合は原文に fallback', async () => {
+    const original = '```ts\n// 日本語コメント\nconst x = 1;\n```';
+    // 言語タグが ts → javascript に変わった
+    const tampered = '```javascript\n// translated comment\nconst x = 1;\n```';
+    const client: CodeTranslatorClient = mock.fn(() => Promise.resolve(tampered));
+    const result = await translateCodeBlock({ code: original, client, model: MODEL });
+    assert.equal(result, original);
+  });
 });

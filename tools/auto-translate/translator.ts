@@ -106,6 +106,11 @@ function summarizeStructureMismatch(validation: ValidationResult): string {
     .join(', ');
 }
 
+type RetryFailureReason =
+  | { kind: 'placeholder' } // restoreCode が throw（drop / 重複 / 幻覚）
+  | { kind: 'structure' } // structure-validator NG
+  | { kind: 'proofread' }; // proofreader NG
+
 async function callWithRetries(
   client: GeminiClient,
   proofreaderClient: ProofreaderClient,
@@ -115,7 +120,7 @@ async function callWithRetries(
   slug: string,
 ): Promise<
   | { ok: true; output: GeminiOutput; attempts: number }
-  | { ok: false; attempts: number }
+  | { ok: false; attempts: number; lastFailure: RetryFailureReason }
   | { ok: false; attempts: number; thrownAt: number; cause: Error }
 > {
   // ja body から code を抽出してプレースホルダ化。LLM には template だけ渡す。
@@ -137,6 +142,7 @@ async function callWithRetries(
   }
 
   let feedback: string | undefined;
+  let lastFailure: RetryFailureReason = { kind: 'structure' }; // 初期値は便宜上 structure（実際には到達前に上書きされる）
   for (let attempt = 1; attempt <= TOTAL_ATTEMPTS; attempt++) {
     let output: GeminiOutput;
     try {
@@ -153,6 +159,7 @@ async function callWithRetries(
       restoredBody = restoreCode(output.body_en, translatedCodeBlocks, inlineCodes);
     } catch (e) {
       // LLM がプレースホルダを drop / 幻覚した場合に到達。retry で改善する可能性
+      lastFailure = { kind: 'placeholder' };
       if (attempt < TOTAL_ATTEMPTS) {
         console.warn(
           `[auto-translate] placeholder restoration failed (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${(e as Error).message} — retrying`,
@@ -167,6 +174,7 @@ async function callWithRetries(
     // 万一一致しないケース（LLM が prose 中で markdown 構造を破壊した等）への保険として残す
     const validation = validateStructure(input.body, restoredOutput.body_en);
     if (!validation.ok) {
+      lastFailure = { kind: 'structure' };
       if (attempt < TOTAL_ATTEMPTS) {
         console.warn(
           `[auto-translate] structure mismatch (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${summarizeStructureMismatch(validation)} — retrying`,
@@ -191,6 +199,7 @@ async function callWithRetries(
       return { ok: true, output: restoredOutput, attempts: attempt };
     }
 
+    lastFailure = { kind: 'proofread' };
     if (attempt < TOTAL_ATTEMPTS) {
       const issuesSummary = proof.issues.map((i) => `[${i.location}] ${i.problem}`).join('; ');
       console.warn(
@@ -200,7 +209,7 @@ async function callWithRetries(
     }
     // 最終試行失敗時は呼び出し元（main.ts）で error ログを出すため、ここでは出力しない（重複防止）
   }
-  return { ok: false, attempts: TOTAL_ATTEMPTS };
+  return { ok: false, attempts: TOTAL_ATTEMPTS, lastFailure };
 }
 
 export async function translateOne(args: TranslateOneArgs): Promise<TranslateResult> {
@@ -285,9 +294,19 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
         reason: `Gemini API error on attempt ${outcome.thrownAt}/${TOTAL_ATTEMPTS}: ${outcome.cause.message}`,
       };
     }
+    const lastReason = (() => {
+      switch (outcome.lastFailure.kind) {
+        case 'placeholder':
+          return 'placeholder restoration failed';
+        case 'structure':
+          return 'structure validation failed';
+        case 'proofread':
+          return 'proofread issues';
+      }
+    })();
     return {
       kind: 'failed',
-      reason: `structure or proofread issues persisted after ${outcome.attempts} attempts, keeping existing .en.md`,
+      reason: `${lastReason} persisted after ${outcome.attempts} attempts, keeping existing .en.md`,
     };
   }
 

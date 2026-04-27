@@ -106,16 +106,16 @@ function createCodeTranslatorClient(apiKey: string): CodeTranslatorClient {
 function createProofreaderClient(apiKey: string): ProofreaderClient {
   const ai = new GoogleGenAI({ apiKey });
   return async (input, model) => {
+    // ソースと訳文はマークダウン（コードブロック含む）が含まれるので、フェンスで囲むと
+    // 内部の ```ts 等がアウターフェンスを誤閉じして LLM が構造を見失う。XML 風タグで囲って区切る
     const userMessage = [
-      'Japanese source:',
-      '```',
+      '<japanese-source>',
       input.jaSource,
-      '```',
+      '</japanese-source>',
       '',
-      'English translation:',
-      '```',
+      '<english-translation>',
       input.enTranslation,
-      '```',
+      '</english-translation>',
     ].join('\n');
 
     const response = await ai.models.generateContent({

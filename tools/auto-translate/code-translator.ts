@@ -44,10 +44,26 @@ function lineCount(s: string): number {
   return s.split('\n').length;
 }
 
+function fenceLines(code: string): string[] {
+  // 行頭判定なので trim しない（インデント済みの ``` はネスト/コンテンツの一部であり fence ではない）
+  return code.split('\n').filter((l) => /^```/.test(l));
+}
+
 function isCodeFenceIntact(code: string): boolean {
-  // コードフェンスは ``` で開始・終了する想定。fence 行の数が偶数（>=2）であること
-  const fenceLines = code.split('\n').filter((l) => /^```/.test(l.trim()));
-  return fenceLines.length >= 2 && fenceLines.length % 2 === 0;
+  // コードフェンス行の数が偶数（>=2）であること
+  const lines = fenceLines(code);
+  return lines.length >= 2 && lines.length % 2 === 0;
+}
+
+function fenceLanguageTagsMatch(original: string, translated: string): boolean {
+  // 各 fence 行を順に比較し、すべて文字列一致であること（言語タグ・属性も含む）
+  const a = fenceLines(original);
+  const b = fenceLines(translated);
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
 }
 
 export async function translateCodeBlock(args: TranslateCodeBlockArgs): Promise<string> {
@@ -64,10 +80,20 @@ export async function translateCodeBlock(args: TranslateCodeBlockArgs): Promise<
     return code;
   }
 
-  // サニティチェック: 行数一致 & fence 健全
-  if (lineCount(translated) !== lineCount(code) || !isCodeFenceIntact(translated)) {
+  // サニティチェック: 行数一致 & fence 健全 & 言語タグ保全
+  if (lineCount(translated) !== lineCount(code)) {
     console.warn(
-      `[auto-translate] code block comment translation produced malformed output (lines ${lineCount(code)}→${lineCount(translated)}, fence intact=${isCodeFenceIntact(translated)}) — keeping original`,
+      `[auto-translate] code block comment translation produced malformed output (lines ${lineCount(code)}→${lineCount(translated)}) — keeping original`,
+    );
+    return code;
+  }
+  if (!isCodeFenceIntact(translated)) {
+    console.warn(`[auto-translate] code block comment translation broke fence structure — keeping original`);
+    return code;
+  }
+  if (!fenceLanguageTagsMatch(code, translated)) {
+    console.warn(
+      `[auto-translate] code block comment translation modified fence (language tag changed?) — keeping original`,
     );
     return code;
   }
