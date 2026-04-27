@@ -1,12 +1,13 @@
 ---
-import { queryAvailablePosts, queryChannels } from '@lib/query';
+import { queryAvailablePosts, queryChannels, deduplicatePosts } from '@lib/query';
 import type { CollectionEntry } from 'astro:content';
 import ChannelNav from 'src/components/ChannelNav.astro';
 import List from '../../layouts/List.astro';
 import { urlize } from '../../libs/strings';
 
 export async function getStaticPaths() {
-  const posts = await queryAvailablePosts();
+  // 同一 slug の ja/en は重複表示しないため deduplicatePosts で ja を優先採用
+  const posts = deduplicatePosts(await queryAvailablePosts());
   const channels = queryChannels();
 
   return channels.map((channel) => {
