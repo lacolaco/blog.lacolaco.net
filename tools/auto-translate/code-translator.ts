@@ -33,8 +33,10 @@ const COMMENT_PATTERN_SOURCES: string[] = [
 
 // extractCode が prose の ⟨⟨/⟩⟩ を ⟪⟪/⟫⟫ に escape した状態で codeBlocks に格納するため、
 // コードブロック内コメントに ⟨⟨...⟩⟩ が含まれる場合（このシステムを解説する記事等）に
-// hasTranslatableComment が ⟪ を非 ASCII と誤検出しないよう、判定前に escape マーカーを除去する
-const ESCAPE_MARKER_RE = /⟪⟪|⟫⟫/g;
+// hasTranslatableComment が ⟪ を非 ASCII と誤検出しないよう、判定前に escape マーカーを除去する。
+// COMMENT_PATTERN_SOURCES と同じく source 文字列で保持し、使用箇所で new RegExp する
+// （g フラグ付きモジュール定数の lastIndex 残留問題を避けるため）
+const ESCAPE_MARKER_RE_SOURCE = '⟪⟪|⟫⟫';
 
 export function hasTranslatableComment(code: string): boolean {
   // 翻訳ターゲットは英語なので、既に英語のコメントは API を呼ばない（ノイズ・コスト削減）。
@@ -47,7 +49,7 @@ export function hasTranslatableComment(code: string): boolean {
     while ((m = re.exec(code)) !== null) {
       // escape マーカーは upstream のパイプライン都合で挿入された人工的な文字なので、
       // コメント実体の判定からは取り除いて評価する
-      const content = m[1].replace(ESCAPE_MARKER_RE, '').trim();
+      const content = m[1].replace(new RegExp(ESCAPE_MARKER_RE_SOURCE, 'g'), '').trim();
       if (content.length === 0) continue;
       if (/[^\x20-\x7e\s]/.test(content)) return true;
     }
