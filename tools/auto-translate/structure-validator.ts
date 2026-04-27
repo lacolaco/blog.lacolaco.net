@@ -18,7 +18,6 @@ export interface StructureMismatch {
   kind: StructureMismatchKind;
   source: number;
   target: number;
-  detail?: string;
 }
 
 export interface ValidationResult {

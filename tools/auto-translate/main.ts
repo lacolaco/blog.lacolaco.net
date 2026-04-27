@@ -65,6 +65,7 @@ Do NOT flag:
 - Hedging differences ("I think" vs "perhaps") — both are acceptable.
 - Minor word choices that preserve meaning.
 - Code blocks themselves (validated separately).
+- Differences in code-block COMMENTS between the source and translation. Comments inside code blocks are translated by a separate pipeline stage; the translation intentionally renders Japanese comments in English (or leaves English-only comments unchanged). Do NOT flag comment-level differences inside fenced code blocks.
 - ANY inconsistency that exists identically in the Japanese source. If the source uses an identifier informally (e.g., source prose says \`active\` referring to a variable named \`activePromise\` in code), the translation may faithfully preserve this. This is the author's choice, not a defect.
 
 If the translation has no translation-induced defects, return ok=true and empty issues. Otherwise return ok=false with a precise list of issues.
