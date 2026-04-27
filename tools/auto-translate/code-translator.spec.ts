@@ -63,6 +63,19 @@ describe('hasTranslatableComment', () => {
     const code = '```ts\n/* multiline\n   日本語含む\n   comment */\nconst x = 1;\n```';
     assert.equal(hasTranslatableComment(code), true);
   });
+
+  test('URL 文字列リテラル内の // は誤検出しない', () => {
+    // `://` の // をコメントマーカーとして検出すると、URL パス内の非 ASCII 文字を
+    // 翻訳対象として API を呼んでしまう偽陽性が発生する
+    const code = '```ts\nconst url = "https://example.com/日本語";\n```';
+    assert.equal(hasTranslatableComment(code), false);
+  });
+
+  test('URL の後にコメントが続く場合は検出する', () => {
+    // 行末に // コメントが付く場合、URL の // と区別する必要がある
+    const code = '```ts\nconst url = "https://example.com"; // 日本語コメント\n```';
+    assert.equal(hasTranslatableComment(code), true);
+  });
 });
 
 describe('translateCodeBlock', () => {

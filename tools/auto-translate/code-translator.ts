@@ -17,8 +17,12 @@ export interface TranslateCodeBlockArgs {
 // 改行を跨いで誤検出しないよう、行コメントは [^\n]* で同一行内に限定する。
 // パターンは関数内で都度 new RegExp で生成する（モジュールスコープの g フラグ付き定数は
 // lastIndex がイテレーション間で残るため、ステートを持たせないことで堅牢にする）
+//
+// 既知の限界: 文字列リテラル内のコメントマーカーを誤検出する可能性がある。完全な解析には
+// 言語別 lexer が必要なため、よくある偽陽性のみ heuristic で除外する:
+// - `://` URL: `(?<!:)\/\/` で URL 内の // を除外
 const COMMENT_PATTERN_SOURCES: string[] = [
-  '\\/\\/[ \\t]*([^\\n]*)', // C/JS/TS line comment
+  '(?<!:)\\/\\/[ \\t]*([^\\n]*)', // C/JS/TS line comment（URL の :// を除外）
   '\\/\\*([\\s\\S]*?)\\*\\/', // C/JS block comment
   '<!--([\\s\\S]*?)-->', // HTML comment
   // # コメントは shell/python 等で頻出。
