@@ -168,22 +168,6 @@ describe('validateStructure', () => {
     assert.equal(result.ok, true);
   });
 
-  test('インラインコードが byte 一致 → ok', () => {
-    const source = 'use `decoding="async"` for X.\n';
-    const target = 'X uses `decoding="async"` here.\n';
-    const result = validateStructure(source, target);
-    assert.equal(result.ok, true);
-  });
-
-  test('インラインコードの引用符が変換されている → ng (inlineCodeContent)', () => {
-    const source = 'use `decoding="async"` for X.\n';
-    // target の右引用符は Unicode RIGHT DOUBLE QUOTATION MARK (U+201D)。詳細は前テスト参照
-    const target = 'X uses `decoding="async”` here.\n';
-    const result = validateStructure(source, target);
-    assert.equal(result.ok, false);
-    assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodeContent'));
-  });
-
   test('翻訳結果に source にないインラインコードが追加されている → ng (inlineCodes count)', () => {
     const source = 'plain text\n';
     const target = 'translated `extra` text\n';

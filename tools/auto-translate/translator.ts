@@ -6,12 +6,9 @@ import { buildEnFrontmatter, getAutoTranslatedFrom, isAutoTranslated, type Front
 import { proofread, formatProofIssues, type ProofreaderClient } from './proofreader.ts';
 import { validateStructure, type ValidationResult } from './structure-validator.ts';
 
-// PROMPT_VERSION:
-// 4: proofreader 導入
-// 5: code 抽出/プレースホルダ翻訳/code 復元方式に変更
-// 6: 各コードブロックを個別翻訳してからマージ（コメント翻訳のため）
-// 7: proofreader を「翻訳由来の不整合のみ flag」に修正（原文の不整合を誤検出していた）
-export const PROMPT_VERSION = 7;
+// PROMPT_VERSION: プロンプト/モデル/構造検証ロジックが変わったらインクリメントしてキャッシュを invalidate する。
+// バージョン履歴は git log で追える（変更時はコミットメッセージに「PROMPT_VERSION N → N+1」と記載）
+export const PROMPT_VERSION = 4;
 // preview だが最新世代品質を採用。GEMINI_MODEL env で stable (gemini-2.5-flash 等) に切替可能
 // 参考: https://ai.google.dev/gemini-api/docs/models
 export const DEFAULT_MODEL = 'gemini-3-flash-preview';
@@ -77,14 +74,7 @@ export function joinFrontmatter(frontmatter: Frontmatter, body: string): string 
 function buildFeedback(validation: ValidationResult): string {
   const lines = ['The translation has structural mismatches with the source:'];
   for (const m of validation.mismatches) {
-    // count 差異と content 差異でフォーマットを分ける:
-    // - count 差異（codeBlocks 等）: 数値で表示（"source has 3, translation has 2"）
-    // - content 差異（inlineCodeContent）: 数値は同値なので detail のみ表示
-    if (m.kind === 'inlineCodeContent') {
-      lines.push(`- ${m.kind}: ${m.detail ?? 'content modified from source'}`);
-    } else {
-      lines.push(`- ${m.kind}: source has ${m.source}, translation has ${m.target}`);
-    }
+    lines.push(`- ${m.kind}: source has ${m.source}, translation has ${m.target}`);
   }
   lines.push('');
   lines.push(
@@ -96,14 +86,7 @@ function buildFeedback(validation: ValidationResult): string {
 const TOTAL_ATTEMPTS = MAX_RETRIES + 1;
 
 function summarizeStructureMismatch(validation: ValidationResult): string {
-  return validation.mismatches
-    .map((m) => {
-      if (m.kind === 'inlineCodeContent') {
-        return `${m.kind}: ${m.detail ?? 'content modified'}`;
-      }
-      return `${m.kind} ja=${m.source} en=${m.target}`;
-    })
-    .join(', ');
+  return validation.mismatches.map((m) => `${m.kind} ja=${m.source} en=${m.target}`).join(', ');
 }
 
 type RetryFailureReason =
