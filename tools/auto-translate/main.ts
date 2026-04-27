@@ -48,6 +48,11 @@ Other structural rules:
 - Code blocks AND inline code INSIDE blockquotes (lines starting with "> ") are NOT replaced by placeholders and appear in the source you receive. Keep these blockquote-nested code blocks AND inline code (text wrapped in backticks within blockquotes) BYTE-FOR-BYTE identical to the source. Do NOT translate their comments. Do NOT change any character including quotation marks, dashes, or whitespace.
 - LaTeX math ($...$ and $$...$$) and Mermaid: keep as-is.
 
+English correctness rules (CRITICAL — these prevent common LLM defects):
+- Indefinite articles a/an follow PHONETIC sound, not spelling, of the next word: "an HTTP" (vowel sound), "a URL" (consonant /j/), "a one-time" (consonant /w/), "an hour" (silent h). For backtick-wrapped identifiers, use the identifier's first phonetic sound: "a \`loading\`" (consonant /l/), NOT "an \`loading\`".
+- Programming-language literals (booleans, null/None, undefined) MUST keep their source-code casing in prose. Do NOT capitalize "true" to "True" because the word starts a sentence or follows a verb. JS/TS use lowercase \`true\`/\`false\`/\`null\`/\`undefined\`. Python uses capitalized \`True\`/\`False\`/\`None\`. Match what the article's surrounding code blocks use.
+- Adjacent placeholders ⟨⟨INLINE_N⟩⟩⟨⟨INLINE_N+1⟩⟩ MUST appear in the SAME ORDER as the source. If the natural English word order would reverse them, restructure the sentence rather than swap the placeholders.
+
 Output only the translated title and body (with placeholders preserved) in the requested JSON schema. Do not include the YAML frontmatter.`;
 
 const PROOFREADER_INSTRUCTION = `You are a meticulous bilingual (Japanese-English) technical proofreader for software engineering blog articles. You receive a Japanese source and its English translation. Your role is to detect TRANSLATION-INDUCED defects that mislead the reader.
@@ -64,6 +69,8 @@ Detect:
    - Indefinite article agreement (a/an) — must match the PHONETIC sound of the following word, not its spelling. "an HTTP" is correct (vowel sound /eɪ/); "an \`loading\`" is WRONG ("loading" starts with consonant /l/, must be "a"); "a hour" is WRONG (silent h, must be "an"). When the article precedes a backtick-wrapped identifier, evaluate the identifier's first phonetic sound.
    - Subject-verb agreement (e.g., "the data is" vs "the data are" — match the source's grammatical number).
    - Sentence fragments that lack a subject or verb, when the source had a complete sentence.
+7. Code-context literal capitalization: when the prose refers to a programming-language literal value (booleans, null/None, undefined), the literal MUST match the EXACT casing used in the article's surrounding code blocks. Do NOT capitalize it as English prose ("becomes True" when the code uses \`true\` is WRONG — must be "becomes \`true\`"). Conversely, do NOT lowercase a literal whose code uses capitalized form. Examples by language: JS/TS uses lowercase \`true\`/\`false\`/\`null\`/\`undefined\`; Python uses capitalized \`True\`/\`False\`/\`None\`. NOTE: do NOT flag the English words "This"/"That"/"Self" at sentence start — only flag when the prose is clearly referring to a code keyword (typically wrapped in backticks or named alongside other code identifiers).
+8. Code reference order: when two or more backtick-wrapped code identifiers appear adjacent in a single sentence, their RELATIVE ORDER in the English translation MUST match the order in the Japanese source. Example: source "\`foo\`と\`bar\`を比較する" → translation "compare \`foo\` and \`bar\`" (correct), NOT "compare \`bar\` and \`foo\`" (WRONG — reversed). LLM translators tend to reorder them to fit natural English — always flag such reordering as a translation defect because the swap loses the author's intended emphasis.
 
 Do NOT flag:
 - Style or tone preferences (the translator handles voice).
