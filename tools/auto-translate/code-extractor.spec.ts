@@ -5,32 +5,31 @@ import { extractCode, restoreCode } from './code-extractor.ts';
 describe('extractCode', () => {
   test('コードブロックを ⟨⟨BLOCK_N⟩⟩ に置換する', () => {
     const md = 'before\n\n```ts\nconst a = 1;\n```\n\nafter\n';
-    const { template, codeBlocks, inlineCodes } = extractCode(md);
+    const { template, codeBlocks } = extractCode(md);
     assert.equal(codeBlocks.length, 1);
-    assert.equal(inlineCodes.length, 0);
     assert.match(template, /⟨⟨BLOCK_0⟩⟩/);
     assert.match(template, /^before/);
     assert.match(template, /after\n$/);
     assert.equal(codeBlocks[0], '```ts\nconst a = 1;\n```');
   });
 
-  test('インラインコードを ⟨⟨INLINE_N⟩⟩ に置換する', () => {
+  test('インラインコードは抽出対象外（ja→en では既に英語/コードなので翻訳されない）', () => {
+    // ja → en 翻訳では inline code (`Signal` 等) は既に target language。
+    // placeholder 化すると ja-en 語順差を「LLM の swap」と誤検出する原因になるため、
+    // inline は template にそのまま残し LLM に渡す。LLM は backtick 識別子を保持する想定
     const md = 'use `foo` and `bar` here\n';
-    const { template, inlineCodes } = extractCode(md);
-    assert.equal(inlineCodes.length, 2);
-    assert.equal(template, 'use ⟨⟨INLINE_0⟩⟩ and ⟨⟨INLINE_1⟩⟩ here\n');
-    assert.equal(inlineCodes[0], '`foo`');
-    assert.equal(inlineCodes[1], '`bar`');
+    const { template, codeBlocks } = extractCode(md);
+    assert.equal(codeBlocks.length, 0);
+    assert.equal(template, 'use `foo` and `bar` here\n');
   });
 
-  test('コードブロック・インラインコードが混在', () => {
+  test('コードブロックは抽出する、インラインはそのまま残す', () => {
     const md = 'use `foo`\n\n```\ncode\n```\n\nthen `bar`\n';
-    const { template, codeBlocks, inlineCodes } = extractCode(md);
+    const { template, codeBlocks } = extractCode(md);
     assert.equal(codeBlocks.length, 1);
-    assert.equal(inlineCodes.length, 2);
-    assert.match(template, /⟨⟨INLINE_0⟩⟩/);
+    assert.match(template, /use `foo`/);
     assert.match(template, /⟨⟨BLOCK_0⟩⟩/);
-    assert.match(template, /⟨⟨INLINE_1⟩⟩/);
+    assert.match(template, /then `bar`/);
   });
 
   test('複数コードブロックは順番に番号付け', () => {
@@ -42,11 +41,10 @@ describe('extractCode', () => {
     assert.match(template, /⟨⟨BLOCK_0⟩⟩[\s\S]*⟨⟨BLOCK_1⟩⟩/);
   });
 
-  test('コードがないと codeBlocks/inlineCodes は空、template は元と同じ', () => {
+  test('コードがないと codeBlocks は空、template は元と同じ', () => {
     const md = 'plain prose\n';
-    const { template, codeBlocks, inlineCodes } = extractCode(md);
+    const { template, codeBlocks } = extractCode(md);
     assert.equal(codeBlocks.length, 0);
-    assert.equal(inlineCodes.length, 0);
     assert.equal(template, md);
   });
 
@@ -58,12 +56,12 @@ describe('extractCode', () => {
 
   test('チルダフェンス (~~~) でも抽出と round-trip が成立する', () => {
     const md = 'before\n\n~~~ts\nconst x = 1;\n~~~\n\nafter\n';
-    const { template, codeBlocks, inlineCodes } = extractCode(md);
+    const { template, codeBlocks } = extractCode(md);
     assert.equal(codeBlocks.length, 1);
     assert.equal(codeBlocks[0], '~~~ts\nconst x = 1;\n~~~');
     assert.match(template, /⟨⟨BLOCK_0⟩⟩/);
     // round-trip
-    assert.equal(restoreCode(template, codeBlocks, inlineCodes), md);
+    assert.equal(restoreCode(template, codeBlocks), md);
   });
 
   test('コードブロック内の引用符・特殊文字をそのまま保持', () => {
@@ -77,30 +75,28 @@ describe('extractCode', () => {
     // プレースホルダ化すると下流の translateCodeBlock の fence 検証が壊れて silent failure になる。
     // よって code-extractor は blockquote 内 code を抽出対象外にし、template に残して LLM の prose 翻訳に委ねる
     const md = '前置き\n\n> ```ts\n> const x = 1;\n> ```\n\n後置き\n';
-    const { template, codeBlocks, inlineCodes } = extractCode(md);
+    const { template, codeBlocks } = extractCode(md);
     assert.equal(codeBlocks.length, 0);
-    assert.equal(inlineCodes.length, 0);
     assert.equal(template, md);
     // 念のため round-trip も確認
-    assert.equal(restoreCode(template, codeBlocks, inlineCodes), md);
+    assert.equal(restoreCode(template, codeBlocks), md);
   });
 
   test('blockquote 内のインラインコードも抽出対象外', () => {
     const md = '> 引用文中の `foo` という識別子\n';
-    const { template, codeBlocks, inlineCodes } = extractCode(md);
+    const { template, codeBlocks } = extractCode(md);
     assert.equal(codeBlocks.length, 0);
-    assert.equal(inlineCodes.length, 0);
     assert.equal(template, md);
   });
 
   test('prose 中にプレースホルダ風文字列があっても衝突しない（escape による退避）', () => {
     // このシステム自体を解説する記事を想定: prose 中で「⟨⟨BLOCK_0⟩⟩」を文字列として参照
     const md = '解説: ⟨⟨BLOCK_0⟩⟩ という記法を使う。\n\n```ts\nconst x = 1;\n```\n';
-    const { template, codeBlocks, inlineCodes } = extractCode(md);
+    const { template, codeBlocks } = extractCode(md);
     // template には実際のプレースホルダだけが exactly 1 回だけ出現する
     assert.equal(codeBlocks.length, 1);
     // round-trip で元に戻る
-    const restored = restoreCode(template, codeBlocks, inlineCodes);
+    const restored = restoreCode(template, codeBlocks);
     assert.equal(restored, md);
   });
 
@@ -120,70 +116,42 @@ describe('extractCode', () => {
 });
 
 describe('restoreCode', () => {
-  test('プレースホルダを元の code で置換する', () => {
-    const template = 'use ⟨⟨INLINE_0⟩⟩\n\n⟨⟨BLOCK_0⟩⟩\n';
-    const result = restoreCode(template, ['```\nA\n```'], ['`foo`']);
+  test('BLOCK プレースホルダを元の code で置換する', () => {
+    const template = 'use `foo`\n\n⟨⟨BLOCK_0⟩⟩\n';
+    const result = restoreCode(template, ['```\nA\n```']);
     assert.equal(result, 'use `foo`\n\n```\nA\n```\n');
   });
 
-  test('複数プレースホルダを順番通りに置換', () => {
-    const template = '⟨⟨INLINE_0⟩⟩ and ⟨⟨INLINE_1⟩⟩';
-    const result = restoreCode(template, [], ['`a`', '`b`']);
-    assert.equal(result, '`a` and `b`');
-  });
-
   test('extractCode → restoreCode が round-trip で元に戻る', () => {
-    const md = 'use `foo` and `bar`\n\n```ts\nconst a = 1;\n```\n\nthen ```inline``` ?\n';
-    const { template, codeBlocks, inlineCodes } = extractCode(md);
-    const restored = restoreCode(template, codeBlocks, inlineCodes);
+    const md = 'use `foo` and `bar`\n\n```ts\nconst a = 1;\n```\n\nthen `inline` ?\n';
+    const { template, codeBlocks } = extractCode(md);
+    const restored = restoreCode(template, codeBlocks);
     assert.equal(restored, md);
   });
 
-  test('プレースホルダが残っていたら throw（LLM が消失させた場合の検知）', () => {
-    const template = '⟨⟨INLINE_0⟩⟩'; // INLINE_0 だけだが inlineCodes には 2 個
-    assert.throws(() => restoreCode(template, [], ['`a`', '`b`']), /placeholder/i);
+  test('プレースホルダが消失していたら throw（LLM が drop した場合の検知）', () => {
+    // codeBlocks は 2 個だが template には BLOCK_0 しかない
+    const template = '⟨⟨BLOCK_0⟩⟩';
+    assert.throws(() => restoreCode(template, ['```\nA\n```', '```\nB\n```']), /missing/i);
   });
 
-  test('テンプレートに余分なプレースホルダがあれば throw（LLM が幻覚した場合の検知）', () => {
-    const template = '⟨⟨INLINE_0⟩⟩ ⟨⟨INLINE_5⟩⟩'; // INLINE_5 はそもそも extract されていない
-    assert.throws(() => restoreCode(template, [], ['`a`']), /placeholder/i);
+  test('テンプレートに extract されていない番号のプレースホルダがあれば throw（LLM 幻覚）', () => {
+    // BLOCK_5 は extract されていない。順序チェックが先に走るため order mismatch で reject される
+    const template = '⟨⟨BLOCK_0⟩⟩ ⟨⟨BLOCK_5⟩⟩';
+    assert.throws(() => restoreCode(template, ['```\nA\n```']), /placeholder/i);
   });
 
-  test('プレースホルダの順序が入れ替わっていたら throw（LLM が swap した場合の検知）', () => {
-    // template 内で BLOCK_1 が BLOCK_0 より先に現れる順序入れ替えケース
+  test('プレースホルダの順序が入れ替わっていたら throw（block code の論理順序保護）', () => {
+    // template 内で BLOCK_1 が BLOCK_0 より先に現れる順序入れ替え。
+    // block code の段落順序が swap = 記事の論理構造の破壊なので reject する
+    // (inline と異なり block は文中での自由な reorder が起きないため)
     const template = '前置き ⟨⟨BLOCK_1⟩⟩\n\n後置き ⟨⟨BLOCK_0⟩⟩';
-    assert.throws(() => restoreCode(template, ['```\nA\n```', '```\nB\n```'], []), /placeholder order mismatch/i);
+    assert.throws(() => restoreCode(template, ['```\nA\n```', '```\nB\n```']), /placeholder order mismatch/i);
   });
 
-  test('BLOCK と INLINE のクロス順序入れ替えを検出（expectedSequence 渡し）', () => {
-    // 元のドキュメント順: INLINE_0 → BLOCK_0
-    // LLM が反転: BLOCK_0 → INLINE_0
-    const md = 'use `foo`\n\n```\nA\n```\n';
-    const { codeBlocks, inlineCodes, placeholderSequence } = extractCode(md);
-    // template を意図的に反転させる
-    const swappedTemplate = '⟨⟨BLOCK_0⟩⟩\n\nuse ⟨⟨INLINE_0⟩⟩\n';
-    assert.throws(
-      () => restoreCode(swappedTemplate, codeBlocks, inlineCodes, placeholderSequence),
-      /placeholder order mismatch/i,
-    );
-  });
-
-  test('expectedSequence 通りの順序なら restoreCode 成功', () => {
-    const md = 'use `foo`\n\n```\nA\n```\n';
-    const extracted = extractCode(md);
-    const restored = restoreCode(
-      extracted.template,
-      extracted.codeBlocks,
-      extracted.inlineCodes,
-      extracted.placeholderSequence,
-    );
-    assert.equal(restored, md);
-  });
-
-  test('プレースホルダが重複していたら throw（LLM が duplicate した場合の検知）', () => {
-    // テンプレート内で ⟨⟨BLOCK_0⟩⟩ が 2 回出現 → コード重複挿入のリスク
+  test('プレースホルダが重複していたら throw（LLM duplicate 検知）', () => {
     const template = '⟨⟨BLOCK_0⟩⟩\n\n再掲: ⟨⟨BLOCK_0⟩⟩';
-    assert.throws(() => restoreCode(template, ['```\nA\n```'], []), /appears 2 times/i);
+    assert.throws(() => restoreCode(template, ['```\nA\n```']), /appears 2 times/i);
   });
 
   test('コードブロックの内容にプレースホルダ風の文字列が含まれても誤検知しない', () => {
@@ -192,7 +160,7 @@ describe('restoreCode', () => {
     // 誤って throw してしまうため、このケースで正常に復元できることを保証する
     const template = '解説: ⟨⟨BLOCK_0⟩⟩';
     const codeWithPlaceholderText = '```ts\n// プレースホルダ ⟨⟨BLOCK_1⟩⟩ について\n```';
-    const result = restoreCode(template, [codeWithPlaceholderText], []);
+    const result = restoreCode(template, [codeWithPlaceholderText]);
     assert.equal(result, '解説: ' + codeWithPlaceholderText);
   });
 });

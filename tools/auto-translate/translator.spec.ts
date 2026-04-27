@@ -390,42 +390,6 @@ describe('translateOne', () => {
       assert.ok(calls[1].feedback);
       assert.match(calls[1].feedback, /placeholder/i);
     });
-
-    test('placeholder order swap → 2 回目の feedback に restoreCode の具体的なエラー（位置・期待・実際）と order 強調が含まれる', async () => {
-      // 本番 angular-debounced-resource.md で再現した症状: LLM が連続する INLINE 系 placeholder を
-      // 並び替えてしまう（英語として自然な語順に変えるバイアス）。汎用 feedback では改善しないため、
-      // restoreCode の具体的なエラーメッセージ（"position N: expected X but found Y"）と
-      // 「順序を保て」という明示的な指示を 2 回目の feedback に含める必要がある
-      const ja = buildJaContent({
-        body: '`a` と `b` の話。\n\n```ts\nconst x = 1;\n```\n\nhttps://example.com\n',
-      });
-      const calls: { feedback?: string }[] = [];
-      let count = 0;
-      const client: GeminiClient = mock.fn((input) => {
-        calls.push({ feedback: input.feedback });
-        count++;
-        if (count === 1) {
-          // INLINE_0 と INLINE_1 を入れ替えた出力（restoreCode の order check で throw）
-          return Promise.resolve({
-            title_en: 'Title',
-            body_en: 'About ⟨⟨INLINE_1⟩⟩ and ⟨⟨INLINE_0⟩⟩.\n\n⟨⟨BLOCK_0⟩⟩\n\nhttps://example.com\n',
-          });
-        }
-        return Promise.resolve({
-          title_en: 'Title',
-          body_en: 'About ⟨⟨INLINE_0⟩⟩ and ⟨⟨INLINE_1⟩⟩.\n\n⟨⟨BLOCK_0⟩⟩\n\nhttps://example.com\n',
-        });
-      });
-      const result = await translateOne(makeArgs({ jaContent: ja, geminiClient: client }));
-      assert.equal(result.kind, 'translated');
-      assert.ok(calls[1].feedback);
-      // 具体的なエラー本文が含まれる（restoreCode の "position N: expected ⟨⟨INLINE_X⟩⟩ but found ⟨⟨INLINE_Y⟩⟩"
-      // がそのまま埋め込まれているか確認）。/position/i 単体だと他の feedback パスと区別できないため
-      // expected/found プレースホルダ表記まで含めて検証する
-      assert.match(calls[1].feedback, /position \d+: expected ⟨⟨INLINE_\d+⟩⟩ but found ⟨⟨INLINE_\d+⟩⟩/);
-      // 順序保持の明示（SAME ORDER キーワード）
-      assert.match(calls[1].feedback, /SAME ORDER/);
-    });
   });
 
   describe('proofread リトライ', () => {

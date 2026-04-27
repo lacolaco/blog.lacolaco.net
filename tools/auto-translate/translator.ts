@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 import { errorMessage } from './ast-utils.ts';
-import { extractCode, restoreCode, type PlaceholderRef } from './code-extractor.ts';
+import { extractCode, restoreCode } from './code-extractor.ts';
 import { translateCodeBlock, type CodeTranslatorClient } from './code-translator.ts';
 import { buildEnFrontmatter, getAutoTranslatedFrom, isAutoTranslated, type Frontmatter } from './frontmatter.ts';
 import { proofread, formatProofIssues, type ProofreaderClient } from './proofreader.ts';
@@ -9,7 +9,7 @@ import { validateStructure, type ValidationResult } from './structure-validator.
 
 // PROMPT_VERSION: プロンプト/モデル/構造検証ロジックが変わったらインクリメントしてキャッシュを invalidate する。
 // バージョン履歴は git log で追える（変更時はコミットメッセージに「PROMPT_VERSION N → N+1」と記載）
-export const PROMPT_VERSION = 5;
+export const PROMPT_VERSION = 6;
 // Gemini 3 Flash の preview モデル。本番運用中（2026-04 時点で stable な 3 系 flash モデルは未提供）。
 // 将来 stable 移行・廃止時は GEMINI_MODEL env で適切な ID（例: gemini-3-flash 等の後継 GA 名）に切替可能。
 // 参考: https://ai.google.dev/gemini-api/docs/models
@@ -82,12 +82,10 @@ export function joinFrontmatter(frontmatter: Frontmatter, body: string): string 
 // そのまま埋め込まれることはない。したがって LLM 経由でのプロンプト書き換えは不可能
 function buildPlaceholderFeedback(error: string): string {
   return [
-    `Your previous response did not preserve code placeholders correctly: ${error}`,
+    `Your previous response did not preserve code block placeholders correctly: ${error}`,
     '',
-    'CRITICAL placeholder rules:',
-    '- Each ⟨⟨BLOCK_N⟩⟩ and ⟨⟨INLINE_N⟩⟩ from the source MUST appear exactly once in your output, verbatim.',
-    '- Placeholders MUST appear in the SAME ORDER as in the source. Do NOT reorder them even if it feels more natural in English.',
-    '- If two adjacent ⟨⟨INLINE_N⟩⟩ placeholders appear in source order N then N+1, they MUST appear in the same order in your translation. Restructure the sentence if needed to preserve order.',
+    'CRITICAL ⟨⟨BLOCK_N⟩⟩ placeholder rules:',
+    '- Each ⟨⟨BLOCK_N⟩⟩ from the source MUST appear exactly once in your output, verbatim.',
     '- Do not invent new placeholders. Do not omit any. Do not modify or duplicate them.',
   ].join('\n');
 }
@@ -128,7 +126,7 @@ function buildFeedback(validation: ValidationResult): string {
   }
   lines.push('');
   lines.push(
-    'Please retranslate ensuring all links, images, and bare URL paragraphs from the source are preserved exactly. Do not omit, merge, or wrap any URL into prose. Each placeholder ⟨⟨BLOCK_N⟩⟩ and ⟨⟨INLINE_N⟩⟩ must appear exactly once in your output, verbatim — do not modify, drop, or duplicate them.',
+    'Please retranslate ensuring all links, images, and bare URL paragraphs from the source are preserved exactly. Do not omit, merge, or wrap any URL into prose. Each ⟨⟨BLOCK_N⟩⟩ placeholder must appear exactly once in your output, verbatim — do not modify, drop, or duplicate them.',
   );
   if (hasBlockquoteCodeIssue) {
     lines.push(
@@ -167,8 +165,6 @@ interface CallWithRetriesArgs {
     body: string;
     jaTemplate: string;
     codeBlocks: string[];
-    inlineCodes: string[];
-    placeholderSequence: readonly PlaceholderRef[];
   };
   slug: string;
 }
@@ -181,7 +177,7 @@ async function callWithRetries(
   | { ok: false; attempts: number; thrownAt: number; cause: unknown }
 > {
   const { geminiClient: client, proofreaderClient, codeTranslatorClient, model, input, slug } = args;
-  const { jaTemplate, codeBlocks, inlineCodes, placeholderSequence } = input;
+  const { jaTemplate, codeBlocks } = input;
 
   // 各コードブロックを個別翻訳（コメントのみ）。インラインコードは識別子なので翻訳しない。
   // ブロック間は独立しているため Promise.all で並列化する
@@ -213,7 +209,7 @@ async function callWithRetries(
     // 翻訳結果（プレースホルダ入り）を、コメント翻訳済みのコードブロック + インラインコードで復元する
     let restoredBody: string;
     try {
-      restoredBody = restoreCode(output.body_en, translatedCodeBlocks, inlineCodes, placeholderSequence);
+      restoredBody = restoreCode(output.body_en, translatedCodeBlocks);
     } catch (e) {
       // LLM がプレースホルダを drop / 幻覚した場合に到達。retry で改善する可能性
       lastFailure = { kind: 'placeholder' };
@@ -361,8 +357,6 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
         body: ja.body,
         jaTemplate: extracted.template,
         codeBlocks: extracted.codeBlocks,
-        inlineCodes: extracted.inlineCodes,
-        placeholderSequence: extracted.placeholderSequence,
       },
       slug,
     });
