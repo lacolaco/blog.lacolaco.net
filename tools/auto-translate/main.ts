@@ -1,6 +1,7 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import { readFile, writeFile, unlink, readdir } from 'node:fs/promises';
 import * as path from 'node:path';
+import { errorMessage } from './ast-utils.ts';
 import { classifyFile, jaToEnPath } from './discover.ts';
 import type { CodeTranslatorClient } from './code-translator.ts';
 import type { ProofreaderClient } from './proofreader.ts';
@@ -240,7 +241,7 @@ async function listJaFiles(contentDir: string): Promise<string[]> {
 type ReadEnResult =
   | { kind: 'present'; content: string; frontmatter: Frontmatter }
   | { kind: 'absent' }
-  | { kind: 'parse-error'; error: Error };
+  | { kind: 'parse-error'; error: unknown };
 
 async function readEn(enPath: string): Promise<ReadEnResult> {
   let content: string;
@@ -257,7 +258,7 @@ async function readEn(enPath: string): Promise<ReadEnResult> {
   } catch (e) {
     // パース不能な en は手動翻訳の破損か自動翻訳の破損か区別できない。
     // 手動 en を上書きするリスクを避けるため、当該記事は failed として skip する
-    return { kind: 'parse-error', error: e as Error };
+    return { kind: 'parse-error', error: e };
   }
 }
 
@@ -301,7 +302,7 @@ async function main(): Promise<void> {
       jaContent = await readFile(jaPath, 'utf8');
       ja = splitFrontmatter(jaContent).frontmatter;
     } catch (e) {
-      console.error(`[auto-translate] ja parse error for ${baseName}: ${(e as Error).message}`);
+      console.error(`[auto-translate] ja parse error for ${baseName}: ${errorMessage(e)}`);
       stats.failed++;
       continue;
     }
@@ -311,14 +312,14 @@ async function main(): Promise<void> {
       enFile = await readEn(enPath);
     } catch (e) {
       // 権限エラー等の I/O 異常は当該記事を失敗扱いにして継続
-      console.error(`[auto-translate] failed to read en for ${baseName}: ${(e as Error).message}`);
+      console.error(`[auto-translate] failed to read en for ${baseName}: ${errorMessage(e)}`);
       stats.failed++;
       continue;
     }
     if (enFile.kind === 'parse-error') {
       // YAML 破損した en が手動 en か自動 en か区別できない。手動 en の保護を優先して skip
       console.error(
-        `[auto-translate] en frontmatter parse error for ${path.basename(enPath)}: ${enFile.error.message} — skipping to protect potentially manual en`,
+        `[auto-translate] en frontmatter parse error for ${path.basename(enPath)}: ${errorMessage(enFile.error)} — skipping to protect potentially manual en`,
       );
       stats.failed++;
       continue;
@@ -344,7 +345,7 @@ async function main(): Promise<void> {
           console.log(`[auto-translate] removed orphaned auto-translation: ${path.basename(enPath)}`);
           stats.deleted++;
         } catch (e) {
-          console.error(`[auto-translate] failed to delete ${path.basename(enPath)}: ${(e as Error).message}`);
+          console.error(`[auto-translate] failed to delete ${path.basename(enPath)}: ${errorMessage(e)}`);
           stats.failed++;
         }
         break;
@@ -367,7 +368,7 @@ async function main(): Promise<void> {
               console.log(`[auto-translate] translated: ${path.basename(enPath)}`);
               stats.translated++;
             } catch (e) {
-              console.error(`[auto-translate] failed to write ${path.basename(enPath)}: ${(e as Error).message}`);
+              console.error(`[auto-translate] failed to write ${path.basename(enPath)}: ${errorMessage(e)}`);
               stats.failed++;
             }
             break;
@@ -377,7 +378,7 @@ async function main(): Promise<void> {
               console.log(`[auto-translate] frontmatter-only: ${path.basename(enPath)}`);
               stats.frontmatterOnly++;
             } catch (e) {
-              console.error(`[auto-translate] failed to write ${path.basename(enPath)}: ${(e as Error).message}`);
+              console.error(`[auto-translate] failed to write ${path.basename(enPath)}: ${errorMessage(e)}`);
               stats.failed++;
             }
             break;

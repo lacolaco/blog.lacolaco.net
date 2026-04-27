@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
+import { errorMessage } from './ast-utils.ts';
 import { extractCode, restoreCode, type PlaceholderRef } from './code-extractor.ts';
 import { translateCodeBlock, type CodeTranslatorClient } from './code-translator.ts';
 import { buildEnFrontmatter, getAutoTranslatedFrom, isAutoTranslated, type Frontmatter } from './frontmatter.ts';
@@ -158,7 +159,7 @@ async function callWithRetries(
 ): Promise<
   | { ok: true; output: GeminiOutput; attempts: number }
   | { ok: false; attempts: number; lastFailure: RetryFailureReason | undefined }
-  | { ok: false; attempts: number; thrownAt: number; cause: Error }
+  | { ok: false; attempts: number; thrownAt: number; cause: unknown }
 > {
   const { geminiClient: client, proofreaderClient, codeTranslatorClient, model, input, slug } = args;
   const { jaTemplate, codeBlocks, inlineCodes, placeholderSequence } = input;
@@ -187,7 +188,7 @@ async function callWithRetries(
       output = await client({ title: input.title, body: jaTemplate, feedback }, model);
     } catch (e) {
       // 試行中に API がエラー（ネットワーク・5xx・429 等）。試行番号を保持して呼び出し元へ
-      return { ok: false, attempts: attempt, thrownAt: attempt, cause: e as Error };
+      return { ok: false, attempts: attempt, thrownAt: attempt, cause: e };
     }
 
     // 翻訳結果（プレースホルダ入り）を、コメント翻訳済みのコードブロック + インラインコードで復元する
@@ -199,7 +200,7 @@ async function callWithRetries(
       lastFailure = { kind: 'placeholder' };
       if (attempt < TOTAL_ATTEMPTS) {
         console.warn(
-          `[auto-translate] placeholder restoration failed (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${(e as Error).message} — retrying`,
+          `[auto-translate] placeholder restoration failed (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${errorMessage(e)} — retrying`,
         );
         feedback = `Your previous response did not preserve all code placeholders correctly. Each placeholder ⟨⟨BLOCK_N⟩⟩ and ⟨⟨INLINE_N⟩⟩ from the source MUST appear exactly once in your output, in a position that makes sense for the translation. Do not invent new placeholders. Do not omit any.`;
       }
@@ -266,7 +267,7 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
   try {
     ja = splitFrontmatter(jaContent);
   } catch (e) {
-    return { kind: 'failed', reason: `ja frontmatter parse error: ${(e as Error).message}` };
+    return { kind: 'failed', reason: `ja frontmatter parse error: ${errorMessage(e)}` };
   }
 
   const jaTitleRaw = ja.frontmatter.title;
@@ -285,7 +286,7 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
       // パース不能な en が手動翻訳かどうか区別できない。上書きリスクを避け失敗扱い。
       // main.ts は parse-error を事前に検出して translateOne を呼ばないが、defense-in-depth として
       // 直接呼び出された場合にも安全側に倒す
-      return { kind: 'failed', reason: `existing en parse error: ${(e as Error).message}` };
+      return { kind: 'failed', reason: `existing en parse error: ${errorMessage(e)}` };
     }
     if (isAutoTranslated(en.frontmatter)) {
       existingEnHash = getAutoTranslatedFrom(en.frontmatter);
@@ -324,7 +325,7 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
   try {
     extracted = extractCode(ja.body);
   } catch (e) {
-    return { kind: 'failed', reason: `code extraction failed: ${(e as Error).message}` };
+    return { kind: 'failed', reason: `code extraction failed: ${errorMessage(e)}` };
   }
 
   // API 呼ぶ（リトライ込み）。callWithRetries は API 例外を内部 catch して outcome に変換するため、
@@ -347,14 +348,14 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
       slug,
     });
   } catch (e) {
-    return { kind: 'failed', reason: `unexpected error: ${(e as Error).message}` };
+    return { kind: 'failed', reason: `unexpected error: ${errorMessage(e)}` };
   }
 
   if (!outcome.ok) {
     if ('thrownAt' in outcome) {
       return {
         kind: 'failed',
-        reason: `Gemini API error on attempt ${outcome.thrownAt}/${TOTAL_ATTEMPTS}: ${outcome.cause.message}`,
+        reason: `Gemini API error on attempt ${outcome.thrownAt}/${TOTAL_ATTEMPTS}: ${errorMessage(outcome.cause)}`,
       };
     }
     const lastReason = (() => {

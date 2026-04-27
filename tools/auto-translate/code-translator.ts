@@ -4,6 +4,8 @@
 // - 行数一致と fence 保持を最低限のサニティチェック（厳密な構文検証は LLM では困難）
 // - 検証失敗・API 失敗 → 原文を返す（fail-safe）。「翻訳されない」より「壊れる」方が悪い
 
+import { errorMessage } from './ast-utils.ts';
+
 export type CodeTranslatorClient = (code: string, model: string) => Promise<string>;
 
 export interface TranslateCodeBlockArgs {
@@ -99,8 +101,13 @@ function stripComments(code: string): string {
   result = result.replace(/<!--[\s\S]*?-->/g, ''); // <!-- ... -->
   // (?<!:) 負先読みで URL の :// は除外（hasTranslatableComment と同じヒューリスティック）
   result = result.replace(/(?<!:)\/\/[^\n]*/g, ''); // // line comment
-  // # 行コメント（shebang は除外、行頭近接のみ）
-  result = result.replace(/(^|\n)([ \t]*)#(?!!)[^\n]*/g, '$1$2'); // インデント保持
+  // # コメント（shebang は除外）。hasTranslatableComment と同じく行頭・行中の両方をカバー。
+  // 行頭 #: (^|\n)[ \t]*#(?!!) のあとの行内容を除去（インデント保持）
+  result = result.replace(/(^|\n)([ \t]*)#(?!!)[^\n]*/g, '$1$2');
+  // 行中 #: 文字列リテラル考慮なしの簡易ヒューリスティック。code 内の前後に空白がある # の後を除去。
+  // 偽陽性（"a#b" のような hash 文字使用）は稀であり、stripComments は片方向比較に使うため
+  // ja/en で同じ偽陽性除去が起きれば問題にならない
+  result = result.replace(/[ \t]+#(?!!)[^\n]*/g, '');
   return result;
 }
 
@@ -114,7 +121,7 @@ export async function translateCodeBlock(args: TranslateCodeBlockArgs): Promise<
   try {
     translated = await client(code, model);
   } catch (e) {
-    console.warn(`[auto-translate] code block comment translation failed: ${(e as Error).message} — keeping original`);
+    console.warn(`[auto-translate] code block comment translation failed: ${errorMessage(e)} — keeping original`);
     return code;
   }
 
