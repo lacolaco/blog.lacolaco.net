@@ -168,6 +168,22 @@ describe('validateStructure', () => {
     assert.equal(result.ok, true);
   });
 
+  test('blockquote 内コードブロックの内容が一致 → ok', () => {
+    const source = '> ```ts\n> const x = 1;\n> ```\n';
+    const target = '> ```ts\n> const x = 1;\n> ```\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, true);
+  });
+
+  test('blockquote 内コードのコメントが翻訳されている → ng (blockquoteCodeContent)', () => {
+    // blockquote 内コードは LLM が直接見るためコメントを翻訳するリスクがある。byte 一致を強制
+    const source = '> ```ts\n> // 元コメント\n> const x = 1;\n> ```\n';
+    const target = '> ```ts\n> // translated comment\n> const x = 1;\n> ```\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'blockquoteCodeContent'));
+  });
+
   test('翻訳結果に source にないインラインコードが追加されている → ng (inlineCodes count)', () => {
     const source = 'plain text\n';
     const target = 'translated `extra` text\n';

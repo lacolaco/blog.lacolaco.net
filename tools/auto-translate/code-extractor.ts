@@ -11,7 +11,9 @@ const remarkProcessor = remark().use(remarkGfm);
 
 const BLOCK_PLACEHOLDER = (i: number) => `⟨⟨BLOCK_${i}⟩⟩`;
 const INLINE_PLACEHOLDER = (i: number) => `⟨⟨INLINE_${i}⟩⟩`;
-const PLACEHOLDER_PATTERN = /⟨⟨(BLOCK|INLINE)_(\d+)⟩⟩/g;
+// g フラグ付きモジュール定数は exec() ループで lastIndex が残留する落とし穴があるため、
+// パターンは source 文字列で保持して使用箇所で new RegExp する
+const PLACEHOLDER_PATTERN_SOURCE = '⟨⟨(BLOCK|INLINE)_(\\d+)⟩⟩';
 
 // prose 中に文字列として ⟨⟨ や ⟩⟩ が現れる場合（このシステム自体を解説する記事等）に、
 // extractCode が生成するプレースホルダと衝突しないよう一旦別文字に escape する。
@@ -124,20 +126,27 @@ export function restoreCode(template: string, codeBlocks: string[], inlineCodes:
 
   // テンプレート内のプレースホルダを順序通りに置換。
   // String#replace のコールバック形式を使い、$ を含む code が special replacement として誤解釈されないようにする
-  const restored = template.replace(PLACEHOLDER_PATTERN, (_match, kind: string, idxStr: string) => {
-    const idx = Number(idxStr);
-    if (kind === 'BLOCK') {
-      if (idx >= codeBlocks.length) {
-        throw new Error(`Restore failed: placeholder ⟨⟨BLOCK_${idx}⟩⟩ has no corresponding code block (hallucinated?)`);
+  const restored = template.replace(
+    new RegExp(PLACEHOLDER_PATTERN_SOURCE, 'g'),
+    (_match, kind: string, idxStr: string) => {
+      const idx = Number(idxStr);
+      if (kind === 'BLOCK') {
+        if (idx >= codeBlocks.length) {
+          throw new Error(
+            `Restore failed: placeholder ⟨⟨BLOCK_${idx}⟩⟩ has no corresponding code block (hallucinated?)`,
+          );
+        }
+        return codeBlocks[idx];
       }
-      return codeBlocks[idx];
-    }
-    // INLINE
-    if (idx >= inlineCodes.length) {
-      throw new Error(`Restore failed: placeholder ⟨⟨INLINE_${idx}⟩⟩ has no corresponding inline code (hallucinated?)`);
-    }
-    return inlineCodes[idx];
-  });
+      // INLINE
+      if (idx >= inlineCodes.length) {
+        throw new Error(
+          `Restore failed: placeholder ⟨⟨INLINE_${idx}⟩⟩ has no corresponding inline code (hallucinated?)`,
+        );
+      }
+      return inlineCodes[idx];
+    },
+  );
 
   // extractCode で escape した ⟪⟪ ⟫⟫ を元の ⟨⟨ ⟩⟩ に戻す（prose 中・code 内容両方に適用）
   return unescapeBareMarkers(restored);

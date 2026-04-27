@@ -12,7 +12,7 @@ export interface StructureCounts {
   bareUrlParagraphs: number;
 }
 
-export type StructureMismatchKind = keyof StructureCounts;
+export type StructureMismatchKind = keyof StructureCounts | 'blockquoteCodeContent';
 
 export interface StructureMismatch {
   kind: StructureMismatchKind;
@@ -47,18 +47,30 @@ function isInBlockquote(ancestors: readonly Parent[]): boolean {
   return ancestors.some((a) => a.type === 'blockquote');
 }
 
-function snapshotStructure(markdown: string): StructureSnapshot {
+interface StructureSnapshotInternal {
+  counts: StructureCounts;
+  // blockquote 内コードは code-extractor で抽出されないため LLM プロンプトに直接渡る。
+  // byte-identical 保持を検証するため、内容を保持して validateStructure で比較する
+  blockquoteCodeContents: string[];
+}
+
+function snapshotStructureInternal(markdown: string): StructureSnapshotInternal {
   const tree = remarkProcessor.parse(markdown);
   let codeBlocks = 0;
   let inlineCodes = 0;
   let images = 0;
   let links = 0;
   let bareUrlParagraphs = 0;
+  const blockquoteCodeContents: string[] = [];
 
   visitParents(tree, (node, ancestors: Parent[]) => {
-    // blockquote 内の要素は code-extractor 側でも抽出対象外。
-    // ja/en 両方で同じ条件で数える限り、validateStructure の対称性は崩れない
-    if (isInBlockquote(ancestors)) return;
+    if (isInBlockquote(ancestors)) {
+      // blockquote 内の code は別途内容比較対象として保持する
+      if (node.type === 'code') {
+        blockquoteCodeContents.push((node as { value?: string }).value ?? '');
+      }
+      return;
+    }
 
     if (node.type === 'code') {
       codeBlocks++;
@@ -78,7 +90,12 @@ function snapshotStructure(markdown: string): StructureSnapshot {
 
   return {
     counts: { codeBlocks, inlineCodes, images, links, bareUrlParagraphs },
+    blockquoteCodeContents,
   };
+}
+
+function snapshotStructure(markdown: string): StructureSnapshot {
+  return { counts: snapshotStructureInternal(markdown).counts };
 }
 
 export function countStructure(markdown: string): StructureCounts {
@@ -86,8 +103,8 @@ export function countStructure(markdown: string): StructureCounts {
 }
 
 export function validateStructure(source: string, target: string): ValidationResult {
-  const src = snapshotStructure(source);
-  const tgt = snapshotStructure(target);
+  const src = snapshotStructureInternal(source);
+  const tgt = snapshotStructureInternal(target);
   const mismatches: StructureMismatch[] = [];
 
   const kinds: (keyof StructureCounts)[] = ['codeBlocks', 'inlineCodes', 'images', 'links', 'bareUrlParagraphs'];
@@ -97,12 +114,22 @@ export function validateStructure(source: string, target: string): ValidationRes
     }
   }
 
-  // コードブロック・インラインコードの内容比較は実施しない:
-  // 新アーキテクチャでは LLM に code を渡さず、translator 側で extractCode → restoreCode する。
-  // - コードブロック: 別経路でコメントのみ翻訳されるため byte 内容は意図的に異なる
-  // - インラインコード: ja のものを byte 一致で復元するため、validateStructure では常に一致する
-  //   （ここで内容比較しても dead code。restoreCode のテストで動作保証）
+  // コードブロック（blockquote 外）・インラインコードの内容比較は実施しない:
+  // - コードブロック: code-translator でコメントのみ翻訳されるため byte 内容は意図的に異なる
+  // - インラインコード: extractCode → restoreCode で ja のものを byte 一致で復元するため常に一致
   // カウント一致は codeBlocks / inlineCodes で担保済み
+
+  // blockquote 内コードはプレースホルダ化されず LLM プロンプトに直接渡るため、byte 一致を検証する。
+  // 順序を含めた完全一致を要求（contents 配列の長さ・各要素の byte 一致）
+  const srcBq = src.blockquoteCodeContents;
+  const tgtBq = tgt.blockquoteCodeContents;
+  if (srcBq.length !== tgtBq.length || srcBq.some((v, i) => v !== tgtBq[i])) {
+    mismatches.push({
+      kind: 'blockquoteCodeContent',
+      source: srcBq.length,
+      target: tgtBq.length,
+    });
+  }
 
   return { ok: mismatches.length === 0, source: src.counts, target: tgt.counts, mismatches };
 }
