@@ -155,6 +155,31 @@ describe('restoreCode', () => {
     assert.throws(() => restoreCode(template, ['```\nA\n```', '```\nB\n```'], []), /placeholder order mismatch/i);
   });
 
+  test('BLOCK と INLINE のクロス順序入れ替えを検出（expectedSequence 渡し）', () => {
+    // 元のドキュメント順: INLINE_0 → BLOCK_0
+    // LLM が反転: BLOCK_0 → INLINE_0
+    const md = 'use `foo`\n\n```\nA\n```\n';
+    const { codeBlocks, inlineCodes, placeholderSequence } = extractCode(md);
+    // template を意図的に反転させる
+    const swappedTemplate = '⟨⟨BLOCK_0⟩⟩\n\nuse ⟨⟨INLINE_0⟩⟩\n';
+    assert.throws(
+      () => restoreCode(swappedTemplate, codeBlocks, inlineCodes, placeholderSequence),
+      /placeholder order mismatch/i,
+    );
+  });
+
+  test('expectedSequence 通りの順序なら restoreCode 成功', () => {
+    const md = 'use `foo`\n\n```\nA\n```\n';
+    const extracted = extractCode(md);
+    const restored = restoreCode(
+      extracted.template,
+      extracted.codeBlocks,
+      extracted.inlineCodes,
+      extracted.placeholderSequence,
+    );
+    assert.equal(restored, md);
+  });
+
   test('プレースホルダが重複していたら throw（LLM が duplicate した場合の検知）', () => {
     // テンプレート内で ⟨⟨BLOCK_0⟩⟩ が 2 回出現 → コード重複挿入のリスク
     const template = '⟨⟨BLOCK_0⟩⟩\n\n再掲: ⟨⟨BLOCK_0⟩⟩';

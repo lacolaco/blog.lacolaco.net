@@ -38,6 +38,11 @@ function unescapeBareMarkers(s: string): string {
   return s.split(ESCAPED_OPEN).join('⟨⟨').split(ESCAPED_CLOSE).join('⟩⟩');
 }
 
+export interface PlaceholderRef {
+  kind: 'BLOCK' | 'INLINE';
+  idx: number;
+}
+
 export interface ExtractedCode {
   /**
    * プレースホルダで code を置換した markdown。LLM にはこれを渡す。
@@ -56,6 +61,11 @@ export interface ExtractedCode {
    * codeBlocks と同様に escape 処理済みのテキストである点に注意
    */
   inlineCodes: string[];
+  /**
+   * BLOCK と INLINE の出現順序（ドキュメント順、左→右）。
+   * restoreCode の検証で「LLM が BLOCK と INLINE のクロス順序を入れ替えた」を検出するために使う
+   */
+  placeholderSequence: PlaceholderRef[];
 }
 
 // 注意: blockquote 内の code/inlineCode は markdown.slice() が "> " プレフィックス混在の文字列を返すため、
@@ -70,6 +80,8 @@ export function extractCode(markdown: string): ExtractedCode {
   const replacements: { start: number; end: number; replacement: string }[] = [];
   const codeBlocks: string[] = [];
   const inlineCodes: string[] = [];
+  // ドキュメント順（visit 順 = 左→右出現順）の placeholder 列。クロス型の順序検証に使う
+  const placeholderSequence: PlaceholderRef[] = [];
 
   visitParents(tree, (node: Node, ancestors: Parent[]) => {
     const pos = node.position;
@@ -84,10 +96,12 @@ export function extractCode(markdown: string): ExtractedCode {
       // codeBlocks には escape された状態で保持。restoreCode の最後で全体を unescape する
       codeBlocks.push(escapedMarkdown.slice(start, end));
       replacements.push({ start, end, replacement: BLOCK_PLACEHOLDER(idx) });
+      placeholderSequence.push({ kind: 'BLOCK', idx });
     } else if (node.type === 'inlineCode') {
       const idx = inlineCodes.length;
       inlineCodes.push(escapedMarkdown.slice(start, end));
       replacements.push({ start, end, replacement: INLINE_PLACEHOLDER(idx) });
+      placeholderSequence.push({ kind: 'INLINE', idx });
     }
   });
 
@@ -97,7 +111,7 @@ export function extractCode(markdown: string): ExtractedCode {
   for (const r of replacements) {
     template = template.slice(0, r.start) + r.replacement + template.slice(r.end);
   }
-  return { template, codeBlocks, inlineCodes };
+  return { template, codeBlocks, inlineCodes, placeholderSequence };
 }
 
 function countOccurrences(haystack: string, needle: string): number {
@@ -105,39 +119,50 @@ function countOccurrences(haystack: string, needle: string): number {
   return haystack.split(needle).length - 1;
 }
 
-// テンプレート内のプレースホルダが extractCode で付与した番号順（0, 1, 2, ...）通りに
-// 左→右で並んでいることを検証する。LLM がブロック順序を入れ替えた場合に検出する
-// （順序入れ替えは記事の意味的構造を壊すため拒否する）
-function validatePlaceholderOrder(template: string): { ok: boolean; reason?: string } {
+// テンプレート内のプレースホルダ列が expected（extractCode の visit 順、ドキュメント順）と
+// 完全一致することを検証する。BLOCK 同士・INLINE 同士の番号順だけでなく、
+// BLOCK と INLINE のクロス順序入れ替えも検出する。
+// 順序入れ替えは記事の意味的構造を壊すため拒否する
+function validatePlaceholderOrder(
+  template: string,
+  expected: readonly PlaceholderRef[],
+): { ok: boolean; reason?: string } {
   const re = new RegExp(PLACEHOLDER_PATTERN_SOURCE, 'g');
-  let blockExpected = 0;
-  let inlineExpected = 0;
+  let i = 0;
   let m: RegExpExecArray | null;
   while ((m = re.exec(template)) !== null) {
-    const kind = m[1];
-    const idx = parseInt(m[2], 10);
-    if (kind === 'BLOCK') {
-      if (idx !== blockExpected) {
-        return {
-          ok: false,
-          reason: `placeholder order mismatch: expected ⟨⟨BLOCK_${blockExpected}⟩⟩ but found ⟨⟨BLOCK_${idx}⟩⟩ (LLM may have swapped block order)`,
-        };
-      }
-      blockExpected++;
-    } else {
-      if (idx !== inlineExpected) {
-        return {
-          ok: false,
-          reason: `placeholder order mismatch: expected ⟨⟨INLINE_${inlineExpected}⟩⟩ but found ⟨⟨INLINE_${idx}⟩⟩ (LLM may have swapped inline order)`,
-        };
-      }
-      inlineExpected++;
+    if (i >= expected.length) {
+      return {
+        ok: false,
+        reason: `placeholder order mismatch: extra placeholder ⟨⟨${m[1]}_${m[2]}⟩⟩ at position ${i} (expected ${expected.length} placeholders total)`,
+      };
     }
+    const kind = m[1] as 'BLOCK' | 'INLINE';
+    const idx = parseInt(m[2], 10);
+    const want = expected[i];
+    if (kind !== want.kind || idx !== want.idx) {
+      return {
+        ok: false,
+        reason: `placeholder order mismatch at position ${i}: expected ⟨⟨${want.kind}_${want.idx}⟩⟩ but found ⟨⟨${kind}_${idx}⟩⟩ (LLM may have swapped placeholder order)`,
+      };
+    }
+    i++;
+  }
+  if (i < expected.length) {
+    return {
+      ok: false,
+      reason: `placeholder order mismatch: missing ${expected.length - i} placeholders at the end (expected total ${expected.length}, got ${i})`,
+    };
   }
   return { ok: true };
 }
 
-export function restoreCode(template: string, codeBlocks: string[], inlineCodes: string[]): string {
+export function restoreCode(
+  template: string,
+  codeBlocks: string[],
+  inlineCodes: string[],
+  expectedSequence?: readonly PlaceholderRef[],
+): string {
   // テンプレート側で各プレースホルダが exactly 1 回現れることを検証する。
   // - 0 回 = LLM が drop した
   // - 2 回以上 = LLM が重複させた（同じ code が複数箇所に挿入されてしまう）
@@ -164,10 +189,38 @@ export function restoreCode(template: string, codeBlocks: string[], inlineCodes:
     }
   }
 
-  // 順序検証: ⟨⟨BLOCK_0⟩⟩ → ⟨⟨BLOCK_1⟩⟩ → ... の昇順で並んでいるべき（LLM の swap 検出）
-  const order = validatePlaceholderOrder(template);
-  if (!order.ok) {
-    throw new Error(`Restore failed: ${order.reason ?? 'placeholder order invalid'}`);
+  // 順序検証: expectedSequence が渡されればドキュメント順との完全一致を検証（クロス型入れ替えも検出）。
+  // 渡されない場合は BLOCK 同士・INLINE 同士の番号昇順のみ検証（後方互換）
+  if (expectedSequence !== undefined) {
+    const order = validatePlaceholderOrder(template, expectedSequence);
+    if (!order.ok) {
+      throw new Error(`Restore failed: ${order.reason ?? 'placeholder order invalid'}`);
+    }
+  } else {
+    // legacy: BLOCK と INLINE をそれぞれ独立に番号昇順チェック
+    const re = new RegExp(PLACEHOLDER_PATTERN_SOURCE, 'g');
+    let blockExpected = 0;
+    let inlineExpected = 0;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(template)) !== null) {
+      const kind = m[1];
+      const idx = parseInt(m[2], 10);
+      if (kind === 'BLOCK') {
+        if (idx !== blockExpected) {
+          throw new Error(
+            `Restore failed: placeholder order mismatch: expected ⟨⟨BLOCK_${blockExpected}⟩⟩ but found ⟨⟨BLOCK_${idx}⟩⟩`,
+          );
+        }
+        blockExpected++;
+      } else {
+        if (idx !== inlineExpected) {
+          throw new Error(
+            `Restore failed: placeholder order mismatch: expected ⟨⟨INLINE_${inlineExpected}⟩⟩ but found ⟨⟨INLINE_${idx}⟩⟩`,
+          );
+        }
+        inlineExpected++;
+      }
+    }
   }
 
   // テンプレート内のプレースホルダを順序通りに置換。
