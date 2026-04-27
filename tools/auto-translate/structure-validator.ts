@@ -13,18 +13,22 @@ export interface StructureCounts {
   bareUrlParagraphs: number;
 }
 
-export type StructureMismatchKind = keyof StructureCounts | 'blockquoteCodeContent';
+export type StructureMismatchKind = keyof StructureCounts | 'blockquoteCodeContent' | 'blockquoteInlineCodeContent';
 
 export interface StructureMismatch {
   kind: StructureMismatchKind;
+  /** ソース文書のカウント */
   source: number;
+  /** ターゲット文書のカウント */
   target: number;
   /**
-   * blockquoteCodeContent でのみ使用:
+   * `blockquoteCodeContent` でのみ使用。差異の種類を識別する:
    * - 'count': source/target の個数自体が異なる
-   * - 'content': 個数は同じだが内容が異なる
+   * - 'content': 個数は同じだが内容が異なる。`differingCount` に差異のあるブロック数が入る
    */
   differKind?: 'count' | 'content';
+  /** content 差異時のみ設定。source 全体のうち何ブロックで差異が出たか */
+  differingCount?: number;
 }
 
 export interface ValidationResult {
@@ -48,9 +52,10 @@ const remarkProcessor = remark().use(remarkGfm);
 
 interface StructureSnapshotInternal {
   counts: StructureCounts;
-  // blockquote 内コードは code-extractor で抽出されないため LLM プロンプトに直接渡る。
+  // blockquote 内のコード関連は code-extractor で抽出されないため LLM プロンプトに直接渡る。
   // byte-identical 保持を検証するため、内容を保持して validateStructure で比較する
   blockquoteCodeContents: string[];
+  blockquoteInlineCodeContents: string[];
 }
 
 function snapshotStructureInternal(markdown: string): StructureSnapshotInternal {
@@ -61,17 +66,21 @@ function snapshotStructureInternal(markdown: string): StructureSnapshotInternal 
   let links = 0;
   let bareUrlParagraphs = 0;
   const blockquoteCodeContents: string[] = [];
+  const blockquoteInlineCodeContents: string[] = [];
 
   visitParents(tree, (node, ancestors: Parent[]) => {
     if (hasBlockquoteAncestor(ancestors)) {
-      // blockquote 内の code は別途内容比較対象として保持し、通常カウントには含めない
-      // （別経路の byte-identical 検証で扱う）
+      // blockquote 内の code は通常カウント対象外、別経路で byte-identical 検証
       if (node.type === 'code') {
         blockquoteCodeContents.push(node.value);
         return;
       }
-      // image / link / inlineCode は LLM が直接扱うので、blockquote 内でも通常カウントに含める。
-      // fall-through して下のカウントロジックへ
+      // blockquote 内のインラインコードは通常カウントにも含めるが、
+      // code-extractor も抽出対象外で LLM が直接扱うため、内容も別途 byte 比較する
+      if (node.type === 'inlineCode') {
+        blockquoteInlineCodeContents.push(node.value);
+        // fall-through して通常 inlineCodes カウントもインクリメント
+      }
     }
 
     if (node.type === 'code') {
@@ -93,6 +102,7 @@ function snapshotStructureInternal(markdown: string): StructureSnapshotInternal 
   return {
     counts: { codeBlocks, inlineCodes, images, links, bareUrlParagraphs },
     blockquoteCodeContents,
+    blockquoteInlineCodeContents,
   };
 }
 
@@ -135,12 +145,31 @@ export function validateStructure(source: string, target: string): ValidationRes
     if (differingIndices.length > 0) {
       mismatches.push({
         kind: 'blockquoteCodeContent',
-        source: differingIndices.length, // content 差異時の source/target は「差異のあるブロック数」「全体ブロック数」
-        target: srcBq.length,
+        source: srcBq.length,
+        target: tgtBq.length,
         differKind: 'content',
+        differingCount: differingIndices.length,
       });
     }
   }
+
+  // blockquote 内インラインコードも code-extractor で抽出されないため LLM が直接扱う。
+  // 内容を byte 比較する（順序依存）。inlineCodes の通常カウントは別途検証済み
+  const srcBqInline = src.blockquoteInlineCodeContents;
+  const tgtBqInline = tgt.blockquoteInlineCodeContents;
+  if (srcBqInline.length === tgtBqInline.length) {
+    const differingInline = srcBqInline.map((v, i) => (v !== tgtBqInline[i] ? i : -1)).filter((i) => i >= 0);
+    if (differingInline.length > 0) {
+      mismatches.push({
+        kind: 'blockquoteInlineCodeContent',
+        source: srcBqInline.length,
+        target: tgtBqInline.length,
+        differKind: 'content',
+        differingCount: differingInline.length,
+      });
+    }
+  }
+  // count 差異は inlineCodes 全体カウントで検出されるため、ここでは検出不要
 
   return { ok: mismatches.length === 0, source: src.counts, target: tgt.counts, mismatches };
 }

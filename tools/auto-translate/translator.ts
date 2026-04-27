@@ -82,11 +82,18 @@ function buildFeedback(validation: ValidationResult): string {
           `- ${m.kind}: a code block inside a blockquote was added or removed (source has ${m.source}, translation has ${m.target}).`,
         );
       } else {
-        // content 差異時、source = 差異のあるブロック数、target = 全体ブロック数
+        // content 差異: differingCount が差異のあるブロック数、source が全体数
+        const differing = m.differingCount ?? 0;
         lines.push(
-          `- ${m.kind}: ${m.source} of ${m.target} code blocks inside blockquotes were modified. The content must remain BYTE-FOR-BYTE identical to the source.`,
+          `- ${m.kind}: ${differing} of ${m.source} code blocks inside blockquotes were modified. The content must remain BYTE-FOR-BYTE identical to the source.`,
         );
       }
+      hasBlockquoteCodeIssue = true;
+    } else if (m.kind === 'blockquoteInlineCodeContent') {
+      const differing = m.differingCount ?? 0;
+      lines.push(
+        `- ${m.kind}: ${differing} of ${m.source} inline code spans inside blockquotes were modified. Inline code inside blockquotes must remain BYTE-FOR-BYTE identical to the source.`,
+      );
       hasBlockquoteCodeIssue = true;
     } else {
       lines.push(`- ${m.kind}: source has ${m.source}, translation has ${m.target}`);

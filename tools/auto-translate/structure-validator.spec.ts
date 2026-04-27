@@ -205,6 +205,22 @@ describe('validateStructure', () => {
     assert.equal(m.differKind, 'content');
   });
 
+  test('blockquote 内インラインコードの内容が一致 → ok', () => {
+    const source = '> 引用文中の `foo` という識別子\n';
+    const target = '> Quoted text contains `foo` identifier\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, true);
+  });
+
+  test('blockquote 内インラインコードの内容が改変された → ng (blockquoteInlineCodeContent)', () => {
+    const source = '> 引用文中の `foo` という識別子\n';
+    // LLM が `foo` を `bar` に変更
+    const target = '> Quoted text contains `bar` identifier\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'blockquoteInlineCodeContent'));
+  });
+
   test('blockquote 内コードが追加・削除された → ng (blockquoteCodeContent, count)', () => {
     const source = '> ```ts\n> const a = 1;\n> ```\n';
     const target = '> ```ts\n> const a = 1;\n> ```\n\n> ```ts\n> const b = 2;\n> ```\n';

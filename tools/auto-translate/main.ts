@@ -44,7 +44,7 @@ Other structural rules:
 - URLs and image paths: leave unchanged.
 - Bare URL paragraphs (a paragraph consisting only of a single URL) MUST remain as standalone paragraphs containing only that URL. Do NOT wrap them in prose, do NOT add surrounding sentences.
 - Markdown structure (heading levels, lists, blockquotes, tables) must be preserved.
-- Code blocks INSIDE blockquotes (lines starting with "> ") are NOT replaced by placeholders and appear in the source you receive. Keep these blockquote-nested code blocks BYTE-FOR-BYTE identical to the source. Do NOT translate their comments. Do NOT change any character including quotation marks, dashes, or whitespace.
+- Code blocks AND inline code INSIDE blockquotes (lines starting with "> ") are NOT replaced by placeholders and appear in the source you receive. Keep these blockquote-nested code blocks AND inline code (text wrapped in backticks within blockquotes) BYTE-FOR-BYTE identical to the source. Do NOT translate their comments. Do NOT change any character including quotation marks, dashes, or whitespace.
 - LaTeX math ($...$ and $$...$$) and Mermaid: keep as-is.
 
 Output only the translated title and body (with placeholders preserved) in the requested JSON schema. Do not include the YAML frontmatter.`;
