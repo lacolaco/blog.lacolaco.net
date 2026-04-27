@@ -70,6 +70,7 @@ Detect:
    - Subject-verb agreement (e.g., "the data is" vs "the data are" — match the source's grammatical number).
    - Sentence fragments that lack a subject or verb, when the source had a complete sentence.
 7. Code-context literal capitalization: when the prose refers to a programming-language literal value (booleans, null/None, undefined), the literal MUST match the EXACT casing used in the article's surrounding code blocks. Do NOT capitalize it as English prose ("becomes True" when the code uses \`true\` is WRONG — must be "becomes \`true\`"). Conversely, do NOT lowercase a literal whose code uses capitalized form. Examples by language: JS/TS uses lowercase \`true\`/\`false\`/\`null\`/\`undefined\`; Python uses capitalized \`True\`/\`False\`/\`None\`. NOTE: do NOT flag the English words "This"/"That"/"Self" at sentence start — only flag when the prose is clearly referring to a code keyword (typically wrapped in backticks or named alongside other code identifiers).
+8. Code reference order: when two or more backtick-wrapped code identifiers appear adjacent in a single sentence, their RELATIVE ORDER in the English translation MUST match the order in the Japanese source. Example: source "\`foo\`と\`bar\`を比較する" → translation "compare \`foo\` and \`bar\`" (correct), NOT "compare \`bar\` and \`foo\`" (WRONG — reversed). The translator may reorder them to fit natural English; flag this as a translation defect because the swap loses the author's intended emphasis.
 
 Do NOT flag:
 - Style or tone preferences (the translator handles voice).
