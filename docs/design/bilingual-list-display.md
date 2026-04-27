@@ -1,4 +1,4 @@
-# Bilingual List Display 設計書
+# Translated List Display 設計書
 
 ## 背景
 
@@ -15,30 +15,42 @@
 
 ## 採用方針: Option D (per-entry locale-aware switch)
 
-list の構造 (どの記事が並ぶか・順序・件数) は **そのまま** 維持し、bilingual な記事 (en 版が存在する記事) のみ user の locale で title / href を切り替える。
+list の構造 (どの記事が並ぶか・順序・件数) は **そのまま** 維持し、翻訳がある記事 (en 版が存在する記事) のみ user の locale で title / href を切り替える。
 
 ### 動作仕様
 
 - list は ja を canonical entry として 1 記事 1 行で表示する (slug ベース dedup)
-- 各 entry は build 時に bilingual flag (en 版が存在するか) と en metadata (en title, en href) を持つ
+- 各 entry は build 時に「en 翻訳の有無」と「en の title / href」を metadata として持つ
 - client-side で `navigator.languages` を見て user locale を判定:
-  - locale が en preference (e.g., `en-*` が `ja-*` より優先): bilingual entry の表示を en に swap
+  - locale が en preference (e.g., `en-*` が `ja-*` より優先): 翻訳がある entry の表示を en に swap
   - それ以外 (ja preference / 不明): ja 表示のまま
-- 非 bilingual entry (en 版なし) は常に ja 表示 (swap 対象外)
+- 翻訳がない entry (ja のみ) は常に ja 表示 (swap 対象外)
 
 ### この採用が他 option より優れる理由
 
 - **A (両方表示)**: 同一記事が list の 2 行を消費して読み手を混乱させる
 - **B (en を list から除外)**: en 訪問者が list 経由で en に到達できない (動線喪失)
 - **C (locale 別 list 分離)**: ルーティング新設 + navigation UI 追加で大規模 rework
-- **D**: list の本数も順序も変えず、各 entry が「読み手の locale に合った表示」になる。bilingual な記事だけ表示が動的に切り替わる
+- **D**: list の本数も順序も変えず、各 entry が「読み手の locale に合った表示」になる。翻訳がある記事だけ表示が動的に切り替わる
 
 ### 評価軸での position
 
-1. 読み手体験: ja 読者は ja のまま、en 読者は bilingual 記事を en で読める
+1. 読み手体験: ja 読者は ja のまま、en 読者は翻訳がある記事を en で読める
 2. 実装コスト: build 時に metadata を attach + 小さい client-side script 追加
 3. 将来拡張性: locale 数を増やすときも metadata 追加と判定ロジック拡張で対応可能
 4. SSG 制約: build 時 HTML には ja を入れる (no-JS 環境では ja で表示される) + JS で swap する progressive enhancement
+
+## 命名規約
+
+技術名:
+
+- 型 / プロパティ: `translations` (将来複数 locale 拡張を見越して複数形)
+  - 例: `{ post: jaEntry, translations: { en: { title, href } } }`
+- HTML data 属性: `data-translation-en-title` / `data-translation-en-href`
+  - locale を URI segment 風にネストして将来の言語追加 (`data-translation-zh-title` 等) に拡張可能
+- client-side script: `src/scripts/translation-swap.ts`
+
+「bilingual」のように 2 言語前提の語彙は使わない (将来の多言語拡張で破綻するため)。
 
 ## 実装方針
 
@@ -46,8 +58,8 @@ list の構造 (どの記事が並ぶか・順序・件数) は **そのまま**
 
 1. `queryAvailablePosts` の結果に対して `deduplicatePosts` で 1 slug 1 entry に絞る (ja 優先)
 2. 各 entry に「対応する en 版が存在するか」のフラグと、存在する場合は en title / href を計算して attach
-   - 例: `{ post: jaEntry, bilingual: { en: { title: '...', href: '...' } } | null }`
-3. List コンポーネントは、bilingual がある entry に `data-bilingual-title-en` / `data-bilingual-href-en` を埋め込む
+   - 型: `{ post: jaEntry, translations: { en: { title: string; href: string } } | null }`
+3. List コンポーネントは、`translations.en` がある entry に `data-translation-en-title` / `data-translation-en-href` を埋め込む
 
 ### Client-side
 
@@ -55,7 +67,7 @@ list の構造 (どの記事が並ぶか・順序・件数) は **そのまま**
 2. `navigator.languages` を確認:
    - en が ja より先 → en preference
    - ja が先 or どちらも無し → ja のまま
-3. en preference の場合、`[data-bilingual-href-en]` を持つ要素の text content と href を data 属性の値に置換
+3. en preference の場合、`[data-translation-en-href]` を持つ要素の text content と href を data 属性の値に置換
 
 ### SEO / no-JS / 直接 link 対応
 
@@ -66,10 +78,10 @@ list の構造 (どの記事が並ぶか・順序・件数) は **そのまま**
 
 ### 影響範囲
 
-- `src/libs/query/posts.ts`: `queryAvailablePosts` の結果に bilingual metadata を attach する関数を追加 (新規 / 既存 dedup を再利用)
-- `src/layouts/List.astro` (または子 component): bilingual の場合 `data-*` 属性を埋め込む
-- `src/scripts/bilingual-swap.ts` (新規) or 同等の inline script: client-side swap 実装
-- `src/pages/index.astro` / `channels/[channel].astro` / `tags/[tag].astro` / `tags/index.astro`: 上記の bilingual-aware query を使用するよう変更
+- `src/libs/query/posts.ts`: `queryAvailablePosts` の結果に `translations` metadata を attach する関数を追加 (新規 / 既存 dedup を再利用)
+- `src/layouts/List.astro` (または子 component): `translations.en` がある場合 `data-translation-en-*` 属性を埋め込む
+- `src/scripts/translation-swap.ts` (新規): client-side swap 実装
+- `src/pages/index.astro` / `channels/[channel].astro` / `tags/[tag].astro` / `tags/index.astro`: 上記の translations-aware query を使用するよう変更
 
 `tags/index.astro` の `usedCount` 計算は dedup 済み posts に対して行うことで `[tag].astro` の表示件数と一致する。
 
@@ -78,7 +90,7 @@ list の構造 (どの記事が並ぶか・順序・件数) は **そのまま**
 1. **client-side JS 必須**: no-JS で en preference な訪問者は ja で表示される (劣化はあるが致命的ではない、SEO 経由の en 直接リンクで補える)
 2. **ja を canonical**: HTML 初期表示は ja。これは og:title / RSS / 検索 index の挙動と整合する
 3. **locale 判定ロジック**: `navigator.languages` の最初に `en` を含む要素が `ja` より先に出現 = en preference、という単純判定で開始。明示切替 (UI による toggle) は将来の拡張
-4. **bilingual の対応関係**: ja の slug に対応する en は `<slug>.en.md` で 1:1 (複数言語に拡張する場合の対応関係は将来別 design doc)
+4. **slug 1:1 前提**: ja の slug に対応する翻訳は `<slug>.en.md` で 1:1 (複数言語に拡張する場合の対応関係は将来別 design doc)
 
 ## 関連 / 別 design doc 化対象
 
