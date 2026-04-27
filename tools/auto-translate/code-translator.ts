@@ -14,13 +14,15 @@ export interface TranslateCodeBlockArgs {
 
 // 翻訳対象になりうるコメントを含むかの簡易ヒューリスティック。
 // 言語非依存に「//」「#」「/* */」「<!-- -->」を検出。
-// 改行を跨いで誤検出しないよう、行コメントは [^\n]* で同一行内に限定する
-const COMMENT_PATTERNS: RegExp[] = [
-  /\/\/[ \t]*([^\n]*)/g, // C/JS/TS line comment
-  /\/\*([\s\S]*?)\*\//g, // C/JS block comment
-  /<!--([\s\S]*?)-->/g, // HTML comment
+// 改行を跨いで誤検出しないよう、行コメントは [^\n]* で同一行内に限定する。
+// パターンは関数内で都度 new RegExp で生成する（モジュールスコープの g フラグ付き定数は
+// lastIndex がイテレーション間で残るため、ステートを持たせないことで堅牢にする）
+const COMMENT_PATTERN_SOURCES: string[] = [
+  '\\/\\/[ \\t]*([^\\n]*)', // C/JS/TS line comment
+  '\\/\\*([\\s\\S]*?)\\*\\/', // C/JS block comment
+  '<!--([\\s\\S]*?)-->', // HTML comment
   // # コメントは shell/python 等で頻出。`#include` 等の preprocessor を避けるため行頭近接のみ
-  /(?:^|\n)[ \t]*#[ \t]+([^\n]*)/g,
+  '(?:^|\\n)[ \\t]*#[ \\t]+([^\\n]*)',
 ];
 
 export function hasTranslatableComment(code: string): boolean {
@@ -28,8 +30,8 @@ export function hasTranslatableComment(code: string): boolean {
   // 非 ASCII 文字（日本語等）を含むコメントだけを翻訳対象とする。
   // \s（\n, \r, \t 等）はホワイトスペースなので除外する: /* */ や <!-- --> の複数行コメントで
   // m[1] に \n が混じるため、これを非 ASCII 扱いすると英語のみの複数行コメントを誤って翻訳対象にしてしまう
-  for (const re of COMMENT_PATTERNS) {
-    re.lastIndex = 0;
+  for (const source of COMMENT_PATTERN_SOURCES) {
+    const re = new RegExp(source, 'g');
     let m: RegExpExecArray | null;
     while ((m = re.exec(code)) !== null) {
       const content = m[1].trim();

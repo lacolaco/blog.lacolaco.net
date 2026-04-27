@@ -61,6 +61,22 @@ describe('extractCode', () => {
     const { codeBlocks } = extractCode(md);
     assert.equal(codeBlocks[0], '```html\n<img src="x” />\n```');
   });
+
+  test('blockquote 内のコードブロックでも round-trip 可能', () => {
+    // 既存コードを引用しながら解説するパターン
+    const md = '前置き\n\n> ```ts\n> const x = 1;\n> ```\n\n後置き\n';
+    const { template, codeBlocks, inlineCodes } = extractCode(md);
+    // 抽出されたら復元で元に戻ることを確認（remark が blockquote 内の code を扱えるかに依存）
+    const restored = restoreCode(template, codeBlocks, inlineCodes);
+    assert.equal(restored, md);
+  });
+
+  test('blockquote 内のインラインコードでも round-trip 可能', () => {
+    const md = '> 引用文中の `foo` という識別子\n';
+    const { template, codeBlocks, inlineCodes } = extractCode(md);
+    const restored = restoreCode(template, codeBlocks, inlineCodes);
+    assert.equal(restored, md);
+  });
 });
 
 describe('restoreCode', () => {
