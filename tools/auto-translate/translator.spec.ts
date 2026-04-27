@@ -331,6 +331,44 @@ describe('translateOne', () => {
       assert.match(feedback, /code/i);
     });
 
+    test('構造検証 NG（プレースホルダは保持されたが prose の bare URL paragraph が消失）→ リトライで復旧', async () => {
+      // プレースホルダを保持しているので restoreCode は通過する。が、ja の bareUrlParagraphs 数が
+      // 合わず validateStructure が ng を返す → buildFeedback でリトライ
+      const calls: { feedback?: string }[] = [];
+      let count = 0;
+      const client: GeminiClient = mock.fn((input) => {
+        calls.push({ feedback: input.feedback });
+        count++;
+        if (count === 1) {
+          // bare URL paragraph (https://example.com の単独行) が prose に巻き込まれた
+          return Promise.resolve({
+            title_en: 'Title',
+            body_en: 'Paragraph 1.\n\n⟨⟨BLOCK_0⟩⟩\n\nSee this link: https://example.com here.\n',
+          });
+        }
+        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE });
+      });
+      const result = await translateOne(makeArgs({ geminiClient: client }));
+      assert.equal(result.kind, 'translated');
+      assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 2);
+      // 2 回目の feedback は buildFeedback 由来（structure mismatch の説明を含む）
+      assert.ok(calls[1].feedback);
+      assert.match(calls[1].feedback, /bareUrlParagraphs|structural/i);
+    });
+
+    test('構造検証が継続失敗 → failed.reason に "structure validation failed" が含まれる', async () => {
+      // プレースホルダは保持するが bareUrlParagraphs カウントが常に合わない出力を返す
+      const client: GeminiClient = mock.fn(() =>
+        Promise.resolve({
+          title_en: 'Title',
+          body_en: 'Paragraph.\n\n⟨⟨BLOCK_0⟩⟩\n\nSee link https://example.com here.\n',
+        }),
+      );
+      const result = await translateOne(makeArgs({ geminiClient: client }));
+      assert.equal(result.kind, 'failed');
+      assert.ok('reason' in result && result.reason.includes('structure validation failed'));
+    });
+
     test('placeholder drop（LLM がプレースホルダを消失） → リトライで復旧', async () => {
       // 新アーキテクチャ: LLM には code を見せず ⟨⟨BLOCK_N⟩⟩ のみ渡す。LLM がプレースホルダを drop した場合、
       // restoreCode が throw して translator が retry する

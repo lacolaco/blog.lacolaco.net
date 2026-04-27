@@ -108,4 +108,13 @@ describe('translateCodeBlock', () => {
     const result = await translateCodeBlock({ code: original, client, model: MODEL });
     assert.equal(result, original);
   });
+
+  test('チルダフェンス (~~~) の翻訳でも fence intact 判定が正しく動作する', async () => {
+    const original = '~~~ts\n// 日本語コメント\nconst x = 1;\n~~~';
+    const translated = '~~~ts\n// translated comment\nconst x = 1;\n~~~';
+    const client: CodeTranslatorClient = mock.fn(() => Promise.resolve(translated));
+    const result = await translateCodeBlock({ code: original, client, model: MODEL });
+    // チルダフェンスもバッククォートフェンスと同等に扱われ、誤って原文 fallback しないこと
+    assert.equal(result, translated);
+  });
 });

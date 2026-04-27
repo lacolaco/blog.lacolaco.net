@@ -45,8 +45,9 @@ function lineCount(s: string): number {
 }
 
 function fenceLines(code: string): string[] {
-  // 行頭判定なので trim しない（インデント済みの ``` はネスト/コンテンツの一部であり fence ではない）
-  return code.split('\n').filter((l) => /^```/.test(l));
+  // 行頭判定なので trim しない（インデント済みの fence はネスト/コンテンツの一部であり fence ではない）。
+  // バッククォート（```）とチルダ（~~~）の両形式を扱う。remark もどちらも code ノードとしてパースする
+  return code.split('\n').filter((l) => /^(?:`{3,}|~{3,})/.test(l));
 }
 
 function isCodeFenceIntact(code: string): boolean {
