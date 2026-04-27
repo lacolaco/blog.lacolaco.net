@@ -9,7 +9,7 @@ import { validateStructure, type ValidationResult } from './structure-validator.
 
 // PROMPT_VERSION: プロンプト/モデル/構造検証ロジックが変わったらインクリメントしてキャッシュを invalidate する。
 // バージョン履歴は git log で追える（変更時はコミットメッセージに「PROMPT_VERSION N → N+1」と記載）
-export const PROMPT_VERSION = 4;
+export const PROMPT_VERSION = 5;
 // Gemini 3 Flash の preview モデル。本番運用中（2026-04 時点で stable な 3 系 flash モデルは未提供）。
 // 将来 stable 移行・廃止時は GEMINI_MODEL env で適切な ID（例: gemini-3-flash 等の後継 GA 名）に切替可能。
 // 参考: https://ai.google.dev/gemini-api/docs/models
