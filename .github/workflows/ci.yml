@@ -319,6 +319,8 @@ jobs:
             - frontmatter（---で囲まれたYAML部分）の変更
             - 画像ファイルの変更
             - コードファイルの変更
+            - **本文中の backtick 識別子とコードブロック内の変数名の不一致**（例: 本文「`active` が一致」、コード内「`activePromise`」）。これは原著者が意図的に使う informal な参照スタイルで、auto-translate の proofreader stage が責任を持って判定する
+            - **auto_translated_from frontmatter を持つファイル（`*.en.md`）の翻訳起因 defect**（識別子参照、文法、casing 等）。これは auto-translate パイプライン（PROOFREADER_INSTRUCTION）の責任範囲。content-review では明らかな typo / markdown 構文エラーのみに限定する
 
             結果をJSONで返してください。問題がなければ approved: true、問題があれば approved: false。summary にレビューの要約、issues 配列に具体的な指摘を入れてください。
           claude_args: >-
