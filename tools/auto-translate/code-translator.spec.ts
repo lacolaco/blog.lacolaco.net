@@ -13,6 +13,14 @@ describe('hasTranslatableComment', () => {
     assert.equal(hasTranslatableComment('```python\n# 説明\nx = 1\n```'), true);
   });
 
+  test('# とコメント本文の間にスペースがなくても検出（#コメント スタイル）', () => {
+    assert.equal(hasTranslatableComment('```python\n#日本語コメント\nx = 1\n```'), true);
+  });
+
+  test('shebang 行 (#!) は翻訳対象として検出しない', () => {
+    assert.equal(hasTranslatableComment('```bash\n#!/usr/bin/env bash\necho hello\n```'), false);
+  });
+
   test('/* ... */ ブロックコメント検出', () => {
     assert.equal(hasTranslatableComment('```ts\n/* 説明 */\nconst x = 1;\n```'), true);
   });

@@ -21,8 +21,10 @@ const COMMENT_PATTERN_SOURCES: string[] = [
   '\\/\\/[ \\t]*([^\\n]*)', // C/JS/TS line comment
   '\\/\\*([\\s\\S]*?)\\*\\/', // C/JS block comment
   '<!--([\\s\\S]*?)-->', // HTML comment
-  // # コメントは shell/python 等で頻出。`#include` 等の preprocessor を避けるため行頭近接のみ
-  '(?:^|\\n)[ \\t]*#[ \\t]+([^\\n]*)',
+  // # コメントは shell/python 等で頻出。
+  // 行頭近接のみ判定（`#include` のような preprocessor 行は内容に来るが、ここでは shebang `#!` を除外）。
+  // `#コメント` のようにスペースなしで書かれるスタイルも捉えるため、# 直後のスペースは [ \t]* にする
+  '(?:^|\\n)[ \\t]*#(?!!)[ \\t]*([^\\n]*)',
 ];
 
 export function hasTranslatableComment(code: string): boolean {

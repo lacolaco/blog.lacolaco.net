@@ -155,6 +155,14 @@ function createProofreaderClient(ai: GoogleGenAI): ProofreaderClient {
     if (typeof parsed.ok !== 'boolean' || !Array.isArray(parsed.issues)) {
       throw new Error('Proofreader response did not match schema');
     }
+    // 各 issue の必須フィールドが string であることを検証（responseSchema が強制するが、
+    // SDK 側のバグや malformed JSON を想定して防御的に確認）
+    const issuesValid = parsed.issues.every(
+      (i) => typeof i.location === 'string' && typeof i.problem === 'string' && typeof i.suggestion === 'string',
+    );
+    if (!issuesValid) {
+      throw new Error('Proofreader issue items did not match schema');
+    }
     return { ok: parsed.ok, issues: parsed.issues };
   };
 }
