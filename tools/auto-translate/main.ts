@@ -73,7 +73,7 @@ Rules:
 - Do NOT change identifiers, string literals, numeric literals, operators, or any non-comment content.
 - Do NOT add or remove lines. The line count of input and output MUST match exactly.
 - Do NOT change the language tag of the fence (\`\`\`ts must stay \`\`\`ts, etc.).
-- Output the entire code block, including the surrounding triple-backtick fences, with comments translated.`;
+- Place the translated code block (including the surrounding triple-backtick fences) into the \`translated_code\` JSON field as required by the response schema.`;
 
 function createCodeTranslatorClient(apiKey: string): CodeTranslatorClient {
   const ai = new GoogleGenAI({ apiKey });
