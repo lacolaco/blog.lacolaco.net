@@ -1,8 +1,9 @@
 ---
-import { queryAvailablePosts, queryTags } from '@lib/query';
+import { queryAvailablePosts, queryTags, deduplicatePosts } from '@lib/query';
 import Tags from '../../layouts/Tags.astro';
 
-const posts = await queryAvailablePosts();
+// 同一 slug の ja/en は重複カウントしない (タグ一覧の usedCount が [tag].astro の表示件数と一致するように)
+const posts = deduplicatePosts(await queryAvailablePosts());
 const tags = await queryTags();
 
 const tagWithCount = tags
