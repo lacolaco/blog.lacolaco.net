@@ -73,6 +73,25 @@ export function joinFrontmatter(frontmatter: Frontmatter, body: string): string 
   return `---\n${yaml}---\n\n${body}`;
 }
 
+// restoreCode が throw した詳細メッセージ（"placeholder order mismatch at position N: expected X but found Y"
+// など）を再翻訳プロンプトに含めるための feedback ビルダー。汎用文言だけだと LLM が「英語として自然な
+// 語順」へ並び替えるバイアスを修正できないため、具体的なエラーと order 保持を明示する。
+//
+// インジェクション安全性: error 文字列は restoreCode 内のハードコード文言 + プレースホルダ名（kind は
+// `BLOCK|INLINE` のリテラル、idx は parseInt 済みの数値）のみから構成され、LLM の自由文字列が
+// そのまま埋め込まれることはない。したがって LLM 経由でのプロンプト書き換えは不可能
+function buildPlaceholderFeedback(error: string): string {
+  return [
+    `Your previous response did not preserve code placeholders correctly: ${error}`,
+    '',
+    'CRITICAL placeholder rules:',
+    '- Each ⟨⟨BLOCK_N⟩⟩ and ⟨⟨INLINE_N⟩⟩ from the source MUST appear exactly once in your output, verbatim.',
+    '- Placeholders MUST appear in the SAME ORDER as in the source. Do NOT reorder them even if it feels more natural in English.',
+    '- If two adjacent ⟨⟨INLINE_N⟩⟩ placeholders appear in source order N then N+1, they MUST appear in the same order in your translation. Restructure the sentence if needed to preserve order.',
+    '- Do not invent new placeholders. Do not omit any. Do not modify or duplicate them.',
+  ].join('\n');
+}
+
 function buildFeedback(validation: ValidationResult): string {
   const lines = ['The translation has structural mismatches with the source:'];
   let hasBlockquoteCodeIssue = false;
@@ -202,7 +221,7 @@ async function callWithRetries(
         console.warn(
           `[auto-translate] placeholder restoration failed (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${errorMessage(e)} — retrying`,
         );
-        feedback = `Your previous response did not preserve all code placeholders correctly. Each placeholder ⟨⟨BLOCK_N⟩⟩ and ⟨⟨INLINE_N⟩⟩ from the source MUST appear exactly once in your output, in a position that makes sense for the translation. Do not invent new placeholders. Do not omit any.`;
+        feedback = buildPlaceholderFeedback(errorMessage(e));
       }
       continue;
     }
