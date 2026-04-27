@@ -64,6 +64,7 @@ Detect:
    - Indefinite article agreement (a/an) — must match the PHONETIC sound of the following word, not its spelling. "an HTTP" is correct (vowel sound /eɪ/); "an \`loading\`" is WRONG ("loading" starts with consonant /l/, must be "a"); "a hour" is WRONG (silent h, must be "an"). When the article precedes a backtick-wrapped identifier, evaluate the identifier's first phonetic sound.
    - Subject-verb agreement (e.g., "the data is" vs "the data are" — match the source's grammatical number).
    - Sentence fragments that lack a subject or verb, when the source had a complete sentence.
+7. Code-context literal capitalization: when the prose refers to a programming-language literal value (boolean \`true\`/\`false\`, \`null\`, \`undefined\`, \`this\`, etc.), the literal MUST appear in lowercase as it does in the source code, NOT capitalized as English ("True"/"False"/"Null"). Example: "becomes True" is WRONG when the code uses \`true\` — must be "becomes \`true\`" or "becomes true". This is especially important for TypeScript/JavaScript/Python contexts where these keywords are case-sensitive.
 
 Do NOT flag:
 - Style or tone preferences (the translator handles voice).
