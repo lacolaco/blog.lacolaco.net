@@ -14,23 +14,24 @@ describe('extractCode', () => {
     assert.equal(codeBlocks[0], '```ts\nconst a = 1;\n```');
   });
 
-  test('インラインコードを ⟨⟨INLINE_N⟩⟩ に置換する', () => {
+  test('インラインコードは抽出対象外（ja→en では既に英語/コードなので翻訳されない）', () => {
+    // ja → en 翻訳では inline code (`Signal` 等) は既に target language。
+    // placeholder 化するとja-en 語順差を「LLM の swap」と誤検出する原因になるため、
+    // inline は template にそのまま残し LLM に渡す。LLM は backtick 識別子を保持する想定
     const md = 'use `foo` and `bar` here\n';
     const { template, inlineCodes } = extractCode(md);
-    assert.equal(inlineCodes.length, 2);
-    assert.equal(template, 'use ⟨⟨INLINE_0⟩⟩ and ⟨⟨INLINE_1⟩⟩ here\n');
-    assert.equal(inlineCodes[0], '`foo`');
-    assert.equal(inlineCodes[1], '`bar`');
+    assert.equal(inlineCodes.length, 0);
+    assert.equal(template, 'use `foo` and `bar` here\n');
   });
 
-  test('コードブロック・インラインコードが混在', () => {
+  test('コードブロックは抽出する、インラインはそのまま残す', () => {
     const md = 'use `foo`\n\n```\ncode\n```\n\nthen `bar`\n';
     const { template, codeBlocks, inlineCodes } = extractCode(md);
     assert.equal(codeBlocks.length, 1);
-    assert.equal(inlineCodes.length, 2);
-    assert.match(template, /⟨⟨INLINE_0⟩⟩/);
+    assert.equal(inlineCodes.length, 0);
+    assert.match(template, /use `foo`/);
     assert.match(template, /⟨⟨BLOCK_0⟩⟩/);
-    assert.match(template, /⟨⟨INLINE_1⟩⟩/);
+    assert.match(template, /then `bar`/);
   });
 
   test('複数コードブロックは順番に番号付け', () => {

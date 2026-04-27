@@ -24,17 +24,20 @@ Title rules:
 - Do NOT expand short Japanese titles into long descriptive English titles. If the source is "Xを対象として見る", prefer "Viewing X as an Object" over "Viewing X as the Object of Your Work".
 - Avoid adding clarifying phrases that are not in the source.
 
-Code placeholders (CRITICAL — read carefully):
-The body you receive has had its code blocks and inline code replaced with opaque placeholders:
+Code blocks (CRITICAL — read carefully):
+The body you receive has had its FENCED code blocks (multi-line \`\`\`...\`\`\` or ~~~...~~~) replaced with opaque placeholders:
 - ⟨⟨BLOCK_0⟩⟩, ⟨⟨BLOCK_1⟩⟩, ... — represent fenced code blocks
-- ⟨⟨INLINE_0⟩⟩, ⟨⟨INLINE_1⟩⟩, ... — represent inline code (was wrapped in backticks in the source)
 
-Rules for placeholders:
-- Each placeholder MUST appear exactly once in your output, in a position that corresponds to where the original code appeared in the source.
+Rules for ⟨⟨BLOCK_N⟩⟩ placeholders:
+- Each placeholder MUST appear exactly once in your output, in a position that corresponds to where the original block appeared in the source.
 - Do NOT translate, modify, or remove placeholders. Copy them verbatim.
 - Do NOT invent new placeholders.
 - Do NOT wrap placeholders in additional backticks, brackets, or formatting.
-- When you reference a placeholder in prose (e.g., describing what the code does), refer to it by its placeholder token directly.
+
+Inline code (single backticks, e.g. \`Signal\`, \`Resource\`):
+- Inline code is NOT replaced by placeholders. It appears verbatim in the body.
+- These are programming identifiers/keywords. They are already in English/code form — do NOT translate them, do NOT change spelling, do NOT add or remove backticks.
+- You MAY reorder inline code within a sentence to fit natural English word order (Japanese SOV → English SVO frequently requires this). Order in the English output need NOT match the source order.
 
 Escape markers (⟪⟪ and ⟫⟫):
 - The source you receive may contain the literal sequences ⟪⟪ and ⟫⟫ (mathematical double angle brackets, U+27EA / U+27EB).
@@ -51,7 +54,6 @@ Other structural rules:
 English correctness rules (CRITICAL — these prevent common LLM defects):
 - Indefinite articles a/an follow PHONETIC sound, not spelling, of the next word: "an HTTP" (vowel sound), "a URL" (consonant /j/), "a one-time" (consonant /w/), "an hour" (silent h). For backtick-wrapped identifiers, use the identifier's first phonetic sound: "a \`loading\`" (consonant /l/), NOT "an \`loading\`".
 - Programming-language literals (booleans, null/None, undefined) MUST keep their source-code casing in prose. Do NOT capitalize "true" to "True" because the word starts a sentence or follows a verb. JS/TS use lowercase \`true\`/\`false\`/\`null\`/\`undefined\`. Python uses capitalized \`True\`/\`False\`/\`None\`. Match what the article's surrounding code blocks use.
-- Adjacent placeholders ⟨⟨INLINE_N⟩⟩⟨⟨INLINE_N+1⟩⟩ MUST appear in the SAME ORDER as the source. If the natural English word order would reverse them, restructure the sentence rather than swap the placeholders.
 
 Output only the translated title and body (with placeholders preserved) in the requested JSON schema. Do not include the YAML frontmatter.`;
 

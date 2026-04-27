@@ -1,6 +1,11 @@
-// LLM に code を見せず prose だけ翻訳させるための extractor / restorer。
-// LLM に code byte-fidelity を要求するのは無理筋なので、コードを抽出してプレースホルダ ⟨⟨BLOCK_N⟩⟩ /
-// ⟨⟨INLINE_N⟩⟩ に置換し、翻訳後にプログラムで復元する。これにより code は LLM を経由しない。
+// LLM に block code を見せず prose だけ翻訳させるための extractor / restorer。
+// block code (multi-line / indent / syntax) は LLM の byte-fidelity が信用できないので
+// プレースホルダ ⟨⟨BLOCK_N⟩⟩ に置換し翻訳後に復元する。
+//
+// inline code (backtick 識別子) は抽出しない。理由: 翻訳方向は常に ja → en で、inline code
+// (`Signal` `Resource` 等) は元から英語/識別子。LLM に翻訳圧力がかからないため改変リスクが
+// 元々低い。逆に placeholder 化すると ja-en の語順差を「LLM の swap」と誤検出してしまい、
+// 自然な英訳 (例: ja `Signal`→`Resource` 順 vs en `Resource`→`Signal` 順) を reject する。
 
 import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
@@ -97,12 +102,8 @@ export function extractCode(markdown: string): ExtractedCode {
       codeBlocks.push(escapedMarkdown.slice(start, end));
       replacements.push({ start, end, replacement: BLOCK_PLACEHOLDER(idx) });
       placeholderSequence.push({ kind: 'BLOCK', idx });
-    } else if (node.type === 'inlineCode') {
-      const idx = inlineCodes.length;
-      inlineCodes.push(escapedMarkdown.slice(start, end));
-      replacements.push({ start, end, replacement: INLINE_PLACEHOLDER(idx) });
-      placeholderSequence.push({ kind: 'INLINE', idx });
     }
+    // inlineCode は抽出しない（top-level のコメント参照）
   });
 
   // 右から左へ置換することでオフセットがズレないようにする

@@ -9,7 +9,7 @@ import { validateStructure, type ValidationResult } from './structure-validator.
 
 // PROMPT_VERSION: プロンプト/モデル/構造検証ロジックが変わったらインクリメントしてキャッシュを invalidate する。
 // バージョン履歴は git log で追える（変更時はコミットメッセージに「PROMPT_VERSION N → N+1」と記載）
-export const PROMPT_VERSION = 5;
+export const PROMPT_VERSION = 6;
 // Gemini 3 Flash の preview モデル。本番運用中（2026-04 時点で stable な 3 系 flash モデルは未提供）。
 // 将来 stable 移行・廃止時は GEMINI_MODEL env で適切な ID（例: gemini-3-flash 等の後継 GA 名）に切替可能。
 // 参考: https://ai.google.dev/gemini-api/docs/models
@@ -82,12 +82,10 @@ export function joinFrontmatter(frontmatter: Frontmatter, body: string): string 
 // そのまま埋め込まれることはない。したがって LLM 経由でのプロンプト書き換えは不可能
 function buildPlaceholderFeedback(error: string): string {
   return [
-    `Your previous response did not preserve code placeholders correctly: ${error}`,
+    `Your previous response did not preserve code block placeholders correctly: ${error}`,
     '',
-    'CRITICAL placeholder rules:',
-    '- Each ⟨⟨BLOCK_N⟩⟩ and ⟨⟨INLINE_N⟩⟩ from the source MUST appear exactly once in your output, verbatim.',
-    '- Placeholders MUST appear in the SAME ORDER as in the source. Do NOT reorder them even if it feels more natural in English.',
-    '- If two adjacent ⟨⟨INLINE_N⟩⟩ placeholders appear in source order N then N+1, they MUST appear in the same order in your translation. Restructure the sentence if needed to preserve order.',
+    'CRITICAL ⟨⟨BLOCK_N⟩⟩ placeholder rules:',
+    '- Each ⟨⟨BLOCK_N⟩⟩ from the source MUST appear exactly once in your output, verbatim.',
     '- Do not invent new placeholders. Do not omit any. Do not modify or duplicate them.',
   ].join('\n');
 }
@@ -128,7 +126,7 @@ function buildFeedback(validation: ValidationResult): string {
   }
   lines.push('');
   lines.push(
-    'Please retranslate ensuring all links, images, and bare URL paragraphs from the source are preserved exactly. Do not omit, merge, or wrap any URL into prose. Each placeholder ⟨⟨BLOCK_N⟩⟩ and ⟨⟨INLINE_N⟩⟩ must appear exactly once in your output, verbatim — do not modify, drop, or duplicate them.',
+    'Please retranslate ensuring all links, images, and bare URL paragraphs from the source are preserved exactly. Do not omit, merge, or wrap any URL into prose. Each ⟨⟨BLOCK_N⟩⟩ placeholder must appear exactly once in your output, verbatim — do not modify, drop, or duplicate them.',
   );
   if (hasBlockquoteCodeIssue) {
     lines.push(
