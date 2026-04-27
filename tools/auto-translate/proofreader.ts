@@ -44,6 +44,10 @@ export function formatProofIssues(issues: ProofIssue[]): string {
     lines.push(`  suggested fix: ${i.suggestion}`);
   }
   lines.push('');
-  lines.push('Please retranslate addressing these issues. Maintain structural fidelity (code blocks unchanged, etc.).');
+  // 翻訳者 LLM はコードブロックを直接見ず ⟨⟨BLOCK_N⟩⟩ プレースホルダのみを受け取るため、
+  // 「code blocks unchanged」ではなくプレースホルダを明示した指示にする
+  lines.push(
+    'Please retranslate addressing these issues. Keep all placeholders ⟨⟨BLOCK_N⟩⟩ and ⟨⟨INLINE_N⟩⟩ verbatim.',
+  );
   return lines.join('\n');
 }

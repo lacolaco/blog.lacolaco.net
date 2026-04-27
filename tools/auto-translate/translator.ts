@@ -192,7 +192,16 @@ async function callWithRetries(
       client: proofreaderClient,
       model,
     });
-    if (proof.ok) {
+    // ok と issues のクロスバリデーション:
+    // - ok=true: issues があっても accept（proofreader が「許容範囲の指摘」とみなした）
+    // - ok=false かつ issues=[]: 不整合な応答。リトライしても feedback が無く改善見込みがないため accept する（fail-open）
+    // - ok=false かつ issues 非空: 通常の retry 経路
+    if (proof.ok || proof.issues.length === 0) {
+      if (!proof.ok) {
+        console.warn(
+          `[auto-translate] proofreader returned ok=false but no issues for ${slug} — treating as accept (cannot retry without feedback)`,
+        );
+      }
       if (attempt > 1) {
         console.info(`[auto-translate] translation accepted on attempt ${attempt} for ${slug}`);
       }

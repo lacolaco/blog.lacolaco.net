@@ -441,6 +441,27 @@ describe('translateOne', () => {
       assert.equal((proofreaderClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 1);
     });
 
+    test('proofreader が ok=false かつ issues=[] → accept（fail-open: feedback なしでリトライしても無意味）', async () => {
+      const geminiClient = makeOkClient();
+      const proofreaderClient: ProofreaderClient = mock.fn(() => Promise.resolve({ ok: false, issues: [] }));
+      const result = await translateOne(makeArgs({ geminiClient, proofreaderClient }));
+      assert.equal(result.kind, 'translated');
+      // 1 回で採用される（リトライ消費しない）
+      assert.equal((geminiClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 1);
+    });
+
+    test('proofreader が ok=true かつ issues 非空 → accept（proofreader 自身の判断を尊重）', async () => {
+      const geminiClient = makeOkClient();
+      const proofreaderClient: ProofreaderClient = mock.fn(() =>
+        Promise.resolve({
+          ok: true,
+          issues: [{ location: 'p1', problem: 'minor', suggestion: 'no action' }],
+        }),
+      );
+      const result = await translateOne(makeArgs({ geminiClient, proofreaderClient }));
+      assert.equal(result.kind, 'translated');
+    });
+
     test('proofreader が throw → fail open で採用される（翻訳全体は止まらない）', async () => {
       const geminiClient = makeOkClient();
       const proofreaderClient: ProofreaderClient = mock.fn(() => Promise.reject(new Error('proofread API down')));
