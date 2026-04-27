@@ -388,16 +388,18 @@ describe('translateOne', () => {
       assert.equal((proofreaderClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 4);
     });
 
-    test('構造検証 NG の attempt では proofread を呼ばない（ローカル検証で先に reject）', async () => {
+    test('placeholder 復元 NG の attempt では proofread を呼ばない（ローカル検証で先に reject）', async () => {
       let count = 0;
       const geminiClient: GeminiClient = mock.fn(() => {
         count++;
+        // TRANSLATED_BODY_BROKEN は ⟨⟨BLOCK_0⟩⟩ を含まないため restoreCode が throw して
+        // placeholder 復元失敗となり、proofread には到達しない
         if (count === 1) return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN });
         return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE });
       });
       const proofreaderClient: ProofreaderClient = mock.fn(() => Promise.resolve({ ok: true, issues: [] }));
       await translateOne(makeArgs({ geminiClient, proofreaderClient }));
-      // 1 回目は構造 NG なので proofread 呼ばれない、2 回目で proofread 呼ばれる
+      // 1 回目は placeholder 復元 NG なので proofread 呼ばれない、2 回目で呼ばれる
       assert.equal((proofreaderClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 1);
     });
 
@@ -406,6 +408,63 @@ describe('translateOne', () => {
       const proofreaderClient: ProofreaderClient = mock.fn(() => Promise.reject(new Error('proofread API down')));
       const result = await translateOne(makeArgs({ geminiClient, proofreaderClient }));
       assert.equal(result.kind, 'translated');
+    });
+  });
+
+  describe('コメント翻訳統合', () => {
+    test('codeTranslator がコメントを翻訳した場合、最終 en にその翻訳が反映される', async () => {
+      // ja: 日本語コメント入りコードブロック
+      const jaWithJaComment = buildJaContent({
+        body: '前文。\n\n```ts\n// 日本語コメント\nconst a = 1;\n```\n\nhttps://example.com\n',
+      });
+      // codeTranslator は日本語コメントを英訳して返す
+      const codeTranslatorClient: CodeTranslatorClient = mock.fn((code) =>
+        Promise.resolve(code.replace('// 日本語コメント', '// translated comment')),
+      );
+      // translator (Gemini) は prose を翻訳して body_en を返す（プレースホルダは保持）
+      const geminiClient: GeminiClient = mock.fn(() =>
+        Promise.resolve({
+          title_en: 'Title',
+          body_en: 'Preface.\n\n⟨⟨BLOCK_0⟩⟩\n\nhttps://example.com\n',
+        }),
+      );
+      const result = await translateOne(makeArgs({ jaContent: jaWithJaComment, geminiClient, codeTranslatorClient }));
+      assert.equal(result.kind, 'translated');
+      assert.ok('enContent' in result);
+      // 出力 en に英訳されたコメントが含まれる（インデックスずれや差し替え漏れがないこと）
+      assert.match(result.enContent, /\/\/ translated comment/);
+      // 元の日本語コメントは含まれない
+      assert.ok(!result.enContent.includes('// 日本語コメント'));
+      // コードブロックの非コメント部分（const a = 1;）は保持
+      assert.match(result.enContent, /const a = 1;/);
+      // codeTranslator が呼ばれていること
+      assert.equal((codeTranslatorClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 1);
+    });
+
+    test('codeTranslator が複数ブロックを処理してインデックスずれせず復元される', async () => {
+      const jaTwoBlocks = buildJaContent({
+        body: '前文。\n\n```ts\n// 一つ目\nconst a = 1;\n```\n\n途中。\n\n```ts\n// 二つ目\nconst b = 2;\n```\n',
+      });
+      // 各ブロックを「コメント翻訳済み」に変換
+      const codeTranslatorClient: CodeTranslatorClient = mock.fn((code) => {
+        if (code.includes('一つ目')) return Promise.resolve(code.replace('// 一つ目', '// first block'));
+        if (code.includes('二つ目')) return Promise.resolve(code.replace('// 二つ目', '// second block'));
+        return Promise.resolve(code);
+      });
+      const geminiClient: GeminiClient = mock.fn(() =>
+        Promise.resolve({
+          title_en: 'Title',
+          body_en: 'Preface.\n\n⟨⟨BLOCK_0⟩⟩\n\nMiddle.\n\n⟨⟨BLOCK_1⟩⟩\n',
+        }),
+      );
+      const result = await translateOne(makeArgs({ jaContent: jaTwoBlocks, geminiClient, codeTranslatorClient }));
+      assert.equal(result.kind, 'translated');
+      assert.ok('enContent' in result);
+      // BLOCK_0 と BLOCK_1 が正しい順序で復元されている
+      const firstIdx = result.enContent.indexOf('// first block');
+      const secondIdx = result.enContent.indexOf('// second block');
+      assert.ok(firstIdx > 0);
+      assert.ok(secondIdx > firstIdx);
     });
   });
 
