@@ -12,9 +12,12 @@ import {
 } from './translator.ts';
 import { buildEnFrontmatter } from './frontmatter.ts';
 import type { ProofreaderClient } from './proofreader.ts';
+import type { CodeTranslatorClient } from './code-translator.ts';
 
 // テスト用デフォルト proofreader: 常に ok を返す（proofread の動作はそれ自身の spec で検証）
 const okProofreader: ProofreaderClient = () => Promise.resolve({ ok: true, issues: [] });
+// テスト用デフォルト codeTranslator: 入力をそのまま返す（コメント翻訳しない = no-op）
+const noopCodeTranslator: CodeTranslatorClient = (code) => Promise.resolve(code);
 
 const MODEL = 'test-model';
 
@@ -38,6 +41,16 @@ const a = 1;
 https://example.com
 `;
 
+// 翻訳結果は placeholder protocol に従う:
+// LLM は code を見ず ⟨⟨BLOCK_N⟩⟩ ⟨⟨INLINE_N⟩⟩ をそのまま返す。translator が restoreCode で復元する
+const TRANSLATED_BODY_OK_TEMPLATE = `Paragraph 1.
+
+⟨⟨BLOCK_0⟩⟩
+
+https://example.com
+`;
+
+// restore 後の最終形（テストの期待値として使用）
 const TRANSLATED_BODY_OK = `Paragraph 1.
 
 \`\`\`ts
@@ -47,6 +60,7 @@ const a = 1;
 https://example.com
 `;
 
+// 構造破壊された翻訳: code block placeholder ⟨⟨BLOCK_0⟩⟩ を消失させた
 const TRANSLATED_BODY_BROKEN = `Paragraph 1 with code: const a = 1; included.
 
 https://example.com
@@ -92,7 +106,9 @@ function buildEnContent(bodyHash: string, body = TRANSLATED_BODY_OK, extraFm: Re
   return joinFrontmatter(fm, body);
 }
 
-function makeOkClient(output = { title_en: 'Title', body_en: TRANSLATED_BODY_OK }): GeminiClient {
+// LLM 動作のモック: 受け取った body はプレースホルダ入り。返り値もプレースホルダ入りで返す
+// （実 LLM の契約: ⟨⟨BLOCK_N⟩⟩ などをそのまま preserve する）
+function makeOkClient(output = { title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE }): GeminiClient {
   return mock.fn(() => Promise.resolve(output));
 }
 
@@ -207,6 +223,7 @@ describe('translateOne', () => {
       enContent: null,
       geminiClient: makeOkClient(),
       proofreaderClient: okProofreader,
+      codeTranslatorClient: noopCodeTranslator,
       model: MODEL,
       ...overrides,
     };
@@ -270,7 +287,7 @@ describe('translateOne', () => {
       const client: GeminiClient = mock.fn(() => {
         count++;
         if (count <= 2) return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN });
-        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK });
+        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE });
       });
       const result = await translateOne(makeArgs({ geminiClient: client }));
       assert.equal(result.kind, 'translated');
@@ -282,7 +299,7 @@ describe('translateOne', () => {
       const client: GeminiClient = mock.fn(() => {
         count++;
         if (count === 1) return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN });
-        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK });
+        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE });
       });
       const result = await translateOne(makeArgs({ geminiClient: client }));
       assert.equal(result.kind, 'translated');
@@ -305,7 +322,7 @@ describe('translateOne', () => {
         calls.push({ feedback: input.feedback });
         count++;
         if (count === 1) return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN });
-        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK });
+        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE });
       });
       await translateOne(makeArgs({ geminiClient: client }));
       assert.equal(calls[0].feedback, undefined);
@@ -314,25 +331,26 @@ describe('translateOne', () => {
       assert.match(feedback, /code/i);
     });
 
-    test('codeBlockContent 不一致時、フィードバックに detail（具体的な差分内容）が含まれる', async () => {
+    test('placeholder drop（LLM がプレースホルダを消失） → リトライで復旧', async () => {
+      // 新アーキテクチャ: LLM には code を見せず ⟨⟨BLOCK_N⟩⟩ のみ渡す。LLM がプレースホルダを drop した場合、
+      // restoreCode が throw して translator が retry する
       const calls: { feedback?: string }[] = [];
-      const jaWithCode = buildJaContent({ body: '本文\n\n```\nfoo\n```\n' });
-      // ターゲットはコード数同数だが内容が違う → codeBlockContent ミスマッチ
-      const brokenWithDifferentCode = '\nParagraph.\n\n```\nbar\n```\n';
       let count = 0;
       const client: GeminiClient = mock.fn((input) => {
         calls.push({ feedback: input.feedback });
         count++;
-        if (count === 1) return Promise.resolve({ title_en: 'Title', body_en: brokenWithDifferentCode });
-        // 2 回目は source と同じ本文に直す
-        return Promise.resolve({ title_en: 'Title', body_en: '\nParagraph.\n\n```\nfoo\n```\n' });
+        if (count === 1) {
+          // プレースホルダを drop した出力（restoreCode で throw する）
+          return Promise.resolve({ title_en: 'Title', body_en: 'Paragraph.\n\nhttps://example.com\n' });
+        }
+        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE });
       });
-      await translateOne(makeArgs({ jaContent: jaWithCode, geminiClient: client }));
-      const feedback = calls[1].feedback;
-      assert.ok(feedback);
-      // 数値だけでなく具体的な差分内容（detail）が含まれている
-      assert.match(feedback, /codeBlockContent/);
-      assert.match(feedback, /code block content modified/);
+      const result = await translateOne(makeArgs({ geminiClient: client }));
+      assert.equal(result.kind, 'translated');
+      assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 2);
+      // 2 回目の feedback にプレースホルダ保全の指示が含まれる
+      assert.ok(calls[1].feedback);
+      assert.match(calls[1].feedback, /placeholder/i);
     });
   });
 
@@ -375,7 +393,7 @@ describe('translateOne', () => {
       const geminiClient: GeminiClient = mock.fn(() => {
         count++;
         if (count === 1) return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN });
-        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK });
+        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE });
       });
       const proofreaderClient: ProofreaderClient = mock.fn(() => Promise.resolve({ ok: true, issues: [] }));
       await translateOne(makeArgs({ geminiClient, proofreaderClient }));

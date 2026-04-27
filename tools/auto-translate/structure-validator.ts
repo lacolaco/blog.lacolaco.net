@@ -109,20 +109,12 @@ export function validateStructure(source: string, target: string): ValidationRes
     }
   }
 
-  // コードブロックの中身は byte 単位で source と一致しなければならない（コメント翻訳・引用符変換等を検出）
-  if (src.counts.codeBlocks === tgt.counts.codeBlocks) {
-    const diff = diffMultiset(src.codeContents, tgt.codeContents);
-    if (!diff.ok) {
-      mismatches.push({
-        kind: 'codeBlockContent',
-        source: src.codeContents.length,
-        target: tgt.codeContents.length,
-        detail: `code block content modified: ${JSON.stringify(diff.missingFromTarget[0]?.slice(0, 80))}`,
-      });
-    }
-  }
+  // コードブロックの内容比較は実施しない:
+  // 新アーキテクチャでは LLM に code を渡さず、別経路でコメントのみ翻訳してから restoreCode で挿入する。
+  // 結果としてコードブロックの byte 内容は ja と en で意図的に異なる（コメントが翻訳されているため）。
+  // カウントの一致は codeBlocks フィールドで担保済み
 
-  // インラインコードも同様（カウント一致時のみ content チェック。カウント不一致は inlineCodes で報告済み）
+  // インラインコードは識別子（`foo` 等）なので翻訳されない想定。byte 一致を引き続き検証する
   if (src.counts.inlineCodes === tgt.counts.inlineCodes) {
     const inlineDiff = diffMultiset(src.inlineCodeContents, tgt.inlineCodeContents);
     if (!inlineDiff.ok) {

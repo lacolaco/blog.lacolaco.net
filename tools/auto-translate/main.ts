@@ -2,6 +2,7 @@ import { GoogleGenAI, Type } from '@google/genai';
 import { readFile, writeFile, unlink, readdir } from 'node:fs/promises';
 import * as path from 'node:path';
 import { classifyFile, jaToEnPath } from './discover.ts';
+import type { CodeTranslatorClient } from './code-translator.ts';
 import type { ProofreaderClient } from './proofreader.ts';
 import { splitFrontmatter, translateOne, DEFAULT_MODEL, type GeminiClient } from './translator.ts';
 import type { Frontmatter } from './frontmatter.ts';
@@ -22,34 +23,85 @@ Title rules:
 - Do NOT expand short Japanese titles into long descriptive English titles. If the source is "Xを対象として見る", prefer "Viewing X as an Object" over "Viewing X as the Object of Your Work".
 - Avoid adding clarifying phrases that are not in the source.
 
-Strict structural preservation rules:
-- Code blocks: keep the entire code block content BYTE-FOR-BYTE identical to the source. Do NOT translate comments. Do NOT change any character including straight/curly quotation marks, dashes, whitespace, or backticks. The validator compares bytes exactly.
-- Inline code (text wrapped in backticks): keep BYTE-FOR-BYTE identical to the source. Do NOT change quotation marks or any character inside backticks.
+Code placeholders (CRITICAL — read carefully):
+The body you receive has had its code blocks and inline code replaced with opaque placeholders:
+- ⟨⟨BLOCK_0⟩⟩, ⟨⟨BLOCK_1⟩⟩, ... — represent fenced code blocks
+- ⟨⟨INLINE_0⟩⟩, ⟨⟨INLINE_1⟩⟩, ... — represent inline code (was wrapped in backticks in the source)
+
+Rules for placeholders:
+- Each placeholder MUST appear exactly once in your output, in a position that corresponds to where the original code appeared in the source.
+- Do NOT translate, modify, or remove placeholders. Copy them verbatim.
+- Do NOT invent new placeholders.
+- Do NOT wrap placeholders in additional backticks, brackets, or formatting.
+- When you reference a placeholder in prose (e.g., describing what the code does), refer to it by its placeholder token directly.
+
+Other structural rules:
 - URLs and image paths: leave unchanged.
 - Bare URL paragraphs (a paragraph consisting only of a single URL) MUST remain as standalone paragraphs containing only that URL. Do NOT wrap them in prose, do NOT add surrounding sentences.
-- Markdown structure (heading levels, lists, blockquotes, tables) must be preserved exactly.
-- LaTeX math ($...$ and $$...$$) and Mermaid blocks: keep as-is.
+- Markdown structure (heading levels, lists, blockquotes, tables) must be preserved.
+- LaTeX math ($...$ and $$...$$) and Mermaid: keep as-is.
 
-Output only the translated title and body in the requested JSON schema. Do not include the YAML frontmatter.`;
+Output only the translated title and body (with placeholders preserved) in the requested JSON schema. Do not include the YAML frontmatter.`;
 
-const PROOFREADER_INSTRUCTION = `You are a meticulous bilingual (Japanese-English) technical proofreader for software engineering blog articles. You receive a Japanese source and its English translation. Your role is fact-checking and consistency review, NOT style polishing.
+const PROOFREADER_INSTRUCTION = `You are a meticulous bilingual (Japanese-English) technical proofreader for software engineering blog articles. You receive a Japanese source and its English translation. Your role is to detect TRANSLATION-INDUCED defects that mislead the reader.
 
-Detect translation defects that mislead the reader. Specifically:
-1. Identifier mismatches: prose references a name (in backticks like \`foo\`) that does not appear in the surrounding code blocks. Example: prose says "the \`active\` variable" but code uses \`waiting\`.
-2. Inverted meaning: negation flipped, comparison reversed, "before" vs "after" swapped, etc.
-3. Hallucinations: facts, terms, or claims that exist in the translation but not in the source.
-4. Omissions: significant content from the source missing in the translation.
-5. Wrong technical terminology: e.g., "object" vs "instance", "type" vs "interface", "function" vs "method" used inconsistently with the source.
+CRITICAL: only flag issues that were introduced by the translation. If the same issue exists in the Japanese source, it is the author's editorial choice and you MUST NOT flag it. Always cross-check the source before flagging.
+
+Detect:
+1. Translation-induced identifier mismatches: prose in the English translation references a name (in backticks) that does not appear in surrounding code blocks, AND the Japanese source did not have that same mismatch. Example: source uses \`waiting\` but translation says \`active\`.
+2. Inverted meaning: negation flipped, comparison reversed, "before" vs "after" swapped between source and translation.
+3. Translation-induced hallucinations: facts/terms/claims in the translation that are not in the source.
+4. Translation-induced omissions: significant content from the source missing in the translation.
+5. Wrong technical terminology drift: e.g., source uses "debounce" but translation says "throttle"; source uses "object" but translation says "instance".
 
 Do NOT flag:
 - Style or tone preferences (the translator handles voice).
 - Hedging differences ("I think" vs "perhaps") — both are acceptable.
 - Minor word choices that preserve meaning.
-- Code blocks themselves (those are validated separately for byte-equality).
+- Code blocks themselves (validated separately).
+- ANY inconsistency that exists identically in the Japanese source. If the source uses an identifier informally (e.g., source prose says \`active\` referring to a variable named \`activePromise\` in code), the translation may faithfully preserve this. This is the author's choice, not a defect.
 
-If the translation has no defects, return ok=true and empty issues. Otherwise return ok=false with a precise list of issues.
+If the translation has no translation-induced defects, return ok=true and empty issues. Otherwise return ok=false with a precise list of issues.
 
-For each issue, "location" must be a concrete reference (e.g., "paragraph 3", "the sentence containing 'setTimeout'"), "problem" describes what is wrong, "suggestion" gives the correct phrasing.`;
+For each issue, "location" must be a concrete reference (e.g., "paragraph 3", "the sentence containing 'setTimeout'"), "problem" describes what is wrong AND confirms the source does NOT have this issue, "suggestion" gives the correct phrasing.`;
+
+const CODE_TRANSLATOR_INSTRUCTION = `You translate ONLY the natural-language comments inside a code block. Everything else (code identifiers, strings, syntax, indentation, fence markers, blank lines) must remain BYTE-FOR-BYTE identical to the input.
+
+Rules:
+- Translate Japanese (or non-English) comments to natural English. Do not translate code-only comments like "TODO" or single-word tags.
+- Preserve the comment delimiter exactly (// , #, /* */, <!-- -->, etc.) and the position of each comment line.
+- Do NOT change identifiers, string literals, numeric literals, operators, or any non-comment content.
+- Do NOT add or remove lines. The line count of input and output MUST match exactly.
+- Do NOT change the language tag of the fence (\`\`\`ts must stay \`\`\`ts, etc.).
+- Output the entire code block, including the surrounding triple-backtick fences, with comments translated.`;
+
+function createCodeTranslatorClient(apiKey: string): CodeTranslatorClient {
+  const ai = new GoogleGenAI({ apiKey });
+  return async (code, model) => {
+    const response = await ai.models.generateContent({
+      model,
+      contents: code,
+      config: {
+        systemInstruction: CODE_TRANSLATOR_INSTRUCTION,
+        responseMimeType: 'application/json',
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            translated_code: { type: Type.STRING },
+          },
+          required: ['translated_code'],
+        },
+      },
+    });
+    const text = response.text;
+    if (!text) throw new Error('Empty response from code translator');
+    const parsed = JSON.parse(text) as { translated_code: string };
+    if (typeof parsed.translated_code !== 'string') {
+      throw new Error('Code translator response did not match schema');
+    }
+    return parsed.translated_code;
+  };
+}
 
 function createProofreaderClient(apiKey: string): ProofreaderClient {
   const ai = new GoogleGenAI({ apiKey });
@@ -213,6 +265,7 @@ async function main(): Promise<void> {
 
   const client = createGeminiClient(apiKey);
   const proofreader = createProofreaderClient(apiKey);
+  const codeTranslator = createCodeTranslatorClient(apiKey);
   const stats: Stats = {
     translated: 0,
     frontmatterOnly: 0,
@@ -288,6 +341,7 @@ async function main(): Promise<void> {
           enContent,
           geminiClient: client,
           proofreaderClient: proofreader,
+          codeTranslatorClient: codeTranslator,
           model,
         });
         switch (result.kind) {

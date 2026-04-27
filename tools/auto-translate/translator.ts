@@ -1,11 +1,17 @@
 import { createHash } from 'node:crypto';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
+import { extractCode, restoreCode } from './code-extractor.ts';
+import { translateCodeBlock, type CodeTranslatorClient } from './code-translator.ts';
 import { buildEnFrontmatter, getAutoTranslatedFrom, isAutoTranslated, type Frontmatter } from './frontmatter.ts';
 import { proofread, formatProofIssues, type ProofreaderClient } from './proofreader.ts';
 import { validateStructure, type ValidationResult } from './structure-validator.ts';
 
-// proofreader（校正）を追加。translator が出した訳を別人格 LLM が意味整合性を検査する
-export const PROMPT_VERSION = 4;
+// PROMPT_VERSION:
+// 4: proofreader 導入
+// 5: code 抽出/プレースホルダ翻訳/code 復元方式に変更
+// 6: 各コードブロックを個別翻訳してからマージ（コメント翻訳のため）
+// 7: proofreader を「翻訳由来の不整合のみ flag」に修正（原文の不整合を誤検出していた）
+export const PROMPT_VERSION = 7;
 // preview だが最新世代品質を採用。GEMINI_MODEL env で stable (gemini-2.5-flash 等) に切替可能
 // 参考: https://ai.google.dev/gemini-api/docs/models
 export const DEFAULT_MODEL = 'gemini-3-flash-preview';
@@ -31,6 +37,7 @@ export interface TranslateOneArgs {
   enContent: string | null;
   geminiClient: GeminiClient;
   proofreaderClient: ProofreaderClient;
+  codeTranslatorClient: CodeTranslatorClient;
   model: string;
   slug?: string; // ログ識別用。省略時は jaPath の basename を使う
 }
@@ -102,6 +109,7 @@ function summarizeStructureMismatch(validation: ValidationResult): string {
 async function callWithRetries(
   client: GeminiClient,
   proofreaderClient: ProofreaderClient,
+  codeTranslatorClient: CodeTranslatorClient,
   model: string,
   input: { title: string; body: string },
   slug: string,
@@ -110,18 +118,55 @@ async function callWithRetries(
   | { ok: false; attempts: number }
   | { ok: false; attempts: number; thrownAt: number; cause: Error }
 > {
+  // ja body から code を抽出してプレースホルダ化。LLM には template だけ渡す。
+  // 各コードブロックは個別に翻訳（コメントのみ訳す）し、最終的に restoreCode でマージする
+  const { template: jaTemplate, codeBlocks, inlineCodes } = extractCode(input.body);
+
+  // 各コードブロックを個別翻訳（コメントのみ）。インラインコードは識別子なので翻訳しない
+  const translatedCodeBlocks: string[] = [];
+  for (let i = 0; i < codeBlocks.length; i++) {
+    const t = await translateCodeBlock({ code: codeBlocks[i], client: codeTranslatorClient, model });
+    translatedCodeBlocks.push(t);
+  }
+  if (codeBlocks.length > 0) {
+    const translatedCount = translatedCodeBlocks.filter((t, i) => t !== codeBlocks[i]).length;
+    if (translatedCount > 0) {
+      console.info(
+        `[auto-translate] code block comments translated for ${slug}: ${translatedCount}/${codeBlocks.length} blocks`,
+      );
+    }
+  }
+
   let feedback: string | undefined;
   for (let attempt = 1; attempt <= TOTAL_ATTEMPTS; attempt++) {
     let output: GeminiOutput;
     try {
-      output = await client({ title: input.title, body: input.body, feedback }, model);
+      // body は jaTemplate（プレースホルダ入り）を渡す
+      output = await client({ title: input.title, body: jaTemplate, feedback }, model);
     } catch (e) {
       // 試行中に API がエラー（ネットワーク・5xx・429 等）。試行番号を保持して呼び出し元へ
       return { ok: false, attempts: attempt, thrownAt: attempt, cause: e as Error };
     }
 
-    // (1) 構造検証（ローカル、コスト 0）
-    const validation = validateStructure(input.body, output.body_en);
+    // 翻訳結果（プレースホルダ入り）を、コメント翻訳済みのコードブロック + インラインコードで復元する
+    let restoredBody: string;
+    try {
+      restoredBody = restoreCode(output.body_en, translatedCodeBlocks, inlineCodes);
+    } catch (e) {
+      // LLM がプレースホルダを drop / 幻覚した場合に到達。retry で改善する可能性
+      if (attempt < TOTAL_ATTEMPTS) {
+        console.warn(
+          `[auto-translate] placeholder restoration failed (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${(e as Error).message} — retrying`,
+        );
+        feedback = `Your previous response did not preserve all code placeholders correctly. Each placeholder ⟨⟨BLOCK_N⟩⟩ and ⟨⟨INLINE_N⟩⟩ from the source MUST appear exactly once in your output, in a position that makes sense for the translation. Do not invent new placeholders. Do not omit any.`;
+      }
+      continue;
+    }
+    const restoredOutput: GeminiOutput = { title_en: output.title_en, body_en: restoredBody };
+
+    // (1) 構造検証（ローカル、コスト 0）。code は復元済みなので構造一致は trivial に成立する想定。
+    // 万一一致しないケース（LLM が prose 中で markdown 構造を破壊した等）への保険として残す
+    const validation = validateStructure(input.body, restoredOutput.body_en);
     if (!validation.ok) {
       if (attempt < TOTAL_ATTEMPTS) {
         console.warn(
@@ -132,10 +177,11 @@ async function callWithRetries(
       continue;
     }
 
-    // (2) proofread（別人格 LLM、API コール 1 回）。意味・整合性をチェック
+    // (2) proofread（別人格 LLM、API コール 1 回）。意味・整合性をチェック。
+    // 完全な en（code 復元済み）を渡すことで proofreader が prose-code 整合をチェックできる
     const proof = await proofread({
       jaSource: input.body,
-      enTranslation: output.body_en,
+      enTranslation: restoredOutput.body_en,
       client: proofreaderClient,
       model,
     });
@@ -143,7 +189,7 @@ async function callWithRetries(
       if (attempt > 1) {
         console.info(`[auto-translate] translation accepted on attempt ${attempt} for ${slug}`);
       }
-      return { ok: true, output, attempts: attempt };
+      return { ok: true, output: restoredOutput, attempts: attempt };
     }
 
     if (attempt < TOTAL_ATTEMPTS) {
@@ -159,7 +205,7 @@ async function callWithRetries(
 }
 
 export async function translateOne(args: TranslateOneArgs): Promise<TranslateResult> {
-  const { jaContent, enContent, geminiClient, proofreaderClient, model, jaPath } = args;
+  const { jaContent, enContent, geminiClient, proofreaderClient, codeTranslatorClient, model, jaPath } = args;
   const slug = args.slug ?? jaPath.split('/').pop() ?? jaPath;
 
   let ja: { frontmatter: Frontmatter; body: string };
@@ -221,7 +267,14 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
   // ここでの try-catch は予期せぬ例外（実装バグ等）の保険のみ
   let outcome: Awaited<ReturnType<typeof callWithRetries>>;
   try {
-    outcome = await callWithRetries(geminiClient, proofreaderClient, model, { title: jaTitle, body: ja.body }, slug);
+    outcome = await callWithRetries(
+      geminiClient,
+      proofreaderClient,
+      codeTranslatorClient,
+      model,
+      { title: jaTitle, body: ja.body },
+      slug,
+    );
   } catch (e) {
     return { kind: 'failed', reason: `unexpected error: ${(e as Error).message}` };
   }

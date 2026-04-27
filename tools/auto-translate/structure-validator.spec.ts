@@ -159,29 +159,13 @@ describe('validateStructure', () => {
     assert.ok(result.mismatches.length >= 3);
   });
 
-  test('コードブロック内容が source と一致 → ok', () => {
-    const source = '```ts\nconst a = 1;\n```\n';
-    const target = '```ts\nconst a = 1;\n```\n';
-    const result = validateStructure(source, target);
-    assert.equal(result.ok, true);
-  });
-
-  test('コードブロック内容が翻訳されている → ng (codeBlockContent)', () => {
+  test('コードブロック内容の差分は許容される（コメント翻訳のため意図的に byte 差分が出る）', () => {
+    // 新アーキテクチャ: LLM はコードを見ないが、別経路でコメントだけ翻訳されて挿入される。
+    // コードブロックの内容は ja と en で byte 異なるのが正常
     const source = '```ts\n// 元のコメント\nconst a = 1;\n```\n';
     const target = '```ts\n// translated comment\nconst a = 1;\n```\n';
     const result = validateStructure(source, target);
-    assert.equal(result.ok, false);
-    assert.ok(result.mismatches.some((m) => m.kind === 'codeBlockContent'));
-  });
-
-  test('コードブロック内の引用符が変換されている → ng (codeBlockContent)', () => {
-    const source = '```html\n<img src="x" />\n```\n';
-    // target の右引用符は Unicode RIGHT DOUBLE QUOTATION MARK (U+201D)。視覚的には ASCII " と区別困難なため
-    // 編集時に誤って ASCII " に置き換えると検証ロジックを通り抜けるテストになる
-    const target = '```html\n<img src="x” />\n```\n';
-    const result = validateStructure(source, target);
-    assert.equal(result.ok, false);
-    assert.ok(result.mismatches.some((m) => m.kind === 'codeBlockContent'));
+    assert.equal(result.ok, true);
   });
 
   test('インラインコードが byte 一致 → ok', () => {
