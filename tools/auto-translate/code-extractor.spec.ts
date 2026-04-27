@@ -93,6 +93,22 @@ describe('extractCode', () => {
     assert.equal(template, md);
   });
 
+  test('prose 中にプレースホルダ風文字列があっても衝突しない（escape による退避）', () => {
+    // このシステム自体を解説する記事を想定: prose 中で「⟨⟨BLOCK_0⟩⟩」を文字列として参照
+    const md = '解説: ⟨⟨BLOCK_0⟩⟩ という記法を使う。\n\n```ts\nconst x = 1;\n```\n';
+    const { template, codeBlocks, inlineCodes } = extractCode(md);
+    // template には実際のプレースホルダだけが exactly 1 回だけ出現する
+    assert.equal(codeBlocks.length, 1);
+    // round-trip で元に戻る
+    const restored = restoreCode(template, codeBlocks, inlineCodes);
+    assert.equal(restored, md);
+  });
+
+  test('escape 文字 ⟪⟪ または ⟫⟫ が markdown に既に含まれていたら throw（silent corruption 防止）', () => {
+    const mdWithReserved = 'text ⟪⟪ marker\n\n```\nfoo\n```\n';
+    assert.throws(() => extractCode(mdWithReserved), /reserved escape sequence/);
+  });
+
   test('blockquote 外の code と blockquote 内 code が混在 → 外側のみ抽出される', () => {
     const md = '```ts\nconst a = 1;\n```\n\n> ```ts\n> const b = 2;\n> ```\n';
     const { template, codeBlocks } = extractCode(md);
