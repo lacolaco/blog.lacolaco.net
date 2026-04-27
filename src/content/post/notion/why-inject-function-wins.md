@@ -3,13 +3,12 @@ title: 'Angular: 依存性の注入にコンストラクタ引数ではなくinj
 slug: 'why-inject-function-wins'
 icon: '📝'
 created_time: '2023-03-23T00:44:00.000Z'
-last_edited_time: '2026-03-28T17:07:00.000Z'
+last_edited_time: '2026-04-27T23:21:00.000Z'
 tags:
-  - 'dependency injection'
+  - 'Dependency Injection'
   - 'TypeScript'
 published: true
 locale: 'ja'
-category: 'Tech'
 canonical_url: 'https://zenn.dev/lacolaco/articles/why-inject-function-wins'
 channels:
   - 'Code'

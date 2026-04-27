@@ -5,10 +5,9 @@ icon: ''
 created_time: '2020-04-13T05:46:00.000Z'
 last_edited_time: '2020-05-05T07:21:00.000Z'
 tags:
-  - '状態管理'
+  - 'State Management'
 published: true
 locale: 'ja'
-category: 'Tech'
 channels:
   - 'Code'
 notion_url: 'https://www.notion.so/1-4552fa97268f4c15b088766732b2f74c'

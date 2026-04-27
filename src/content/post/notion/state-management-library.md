@@ -3,13 +3,12 @@ title: '状態管理のライブラリを作りました'
 slug: 'state-management-library'
 icon: ''
 created_time: '2018-01-12T00:00:00.000Z'
-last_edited_time: '2026-03-28T13:21:00.000Z'
+last_edited_time: '2026-04-27T23:20:00.000Z'
 tags:
   - 'TypeScript'
-  - '状態管理'
+  - 'State Management'
 published: true
 locale: 'ja'
-category: 'Tech'
 channels:
   - 'Code'
 notion_url: 'https://www.notion.so/de2f47a33dcc46218f6cf56dc1b57062'

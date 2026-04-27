@@ -3,10 +3,10 @@ title: 'Angular: Implementing summaryResource to Signal-ize Built-in AI'
 slug: 'angular-builtin-summarizer-resource'
 icon: ''
 created_time: '2026-04-27T07:49:00.000Z'
-last_edited_time: '2026-04-27T15:23:00.000Z'
+last_edited_time: '2026-04-27T23:21:00.000Z'
 tags:
   - 'Signals'
-  - 'dependency injection'
+  - 'Dependency Injection'
   - 'Chrome'
   - 'AI'
 published: true
