@@ -130,6 +130,18 @@ describe('translateCodeBlock', () => {
     assert.equal(result, original);
   });
 
+  test('リスト項目内のインデント付きコードブロックでも fence intact 判定が動作する', async () => {
+    // remark は list item 内コードの position offset でインデント先頭から始まる範囲を返すため、
+    // markdown.slice() の結果は各行の先頭が "  ```ts" のようなインデント付きになる。
+    // fenceLines が空白を許容しないと isCodeFenceIntact が false → コメント翻訳がスキップされる
+    const original = '  ```ts\n  // 日本語コメント\n  const x = 1;\n  ```';
+    const translated = '  ```ts\n  // translated comment\n  const x = 1;\n  ```';
+    const client: CodeTranslatorClient = mock.fn(() => Promise.resolve(translated));
+    const result = await translateCodeBlock({ code: original, client, model: MODEL });
+    // 原文 fallback ではなく translated が採用されることを確認
+    assert.equal(result, translated);
+  });
+
   test('チルダフェンス (~~~) の翻訳でも fence intact 判定が正しく動作する', async () => {
     const original = '~~~ts\n// 日本語コメント\nconst x = 1;\n~~~';
     const translated = '~~~ts\n// translated comment\nconst x = 1;\n~~~';

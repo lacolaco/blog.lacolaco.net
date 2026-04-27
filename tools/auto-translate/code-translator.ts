@@ -53,9 +53,10 @@ function lineCount(s: string): number {
 }
 
 function fenceLines(code: string): string[] {
-  // 行頭判定なので trim しない（インデント済みの fence はネスト/コンテンツの一部であり fence ではない）。
-  // バッククォート（```）とチルダ（~~~）の両形式を扱う。remark もどちらも code ノードとしてパースする
-  return code.split('\n').filter((l) => /^(?:`{3,}|~{3,})/.test(l));
+  // バッククォート（```）とチルダ（~~~）の両形式を扱う。remark もどちらも code ノードとしてパースする。
+  // リスト項目内のコードブロックは markdown.slice() がインデント付きの fence 行を含むため、
+  // 先頭空白を許容する（"  ```ts" のような行も fence として認識）
+  return code.split('\n').filter((l) => /^\s*(?:`{3,}|~{3,})/.test(l));
 }
 
 function isCodeFenceIntact(code: string): boolean {

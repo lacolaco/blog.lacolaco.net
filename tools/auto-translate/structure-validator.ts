@@ -6,7 +6,12 @@ import { visitParents } from 'unist-util-visit-parents';
 import { hasBlockquoteAncestor } from './ast-utils.ts';
 
 export interface StructureCounts {
+  /**
+   * blockquote 外のコードブロック数のみ。
+   * blockquote 内コードブロックは別途 blockquoteCodeContents で内容比較される
+   */
   codeBlocks: number;
+  /** インラインコード総数（blockquote 内外両方を含む） */
   inlineCodes: number;
   images: number;
   links: number;
