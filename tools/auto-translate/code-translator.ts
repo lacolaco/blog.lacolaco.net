@@ -31,6 +31,11 @@ const COMMENT_PATTERN_SOURCES: string[] = [
   '(?:^|\\n)[ \\t]*#(?!!)[ \\t]*([^\\n]*)',
 ];
 
+// extractCode が prose の ⟨⟨/⟩⟩ を ⟪⟪/⟫⟫ に escape した状態で codeBlocks に格納するため、
+// コードブロック内コメントに ⟨⟨...⟩⟩ が含まれる場合（このシステムを解説する記事等）に
+// hasTranslatableComment が ⟪ を非 ASCII と誤検出しないよう、判定前に escape マーカーを除去する
+const ESCAPE_MARKER_RE = /⟪⟪|⟫⟫/g;
+
 export function hasTranslatableComment(code: string): boolean {
   // 翻訳ターゲットは英語なので、既に英語のコメントは API を呼ばない（ノイズ・コスト削減）。
   // 非 ASCII 文字（日本語等）を含むコメントだけを翻訳対象とする。
@@ -40,7 +45,9 @@ export function hasTranslatableComment(code: string): boolean {
     const re = new RegExp(source, 'g');
     let m: RegExpExecArray | null;
     while ((m = re.exec(code)) !== null) {
-      const content = m[1].trim();
+      // escape マーカーは upstream のパイプライン都合で挿入された人工的な文字なので、
+      // コメント実体の判定からは取り除いて評価する
+      const content = m[1].replace(ESCAPE_MARKER_RE, '').trim();
       if (content.length === 0) continue;
       if (/[^\x20-\x7e\s]/.test(content)) return true;
     }
@@ -76,6 +83,20 @@ function fenceLanguageTagsMatch(original: string, translated: string): boolean {
   return true;
 }
 
+// 行コメントとブロックコメントを除去した「非コメント部分」を返す。
+// コメント以外（識別子・文字列リテラル等）の改変を検出するために使う。
+// 簡易ヒューリスティックなので完全な lexer ではないが、既知の主要コメント形式をカバーする
+function stripComments(code: string): string {
+  let result = code;
+  result = result.replace(/\/\*[\s\S]*?\*\//g, ''); // /* ... */
+  result = result.replace(/<!--[\s\S]*?-->/g, ''); // <!-- ... -->
+  // (?<!:) 負先読みで URL の :// は除外（hasTranslatableComment と同じヒューリスティック）
+  result = result.replace(/(?<!:)\/\/[^\n]*/g, ''); // // line comment
+  // # 行コメント（shebang は除外、行頭近接のみ）
+  result = result.replace(/(^|\n)([ \t]*)#(?!!)[^\n]*/g, '$1$2'); // インデント保持
+  return result;
+}
+
 export async function translateCodeBlock(args: TranslateCodeBlockArgs): Promise<string> {
   const { code, client, model } = args;
 
@@ -104,6 +125,14 @@ export async function translateCodeBlock(args: TranslateCodeBlockArgs): Promise<
   if (!fenceLanguageTagsMatch(code, translated)) {
     console.warn(
       `[auto-translate] code block comment translation modified fence (language tag changed?) — keeping original`,
+    );
+    return code;
+  }
+  // 非コメント部分（識別子・文字列リテラル等）が改変されていないか確認。
+  // LLM が「コメント翻訳のついでに」識別子や文字列を変更するケースを検出する
+  if (stripComments(code) !== stripComments(translated)) {
+    console.warn(
+      `[auto-translate] code block comment translation modified non-comment content (identifiers / string literals?) — keeping original`,
     );
     return code;
   }

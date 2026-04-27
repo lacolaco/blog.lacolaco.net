@@ -130,6 +130,23 @@ describe('translateCodeBlock', () => {
     assert.equal(result, original);
   });
 
+  test('LLM がコメント以外（識別子）を改変した場合は原文に fallback', async () => {
+    // 行数・fence・言語タグは保たれるが、識別子 foo → bar に変更
+    const original = '```ts\n// 元コメント\nconst foo = 1;\n```';
+    const tampered = '```ts\n// translated\nconst bar = 1;\n```';
+    const client: CodeTranslatorClient = mock.fn(() => Promise.resolve(tampered));
+    const result = await translateCodeBlock({ code: original, client, model: MODEL });
+    assert.equal(result, original);
+  });
+
+  test('LLM が文字列リテラルを改変した場合は原文に fallback', async () => {
+    const original = '```ts\n// 元コメント\nconst x = "hello";\n```';
+    const tampered = '```ts\n// translated\nconst x = "world";\n```';
+    const client: CodeTranslatorClient = mock.fn(() => Promise.resolve(tampered));
+    const result = await translateCodeBlock({ code: original, client, model: MODEL });
+    assert.equal(result, original);
+  });
+
   test('リスト項目内のインデント付きコードブロックでも fence intact 判定が動作する', async () => {
     // remark は list item 内コードの position offset でインデント先頭から始まる範囲を返すため、
     // markdown.slice() の結果は各行の先頭が "  ```ts" のようなインデント付きになる。

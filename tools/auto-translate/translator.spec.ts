@@ -462,6 +462,39 @@ describe('translateOne', () => {
       assert.equal(result.kind, 'translated');
     });
 
+    test('実コメント翻訳シナリオ（ja コメント → en コメント）で proofreader が ok を返し採用される', async () => {
+      // 「ja に日本語コメント入りコード、en に英語コメント入りコード」という本番運用パスを再現。
+      // proofreader 指示文は「コードコメントの差分は flag するな」と明記しているため、
+      // 翻訳済みコメントを見ても false-positive を生成せず採用されることを確認する
+      const jaWithJaComment = buildJaContent({
+        body: '前文。\n\n```ts\n// 日本語コメント\nconst x = 1;\n```\n',
+      });
+      // codeTranslator が実際にコメントを翻訳
+      const codeTranslatorClient: CodeTranslatorClient = mock.fn((code) =>
+        Promise.resolve(code.replace('// 日本語コメント', '// English comment')),
+      );
+      // translator (Gemini) は prose 翻訳のみ、コードはプレースホルダで保持
+      const geminiClient: GeminiClient = mock.fn(() =>
+        Promise.resolve({
+          title_en: 'Title',
+          body_en: 'Preface.\n\n⟨⟨BLOCK_0⟩⟩\n',
+        }),
+      );
+      // proofreader: 翻訳済みコメントを見て「コメント差分は flag しない」運用が正しく動くか
+      let proofCalls = 0;
+      const proofreaderClient: ProofreaderClient = mock.fn((input) => {
+        proofCalls++;
+        // 渡される en には英訳済みコメントが入っているはず
+        assert.match(input.enTranslation, /\/\/ English comment/);
+        return Promise.resolve({ ok: true, issues: [] });
+      });
+      const result = await translateOne(
+        makeArgs({ jaContent: jaWithJaComment, geminiClient, codeTranslatorClient, proofreaderClient }),
+      );
+      assert.equal(result.kind, 'translated');
+      assert.equal(proofCalls, 1);
+    });
+
     test('proofreader が throw → fail open で採用される（翻訳全体は止まらない）', async () => {
       const geminiClient = makeOkClient();
       const proofreaderClient: ProofreaderClient = mock.fn(() => Promise.reject(new Error('proofread API down')));
