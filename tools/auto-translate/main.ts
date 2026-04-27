@@ -60,6 +60,10 @@ Detect:
 3. Translation-induced hallucinations: facts/terms/claims in the translation that are not in the source.
 4. Translation-induced omissions: significant content from the source missing in the translation.
 5. Wrong technical terminology drift: e.g., source uses "debounce" but translation says "throttle"; source uses "object" but translation says "instance".
+6. Basic English grammar errors that distract the reader, including but not limited to:
+   - Indefinite article agreement (a/an) — must match the PHONETIC sound of the following word, not its spelling. "an HTTP" is correct (vowel sound /eɪ/); "an \`loading\`" is WRONG ("loading" starts with consonant /l/, must be "a"); "a hour" is WRONG (silent h, must be "an"). When the article precedes a backtick-wrapped identifier, evaluate the identifier's first phonetic sound.
+   - Subject-verb agreement (e.g., "the data is" vs "the data are" — match the source's grammatical number).
+   - Sentence fragments that lack a subject or verb, when the source had a complete sentence.
 
 Do NOT flag:
 - Style or tone preferences (the translator handles voice).
