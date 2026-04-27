@@ -84,14 +84,22 @@ export function attachTranslations(
 }
 
 /**
+ * List page で表示する posts を所与の集合から組み立てる pure 関数。
+ * IO を分離して unit test できるようにする (queryListPagePosts は thin wrapper)
+ */
+export function buildListPagePosts(allPosts: Array<CollectionEntry<'posts' | 'postsEn'>>): PostWithTranslations[] {
+  const enPosts = allPosts.filter((p): p is CollectionEntry<'postsEn'> => p.data.locale === 'en');
+  const deduped = deduplicatePosts(allPosts);
+  return attachTranslations(deduped, enPosts);
+}
+
+/**
  * List page で表示する posts に dedup と翻訳 metadata を attach した形を返す helper。
  * 各 list page (index, channels, tags) で共通利用する
  */
 export async function queryListPagePosts(): Promise<PostWithTranslations[]> {
   const allPosts = await queryAvailablePosts();
-  const enPosts = allPosts.filter((p): p is CollectionEntry<'postsEn'> => p.data.locale === 'en');
-  const deduped = deduplicatePosts(allPosts);
-  return attachTranslations(deduped, enPosts);
+  return buildListPagePosts(allPosts);
 }
 
 /**
