@@ -75,8 +75,7 @@ Rules:
 - Do NOT change the language tag of the fence (\`\`\`ts must stay \`\`\`ts, etc.).
 - Place the translated code block (including the surrounding triple-backtick fences) into the \`translated_code\` JSON field as required by the response schema.`;
 
-function createCodeTranslatorClient(apiKey: string): CodeTranslatorClient {
-  const ai = new GoogleGenAI({ apiKey });
+function createCodeTranslatorClient(ai: GoogleGenAI): CodeTranslatorClient {
   return async (code, model) => {
     const response = await ai.models.generateContent({
       model,
@@ -103,8 +102,7 @@ function createCodeTranslatorClient(apiKey: string): CodeTranslatorClient {
   };
 }
 
-function createProofreaderClient(apiKey: string): ProofreaderClient {
-  const ai = new GoogleGenAI({ apiKey });
+function createProofreaderClient(ai: GoogleGenAI): ProofreaderClient {
   return async (input, model) => {
     // ソースと訳文はマークダウン（コードブロック含む）が含まれるので、フェンスで囲むと
     // 内部の ```ts 等がアウターフェンスを誤閉じして LLM が構造を見失う。XML 風タグで囲って区切る
@@ -161,8 +159,7 @@ function createProofreaderClient(apiKey: string): ProofreaderClient {
   };
 }
 
-function createGeminiClient(apiKey: string): GeminiClient {
-  const ai = new GoogleGenAI({ apiKey });
+function createGeminiClient(ai: GoogleGenAI): GeminiClient {
   return async (input, model) => {
     const userMessageParts = [`Title: ${input.title}`, '', 'Body:', input.body];
     if (input.feedback) {
@@ -263,9 +260,11 @@ async function main(): Promise<void> {
   console.log(`[auto-translate] scanning ${jaFiles.length} ja files in ${contentDir}`);
   console.log(`[auto-translate] model: ${model}`);
 
-  const client = createGeminiClient(apiKey);
-  const proofreader = createProofreaderClient(apiKey);
-  const codeTranslator = createCodeTranslatorClient(apiKey);
+  // GoogleGenAI は内部で HTTP クライアントを保持するため、3 用途で 1 インスタンスを共有する
+  const ai = new GoogleGenAI({ apiKey });
+  const client = createGeminiClient(ai);
+  const proofreader = createProofreaderClient(ai);
+  const codeTranslator = createCodeTranslatorClient(ai);
   const stats: Stats = {
     translated: 0,
     frontmatterOnly: 0,
