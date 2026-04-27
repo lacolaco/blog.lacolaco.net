@@ -11,6 +11,10 @@ import {
   type TranslateOneArgs,
 } from './translator.ts';
 import { buildEnFrontmatter } from './frontmatter.ts';
+import type { ProofreaderClient } from './proofreader.ts';
+
+// テスト用デフォルト proofreader: 常に ok を返す（proofread の動作はそれ自身の spec で検証）
+const okProofreader: ProofreaderClient = () => Promise.resolve({ ok: true, issues: [] });
 
 const MODEL = 'test-model';
 
@@ -202,6 +206,7 @@ describe('translateOne', () => {
       jaContent: JA_CONTENT_BASIC,
       enContent: null,
       geminiClient: makeOkClient(),
+      proofreaderClient: okProofreader,
       model: MODEL,
       ...overrides,
     };
@@ -328,6 +333,61 @@ describe('translateOne', () => {
       // 数値だけでなく具体的な差分内容（detail）が含まれている
       assert.match(feedback, /codeBlockContent/);
       assert.match(feedback, /code block content modified/);
+    });
+  });
+
+  describe('proofread リトライ', () => {
+    test('proofread が ng → 2 回目で ok → 採用、translate 呼び出し 2 回 + proofread 呼び出し 2 回', async () => {
+      const geminiClient = makeOkClient();
+      let proofCount = 0;
+      const proofreaderClient: ProofreaderClient = mock.fn(() => {
+        proofCount++;
+        if (proofCount === 1) {
+          return Promise.resolve({
+            ok: false,
+            issues: [{ location: 'p2', problem: 'wrong variable name', suggestion: 'use waiting not active' }],
+          });
+        }
+        return Promise.resolve({ ok: true, issues: [] });
+      });
+      const result = await translateOne(makeArgs({ geminiClient, proofreaderClient }));
+      assert.equal(result.kind, 'translated');
+      assert.equal((geminiClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 2);
+      assert.equal((proofreaderClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 2);
+    });
+
+    test('proofread が常に ng → 4 試行後 failed', async () => {
+      const geminiClient = makeOkClient();
+      const proofreaderClient: ProofreaderClient = mock.fn(() =>
+        Promise.resolve({
+          ok: false,
+          issues: [{ location: 'p1', problem: 'persistent', suggestion: 'fix' }],
+        }),
+      );
+      const result = await translateOne(makeArgs({ geminiClient, proofreaderClient }));
+      assert.equal(result.kind, 'failed');
+      assert.equal((geminiClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 4);
+      assert.equal((proofreaderClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 4);
+    });
+
+    test('構造検証 NG の attempt では proofread を呼ばない（ローカル検証で先に reject）', async () => {
+      let count = 0;
+      const geminiClient: GeminiClient = mock.fn(() => {
+        count++;
+        if (count === 1) return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN });
+        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK });
+      });
+      const proofreaderClient: ProofreaderClient = mock.fn(() => Promise.resolve({ ok: true, issues: [] }));
+      await translateOne(makeArgs({ geminiClient, proofreaderClient }));
+      // 1 回目は構造 NG なので proofread 呼ばれない、2 回目で proofread 呼ばれる
+      assert.equal((proofreaderClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 1);
+    });
+
+    test('proofreader が throw → fail open で採用される（翻訳全体は止まらない）', async () => {
+      const geminiClient = makeOkClient();
+      const proofreaderClient: ProofreaderClient = mock.fn(() => Promise.reject(new Error('proofread API down')));
+      const result = await translateOne(makeArgs({ geminiClient, proofreaderClient }));
+      assert.equal(result.kind, 'translated');
     });
   });
 

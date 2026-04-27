@@ -1,9 +1,11 @@
 import { createHash } from 'node:crypto';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 import { buildEnFrontmatter, getAutoTranslatedFrom, isAutoTranslated, type Frontmatter } from './frontmatter.ts';
+import { proofread, formatProofIssues, type ProofreaderClient } from './proofreader.ts';
 import { validateStructure, type ValidationResult } from './structure-validator.ts';
 
-export const PROMPT_VERSION = 3;
+// proofreader（校正）を追加。translator が出した訳を別人格 LLM が意味整合性を検査する
+export const PROMPT_VERSION = 4;
 // preview だが最新世代品質を採用。GEMINI_MODEL env で stable (gemini-2.5-flash 等) に切替可能
 // 参考: https://ai.google.dev/gemini-api/docs/models
 export const DEFAULT_MODEL = 'gemini-3-flash-preview';
@@ -28,6 +30,7 @@ export interface TranslateOneArgs {
   jaContent: string;
   enContent: string | null;
   geminiClient: GeminiClient;
+  proofreaderClient: ProofreaderClient;
   model: string;
   slug?: string; // ログ識別用。省略時は jaPath の basename を使う
 }
@@ -85,8 +88,20 @@ function buildFeedback(validation: ValidationResult): string {
 
 const TOTAL_ATTEMPTS = MAX_RETRIES + 1;
 
+function summarizeStructureMismatch(validation: ValidationResult): string {
+  return validation.mismatches
+    .map((m) => {
+      if (m.kind === 'codeBlockContent' || m.kind === 'inlineCodeContent') {
+        return `${m.kind}: ${m.detail ?? 'content modified'}`;
+      }
+      return `${m.kind} ja=${m.source} en=${m.target}`;
+    })
+    .join(', ');
+}
+
 async function callWithRetries(
   client: GeminiClient,
+  proofreaderClient: ProofreaderClient,
   model: string,
   input: { title: string; body: string },
   slug: string,
@@ -104,27 +119,39 @@ async function callWithRetries(
       // 試行中に API がエラー（ネットワーク・5xx・429 等）。試行番号を保持して呼び出し元へ
       return { ok: false, attempts: attempt, thrownAt: attempt, cause: e as Error };
     }
+
+    // (1) 構造検証（ローカル、コスト 0）
     const validation = validateStructure(input.body, output.body_en);
-    if (validation.ok) {
+    if (!validation.ok) {
+      if (attempt < TOTAL_ATTEMPTS) {
+        console.warn(
+          `[auto-translate] structure mismatch (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${summarizeStructureMismatch(validation)} — retrying`,
+        );
+        feedback = buildFeedback(validation);
+      }
+      continue;
+    }
+
+    // (2) proofread（別人格 LLM、API コール 1 回）。意味・整合性をチェック
+    const proof = await proofread({
+      jaSource: input.body,
+      enTranslation: output.body_en,
+      client: proofreaderClient,
+      model,
+    });
+    if (proof.ok) {
       if (attempt > 1) {
-        console.info(`[auto-translate] structure validation passed on attempt ${attempt} for ${slug}`);
+        console.info(`[auto-translate] translation accepted on attempt ${attempt} for ${slug}`);
       }
       return { ok: true, output, attempts: attempt };
     }
+
     if (attempt < TOTAL_ATTEMPTS) {
-      const mismatchSummary = validation.mismatches
-        .map((m) => {
-          // content 差異は数値が同値で混乱を招くため detail のみ表示
-          if (m.kind === 'codeBlockContent' || m.kind === 'inlineCodeContent') {
-            return `${m.kind}: ${m.detail ?? 'content modified'}`;
-          }
-          return `${m.kind} ja=${m.source} en=${m.target}`;
-        })
-        .join(', ');
+      const issuesSummary = proof.issues.map((i) => `[${i.location}] ${i.problem}`).join('; ');
       console.warn(
-        `[auto-translate] structure mismatch (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${mismatchSummary} — retrying`,
+        `[auto-translate] proofread issues (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${issuesSummary} — retrying`,
       );
-      feedback = buildFeedback(validation);
+      feedback = formatProofIssues(proof.issues);
     }
     // 最終試行失敗時は呼び出し元（main.ts）で error ログを出すため、ここでは出力しない（重複防止）
   }
@@ -132,7 +159,7 @@ async function callWithRetries(
 }
 
 export async function translateOne(args: TranslateOneArgs): Promise<TranslateResult> {
-  const { jaContent, enContent, geminiClient, model, jaPath } = args;
+  const { jaContent, enContent, geminiClient, proofreaderClient, model, jaPath } = args;
   const slug = args.slug ?? jaPath.split('/').pop() ?? jaPath;
 
   let ja: { frontmatter: Frontmatter; body: string };
@@ -194,7 +221,7 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
   // ここでの try-catch は予期せぬ例外（実装バグ等）の保険のみ
   let outcome: Awaited<ReturnType<typeof callWithRetries>>;
   try {
-    outcome = await callWithRetries(geminiClient, model, { title: jaTitle, body: ja.body }, slug);
+    outcome = await callWithRetries(geminiClient, proofreaderClient, model, { title: jaTitle, body: ja.body }, slug);
   } catch (e) {
     return { kind: 'failed', reason: `unexpected error: ${(e as Error).message}` };
   }
@@ -208,7 +235,7 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
     }
     return {
       kind: 'failed',
-      reason: `structure mismatch persisted after ${outcome.attempts} attempts, keeping existing .en.md`,
+      reason: `structure or proofread issues persisted after ${outcome.attempts} attempts, keeping existing .en.md`,
     };
   }
 

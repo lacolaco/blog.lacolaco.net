@@ -2,6 +2,7 @@ import { GoogleGenAI, Type } from '@google/genai';
 import { readFile, writeFile, unlink, readdir } from 'node:fs/promises';
 import * as path from 'node:path';
 import { classifyFile, jaToEnPath } from './discover.ts';
+import type { ProofreaderClient } from './proofreader.ts';
 import { splitFrontmatter, translateOne, DEFAULT_MODEL, type GeminiClient } from './translator.ts';
 import type { Frontmatter } from './frontmatter.ts';
 
@@ -30,6 +31,83 @@ Strict structural preservation rules:
 - LaTeX math ($...$ and $$...$$) and Mermaid blocks: keep as-is.
 
 Output only the translated title and body in the requested JSON schema. Do not include the YAML frontmatter.`;
+
+const PROOFREADER_INSTRUCTION = `You are a meticulous bilingual (Japanese-English) technical proofreader for software engineering blog articles. You receive a Japanese source and its English translation. Your role is fact-checking and consistency review, NOT style polishing.
+
+Detect translation defects that mislead the reader. Specifically:
+1. Identifier mismatches: prose references a name (in backticks like \`foo\`) that does not appear in the surrounding code blocks. Example: prose says "the \`active\` variable" but code uses \`waiting\`.
+2. Inverted meaning: negation flipped, comparison reversed, "before" vs "after" swapped, etc.
+3. Hallucinations: facts, terms, or claims that exist in the translation but not in the source.
+4. Omissions: significant content from the source missing in the translation.
+5. Wrong technical terminology: e.g., "object" vs "instance", "type" vs "interface", "function" vs "method" used inconsistently with the source.
+
+Do NOT flag:
+- Style or tone preferences (the translator handles voice).
+- Hedging differences ("I think" vs "perhaps") — both are acceptable.
+- Minor word choices that preserve meaning.
+- Code blocks themselves (those are validated separately for byte-equality).
+
+If the translation has no defects, return ok=true and empty issues. Otherwise return ok=false with a precise list of issues.
+
+For each issue, "location" must be a concrete reference (e.g., "paragraph 3", "the sentence containing 'setTimeout'"), "problem" describes what is wrong, "suggestion" gives the correct phrasing.`;
+
+function createProofreaderClient(apiKey: string): ProofreaderClient {
+  const ai = new GoogleGenAI({ apiKey });
+  return async (input, model) => {
+    const userMessage = [
+      'Japanese source:',
+      '```',
+      input.jaSource,
+      '```',
+      '',
+      'English translation:',
+      '```',
+      input.enTranslation,
+      '```',
+    ].join('\n');
+
+    const response = await ai.models.generateContent({
+      model,
+      contents: userMessage,
+      config: {
+        systemInstruction: PROOFREADER_INSTRUCTION,
+        responseMimeType: 'application/json',
+        responseSchema: {
+          type: Type.OBJECT,
+          properties: {
+            ok: { type: Type.BOOLEAN },
+            issues: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  location: { type: Type.STRING },
+                  problem: { type: Type.STRING },
+                  suggestion: { type: Type.STRING },
+                },
+                required: ['location', 'problem', 'suggestion'],
+                propertyOrdering: ['location', 'problem', 'suggestion'],
+              },
+            },
+          },
+          required: ['ok', 'issues'],
+          propertyOrdering: ['ok', 'issues'],
+        },
+      },
+    });
+
+    const text = response.text;
+    if (!text) throw new Error('Empty response from proofreader');
+    const parsed = JSON.parse(text) as {
+      ok: boolean;
+      issues: { location: string; problem: string; suggestion: string }[];
+    };
+    if (typeof parsed.ok !== 'boolean' || !Array.isArray(parsed.issues)) {
+      throw new Error('Proofreader response did not match schema');
+    }
+    return { ok: parsed.ok, issues: parsed.issues };
+  };
+}
 
 function createGeminiClient(apiKey: string): GeminiClient {
   const ai = new GoogleGenAI({ apiKey });
@@ -134,6 +212,7 @@ async function main(): Promise<void> {
   console.log(`[auto-translate] model: ${model}`);
 
   const client = createGeminiClient(apiKey);
+  const proofreader = createProofreaderClient(apiKey);
   const stats: Stats = {
     translated: 0,
     frontmatterOnly: 0,
@@ -208,6 +287,7 @@ async function main(): Promise<void> {
           jaContent,
           enContent,
           geminiClient: client,
+          proofreaderClient: proofreader,
           model,
         });
         switch (result.kind) {
