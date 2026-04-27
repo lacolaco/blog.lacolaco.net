@@ -90,10 +90,16 @@ function buildFeedback(validation: ValidationResult): string {
       }
       hasBlockquoteCodeIssue = true;
     } else if (m.kind === 'blockquoteInlineCodeContent') {
-      const differing = m.differingCount ?? 0;
-      lines.push(
-        `- ${m.kind}: ${differing} of ${m.source} inline code spans inside blockquotes were modified. Inline code inside blockquotes must remain BYTE-FOR-BYTE identical to the source.`,
-      );
+      if (m.differKind === 'count') {
+        lines.push(
+          `- ${m.kind}: an inline code span inside a blockquote was added or removed (source has ${m.source}, translation has ${m.target}).`,
+        );
+      } else {
+        const differing = m.differingCount ?? 0;
+        lines.push(
+          `- ${m.kind}: ${differing} of ${m.source} inline code spans inside blockquotes were modified. Inline code inside blockquotes must remain BYTE-FOR-BYTE identical to the source.`,
+        );
+      }
       hasBlockquoteCodeIssue = true;
     } else {
       lines.push(`- ${m.kind}: source has ${m.source}, translation has ${m.target}`);

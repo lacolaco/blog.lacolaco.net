@@ -238,6 +238,29 @@ describe('validateStructure', () => {
     assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodes'));
   });
 
+  test('blockquote 内コードの言語タグが変えられた → ng (blockquoteCodeContent, content)', () => {
+    // LLM が ```ts → ```javascript と書き換えた場合の検出
+    const source = '> ```ts\n> const x = 1;\n> ```\n';
+    const target = '> ```javascript\n> const x = 1;\n> ```\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    const m = result.mismatches.find((x) => x.kind === 'blockquoteCodeContent');
+    assert.ok(m);
+    assert.equal(m.differKind, 'content');
+  });
+
+  test('blockquote 内インラインコードの「移動」（blockquote 内→外）が検出される', () => {
+    // blockquote 内 `foo` + 通常 `bar` (inlineCodes=2) → blockquote 外 `foo` + 通常 `bar` (inlineCodes=2)
+    // inlineCodes 総数は同じだが blockquote 内インラインコードの count が異なる
+    const source = '> 引用 `foo`\n\n通常 `bar`\n';
+    const target = '通常 `bar` と `foo` を移動\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    const m = result.mismatches.find((x) => x.kind === 'blockquoteInlineCodeContent');
+    assert.ok(m);
+    assert.equal(m.differKind, 'count');
+  });
+
   test('blockquote 内コードが追加・削除された → ng (blockquoteCodeContent, count)', () => {
     const source = '> ```ts\n> const a = 1;\n> ```\n';
     const target = '> ```ts\n> const a = 1;\n> ```\n\n> ```ts\n> const b = 2;\n> ```\n';

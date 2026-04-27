@@ -72,7 +72,10 @@ function snapshotStructureInternal(markdown: string): StructureSnapshotInternal 
     if (hasBlockquoteAncestor(ancestors)) {
       // blockquote 内の code は通常カウント対象外、別経路で byte-identical 検証
       if (node.type === 'code') {
-        blockquoteCodeContents.push(node.value);
+        // 言語タグ (node.lang) も byte 比較対象に含める。LLM が ```ts → ```javascript と
+        // 書き換えても検出できるよう、{lang}:\n{value} の形式で連結する
+        const lang = node.lang ?? '';
+        blockquoteCodeContents.push(`${lang}:\n${node.value}`);
         return;
       }
       // blockquote 内のインラインコードは通常カウントにも含めるが、
@@ -154,10 +157,19 @@ export function validateStructure(source: string, target: string): ValidationRes
   }
 
   // blockquote 内インラインコードも code-extractor で抽出されないため LLM が直接扱う。
-  // 内容を byte 比較する（順序依存）。inlineCodes の通常カウントは別途検証済み
+  // 内容を byte 比較する（順序依存）。
+  // count 差異も明示的に報告する: blockquote 内/外でインラインコードが移動するケース
+  // （例: blockquote 内 `foo` 削除 + 外で 1 個追加で総数同じ）は inlineCodes カウントだけでは検出できない
   const srcBqInline = src.blockquoteInlineCodeContents;
   const tgtBqInline = tgt.blockquoteInlineCodeContents;
-  if (srcBqInline.length === tgtBqInline.length) {
+  if (srcBqInline.length !== tgtBqInline.length) {
+    mismatches.push({
+      kind: 'blockquoteInlineCodeContent',
+      source: srcBqInline.length,
+      target: tgtBqInline.length,
+      differKind: 'count',
+    });
+  } else {
     const differingInline = srcBqInline.map((v, i) => (v !== tgtBqInline[i] ? i : -1)).filter((i) => i >= 0);
     if (differingInline.length > 0) {
       mismatches.push({
@@ -169,7 +181,6 @@ export function validateStructure(source: string, target: string): ValidationRes
       });
     }
   }
-  // count 差異は inlineCodes 全体カウントで検出されるため、ここでは検出不要
 
   return { ok: mismatches.length === 0, source: src.counts, target: tgt.counts, mismatches };
 }
