@@ -83,7 +83,7 @@ const postsByYear = Array.from(
                         {post.data.locale === 'en' && (
                           <span class="inline-block text-[10px] font-bold text-white bg-blue-500 py-px px-1.5 rounded-[3px] ml-1.5 align-middle">EN</span>
                         )}
-                        {translations.en && post.data.locale !== 'en' && (
+                        {translations.en && (
                           <span
                             class="inline-block text-[10px] font-bold text-white bg-blue-500 py-px px-1.5 rounded-[3px] ml-1.5 align-middle"
                             data-translation-en-badge
@@ -107,6 +107,12 @@ const postsByYear = Array.from(
       // 翻訳がある entry の title / href を user の locale 設定に応じて en に swap する。
       // 詳細は docs/design/bilingual-list-display.md (Option D) を参照
       // 判定: navigator.languages を順に走査し、en が ja より先に出現したら en preference
+      //
+      // FOUC について: en preference のユーザは ja title が一瞬見えてから en に swap される
+      // (script は type="module" の defer 実行)。タイトルを初期非表示 (opacity:0) にすれば
+      // FOUC は隠せるが、JS 不在環境 / script 失敗時に永久に title が見えなくなる劣化が
+      // 大きいため敢えて行わない。EN badge は逆に「未スワップ時は無いべきもの」なので
+      // \`display: none\` で初期非表示にしている (バッジとタイトルで扱いが異なるのは設計意図)
       const langs = navigator.languages ?? [navigator.language];
       let prefersEn = false;
       for (const lang of langs) {
