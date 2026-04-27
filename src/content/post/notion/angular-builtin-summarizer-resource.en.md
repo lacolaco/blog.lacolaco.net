@@ -1,5 +1,5 @@
 ---
-title: 'Angular: Built-in AI をSignal化する summaryResource の実装'
+title: 'Angular: Implementing summaryResource to Signal-ize Built-in AI'
 slug: 'angular-builtin-summarizer-resource'
 icon: ''
 created_time: '2026-04-27T07:49:00.000Z'
@@ -10,32 +10,32 @@ tags:
   - 'Chrome'
   - 'AI'
 published: true
-locale: 'ja'
+locale: 'en'
 channels:
   - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Built-in-AI-Signal-summaryResource-34f3521b014a80149b66c11891b89391'
-auto_translate: true
 features:
   katex: false
   mermaid: false
   tweet: false
+auto_translated_from: 'cb9e57c00d9583987d0596301a2d6584ff0f557c4f9678e986bf782ed422ff82'
 ---
 
-Chromeが内蔵する組み込みAI機能である Summarizer API を使ってブログ記事を要約できるようにした記事を以前投稿した。
+I previously posted an article about enabling blog post summarization using the Summarizer API, which is a built-in AI feature in Chrome.
 
 https://developer.chrome.com/docs/ai/summarizer-api?hl=ja
 
 https://blog.lacolaco.net/posts/implement-article-summary-feature
 
-今回は、Angularアプリケーション中でこのSummarizer APIを使うにあたって、非同期処理をAngularのResource APIでラップする実装を試してみた。Signalで管理されたアプリケーションの状態と連動するかたちでリアクティブにSummarizer APIを呼び出してみよう。
+This time, I tried an implementation that wraps the asynchronous processing of this Summarizer API with Angular's Resource API for use within an Angular application. Let's try calling the Summarizer API reactively in a way that links with the application state managed by Signals.
 
-動作するサンプルはStackBlitzで確認できる。Summarizer APIをサポートしているのがChromeだけなので、Chrome以外では動かないことには注意。
+You can see a working sample on StackBlitz. Note that since only Chrome currently supports the Summarizer API, it will not work in browsers other than Chrome.
 
 https://stackblitz.com/github/lacolaco/angular-built-in-ai?ctl=1&embed=1&file=src%2Fapp%2Fapp.ts
 
-## 試作品: `summaryResource`
+## Prototype: `summaryResource`
 
-まずは最終的な完成形、`summaryResource`のインタフェースを紹介する。次の`App`コンポーネントでは、テキストエリアにバインドされた`input`文字列シグナルを引数に、`summaryResource`関数を呼び出している。戻り値の`SummaryResource`は、Summarizer APIの状態を`summary.summarizerAvailability()`ステータスシグナルとして、`input`の内容が要約された結果を`summary.value()`文字列シグナルとして提供している。
+First, I'll introduce the interface of the final version, `summaryResource`. In the following `App` component, the `summaryResource` function is called with the `input` string signal bound to a textarea as an argument. The returned `SummaryResource` provides the Summarizer API status as a `summary.summarizerAvailability()` status signal and the summarized result of the `input` content as a `summary.value()` string signal.
 
 ```typescript
 import { Component, signal } from '@angular/core';
@@ -108,13 +108,13 @@ export class App {
 }
 ```
 
-Angular組み込みの`httpResource`と似たようなメンタルモデルで内部の非同期処理を隠蔽し、動的な値に対する非同期処理の結果をResource型で表現できている。
+It hides the internal asynchronous processing with a mental model similar to Angular's built-in `httpResource`, and is able to represent the result of asynchronous processing for dynamic values using the Resource type.
 
-ここからはこの`summaryResource`がどのように作られているかを解説する。
+From here, I will explain how this `summaryResource` is constructed.
 
 ## Summarizer API
 
-上述の記事でも一度紹介しているし、最新の情報は公式を参照してほしいためあまりSummarizer API自体の詳細には立ち入らない。まずはアプリケーションからSummarizer APIを直接呼び出す関数を作成する。次のコードでは、実行環境に `Summarizer` 変数がそもそもあるかどうかの検出と、`Summarizer.availability`、`Summarizer.create`の呼び出しをラップする関数を書いている。これでアプリケーションの他の場所からはSummarizer APIの呼び出し方の詳細について知らずに済む。
+I've already introduced this in the aforementioned article, and since I'd like you to refer to the official documentation for the latest information, I won't go too deep into the details of the Summarizer API itself. First, we create a function to call the Summarizer API directly from the application. In the following code, I wrote a function that wraps the detection of whether the `Summarizer` variable even exists in the execution environment and the calls to `Summarizer.availability` and `Summarizer.create`. This allows other parts of the application to remain unaware of the details of how to call the Summarizer API.
 
 ```typescript
 // ai/summarizer.ts
@@ -140,7 +140,7 @@ export async function createBuiltinAISummarizer(
 
 ## SummarizerFactory
 
-ここは今回の本質的な部分ではないが、実践的にBuilt-in AI機能を使うためには必要になる環境差異の吸収部分だ。Summarizer APIが利用できない環境では何も要約しないNoop実装に差し替わるよう、DIで切り替わるようにしている。もちろんテストにおいても任意のSummarizer実装に置き換えられるフックポイントでもある。
+This isn't the essential part of this topic, but it's a necessary piece for handling environment differences to use the Built-in AI feature in practice. I've set it up to switch via DI so that it swaps to a Noop implementation that summarizes nothing in environments where the Summarizer API is unavailable. Of course, it also serves as a hook point that can be replaced with any Summarizer implementation during testing.
 
 ```typescript
 // summarizer-factory.ts
@@ -191,34 +191,34 @@ export class NoopSummarizerFactory extends SummarizerFactory {
 
 ## SummaryResource
 
-ここが`summaryResource`関数の本体だ。少し複雑なので順を追ってパーツを見ていく。
+This is the body of the `summaryResource` function. It's a bit complex, so let's look at the parts one by one.
 
-まずは関数の戻り値になる`SummaryResource`型について。これはAngularが提供する`Resource<T>`型に2つのフィールドを追加している。`summarizerAvailability`はその名の通り、Summarizerインスタンスそれ自体の利用可否状態をシグナル化したものだ。そしてもうひとつの`initialize`は、`Summarizer`インスタンスの作成を明示的にトリガーするための関数だ。
+First, regarding the `SummaryResource` type that serves as the function's return value. This adds two fields to the `Resource<T>` type provided by Angular. `summarizerAvailability` is, as the name suggests, a signal representing the availability status of the Summarizer instance itself. And the other, `initialize`, is a function to explicitly trigger the creation of the `Summarizer` instance.
 
 ```typescript
 /**
- * {@link summaryResource} が返す Resource。
- * 標準の `Resource<string>` に Summarizer 固有のプロパティを加えたもの。
+ * Resource returned by {@link summaryResource}.
+ * Standard Resource<string> with Summarizer-specific properties added.
  */
 export interface SummaryResource extends Resource<string> {
-  /** Summarizer の利用可否。`Summarizer.availability()` の戻り値を反映する。 */
+  /** Summarizer availability. Reflects the return value of Summarizer.availability(). */
   readonly summarizerAvailability: Signal<Availability>;
 
   /**
-   * Summarizer を生成して要約を開始する。冪等。
-   * `summarizerAvailability()` が `'downloadable'` のときはユーザー操作起点（クリック等）で呼ぶ必要がある。
+   * Creates a Summarizer and starts summarization. Idempotent.
+   * When `summarizerAvailability()` is `'downloadable'`, it must be called from a user-initiated action (e.g., a click).
    */
   initialize(): void;
 }
 ```
 
-なぜ`initialize`が必要かというと、Summarizer APIが内部で利用するAIモデルは必要になったときにオンデマンドでダウンロードされるのだが、そのダウンロード開始にはユーザーのアクションが必要という仕様だからだ。つまり、ページの読み込みなどのイベントでは開始できず、ボタンのクリックなどユーザーのインタラクションによるイベントをトリガーにする必要がある。
+Why is `initialize` necessary? It's because the AI model used internally by the Summarizer API is downloaded on-demand when needed, but the specification states that user activation is required to start that download. In other words, it cannot be started by events like page loading; it must be triggered by a user interaction event such as a button click.
 
 [https://developer.chrome.com/docs/ai/get-started#user-activation](https://developer.chrome.com/docs/ai/get-started#user-activation)
 
 > If the device can support built-in AI APIs, but the model is not yet downloaded, the user must meaningfully interact with your page for your application to start a session with `create()`.
 
-よって、`summaryResource`では、次のように`factory.availability`の呼び出し結果が`available`または`downloading`のときだけ、自動的に`initialize`を呼び出すように条件分岐している。
+Therefore, in `summaryResource`, I've added a conditional branch to automatically call `initialize` only when the result of calling `factory.availability` is `available` or `downloading`, as follows.
 
 ```typescript
 export const summaryResource = (
@@ -264,9 +264,9 @@ export const summaryResource = (
 };
 ```
 
-続いて、`Summarizer`インスタンスの作成について。次のように、`initialize`関数では、`factory.create`関数を呼び出してSummarizerインスタンスを作成する。この`factory.create`関数のPromiseはモデルのダウンロードを待つことになる。つまり、Promiseが解決した時点で`summarizerAvailability`は`available`だ。
+Next, regarding the creation of the `Summarizer` instance. As shown below, in the `initialize` function, the `factory.create` function is called to create the Summarizer instance. This `factory.create` function's Promise will wait for the model download. In other words, by the time the Promise resolves, `summarizerAvailability` is `available`.
 
-また、Resourceの破棄と連動して、`DestroyRef`を使った`Summarizer`のインスタンス破棄もおこなっている。これにより意図しないメモリリークを防いでいる。
+Also, in coordination with the destruction of the Resource, I am using `DestroyRef` to perform the instance destruction of the `Summarizer`. This prevents unintended memory leaks.
 
 ```typescript
 export const summaryResource = (
@@ -308,7 +308,7 @@ export const summaryResource = (
 };
 ```
 
-最後に、入力テキストをリアクティブに要約する部分の実装だ。次のコードでは、`initialize`関数の中で`effect`を宣言している。この`effect`は`source`シグナルを購読するもので、`source`が更新されたらこの関数が再実行される。入力テキストが空でなければ、`summarizer.summarize`関数を呼び出して、要約を生成する。この要約処理は時間がかかるため、要約している間に入力テキストが更新されている可能性がある。古い要約が無駄に処理されないよう、`activeSummarization` 変数による状態管理と、`AbortController`と`onCleanUp`関数による中断処理も実装しているのがポイントだ。
+Finally, the implementation of the part that reactively summarizes the input text. In the following code, an `effect` is declared inside the `initialize` function. This `effect` subscribes to the `source` signal, and whenever `source` is updated, this function is re-executed. If the input text is not empty, it calls the `summarizer.summarize` function to generate a summary. Since this summarization process takes time, there is a possibility that the input text has been updated while it is summarizing. The key point is that I've implemented state management with an `activeSummarization` variable, as well as cancellation processing using an `AbortController` and the `onCleanUp` function, so that old summaries are not processed unnecessarily.
 
 ```typescript
 export const summaryResource = (
@@ -352,7 +352,7 @@ export const summaryResource = (
         state.set({ status: 'loading', value: '' });
         summarizePromise
           .then((result) => {
-            // 古い summarize の結果で新しい状態を上書きしないよう、最新の Promise のみ反映する。
+            // Reflect only the latest Promise to avoid overwriting the new state with the results of an old summarize call.
             if (activeSummarization === summarizePromise) {
               state.set({ status: 'resolved', value: result });
             }
@@ -377,15 +377,14 @@ export const summaryResource = (
 };
 ```
 
-これらを組み合わせることで冒頭の`summaryResource`が完成する。ソースコードの全体を読みたい場合は、StackBlitzかGitHubで確認できる。
+By combining these, the `summaryResource` mentioned at the beginning is completed. If you want to read the entire source code, you can check it on StackBlitz or GitHub.
 
 https://github.com/lacolaco/angular-built-in-ai/blob/main/src/app/summarized.resource.ts
 
-## まとめ
+## Summary
 
-- Chrome の Built-in AI である Summarizer API を、Angular の Resource API と Signal を使ってリアクティブに扱うための `summaryResource` を試作した。
-- `SummaryResource` は `Resource<string>` を拡張し、Summarizer の利用可否を示す `summarizerAvailability` と、ユーザー操作起点で初期化するための `initialize()` を提供する。
-- モデルのオンデマンドダウンロードはユーザーアクティベーションが必要なため、`availability` に応じて自動初期化するか、ボタンなどから `initialize()` を明示的に呼ぶ設計にしている。
-- 実装では DI で `SummarizerFactory` を切り替え、非対応環境では Noop 実装にフォールバックできるようにした。
-- 入力テキストの要約は `effect` で購読し、`AbortController` と最新 Promise のみを反映するガードで、入力更新に追従しつつ無駄な処理や競合を避けている。
-
+- I prototyped `summaryResource` to reactively handle the Summarizer API, a Chrome Built-in AI, using Angular's Resource API and Signals.
+- `SummaryResource` extends `Resource<string>` and provides `summarizerAvailability`, which indicates the availability of the Summarizer, and `initialize()`, which is used to initialize from a user operation.
+- Since on-demand model downloading requires user activation, it is designed to either auto-initialize based on `availability` or have `initialize()` called explicitly from a button or similar.
+- In the implementation, I switched `SummarizerFactory` via DI to allow falling back to a Noop implementation in unsupported environments.
+- Input text summarization is subscribed to via `effect`, and by using an `AbortController` and a guard that only reflects the latest Promise, it follows input updates while avoiding unnecessary processing or conflicts.
