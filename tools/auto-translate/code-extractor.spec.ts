@@ -149,6 +149,12 @@ describe('restoreCode', () => {
     assert.throws(() => restoreCode(template, [], ['`a`']), /placeholder/i);
   });
 
+  test('プレースホルダの順序が入れ替わっていたら throw（LLM が swap した場合の検知）', () => {
+    // template 内で BLOCK_1 が BLOCK_0 より先に現れる順序入れ替えケース
+    const template = '前置き ⟨⟨BLOCK_1⟩⟩\n\n後置き ⟨⟨BLOCK_0⟩⟩';
+    assert.throws(() => restoreCode(template, ['```\nA\n```', '```\nB\n```'], []), /placeholder order mismatch/i);
+  });
+
   test('プレースホルダが重複していたら throw（LLM が duplicate した場合の検知）', () => {
     // テンプレート内で ⟨⟨BLOCK_0⟩⟩ が 2 回出現 → コード重複挿入のリスク
     const template = '⟨⟨BLOCK_0⟩⟩\n\n再掲: ⟨⟨BLOCK_0⟩⟩';

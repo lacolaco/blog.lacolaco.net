@@ -64,7 +64,12 @@ function lineCount(s: string): number {
 function fenceLines(code: string): string[] {
   // バッククォート（```）とチルダ（~~~）の両形式を扱う。remark もどちらも code ノードとしてパースする。
   // リスト項目内のコードブロックは markdown.slice() がインデント付きの fence 行を含むため、
-  // 先頭空白を許容する（"  ```ts" のような行も fence として認識）
+  // 先頭空白を許容する（"  ```ts" のような行も fence として認識）。
+  //
+  // 既知の制約: 4-backtick フェンス（meta-documentation で「コードブロックの書き方を解説する
+  // コードブロック」として使われる）の内側に含まれる 3-backtick 行も fence 行としてカウントされ、
+  // isCodeFenceIntact が false → translateCodeBlock が原文 fallback する。壊れない（機能的欠落のみ）、
+  // 個人ブログでの実用頻度が低いため対応保留
   return code.split('\n').filter((l) => /^\s*(?:`{3,}|~{3,})/.test(l));
 }
 

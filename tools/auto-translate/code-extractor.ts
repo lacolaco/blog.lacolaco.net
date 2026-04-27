@@ -105,6 +105,38 @@ function countOccurrences(haystack: string, needle: string): number {
   return haystack.split(needle).length - 1;
 }
 
+// テンプレート内のプレースホルダが extractCode で付与した番号順（0, 1, 2, ...）通りに
+// 左→右で並んでいることを検証する。LLM がブロック順序を入れ替えた場合に検出する
+// （順序入れ替えは記事の意味的構造を壊すため拒否する）
+function validatePlaceholderOrder(template: string): { ok: boolean; reason?: string } {
+  const re = new RegExp(PLACEHOLDER_PATTERN_SOURCE, 'g');
+  let blockExpected = 0;
+  let inlineExpected = 0;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(template)) !== null) {
+    const kind = m[1];
+    const idx = parseInt(m[2], 10);
+    if (kind === 'BLOCK') {
+      if (idx !== blockExpected) {
+        return {
+          ok: false,
+          reason: `placeholder order mismatch: expected ⟨⟨BLOCK_${blockExpected}⟩⟩ but found ⟨⟨BLOCK_${idx}⟩⟩ (LLM may have swapped block order)`,
+        };
+      }
+      blockExpected++;
+    } else {
+      if (idx !== inlineExpected) {
+        return {
+          ok: false,
+          reason: `placeholder order mismatch: expected ⟨⟨INLINE_${inlineExpected}⟩⟩ but found ⟨⟨INLINE_${idx}⟩⟩ (LLM may have swapped inline order)`,
+        };
+      }
+      inlineExpected++;
+    }
+  }
+  return { ok: true };
+}
+
 export function restoreCode(template: string, codeBlocks: string[], inlineCodes: string[]): string {
   // テンプレート側で各プレースホルダが exactly 1 回現れることを検証する。
   // - 0 回 = LLM が drop した
@@ -130,6 +162,12 @@ export function restoreCode(template: string, codeBlocks: string[], inlineCodes:
     if (n > 1) {
       throw new Error(`Restore failed: placeholder ${ph} appears ${n} times in template (LLM duplicated it?)`);
     }
+  }
+
+  // 順序検証: ⟨⟨BLOCK_0⟩⟩ → ⟨⟨BLOCK_1⟩⟩ → ... の昇順で並んでいるべき（LLM の swap 検出）
+  const order = validatePlaceholderOrder(template);
+  if (!order.ok) {
+    throw new Error(`Restore failed: ${order.reason ?? 'placeholder order invalid'}`);
   }
 
   // テンプレート内のプレースホルダを順序通りに置換。
