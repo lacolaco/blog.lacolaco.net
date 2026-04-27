@@ -25,14 +25,16 @@ const COMMENT_PATTERNS: RegExp[] = [
 
 export function hasTranslatableComment(code: string): boolean {
   // 翻訳ターゲットは英語なので、既に英語のコメントは API を呼ばない（ノイズ・コスト削減）。
-  // 非 ASCII 文字（日本語等）を含むコメントだけを翻訳対象とする
+  // 非 ASCII 文字（日本語等）を含むコメントだけを翻訳対象とする。
+  // \s（\n, \r, \t 等）はホワイトスペースなので除外する: /* */ や <!-- --> の複数行コメントで
+  // m[1] に \n が混じるため、これを非 ASCII 扱いすると英語のみの複数行コメントを誤って翻訳対象にしてしまう
   for (const re of COMMENT_PATTERNS) {
     re.lastIndex = 0;
     let m: RegExpExecArray | null;
     while ((m = re.exec(code)) !== null) {
       const content = m[1].trim();
       if (content.length === 0) continue;
-      if (/[^\x20-\x7e]/.test(content)) return true;
+      if (/[^\x20-\x7e\s]/.test(content)) return true;
     }
   }
   return false;

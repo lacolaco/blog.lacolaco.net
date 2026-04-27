@@ -40,6 +40,21 @@ describe('hasTranslatableComment', () => {
   test('日本語コメント → true', () => {
     assert.equal(hasTranslatableComment('```ts\n// これは日本語コメントです\n```'), true);
   });
+
+  test('英文の複数行ブロックコメント /* ... */ → false（改行で誤検出しない）', () => {
+    const code = '```ts\n/* multiline\n   english only comment */\nconst x = 1;\n```';
+    assert.equal(hasTranslatableComment(code), false);
+  });
+
+  test('英文の複数行 HTML コメント <!-- ... --> → false', () => {
+    const code = '```html\n<!-- multi\n  line comment -->\n<div></div>\n```';
+    assert.equal(hasTranslatableComment(code), false);
+  });
+
+  test('日本語を含む複数行ブロックコメント → true', () => {
+    const code = '```ts\n/* multiline\n   日本語含む\n   comment */\nconst x = 1;\n```';
+    assert.equal(hasTranslatableComment(code), true);
+  });
 });
 
 describe('translateCodeBlock', () => {
