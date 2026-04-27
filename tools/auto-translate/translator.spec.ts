@@ -274,7 +274,7 @@ describe('translateOne', () => {
     });
   });
 
-  describe('構造検証とリトライ', () => {
+  describe('リトライパス（placeholder/structure/proofread）', () => {
     test('1 回目 OK → そのまま採用、API 呼び出し 1 回', async () => {
       const client = makeOkClient();
       const result = await translateOne(makeArgs({ geminiClient: client }));
@@ -282,7 +282,7 @@ describe('translateOne', () => {
       assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 1);
     });
 
-    test('2 回連続 NG → 3 回目 OK → 採用、API 呼び出し 3 回', async () => {
+    test('placeholder 復元 NG が 2 回連続 → 3 回目 OK → 採用、API 呼び出し 3 回', async () => {
       let count = 0;
       const client: GeminiClient = mock.fn(() => {
         count++;
@@ -294,7 +294,7 @@ describe('translateOne', () => {
       assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 3);
     });
 
-    test('1 回目 NG → 2 回目 OK → 採用、API 呼び出し 2 回', async () => {
+    test('placeholder 復元 1 回目 NG → 2 回目 OK → 採用、API 呼び出し 2 回', async () => {
       let count = 0;
       const client: GeminiClient = mock.fn(() => {
         count++;
@@ -306,7 +306,7 @@ describe('translateOne', () => {
       assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 2);
     });
 
-    test('4 試行全て NG → failed、API 呼び出し 4 回', async () => {
+    test('placeholder 復元 4 試行全て NG → failed、API 呼び出し 4 回', async () => {
       const client: GeminiClient = mock.fn(() =>
         Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN }),
       );
@@ -551,6 +551,20 @@ describe('translateOne', () => {
       const secondIdx = result.enContent.indexOf('// second block');
       assert.ok(firstIdx > 0);
       assert.ok(secondIdx > firstIdx);
+    });
+  });
+
+  describe('extractCode 例外（escape 文字衝突）の伝播', () => {
+    test('ja に予約 escape 文字 ⟪⟪ が含まれる → translateOne は failed を返し API は呼ばれない', async () => {
+      const jaWithReserved = buildJaContent({
+        body: 'reserved char ⟪⟪ marker\n\n```ts\nconst x = 1;\n```\n',
+      });
+      const geminiClient = makeOkClient();
+      const result = await translateOne(makeArgs({ jaContent: jaWithReserved, geminiClient }));
+      assert.equal(result.kind, 'failed');
+      assert.ok('reason' in result && result.reason.includes('reserved escape sequence'));
+      // extractCode は callWithRetries の冒頭で実行されるため、API は一切呼ばれない
+      assert.equal((geminiClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 0);
     });
   });
 

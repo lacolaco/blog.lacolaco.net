@@ -82,8 +82,9 @@ function buildFeedback(validation: ValidationResult): string {
           `- ${m.kind}: a code block inside a blockquote was added or removed (source has ${m.source}, translation has ${m.target}).`,
         );
       } else {
+        // content 差異時、source = 差異のあるブロック数、target = 全体ブロック数
         lines.push(
-          `- ${m.kind}: a code block inside a blockquote was modified. The content must remain BYTE-FOR-BYTE identical to the source.`,
+          `- ${m.kind}: ${m.source} of ${m.target} code blocks inside blockquotes were modified. The content must remain BYTE-FOR-BYTE identical to the source.`,
         );
       }
       hasBlockquoteCodeIssue = true;

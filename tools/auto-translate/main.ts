@@ -81,7 +81,7 @@ Rules:
 - Do NOT change identifiers, string literals, numeric literals, operators, or any non-comment content.
 - Do NOT add or remove lines. The line count of input and output MUST match exactly.
 - Do NOT change the language tag of the fence (\`\`\`ts must stay \`\`\`ts, etc.).
-- The code may contain the literal sequences ⟪⟪ or ⟫⟫ (escape markers used by the upstream pipeline). Keep them BYTE-FOR-BYTE in their original positions.
+- The code may contain the literal sequences ⟪⟪ or ⟫⟫ (escape markers used by the upstream pipeline). They can appear ANYWHERE inside the code block, INCLUDING inside comments. Keep them BYTE-FOR-BYTE in their original positions. Do NOT translate, modify, normalize, or remove them, even if they appear inside a natural-language comment you are translating.
 - Place the translated code block (including the surrounding triple-backtick fences) into the \`translated_code\` JSON field as required by the response schema.`;
 
 function createCodeTranslatorClient(ai: GoogleGenAI): CodeTranslatorClient {

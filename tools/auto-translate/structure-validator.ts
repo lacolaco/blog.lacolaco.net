@@ -119,7 +119,8 @@ export function validateStructure(source: string, target: string): ValidationRes
 
   // blockquote 内コードはプレースホルダ化されず LLM プロンプトに直接渡るため、byte 一致を検証する。
   // 順序を含めた完全一致を要求（contents 配列の長さ・各要素の byte 一致）。
-  // count 差異と content 差異は別物なので differKind で区別する（フィードバックメッセージで使い分け）
+  // count 差異と content 差異は別物なので differKind で区別する（フィードバックメッセージで使い分け）。
+  // content 差異の場合は差異件数を source/target に格納して LLM が修正範囲を把握できるようにする
   const srcBq = src.blockquoteCodeContents;
   const tgtBq = tgt.blockquoteCodeContents;
   if (srcBq.length !== tgtBq.length) {
@@ -129,13 +130,16 @@ export function validateStructure(source: string, target: string): ValidationRes
       target: tgtBq.length,
       differKind: 'count',
     });
-  } else if (srcBq.some((v, i) => v !== tgtBq[i])) {
-    mismatches.push({
-      kind: 'blockquoteCodeContent',
-      source: srcBq.length,
-      target: tgtBq.length,
-      differKind: 'content',
-    });
+  } else {
+    const differingIndices = srcBq.map((v, i) => (v !== tgtBq[i] ? i : -1)).filter((i) => i >= 0);
+    if (differingIndices.length > 0) {
+      mismatches.push({
+        kind: 'blockquoteCodeContent',
+        source: differingIndices.length, // content 差異時の source/target は「差異のあるブロック数」「全体ブロック数」
+        target: srcBq.length,
+        differKind: 'content',
+      });
+    }
   }
 
   return { ok: mismatches.length === 0, source: src.counts, target: tgt.counts, mismatches };
