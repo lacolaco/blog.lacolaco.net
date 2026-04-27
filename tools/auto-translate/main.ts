@@ -35,6 +35,11 @@ Rules for placeholders:
 - Do NOT wrap placeholders in additional backticks, brackets, or formatting.
 - When you reference a placeholder in prose (e.g., describing what the code does), refer to it by its placeholder token directly.
 
+Escape markers (⟪⟪ and ⟫⟫):
+- The source you receive may contain the literal sequences ⟪⟪ and ⟫⟫ (mathematical double angle brackets, U+27EA / U+27EB).
+- These are escape markers used internally to avoid conflicts when the source prose itself mentions ⟨⟨ / ⟩⟩.
+- Treat ⟪⟪ and ⟫⟫ as opaque verbatim text: keep them exactly as they appear, in the same positions. Do NOT translate, modify, normalize, or remove them.
+
 Other structural rules:
 - URLs and image paths: leave unchanged.
 - Bare URL paragraphs (a paragraph consisting only of a single URL) MUST remain as standalone paragraphs containing only that URL. Do NOT wrap them in prose, do NOT add surrounding sentences.
@@ -74,6 +79,7 @@ Rules:
 - Do NOT change identifiers, string literals, numeric literals, operators, or any non-comment content.
 - Do NOT add or remove lines. The line count of input and output MUST match exactly.
 - Do NOT change the language tag of the fence (\`\`\`ts must stay \`\`\`ts, etc.).
+- The code may contain the literal sequences ⟪⟪ or ⟫⟫ (escape markers used by the upstream pipeline). Keep them BYTE-FOR-BYTE in their original positions.
 - Place the translated code block (including the surrounding triple-backtick fences) into the \`translated_code\` JSON field as required by the response schema.`;
 
 function createCodeTranslatorClient(ai: GoogleGenAI): CodeTranslatorClient {

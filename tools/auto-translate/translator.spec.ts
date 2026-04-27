@@ -500,6 +500,33 @@ describe('translateOne', () => {
       assert.equal((codeTranslatorClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 1);
     });
 
+    test('prose 中に ⟨⟨ 文字列が含まれていても escape 経由で正しく復元される（衝突回避）', async () => {
+      // 「auto-translate ⟨⟨BLOCK_0⟩⟩ という記法を使う」のように prose に
+      // プレースホルダ風文字列がある記事の end-to-end テスト
+      const ja = buildJaContent({
+        body: 'システムは ⟨⟨BLOCK_0⟩⟩ で識別する。\n\n```ts\nconst x = 1;\n```\n',
+      });
+      // LLM は escape 後の prose（⟨⟨ → ⟪⟪）を受け取り、それをそのまま英訳して返す（escape は保持）
+      const geminiClient: GeminiClient = mock.fn((input) => {
+        // input.body には escape された ⟪⟪ が含まれているはず
+        assert.match(input.body, /⟪⟪BLOCK_0⟫⟫/);
+        return Promise.resolve({
+          title_en: 'Title',
+          body_en: 'The system identifies via ⟪⟪BLOCK_0⟫⟫.\n\n⟨⟨BLOCK_0⟩⟩\n',
+        });
+      });
+      const result = await translateOne(makeArgs({ jaContent: ja, geminiClient }));
+      assert.equal(result.kind, 'translated');
+      assert.ok('enContent' in result);
+      // 最終 en では escape が復元されて元の ⟨⟨BLOCK_0⟩⟩ 文字列に戻る
+      assert.match(result.enContent, /via ⟨⟨BLOCK_0⟩⟩/);
+      // コードブロックも正しく復元されている
+      assert.match(result.enContent, /const x = 1;/);
+      // ⟪⟪ が最終出力に残らない
+      assert.ok(!result.enContent.includes('⟪⟪'));
+      assert.ok(!result.enContent.includes('⟫⟫'));
+    });
+
     test('codeTranslator が複数ブロックを処理してインデックスずれせず復元される', async () => {
       const jaTwoBlocks = buildJaContent({
         body: '前文。\n\n```ts\n// 一つ目\nconst a = 1;\n```\n\n途中。\n\n```ts\n// 二つ目\nconst b = 2;\n```\n',
