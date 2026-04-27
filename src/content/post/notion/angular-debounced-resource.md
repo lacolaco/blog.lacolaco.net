@@ -3,17 +3,17 @@ title: 'Angular v22: debounced Resource の解説'
 slug: 'angular-debounced-resource'
 icon: ''
 created_time: '2026-04-08T02:03:00.000Z'
-last_edited_time: '2026-04-08T23:08:00.000Z'
+last_edited_time: '2026-04-27T00:02:00.000Z'
 tags:
   - 'Signals'
   - '状態管理'
 published: true
 locale: 'ja'
-category: 'Tech'
 channels:
   - 'Angular'
   - 'Code'
 notion_url: 'https://www.notion.so/Angular-v22-debounced-Resource-3253521b014a8157a3b6d0d63eae2c6e'
+auto_translate: true
 features:
   katex: false
   mermaid: false
