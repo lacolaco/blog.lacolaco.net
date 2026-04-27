@@ -44,7 +44,7 @@ Other structural rules:
 - URLs and image paths: leave unchanged.
 - Bare URL paragraphs (a paragraph consisting only of a single URL) MUST remain as standalone paragraphs containing only that URL. Do NOT wrap them in prose, do NOT add surrounding sentences.
 - Markdown structure (heading levels, lists, blockquotes, tables) must be preserved.
-- Code blocks INSIDE blockquotes (lines starting with \`> \`) are NOT replaced by placeholders and appear in the source you receive. Keep these blockquote-nested code blocks BYTE-FOR-BYTE identical to the source. Do NOT translate their comments. Do NOT change any character including quotation marks, dashes, or whitespace.
+- Code blocks INSIDE blockquotes (lines starting with "> ") are NOT replaced by placeholders and appear in the source you receive. Keep these blockquote-nested code blocks BYTE-FOR-BYTE identical to the source. Do NOT translate their comments. Do NOT change any character including quotation marks, dashes, or whitespace.
 - LaTeX math ($...$ and $$...$$) and Mermaid: keep as-is.
 
 Output only the translated title and body (with placeholders preserved) in the requested JSON schema. Do not include the YAML frontmatter.`;
@@ -65,7 +65,8 @@ Do NOT flag:
 - Hedging differences ("I think" vs "perhaps") — both are acceptable.
 - Minor word choices that preserve meaning.
 - Code blocks themselves (validated separately).
-- Differences in code-block COMMENTS between the source and translation. Comments inside code blocks are translated by a separate pipeline stage; the translation intentionally renders Japanese comments in English (or leaves English-only comments unchanged). Do NOT flag comment-level differences inside fenced code blocks.
+- Differences in code-block COMMENTS between the source and translation. Comments inside fenced code blocks are translated by a separate pipeline stage; the translation intentionally renders Japanese comments in English (or leaves English-only comments unchanged). Do NOT flag comment-level differences inside fenced code blocks.
+- Note that this comment-translation only applies to top-level fenced code blocks. Code blocks INSIDE blockquotes (lines starting with "> ") are NOT translated by the comment-translation stage and are kept byte-for-byte identical to the source. Do NOT flag a blockquote-nested code block as a defect just because its comments remain in Japanese.
 - ANY inconsistency that exists identically in the Japanese source. If the source uses an identifier informally (e.g., source prose says \`active\` referring to a variable named \`activePromise\` in code), the translation may faithfully preserve this. This is the author's choice, not a defect.
 
 If the translation has no translation-induced defects, return ok=true and empty issues. Otherwise return ok=false with a precise list of issues.

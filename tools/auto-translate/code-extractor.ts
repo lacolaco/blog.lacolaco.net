@@ -129,7 +129,10 @@ export function restoreCode(template: string, codeBlocks: string[], inlineCodes:
   const restored = template.replace(
     new RegExp(PLACEHOLDER_PATTERN_SOURCE, 'g'),
     (_match, kind: string, idxStr: string) => {
-      const idx = Number(idxStr);
+      const idx = parseInt(idxStr, 10);
+      if (!Number.isInteger(idx) || idx < 0) {
+        throw new Error(`Restore failed: invalid placeholder index "${idxStr}"`);
+      }
       if (kind === 'BLOCK') {
         if (idx >= codeBlocks.length) {
           throw new Error(

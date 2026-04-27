@@ -91,7 +91,7 @@ function buildFeedback(validation: ValidationResult): string {
   );
   if (hasBlockquoteCodeIssue) {
     lines.push(
-      'Code blocks inside blockquotes (lines starting with `> `) must be preserved BYTE-FOR-BYTE — do NOT translate their comments and do NOT change any character.',
+      'Code blocks inside blockquotes (lines starting with "> ") must be preserved BYTE-FOR-BYTE — do NOT translate their comments and do NOT change any character.',
     );
   }
   return lines.join('\n');
@@ -303,13 +303,19 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
     }
     const lastReason = (() => {
       if (!outcome.lastFailure) return 'unknown failure';
-      switch (outcome.lastFailure.kind) {
+      const kind = outcome.lastFailure.kind;
+      switch (kind) {
         case 'placeholder':
           return 'placeholder restoration failed';
         case 'structure':
           return 'structure validation failed';
         case 'proofread':
           return 'proofread issues';
+        default: {
+          // 新しい kind が増えた場合に型エラーで気づくための exhaustive check
+          const _exhaustive: never = kind;
+          throw new Error(`Unhandled RetryFailureReason kind: ${String(_exhaustive)}`);
+        }
       }
     })();
     return {
