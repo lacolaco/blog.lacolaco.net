@@ -79,8 +79,8 @@ function buildFeedback(validation: ValidationResult): string {
   for (const m of validation.mismatches) {
     // count 差異と content 差異でフォーマットを分ける:
     // - count 差異（codeBlocks 等）: 数値で表示（"source has 3, translation has 2"）
-    // - content 差異（codeBlockContent / inlineCodeContent）: 数値は同値なので detail のみ表示
-    if (m.kind === 'codeBlockContent' || m.kind === 'inlineCodeContent') {
+    // - content 差異（inlineCodeContent）: 数値は同値なので detail のみ表示
+    if (m.kind === 'inlineCodeContent') {
       lines.push(`- ${m.kind}: ${m.detail ?? 'content modified from source'}`);
     } else {
       lines.push(`- ${m.kind}: source has ${m.source}, translation has ${m.target}`);
@@ -98,7 +98,7 @@ const TOTAL_ATTEMPTS = MAX_RETRIES + 1;
 function summarizeStructureMismatch(validation: ValidationResult): string {
   return validation.mismatches
     .map((m) => {
-      if (m.kind === 'codeBlockContent' || m.kind === 'inlineCodeContent') {
+      if (m.kind === 'inlineCodeContent') {
         return `${m.kind}: ${m.detail ?? 'content modified'}`;
       }
       return `${m.kind} ja=${m.source} en=${m.target}`;
@@ -122,12 +122,11 @@ async function callWithRetries(
   // 各コードブロックは個別に翻訳（コメントのみ訳す）し、最終的に restoreCode でマージする
   const { template: jaTemplate, codeBlocks, inlineCodes } = extractCode(input.body);
 
-  // 各コードブロックを個別翻訳（コメントのみ）。インラインコードは識別子なので翻訳しない
-  const translatedCodeBlocks: string[] = [];
-  for (let i = 0; i < codeBlocks.length; i++) {
-    const t = await translateCodeBlock({ code: codeBlocks[i], client: codeTranslatorClient, model });
-    translatedCodeBlocks.push(t);
-  }
+  // 各コードブロックを個別翻訳（コメントのみ）。インラインコードは識別子なので翻訳しない。
+  // ブロック間は独立しているため Promise.all で並列化する
+  const translatedCodeBlocks = await Promise.all(
+    codeBlocks.map((code) => translateCodeBlock({ code, client: codeTranslatorClient, model })),
+  );
   if (codeBlocks.length > 0) {
     const translatedCount = translatedCodeBlocks.filter((t, i) => t !== codeBlocks[i]).length;
     if (translatedCount > 0) {

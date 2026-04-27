@@ -33,6 +33,10 @@ describe('hasTranslatableComment', () => {
     assert.equal(hasTranslatableComment('```ts\n// TODO\nconst x = 1;\n```'), false);
   });
 
+  test('英文コメントも → false（既に英語なので翻訳不要、API コスト削減）', () => {
+    assert.equal(hasTranslatableComment('```ts\n// returns the user object\nconst x = 1;\n```'), false);
+  });
+
   test('日本語コメント → true', () => {
     assert.equal(hasTranslatableComment('```ts\n// これは日本語コメントです\n```'), true);
   });

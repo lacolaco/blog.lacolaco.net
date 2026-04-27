@@ -24,17 +24,15 @@ const COMMENT_PATTERNS: RegExp[] = [
 ];
 
 export function hasTranslatableComment(code: string): boolean {
+  // 翻訳ターゲットは英語なので、既に英語のコメントは API を呼ばない（ノイズ・コスト削減）。
+  // 非 ASCII 文字（日本語等）を含むコメントだけを翻訳対象とする
   for (const re of COMMENT_PATTERNS) {
     re.lastIndex = 0;
     let m: RegExpExecArray | null;
     while ((m = re.exec(code)) !== null) {
       const content = m[1].trim();
       if (content.length === 0) continue;
-      // ASCII 英数字・記号のみは翻訳不要（識別子的なコメント）
-      // 非 ASCII（日本語等）または英文相当の文章があれば翻訳対象
       if (/[^\x20-\x7e]/.test(content)) return true;
-      // ASCII 英文判定: 単語数 2 以上で空白を含む（"TODO" などの単独語は除外）
-      if (/[a-zA-Z]/.test(content) && /\s/.test(content) && content.length > 5) return true;
     }
   }
   return false;

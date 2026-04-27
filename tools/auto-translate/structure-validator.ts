@@ -11,7 +11,7 @@ export interface StructureCounts {
   bareUrlParagraphs: number;
 }
 
-export type StructureMismatchKind = keyof StructureCounts | 'codeBlockContent' | 'inlineCodeContent';
+export type StructureMismatchKind = keyof StructureCounts | 'inlineCodeContent';
 
 export interface StructureMismatch {
   kind: StructureMismatchKind;
@@ -38,7 +38,8 @@ function isBareUrlParagraph(node: Paragraph): boolean {
 
 interface StructureSnapshot {
   counts: StructureCounts;
-  codeContents: string[];
+  // コードブロックの内容比較は実施しないため codeContents は保持しない（コメント翻訳で byte 差分が出るため）。
+  // インラインコードは識別子なので翻訳されず、引き続き byte 比較する
   inlineCodeContents: string[];
 }
 
@@ -52,13 +53,11 @@ function snapshotStructure(markdown: string): StructureSnapshot {
   let images = 0;
   let links = 0;
   let bareUrlParagraphs = 0;
-  const codeContents: string[] = [];
   const inlineCodeContents: string[] = [];
 
   visit(tree, (node, _index, parent) => {
     if (node.type === 'code') {
       codeBlocks++;
-      codeContents.push(node.value);
     } else if (node.type === 'inlineCode') {
       inlineCodes++;
       inlineCodeContents.push(node.value);
@@ -72,7 +71,6 @@ function snapshotStructure(markdown: string): StructureSnapshot {
 
   return {
     counts: { codeBlocks, inlineCodes, images, links, bareUrlParagraphs },
-    codeContents,
     inlineCodeContents,
   };
 }
