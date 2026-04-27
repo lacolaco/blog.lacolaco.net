@@ -3,11 +3,18 @@
 # Blocks edits to Notion-sourced content (.md / .en.md under src/content/post/notion/)
 # Rationale: these files are auto-generated (Notion → notion-sync, ja → auto-translate).
 # Direct edits get overwritten on next sync. Content fixes belong upstream (Notion / pipeline).
+#
+# Exit codes are managed explicitly (no `set -e`): unexpected non-zero exits would be
+# interpreted as undefined hook behavior by Claude Code. Always exit 0 (allow) on
+# environment issues (missing jq, malformed input) — fail-open is safer here than blocking
+# legitimate edits because of a tool-environment problem.
 
-set -e
+if ! command -v jq >/dev/null 2>&1; then
+  exit 0
+fi
 
 input=$(cat)
-file_path=$(echo "$input" | jq -r '.tool_input.file_path // .tool_input.notebook_path // empty')
+file_path=$(echo "$input" | jq -r '.tool_input.file_path // .tool_input.notebook_path // empty' 2>/dev/null)
 
 if [ -z "$file_path" ]; then
   exit 0
