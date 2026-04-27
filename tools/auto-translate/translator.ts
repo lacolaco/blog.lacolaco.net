@@ -14,7 +14,11 @@ export const PROMPT_VERSION = 5;
 // 将来 stable 移行・廃止時は GEMINI_MODEL env で適切な ID（例: gemini-3-flash 等の後継 GA 名）に切替可能。
 // 参考: https://ai.google.dev/gemini-api/docs/models
 export const DEFAULT_MODEL = 'gemini-3-flash-preview';
-export const MAX_RETRIES = 3;
+// MAX_RETRIES + 1 = TOTAL_ATTEMPTS. 観測実績: angular-debounced-resource.md は LLM が
+// 高頻度で placeholder swap を起こし、4 attempts では確率的に失敗するケースがあった
+// (sync run 24987177820 で 4/4 swap fail)。retry feedback で recover はできるが
+// 試行回数が足りない。6 attempts に増やしてカバー率を上げる
+export const MAX_RETRIES = 5;
 
 export interface GeminiInput {
   title: string;

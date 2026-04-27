@@ -6,10 +6,13 @@ import {
   translateOne,
   joinFrontmatter,
   splitFrontmatter,
+  MAX_RETRIES,
   PROMPT_VERSION,
   type GeminiClient,
   type TranslateOneArgs,
 } from './translator.ts';
+
+const TOTAL_ATTEMPTS = MAX_RETRIES + 1;
 import { buildEnFrontmatter } from './frontmatter.ts';
 import type { ProofreaderClient } from './proofreader.ts';
 import type { CodeTranslatorClient } from './code-translator.ts';
@@ -306,13 +309,13 @@ describe('translateOne', () => {
       assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 2);
     });
 
-    test('placeholder 復元 4 試行全て NG → failed、API 呼び出し 4 回', async () => {
+    test('placeholder 復元 全 TOTAL_ATTEMPTS 試行 NG → failed、API 呼び出し TOTAL_ATTEMPTS 回', async () => {
       const client: GeminiClient = mock.fn(() =>
         Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN }),
       );
       const result = await translateOne(makeArgs({ geminiClient: client }));
       assert.equal(result.kind, 'failed');
-      assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 4);
+      assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, TOTAL_ATTEMPTS);
     });
 
     test('リトライ時のフィードバックメッセージに差分情報が含まれる', async () => {
@@ -448,7 +451,7 @@ describe('translateOne', () => {
       assert.equal((proofreaderClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 2);
     });
 
-    test('proofread が常に ng → 4 試行後 failed', async () => {
+    test('proofread が常に ng → TOTAL_ATTEMPTS 試行後 failed', async () => {
       const geminiClient = makeOkClient();
       const proofreaderClient: ProofreaderClient = mock.fn(() =>
         Promise.resolve({
@@ -458,8 +461,8 @@ describe('translateOne', () => {
       );
       const result = await translateOne(makeArgs({ geminiClient, proofreaderClient }));
       assert.equal(result.kind, 'failed');
-      assert.equal((geminiClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 4);
-      assert.equal((proofreaderClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 4);
+      assert.equal((geminiClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, TOTAL_ATTEMPTS);
+      assert.equal((proofreaderClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, TOTAL_ATTEMPTS);
     });
 
     test('placeholder 復元 NG の attempt では proofread を呼ばない（ローカル検証で先に reject）', async () => {
@@ -689,7 +692,7 @@ describe('translateOne', () => {
       assert.equal(result.kind, 'failed');
       assert.ok('reason' in result);
       // 2 回目（リトライ）で throw したことが reason から分かる
-      assert.match(result.reason, /attempt 2\/4/);
+      assert.match(result.reason, new RegExp(`attempt 2\\/${TOTAL_ATTEMPTS}`));
       assert.match(result.reason, /rate limit/);
     });
   });
