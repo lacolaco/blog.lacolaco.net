@@ -221,6 +221,23 @@ describe('validateStructure', () => {
     assert.ok(result.mismatches.some((m) => m.kind === 'blockquoteInlineCodeContent'));
   });
 
+  test('blockquote 内インラインコードが削除された → ng (inlineCodes count)', () => {
+    // count 差異は inlineCodes 全体カウントで検出される（個別の blockquoteInlineCode count check は実装しない）
+    const source = '> 引用 `foo`\n';
+    const target = '> no code\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodes'));
+  });
+
+  test('blockquote 内インラインコードが追加された → ng (inlineCodes count)', () => {
+    const source = '> 引用文\n';
+    const target = '> Added `code` here\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodes'));
+  });
+
   test('blockquote 内コードが追加・削除された → ng (blockquoteCodeContent, count)', () => {
     const source = '> ```ts\n> const a = 1;\n> ```\n';
     const target = '> ```ts\n> const a = 1;\n> ```\n\n> ```ts\n> const b = 2;\n> ```\n';

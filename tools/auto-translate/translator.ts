@@ -135,16 +135,14 @@ async function callWithRetries(
   proofreaderClient: ProofreaderClient,
   codeTranslatorClient: CodeTranslatorClient,
   model: string,
-  input: { title: string; body: string },
+  input: { title: string; body: string; jaTemplate: string; codeBlocks: string[]; inlineCodes: string[] },
   slug: string,
 ): Promise<
   | { ok: true; output: GeminiOutput; attempts: number }
   | { ok: false; attempts: number; lastFailure: RetryFailureReason | undefined }
   | { ok: false; attempts: number; thrownAt: number; cause: Error }
 > {
-  // ja body から code を抽出してプレースホルダ化。LLM には template だけ渡す。
-  // 各コードブロックは個別に翻訳（コメントのみ訳す）し、最終的に restoreCode でマージする
-  const { template: jaTemplate, codeBlocks, inlineCodes } = extractCode(input.body);
+  const { jaTemplate, codeBlocks, inlineCodes } = input;
 
   // 各コードブロックを個別翻訳（コメントのみ）。インラインコードは識別子なので翻訳しない。
   // ブロック間は独立しているため Promise.all で並列化する
@@ -300,6 +298,16 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
     return { kind: 'frontmatter-only', enContent: newEnContent };
   }
 
+  // ja body から code を抽出してプレースホルダ化。LLM には template だけ渡す。
+  // extractCode は予約 escape 文字（⟪⟪/⟫⟫）が markdown 中にあると throw する既知の失敗モードがあるため、
+  // unexpected error ではなく専用 reason で扱う
+  let extracted: ReturnType<typeof extractCode>;
+  try {
+    extracted = extractCode(ja.body);
+  } catch (e) {
+    return { kind: 'failed', reason: `code extraction failed: ${(e as Error).message}` };
+  }
+
   // API 呼ぶ（リトライ込み）。callWithRetries は API 例外を内部 catch して outcome に変換するため、
   // ここでの try-catch は予期せぬ例外（実装バグ等）の保険のみ
   let outcome: Awaited<ReturnType<typeof callWithRetries>>;
@@ -309,7 +317,13 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
       proofreaderClient,
       codeTranslatorClient,
       model,
-      { title: jaTitle, body: ja.body },
+      {
+        title: jaTitle,
+        body: ja.body,
+        jaTemplate: extracted.template,
+        codeBlocks: extracted.codeBlocks,
+        inlineCodes: extracted.inlineCodes,
+      },
       slug,
     );
   } catch (e) {

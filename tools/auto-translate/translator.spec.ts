@@ -562,8 +562,10 @@ describe('translateOne', () => {
       const geminiClient = makeOkClient();
       const result = await translateOne(makeArgs({ jaContent: jaWithReserved, geminiClient }));
       assert.equal(result.kind, 'failed');
+      // extractCode の専用 failure reason として返される（unexpected error ではない）
+      assert.ok('reason' in result && result.reason.startsWith('code extraction failed'));
       assert.ok('reason' in result && result.reason.includes('reserved escape sequence'));
-      // extractCode は callWithRetries の冒頭で実行されるため、API は一切呼ばれない
+      // extractCode は translateOne 内で実行されるため、API は一切呼ばれない
       assert.equal((geminiClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 0);
     });
   });
