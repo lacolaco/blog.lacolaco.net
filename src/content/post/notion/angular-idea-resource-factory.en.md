@@ -3,13 +3,12 @@ title: 'Angular implementation idea: Resource Factory '
 slug: 'angular-idea-resource-factory'
 icon: ''
 created_time: '2024-11-16T01:24:00.000Z'
-last_edited_time: '2026-03-28T16:17:00.000Z'
+last_edited_time: '2026-04-27T23:21:00.000Z'
 tags:
-  - 'dependency injection'
+  - 'Dependency Injection'
   - 'Signals'
 published: true
 locale: 'en'
-category: 'Tech'
 channels:
   - 'Code'
   - 'Angular'

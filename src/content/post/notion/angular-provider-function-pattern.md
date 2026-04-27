@@ -5,11 +5,10 @@ icon: ''
 created_time: '2022-10-16T07:08:00.000Z'
 last_edited_time: '2022-10-16T00:00:00.000Z'
 tags:
-  - 'dependency injection'
+  - 'Dependency Injection'
   - 'standalone component'
 published: true
 locale: 'ja'
-category: 'Tech'
 channels:
   - 'Code'
   - 'Angular'

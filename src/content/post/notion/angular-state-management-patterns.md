@@ -3,12 +3,11 @@ title: 'Angularアプリケーションの状態管理パターン'
 slug: 'angular-state-management-patterns'
 icon: ''
 created_time: '2022-05-11T02:10:00.000Z'
-last_edited_time: '2026-03-28T16:18:00.000Z'
+last_edited_time: '2026-04-27T23:20:00.000Z'
 tags:
-  - '状態管理'
+  - 'State Management'
 published: true
 locale: 'ja'
-category: 'Tech'
 channels:
   - 'Code'
   - 'Angular'

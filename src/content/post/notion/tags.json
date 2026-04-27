@@ -48,12 +48,6 @@
     "description": null
   },
   {
-    "id": "3570e024-f17b-48b8-9a7e-219f8c01fe15",
-    "name": "components",
-    "color": "red",
-    "description": null
-  },
-  {
     "id": "30591110-7705-4cde-ba21-f50693865f05",
     "name": "Forms",
     "color": "red",
@@ -211,13 +205,13 @@
   },
   {
     "id": "fb19e579-9c85-4397-b0bc-ee4c48e67a49",
-    "name": "状態管理",
+    "name": "State Management",
     "color": "brown",
     "description": null
   },
   {
     "id": "140aa34e-cea2-45d9-a48a-4964ad6578a2",
-    "name": "dependency injection",
+    "name": "Dependency Injection",
     "color": "brown",
     "description": null
   },
