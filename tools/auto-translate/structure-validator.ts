@@ -18,6 +18,12 @@ export interface StructureMismatch {
   kind: StructureMismatchKind;
   source: number;
   target: number;
+  /**
+   * blockquoteCodeContent でのみ使用:
+   * - 'count': source/target の個数自体が異なる
+   * - 'content': 個数は同じだが内容が異なる
+   */
+  differKind?: 'count' | 'content';
 }
 
 export interface ValidationResult {
@@ -68,7 +74,7 @@ function snapshotStructureInternal(markdown: string): StructureSnapshotInternal 
       // blockquote 内の code は別途内容比較対象として保持し、通常カウントには含めない
       // （別経路の byte-identical 検証で扱う）
       if (node.type === 'code') {
-        blockquoteCodeContents.push((node as { value?: string }).value ?? '');
+        blockquoteCodeContents.push(node.value);
         return;
       }
       // image / link / inlineCode は LLM が直接扱うので、blockquote 内でも通常カウントに含める。
@@ -123,14 +129,23 @@ export function validateStructure(source: string, target: string): ValidationRes
   // カウント一致は codeBlocks / inlineCodes で担保済み
 
   // blockquote 内コードはプレースホルダ化されず LLM プロンプトに直接渡るため、byte 一致を検証する。
-  // 順序を含めた完全一致を要求（contents 配列の長さ・各要素の byte 一致）
+  // 順序を含めた完全一致を要求（contents 配列の長さ・各要素の byte 一致）。
+  // count 差異と content 差異は別物なので differKind で区別する（フィードバックメッセージで使い分け）
   const srcBq = src.blockquoteCodeContents;
   const tgtBq = tgt.blockquoteCodeContents;
-  if (srcBq.length !== tgtBq.length || srcBq.some((v, i) => v !== tgtBq[i])) {
+  if (srcBq.length !== tgtBq.length) {
     mismatches.push({
       kind: 'blockquoteCodeContent',
       source: srcBq.length,
       target: tgtBq.length,
+      differKind: 'count',
+    });
+  } else if (srcBq.some((v, i) => v !== tgtBq[i])) {
+    mismatches.push({
+      kind: 'blockquoteCodeContent',
+      source: srcBq.length,
+      target: tgtBq.length,
+      differKind: 'content',
     });
   }
 

@@ -194,13 +194,25 @@ describe('validateStructure', () => {
     assert.ok(result.mismatches.some((m) => m.kind === 'links'));
   });
 
-  test('blockquote 内コードのコメントが翻訳されている → ng (blockquoteCodeContent)', () => {
+  test('blockquote 内コードのコメントが翻訳されている → ng (blockquoteCodeContent, content)', () => {
     // blockquote 内コードは LLM が直接見るためコメントを翻訳するリスクがある。byte 一致を強制
     const source = '> ```ts\n> // 元コメント\n> const x = 1;\n> ```\n';
     const target = '> ```ts\n> // translated comment\n> const x = 1;\n> ```\n';
     const result = validateStructure(source, target);
     assert.equal(result.ok, false);
-    assert.ok(result.mismatches.some((m) => m.kind === 'blockquoteCodeContent'));
+    const m = result.mismatches.find((x) => x.kind === 'blockquoteCodeContent');
+    assert.ok(m);
+    assert.equal(m.differKind, 'content');
+  });
+
+  test('blockquote 内コードが追加・削除された → ng (blockquoteCodeContent, count)', () => {
+    const source = '> ```ts\n> const a = 1;\n> ```\n';
+    const target = '> ```ts\n> const a = 1;\n> ```\n\n> ```ts\n> const b = 2;\n> ```\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    const m = result.mismatches.find((x) => x.kind === 'blockquoteCodeContent');
+    assert.ok(m);
+    assert.equal(m.differKind, 'count');
   });
 
   test('翻訳結果に source にないインラインコードが追加されている → ng (inlineCodes count)', () => {

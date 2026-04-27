@@ -76,10 +76,16 @@ function buildFeedback(validation: ValidationResult): string {
   let hasBlockquoteCodeIssue = false;
   for (const m of validation.mismatches) {
     if (m.kind === 'blockquoteCodeContent') {
-      // count 一致 + 内容不一致のケースが通常で、数値表示は LLM を混乱させるため専用メッセージにする
-      lines.push(
-        `- ${m.kind}: a code block inside a blockquote (> \`\`\` ... \`\`\`) was modified. The content must remain BYTE-FOR-BYTE identical to the source.`,
-      );
+      // count 差異と内容差異で別メッセージにする
+      if (m.differKind === 'count') {
+        lines.push(
+          `- ${m.kind}: a code block inside a blockquote was added or removed (source has ${m.source}, translation has ${m.target}).`,
+        );
+      } else {
+        lines.push(
+          `- ${m.kind}: a code block inside a blockquote was modified. The content must remain BYTE-FOR-BYTE identical to the source.`,
+        );
+      }
       hasBlockquoteCodeIssue = true;
     } else {
       lines.push(`- ${m.kind}: source has ${m.source}, translation has ${m.target}`);
@@ -100,7 +106,15 @@ function buildFeedback(validation: ValidationResult): string {
 const TOTAL_ATTEMPTS = MAX_RETRIES + 1;
 
 function summarizeStructureMismatch(validation: ValidationResult): string {
-  return validation.mismatches.map((m) => `${m.kind} ja=${m.source} en=${m.target}`).join(', ');
+  return validation.mismatches
+    .map((m) => {
+      if (m.kind === 'blockquoteCodeContent') {
+        // count 同値の場合は数だけだと「ja=2 en=2」と一見問題なく見えるため明示する
+        return `${m.kind} (${m.differKind ?? 'differ'}) ja=${m.source} en=${m.target}`;
+      }
+      return `${m.kind} ja=${m.source} en=${m.target}`;
+    })
+    .join(', ');
 }
 
 type RetryFailureReason =
