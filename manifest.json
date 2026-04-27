@@ -1384,5 +1384,9 @@
   "34a3521b-014a-808f-9211-c3a1b715c44d": {
     "lastModified": "2026-04-22T14:44:00.000Z",
     "filePath": "src/content/post/notion/angular-v22-onpush-by-default.md"
+  },
+  "34f3521b-014a-8014-9b66-c11891b89391": {
+    "lastModified": "2026-04-27T08:05:00.000Z",
+    "filePath": "src/content/post/notion/angular-builtin-summarizer-resource.md"
   }
 }
