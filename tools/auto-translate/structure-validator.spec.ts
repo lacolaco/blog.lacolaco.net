@@ -230,21 +230,22 @@ describe('validateStructure', () => {
     assert.ok(result.mismatches.some((m) => m.kind === 'blockquoteInlineCodeContent'));
   });
 
-  test('blockquote 内インラインコードが削除された → ng (inlineCodes count)', () => {
-    // count 差異は inlineCodes 全体カウントで検出される（個別の blockquoteInlineCode count check は実装しない）
+  test('blockquote 内インラインコードが削除された → ng (blockquoteInlineCodeContent count)', () => {
+    // 全体 inlineCodes カウントは check しない (LLM の有用な追加/補正を許容するため)。
+    // ただし blockquote 内 inline は byte fidelity 保護が必要なので個別に count + content check する
     const source = '> 引用 `foo`\n';
     const target = '> no code\n';
     const result = validateStructure(source, target);
     assert.equal(result.ok, false);
-    assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodes'));
+    assert.ok(result.mismatches.some((m) => m.kind === 'blockquoteInlineCodeContent'));
   });
 
-  test('blockquote 内インラインコードが追加された → ng (inlineCodes count)', () => {
+  test('blockquote 内インラインコードが追加された → ng (blockquoteInlineCodeContent count)', () => {
     const source = '> 引用文\n';
     const target = '> Added `code` here\n';
     const result = validateStructure(source, target);
     assert.equal(result.ok, false);
-    assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodes'));
+    assert.ok(result.mismatches.some((m) => m.kind === 'blockquoteInlineCodeContent'));
   });
 
   test('blockquote 内コードの言語タグが変えられた → ng (blockquoteCodeContent, content)', () => {
@@ -280,19 +281,22 @@ describe('validateStructure', () => {
     assert.equal(m.differKind, 'count');
   });
 
-  test('翻訳結果に source にないインラインコードが追加されている → ng (inlineCodes count)', () => {
-    const source = 'plain text\n';
-    const target = 'translated `extra` text\n';
-    const result = validateStructure(source, target);
-    assert.equal(result.ok, false);
-    assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodes'));
-  });
+  test('翻訳結果のインラインコードが source と異なってもエラーにしない (LLM の有用な補正を許容)', () => {
+    // LLM は backtick 識別子を追加 (例: \`true\` で wrap) または削除 (例: source の informal
+    // \`active\` を正規 \`waiting\` に補正) することがある。これらは品質改善方向の挙動で
+    // corruption ではないため inlineCodes count は flag しない設計。
+    // 識別子の semantic な改変は proofreader rule 1 が検出する責務範囲
 
-  test('翻訳結果のインラインコードが少ない → ng (inlineCodes count)', () => {
-    const source = 'use `foo` and `bar`\n';
-    const target = 'use foo and `bar`\n';
-    const result = validateStructure(source, target);
-    assert.equal(result.ok, false);
-    assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodes'));
+    // ケース 1: en で inline code 追加
+    const source1 = 'plain text\n';
+    const target1 = 'translated `extra` text\n';
+    const result1 = validateStructure(source1, target1);
+    assert.ok(!result1.mismatches.some((m) => m.kind === 'inlineCodes'));
+
+    // ケース 2: en で inline code 削除
+    const source2 = 'use `foo` and `bar`\n';
+    const target2 = 'use foo and `bar`\n';
+    const result2 = validateStructure(source2, target2);
+    assert.ok(!result2.mismatches.some((m) => m.kind === 'inlineCodes'));
   });
 });
