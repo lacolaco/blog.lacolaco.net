@@ -137,18 +137,23 @@ type RetryFailureReason =
   | { kind: 'structure' } // structure-validator NG
   | { kind: 'proofread' }; // proofreader NG
 
+interface CallWithRetriesArgs {
+  geminiClient: GeminiClient;
+  proofreaderClient: ProofreaderClient;
+  codeTranslatorClient: CodeTranslatorClient;
+  model: string;
+  input: { title: string; body: string; jaTemplate: string; codeBlocks: string[]; inlineCodes: string[] };
+  slug: string;
+}
+
 async function callWithRetries(
-  client: GeminiClient,
-  proofreaderClient: ProofreaderClient,
-  codeTranslatorClient: CodeTranslatorClient,
-  model: string,
-  input: { title: string; body: string; jaTemplate: string; codeBlocks: string[]; inlineCodes: string[] },
-  slug: string,
+  args: CallWithRetriesArgs,
 ): Promise<
   | { ok: true; output: GeminiOutput; attempts: number }
   | { ok: false; attempts: number; lastFailure: RetryFailureReason | undefined }
   | { ok: false; attempts: number; thrownAt: number; cause: Error }
 > {
+  const { geminiClient: client, proofreaderClient, codeTranslatorClient, model, input, slug } = args;
   const { jaTemplate, codeBlocks, inlineCodes } = input;
 
   // 各コードブロックを個別翻訳（コメントのみ）。インラインコードは識別子なので翻訳しない。
@@ -319,12 +324,12 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
   // ここでの try-catch は予期せぬ例外（実装バグ等）の保険のみ
   let outcome: Awaited<ReturnType<typeof callWithRetries>>;
   try {
-    outcome = await callWithRetries(
+    outcome = await callWithRetries({
       geminiClient,
       proofreaderClient,
       codeTranslatorClient,
       model,
-      {
+      input: {
         title: jaTitle,
         body: ja.body,
         jaTemplate: extracted.template,
@@ -332,7 +337,7 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
         inlineCodes: extracted.inlineCodes,
       },
       slug,
-    );
+    });
   } catch (e) {
     return { kind: 'failed', reason: `unexpected error: ${(e as Error).message}` };
   }

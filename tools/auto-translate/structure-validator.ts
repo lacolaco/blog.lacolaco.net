@@ -77,10 +77,21 @@ function snapshotStructureInternal(markdown: string): StructureSnapshotInternal 
     if (hasBlockquoteAncestor(ancestors)) {
       // blockquote 内の code は通常カウント対象外、別経路で byte-identical 検証
       if (node.type === 'code') {
-        // 言語タグ (node.lang) も byte 比較対象に含める。LLM が ```ts → ```javascript と
-        // 書き換えても検出できるよう、{lang}:\n{value} の形式で連結する
+        // 言語タグ (node.lang) と fence 種別 (``` か ~~~) も比較対象に含める。
+        // LLM が ```ts → ```javascript / ```ts → ~~~ts のように書き換えても検出できる。
+        // remark は ``` と ~~~ を同一 code ノードに正規化するため、AST 値だけでは fence 種別の差を見抜けない。
+        // markdown.slice() で生テキストを取得して fence 文字を判定する
         const lang = node.lang ?? '';
-        blockquoteCodeContents.push(`${lang}:\n${node.value}`);
+        const startOffset = node.position?.start.offset;
+        const endOffset = node.position?.end.offset;
+        let fenceChar = '`';
+        if (startOffset != null && endOffset != null) {
+          // blockquote 内では `> ` プレフィックスが混じるため、最初の ` または ~ を探す
+          const raw = markdown.slice(startOffset, endOffset);
+          const m = /[`~]/.exec(raw);
+          if (m) fenceChar = m[0];
+        }
+        blockquoteCodeContents.push(`${fenceChar}:${lang}:\n${node.value}`);
         return;
       }
       // blockquote 内のインラインコードは通常カウントにも含めるが、

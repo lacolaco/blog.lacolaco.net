@@ -205,6 +205,15 @@ describe('validateStructure', () => {
     assert.equal(m.differKind, 'content');
   });
 
+  test('blockquote 内コードの fence 種別が変えられた → ng (blockquoteCodeContent, content)', () => {
+    // remark は ``` と ~~~ を同一 code ノードに正規化するが、生 markdown レベルでは別物なので検出する
+    const source = '> ```ts\n> const x = 1;\n> ```\n';
+    const target = '> ~~~ts\n> const x = 1;\n> ~~~\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'blockquoteCodeContent'));
+  });
+
   test('blockquote 内インラインコードの内容が一致 → ok', () => {
     const source = '> 引用文中の `foo` という識別子\n';
     const target = '> Quoted text contains `foo` identifier\n';
