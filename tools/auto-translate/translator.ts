@@ -73,13 +73,27 @@ export function joinFrontmatter(frontmatter: Frontmatter, body: string): string 
 
 function buildFeedback(validation: ValidationResult): string {
   const lines = ['The translation has structural mismatches with the source:'];
+  let hasBlockquoteCodeIssue = false;
   for (const m of validation.mismatches) {
-    lines.push(`- ${m.kind}: source has ${m.source}, translation has ${m.target}`);
+    if (m.kind === 'blockquoteCodeContent') {
+      // count 一致 + 内容不一致のケースが通常で、数値表示は LLM を混乱させるため専用メッセージにする
+      lines.push(
+        `- ${m.kind}: a code block inside a blockquote (> \`\`\` ... \`\`\`) was modified. The content must remain BYTE-FOR-BYTE identical to the source.`,
+      );
+      hasBlockquoteCodeIssue = true;
+    } else {
+      lines.push(`- ${m.kind}: source has ${m.source}, translation has ${m.target}`);
+    }
   }
   lines.push('');
   lines.push(
     'Please retranslate ensuring all links, images, and bare URL paragraphs from the source are preserved exactly. Do not omit, merge, or wrap any URL into prose. Each placeholder ⟨⟨BLOCK_N⟩⟩ and ⟨⟨INLINE_N⟩⟩ must appear exactly once in your output, verbatim — do not modify, drop, or duplicate them.',
   );
+  if (hasBlockquoteCodeIssue) {
+    lines.push(
+      'Code blocks inside blockquotes (lines starting with `> `) must be preserved BYTE-FOR-BYTE — do NOT translate their comments and do NOT change any character.',
+    );
+  }
   return lines.join('\n');
 }
 
