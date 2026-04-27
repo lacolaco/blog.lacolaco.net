@@ -6,6 +6,7 @@ import { remark } from 'remark';
 import remarkGfm from 'remark-gfm';
 import type { Node, Parent } from 'unist';
 import { visitParents } from 'unist-util-visit-parents';
+import { hasBlockquoteAncestor } from './ast-utils.ts';
 
 const remarkProcessor = remark().use(remarkGfm);
 
@@ -46,13 +47,9 @@ export interface ExtractedCode {
   inlineCodes: string[];
 }
 
-// blockquote 内の code/inlineCode は markdown.slice() が `> ` プレフィックス混在の文字列を返すため、
+// 注意: blockquote 内の code/inlineCode は markdown.slice() が "> " プレフィックス混在の文字列を返すため、
 // プレースホルダ化すると translateCodeBlock 側の fence 検証が壊れる（silent failure を起こす）。
-// 抽出対象外として template に残し、LLM の prose 翻訳に委ねる
-function hasBlockquoteAncestor(ancestors: readonly Parent[]): boolean {
-  return ancestors.some((a) => a.type === 'blockquote');
-}
-
+// 抽出対象外として template に残し、LLM の prose 翻訳に委ねる（hasBlockquoteAncestor は ast-utils.ts 経由で共有）
 export function extractCode(markdown: string): ExtractedCode {
   // markdown 全体の ⟨⟨ ⟩⟩ を別文字に escape してからパース。
   // これによりプレースホルダ ⟨⟨BLOCK_N⟩⟩ と prose 中の同名文字列の衝突を回避する。

@@ -3,6 +3,7 @@ import remarkGfm from 'remark-gfm';
 import type { Paragraph } from 'mdast';
 import type { Parent } from 'unist';
 import { visitParents } from 'unist-util-visit-parents';
+import { hasBlockquoteAncestor } from './ast-utils.ts';
 
 export interface StructureCounts {
   codeBlocks: number;
@@ -42,16 +43,8 @@ function isBareUrlParagraph(node: Paragraph): boolean {
   return linkText === link.url;
 }
 
-interface StructureSnapshot {
-  counts: StructureCounts;
-}
-
 // remark プロセッサはプラグイン初期化のコストがあるためモジュールレベルで一度だけ生成
 const remarkProcessor = remark().use(remarkGfm);
-
-function isInBlockquote(ancestors: readonly Parent[]): boolean {
-  return ancestors.some((a) => a.type === 'blockquote');
-}
 
 interface StructureSnapshotInternal {
   counts: StructureCounts;
@@ -70,7 +63,7 @@ function snapshotStructureInternal(markdown: string): StructureSnapshotInternal 
   const blockquoteCodeContents: string[] = [];
 
   visitParents(tree, (node, ancestors: Parent[]) => {
-    if (isInBlockquote(ancestors)) {
+    if (hasBlockquoteAncestor(ancestors)) {
       // blockquote 内の code は別途内容比較対象として保持し、通常カウントには含めない
       // （別経路の byte-identical 検証で扱う）
       if (node.type === 'code') {
@@ -103,12 +96,8 @@ function snapshotStructureInternal(markdown: string): StructureSnapshotInternal 
   };
 }
 
-function snapshotStructure(markdown: string): StructureSnapshot {
-  return { counts: snapshotStructureInternal(markdown).counts };
-}
-
 export function countStructure(markdown: string): StructureCounts {
-  return snapshotStructure(markdown).counts;
+  return snapshotStructureInternal(markdown).counts;
 }
 
 export function validateStructure(source: string, target: string): ValidationResult {
