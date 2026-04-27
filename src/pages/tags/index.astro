@@ -1,14 +1,15 @@
 ---
-import { queryAvailablePosts, queryTags } from '@lib/query';
+import { queryListPagePosts, queryTags } from '@lib/query';
 import Tags from '../../layouts/Tags.astro';
 
-const posts = await queryAvailablePosts();
+// dedup 済み posts (1 slug 1 entry) で usedCount を計算 → [tag].astro の表示件数と一致
+const posts = await queryListPagePosts();
 const tags = await queryTags();
 
 const tagWithCount = tags
   .map((tag) => {
-    const usedCount = posts.filter((post) => {
-      return post.data.tags.includes(tag.name);
+    const usedCount = posts.filter((item) => {
+      return item.post.data.tags.includes(tag.name);
     }).length;
     return { name: tag.name, usedCount };
   })

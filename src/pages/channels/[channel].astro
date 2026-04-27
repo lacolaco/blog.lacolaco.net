@@ -1,16 +1,15 @@
 ---
-import { queryAvailablePosts, queryChannels } from '@lib/query';
-import type { CollectionEntry } from 'astro:content';
+import { queryListPagePosts, queryChannels, type PostWithTranslations } from '@lib/query';
 import ChannelNav from 'src/components/ChannelNav.astro';
 import List from '../../layouts/List.astro';
 import { urlize } from '../../libs/strings';
 
 export async function getStaticPaths() {
-  const posts = await queryAvailablePosts();
+  const posts = await queryListPagePosts();
   const channels = queryChannels();
 
   return channels.map((channel) => {
-    const matchPosts = posts.filter((post) => post.data.channels?.includes(channel.name));
+    const matchPosts = posts.filter((item) => item.post.data.channels?.includes(channel.name));
     const urlizedName = urlize(channel.name);
     return {
       params: { channel: urlizedName },
@@ -21,7 +20,7 @@ export async function getStaticPaths() {
 
 type Props = {
   channel: string;
-  posts: Array<CollectionEntry<'posts' | 'postsEn'>>;
+  posts: PostWithTranslations[];
 };
 
 const { channel, posts } = Astro.props;

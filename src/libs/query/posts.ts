@@ -1,5 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { compareDesc, compareAsc, isPast } from 'date-fns';
+import { getRelativePostUrl } from '../compat';
 
 export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'posts' | 'postsEn'>>> {
   const posts = await getCollection('posts');
@@ -42,6 +43,53 @@ export function deduplicatePosts(
   }
 
   return deduplicatedPosts;
+}
+
+/**
+ * List page で表示する posts に dedup と翻訳 metadata を attach した形を返す helper。
+ * 各 list page (index, channels, tags) で共通利用する
+ */
+export async function queryListPagePosts(): Promise<PostWithTranslations[]> {
+  const allPosts = await queryAvailablePosts();
+  const enPosts = allPosts.filter((p): p is CollectionEntry<'postsEn'> => p.data.locale === 'en');
+  const deduped = deduplicatePosts(allPosts);
+  return attachTranslations(deduped, enPosts);
+}
+
+/**
+ * Translated List Display 用に各 post に翻訳 metadata を attach する。
+ * 詳細は docs/design/bilingual-list-display.md (Option D) を参照。
+ *
+ * 入力: dedup 済み posts (ja-preferred) と en posts 全集合
+ * 出力: 各 entry に translations.en を持たせた配列。en 記事自体には translations を入れない
+ *       (canonical entry が en になっているケースは swap 対象外)
+ */
+export interface PostTranslations {
+  en?: { title: string; href: string };
+}
+
+export interface PostWithTranslations {
+  post: CollectionEntry<'posts' | 'postsEn'>;
+  translations: PostTranslations;
+}
+
+export function attachTranslations(
+  posts: Array<CollectionEntry<'posts' | 'postsEn'>>,
+  enPosts: Array<CollectionEntry<'postsEn'>>,
+): PostWithTranslations[] {
+  return posts.map((post) => {
+    const translations: PostTranslations = {};
+    if (post.data.locale !== 'en') {
+      const enPost = enPosts.find((p) => p.data.slug === post.data.slug);
+      if (enPost) {
+        translations.en = {
+          title: enPost.data.title,
+          href: getRelativePostUrl(enPost),
+        };
+      }
+    }
+    return { post, translations };
+  });
 }
 
 /**
