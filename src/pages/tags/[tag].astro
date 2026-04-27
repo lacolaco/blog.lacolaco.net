@@ -1,16 +1,15 @@
 ---
-import { queryAvailablePosts, queryTags } from '@lib/query';
+import { queryListPagePosts, queryTags, type PostWithTranslations } from '@lib/query';
 import List from '../../layouts/List.astro';
 import { urlize } from '../../libs/strings';
-import type { CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
-  const posts = await queryAvailablePosts();
+  const posts = await queryListPagePosts();
   const tags = await queryTags();
 
   return tags.map((tag) => {
-    const matchPosts = posts.filter((post) => {
-      return post.data.tags?.includes(tag.name);
+    const matchPosts = posts.filter((item) => {
+      return item.post.data.tags?.includes(tag.name);
     });
     const urlizedName = urlize(tag.name);
     return {
@@ -22,7 +21,7 @@ export async function getStaticPaths() {
 
 type Props = {
   tag: string;
-  posts: Array<CollectionEntry<'posts'>>;
+  posts: PostWithTranslations[];
 };
 
 const { tag, posts } = Astro.props;

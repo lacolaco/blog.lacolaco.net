@@ -8,10 +8,10 @@ import FormattedDate from '../components/FormattedDate';
 import Header from '../components/Header.astro';
 import MainContainer from '../components/MainContainer.astro';
 import { SITE_TITLE } from '../consts';
-import type { CollectionEntry } from 'astro:content';
+import type { PostWithTranslations } from '../libs/query';
 
 type Props = {
-  posts: Array<CollectionEntry<'posts'>>;
+  posts: PostWithTranslations[];
   /** RSS auto-discoveryリンク用URL（例: "/index.xml", "/tags/angular.xml"） */
   feedUrl?: string;
   showChannels?: boolean;
@@ -20,13 +20,13 @@ type Props = {
 const { posts, feedUrl, showChannels = false } = Astro.props;
 const postsByYear = Array.from(
   posts
-    .reduce((acc, post) => {
-      const year = formatDate(getDate(post), 'yyyy');
-      const posts = acc.get(year) ?? [];
-      posts.push(post);
-      acc.set(year, posts);
+    .reduce((acc, item) => {
+      const year = formatDate(getDate(item.post), 'yyyy');
+      const list = acc.get(year) ?? [];
+      list.push(item);
+      acc.set(year, list);
       return acc;
-    }, new Map<string, Array<CollectionEntry<'posts'>>>())
+    }, new Map<string, PostWithTranslations[]>())
     .entries(),
 ).sort(([a], [b]) => Number(b) - Number(a));
 ---
@@ -55,7 +55,7 @@ const postsByYear = Array.from(
               </div>
             )}
             <ul class="list-none">
-              {posts.map((post) => {
+              {posts.map(({ post, translations }) => {
                 const postChannels = showChannels ? getChannels(post) : [];
                 return (
                   <li class="[&+&]:border-t [&+&]:border-[var(--color-border-light)]">
@@ -73,10 +73,22 @@ const postsByYear = Array.from(
                           </div>
                         )}
                       </div>
-                      <a href={getRelativePostUrl(post)} class="text-base lg:text-[18px] font-semibold lg:font-bold leading-[1.5] lg:leading-[1.45] text-default no-underline hover:text-muted lg:hover:text-hover-link lg:hover:no-underline lg:group-hover:text-hover-link transition-colors duration-100 lg:after:absolute lg:after:inset-0 lg:after:content-['']">
-                        {getTitle(post)}
+                      <a
+                        href={getRelativePostUrl(post)}
+                        data-translation-en-href={translations.en?.href}
+                        data-translation-en-title={translations.en?.title}
+                        class="text-base lg:text-[18px] font-semibold lg:font-bold leading-[1.5] lg:leading-[1.45] text-default no-underline hover:text-muted lg:hover:text-hover-link lg:hover:no-underline lg:group-hover:text-hover-link transition-colors duration-100 lg:after:absolute lg:after:inset-0 lg:after:content-['']"
+                      >
+                        <span data-translation-target>{getTitle(post)}</span>
                         {post.data.locale === 'en' && (
                           <span class="inline-block text-[10px] font-bold text-white bg-blue-500 py-px px-1.5 rounded-[3px] ml-1.5 align-middle">EN</span>
+                        )}
+                        {translations.en && (
+                          <span
+                            class="inline-block text-[10px] font-bold text-white bg-blue-500 py-px px-1.5 rounded-[3px] ml-1.5 align-middle"
+                            data-translation-en-badge
+                            style="display: none;"
+                          >EN</span>
                         )}
                       </a>
                     </div>
@@ -90,5 +102,44 @@ const postsByYear = Array.from(
     </MainContainer>
 
     <Footer class="py-4 lg:py-0" />
+
+    <script>
+      // 翻訳がある entry の title / href を user の locale 設定に応じて en に swap する。
+      // 詳細は docs/design/bilingual-list-display.md (Option D) を参照
+      // 判定: navigator.languages を順に走査し、en が ja より先に出現したら en preference
+      //
+      // FOUC について: en preference のユーザは ja title が一瞬見えてから en に swap される
+      // (script は type="module" の defer 実行)。タイトルを初期非表示 (opacity:0) にすれば
+      // FOUC は隠せるが、JS 不在環境 / script 失敗時に永久に title が見えなくなる劣化が
+      // 大きいため敢えて行わない。EN badge は逆に「未スワップ時は無いべきもの」なので
+      // \`display: none\` で初期非表示にしている (バッジとタイトルで扱いが異なるのは設計意図)
+      const langs = navigator.languages ?? [navigator.language];
+      let prefersEn = false;
+      for (const lang of langs) {
+        if (!lang) continue;
+        const lower = lang.toLowerCase();
+        if (lower === 'ja' || lower.startsWith('ja-')) break;
+        if (lower === 'en' || lower.startsWith('en-')) {
+          prefersEn = true;
+          break;
+        }
+      }
+      if (prefersEn) {
+        const links = document.querySelectorAll<HTMLAnchorElement>('a[data-translation-en-href]');
+        for (const link of links) {
+          const enHref = link.dataset.translationEnHref;
+          const enTitle = link.dataset.translationEnTitle;
+          if (!enHref || !enTitle) continue;
+          link.href = enHref;
+          const titleEl = link.querySelector<HTMLElement>('[data-translation-target]');
+          if (titleEl) titleEl.textContent = enTitle;
+          link.setAttribute('hreflang', 'en');
+          // 翻訳済みであることを EN badge で示す。ja のままの entry には badge を出さないため
+          // 「今 en 表示の記事」と「ja のまま残った記事」が視覚的に区別できる
+          const badge = link.querySelector<HTMLElement>('[data-translation-en-badge]');
+          if (badge) badge.style.display = '';
+        }
+      }
+    </script>
   </body>
 </html>

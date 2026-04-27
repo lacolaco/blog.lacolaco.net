@@ -1,20 +1,20 @@
 import type { CollectionEntry } from 'astro:content';
 import { channels as channelDefinitions } from './post/properties';
 
-export function getDate(post: CollectionEntry<'posts'>): Date {
+export function getDate(post: CollectionEntry<'posts' | 'postsEn'>): Date {
   return post.data.created_time;
 }
 
-export function getRelativePostUrl(post: CollectionEntry<'posts'>): string {
+export function getRelativePostUrl(post: CollectionEntry<'posts' | 'postsEn'>): string {
   const localeSuffix = post.data.locale === 'en' ? '.en' : '';
   return `/posts/${post.data.slug}${localeSuffix}`;
 }
 
-export function getTitle(post: CollectionEntry<'posts'>): string {
+export function getTitle(post: CollectionEntry<'posts' | 'postsEn'>): string {
   return post.data.title;
 }
 
-export function getChannels(post: CollectionEntry<'posts'>): string[] {
+export function getChannels(post: CollectionEntry<'posts' | 'postsEn'>): string[] {
   const postChannels = post.data.channels ?? [];
   const order = channelDefinitions.map((c) => c.name);
   return [...postChannels].sort((a, b) => {

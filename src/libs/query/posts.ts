@@ -1,5 +1,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { compareDesc, compareAsc, isPast } from 'date-fns';
+import { getRelativePostUrl } from '../compat';
 
 export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'posts' | 'postsEn'>>> {
   const posts = await getCollection('posts');
@@ -42,6 +43,63 @@ export function deduplicatePosts(
   }
 
   return deduplicatedPosts;
+}
+
+/**
+ * Translated List Display 用に各 post に翻訳 metadata を attach する。
+ * 詳細は docs/design/bilingual-list-display.md (Option D) を参照。
+ *
+ * 入力: dedup 済み posts (ja-preferred) と en posts 全集合
+ * 出力: 各 entry に translations.en を持たせた配列。en 記事自体には translations を入れない
+ *       (canonical entry が en になっているケースは swap 対象外)
+ */
+export interface PostTranslations {
+  en?: { title: string; href: string };
+}
+
+export interface PostWithTranslations {
+  post: CollectionEntry<'posts' | 'postsEn'>;
+  translations: PostTranslations;
+}
+
+export function attachTranslations(
+  posts: Array<CollectionEntry<'posts' | 'postsEn'>>,
+  enPosts: Array<CollectionEntry<'postsEn'>>,
+): PostWithTranslations[] {
+  // slug → en post の Map を事前構築して posts.map 内 lookup を O(1) にする
+  const enBySlug = new Map(enPosts.map((p) => [p.data.slug, p]));
+  return posts.map((post) => {
+    const translations: PostTranslations = {};
+    if (post.data.locale !== 'en') {
+      const enPost = enBySlug.get(post.data.slug);
+      if (enPost) {
+        translations.en = {
+          title: enPost.data.title,
+          href: getRelativePostUrl(enPost),
+        };
+      }
+    }
+    return { post, translations };
+  });
+}
+
+/**
+ * List page で表示する posts を所与の集合から組み立てる pure 関数。
+ * IO を分離して unit test できるようにする (queryListPagePosts は thin wrapper)
+ */
+export function buildListPagePosts(allPosts: Array<CollectionEntry<'posts' | 'postsEn'>>): PostWithTranslations[] {
+  const enPosts = allPosts.filter((p): p is CollectionEntry<'postsEn'> => p.data.locale === 'en');
+  const deduped = deduplicatePosts(allPosts);
+  return attachTranslations(deduped, enPosts);
+}
+
+/**
+ * List page で表示する posts に dedup と翻訳 metadata を attach した形を返す helper。
+ * 各 list page (index, channels, tags) で共通利用する
+ */
+export async function queryListPagePosts(): Promise<PostWithTranslations[]> {
+  const allPosts = await queryAvailablePosts();
+  return buildListPagePosts(allPosts);
 }
 
 /**

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { queryAdjacentPosts, deduplicatePosts } from './posts';
+import { queryAdjacentPosts, deduplicatePosts, attachTranslations, buildListPagePosts } from './posts';
 import type { CollectionEntry } from 'astro:content';
 
 // テスト用のモックデータを作成するヘルパー関数
@@ -240,5 +240,114 @@ describe('deduplicatePosts', () => {
     expect(result[1].data.slug).toBe('post-2');
     expect(result[2].data.slug).toBe('post-1');
     expect(result.every((p) => p.data.locale === 'ja')).toBe(true);
+  });
+});
+
+describe('attachTranslations', () => {
+  it('ja 記事に対応する en 記事があれば translations.en に title/href を attach', () => {
+    const jaPosts = [createMockPost('post-1', new Date('2023-01-01'), 'ja')];
+    const enPosts = [createMockEnPost('post-1', new Date('2023-01-01'))];
+
+    const result = attachTranslations(jaPosts, enPosts);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].translations.en).toEqual({
+      title: 'Test Post post-1 (EN)',
+      href: '/posts/post-1.en',
+    });
+  });
+
+  it('対応する en 記事がなければ translations は空オブジェクト', () => {
+    const jaPosts = [createMockPost('post-1', new Date('2023-01-01'), 'ja')];
+    const enPosts: Array<CollectionEntry<'postsEn'>> = [];
+
+    const result = attachTranslations(jaPosts, enPosts);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].translations).toEqual({});
+  });
+
+  it('en 記事自体には translations は attach しない (en が canonical の場合は swap 対象外)', () => {
+    const enOnly = [createMockEnPost('post-1', new Date('2023-01-01'))] as Array<CollectionEntry<'posts' | 'postsEn'>>;
+    const enPosts = [createMockEnPost('post-1', new Date('2023-01-01'))];
+
+    const result = attachTranslations(enOnly, enPosts);
+
+    expect(result[0].translations).toEqual({});
+  });
+
+  it('元 posts の順序を維持する', () => {
+    const jaPosts = [
+      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-2', new Date('2023-01-02'), 'ja'),
+      createMockPost('post-3', new Date('2023-01-03'), 'ja'),
+    ];
+    const enPosts = [createMockEnPost('post-2', new Date('2023-01-02'))];
+
+    const result = attachTranslations(jaPosts, enPosts);
+
+    expect(result.map((r) => r.post.data.slug)).toEqual(['post-1', 'post-2', 'post-3']);
+    expect(result[0].translations).toEqual({});
+    expect(result[1].translations.en).toBeDefined();
+    expect(result[2].translations).toEqual({});
+  });
+});
+
+describe('buildListPagePosts', () => {
+  it('ja/en 両エントリのスラッグは ja に集約され translations.en が付く', () => {
+    const allPosts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
+      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockEnPost('post-1', new Date('2023-01-01')),
+    ];
+
+    const result = buildListPagePosts(allPosts);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].post.data.locale).toBe('ja');
+    expect(result[0].translations.en).toEqual({
+      title: 'Test Post post-1 (EN)',
+      href: '/posts/post-1.en',
+    });
+  });
+
+  it('ja のみのエントリは translations が空', () => {
+    const allPosts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
+      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+    ];
+
+    const result = buildListPagePosts(allPosts);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].translations).toEqual({});
+  });
+
+  it('en のみのエントリ (ja なし) は en が canonical となり translations は空', () => {
+    const allPosts: Array<CollectionEntry<'posts' | 'postsEn'>> = [createMockEnPost('post-1', new Date('2023-01-01'))];
+
+    const result = buildListPagePosts(allPosts);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].post.data.locale).toBe('en');
+    expect(result[0].translations).toEqual({});
+  });
+
+  it('混在: ja+en 重複 / ja のみ / en のみ をそれぞれ正しく扱う', () => {
+    const allPosts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
+      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockEnPost('post-1', new Date('2023-01-01')),
+      createMockPost('post-2', new Date('2023-01-02'), 'ja'),
+      createMockEnPost('post-3', new Date('2023-01-03')),
+    ];
+
+    const result = buildListPagePosts(allPosts);
+
+    expect(result).toHaveLength(3);
+    const bySlug = new Map(result.map((r) => [r.post.data.slug, r]));
+    expect(bySlug.get('post-1')?.post.data.locale).toBe('ja');
+    expect(bySlug.get('post-1')?.translations.en).toBeDefined();
+    expect(bySlug.get('post-2')?.post.data.locale).toBe('ja');
+    expect(bySlug.get('post-2')?.translations).toEqual({});
+    expect(bySlug.get('post-3')?.post.data.locale).toBe('en');
+    expect(bySlug.get('post-3')?.translations).toEqual({});
   });
 });
