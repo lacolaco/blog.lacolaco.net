@@ -25,6 +25,21 @@ NEVER delete files/directories without user saying "yes, delete".
 - "Check compatibility" ≠ permission to delete
 - Show what will be deleted → Wait for approval → Then delete
 
+### 2b. Notion-Sourced Content (.md / .en.md) は絶対に編集しない
+**TRIGGER**: `src/content/post/notion/*.md` または `*.en.md` の typo / 文法 / 内容に問題を見つけたとき
+
+- これらのファイルは **すべて自動生成** (`.md` = Notion → notion-sync、`.en.md` = ja → auto-translate)
+- 直接編集すると次回 sync で上書きされる。content-review NG を見て直接 .md を直すのは **二重の違反** (DO NOT EDIT 違反 + 上流の真のソースを直さない)
+- 正しい対応:
+  - `.md` の問題 → ユーザに「Notion で修正してください」と報告し待つ。**勝手に直さない**
+  - `.en.md` の問題 → auto-translate パイプライン（prompt / proofreader / validator）の改善で対応
+- **sync-with-notion ブランチへの force-push は sync workflow が常時行う正常動作**。「自分の修正が消された」と誤認して再 push するな。force-push されたら **それが新しい真実** として再観測してから動け
+- 一次データ確認: ユーザが Notion を編集中の可能性があるなら、ローカル snapshot ではなく **最新の origin/sync-with-notion を fetch して確認** してから判断する
+
+失敗例 (PR #1575):
+- ❌ content-review NG → `.md` の typo を直接修正コミット → sync が上書き → reset+force-push → さらに sync が上書き → 古いデータで暴走
+- ✅ content-review NG → 「Notion で修正してください」と報告 → ユーザが Notion 修正 → 次回 sync で反映 → CI pass
+
 ### 3. TDD is Mandatory
 Kent Beck style. Tests = spec. Fix implementation, not tests.
 - 設計フェーズで検証方法を自然言語ではなく実行可能なテストコードとして書け
