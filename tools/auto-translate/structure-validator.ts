@@ -65,11 +65,14 @@ function snapshotStructureInternal(markdown: string): StructureSnapshotInternal 
 
   visitParents(tree, (node, ancestors: Parent[]) => {
     if (isInBlockquote(ancestors)) {
-      // blockquote 内の code は別途内容比較対象として保持する
+      // blockquote 内の code は別途内容比較対象として保持し、通常カウントには含めない
+      // （別経路の byte-identical 検証で扱う）
       if (node.type === 'code') {
         blockquoteCodeContents.push((node as { value?: string }).value ?? '');
+        return;
       }
-      return;
+      // image / link / inlineCode は LLM が直接扱うので、blockquote 内でも通常カウントに含める。
+      // fall-through して下のカウントロジックへ
     }
 
     if (node.type === 'code') {

@@ -175,6 +175,25 @@ describe('validateStructure', () => {
     assert.equal(result.ok, true);
   });
 
+  test('blockquote 内のリンク・画像・インラインコードは通常カウントに含まれる（LLM が直接扱うため）', () => {
+    const md = '> 引用文中の `foo` と [link](https://example.com) と ![img](/x.png)\n';
+    const counts = countStructure(md);
+    // blockquote 内でも image/link/inlineCode はカウント対象
+    assert.equal(counts.inlineCodes, 1);
+    assert.equal(counts.links, 1);
+    assert.equal(counts.images, 1);
+    // ただし code（コードブロック）は blockquote 内では別経路で検証されるためカウント対象外
+    assert.equal(counts.codeBlocks, 0);
+  });
+
+  test('blockquote 内のリンク数不一致を検出する', () => {
+    const source = '> [a](https://a) と [b](https://b) を参考にする\n';
+    const target = '> see [a](https://a)\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'links'));
+  });
+
   test('blockquote 内コードのコメントが翻訳されている → ng (blockquoteCodeContent)', () => {
     // blockquote 内コードは LLM が直接見るためコメントを翻訳するリスクがある。byte 一致を強制
     const source = '> ```ts\n> // 元コメント\n> const x = 1;\n> ```\n';
