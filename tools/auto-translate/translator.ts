@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
 import { errorMessage } from './ast-utils.ts';
-import { extractCode, restoreCode, type PlaceholderRef } from './code-extractor.ts';
+import { extractCode, restoreCode } from './code-extractor.ts';
 import { translateCodeBlock, type CodeTranslatorClient } from './code-translator.ts';
 import { buildEnFrontmatter, getAutoTranslatedFrom, isAutoTranslated, type Frontmatter } from './frontmatter.ts';
 import { proofread, formatProofIssues, type ProofreaderClient } from './proofreader.ts';
@@ -165,8 +165,6 @@ interface CallWithRetriesArgs {
     body: string;
     jaTemplate: string;
     codeBlocks: string[];
-    inlineCodes: string[];
-    placeholderSequence: readonly PlaceholderRef[];
   };
   slug: string;
 }
@@ -179,7 +177,7 @@ async function callWithRetries(
   | { ok: false; attempts: number; thrownAt: number; cause: unknown }
 > {
   const { geminiClient: client, proofreaderClient, codeTranslatorClient, model, input, slug } = args;
-  const { jaTemplate, codeBlocks, inlineCodes, placeholderSequence } = input;
+  const { jaTemplate, codeBlocks } = input;
 
   // 各コードブロックを個別翻訳（コメントのみ）。インラインコードは識別子なので翻訳しない。
   // ブロック間は独立しているため Promise.all で並列化する
@@ -211,7 +209,7 @@ async function callWithRetries(
     // 翻訳結果（プレースホルダ入り）を、コメント翻訳済みのコードブロック + インラインコードで復元する
     let restoredBody: string;
     try {
-      restoredBody = restoreCode(output.body_en, translatedCodeBlocks, inlineCodes, placeholderSequence);
+      restoredBody = restoreCode(output.body_en, translatedCodeBlocks);
     } catch (e) {
       // LLM がプレースホルダを drop / 幻覚した場合に到達。retry で改善する可能性
       lastFailure = { kind: 'placeholder' };
@@ -359,8 +357,6 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
         body: ja.body,
         jaTemplate: extracted.template,
         codeBlocks: extracted.codeBlocks,
-        inlineCodes: extracted.inlineCodes,
-        placeholderSequence: extracted.placeholderSequence,
       },
       slug,
     });
