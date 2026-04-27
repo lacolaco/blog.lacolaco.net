@@ -39,11 +39,22 @@ function unescapeBareMarkers(s: string): string {
 }
 
 export interface ExtractedCode {
-  /** プレースホルダで code を置換した markdown。LLM にはこれを渡す */
+  /**
+   * プレースホルダで code を置換した markdown。LLM にはこれを渡す。
+   * markdown 全体は ⟨⟨/⟩⟩ → ⟪⟪/⟫⟫ に escape 済みなので、生 prose にも escape が含まれる
+   */
   template: string;
-  /** コードブロックの元テキスト（fence 含む完全な形）を順序通りに保持 */
+  /**
+   * コードブロックのテキスト（fence 含む完全な形）を順序通りに保持。
+   * extractCode 時点で markdown 全体を escape 済みのため、code 内に元 ⟨⟨/⟩⟩ があると ⟪⟪/⟫⟫ として保持される。
+   * 復元（元 ⟨⟨/⟩⟩ への変換）は restoreCode の末尾で行われるため、外部利用時はこの値を「元テキスト」として
+   * 直接使わないこと
+   */
   codeBlocks: string[];
-  /** インラインコードの元テキスト（バッククォート含む）を順序通りに保持 */
+  /**
+   * インラインコードのテキスト（バッククォート含む）を順序通りに保持。
+   * codeBlocks と同様に escape 処理済みのテキストである点に注意
+   */
   inlineCodes: string[];
 }
 

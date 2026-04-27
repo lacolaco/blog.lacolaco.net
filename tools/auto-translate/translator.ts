@@ -122,8 +122,8 @@ const TOTAL_ATTEMPTS = MAX_RETRIES + 1;
 function summarizeStructureMismatch(validation: ValidationResult): string {
   return validation.mismatches
     .map((m) => {
-      if (m.kind === 'blockquoteCodeContent') {
-        // count 同値の場合は数だけだと「ja=2 en=2」と一見問題なく見えるため明示する
+      if (m.kind === 'blockquoteCodeContent' || m.kind === 'blockquoteInlineCodeContent') {
+        // count 同値の場合は数だけだと「ja=2 en=2」と一見問題なく見えるため differKind を明示する
         return `${m.kind} (${m.differKind ?? 'differ'}) ja=${m.source} en=${m.target}`;
       }
       return `${m.kind} ja=${m.source} en=${m.target}`;
