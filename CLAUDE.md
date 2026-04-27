@@ -25,6 +25,14 @@ NEVER delete files/directories without user saying "yes, delete".
 - "Check compatibility" ≠ permission to delete
 - Show what will be deleted → Wait for approval → Then delete
 
+### 2b. Notion-Sourced Content (.md / .en.md) は編集しない
+
+`src/content/post/notion/**/*.md` への Edit/Write は `tools/protect-notion-content.sh` PreToolUse hook が自動ブロック (`.claude/settings.json` で登録)。原則:
+
+- `.md` (Notion → notion-sync) の問題 → **Notion で修正依頼**。勝手に直さない
+- `.en.md` (auto-translate 生成) の問題 → `tools/auto-translate/` パイプライン (prompt / proofreader / validator) で対応
+- **sync-with-notion への force-push は sync workflow の正常動作**。「自分の修正が消された」と誤認して再 push せず、`origin/sync-with-notion` を fetch して**新しい真実として再観測**してから動く
+
 ### 3. TDD is Mandatory
 Kent Beck style. Tests = spec. Fix implementation, not tests.
 - 設計フェーズで検証方法を自然言語ではなく実行可能なテストコードとして書け
