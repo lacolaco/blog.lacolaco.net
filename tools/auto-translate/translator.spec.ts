@@ -11,6 +11,13 @@ import {
   type TranslateOneArgs,
 } from './translator.ts';
 import { buildEnFrontmatter } from './frontmatter.ts';
+import type { ProofreaderClient } from './proofreader.ts';
+import type { CodeTranslatorClient } from './code-translator.ts';
+
+// テスト用デフォルト proofreader: 常に ok を返す（proofread の動作はそれ自身の spec で検証）
+const okProofreader: ProofreaderClient = () => Promise.resolve({ ok: true, issues: [] });
+// テスト用デフォルト codeTranslator: 入力をそのまま返す（コメント翻訳しない = no-op）
+const noopCodeTranslator: CodeTranslatorClient = (code) => Promise.resolve(code);
 
 const MODEL = 'test-model';
 
@@ -34,6 +41,16 @@ const a = 1;
 https://example.com
 `;
 
+// 翻訳結果は placeholder protocol に従う:
+// LLM は code を見ず ⟨⟨BLOCK_N⟩⟩ ⟨⟨INLINE_N⟩⟩ をそのまま返す。translator が restoreCode で復元する
+const TRANSLATED_BODY_OK_TEMPLATE = `Paragraph 1.
+
+⟨⟨BLOCK_0⟩⟩
+
+https://example.com
+`;
+
+// restore 後の最終形（テストの期待値として使用）
 const TRANSLATED_BODY_OK = `Paragraph 1.
 
 \`\`\`ts
@@ -43,6 +60,7 @@ const a = 1;
 https://example.com
 `;
 
+// 構造破壊された翻訳: code block placeholder ⟨⟨BLOCK_0⟩⟩ を消失させた
 const TRANSLATED_BODY_BROKEN = `Paragraph 1 with code: const a = 1; included.
 
 https://example.com
@@ -88,7 +106,9 @@ function buildEnContent(bodyHash: string, body = TRANSLATED_BODY_OK, extraFm: Re
   return joinFrontmatter(fm, body);
 }
 
-function makeOkClient(output = { title_en: 'Title', body_en: TRANSLATED_BODY_OK }): GeminiClient {
+// LLM 動作のモック: 受け取った body はプレースホルダ入り。返り値もプレースホルダ入りで返す
+// （実 LLM の契約: ⟨⟨BLOCK_N⟩⟩ などをそのまま preserve する）
+function makeOkClient(output = { title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE }): GeminiClient {
   return mock.fn(() => Promise.resolve(output));
 }
 
@@ -202,6 +222,8 @@ describe('translateOne', () => {
       jaContent: JA_CONTENT_BASIC,
       enContent: null,
       geminiClient: makeOkClient(),
+      proofreaderClient: okProofreader,
+      codeTranslatorClient: noopCodeTranslator,
       model: MODEL,
       ...overrides,
     };
@@ -252,7 +274,7 @@ describe('translateOne', () => {
     });
   });
 
-  describe('構造検証とリトライ', () => {
+  describe('リトライパス（placeholder/structure/proofread）', () => {
     test('1 回目 OK → そのまま採用、API 呼び出し 1 回', async () => {
       const client = makeOkClient();
       const result = await translateOne(makeArgs({ geminiClient: client }));
@@ -260,31 +282,31 @@ describe('translateOne', () => {
       assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 1);
     });
 
-    test('2 回連続 NG → 3 回目 OK → 採用、API 呼び出し 3 回', async () => {
+    test('placeholder 復元 NG が 2 回連続 → 3 回目 OK → 採用、API 呼び出し 3 回', async () => {
       let count = 0;
       const client: GeminiClient = mock.fn(() => {
         count++;
         if (count <= 2) return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN });
-        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK });
+        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE });
       });
       const result = await translateOne(makeArgs({ geminiClient: client }));
       assert.equal(result.kind, 'translated');
       assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 3);
     });
 
-    test('1 回目 NG → 2 回目 OK → 採用、API 呼び出し 2 回', async () => {
+    test('placeholder 復元 1 回目 NG → 2 回目 OK → 採用、API 呼び出し 2 回', async () => {
       let count = 0;
       const client: GeminiClient = mock.fn(() => {
         count++;
         if (count === 1) return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN });
-        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK });
+        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE });
       });
       const result = await translateOne(makeArgs({ geminiClient: client }));
       assert.equal(result.kind, 'translated');
       assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 2);
     });
 
-    test('4 試行全て NG → failed、API 呼び出し 4 回', async () => {
+    test('placeholder 復元 4 試行全て NG → failed、API 呼び出し 4 回', async () => {
       const client: GeminiClient = mock.fn(() =>
         Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN }),
       );
@@ -300,7 +322,7 @@ describe('translateOne', () => {
         calls.push({ feedback: input.feedback });
         count++;
         if (count === 1) return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN });
-        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK });
+        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE });
       });
       await translateOne(makeArgs({ geminiClient: client }));
       assert.equal(calls[0].feedback, undefined);
@@ -309,25 +331,275 @@ describe('translateOne', () => {
       assert.match(feedback, /code/i);
     });
 
-    test('codeBlockContent 不一致時、フィードバックに detail（具体的な差分内容）が含まれる', async () => {
+    test('構造検証 NG（プレースホルダは保持されたが prose の bare URL paragraph が消失）→ リトライで復旧', async () => {
+      // プレースホルダを保持しているので restoreCode は通過する。が、ja の bareUrlParagraphs 数が
+      // 合わず validateStructure が ng を返す → buildFeedback でリトライ
       const calls: { feedback?: string }[] = [];
-      const jaWithCode = buildJaContent({ body: '本文\n\n```\nfoo\n```\n' });
-      // ターゲットはコード数同数だが内容が違う → codeBlockContent ミスマッチ
-      const brokenWithDifferentCode = '\nParagraph.\n\n```\nbar\n```\n';
       let count = 0;
       const client: GeminiClient = mock.fn((input) => {
         calls.push({ feedback: input.feedback });
         count++;
-        if (count === 1) return Promise.resolve({ title_en: 'Title', body_en: brokenWithDifferentCode });
-        // 2 回目は source と同じ本文に直す
-        return Promise.resolve({ title_en: 'Title', body_en: '\nParagraph.\n\n```\nfoo\n```\n' });
+        if (count === 1) {
+          // bare URL paragraph (https://example.com の単独行) が prose に巻き込まれた
+          return Promise.resolve({
+            title_en: 'Title',
+            body_en: 'Paragraph 1.\n\n⟨⟨BLOCK_0⟩⟩\n\nSee this link: https://example.com here.\n',
+          });
+        }
+        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE });
       });
-      await translateOne(makeArgs({ jaContent: jaWithCode, geminiClient: client }));
-      const feedback = calls[1].feedback;
-      assert.ok(feedback);
-      // 数値だけでなく具体的な差分内容（detail）が含まれている
-      assert.match(feedback, /codeBlockContent/);
-      assert.match(feedback, /code block content modified/);
+      const result = await translateOne(makeArgs({ geminiClient: client }));
+      assert.equal(result.kind, 'translated');
+      assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 2);
+      // 2 回目の feedback は buildFeedback 由来（structure mismatch の説明を含む）
+      assert.ok(calls[1].feedback);
+      assert.match(calls[1].feedback, /bareUrlParagraphs|structural/i);
+    });
+
+    test('構造検証が継続失敗 → failed.reason に "structure validation failed" が含まれる', async () => {
+      // プレースホルダは保持するが bareUrlParagraphs カウントが常に合わない出力を返す
+      const client: GeminiClient = mock.fn(() =>
+        Promise.resolve({
+          title_en: 'Title',
+          body_en: 'Paragraph.\n\n⟨⟨BLOCK_0⟩⟩\n\nSee link https://example.com here.\n',
+        }),
+      );
+      const result = await translateOne(makeArgs({ geminiClient: client }));
+      assert.equal(result.kind, 'failed');
+      assert.ok('reason' in result && result.reason.includes('structure validation failed'));
+    });
+
+    test('placeholder drop（LLM がプレースホルダを消失） → リトライで復旧', async () => {
+      // 新アーキテクチャ: LLM には code を見せず ⟨⟨BLOCK_N⟩⟩ のみ渡す。LLM がプレースホルダを drop した場合、
+      // restoreCode が throw して translator が retry する
+      const calls: { feedback?: string }[] = [];
+      let count = 0;
+      const client: GeminiClient = mock.fn((input) => {
+        calls.push({ feedback: input.feedback });
+        count++;
+        if (count === 1) {
+          // プレースホルダを drop した出力（restoreCode で throw する）
+          return Promise.resolve({ title_en: 'Title', body_en: 'Paragraph.\n\nhttps://example.com\n' });
+        }
+        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE });
+      });
+      const result = await translateOne(makeArgs({ geminiClient: client }));
+      assert.equal(result.kind, 'translated');
+      assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 2);
+      // 2 回目の feedback にプレースホルダ保全の指示が含まれる
+      assert.ok(calls[1].feedback);
+      assert.match(calls[1].feedback, /placeholder/i);
+    });
+  });
+
+  describe('proofread リトライ', () => {
+    test('proofread が ng → 2 回目で ok → 採用、translate 呼び出し 2 回 + proofread 呼び出し 2 回', async () => {
+      const geminiClient = makeOkClient();
+      let proofCount = 0;
+      const proofreaderClient: ProofreaderClient = mock.fn(() => {
+        proofCount++;
+        if (proofCount === 1) {
+          return Promise.resolve({
+            ok: false,
+            issues: [{ location: 'p2', problem: 'wrong variable name', suggestion: 'use waiting not active' }],
+          });
+        }
+        return Promise.resolve({ ok: true, issues: [] });
+      });
+      const result = await translateOne(makeArgs({ geminiClient, proofreaderClient }));
+      assert.equal(result.kind, 'translated');
+      assert.equal((geminiClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 2);
+      assert.equal((proofreaderClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 2);
+    });
+
+    test('proofread が常に ng → 4 試行後 failed', async () => {
+      const geminiClient = makeOkClient();
+      const proofreaderClient: ProofreaderClient = mock.fn(() =>
+        Promise.resolve({
+          ok: false,
+          issues: [{ location: 'p1', problem: 'persistent', suggestion: 'fix' }],
+        }),
+      );
+      const result = await translateOne(makeArgs({ geminiClient, proofreaderClient }));
+      assert.equal(result.kind, 'failed');
+      assert.equal((geminiClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 4);
+      assert.equal((proofreaderClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 4);
+    });
+
+    test('placeholder 復元 NG の attempt では proofread を呼ばない（ローカル検証で先に reject）', async () => {
+      let count = 0;
+      const geminiClient: GeminiClient = mock.fn(() => {
+        count++;
+        // TRANSLATED_BODY_BROKEN は ⟨⟨BLOCK_0⟩⟩ を含まないため restoreCode が throw して
+        // placeholder 復元失敗となり、proofread には到達しない
+        if (count === 1) return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_BROKEN });
+        return Promise.resolve({ title_en: 'Title', body_en: TRANSLATED_BODY_OK_TEMPLATE });
+      });
+      const proofreaderClient: ProofreaderClient = mock.fn(() => Promise.resolve({ ok: true, issues: [] }));
+      await translateOne(makeArgs({ geminiClient, proofreaderClient }));
+      // 1 回目は placeholder 復元 NG なので proofread 呼ばれない、2 回目で呼ばれる
+      assert.equal((proofreaderClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 1);
+    });
+
+    test('proofreader が ok=false かつ issues=[] → accept（fail-open: feedback なしでリトライしても無意味）', async () => {
+      const geminiClient = makeOkClient();
+      const proofreaderClient: ProofreaderClient = mock.fn(() => Promise.resolve({ ok: false, issues: [] }));
+      const result = await translateOne(makeArgs({ geminiClient, proofreaderClient }));
+      assert.equal(result.kind, 'translated');
+      // 1 回で採用される（リトライ消費しない）
+      assert.equal((geminiClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 1);
+    });
+
+    test('proofreader が ok=true かつ issues 非空 → accept（proofreader 自身の判断を尊重）', async () => {
+      const geminiClient = makeOkClient();
+      const proofreaderClient: ProofreaderClient = mock.fn(() =>
+        Promise.resolve({
+          ok: true,
+          issues: [{ location: 'p1', problem: 'minor', suggestion: 'no action' }],
+        }),
+      );
+      const result = await translateOne(makeArgs({ geminiClient, proofreaderClient }));
+      assert.equal(result.kind, 'translated');
+    });
+
+    test('実コメント翻訳シナリオ（ja コメント → en コメント）で proofreader が ok を返し採用される', async () => {
+      // 「ja に日本語コメント入りコード、en に英語コメント入りコード」という本番運用パスを再現。
+      // proofreader 指示文は「コードコメントの差分は flag するな」と明記しているため、
+      // 翻訳済みコメントを見ても false-positive を生成せず採用されることを確認する
+      const jaWithJaComment = buildJaContent({
+        body: '前文。\n\n```ts\n// 日本語コメント\nconst x = 1;\n```\n',
+      });
+      // codeTranslator が実際にコメントを翻訳
+      const codeTranslatorClient: CodeTranslatorClient = mock.fn((code) =>
+        Promise.resolve(code.replace('// 日本語コメント', '// English comment')),
+      );
+      // translator (Gemini) は prose 翻訳のみ、コードはプレースホルダで保持
+      const geminiClient: GeminiClient = mock.fn(() =>
+        Promise.resolve({
+          title_en: 'Title',
+          body_en: 'Preface.\n\n⟨⟨BLOCK_0⟩⟩\n',
+        }),
+      );
+      // proofreader: 翻訳済みコメントを見て「コメント差分は flag しない」運用が正しく動くか
+      let proofCalls = 0;
+      const proofreaderClient: ProofreaderClient = mock.fn((input) => {
+        proofCalls++;
+        // 渡される en には英訳済みコメントが入っているはず
+        assert.match(input.enTranslation, /\/\/ English comment/);
+        return Promise.resolve({ ok: true, issues: [] });
+      });
+      const result = await translateOne(
+        makeArgs({ jaContent: jaWithJaComment, geminiClient, codeTranslatorClient, proofreaderClient }),
+      );
+      assert.equal(result.kind, 'translated');
+      assert.equal(proofCalls, 1);
+    });
+
+    test('proofreader が throw → fail open で採用される（翻訳全体は止まらない）', async () => {
+      const geminiClient = makeOkClient();
+      const proofreaderClient: ProofreaderClient = mock.fn(() => Promise.reject(new Error('proofread API down')));
+      const result = await translateOne(makeArgs({ geminiClient, proofreaderClient }));
+      assert.equal(result.kind, 'translated');
+    });
+  });
+
+  describe('コメント翻訳統合', () => {
+    test('codeTranslator がコメントを翻訳した場合、最終 en にその翻訳が反映される', async () => {
+      // ja: 日本語コメント入りコードブロック
+      const jaWithJaComment = buildJaContent({
+        body: '前文。\n\n```ts\n// 日本語コメント\nconst a = 1;\n```\n\nhttps://example.com\n',
+      });
+      // codeTranslator は日本語コメントを英訳して返す
+      const codeTranslatorClient: CodeTranslatorClient = mock.fn((code) =>
+        Promise.resolve(code.replace('// 日本語コメント', '// translated comment')),
+      );
+      // translator (Gemini) は prose を翻訳して body_en を返す（プレースホルダは保持）
+      const geminiClient: GeminiClient = mock.fn(() =>
+        Promise.resolve({
+          title_en: 'Title',
+          body_en: 'Preface.\n\n⟨⟨BLOCK_0⟩⟩\n\nhttps://example.com\n',
+        }),
+      );
+      const result = await translateOne(makeArgs({ jaContent: jaWithJaComment, geminiClient, codeTranslatorClient }));
+      assert.equal(result.kind, 'translated');
+      assert.ok('enContent' in result);
+      // 出力 en に英訳されたコメントが含まれる（インデックスずれや差し替え漏れがないこと）
+      assert.match(result.enContent, /\/\/ translated comment/);
+      // 元の日本語コメントは含まれない
+      assert.ok(!result.enContent.includes('// 日本語コメント'));
+      // コードブロックの非コメント部分（const a = 1;）は保持
+      assert.match(result.enContent, /const a = 1;/);
+      // codeTranslator が呼ばれていること
+      assert.equal((codeTranslatorClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 1);
+    });
+
+    test('prose 中に ⟨⟨ 文字列が含まれていても escape 経由で正しく復元される（衝突回避）', async () => {
+      // 「auto-translate ⟨⟨BLOCK_0⟩⟩ という記法を使う」のように prose に
+      // プレースホルダ風文字列がある記事の end-to-end テスト
+      const ja = buildJaContent({
+        body: 'システムは ⟨⟨BLOCK_0⟩⟩ で識別する。\n\n```ts\nconst x = 1;\n```\n',
+      });
+      // LLM は escape 後の prose（⟨⟨ → ⟪⟪）を受け取り、それをそのまま英訳して返す（escape は保持）
+      const geminiClient: GeminiClient = mock.fn((input) => {
+        // input.body には escape された ⟪⟪ が含まれているはず
+        assert.match(input.body, /⟪⟪BLOCK_0⟫⟫/);
+        return Promise.resolve({
+          title_en: 'Title',
+          body_en: 'The system identifies via ⟪⟪BLOCK_0⟫⟫.\n\n⟨⟨BLOCK_0⟩⟩\n',
+        });
+      });
+      const result = await translateOne(makeArgs({ jaContent: ja, geminiClient }));
+      assert.equal(result.kind, 'translated');
+      assert.ok('enContent' in result);
+      // 最終 en では escape が復元されて元の ⟨⟨BLOCK_0⟩⟩ 文字列に戻る
+      assert.match(result.enContent, /via ⟨⟨BLOCK_0⟩⟩/);
+      // コードブロックも正しく復元されている
+      assert.match(result.enContent, /const x = 1;/);
+      // ⟪⟪ が最終出力に残らない
+      assert.ok(!result.enContent.includes('⟪⟪'));
+      assert.ok(!result.enContent.includes('⟫⟫'));
+    });
+
+    test('codeTranslator が複数ブロックを処理してインデックスずれせず復元される', async () => {
+      const jaTwoBlocks = buildJaContent({
+        body: '前文。\n\n```ts\n// 一つ目\nconst a = 1;\n```\n\n途中。\n\n```ts\n// 二つ目\nconst b = 2;\n```\n',
+      });
+      // 各ブロックを「コメント翻訳済み」に変換
+      const codeTranslatorClient: CodeTranslatorClient = mock.fn((code) => {
+        if (code.includes('一つ目')) return Promise.resolve(code.replace('// 一つ目', '// first block'));
+        if (code.includes('二つ目')) return Promise.resolve(code.replace('// 二つ目', '// second block'));
+        return Promise.resolve(code);
+      });
+      const geminiClient: GeminiClient = mock.fn(() =>
+        Promise.resolve({
+          title_en: 'Title',
+          body_en: 'Preface.\n\n⟨⟨BLOCK_0⟩⟩\n\nMiddle.\n\n⟨⟨BLOCK_1⟩⟩\n',
+        }),
+      );
+      const result = await translateOne(makeArgs({ jaContent: jaTwoBlocks, geminiClient, codeTranslatorClient }));
+      assert.equal(result.kind, 'translated');
+      assert.ok('enContent' in result);
+      // BLOCK_0 と BLOCK_1 が正しい順序で復元されている
+      const firstIdx = result.enContent.indexOf('// first block');
+      const secondIdx = result.enContent.indexOf('// second block');
+      assert.ok(firstIdx > 0);
+      assert.ok(secondIdx > firstIdx);
+    });
+  });
+
+  describe('extractCode 例外（escape 文字衝突）の伝播', () => {
+    test('ja に予約 escape 文字 ⟪⟪ が含まれる → translateOne は failed を返し API は呼ばれない', async () => {
+      const jaWithReserved = buildJaContent({
+        body: 'reserved char ⟪⟪ marker\n\n```ts\nconst x = 1;\n```\n',
+      });
+      const geminiClient = makeOkClient();
+      const result = await translateOne(makeArgs({ jaContent: jaWithReserved, geminiClient }));
+      assert.equal(result.kind, 'failed');
+      // extractCode の専用 failure reason として返される（unexpected error ではない）
+      assert.ok('reason' in result && result.reason.startsWith('code extraction failed'));
+      assert.ok('reason' in result && result.reason.includes('reserved escape sequence'));
+      // extractCode は translateOne 内で実行されるため、API は一切呼ばれない
+      assert.equal((geminiClient as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 0);
     });
   });
 

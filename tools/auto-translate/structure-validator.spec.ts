@@ -159,45 +159,125 @@ describe('validateStructure', () => {
     assert.ok(result.mismatches.length >= 3);
   });
 
-  test('コードブロック内容が source と一致 → ok', () => {
-    const source = '```ts\nconst a = 1;\n```\n';
-    const target = '```ts\nconst a = 1;\n```\n';
-    const result = validateStructure(source, target);
-    assert.equal(result.ok, true);
-  });
-
-  test('コードブロック内容が翻訳されている → ng (codeBlockContent)', () => {
+  test('コードブロック内容の差分は許容される（コメント翻訳のため意図的に byte 差分が出る）', () => {
+    // 新アーキテクチャ: LLM はコードを見ないが、別経路でコメントだけ翻訳されて挿入される。
+    // コードブロックの内容は ja と en で byte 異なるのが正常
     const source = '```ts\n// 元のコメント\nconst a = 1;\n```\n';
     const target = '```ts\n// translated comment\nconst a = 1;\n```\n';
     const result = validateStructure(source, target);
-    assert.equal(result.ok, false);
-    assert.ok(result.mismatches.some((m) => m.kind === 'codeBlockContent'));
+    assert.equal(result.ok, true);
   });
 
-  test('コードブロック内の引用符が変換されている → ng (codeBlockContent)', () => {
-    const source = '```html\n<img src="x" />\n```\n';
-    // target の右引用符は Unicode RIGHT DOUBLE QUOTATION MARK (U+201D)。視覚的には ASCII " と区別困難なため
-    // 編集時に誤って ASCII " に置き換えると検証ロジックを通り抜けるテストになる
-    const target = '```html\n<img src="x” />\n```\n';
-    const result = validateStructure(source, target);
-    assert.equal(result.ok, false);
-    assert.ok(result.mismatches.some((m) => m.kind === 'codeBlockContent'));
-  });
-
-  test('インラインコードが byte 一致 → ok', () => {
-    const source = 'use `decoding="async"` for X.\n';
-    const target = 'X uses `decoding="async"` here.\n';
+  test('blockquote 内コードブロックの内容が一致 → ok', () => {
+    const source = '> ```ts\n> const x = 1;\n> ```\n';
+    const target = '> ```ts\n> const x = 1;\n> ```\n';
     const result = validateStructure(source, target);
     assert.equal(result.ok, true);
   });
 
-  test('インラインコードの引用符が変換されている → ng (inlineCodeContent)', () => {
-    const source = 'use `decoding="async"` for X.\n';
-    // target の右引用符は Unicode RIGHT DOUBLE QUOTATION MARK (U+201D)。詳細は前テスト参照
-    const target = 'X uses `decoding="async”` here.\n';
+  test('blockquote 内のリンク・画像・インラインコードは通常カウントに含まれる（LLM が直接扱うため）', () => {
+    const md = '> 引用文中の `foo` と [link](https://example.com) と ![img](/x.png)\n';
+    const counts = countStructure(md);
+    // blockquote 内でも image/link/inlineCode はカウント対象
+    assert.equal(counts.inlineCodes, 1);
+    assert.equal(counts.links, 1);
+    assert.equal(counts.images, 1);
+    // ただし code（コードブロック）は blockquote 内では別経路で検証されるためカウント対象外
+    assert.equal(counts.codeBlocks, 0);
+  });
+
+  test('blockquote 内のリンク数不一致を検出する', () => {
+    const source = '> [a](https://a) と [b](https://b) を参考にする\n';
+    const target = '> see [a](https://a)\n';
     const result = validateStructure(source, target);
     assert.equal(result.ok, false);
-    assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodeContent'));
+    assert.ok(result.mismatches.some((m) => m.kind === 'links'));
+  });
+
+  test('blockquote 内コードのコメントが翻訳されている → ng (blockquoteCodeContent, content)', () => {
+    // blockquote 内コードは LLM が直接見るためコメントを翻訳するリスクがある。byte 一致を強制
+    const source = '> ```ts\n> // 元コメント\n> const x = 1;\n> ```\n';
+    const target = '> ```ts\n> // translated comment\n> const x = 1;\n> ```\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    const m = result.mismatches.find((x) => x.kind === 'blockquoteCodeContent');
+    assert.ok(m);
+    assert.equal(m.differKind, 'content');
+  });
+
+  test('blockquote 内コードの fence 種別が変えられた → ng (blockquoteCodeContent, content)', () => {
+    // remark は ``` と ~~~ を同一 code ノードに正規化するが、生 markdown レベルでは別物なので検出する
+    const source = '> ```ts\n> const x = 1;\n> ```\n';
+    const target = '> ~~~ts\n> const x = 1;\n> ~~~\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'blockquoteCodeContent'));
+  });
+
+  test('blockquote 内インラインコードの内容が一致 → ok', () => {
+    const source = '> 引用文中の `foo` という識別子\n';
+    const target = '> Quoted text contains `foo` identifier\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, true);
+  });
+
+  test('blockquote 内インラインコードの内容が改変された → ng (blockquoteInlineCodeContent)', () => {
+    const source = '> 引用文中の `foo` という識別子\n';
+    // LLM が `foo` を `bar` に変更
+    const target = '> Quoted text contains `bar` identifier\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'blockquoteInlineCodeContent'));
+  });
+
+  test('blockquote 内インラインコードが削除された → ng (inlineCodes count)', () => {
+    // count 差異は inlineCodes 全体カウントで検出される（個別の blockquoteInlineCode count check は実装しない）
+    const source = '> 引用 `foo`\n';
+    const target = '> no code\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodes'));
+  });
+
+  test('blockquote 内インラインコードが追加された → ng (inlineCodes count)', () => {
+    const source = '> 引用文\n';
+    const target = '> Added `code` here\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    assert.ok(result.mismatches.some((m) => m.kind === 'inlineCodes'));
+  });
+
+  test('blockquote 内コードの言語タグが変えられた → ng (blockquoteCodeContent, content)', () => {
+    // LLM が ```ts → ```javascript と書き換えた場合の検出
+    const source = '> ```ts\n> const x = 1;\n> ```\n';
+    const target = '> ```javascript\n> const x = 1;\n> ```\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    const m = result.mismatches.find((x) => x.kind === 'blockquoteCodeContent');
+    assert.ok(m);
+    assert.equal(m.differKind, 'content');
+  });
+
+  test('blockquote 内インラインコードの「移動」（blockquote 内→外）が検出される', () => {
+    // blockquote 内 `foo` + 通常 `bar` (inlineCodes=2) → blockquote 外 `foo` + 通常 `bar` (inlineCodes=2)
+    // inlineCodes 総数は同じだが blockquote 内インラインコードの count が異なる
+    const source = '> 引用 `foo`\n\n通常 `bar`\n';
+    const target = '通常 `bar` と `foo` を移動\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    const m = result.mismatches.find((x) => x.kind === 'blockquoteInlineCodeContent');
+    assert.ok(m);
+    assert.equal(m.differKind, 'count');
+  });
+
+  test('blockquote 内コードが追加・削除された → ng (blockquoteCodeContent, count)', () => {
+    const source = '> ```ts\n> const a = 1;\n> ```\n';
+    const target = '> ```ts\n> const a = 1;\n> ```\n\n> ```ts\n> const b = 2;\n> ```\n';
+    const result = validateStructure(source, target);
+    assert.equal(result.ok, false);
+    const m = result.mismatches.find((x) => x.kind === 'blockquoteCodeContent');
+    assert.ok(m);
+    assert.equal(m.differKind, 'count');
   });
 
   test('翻訳結果に source にないインラインコードが追加されている → ng (inlineCodes count)', () => {

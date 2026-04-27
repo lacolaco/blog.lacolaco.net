@@ -1,10 +1,17 @@
 import { createHash } from 'node:crypto';
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml';
+import { errorMessage } from './ast-utils.ts';
+import { extractCode, restoreCode, type PlaceholderRef } from './code-extractor.ts';
+import { translateCodeBlock, type CodeTranslatorClient } from './code-translator.ts';
 import { buildEnFrontmatter, getAutoTranslatedFrom, isAutoTranslated, type Frontmatter } from './frontmatter.ts';
+import { proofread, formatProofIssues, type ProofreaderClient } from './proofreader.ts';
 import { validateStructure, type ValidationResult } from './structure-validator.ts';
 
-export const PROMPT_VERSION = 3;
-// preview だが最新世代品質を採用。GEMINI_MODEL env で stable (gemini-2.5-flash 等) に切替可能
+// PROMPT_VERSION: プロンプト/モデル/構造検証ロジックが変わったらインクリメントしてキャッシュを invalidate する。
+// バージョン履歴は git log で追える（変更時はコミットメッセージに「PROMPT_VERSION N → N+1」と記載）
+export const PROMPT_VERSION = 4;
+// Gemini 3 Flash の preview モデル。本番運用中（2026-04 時点で stable な 3 系 flash モデルは未提供）。
+// 将来 stable 移行・廃止時は GEMINI_MODEL env で適切な ID（例: gemini-3-flash 等の後継 GA 名）に切替可能。
 // 参考: https://ai.google.dev/gemini-api/docs/models
 export const DEFAULT_MODEL = 'gemini-3-flash-preview';
 export const MAX_RETRIES = 3;
@@ -28,6 +35,8 @@ export interface TranslateOneArgs {
   jaContent: string;
   enContent: string | null;
   geminiClient: GeminiClient;
+  proofreaderClient: ProofreaderClient;
+  codeTranslatorClient: CodeTranslatorClient;
   model: string;
   slug?: string; // ログ識別用。省略時は jaPath の basename を使う
 }
@@ -66,80 +75,199 @@ export function joinFrontmatter(frontmatter: Frontmatter, body: string): string 
 
 function buildFeedback(validation: ValidationResult): string {
   const lines = ['The translation has structural mismatches with the source:'];
+  let hasBlockquoteCodeIssue = false;
   for (const m of validation.mismatches) {
-    // count 差異と content 差異でフォーマットを分ける:
-    // - count 差異（codeBlocks 等）: 数値で表示（"source has 3, translation has 2"）
-    // - content 差異（codeBlockContent / inlineCodeContent）: 数値は同値なので detail のみ表示
-    if (m.kind === 'codeBlockContent' || m.kind === 'inlineCodeContent') {
-      lines.push(`- ${m.kind}: ${m.detail ?? 'content modified from source'}`);
+    if (m.kind === 'blockquoteCodeContent') {
+      // count 差異と内容差異で別メッセージにする
+      if (m.differKind === 'count') {
+        lines.push(
+          `- ${m.kind}: a code block inside a blockquote was added or removed (source has ${m.source}, translation has ${m.target}).`,
+        );
+      } else {
+        // content 差異: differingCount が差異のあるブロック数、source が全体数
+        const differing = m.differingCount ?? 0;
+        lines.push(
+          `- ${m.kind}: ${differing} of ${m.source} code blocks inside blockquotes were modified. The content must remain BYTE-FOR-BYTE identical to the source.`,
+        );
+      }
+      hasBlockquoteCodeIssue = true;
+    } else if (m.kind === 'blockquoteInlineCodeContent') {
+      if (m.differKind === 'count') {
+        lines.push(
+          `- ${m.kind}: an inline code span inside a blockquote was added or removed (source has ${m.source}, translation has ${m.target}).`,
+        );
+      } else {
+        const differing = m.differingCount ?? 0;
+        lines.push(
+          `- ${m.kind}: ${differing} of ${m.source} inline code spans inside blockquotes were modified. Inline code inside blockquotes must remain BYTE-FOR-BYTE identical to the source.`,
+        );
+      }
+      hasBlockquoteCodeIssue = true;
     } else {
       lines.push(`- ${m.kind}: source has ${m.source}, translation has ${m.target}`);
     }
   }
   lines.push('');
   lines.push(
-    'Please retranslate ensuring all code blocks, links, images, and bare URL paragraphs from the source are preserved exactly. Do not omit, merge, or wrap any URL into prose. Code blocks and inline code must be kept BYTE-FOR-BYTE identical to the source — do not change any quotation marks, dashes, or whitespace.',
+    'Please retranslate ensuring all links, images, and bare URL paragraphs from the source are preserved exactly. Do not omit, merge, or wrap any URL into prose. Each placeholder ⟨⟨BLOCK_N⟩⟩ and ⟨⟨INLINE_N⟩⟩ must appear exactly once in your output, verbatim — do not modify, drop, or duplicate them.',
   );
+  if (hasBlockquoteCodeIssue) {
+    lines.push(
+      'Code blocks inside blockquotes (lines starting with "> ") must be preserved BYTE-FOR-BYTE — do NOT translate their comments and do NOT change any character.',
+    );
+  }
   return lines.join('\n');
 }
 
 const TOTAL_ATTEMPTS = MAX_RETRIES + 1;
 
+function summarizeStructureMismatch(validation: ValidationResult): string {
+  return validation.mismatches
+    .map((m) => {
+      if (m.kind === 'blockquoteCodeContent' || m.kind === 'blockquoteInlineCodeContent') {
+        // count 同値の場合は数だけだと「ja=2 en=2」と一見問題なく見えるため differKind を明示する
+        return `${m.kind} (${m.differKind ?? 'differ'}) ja=${m.source} en=${m.target}`;
+      }
+      return `${m.kind} ja=${m.source} en=${m.target}`;
+    })
+    .join(', ');
+}
+
+type RetryFailureReason =
+  | { kind: 'placeholder' } // restoreCode が throw（drop / 重複 / 幻覚）
+  | { kind: 'structure' } // structure-validator NG
+  | { kind: 'proofread' }; // proofreader NG
+
+interface CallWithRetriesArgs {
+  geminiClient: GeminiClient;
+  proofreaderClient: ProofreaderClient;
+  codeTranslatorClient: CodeTranslatorClient;
+  model: string;
+  input: {
+    title: string;
+    body: string;
+    jaTemplate: string;
+    codeBlocks: string[];
+    inlineCodes: string[];
+    placeholderSequence: readonly PlaceholderRef[];
+  };
+  slug: string;
+}
+
 async function callWithRetries(
-  client: GeminiClient,
-  model: string,
-  input: { title: string; body: string },
-  slug: string,
+  args: CallWithRetriesArgs,
 ): Promise<
   | { ok: true; output: GeminiOutput; attempts: number }
-  | { ok: false; attempts: number }
-  | { ok: false; attempts: number; thrownAt: number; cause: Error }
+  | { ok: false; attempts: number; lastFailure: RetryFailureReason | undefined }
+  | { ok: false; attempts: number; thrownAt: number; cause: unknown }
 > {
+  const { geminiClient: client, proofreaderClient, codeTranslatorClient, model, input, slug } = args;
+  const { jaTemplate, codeBlocks, inlineCodes, placeholderSequence } = input;
+
+  // 各コードブロックを個別翻訳（コメントのみ）。インラインコードは識別子なので翻訳しない。
+  // ブロック間は独立しているため Promise.all で並列化する
+  const translatedCodeBlocks = await Promise.all(
+    codeBlocks.map((code) => translateCodeBlock({ code, client: codeTranslatorClient, model })),
+  );
+  if (codeBlocks.length > 0) {
+    const translatedCount = translatedCodeBlocks.filter((t, i) => t !== codeBlocks[i]).length;
+    if (translatedCount > 0) {
+      console.info(
+        `[auto-translate] code block comments translated for ${slug}: ${translatedCount}/${codeBlocks.length} blocks`,
+      );
+    }
+  }
+
   let feedback: string | undefined;
+  // lastFailure は最終試行の失敗種別を保持。失敗パスを通る前に return する場合は undefined のまま
+  let lastFailure: RetryFailureReason | undefined;
   for (let attempt = 1; attempt <= TOTAL_ATTEMPTS; attempt++) {
     let output: GeminiOutput;
     try {
-      output = await client({ title: input.title, body: input.body, feedback }, model);
+      // body は jaTemplate（プレースホルダ入り）を渡す
+      output = await client({ title: input.title, body: jaTemplate, feedback }, model);
     } catch (e) {
       // 試行中に API がエラー（ネットワーク・5xx・429 等）。試行番号を保持して呼び出し元へ
-      return { ok: false, attempts: attempt, thrownAt: attempt, cause: e as Error };
+      return { ok: false, attempts: attempt, thrownAt: attempt, cause: e };
     }
-    const validation = validateStructure(input.body, output.body_en);
-    if (validation.ok) {
-      if (attempt > 1) {
-        console.info(`[auto-translate] structure validation passed on attempt ${attempt} for ${slug}`);
+
+    // 翻訳結果（プレースホルダ入り）を、コメント翻訳済みのコードブロック + インラインコードで復元する
+    let restoredBody: string;
+    try {
+      restoredBody = restoreCode(output.body_en, translatedCodeBlocks, inlineCodes, placeholderSequence);
+    } catch (e) {
+      // LLM がプレースホルダを drop / 幻覚した場合に到達。retry で改善する可能性
+      lastFailure = { kind: 'placeholder' };
+      if (attempt < TOTAL_ATTEMPTS) {
+        console.warn(
+          `[auto-translate] placeholder restoration failed (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${errorMessage(e)} — retrying`,
+        );
+        feedback = `Your previous response did not preserve all code placeholders correctly. Each placeholder ⟨⟨BLOCK_N⟩⟩ and ⟨⟨INLINE_N⟩⟩ from the source MUST appear exactly once in your output, in a position that makes sense for the translation. Do not invent new placeholders. Do not omit any.`;
       }
-      return { ok: true, output, attempts: attempt };
+      continue;
     }
+    const restoredOutput: GeminiOutput = { title_en: output.title_en, body_en: restoredBody };
+
+    // (1) 構造検証（ローカル、コスト 0）。code は復元済みなので構造一致は trivial に成立する想定。
+    // 万一一致しないケース（LLM が prose 中で markdown 構造を破壊した等）への保険として残す
+    const validation = validateStructure(input.body, restoredOutput.body_en);
+    if (!validation.ok) {
+      lastFailure = { kind: 'structure' };
+      if (attempt < TOTAL_ATTEMPTS) {
+        console.warn(
+          `[auto-translate] structure mismatch (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${summarizeStructureMismatch(validation)} — retrying`,
+        );
+        feedback = buildFeedback(validation);
+      }
+      continue;
+    }
+
+    // (2) proofread（別人格 LLM、API コール 1 回）。意味・整合性をチェック。
+    // 完全な en（code 復元済み）を渡すことで proofreader が prose-code 整合をチェックできる
+    const proof = await proofread({
+      jaSource: input.body,
+      enTranslation: restoredOutput.body_en,
+      client: proofreaderClient,
+      model,
+    });
+    // ok と issues のクロスバリデーション:
+    // - ok=true: issues があっても accept（proofreader が「許容範囲の指摘」とみなした）
+    // - ok=false かつ issues=[]: 不整合な応答。リトライしても feedback が無く改善見込みがないため accept する（fail-open）
+    // - ok=false かつ issues 非空: 通常の retry 経路
+    if (proof.ok || proof.issues.length === 0) {
+      if (!proof.ok) {
+        console.warn(
+          `[auto-translate] proofreader returned ok=false but no issues for ${slug} — treating as accept (cannot retry without feedback)`,
+        );
+      }
+      if (attempt > 1) {
+        console.info(`[auto-translate] translation accepted on attempt ${attempt} for ${slug}`);
+      }
+      return { ok: true, output: restoredOutput, attempts: attempt };
+    }
+
+    lastFailure = { kind: 'proofread' };
     if (attempt < TOTAL_ATTEMPTS) {
-      const mismatchSummary = validation.mismatches
-        .map((m) => {
-          // content 差異は数値が同値で混乱を招くため detail のみ表示
-          if (m.kind === 'codeBlockContent' || m.kind === 'inlineCodeContent') {
-            return `${m.kind}: ${m.detail ?? 'content modified'}`;
-          }
-          return `${m.kind} ja=${m.source} en=${m.target}`;
-        })
-        .join(', ');
+      const issuesSummary = proof.issues.map((i) => `[${i.location}] ${i.problem}`).join('; ');
       console.warn(
-        `[auto-translate] structure mismatch (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${mismatchSummary} — retrying`,
+        `[auto-translate] proofread issues (attempt ${attempt}/${TOTAL_ATTEMPTS}) for ${slug}: ${issuesSummary} — retrying`,
       );
-      feedback = buildFeedback(validation);
+      feedback = formatProofIssues(proof.issues);
     }
     // 最終試行失敗時は呼び出し元（main.ts）で error ログを出すため、ここでは出力しない（重複防止）
   }
-  return { ok: false, attempts: TOTAL_ATTEMPTS };
+  return { ok: false, attempts: TOTAL_ATTEMPTS, lastFailure };
 }
 
 export async function translateOne(args: TranslateOneArgs): Promise<TranslateResult> {
-  const { jaContent, enContent, geminiClient, model, jaPath } = args;
+  const { jaContent, enContent, geminiClient, proofreaderClient, codeTranslatorClient, model, jaPath } = args;
   const slug = args.slug ?? jaPath.split('/').pop() ?? jaPath;
 
   let ja: { frontmatter: Frontmatter; body: string };
   try {
     ja = splitFrontmatter(jaContent);
   } catch (e) {
-    return { kind: 'failed', reason: `ja frontmatter parse error: ${(e as Error).message}` };
+    return { kind: 'failed', reason: `ja frontmatter parse error: ${errorMessage(e)}` };
   }
 
   const jaTitleRaw = ja.frontmatter.title;
@@ -158,7 +286,7 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
       // パース不能な en が手動翻訳かどうか区別できない。上書きリスクを避け失敗扱い。
       // main.ts は parse-error を事前に検出して translateOne を呼ばないが、defense-in-depth として
       // 直接呼び出された場合にも安全側に倒す
-      return { kind: 'failed', reason: `existing en parse error: ${(e as Error).message}` };
+      return { kind: 'failed', reason: `existing en parse error: ${errorMessage(e)}` };
     }
     if (isAutoTranslated(en.frontmatter)) {
       existingEnHash = getAutoTranslatedFrom(en.frontmatter);
@@ -190,25 +318,66 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
     return { kind: 'frontmatter-only', enContent: newEnContent };
   }
 
+  // ja body から code を抽出してプレースホルダ化。LLM には template だけ渡す。
+  // extractCode は予約 escape 文字（⟪⟪/⟫⟫）が markdown 中にあると throw する既知の失敗モードがあるため、
+  // unexpected error ではなく専用 reason で扱う
+  let extracted: ReturnType<typeof extractCode>;
+  try {
+    extracted = extractCode(ja.body);
+  } catch (e) {
+    return { kind: 'failed', reason: `code extraction failed: ${errorMessage(e)}` };
+  }
+
   // API 呼ぶ（リトライ込み）。callWithRetries は API 例外を内部 catch して outcome に変換するため、
   // ここでの try-catch は予期せぬ例外（実装バグ等）の保険のみ
   let outcome: Awaited<ReturnType<typeof callWithRetries>>;
   try {
-    outcome = await callWithRetries(geminiClient, model, { title: jaTitle, body: ja.body }, slug);
+    outcome = await callWithRetries({
+      geminiClient,
+      proofreaderClient,
+      codeTranslatorClient,
+      model,
+      input: {
+        title: jaTitle,
+        body: ja.body,
+        jaTemplate: extracted.template,
+        codeBlocks: extracted.codeBlocks,
+        inlineCodes: extracted.inlineCodes,
+        placeholderSequence: extracted.placeholderSequence,
+      },
+      slug,
+    });
   } catch (e) {
-    return { kind: 'failed', reason: `unexpected error: ${(e as Error).message}` };
+    return { kind: 'failed', reason: `unexpected error: ${errorMessage(e)}` };
   }
 
   if (!outcome.ok) {
     if ('thrownAt' in outcome) {
       return {
         kind: 'failed',
-        reason: `Gemini API error on attempt ${outcome.thrownAt}/${TOTAL_ATTEMPTS}: ${outcome.cause.message}`,
+        reason: `Gemini API error on attempt ${outcome.thrownAt}/${TOTAL_ATTEMPTS}: ${errorMessage(outcome.cause)}`,
       };
     }
+    const lastReason = (() => {
+      if (!outcome.lastFailure) return 'unknown failure';
+      const kind = outcome.lastFailure.kind;
+      switch (kind) {
+        case 'placeholder':
+          return 'placeholder restoration failed';
+        case 'structure':
+          return 'structure validation failed';
+        case 'proofread':
+          return 'proofread issues';
+        default: {
+          // 新しい kind が増えた場合に型エラーで気づくための exhaustive check
+          const _exhaustive: never = kind;
+          throw new Error(`Unhandled RetryFailureReason kind: ${String(_exhaustive)}`);
+        }
+      }
+    })();
     return {
       kind: 'failed',
-      reason: `structure mismatch persisted after ${outcome.attempts} attempts, keeping existing .en.md`,
+      reason: `${lastReason} persisted after ${outcome.attempts} attempts, keeping existing .en.md`,
     };
   }
 
