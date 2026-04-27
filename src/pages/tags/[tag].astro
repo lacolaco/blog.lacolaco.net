@@ -1,12 +1,11 @@
 ---
-import { queryAvailablePosts, queryTags, deduplicatePosts } from '@lib/query';
+import { queryAvailablePosts, queryTags } from '@lib/query';
 import List from '../../layouts/List.astro';
 import { urlize } from '../../libs/strings';
 import type { CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
-  // 同一 slug の ja/en は重複表示しないため deduplicatePosts で ja を優先採用
-  const posts = deduplicatePosts(await queryAvailablePosts());
+  const posts = await queryAvailablePosts();
   const tags = await queryTags();
 
   return tags.map((tag) => {

@@ -1,10 +1,9 @@
 ---
-import { queryAvailablePosts, deduplicatePosts } from '@lib/query';
+import { queryAvailablePosts } from '@lib/query';
 import ChannelNav from 'src/components/ChannelNav.astro';
 import List from '../layouts/List.astro';
 
-// 同一 slug の ja/en は重複表示しないため deduplicatePosts で ja を優先採用
-const posts = deduplicatePosts(await queryAvailablePosts());
+const posts = await queryAvailablePosts();
 ---
 
 <List posts={posts} feedUrl="/index.xml" showChannels>
