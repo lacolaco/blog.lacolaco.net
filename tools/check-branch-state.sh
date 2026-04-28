@@ -11,8 +11,8 @@ if [[ -z "$BRANCH" || "$BRANCH" == "main" || "$BRANCH" == "HEAD" ]]; then
   exit 0
 fi
 
-REMOTE_BRANCH=$(git ls-remote --heads origin "$BRANCH" 2>/dev/null | awk '{print $2}')
-PR_JSON=$(gh pr view "$BRANCH" --json number,state,mergedAt 2>/dev/null || echo "")
+REMOTE_BRANCH=$(timeout 5 git ls-remote --heads origin "$BRANCH" 2>/dev/null | awk '{print $2}')
+PR_JSON=$(timeout 5 gh pr view "$BRANCH" --json number,state,mergedAt 2>/dev/null || echo "")
 
 if [[ -n "$PR_JSON" ]]; then
   PR_STATE=$(echo "$PR_JSON" | jq -r '.state // empty' 2>/dev/null || echo "")
