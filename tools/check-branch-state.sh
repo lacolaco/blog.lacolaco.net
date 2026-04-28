@@ -13,9 +13,13 @@ fi
 
 REMOTE_BRANCH=$(timeout 5 git ls-remote --heads origin "$BRANCH" 2>/dev/null | awk '{print $2}')
 
-PR_STATE=$(timeout 5 gh pr view "$BRANCH" --json state --jq '.state // empty' 2>/dev/null || echo "")
-PR_NUMBER=$(timeout 5 gh pr view "$BRANCH" --json number --jq '.number // empty' 2>/dev/null || echo "")
-PR_MERGED_AT=$(timeout 5 gh pr view "$BRANCH" --json mergedAt --jq '.mergedAt // empty' 2>/dev/null || echo "")
+# Single gh call; parse via Go template to avoid jq dependency and 3x latency
+PR_INFO=$(timeout 5 gh pr view "$BRANCH" --json state,number,mergedAt --template '{{.state}}|{{.number}}|{{.mergedAt}}' 2>/dev/null || echo "")
+PR_STATE="${PR_INFO%%|*}"
+PR_REST="${PR_INFO#*|}"
+PR_NUMBER="${PR_REST%%|*}"
+PR_MERGED_AT="${PR_REST#*|}"
+[[ "$PR_MERGED_AT" == "<no value>" || "$PR_MERGED_AT" == "<nil>" ]] && PR_MERGED_AT=""
 
 echo "## Branch state check"
 echo ""
