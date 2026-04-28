@@ -646,5 +646,11 @@
     "name": "Extensions",
     "color": "default",
     "description": null
+  },
+  {
+    "id": "dcb11d2e-dc51-4a3c-913f-0a78fd4c2223",
+    "name": "Claude Code",
+    "color": "red",
+    "description": null
   }
 ]
