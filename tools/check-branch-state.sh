@@ -14,15 +14,25 @@ fi
 
 # Primary signal: remote branch existence. GitHub auto-deletes branches on merge,
 # so a missing remote is the most reliable "stale" indicator and avoids gh auth latency.
-REMOTE_BRANCH=$(timeout 3 git ls-remote --heads origin "$BRANCH" 2>/dev/null | awk '{print $2}')
+# Capture timeout exit code (124) separately from "branch not found" (empty output, exit 0)
+# so a network outage doesn't cascade into a second 5s gh call on every Edit.
+LS_OUT=$(timeout 3 git ls-remote --heads origin "$BRANCH" 2>/dev/null)
+LS_EXIT=$?
+if [[ $LS_EXIT -eq 124 ]]; then
+  exit 0  # network timeout — assume live, do not block
+fi
+REMOTE_BRANCH=$(echo "$LS_OUT" | awk '{print $2}')
 
 if [[ -n "$REMOTE_BRANCH" ]]; then
-  # Remote exists — branch is live. No further check needed.
   exit 0
 fi
 
 # Remote missing. Confirm via PR state to distinguish "never pushed" from "merged & deleted".
-PR_INFO=$(timeout 5 gh pr view "$BRANCH" --json state,number --template '{{.state}}|{{.number}}' 2>/dev/null || echo "")
+PR_INFO=$(timeout 5 gh pr view "$BRANCH" --json state,number --template '{{.state}}|{{.number}}' 2>/dev/null)
+GH_EXIT=$?
+if [[ $GH_EXIT -eq 124 ]]; then
+  exit 0  # gh timeout — cannot determine state, do not block
+fi
 PR_STATE="${PR_INFO%%|*}"
 PR_NUMBER="${PR_INFO#*|}"
 
