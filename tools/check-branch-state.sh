@@ -3,9 +3,7 @@
 # Output is shown to Claude as additional context so stale branches are caught
 # before any mutating operation.
 
-set -e
-
-cd "${CLAUDE_PROJECT_DIR:-$(pwd)}"
+cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || cd "$(pwd)"
 
 BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
 
@@ -17,9 +15,9 @@ REMOTE_BRANCH=$(git ls-remote --heads origin "$BRANCH" 2>/dev/null | awk '{print
 PR_JSON=$(gh pr view "$BRANCH" --json number,state,mergedAt 2>/dev/null || echo "")
 
 if [[ -n "$PR_JSON" ]]; then
-  PR_STATE=$(echo "$PR_JSON" | jq -r .state 2>/dev/null || echo "")
-  PR_NUMBER=$(echo "$PR_JSON" | jq -r .number 2>/dev/null || echo "")
-  PR_MERGED_AT=$(echo "$PR_JSON" | jq -r .mergedAt 2>/dev/null || echo "")
+  PR_STATE=$(echo "$PR_JSON" | jq -r '.state // empty' 2>/dev/null || echo "")
+  PR_NUMBER=$(echo "$PR_JSON" | jq -r '.number // empty' 2>/dev/null || echo "")
+  PR_MERGED_AT=$(echo "$PR_JSON" | jq -r '.mergedAt // empty' 2>/dev/null || echo "")
 else
   PR_STATE=""
   PR_NUMBER=""
