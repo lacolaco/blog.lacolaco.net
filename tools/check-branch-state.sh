@@ -1,70 +1,19 @@
 #!/usr/bin/env bash
-# PreToolUse hook for Edit/Write/MultiEdit/NotebookEdit:
-# Block file modifications when current branch is stale (merged/closed PR).
-# This catches the case where Claude continues working on a branch after its PR
-# was merged elsewhere — the SessionStart-only approach misses mid-session staleness.
+# PreToolUse hook: block file edits when current branch's PR is MERGED/CLOSED.
+# Fail-open: any error (no gh auth, network down, no PR, etc) → allow.
 
-cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || cd "$(pwd)"
+cd "${CLAUDE_PROJECT_DIR:-.}" 2>/dev/null || exit 0
 
-BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
+BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
+[[ -z "$BRANCH" || "$BRANCH" == "main" || "$BRANCH" == "HEAD" ]] && exit 0
 
-if [[ -z "$BRANCH" || "$BRANCH" == "main" || "$BRANCH" == "HEAD" ]]; then
-  exit 0
-fi
+STATE=$(timeout 5 gh pr view "$BRANCH" --json state --template '{{.state}}' 2>/dev/null) || exit 0
 
-# 60s TTL cache: skip network calls when branch was recently confirmed live.
-# Cache is per-branch and stored in /tmp; mtime serves as the timestamp.
-CACHE_DIR="${TMPDIR:-/tmp}"
-BRANCH_HASH=$(
-  printf '%s' "$BRANCH" | sha256sum 2>/dev/null | cut -c1-16 \
-  || printf '%s' "$BRANCH" | shasum -a 256 2>/dev/null | cut -c1-16
-)
-# Final fallback: sanitized branch name (no hash tools available)
-if [[ -z "$BRANCH_HASH" ]]; then
-  BRANCH_HASH=$(printf '%s' "$BRANCH" | tr '/' '-' | tr -cd '[:alnum:]._-' | cut -c1-64)
-fi
-CACHE_FILE="$CACHE_DIR/check-branch-state-${BRANCH_HASH:-default}.cache"
-NOW=$(date +%s)
-if [[ -f "$CACHE_FILE" ]]; then
-  CACHE_MTIME=$(stat -f %m "$CACHE_FILE" 2>/dev/null || stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0)
-  if (( NOW - CACHE_MTIME < 60 )); then
-    exit 0
-  fi
-fi
-
-# Primary signal: remote branch existence. GitHub auto-deletes branches on merge,
-# so a missing remote is the most reliable "stale" indicator and avoids gh auth latency.
-# Capture timeout exit code (124) separately from "branch not found" (empty output, exit 0)
-# so a network outage doesn't cascade into a second 5s gh call on every Edit.
-LS_OUT=$(timeout 3 git ls-remote --heads origin "$BRANCH" 2>/dev/null)
-LS_EXIT=$?
-if [[ $LS_EXIT -eq 124 ]]; then
-  exit 0  # network timeout — assume live, do not block
-fi
-REMOTE_BRANCH=$(echo "$LS_OUT" | awk '{print $2}')
-
-if [[ -n "$REMOTE_BRANCH" ]]; then
-  touch "$CACHE_FILE" 2>/dev/null
-  exit 0
-fi
-
-# Remote missing. Confirm via PR state to distinguish "never pushed" from "merged & deleted".
-PR_INFO=$(timeout 5 gh pr view "$BRANCH" --json state,number --template '{{.state}}|{{.number}}' 2>/dev/null)
-GH_EXIT=$?
-if [[ $GH_EXIT -eq 124 ]]; then
-  exit 0  # gh timeout — cannot determine state, do not block
-fi
-PR_STATE="${PR_INFO%%|*}"
-PR_NUMBER="${PR_INFO#*|}"
-
-if [[ "$PR_STATE" == "MERGED" || "$PR_STATE" == "CLOSED" ]]; then
-  cat >&2 <<EOF
-Blocked: branch '$BRANCH' is stale.
-Associated PR #$PR_NUMBER is $PR_STATE and the remote branch was deleted.
-Do not commit/edit on this branch. Switch to main and start a fresh branch:
-  git checkout main && git pull && git checkout -b <new-branch>
-EOF
-  exit 2
-fi
-
+case "$STATE" in
+  MERGED|CLOSED)
+    echo "Blocked: branch '$BRANCH' has a $STATE PR. Switch to main and start a fresh branch:" >&2
+    echo "  git checkout main && git pull && git checkout -b <new-branch>" >&2
+    exit 2
+    ;;
+esac
 exit 0
