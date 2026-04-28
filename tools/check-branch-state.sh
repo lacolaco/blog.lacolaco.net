@@ -12,6 +12,18 @@ if [[ -z "$BRANCH" || "$BRANCH" == "main" || "$BRANCH" == "HEAD" ]]; then
   exit 0
 fi
 
+# 60s TTL cache: skip network calls when branch was recently confirmed live.
+# Cache is per-branch and stored in /tmp; mtime serves as the timestamp.
+CACHE_DIR="${TMPDIR:-/tmp}"
+CACHE_FILE="$CACHE_DIR/check-branch-state-$(echo "$BRANCH" | tr '/' '_').cache"
+NOW=$(date +%s)
+if [[ -f "$CACHE_FILE" ]]; then
+  CACHE_MTIME=$(stat -f %m "$CACHE_FILE" 2>/dev/null || stat -c %Y "$CACHE_FILE" 2>/dev/null || echo 0)
+  if (( NOW - CACHE_MTIME < 60 )); then
+    exit 0
+  fi
+fi
+
 # Primary signal: remote branch existence. GitHub auto-deletes branches on merge,
 # so a missing remote is the most reliable "stale" indicator and avoids gh auth latency.
 # Capture timeout exit code (124) separately from "branch not found" (empty output, exit 0)
@@ -24,6 +36,7 @@ fi
 REMOTE_BRANCH=$(echo "$LS_OUT" | awk '{print $2}')
 
 if [[ -n "$REMOTE_BRANCH" ]]; then
+  touch "$CACHE_FILE" 2>/dev/null
   exit 0
 fi
 
