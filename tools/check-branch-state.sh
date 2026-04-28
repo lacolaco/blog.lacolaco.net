@@ -12,17 +12,10 @@ if [[ -z "$BRANCH" || "$BRANCH" == "main" || "$BRANCH" == "HEAD" ]]; then
 fi
 
 REMOTE_BRANCH=$(timeout 5 git ls-remote --heads origin "$BRANCH" 2>/dev/null | awk '{print $2}')
-PR_JSON=$(timeout 5 gh pr view "$BRANCH" --json number,state,mergedAt 2>/dev/null || echo "")
 
-if [[ -n "$PR_JSON" ]]; then
-  PR_STATE=$(echo "$PR_JSON" | jq -r '.state // empty' 2>/dev/null || echo "")
-  PR_NUMBER=$(echo "$PR_JSON" | jq -r '.number // empty' 2>/dev/null || echo "")
-  PR_MERGED_AT=$(echo "$PR_JSON" | jq -r '.mergedAt // empty' 2>/dev/null || echo "")
-else
-  PR_STATE=""
-  PR_NUMBER=""
-  PR_MERGED_AT=""
-fi
+PR_STATE=$(timeout 5 gh pr view "$BRANCH" --json state --jq '.state // empty' 2>/dev/null || echo "")
+PR_NUMBER=$(timeout 5 gh pr view "$BRANCH" --json number --jq '.number // empty' 2>/dev/null || echo "")
+PR_MERGED_AT=$(timeout 5 gh pr view "$BRANCH" --json mergedAt --jq '.mergedAt // empty' 2>/dev/null || echo "")
 
 echo "## Branch state check"
 echo ""
@@ -34,7 +27,7 @@ else
   echo "- Remote branch: exists"
 fi
 
-if [[ -z "$PR_JSON" ]]; then
+if [[ -z "$PR_NUMBER" ]]; then
   echo "- Associated PR: none"
 else
   echo "- Associated PR: #$PR_NUMBER, state=$PR_STATE, mergedAt=$PR_MERGED_AT"
