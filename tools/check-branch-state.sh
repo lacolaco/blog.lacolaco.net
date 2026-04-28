@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# SessionStart hook: surface current branch state for non-main branches.
-# Output is shown to Claude as additional context so stale branches are caught
-# before any mutating operation.
+# PreToolUse hook for Edit/Write/MultiEdit/NotebookEdit:
+# Block file modifications when current branch is stale (merged/closed PR).
+# This catches the case where Claude continues working on a branch after its PR
+# was merged elsewhere — the SessionStart-only approach misses mid-session staleness.
 
 cd "${CLAUDE_PROJECT_DIR:-$(pwd)}" 2>/dev/null || cd "$(pwd)"
 
@@ -11,33 +12,28 @@ if [[ -z "$BRANCH" || "$BRANCH" == "main" || "$BRANCH" == "HEAD" ]]; then
   exit 0
 fi
 
-REMOTE_BRANCH=$(timeout 5 git ls-remote --heads origin "$BRANCH" 2>/dev/null | awk '{print $2}')
+# Primary signal: remote branch existence. GitHub auto-deletes branches on merge,
+# so a missing remote is the most reliable "stale" indicator and avoids gh auth latency.
+REMOTE_BRANCH=$(timeout 3 git ls-remote --heads origin "$BRANCH" 2>/dev/null | awk '{print $2}')
 
-# Single gh call; parse via Go template to avoid jq dependency and 3x latency
-PR_INFO=$(timeout 5 gh pr view "$BRANCH" --json state,number,mergedAt --template '{{.state}}|{{.number}}|{{.mergedAt}}' 2>/dev/null || echo "")
+if [[ -n "$REMOTE_BRANCH" ]]; then
+  # Remote exists — branch is live. No further check needed.
+  exit 0
+fi
+
+# Remote missing. Confirm via PR state to distinguish "never pushed" from "merged & deleted".
+PR_INFO=$(timeout 5 gh pr view "$BRANCH" --json state,number --template '{{.state}}|{{.number}}' 2>/dev/null || echo "")
 PR_STATE="${PR_INFO%%|*}"
-PR_REST="${PR_INFO#*|}"
-PR_NUMBER="${PR_REST%%|*}"
-PR_MERGED_AT="${PR_REST#*|}"
-[[ "$PR_MERGED_AT" == "<no value>" || "$PR_MERGED_AT" == "<nil>" ]] && PR_MERGED_AT=""
-
-echo "## Branch state check"
-echo ""
-echo "- Current branch: \`$BRANCH\`"
-
-if [[ -z "$REMOTE_BRANCH" ]]; then
-  echo "- Remote branch: **NOT FOUND** (origin/$BRANCH does not exist)"
-else
-  echo "- Remote branch: exists"
-fi
-
-if [[ -z "$PR_NUMBER" ]]; then
-  echo "- Associated PR: none"
-else
-  echo "- Associated PR: #$PR_NUMBER, state=$PR_STATE, mergedAt=$PR_MERGED_AT"
-fi
+PR_NUMBER="${PR_INFO#*|}"
 
 if [[ "$PR_STATE" == "MERGED" || "$PR_STATE" == "CLOSED" ]]; then
-  echo ""
-  echo "**WARNING**: associated PR is $PR_STATE. This branch is stale - do not commit/push to it. Switch to main and start fresh."
+  cat >&2 <<EOF
+Blocked: branch '$BRANCH' is stale.
+Associated PR #$PR_NUMBER is $PR_STATE and the remote branch was deleted.
+Do not commit/edit on this branch. Switch to main and start a fresh branch:
+  git checkout main && git pull && git checkout -b <new-branch>
+EOF
+  exit 2
 fi
+
+exit 0

@@ -34,16 +34,16 @@ NEVER delete files/directories without user saying "yes, delete".
 - 「working tree にあるから」を理由に異種関心を 1 commit に同居させるな
 - conventional commit の type と branch prefix が不整合 (例: `feat/*` branch に `chore:` commit) なら STOP
 
-### 2d. Commit→Push→PR→CI watch は不可分。Merge は別単位
+### 2d. Merge は user 明示指示必須。Push までは不可分
 
-`git commit` 単発で完了報告を出すな。以下を 1 単位として実行せよ:
+`gh pr merge` (main への取り込み) は user の明示指示なしに実行禁止。skill / agent の自走範囲に merge は含まれない。retrospective skill の "commit and push" は文字通り push まで。
+
+merge を除いた以下は 1 単位として実行 (途中で止めるな):
 1. commit
 2. push
 3. PR が未作成なら作成
 4. `gh pr checks --watch` をバックグラウンドで起動
-5. CI 完了 + code-review 確認まで見届けて完了報告 → **ここで停止**
-
-`gh pr merge` (main への取り込み) は必ず user の明示指示が必要。skill / agent の自走範囲に merge は含まれない。retrospective skill の "commit and push" は文字通り push までを意味し、merge は含まない。
+5. CI 完了 + code-review 確認 → 完了報告
 
 ### 2b. Notion-Sourced Content (.md / .en.md) は編集しない
 

@@ -7,13 +7,7 @@
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/tools/protect-notion-content.sh"
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "hooks": [
+          },
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/tools/check-branch-state.sh"
