@@ -15,7 +15,14 @@ fi
 # 60s TTL cache: skip network calls when branch was recently confirmed live.
 # Cache is per-branch and stored in /tmp; mtime serves as the timestamp.
 CACHE_DIR="${TMPDIR:-/tmp}"
-BRANCH_HASH=$(printf '%s' "$BRANCH" | shasum -a 256 2>/dev/null | cut -c1-16)
+BRANCH_HASH=$(
+  printf '%s' "$BRANCH" | sha256sum 2>/dev/null | cut -c1-16 \
+  || printf '%s' "$BRANCH" | shasum -a 256 2>/dev/null | cut -c1-16
+)
+# Final fallback: sanitized branch name (no hash tools available)
+if [[ -z "$BRANCH_HASH" ]]; then
+  BRANCH_HASH=$(printf '%s' "$BRANCH" | tr '/' '-' | tr -cd '[:alnum:]._-' | cut -c1-64)
+fi
 CACHE_FILE="$CACHE_DIR/check-branch-state-${BRANCH_HASH:-default}.cache"
 NOW=$(date +%s)
 if [[ -f "$CACHE_FILE" ]]; then
