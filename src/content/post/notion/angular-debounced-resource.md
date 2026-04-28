@@ -3,12 +3,13 @@ title: 'Angular v22: debounced Resource の解説'
 slug: 'angular-debounced-resource'
 icon: ''
 created_time: '2026-04-08T02:03:00.000Z'
-last_edited_time: '2026-04-27T23:20:00.000Z'
+last_edited_time: '2026-04-28T10:40:00.000Z'
 tags:
   - 'Signals'
   - 'State Management'
 published: true
 locale: 'ja'
+canonical_url: 'https://zenn.dev/lacolaco/articles/angular-debounced-resource'
 channels:
   - 'Angular'
   - 'Code'

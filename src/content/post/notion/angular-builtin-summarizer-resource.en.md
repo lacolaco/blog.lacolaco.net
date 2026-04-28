@@ -3,7 +3,7 @@ title: 'Angular: Implementing summaryResource to Signal-ize Built-in AI'
 slug: 'angular-builtin-summarizer-resource'
 icon: ''
 created_time: '2026-04-27T07:49:00.000Z'
-last_edited_time: '2026-04-27T23:21:00.000Z'
+last_edited_time: '2026-04-28T10:40:00.000Z'
 tags:
   - 'Signals'
   - 'Dependency Injection'
@@ -11,6 +11,7 @@ tags:
   - 'AI'
 published: true
 locale: 'en'
+canonical_url: 'https://zenn.dev/lacolaco/articles/angular-builtin-summarizer-resource'
 channels:
   - 'Angular'
 notion_url: 'https://www.notion.so/Angular-Built-in-AI-Signal-summaryResource-34f3521b014a80149b66c11891b89391'
