@@ -6,6 +6,7 @@ import { createHash } from 'node:crypto';
 import * as path from 'node:path';
 import { parseArgs } from 'node:util';
 import { extractAutoTranslate, frontmatterAutoTranslate } from './auto-translate-flag.ts';
+import { resolveCanonicalUrl } from './canonical-url.ts';
 
 // Notion DBプロパティのスキーマ。get(name)の戻り値型をここで定義する
 type BlogPostDatasource = {
@@ -16,6 +17,7 @@ type BlogPostDatasource = {
   locale: string | undefined;
   tags: string[] | undefined;
   canonical_url: string | undefined;
+  distribution: string[] | undefined;
   updated_at: string | undefined;
   created_at_override: string | undefined;
   auto_translate: boolean | undefined;
@@ -184,6 +186,7 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
     const locale = get('locale');
     const tags = get('tags');
     const canonicalUrl = get('canonical_url');
+    const distribution = get('distribution');
     const updatedAt = get('updated_at');
     const createdAtOverride = get('created_at_override');
     const autoTranslate = get('auto_translate');
@@ -215,7 +218,7 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
       locale: locale ?? 'ja',
       source_url: page.url,
       tags: tags ?? [],
-      canonical_url: canonicalUrl ?? null,
+      canonical_url: resolveCanonicalUrl(canonicalUrl, distribution, slug),
       created_time: date.toISOString(),
       last_edited_time: lastEditedTime.toISOString(),
       auto_translate: extractAutoTranslate(autoTranslate),
