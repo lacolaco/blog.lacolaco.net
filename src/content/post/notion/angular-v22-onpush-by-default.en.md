@@ -3,12 +3,13 @@ title: 'Angular v22: Introducing ChangeDetectionStrategy.Eager and OnPush By Def
 slug: 'angular-v22-onpush-by-default'
 icon: ''
 created_time: '2026-04-22T14:43:00.000Z'
-last_edited_time: '2026-04-27T15:23:00.000Z'
+last_edited_time: '2026-04-28T10:40:00.000Z'
 tags:
   - 'Signals'
   - 'Angular CLI'
 published: true
 locale: 'en'
+canonical_url: 'https://zenn.dev/lacolaco/articles/angular-v22-onpush-by-default'
 channels:
   - 'Angular'
 notion_url: 'https://www.notion.so/Angular-v22-ChangeDetectionStrategy-Eager-OnPush-By-Default-34a3521b014a808f9211c3a1b715c44d'
