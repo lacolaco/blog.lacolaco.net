@@ -24,6 +24,26 @@ For significant changes (new features, refactoring, multi-file):
 NEVER delete files/directories without user saying "yes, delete".
 - "Check compatibility" ≠ permission to delete
 - Show what will be deleted → Wait for approval → Then delete
+- **working tree に既に存在する削除済みファイルも例外ではない**。前のセッション・他プロセスが削除した状態は「承認済み」を意味しない。commit 前にユーザーに削除是非を確認せよ
+
+### 2c. Commit は Branch 目的と整合させろ
+
+`git commit` 実行前に、現在の branch 名から推測される目的と staged changes の内容が一致するか必ず検証せよ。
+- branch 名 `feat/X` → X 機能に関する変更のみコミット
+- 関係ない変更が working tree にある場合 → main から別 branch を切るか、stash して分離してからコミット
+- 「working tree にあるから」を理由に異種関心を 1 commit に同居させるな
+- conventional commit の type と branch prefix が不整合 (例: `feat/*` branch に `chore:` commit) なら STOP
+
+### 2d. Commit→Push→PR→CI watch は不可分
+
+`git commit` 単発で完了報告を出すな。以下を 1 単位として実行せよ:
+1. commit
+2. push
+3. PR が未作成なら作成
+4. `gh pr checks --watch` をバックグラウンドで起動
+5. CI 完了 + code-review 確認まで見届けて初めて完了報告
+
+途中で止めて user の入力を待つな。Auto mode 下では特に「commit 完了しました」だけの報告は禁止。
 
 ### 2b. Notion-Sourced Content (.md / .en.md) は編集しない
 
@@ -173,7 +193,8 @@ pnpm test:libs    # library tests
 - **デプロイ時の依存関係でマージ順序を決定せよ**。実装着手順序とマージ順序は異なる。環境変数・インフラ設定は、それを使うコードより先にマージ・デプロイする。「コードがデプロイされた時点で依存リソースが存在するか」を基準にする
 
 ### Git Operations
-- **コミット→push→PR作成→CI watchは不可分の単位。途中で止めるな。コミットだけで完了報告するな**
+- commit→push→PR→CI watch の不可分性は CRITICAL RULES §2d を参照
+- branch 目的と staged changes の整合性検査は CRITICAL RULES §2c を参照
 - **PRマージ時に`--delete-branch`を付けるな**。リモートブランチはマージ後に自動削除される（GitHub設定）
 - Use git-github-ops agent for complex operations
 - NEVER `git reset --hard` with uncommitted changes you need
