@@ -1,4 +1,5 @@
 import rss from '@astrojs/rss';
+import { buildRssCategories } from '@lib/post';
 import { queryAvailablePosts, deduplicatePosts } from '@lib/query';
 import type { APIContext } from 'astro';
 import { RSS_ITEMS_LIMIT, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
@@ -16,7 +17,7 @@ export async function GET(context: APIContext) {
         title: post.data.title,
         pubDate: post.data.created_time,
         link: `/posts/${post.data.slug}`,
-        categories: post.data.tags,
+        categories: buildRssCategories(post.data),
       };
     }),
   });
