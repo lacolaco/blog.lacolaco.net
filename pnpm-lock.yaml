@@ -83,7 +83,7 @@ importers:
         version: 1.51.0
       '@iconify/json':
         specifier: ^2.2.161
-        version: 2.2.467
+        version: 2.2.468
       '@iconify/tailwind':
         specifier: ^1.0.0
         version: 1.2.0
@@ -831,8 +831,8 @@ packages:
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
 
-  '@iconify/json@2.2.467':
-    resolution: {integrity: sha512-vjw27l6Sp6OJnCSNAhE6PGCZFYNSp68j1xK+hws0T5mptSEez0EjmmJBQLUk4yM5nhA9G5H5mW3EF2/yRfk74Q==}
+  '@iconify/json@2.2.468':
+    resolution: {integrity: sha512-vfW6JQdYiHAFnCRZN6H5uzObcFBTaAguNaKqUpeazDLz5DO7R2UM8StyM/+v8d8KP15SfrQzG9aZy4uF9lViVQ==}
 
   '@iconify/tailwind@1.2.0':
     resolution: {integrity: sha512-KgpIHWOTcRYw1XcoUqyNSrmYyfLLqZYu3AmP8zdfLk0F5TqRO8YerhlvlQmGfn7rJXgPeZN569xPAJnJ53zZxA==}
@@ -1016,9 +1016,6 @@ packages:
     resolution: {integrity: sha512-RpeCAW6Mps5c7mz5s+xySDHEjoVWjX3aADmYpr2MXiCsLaLBEB08J6xkJFZo3spXOhc6/oK/xNuAH7upStSKbA==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/15.0.0/b2745df18773df27984083f2f647aa64bc49b049}
     peerDependencies:
       js-yaml: ^4.0.0
-    peerDependenciesMeta:
-      js-yaml:
-        optional: true
 
   '@mermaid-js/parser@1.1.0':
     resolution: {integrity: sha512-gxK9ZX2+Fex5zu8LhRQoMeMPEHbc73UKZ0FQ54YrQtUxE1VVhMwzeNtKRPAu5aXks4FasbMe4xB4bWrmq6Jlxw==}
@@ -5141,7 +5138,7 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
-  '@iconify/json@2.2.467':
+  '@iconify/json@2.2.468':
     dependencies:
       '@iconify/types': 2.0.0
       pathe: 2.0.3
@@ -5286,13 +5283,12 @@ snapshots:
       '@notionhq/client': 5.20.0
       cli-progress: 3.12.0
       consola: 3.4.2
+      js-yaml: 4.1.1
       p-limit: 7.2.0
       p-retry: 7.1.1
       tslib: 2.8.1
       unist-util-visit: 5.1.0
       zod: 4.3.6
-    optionalDependencies:
-      js-yaml: 4.1.1
 
   '@mermaid-js/parser@1.1.0':
     dependencies:
