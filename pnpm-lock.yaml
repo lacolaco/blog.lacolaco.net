@@ -88,8 +88,8 @@ importers:
         specifier: ^1.0.0
         version: 1.2.0
       '@lacolaco/notion-sync':
-        specifier: ^14.0.0
-        version: 14.0.0
+        specifier: ^15.0.0
+        version: 15.0.0(js-yaml@4.1.1)
       '@notionhq/client':
         specifier: ^5.20.0
         version: 5.20.0
@@ -111,6 +111,9 @@ importers:
       '@types/gtag.js':
         specifier: ^0.0.20
         version: 0.0.20
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
       '@types/katex':
         specifier: 0.16.8
         version: 0.16.8
@@ -135,6 +138,9 @@ importers:
       image-size:
         specifier: ^2.0.2
         version: 2.0.2
+      js-yaml:
+        specifier: ^4.1.1
+        version: 4.1.1
       jsdom:
         specifier: ^29.0.2
         version: 29.1.0
@@ -1006,8 +1012,13 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@lacolaco/notion-sync@14.0.0':
-    resolution: {integrity: sha512-cWxO1L11J2keEv0kBLODlmW4rTYrfyJ2E0GNQFCBAtLUOB+KwYXyivclqr9nTiFJKtzAlEvHqCbrT3/7W9QilA==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/14.0.0/41ea83f282284ac221e009e1eefafe3ed255a4fc}
+  '@lacolaco/notion-sync@15.0.0':
+    resolution: {integrity: sha512-RpeCAW6Mps5c7mz5s+xySDHEjoVWjX3aADmYpr2MXiCsLaLBEB08J6xkJFZo3spXOhc6/oK/xNuAH7upStSKbA==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/15.0.0/b2745df18773df27984083f2f647aa64bc49b049}
+    peerDependencies:
+      js-yaml: ^4.0.0
+    peerDependenciesMeta:
+      js-yaml:
+        optional: true
 
   '@mermaid-js/parser@1.1.0':
     resolution: {integrity: sha512-gxK9ZX2+Fex5zu8LhRQoMeMPEHbc73UKZ0FQ54YrQtUxE1VVhMwzeNtKRPAu5aXks4FasbMe4xB4bWrmq6Jlxw==}
@@ -1853,6 +1864,9 @@ packages:
 
   '@types/hast@3.0.4':
     resolution: {integrity: sha512-WPs+bbQw5aCj+x6laNGWLH3wviHtoCv/P3+otBhbOhJgG8qtpdAMlTCxLtsTWA7LH1Oh/bFCHsBn0TPS5m30EQ==}
+
+  '@types/js-yaml@4.0.9':
+    resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -5267,17 +5281,18 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@lacolaco/notion-sync@14.0.0':
+  '@lacolaco/notion-sync@15.0.0(js-yaml@4.1.1)':
     dependencies:
       '@notionhq/client': 5.20.0
       cli-progress: 3.12.0
       consola: 3.4.2
-      js-yaml: 4.1.1
       p-limit: 7.2.0
       p-retry: 7.1.1
       tslib: 2.8.1
       unist-util-visit: 5.1.0
       zod: 4.3.6
+    optionalDependencies:
+      js-yaml: 4.1.1
 
   '@mermaid-js/parser@1.1.0':
     dependencies:
@@ -6140,6 +6155,8 @@ snapshots:
   '@types/hast@3.0.4':
     dependencies:
       '@types/unist': 3.0.3
+
+  '@types/js-yaml@4.0.9': {}
 
   '@types/json-schema@7.0.15': {}
 

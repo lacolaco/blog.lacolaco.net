@@ -1,4 +1,5 @@
 import { syncNotionDatasource, type EntryMetadata, type RenderContext } from '@lacolaco/notion-sync';
+import { jsYamlSerializer } from '@lacolaco/notion-sync/serializers/yaml';
 import { Client, isFullPage } from '@notionhq/client';
 import { TZDate } from '@date-fns/tz';
 import { format } from 'date-fns';
@@ -302,6 +303,8 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
         return defaultRenderer(block);
       },
     },
+    // serializeFrontmatterが必須なため、js-yamlベースの既存挙動を維持する公式ヘルパを使用
+    serializeFrontmatter: jsYamlSerializer,
     generateFrontmatter: (_baseFields, metadata, renderContext: RenderContext<FeatureState>) => {
       return {
         title: metadata.title,
