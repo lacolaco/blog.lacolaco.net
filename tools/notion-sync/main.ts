@@ -303,7 +303,7 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
         return defaultRenderer(block);
       },
     },
-    // v15: serializeFrontmatter は必須。js-yamlベースの既存挙動を維持するため公式ヘルパを採用
+    // serializeFrontmatterが必須なため、js-yamlベースの既存挙動を維持する公式ヘルパを使用
     serializeFrontmatter: jsYamlSerializer,
     generateFrontmatter: (_baseFields, metadata, renderContext: RenderContext<FeatureState>) => {
       return {
