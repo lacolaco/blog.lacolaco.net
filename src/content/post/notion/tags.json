@@ -652,5 +652,11 @@
     "name": "Claude Code",
     "color": "red",
     "description": null
+  },
+  {
+    "id": "0459481f-87fd-4a82-aabb-55d54af70f8b",
+    "name": "TTS",
+    "color": "green",
+    "description": null
   }
 ]
