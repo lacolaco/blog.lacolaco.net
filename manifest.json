@@ -1399,5 +1399,12 @@
   "3503521b-014a-80b4-90cf-fc322cceea91": {
     "lastModified": "2026-04-28T15:47:00.000Z",
     "filePath": "src/content/post/notion/bottom-top-bottom-retrospective.md"
+  },
+  "35b3521b-014a-813d-b183-f62f35e4eb20": {
+    "lastModified": "2026-05-10T01:53:00.000Z",
+    "filePath": "src/content/post/notion/claude-code-tts.md",
+    "imagePaths": [
+      ".tmp/r2-staging/videos/claude-code-tts/CleanShot_2026-05-09_at_17.26.57-converted.83dc7da309040f99.mp4"
+    ]
   }
 }
