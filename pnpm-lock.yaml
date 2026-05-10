@@ -77,7 +77,7 @@ importers:
     devDependencies:
       '@aws-sdk/client-s3':
         specifier: ^3.967.0
-        version: 3.1042.0
+        version: 3.1043.0
       '@eslint/js':
         specifier: ^10.0.1
         version: 10.0.1(eslint@10.3.0(jiti@2.6.1))
@@ -294,8 +294,8 @@ packages:
   '@aws-crypto/util@5.2.0':
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
 
-  '@aws-sdk/client-s3@3.1042.0':
-    resolution: {integrity: sha512-z3Ibstr7ckDT10dz/nkk4+93LitrrO49Oq563/JoFHt30ZNodPBCfSxysKcelLyi/lNVF1MZrhZZfikUAG3iNQ==}
+  '@aws-sdk/client-s3@3.1043.0':
+    resolution: {integrity: sha512-QrDh9PACpmijOgbVnvQIvoWFZcMEBoGw0qiQRfGvsUEcB1JPCS2U5R0irB4XQSmsBlQUNlNeXVfpx3JI++NqrA==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/core@3.974.8':
@@ -1019,9 +1019,6 @@ packages:
     resolution: {integrity: sha512-zw6UQvTgpCe5VmAo0qmQzXnog0vrdSgH2/5EL1GVoc+xiGUEhX/IN2uy/Hx+KyH80KjyIh2Rr6Yt7M+FkBqHQw==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/15.1.0/5ff8d4b92a9f8698913d57577141ffa5e554aefa}
     peerDependencies:
       js-yaml: ^4.0.0
-    peerDependenciesMeta:
-      js-yaml:
-        optional: true
 
   '@mermaid-js/parser@1.1.0':
     resolution: {integrity: sha512-gxK9ZX2+Fex5zu8LhRQoMeMPEHbc73UKZ0FQ54YrQtUxE1VVhMwzeNtKRPAu5aXks4FasbMe4xB4bWrmq6Jlxw==}
@@ -4414,7 +4411,7 @@ snapshots:
       '@smithy/util-utf8': 2.3.0
       tslib: 2.8.1
 
-  '@aws-sdk/client-s3@3.1042.0':
+  '@aws-sdk/client-s3@3.1043.0':
     dependencies:
       '@aws-crypto/sha1-browser': 5.2.0
       '@aws-crypto/sha256-browser': 5.2.0
@@ -5287,13 +5284,12 @@ snapshots:
       '@notionhq/client': 5.20.0
       cli-progress: 3.12.0
       consola: 3.4.2
+      js-yaml: 4.1.1
       p-limit: 7.2.0
       p-retry: 7.1.1
       tslib: 2.8.1
       unist-util-visit: 5.1.0
       zod: 4.3.6
-    optionalDependencies:
-      js-yaml: 4.1.1
 
   '@mermaid-js/parser@1.1.0':
     dependencies:
