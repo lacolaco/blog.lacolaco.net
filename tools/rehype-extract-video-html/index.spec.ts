@@ -70,9 +70,10 @@ describe('rehypeExtractVideoHtml', () => {
     const md =
       '<figure>\n  <video src="/videos/x/y.mp4" controls></video>\n  <figcaption>cap</figcaption>\n</figure>\n';
     const html = await processMarkdown(md);
-    assert.ok(html.includes('<video'));
-    assert.ok(html.includes('src="/videos/x/y.mp4"'));
+    assert.ok(html.includes('<figure>'));
+    assert.ok(html.includes('<video src="/videos/x/y.mp4" controls></video>'));
     assert.ok(html.includes('<figcaption>cap</figcaption>'));
+    assert.ok(html.includes('</figure>'));
   });
 
   test('1 つの markdown に video raw と video を含まない raw が混在しても、video 以外は raw のまま', async () => {
