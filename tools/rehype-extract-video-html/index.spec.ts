@@ -5,34 +5,38 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 import rehypeImageCdn from '../rehype-image-cdn/index.ts';
-import { handleHtml } from './handle-html.ts';
+import rehypeExtractVideoHtml from './index.ts';
 
 async function processMarkdown(md: string) {
   const result = await unified()
+    // allowDangerousHtml: true で markdown 内の生 HTML を hast の raw ノードとして残す
+    // (astro と同じ前段挙動)
     .use(remarkParse)
-    .use(remarkRehype, { allowDangerousHtml: true, handlers: { html: handleHtml } })
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeExtractVideoHtml)
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(md);
   return String(result);
 }
 
-async function processWithImageCdn(md: string, baseUrl: string) {
+async function processMarkdownWithImageCdn(md: string, baseUrl: string) {
   const result = await unified()
     .use(remarkParse)
-    .use(remarkRehype, { allowDangerousHtml: true, handlers: { html: handleHtml } })
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeExtractVideoHtml)
     .use(rehypeImageCdn, { baseUrl })
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(md);
   return String(result);
 }
 
-describe('handleHtml', () => {
-  test('<video> を含む html ノードは element として hast に乗る', async () => {
+describe('rehypeExtractVideoHtml', () => {
+  test('<video> を含む raw HTML が element に展開される', async () => {
     const html = await processMarkdown('<video src="/videos/foo/bar.mp4" controls></video>\n');
     assert.ok(html.includes('<video src="/videos/foo/bar.mp4" controls></video>'));
   });
 
-  test('<video> 以外の生 HTML は raw のまま (副作用なし)', async () => {
+  test('<video> が含まれない raw HTML はそのまま raw として残される (副作用なし)', async () => {
     const html = await processMarkdown('<details><summary>title</summary>body</details>\n');
     assert.ok(html.includes('<details><summary>title</summary>body</details>'));
   });
@@ -42,7 +46,7 @@ describe('handleHtml', () => {
     assert.ok(html.includes('<videos>list</videos>'));
   });
 
-  test('<figure><video><figcaption></figure> 全体が element 化される', async () => {
+  test('<figure><video><figcaption></figure> 全体が element に展開される', async () => {
     const md =
       '<figure>\n  <video src="/videos/x/y.mp4" controls></video>\n  <figcaption>cap</figcaption>\n</figure>\n';
     const html = await processMarkdown(md);
@@ -51,7 +55,7 @@ describe('handleHtml', () => {
     assert.ok(html.includes('<figcaption>cap</figcaption>'));
   });
 
-  test('video raw と video を含まない raw が混在しても、video 以外は raw のまま', async () => {
+  test('1 つの markdown に video raw と video を含まない raw が混在しても、video 以外は raw のまま', async () => {
     const md = '<details>note</details>\n\n<video src="/videos/a/b.mp4" controls></video>\n';
     const html = await processMarkdown(md);
     assert.ok(html.includes('<details>note</details>'));
@@ -74,7 +78,7 @@ describe('handleHtml', () => {
 
   test('rehype-image-cdn と連結すると <video src="/videos/..."> が CDN URL に書き換わる (パイプライン統合)', async () => {
     const md = '<video src="/videos/foo/bar.mp4" controls playsinline preload="metadata"></video>\n';
-    const html = await processWithImageCdn(md, 'https://images.example.com');
+    const html = await processMarkdownWithImageCdn(md, 'https://images.example.com');
     assert.ok(html.includes('src="https://images.example.com/videos/foo/bar.mp4"'));
   });
 });

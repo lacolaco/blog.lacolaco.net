@@ -10,7 +10,7 @@ import remarkBreaks from 'remark-breaks';
 import remarkMath from 'remark-math';
 import remarkEmbed from './tools/remark-embed';
 import rehypeImageCdn from './tools/rehype-image-cdn';
-import { handleHtml } from './tools/markdown-html-handlers/handle-html';
+import rehypeExtractVideoHtml from './tools/rehype-extract-video-html';
 
 import node from '@astrojs/node';
 
@@ -45,11 +45,11 @@ export default defineConfig({
   markdown: {
     gfm: true,
     remarkPlugins: [remarkBreaks, remarkMath, remarkEmbed],
-    // mdast→hast 変換時、<video> を含む生 HTML だけ element に展開する
-    // (notion-sync が出力する <video> を後段 rehype-image-cdn から見えるようにする)。
-    // <video> 以外の生 HTML は従来どおり raw のまま流して副作用を避ける
-    remarkRehype: { handlers: { html: handleHtml } },
+    // rehypeExtractVideoHtml は notion-sync が出力する <video> を含む raw ノードのみを
+    // element 化する最小スコープのプラグイン。後段の rehype-image-cdn が <video> を
+    // visit できるようにするため先頭に置く。<video> を含まない raw HTML には触れない
     rehypePlugins: [
+      rehypeExtractVideoHtml,
       rehypeGithubEmoji,
       rehypeGithubAlert,
       rehypeKatex,
