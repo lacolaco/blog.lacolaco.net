@@ -6,6 +6,7 @@ import rehypeGithubAlert from 'rehype-github-alert';
 import rehypeGithubEmoji from 'rehype-github-emoji';
 import rehypeKatex from 'rehype-katex';
 import rehypeMermaid from 'rehype-mermaid';
+import { handleHtml } from './tools/markdown-html-handlers/handle-html';
 import remarkBreaks from 'remark-breaks';
 import remarkMath from 'remark-math';
 import remarkEmbed from './tools/remark-embed';
@@ -44,7 +45,17 @@ export default defineConfig({
   markdown: {
     gfm: true,
     remarkPlugins: [remarkBreaks, remarkMath, remarkEmbed],
-    rehypePlugins: [rehypeGithubEmoji, rehypeGithubAlert, rehypeKatex, [rehypeMermaid, { strategy: 'pre-mermaid' }], rehypeImageCdn],
+    // mdast→hast 変換時、<video> を含む生 HTML だけ element に展開する
+    // (notion-sync が出力する <video> を後段 rehype-image-cdn から見えるようにする)。
+    // <video> 以外の生 HTML は従来どおり raw のまま流して副作用を避ける
+    remarkRehype: { handlers: { html: handleHtml } },
+    rehypePlugins: [
+      rehypeGithubEmoji,
+      rehypeGithubAlert,
+      rehypeKatex,
+      [rehypeMermaid, { strategy: 'pre-mermaid' }],
+      rehypeImageCdn,
+    ],
     syntaxHighlight: {
       type: 'shiki',
       excludeLangs: ['mermaid', 'math'],

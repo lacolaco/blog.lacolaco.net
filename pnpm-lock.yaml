@@ -47,6 +47,9 @@ importers:
       escape-html:
         specifier: ^1.0.3
         version: 1.0.3
+      hast-util-from-html:
+        specifier: ^2.0.3
+        version: 2.0.3
       katex:
         specifier: 0.16.45
         version: 0.16.45
@@ -1016,6 +1019,9 @@ packages:
     resolution: {integrity: sha512-zw6UQvTgpCe5VmAo0qmQzXnog0vrdSgH2/5EL1GVoc+xiGUEhX/IN2uy/Hx+KyH80KjyIh2Rr6Yt7M+FkBqHQw==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/15.1.0/5ff8d4b92a9f8698913d57577141ffa5e554aefa}
     peerDependencies:
       js-yaml: ^4.0.0
+    peerDependenciesMeta:
+      js-yaml:
+        optional: true
 
   '@mermaid-js/parser@1.1.0':
     resolution: {integrity: sha512-gxK9ZX2+Fex5zu8LhRQoMeMPEHbc73UKZ0FQ54YrQtUxE1VVhMwzeNtKRPAu5aXks4FasbMe4xB4bWrmq6Jlxw==}
@@ -5281,12 +5287,13 @@ snapshots:
       '@notionhq/client': 5.20.0
       cli-progress: 3.12.0
       consola: 3.4.2
-      js-yaml: 4.1.1
       p-limit: 7.2.0
       p-retry: 7.1.1
       tslib: 2.8.1
       unist-util-visit: 5.1.0
       zod: 4.3.6
+    optionalDependencies:
+      js-yaml: 4.1.1
 
   '@mermaid-js/parser@1.1.0':
     dependencies:
