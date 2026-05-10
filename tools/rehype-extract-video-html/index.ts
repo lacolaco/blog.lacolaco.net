@@ -9,9 +9,12 @@ import { SKIP, visit } from 'unist-util-visit';
 // element 化されて意図しない副作用 (属性正規化など) が広範に出るため、`<video>` を
 // 含む raw ノードのみを最小スコープで element に展開する。
 //
-// `i` フラグで `<VIDEO>` や `<Video>` も拾う (notion-sync 自体は小文字タグを吐くが、
-// 将来別経路から大文字タグが流入してもサイレントに raw に落ちないよう保険)
-const VIDEO_TAG_PATTERN = /<video[\s/>]/i;
+// notion-sync の出力 (`<video src="/videos/{slug}/{file}" ...>`) を identify する。
+// 単純な `<video` 部分一致だと説明テキスト (`<p>The <video> tag</p>`) や HTML コメント
+// (`<!-- <video> sample -->`) も誤検知し、fromHtml が周囲の <p> を取り込んで
+// レンダリングが壊れる。`<video` 直後に空白 + src 属性 + `/videos/` パスを要求して
+// notion-sync 由来の <video> だけにマッチさせる。`i` フラグで <VIDEO>/<Video> も拾う
+const VIDEO_TAG_PATTERN = /<video\s[^>]*\bsrc=["']\/videos\//i;
 
 const rehypeExtractVideoHtml: Plugin<[], Root> = () => {
   return (tree: Root) => {

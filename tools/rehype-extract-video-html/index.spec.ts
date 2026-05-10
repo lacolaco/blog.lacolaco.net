@@ -42,8 +42,28 @@ describe('rehypeExtractVideoHtml', () => {
   });
 
   test('`<videos>` や `<videoplayer>` のような前方一致タグは raw のままにする', async () => {
-    const html = await processMarkdown('<videos>list</videos>\n');
-    assert.ok(html.includes('<videos>list</videos>'));
+    const videos = await processMarkdown('<videos>list</videos>\n');
+    assert.ok(videos.includes('<videos>list</videos>'));
+    const player = await processMarkdown('<videoplayer src="/videos/x/y.mp4">test</videoplayer>\n');
+    assert.ok(player.includes('<videoplayer src="/videos/x/y.mp4">test</videoplayer>'));
+  });
+
+  test('説明テキスト中の `<video>` は誤検知しない (raw のまま)', async () => {
+    const md = '<p>The <video> tag is described in the HTML spec.</p>\n';
+    const html = await processMarkdown(md);
+    assert.ok(html.includes('<p>The <video> tag is described in the HTML spec.</p>'));
+  });
+
+  test('HTML コメント中の <video> 言及は誤検知しない (raw のまま)', async () => {
+    const md = '<!-- <video src="/videos/foo/bar.mp4"> sample -->\n';
+    const html = await processMarkdown(md);
+    assert.ok(html.includes('<!-- <video src="/videos/foo/bar.mp4"> sample -->'));
+  });
+
+  test('src が `/videos/` 以外を指す <video> は raw のまま (notion-sync 由来でないものに触らない)', async () => {
+    const md = '<video src="https://other.example.com/v.mp4" controls></video>\n';
+    const html = await processMarkdown(md);
+    assert.ok(html.includes('<video src="https://other.example.com/v.mp4" controls></video>'));
   });
 
   test('<figure><video><figcaption></figure> 全体が element に展開される', async () => {
