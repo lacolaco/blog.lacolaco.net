@@ -20,6 +20,11 @@ const rehypeExtractVideoHtml: Plugin<[], Root> = () => {
   return (tree: Root) => {
     visit(tree, 'raw', (node, index, parent) => {
       if (typeof node.value !== 'string') return;
+      // HTML コメントブロックは展開対象外。fromHtml に通すと raw → comment ノードに
+      // 変換されるため、`raw のまま保持する` 意図とずれる。文字列出力では同じ
+      // ため挙動上の差は出ないが、後段プラグインの ノード type 依存処理を壊さないよう
+      // 早期 return する
+      if (node.value.trimStart().startsWith('<!--')) return;
       if (!VIDEO_TAG_PATTERN.test(node.value)) return;
       if (!parent || typeof index !== 'number') return;
       const fragment = fromHtml(node.value, { fragment: true });
