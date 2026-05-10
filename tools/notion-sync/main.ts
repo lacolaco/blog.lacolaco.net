@@ -248,6 +248,35 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
         filePath: path.join('public/images', metadata.slug, diskFilename),
       };
     },
+    // 動画は git 管理外。Notion CDN → ローカル一時ディレクトリ → R2 → CDN 経由配信。
+    // markdown には CDN URL を直書きする（rehype 変換に依存しない）。
+    // 画像と運用が異なる理由はファイルサイズ特性: 動画は GitHub の単体100MB上限に抵触しうるため
+    getVideoOutput: (video, metadata) => {
+      const cdnBaseUrl = process.env.IMAGE_CDN_BASE_URL?.replace(/\/$/, '');
+      if (!cdnBaseUrl) {
+        throw new Error('IMAGE_CDN_BASE_URL is required to sync file-type videos (markdown writes CDN URL directly).');
+      }
+      const rawSegment = video.url.split('?')[0].split('#')[0].split('/').pop() ?? '';
+      const nfcFilename = decodeURIComponent(rawSegment).normalize('NFC');
+      const dotIndex = nfcFilename.lastIndexOf('.');
+      const rawName = dotIndex > 0 ? nfcFilename.substring(0, dotIndex) : nfcFilename;
+      const ext = dotIndex > 0 ? nfcFilename.substring(dotIndex + 1).toLowerCase() : 'mp4';
+      // 防御的処理:
+      // 1. URL末尾セグメント抽出に失敗した場合 (rawName='') は blockId 短縮形をフォールバック
+      //    ('' のままだと R2 キーが '.{hash}.mp4' とドット始まりになる)
+      // 2. decodeURIComponent で '%2F' が '/' に展開されたケースに備えてスラッシュを除去
+      //    (path.join 経由で意図しないサブディレクトリが作られるのを防ぐ)
+      const safeName = (rawName || video.blockId.substring(0, 8)).replace(/\//g, '_');
+      const hash = createHash('sha256').update(video.blockId).digest('hex').substring(0, 16);
+      const diskFilename = `${safeName}.${hash}.${ext}`;
+      const encodedFilename = `${encodeURIComponent(safeName)}.${hash}.${ext}`;
+      return {
+        src: `${cdnBaseUrl}/videos/${metadata.slug}/${encodedFilename}`,
+        // r2-sync が `.tmp/r2-staging` を root として relative path をキー化するため、
+        // R2 上では `videos/{slug}/{filename}` として配置される
+        filePath: path.join('.tmp/r2-staging/videos', metadata.slug, diskFilename),
+      };
+    },
     blockRenderers: {
       // Mermaid図の検出
       code: (block, context: RenderContext<FeatureState>, defaultRenderer) => {

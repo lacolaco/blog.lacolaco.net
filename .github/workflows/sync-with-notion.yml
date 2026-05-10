@@ -42,6 +42,8 @@ jobs:
         env:
           NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+          # file 型 video の markdown 出力で CDN URL を直書きするため必要 (deploy 時と同じ値を使う)
+          IMAGE_CDN_BASE_URL: ${{ vars.IMAGE_CDN_BASE_URL }}
 
       - name: Auto-translate ja → en for flagged articles
         run: pnpm run auto-translate
@@ -50,6 +52,17 @@ jobs:
 
       - name: Sync images to Cloudflare R2
         run: pnpm r2-sync public/images
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+
+      # 動画は git 管理外: notion-sync の getVideoOutput が `.tmp/r2-staging/videos/{slug}/...` に保存し、ここで R2 へ送る。
+      # `.tmp/r2-staging` への書き込みは getVideoOutput のみ。他ツールが流入すると意図しないアップロードが発生するので注意。
+      # r2-sync は引数のディレクトリ配下を relative path でキー化するため、R2 上では `videos/{slug}/{filename}` になる
+      - name: Sync videos to Cloudflare R2
+        run: pnpm r2-sync .tmp/r2-staging
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
