@@ -249,13 +249,11 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
       };
     },
     // 動画は git 管理外。Notion CDN → ローカル一時ディレクトリ → R2 → CDN 経由配信。
-    // markdown には CDN URL を直書きする（rehype 変換に依存しない）。
-    // 画像と運用が異なる理由はファイルサイズ特性: 動画は GitHub の単体100MB上限に抵触しうるため
+    // markdown には `/videos/...` 相対パスを書き、画像と同じく rehype-image-cdn が
+    // ビルド時に CDN URL へ書き換える（notion-sync は CDN URL を知らない）。
+    // 画像との運用差はファイルサイズ特性のみ: 動画は GitHub の単体100MB上限に抵触しうるため
+    // public/ 直下ではなく `.tmp/r2-staging/` (gitignore 済み) に staging する
     getVideoOutput: (video, metadata) => {
-      const cdnBaseUrl = process.env.IMAGE_CDN_BASE_URL?.replace(/\/$/, '');
-      if (!cdnBaseUrl) {
-        throw new Error('IMAGE_CDN_BASE_URL is required to sync file-type videos (markdown writes CDN URL directly).');
-      }
       const rawSegment = video.url.split('?')[0].split('#')[0].split('/').pop() ?? '';
       // 不正なパーセントエンコード (例: '%GH') を含む URL でも sync 全体を止めないよう防御
       let decoded: string;
@@ -272,8 +270,7 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
       // 1. URL末尾セグメント抽出に失敗した場合 (rawName='') は blockId 短縮形をフォールバック
       //    ('' のままだと R2 キーが '.{hash}.mp4' とドット始まりになる)
       // 2. URL/filesystem unsafe 文字 (スペース・日本語・記号など) を _ に置換し、R2 キー (filePath)
-      //    と CDN URL (src) のファイル名を完全一致させる。CDN がパスのパーセントデコードを
-      //    行うかどうかに依存しないので 404 リスクを排除できる
+      //    と markdown 上の src (= rehype 変換後の CDN URL) のファイル名を完全一致させる
       // 3. ext も同じ理由でサニタイズ (NFC 正規化は ASCII を保証しないため、'video.動画' のような
       //    非ASCII拡張子があると同じ不整合が起きる)
       const safeName = (rawName || video.blockId.substring(0, 8)).replace(/[^a-zA-Z0-9._-]/g, '_');
@@ -281,7 +278,7 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
       const hash = createHash('sha256').update(video.blockId).digest('hex').substring(0, 16);
       const filename = `${safeName}.${hash}.${ext}`;
       return {
-        src: `${cdnBaseUrl}/videos/${metadata.slug}/${filename}`,
+        src: `/videos/${metadata.slug}/${filename}`,
         // r2-sync が `.tmp/r2-staging` を root として relative path をキー化するため、
         // R2 上では `videos/{slug}/${filename}` として配置される
         filePath: path.join('.tmp/r2-staging/videos', metadata.slug, filename),

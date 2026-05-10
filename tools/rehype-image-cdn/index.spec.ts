@@ -214,6 +214,53 @@ describe('rehypeImageCdn', () => {
     });
   });
 
+  describe('video 要素', () => {
+    test('/videos/ で始まる src が CDN URL に書き換えられる', async () => {
+      const output = await processHtml(
+        '<video src="/videos/test/sample.abc123.mp4" controls playsinline preload="metadata"></video>',
+        { baseUrl: CDN_BASE_URL },
+      );
+      assert.ok(output.includes(`src="${CDN_BASE_URL}/videos/test/sample.abc123.mp4"`));
+    });
+
+    test('video には srcset/sizes/width/height/loading/decoding を付与しない', async () => {
+      const output = await processHtml(
+        '<video src="/videos/test/sample.abc123.mp4" controls playsinline preload="metadata"></video>',
+        { baseUrl: CDN_BASE_URL },
+      );
+      assert.ok(!output.includes('srcset'));
+      assert.ok(!output.includes('sizes'));
+      assert.ok(!output.includes('width='));
+      assert.ok(!output.includes('height='));
+      assert.ok(!output.includes('loading='));
+      assert.ok(!output.includes('decoding='));
+    });
+
+    test('既存属性 (controls/playsinline/preload) は維持される', async () => {
+      const output = await processHtml(
+        '<video src="/videos/test/sample.abc123.mp4" controls playsinline preload="metadata"></video>',
+        { baseUrl: CDN_BASE_URL },
+      );
+      assert.ok(output.includes('controls'));
+      assert.ok(output.includes('playsinline'));
+      assert.ok(output.includes('preload="metadata"'));
+    });
+
+    test('外部 URL や `/videos/` 以外で始まる src は変換しない', async () => {
+      const output = await processHtml('<video src="https://example.com/v.mp4" controls></video>', {
+        baseUrl: CDN_BASE_URL,
+      });
+      assert.ok(output.includes('src="https://example.com/v.mp4"'));
+    });
+
+    test('baseUrl 未設定時は src を変更しない', async () => {
+      const output = await processHtml(
+        '<video src="/videos/test/sample.abc123.mp4" controls playsinline preload="metadata"></video>',
+      );
+      assert.ok(output.includes('src="/videos/test/sample.abc123.mp4"'));
+    });
+  });
+
   describe('JPG/JPEG/WebP 対応', () => {
     test('.jpg で srcset が生成される', async () => {
       const output = await processHtml('<img src="/images/test/photo.jpg" alt="test">', {

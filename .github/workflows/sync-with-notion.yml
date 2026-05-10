@@ -42,8 +42,6 @@ jobs:
         env:
           NOTION_AUTH_TOKEN: ${{ secrets.NOTION_AUTH_TOKEN }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
-          # file 型 video の markdown 出力で CDN URL を直書きするため必要 (deploy 時と同じ値を使う)
-          IMAGE_CDN_BASE_URL: ${{ vars.IMAGE_CDN_BASE_URL }}
 
       - name: Auto-translate ja → en for flagged articles
         run: pnpm run auto-translate
