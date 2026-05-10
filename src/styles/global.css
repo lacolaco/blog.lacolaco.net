@@ -180,6 +180,15 @@
       color: transparent;
     }
 
+    p > video,
+    figure > video {
+      /* YouTube embed と同様、プレーヤーは固定 16:9。動画 natural ratio と異なる場合は object-contain で letterbox */
+      @apply aspect-video w-full h-auto md:max-w-(--breakpoint-md) block mx-auto object-contain;
+      /* dvh フォールバック付き (img と同じプログレッシブエンハンスメント、モバイル Safari の UI 表示時を考慮) */
+      max-height: 75vh;
+      max-height: 75dvh;
+    }
+
     figure {
       @apply flex flex-col items-center;
     }

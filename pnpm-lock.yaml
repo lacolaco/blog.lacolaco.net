@@ -88,8 +88,8 @@ importers:
         specifier: ^1.0.0
         version: 1.2.0
       '@lacolaco/notion-sync':
-        specifier: ^15.0.0
-        version: 15.0.0(js-yaml@4.1.1)
+        specifier: ^15.1.0
+        version: 15.1.0(js-yaml@4.1.1)
       '@notionhq/client':
         specifier: ^5.20.0
         version: 5.20.0
@@ -1012,8 +1012,8 @@ packages:
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
 
-  '@lacolaco/notion-sync@15.0.0':
-    resolution: {integrity: sha512-RpeCAW6Mps5c7mz5s+xySDHEjoVWjX3aADmYpr2MXiCsLaLBEB08J6xkJFZo3spXOhc6/oK/xNuAH7upStSKbA==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/15.0.0/b2745df18773df27984083f2f647aa64bc49b049}
+  '@lacolaco/notion-sync@15.1.0':
+    resolution: {integrity: sha512-zw6UQvTgpCe5VmAo0qmQzXnog0vrdSgH2/5EL1GVoc+xiGUEhX/IN2uy/Hx+KyH80KjyIh2Rr6Yt7M+FkBqHQw==, tarball: https://npm.pkg.github.com/download/@lacolaco/notion-sync/15.1.0/5ff8d4b92a9f8698913d57577141ffa5e554aefa}
     peerDependencies:
       js-yaml: ^4.0.0
 
@@ -5276,7 +5276,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@lacolaco/notion-sync@15.0.0(js-yaml@4.1.1)':
+  '@lacolaco/notion-sync@15.1.0(js-yaml@4.1.1)':
     dependencies:
       '@notionhq/client': 5.20.0
       cli-progress: 3.12.0

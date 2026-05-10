@@ -56,6 +56,17 @@ jobs:
           R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
 
+      # 動画は git 管理外: notion-sync の getVideoOutput が `.tmp/r2-staging/videos/{slug}/...` に保存し、ここで R2 へ送る。
+      # `.tmp/r2-staging` への書き込みは getVideoOutput のみ。他ツールが流入すると意図しないアップロードが発生するので注意。
+      # r2-sync は引数のディレクトリ配下を relative path でキー化するため、R2 上では `videos/{slug}/{filename}` になる
+      - name: Sync videos to Cloudflare R2
+        run: pnpm r2-sync .tmp/r2-staging
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
