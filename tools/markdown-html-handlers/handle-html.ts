@@ -11,7 +11,10 @@ import { fromHtml } from 'hast-util-from-html';
 // remark-rehype は raw 戻り値を allowDangerousHtml: true 前提で扱うため、
 // `{ type: 'raw', value }` をそのまま返してよい。型上は raw が標準 hast の
 // ElementContent 列挙にないため as cast で吸収する。
-const VIDEO_TAG_PATTERN = /<video[\s/>]/;
+//
+// `i` フラグで `<VIDEO>` や `<Video>` も拾う (notion-sync 自体は小文字タグを
+// 吐くが、将来別経路から大文字タグが流入してもサイレントに raw に落ちないよう保険)
+const VIDEO_TAG_PATTERN = /<video[\s/>]/i;
 
 interface MdastHtmlNode {
   type: 'html';

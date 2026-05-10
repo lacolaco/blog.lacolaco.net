@@ -65,6 +65,13 @@ describe('handleHtml', () => {
     assert.ok(html.includes('<img src="/images/x/y.png" alt="alt">'));
   });
 
+  test('大文字の <VIDEO> や <Video> も element 化される (case-insensitive)', async () => {
+    const upper = await processMarkdown('<VIDEO src="/videos/u/up.mp4" controls></VIDEO>\n');
+    assert.ok(upper.includes('<video src="/videos/u/up.mp4" controls></video>'));
+    const mixed = await processMarkdown('<Video src="/videos/m/mx.mp4" controls></Video>\n');
+    assert.ok(mixed.includes('<video src="/videos/m/mx.mp4" controls></video>'));
+  });
+
   test('rehype-image-cdn と連結すると <video src="/videos/..."> が CDN URL に書き換わる (パイプライン統合)', async () => {
     const md = '<video src="/videos/foo/bar.mp4" controls playsinline preload="metadata"></video>\n';
     const html = await processWithImageCdn(md, 'https://images.example.com');

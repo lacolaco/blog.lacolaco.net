@@ -6,11 +6,11 @@ import rehypeGithubAlert from 'rehype-github-alert';
 import rehypeGithubEmoji from 'rehype-github-emoji';
 import rehypeKatex from 'rehype-katex';
 import rehypeMermaid from 'rehype-mermaid';
-import { handleHtml } from './tools/markdown-html-handlers/handle-html';
 import remarkBreaks from 'remark-breaks';
 import remarkMath from 'remark-math';
 import remarkEmbed from './tools/remark-embed';
 import rehypeImageCdn from './tools/rehype-image-cdn';
+import { handleHtml } from './tools/markdown-html-handlers/handle-html';
 
 import node from '@astrojs/node';
 
