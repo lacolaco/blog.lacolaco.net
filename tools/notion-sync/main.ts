@@ -3,11 +3,11 @@ import { jsYamlSerializer } from '@lacolaco/notion-sync/serializers/yaml';
 import { Client, isFullPage } from '@notionhq/client';
 import { TZDate } from '@date-fns/tz';
 import { format } from 'date-fns';
-import { createHash } from 'node:crypto';
 import * as path from 'node:path';
 import { parseArgs } from 'node:util';
 import { extractAutoTranslate, frontmatterAutoTranslate } from './auto-translate-flag.ts';
 import { resolveCanonicalUrl } from './canonical-url.ts';
+import { deriveAssetFilename } from './asset-filename.ts';
 
 // Notion DBプロパティのスキーマ。get(name)の戻り値型をここで定義する
 type BlogPostDatasource = {
@@ -233,19 +233,10 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
       };
     },
     getImageOutput: (image, metadata) => {
-      // Notion URLからファイル名を抽出し、URLデコード→NFC正規化
-      const rawSegment = image.url.split('?')[0].split('#')[0].split('/').pop() ?? '';
-      const nfcFilename = decodeURIComponent(rawSegment).normalize('NFC');
-      const dotIndex = nfcFilename.lastIndexOf('.');
-      const name = dotIndex > 0 ? nfcFilename.substring(0, dotIndex) : nfcFilename;
-      const ext = dotIndex > 0 ? nfcFilename.substring(dotIndex + 1).toLowerCase() : 'png';
-      const hash = createHash('sha256').update(image.blockId).digest('hex').substring(0, 16);
-      const diskFilename = `${name}.${hash}.${ext}`;
-      // srcはURLエンコード（既存markdownとの互換性維持）、filePathはデコード済みNFC
-      const encodedFilename = `${encodeURIComponent(name)}.${hash}.${ext}`;
+      const filename = deriveAssetFilename(image.url, image.blockId, 'png');
       return {
-        src: `/images/${metadata.slug}/${encodedFilename}`,
-        filePath: path.join('public/images', metadata.slug, diskFilename),
+        src: `/images/${metadata.slug}/${filename}`,
+        filePath: path.join('public/images', metadata.slug, filename),
       };
     },
     // 動画は git 管理外。Notion CDN → ローカル一時ディレクトリ → R2 → CDN 経由配信。
@@ -254,29 +245,7 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
     // 画像との運用差はファイルサイズ特性のみ: 動画は GitHub の単体100MB上限に抵触しうるため
     // public/ 直下ではなく `.tmp/r2-staging/` (gitignore 済み) に staging する
     getVideoOutput: (video, metadata) => {
-      const rawSegment = video.url.split('?')[0].split('#')[0].split('/').pop() ?? '';
-      // 不正なパーセントエンコード (例: '%GH') を含む URL でも sync 全体を止めないよう防御
-      let decoded: string;
-      try {
-        decoded = decodeURIComponent(rawSegment);
-      } catch {
-        decoded = rawSegment;
-      }
-      const nfcFilename = decoded.normalize('NFC');
-      const dotIndex = nfcFilename.lastIndexOf('.');
-      const rawName = dotIndex > 0 ? nfcFilename.substring(0, dotIndex) : nfcFilename;
-      const rawExt = dotIndex > 0 ? nfcFilename.substring(dotIndex + 1).toLowerCase() : 'mp4';
-      // 防御的処理:
-      // 1. URL末尾セグメント抽出に失敗した場合 (rawName='') は blockId 短縮形をフォールバック
-      //    ('' のままだと R2 キーが '.{hash}.mp4' とドット始まりになる)
-      // 2. URL/filesystem unsafe 文字 (スペース・日本語・記号など) を _ に置換し、R2 キー (filePath)
-      //    と markdown 上の src (= rehype 変換後の CDN URL) のファイル名を完全一致させる
-      // 3. ext も同じ理由でサニタイズ (NFC 正規化は ASCII を保証しないため、'video.動画' のような
-      //    非ASCII拡張子があると同じ不整合が起きる)
-      const safeName = (rawName || video.blockId.substring(0, 8)).replace(/[^a-zA-Z0-9._-]/g, '_');
-      const ext = rawExt.replace(/[^a-zA-Z0-9-]/g, '_');
-      const hash = createHash('sha256').update(video.blockId).digest('hex').substring(0, 16);
-      const filename = `${safeName}.${hash}.${ext}`;
+      const filename = deriveAssetFilename(video.url, video.blockId, 'mp4');
       return {
         src: `/videos/${metadata.slug}/${filename}`,
         // r2-sync が `.tmp/r2-staging` を root として relative path をキー化するため、
