@@ -267,14 +267,17 @@ const result = await syncNotionDatasource<BlogPostMetadata, BlogPostDatasource>(
       const nfcFilename = decoded.normalize('NFC');
       const dotIndex = nfcFilename.lastIndexOf('.');
       const rawName = dotIndex > 0 ? nfcFilename.substring(0, dotIndex) : nfcFilename;
-      const ext = dotIndex > 0 ? nfcFilename.substring(dotIndex + 1).toLowerCase() : 'mp4';
+      const rawExt = dotIndex > 0 ? nfcFilename.substring(dotIndex + 1).toLowerCase() : 'mp4';
       // 防御的処理:
       // 1. URL末尾セグメント抽出に失敗した場合 (rawName='') は blockId 短縮形をフォールバック
       //    ('' のままだと R2 キーが '.{hash}.mp4' とドット始まりになる)
       // 2. URL/filesystem unsafe 文字 (スペース・日本語・記号など) を _ に置換し、R2 キー (filePath)
       //    と CDN URL (src) のファイル名を完全一致させる。CDN がパスのパーセントデコードを
       //    行うかどうかに依存しないので 404 リスクを排除できる
+      // 3. ext も同じ理由でサニタイズ (NFC 正規化は ASCII を保証しないため、'video.動画' のような
+      //    非ASCII拡張子があると同じ不整合が起きる)
       const safeName = (rawName || video.blockId.substring(0, 8)).replace(/[^a-zA-Z0-9._-]/g, '_');
+      const ext = rawExt.replace(/[^a-zA-Z0-9-]/g, '_');
       const hash = createHash('sha256').update(video.blockId).digest('hex').substring(0, 16);
       const filename = `${safeName}.${hash}.${ext}`;
       return {
