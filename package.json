@@ -42,7 +42,7 @@
     "escape-html": "^1.0.3",
     "hast-util-from-html": "^2.0.3",
     "katex": "0.16.45",
-    "mermaid": "11.14.0",
+    "mermaid": "11.15.0",
     "p-retry": "^8.0.0",
     "react": "19.2.6",
     "react-dom": "19.2.6",
