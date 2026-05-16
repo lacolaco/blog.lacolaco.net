@@ -95,7 +95,7 @@ importers:
         version: 15.1.0(js-yaml@4.1.1)
       '@notionhq/client':
         specifier: ^5.20.0
-        version: 5.20.0
+        version: 5.21.0
       '@tailwindcss/vite':
         specifier: ^4.1.4
         version: 4.3.0(vite@7.3.2(@types/node@24.12.3)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.99.0)(tsx@4.21.0)(yaml@2.9.0))
@@ -1014,8 +1014,8 @@ packages:
   '@nodable/entities@2.1.0':
     resolution: {integrity: sha512-nyT7T3nbMyBI/lvr6L5TyWbFJAI9FTgVRakNoBqCD+PmID8DzFrrNdLLtHMwMszOtqZa8PAOV24ZqDnQrhQINA==}
 
-  '@notionhq/client@5.20.0':
-    resolution: {integrity: sha512-MS0DFSfHPLZ0wi+e9mOP16gCCYbWAkaiMuu/rVK9KxDlKac4oAgHReOfTglcd77g/nlg78snp+KB7fNWP75bEw==}
+  '@notionhq/client@5.21.0':
+    resolution: {integrity: sha512-X+T+hzaQFleOUGm4xUOUm51pOpdZ1+6T4BsRjGlcdEOTJLNkUEv8nZATq9O3ZY4NQEgICc0qwQ0I25OdYprX0w==}
     engines: {node: '>=18'}
 
   '@oslojs/encoding@1.1.0':
@@ -5177,7 +5177,7 @@ snapshots:
 
   '@lacolaco/notion-sync@15.1.0(js-yaml@4.1.1)':
     dependencies:
-      '@notionhq/client': 5.20.0
+      '@notionhq/client': 5.21.0
       cli-progress: 3.12.0
       consola: 3.4.2
       js-yaml: 4.1.1
@@ -5193,7 +5193,7 @@ snapshots:
 
   '@nodable/entities@2.1.0': {}
 
-  '@notionhq/client@5.20.0': {}
+  '@notionhq/client@5.21.0': {}
 
   '@oslojs/encoding@1.1.0': {}
 
