@@ -3,12 +3,11 @@ title: 'v-tokyo#22 でAngularのSignalsについて話します'
 slug: 'v-tokyo-22-pre'
 icon: ''
 created_time: '2025-03-03T23:40:00.000Z'
-last_edited_time: '2026-03-28T16:53:00.000Z'
+last_edited_time: '2026-05-18T01:57:00.000Z'
 tags:
-  - '登壇'
+  - 'Speaking'
 published: true
 locale: 'ja'
-category: 'Diary'
 channels:
   - 'Life'
 notion_url: 'https://www.notion.so/v-tokyo-22-Angular-Signals-1ab3521b014a80fbb2b3edfd08438071'
