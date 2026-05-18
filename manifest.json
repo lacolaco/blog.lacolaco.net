@@ -216,8 +216,11 @@
     "filePath": "src/content/post/notion/weekly-commits-on-angular-2025-03-05.md"
   },
   "1ab3521b-014a-80fb-b2b3-edfd08438071": {
-    "lastModified": "2026-03-28T16:53:00.000Z",
-    "filePath": "src/content/post/notion/v-tokyo-22-pre.md"
+    "lastModified": "2026-05-18T01:57:00.000Z",
+    "filePath": "src/content/post/notion/v-tokyo-22-pre.md",
+    "imagePaths": [
+      "public/images/v-tokyo-22-pre/CleanShot_2025-03-04_at_08.34.512x.20601a1df3446b9d.png"
+    ]
   },
   "1a63521b-014a-808f-9266-e92dc6f86dfc": {
     "lastModified": "2026-03-28T16:53:00.000Z",
@@ -1415,5 +1418,9 @@
       "public/images/20260511193100/1000008725.1b716320ef669744.jpg",
       "public/images/20260511193100/1000008727.dedcfeda89dac5dd.jpg"
     ]
+  },
+  "3643521b-014a-8043-8264-c9ce0508397a": {
+    "lastModified": "2026-05-18T01:58:00.000Z",
+    "filePath": "src/content/post/notion/presenting-at-tskaigi-2026-day2.md"
   }
 }
