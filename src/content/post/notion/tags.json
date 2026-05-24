@@ -658,5 +658,11 @@
     "name": "TTS",
     "color": "green",
     "description": null
+  },
+  {
+    "id": "13e94606-46bb-411a-9be7-50f803ecba5b",
+    "name": "TSKaigi",
+    "color": "default",
+    "description": null
   }
 ]
