@@ -175,7 +175,9 @@ export async function fetchPageMetadata(url: string): Promise<PageMetadata> {
         title: url,
         description: '',
         imageUrl: null,
-        cacheControl: response.headers.get('cache-control'),
+        // Cache-Control 未設定 (PDF 等で一般的) なら catch ブロックの fallback と
+        // 揃えて短期間 must-revalidate にする。毎リクエスト再 fetch を避ける
+        cacheControl: response.headers.get('cache-control') ?? 'max-age=60, must-revalidate',
       };
     }
 

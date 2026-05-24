@@ -180,9 +180,27 @@ describe('fetchPageMetadata', () => {
       title: 'https://example.com/file.pdf',
       description: '',
       imageUrl: null,
-      cacheControl: null,
+      // Cache-Control 未設定なので catch fallback と同じデフォルトに揃える
+      cacheControl: 'max-age=60, must-revalidate',
     });
     expect(cancel).toHaveBeenCalled();
+  });
+
+  it('content-type が HTML 以外 + Cache-Control ヘッダあり → サーバー指定値を尊重する', async () => {
+    const cancel = vi.fn().mockResolvedValue(undefined);
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      headers: new Headers({
+        'content-type': 'application/pdf',
+        'cache-control': 'public, max-age=86400',
+      }),
+      body: { cancel } as unknown as ReadableStream<Uint8Array>,
+    });
+
+    const result = await fetchPageMetadata('https://example.com/file.pdf');
+
+    expect(result.cacheControl).toBe('public, max-age=86400');
   });
 
   it('streaming で </head> を見つけた時点で body 読み込みを打ち切る (巨大HTML対策)', async () => {
