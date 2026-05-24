@@ -1420,11 +1420,18 @@
     ]
   },
   "3643521b-014a-8043-8264-c9ce0508397a": {
-    "lastModified": "2026-05-18T01:58:00.000Z",
+    "lastModified": "2026-05-24T10:23:00.000Z",
     "filePath": "src/content/post/notion/presenting-at-tskaigi-2026-day2.md"
   },
   "36a3521b-014a-8024-ac6a-c60c81512378": {
-    "lastModified": "2026-05-24T10:21:00.000Z",
+    "lastModified": "2026-05-24T10:27:00.000Z",
     "filePath": "src/content/post/notion/tskaigi-2026-deck.md"
+  },
+  "3643521b-014a-8007-be1d-c2c7d5c1ee7a": {
+    "lastModified": "2026-05-24T11:37:00.000Z",
+    "filePath": "src/content/post/notion/balancing-coupling-in-software-design.md",
+    "imagePaths": [
+      "public/images/balancing-coupling-in-software-design/image.a6f37cb171b3f864.png"
+    ]
   }
 }
