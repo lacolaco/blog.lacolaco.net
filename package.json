@@ -17,7 +17,6 @@
     "astro": "astro",
     "notion-sync": "tsx --env-file .env tools/notion-sync/main.ts",
     "auto-translate": "tsx --env-file .env tools/auto-translate/main.ts",
-    "r2-sync": "tsx --env-file .env tools/r2-sync/main.ts",
     "test:tools": "tsx --test --test-reporter spec tools/**/*.spec.ts",
     "test:remark-embed": "tsx --test --test-reporter spec tools/remark-embed/**/*.spec.ts",
     "test:libs": "vitest run",
@@ -51,7 +50,6 @@
     "yaml": "^2.8.0"
   },
   "devDependencies": {
-    "@aws-sdk/client-s3": "^3.967.0",
     "@eslint/js": "^10.0.1",
     "@google/genai": "^2.0.0",
     "@iconify/json": "^2.2.161",
@@ -66,7 +64,6 @@
     "@types/gtag.js": "^0.0.20",
     "@types/js-yaml": "^4.0.9",
     "@types/katex": "0.16.8",
-    "@types/mime-types": "^3.0.1",
     "@types/node": "24.12.4",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
@@ -75,7 +72,6 @@
     "image-size": "^2.0.2",
     "js-yaml": "^4.1.1",
     "jsdom": "^29.0.2",
-    "mime-types": "^3.0.2",
     "prettier": "3.8.3",
     "rehype": "^13.0.2",
     "rehype-github-alert": "^1.0.0",
