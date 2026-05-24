@@ -8,6 +8,13 @@ const CHROME_USER_AGENT =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
 const DEFAULT_USER_AGENT = 'blog.lacolaco.net';
 
+// OGP/meta は <head> 内で完結するため body 全部は読まない。
+// 巨大な SPA / Google Slides 等 (20MB+) を丸ごと cheerio.load すると Cloud Run の
+// メモリと request timeout を食い潰して 503 になる。streaming で </head> を見つけたら
+// 即 abort し、見つからなくても上限 byte で打ち切る (head 終端不明な壊れた HTML の保険)
+const MAX_HTML_BYTES = 512 * 1024; // 512 KB
+const HEAD_END_PATTERN = /<\/head\s*>/i;
+
 // 型定義
 export interface PageMetadata {
   title: string;
@@ -66,6 +73,45 @@ function extractImageUrl($: CheerioAPI, baseUrl: string): string | null {
   }
 }
 
+// response body を <head> 終端 or 上限 byte まで streaming で読む。
+// body プロパティが存在しない場合 (テストの簡易 mock 等) は従来通り text() に fallback。
+async function readHtmlHead(res: Response): Promise<string> {
+  if (!res.body) {
+    return await res.text();
+  }
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder('utf-8');
+  let total = 0;
+  let acc = '';
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      total += value.byteLength;
+      acc += decoder.decode(value, { stream: true });
+      const idx = acc.search(HEAD_END_PATTERN);
+      if (idx !== -1) {
+        // </head> までを切り出して残りは読み捨て
+        const endIdx = acc.indexOf('>', idx) + 1;
+        acc = acc.slice(0, endIdx);
+        break;
+      }
+      if (total >= MAX_HTML_BYTES) {
+        // head 終端を見つけられないまま上限に達した。ここまでで切り上げる
+        break;
+      }
+    }
+    acc += decoder.decode();
+  } finally {
+    try {
+      await reader.cancel();
+    } catch {
+      // cancel が rejected でも本処理には影響しない
+    }
+  }
+  return acc;
+}
+
 export const DEFAULT_CACHE_MAX_AGE = 60 * 60; // 1 hour
 
 export async function fetchPageMetadata(url: string): Promise<PageMetadata> {
@@ -117,7 +163,23 @@ export async function fetchPageMetadata(url: string): Promise<PageMetadata> {
       },
     );
 
-    const html = await response.text();
+    // content-type が HTML 系でなければ metadata 抽出は無意味なので fallback
+    const contentType = response.headers.get('content-type') ?? '';
+    if (contentType && !/text\/html|application\/xhtml/i.test(contentType)) {
+      try {
+        await response.body?.cancel();
+      } catch {
+        // cancel 失敗は無害
+      }
+      return {
+        title: url,
+        description: '',
+        imageUrl: null,
+        cacheControl: response.headers.get('cache-control'),
+      };
+    }
+
+    const html = await readHtmlHead(response);
     const $ = load(html);
 
     return {
