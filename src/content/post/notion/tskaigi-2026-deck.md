@@ -3,11 +3,12 @@ title: 'TSKaigi 2026「いつテストを書くか？」発表資料'
 slug: 'tskaigi-2026-deck'
 icon: ''
 created_time: '2026-05-24T10:21:00.000Z'
-last_edited_time: '2026-05-24T10:21:00.000Z'
+last_edited_time: '2026-05-24T10:27:00.000Z'
 tags:
   - 'Testing'
   - '発表スライド'
   - 'TSKaigi'
+  - 'Speaking'
 published: true
 locale: 'ja'
 channels:
@@ -17,10 +18,8 @@ notion_url: 'https://www.notion.so/TSKaigi-2026-36a3521b014a8024ac6ac60c81512378
 features:
   katex: false
   mermaid: false
-  tweet: true
+  tweet: false
 ---
-
-https://x.com/laco2net/status/2058065903871484015?s=20
 
 5月23日 TSKaigi 2026 にて発表した「いつテストを書くか」の発表資料です。
 
@@ -34,5 +33,5 @@ https://docs.google.com/presentation/d/e/2PACX-1vSuTOMT21i3AsVT0xiy9wZV1h2ZytSbF
 
 https://smarthr.connpass.com/event/392342/
 
-SmartHRさん主催の事後勉強会でLTをします。TSKaigi では時間の都合でカットしたスライドの内容を話します。本編を聞いた前提での延長戦ですね。オンライン配信はないらしいので、興味があれば現地へ。
+SmartHRさん主催の事後勉強会でLTをします。TSKaigi では時間の都合でカットした内容を話します。本編を聞いている前提での延長戦です。オンライン配信はないらしいので、興味があれば現地へ。
 
