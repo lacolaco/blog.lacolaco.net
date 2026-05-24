@@ -3,10 +3,11 @@ title: 'TSKaigi 2026 Day 2で発表します'
 slug: 'presenting-at-tskaigi-2026-day2'
 icon: ''
 created_time: '2026-05-18T01:57:00.000Z'
-last_edited_time: '2026-05-18T01:58:00.000Z'
+last_edited_time: '2026-05-24T10:23:00.000Z'
 tags:
   - 'Testing'
   - 'Speaking'
+  - 'TSKaigi'
 published: true
 locale: 'ja'
 channels:
