@@ -1,8 +1,9 @@
 name: post-sync-processing
 
 # blog-contents から push される notion-sync-from-blog-contents PR が main に
-# merge された後、auto-translate (ja → en) と R2 image sync を実行する。
-# Notion からの取得自体は blog-contents 側 (sync-blog-lacolaco workflow) が担当する。
+# merge された後、auto-translate (ja → en) を実行して翻訳結果を新規 PR で開く。
+# Notion fetch と R2 upload (image / video) は blog-contents 側
+# (sync-blog-lacolaco workflow) が完了済なので、本 workflow では行わない。
 
 on:
   pull_request:
@@ -12,7 +13,7 @@ on:
 
 jobs:
   process:
-    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && contains(github.event.pull_request.head.ref, 'notion-sync-from-blog-contents'))
+    if: github.event_name == 'workflow_dispatch' || (github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'notion-sync-from-blog-contents')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -39,20 +40,12 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
-      - name: Sync images to Cloudflare R2
-        run: pnpm r2-sync public/images
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
-          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          R2_BUCKET_NAME: ${{ secrets.R2_BUCKET_NAME }}
-
       - name: Create PR for translated content
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           token: ${{ steps.generate-token.outputs.token }}
-          commit-message: 'chore: post-sync processing (auto-translate + R2)'
+          commit-message: 'chore: auto-translate (post-sync)'
           branch: post-sync-processing
           delete-branch: true
-          title: 'chore: post-sync processing (auto-translate + R2)'
+          title: 'chore: auto-translate (post-sync)'
           body: 'Automated post-sync from notion-sync-from-blog-contents PR merge'
