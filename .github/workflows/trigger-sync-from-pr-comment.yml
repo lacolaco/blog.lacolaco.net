@@ -11,7 +11,6 @@ jobs:
       pull-requests: write
       issues: write
       checks: read
-      actions: write
     steps:
       - uses: github/command@3442f3fa1efe01bdb024b157083c337902d17372 # v2.0.3
         id: command
@@ -22,17 +21,24 @@ jobs:
           skip_ci: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
           allowlist: lacolaco
-      - name: Trigger Workflow
+
+      - uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
+        if: ${{ steps.command.outputs.continue == 'true' }}
+        id: generate-token
+        with:
+          app-id: ${{ secrets.WORKER_APP_ID }}
+          private-key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}
+          owner: lacolaco
+          repositories: blog-contents
+
+      - name: Trigger sync workflow in blog-contents
         if: ${{ steps.command.outputs.continue == 'true' }}
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
+          github-token: ${{ steps.generate-token.outputs.token }}
           script: |
-            github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'sync-with-notion.yml',
-              ref: 'main',
-              inputs: {
-                forceUpdate: 'false'
-              }
-            })
+            await github.rest.repos.createDispatchEvent({
+              owner: 'lacolaco',
+              repo: 'blog-contents',
+              event_type: 'notion-sync-blog-lacolaco',
+            });
