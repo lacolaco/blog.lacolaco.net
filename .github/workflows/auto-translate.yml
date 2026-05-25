@@ -21,12 +21,10 @@ on:
 jobs:
   translate:
     runs-on: ubuntu-latest
-    # checkout / push / PR 作成は全て App token で完結。GITHUB_TOKEN は
-    # `NODE_AUTH_TOKEN` 経由で GitHub Packages から `@lacolaco/*` を install するためだけに使う。
-    # `permissions:` を明示すると他は全て none なので `packages: read` を明示付与
+    # checkout / push / PR 作成は全て App token で完結。GITHUB_TOKEN は不使用。
+    # `permissions:` を明示すると他は全て none になる
     permissions:
       contents: read
-      packages: read
     steps:
       - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
@@ -45,11 +43,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: 'pnpm'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@lacolaco'
       - run: pnpm install --frozen-lockfile
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # tsx --env-file は対象ファイル不存在で起動失敗するため空 .env で workaround
       - run: touch .env
 

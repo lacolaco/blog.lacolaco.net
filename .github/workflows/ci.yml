@@ -106,11 +106,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: 'pnpm'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@lacolaco'
       - run: pnpm install --frozen-lockfile
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: pnpm run build
 
   lint:
@@ -122,11 +118,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: 'pnpm'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@lacolaco'
       - run: pnpm install --frozen-lockfile
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: pnpm astro sync
       - run: pnpm lint
 
@@ -139,11 +131,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: 'pnpm'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@lacolaco'
       - run: pnpm install --frozen-lockfile
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: pnpm format:check
 
   test:
@@ -155,11 +143,7 @@ jobs:
         with:
           node-version-file: .node-version
           cache: 'pnpm'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@lacolaco'
       - run: pnpm install --frozen-lockfile
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: pnpm test:tools
 
   terraform:
