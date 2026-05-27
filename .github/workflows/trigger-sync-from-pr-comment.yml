@@ -7,8 +7,11 @@ on:
     branches: [main]
 
 # 連打 / 複数 main push を debounce、blog-contents 側 sync workflow の concurrency と協調
+# event_name を group に含めることで comment-trigger と push-trigger が互いを cancel しないようにする
+# (共有 group だと `.sync` コメント実行中に main push が来ると eyes reaction だけ残して
+#  dispatch が無音ドロップされる UX バグになる)
 concurrency:
-  group: dispatch-blog-contents-sync
+  group: dispatch-blog-contents-sync-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
