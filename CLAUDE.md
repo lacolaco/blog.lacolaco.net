@@ -196,7 +196,6 @@ pnpm test:libs    # library tests
 ### Git Operations
 - commit→push→PR→CI watch の不可分性は CRITICAL RULES §2d を参照
 - branch 目的と staged changes の整合性検査は CRITICAL RULES §2c を参照
-- **現在の checkout 以外のブランチで作業する場合は `git wt` (worktree skill) を使え**。`git checkout <other>` は同一リポジトリで並行する別セッションの working tree を破壊するリスクがある。作業起点で `git wt` / `git stash list` を読み、並行作業の signal があれば worktree で隔離する
 - **PRマージ時に`--delete-branch`を付けるな**。リモートブランチはマージ後に自動削除される（GitHub設定）
 - Use git-github-ops agent for complex operations
 - NEVER `git reset --hard` with uncommitted changes you need
