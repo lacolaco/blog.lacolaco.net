@@ -1,0 +1,83 @@
+name: auto-translate
+
+# main に新規 ja content がマージされた後、en 翻訳を生成して別 PR で提案する。
+# consumer 自身が PR 作成者となり、blog-contents 作成 PR には触らない。
+# ci.yml (validation) とは責務 (content 生成) が異なるため別 workflow file で分離。
+# 詳細設計: lacolaco/blog-contents docs/plans/009-extract-public-consumer-syncs.md (Phase 3A Step 4, Option N)
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/content/post/notion/**/*.md'
+      - '!src/content/post/notion/**/*.en.md' # en 自身の変更では起動しない (無限ループ防止)
+  workflow_dispatch:
+    # 任意 SHA に対する手動再実行 (en PR 作成途中の失敗復旧等)
+    inputs:
+      sha:
+        description: 'main の commit SHA (省略時は現在の main HEAD)'
+        required: false
+        type: string
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    # checkout / push / PR 作成は全て App token で完結。GITHUB_TOKEN は不使用。
+    # `permissions:` を明示すると他は全て none になる
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        id: app-token
+        with:
+          app-id: ${{ secrets.WORKER_APP_ID }}
+          private-key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          # workflow_dispatch で sha が指定されていればそれを使い、なければ trigger commit
+          ref: ${{ github.event.inputs.sha || github.sha }}
+          token: ${{ steps.app-token.outputs.token }}
+          fetch-depth: 1
+      - uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version-file: .node-version
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      # tsx --env-file は対象ファイル不存在で起動失敗するため空 .env で workaround
+      - run: touch .env
+
+      - name: Auto-translate ja → en
+        run: pnpm run auto-translate
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: Create PR for translated files
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          COMMIT_SHA: ${{ github.event.inputs.sha || github.sha }}
+        run: |
+          if [[ -z "$(git status --porcelain src/content/post/notion)" ]]; then
+            echo "No translation changes"
+            exit 0
+          fi
+          BRANCH="auto-translate/${COMMIT_SHA}"
+          # 再実行時の冪等性ガード: branch 存在 → PR 状態 (open/closed/merged) の 2 段判定
+          if git ls-remote --exit-code --heads origin "refs/heads/$BRANCH" >/dev/null 2>&1; then
+            PR_COUNT=$(gh pr list --head "$BRANCH" --state all --json number --jq 'length')
+            if [ "$PR_COUNT" -gt 0 ]; then
+              echo "Branch $BRANCH と PR が既存 (open/closed/merged のいずれか)、skipping"
+              exit 0
+            fi
+            echo "Branch $BRANCH exists but no PR record, creating PR only"
+          else
+            git config user.name "lacolaco-actions-worker[bot]"
+            git config user.email "lacolaco-actions-worker[bot]@users.noreply.github.com"
+            git checkout -b "$BRANCH"
+            git add src/content/post/notion
+            git commit -m "chore: auto-translate ja → en for ${COMMIT_SHA}"
+            git push origin "$BRANCH"
+          fi
+          gh pr create --base main --head "$BRANCH" \
+            --title "chore: auto-translate ja → en (${COMMIT_SHA:0:7})" \
+            --body "Automated translation for content merged in ${COMMIT_SHA}."
