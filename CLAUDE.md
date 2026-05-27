@@ -132,6 +132,7 @@ pnpm test:libs    # library tests
 - **メジャーバージョンアップ時は旧知識を全て捨てろ**。新バージョンのREADME/CHANGELOG/Migration Guideを先に読むまで、旧知識に基づく行動（issue作成、方針決定、コード変更）を一切禁止
 
 ### 既存コードの修正ルール
+- **修正前に「このコードが今も必要か」を `git log -- <file>` で問え**。バグ修正タスクでもファイル導入経緯と関連 PR を読み、ワンタイム性 (migration スクリプトの残骸、廃止 feature の遺物、Red phase で導入された後に役割を終えた spec 等) を疑う。存在意義の検証は設計意図の検証より先
 - **既存コードの設計意図を問え**。「なぜそうなっているか」が不明なまま修正するな。根拠がレファレンスに基づくか、根拠がないかで対応が変わる
 - 根拠不明の設計を表面的な修正（コメント追加等）で済ませない。根拠を確認し、正当ならそのまま、不当なら根本から修正する
 - **既存の動作を変更する前に、構成要素間の依存関係を分析せよ**。1つの要素だけ変えて「うまくいくか試す」のは設計ではなく試行錯誤。全組み合わせの挙動を事前に把握してから変更する
@@ -195,6 +196,7 @@ pnpm test:libs    # library tests
 ### Git Operations
 - commit→push→PR→CI watch の不可分性は CRITICAL RULES §2d を参照
 - branch 目的と staged changes の整合性検査は CRITICAL RULES §2c を参照
+- **現在の checkout 以外のブランチで作業する場合は `git wt` (worktree skill) を使え**。`git checkout <other>` は同一リポジトリで並行する別セッションの working tree を破壊するリスクがある。作業起点で `git wt` / `git stash list` を読み、並行作業の signal があれば worktree で隔離する
 - **PRマージ時に`--delete-branch`を付けるな**。リモートブランチはマージ後に自動削除される（GitHub設定）
 - Use git-github-ops agent for complex operations
 - NEVER `git reset --hard` with uncommitted changes you need
