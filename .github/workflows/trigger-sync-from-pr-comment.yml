@@ -1,4 +1,4 @@
-name: trigger-sync-from-pr-comment
+name: trigger-blog-contents-sync
 
 on:
   issue_comment:
