@@ -80,7 +80,7 @@
     "remark-math": "^6.0.0",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
-    "sass": "1.99.0",
+    "sass": "1.100.0",
     "tailwindcss": "4.3.0",
     "tsx": "4.22.3",
     "typescript-eslint": "^8.33.1",
