@@ -1,11 +1,25 @@
-name: trigger-sync-from-pr-comment
+name: trigger-blog-contents-sync
 
 on:
   issue_comment:
     types: [created]
+  push:
+    branches: [main]
+
+# 連打 / 複数 main push を debounce、blog-contents 側 sync workflow の concurrency と協調
+# group キーは以下の 2 軸で scope:
+#   - event_name: comment-trigger と push-trigger が互いを cancel しないように分離
+#   - issue.number (comment 時) / 'push' (push 時): PR ごと / push 全体で独立した group に
+# こうすることで silent-drop UX バグを以下のいずれの軸でも回避できる:
+#   - `.sync` コメント実行中に main push が来ても comment-trigger は cancel されない
+#   - PR #1 の `.sync` 実行中に PR #2 の `.sync` が来ても PR #1 は cancel されない
+concurrency:
+  group: dispatch-blog-contents-sync-${{ github.event_name }}-${{ github.event.issue.number || 'push' }}
+  cancel-in-progress: true
 
 jobs:
-  trigger-sync:
+  comment-trigger:
+    if: github.event_name == 'issue_comment'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -35,6 +49,34 @@ jobs:
 
       - name: Dispatch sync workflow in blog-contents
         if: ${{ steps.command.outputs.continue == 'true' }}
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          github-token: ${{ steps.app-token.outputs.token }}
+          script: |
+            await github.rest.repos.createDispatchEvent({
+              owner: 'lacolaco',
+              repo: 'blog-contents',
+              event_type: 'notion-sync-blog-lacolaco',
+            });
+
+  # main push 時にも dispatch を投げ、blog-contents 側の既存 sync PR を最新 main base で refresh する
+  # (renovate / 人手 PR / sync PR merge → main 更新 → 既存 sync PR が base behind になる問題への対処)
+  push-trigger:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Generate App token (for blog-contents dispatch)
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.WORKER_APP_ID }}
+          private-key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}
+          owner: lacolaco
+          repositories: blog-contents
+
+      - name: Dispatch sync workflow in blog-contents
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           github-token: ${{ steps.app-token.outputs.token }}
