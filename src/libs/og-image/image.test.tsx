@@ -99,6 +99,8 @@ describe('image', () => {
 
       expect(svg).toBe('<svg></svg>');
       expect(mockedSatori).toHaveBeenCalledTimes(1);
+      // フォントロードは sans 400 (ドメイン) / sans 700 (タイトル) / mono 400 (日付) の 3 種を並列実行
+      expect(mockFontLoader).toHaveBeenCalledTimes(3);
     });
 
     it('JSX 内に文節分割済みタイトル・日付・ドメインが含まれる', async () => {
