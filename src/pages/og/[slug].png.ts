@@ -12,9 +12,10 @@ export async function GET({ params }: APIContext) {
   if (!post) return new Response(null, { status: 404 });
 
   const title = post.data.title;
+  const publishedDate = post.data.created_time;
 
   try {
-    const pngBuffer = await generateOgImage({ slug, title });
+    const pngBuffer = await generateOgImage({ title, publishedDate });
     return new Response(new Uint8Array(pngBuffer).buffer, {
       headers: {
         'content-type': 'image/png',
