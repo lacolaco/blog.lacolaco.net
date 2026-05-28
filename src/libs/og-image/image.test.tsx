@@ -52,17 +52,17 @@ describe('image', () => {
   });
 
   describe('tierOf', () => {
-    it('境界値で正しい tier を返す', () => {
-      expect(tierOf(1)).toBe('s');
-      expect(tierOf(20)).toBe('s');
-      expect(tierOf(21)).toBe('m');
-      expect(tierOf(35)).toBe('m');
+    it('境界値で正しい tier を返す (短いタイトルほど大きいフォントサイズ tier)', () => {
+      expect(tierOf(1)).toBe('xxl');
+      expect(tierOf(20)).toBe('xxl');
+      expect(tierOf(21)).toBe('xl');
+      expect(tierOf(35)).toBe('xl');
       expect(tierOf(36)).toBe('l');
       expect(tierOf(60)).toBe('l');
-      expect(tierOf(61)).toBe('xl');
-      expect(tierOf(90)).toBe('xl');
-      expect(tierOf(91)).toBe('xxl');
-      expect(tierOf(300)).toBe('xxl');
+      expect(tierOf(61)).toBe('m');
+      expect(tierOf(90)).toBe('m');
+      expect(tierOf(91)).toBe('s');
+      expect(tierOf(300)).toBe('s');
     });
   });
 

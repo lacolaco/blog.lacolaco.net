@@ -6,10 +6,14 @@ import satori from 'satori';
 import { googleFontLoader } from './font-loader.js';
 
 const FONT_FAMILY = 'Zen Kaku Gothic New';
-const FONT_FAMILY_MONO = 'JetBrains Mono';
+const FONT_FAMILY_MONO = 'Source Code Pro';
 
 const phraseParser = loadDefaultJapaneseParser();
 
+/**
+ * タイトルのフォントサイズ tier。命名は **フォントサイズの大きさ** を表す:
+ *   xxl = 最大 (短いタイトル用)、s = 最小 (長いタイトル用)
+ */
 export type Tier = 's' | 'm' | 'l' | 'xl' | 'xxl';
 
 /**
@@ -28,22 +32,23 @@ export function visualLen(title: string): number {
 
 /**
  * タイトルの視覚的幅から表示 tier を決める。
- *   s 〜20 / m 〜35 / l 〜60 / xl 〜90 / xxl 91+
+ * タイトルが短いほど大きなフォントサイズの tier (xxl) を返す。
+ *   ~20: xxl / ~35: xl / ~60: l / ~90: m / 91+: s
  */
 export function tierOf(len: number): Tier {
-  if (len <= 20) return 's';
-  if (len <= 35) return 'm';
+  if (len <= 20) return 'xxl';
+  if (len <= 35) return 'xl';
   if (len <= 60) return 'l';
-  if (len <= 90) return 'xl';
-  return 'xxl';
+  if (len <= 90) return 'm';
+  return 's';
 }
 
 const TIER_STYLES: Record<Tier, { fontSize: number; maxLines: number }> = {
-  s: { fontSize: 60, maxLines: 2 },
-  m: { fontSize: 56, maxLines: 3 },
+  xxl: { fontSize: 60, maxLines: 2 },
+  xl: { fontSize: 56, maxLines: 3 },
   l: { fontSize: 48, maxLines: 4 },
-  xl: { fontSize: 46, maxLines: 4 },
-  xxl: { fontSize: 40, maxLines: 4 },
+  m: { fontSize: 46, maxLines: 4 },
+  s: { fontSize: 40, maxLines: 4 },
 };
 
 export function splitPhrases(title: string): string[] {
