@@ -103,12 +103,13 @@ describe('image', () => {
       expect(mockFontLoader).toHaveBeenCalledTimes(3);
     });
 
-    it('JSX 内に文節分割済みタイトル・日付・ドメインが含まれる', async () => {
+    it('JSX 内に文節分割済みタイトル・日付・ドメイン・アバターが含まれる', async () => {
       const mockFontLoader = vi.fn().mockResolvedValue(new ArrayBuffer(0));
       const mockedSatori = vi.mocked(satori).mockResolvedValue('<svg></svg>');
 
+      const title = 'TSKaigi 2026「いつテストを書くか？」発表資料';
       await buildOgImageSvg({
-        title: 'TSKaigi 2026「いつテストを書くか？」発表資料',
+        title,
         publishedDate: new Date('2026-05-24T00:00:00.000Z'),
         siteDomainName: 'blog.lacolaco.net',
         avatarDataUrl: fakeAvatarDataUrl,
@@ -116,8 +117,12 @@ describe('image', () => {
       });
 
       const json = JSON.stringify(mockedSatori.mock.calls[0][0]);
-      expect(json).toContain('TSKaigi 2026');
-      expect(json).toContain('発表資料');
+      // タイトルは splitPhrases の各文節として JSX に含まれる。
+      // ハードコードした文字列だと BudouX モデル更新で分割位置が変わり偽陰性になるため、
+      // splitPhrases の実際の出力に追従して検証する。
+      for (const phrase of splitPhrases(title)) {
+        expect(json).toContain(phrase);
+      }
       expect(json).toContain('2026-05-24');
       expect(json).toContain('blog.lacolaco.net');
       expect(json).toContain(fakeAvatarDataUrl);

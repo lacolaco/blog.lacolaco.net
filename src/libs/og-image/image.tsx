@@ -1,5 +1,9 @@
 import { TZDate } from '@date-fns/tz';
 import { Resvg } from '@resvg/resvg-js';
+// budoux はランタイムで loadDefaultJapaneseParser のみ使用する。
+// budoux の transitive deps (google-artifactregistry-auth / linkedom / commander) は
+// budoux 自身の CLI publish 用であり、Astro SSR の tree-shake で実行バンドルから除外される
+// (dist/server に当該 deps の参照なしを確認済み)。日本語文節分割のための意図的な採用。
 import { loadDefaultJapaneseParser } from 'budoux';
 import { format } from 'date-fns';
 import satori from 'satori';
