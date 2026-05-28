@@ -120,6 +120,7 @@ describe('image', () => {
       expect(json).toContain('発表資料');
       expect(json).toContain('2026-05-24');
       expect(json).toContain('blog.lacolaco.net');
+      expect(json).toContain(fakeAvatarDataUrl);
     });
 
     it('satori の canvas サイズは 1200x630', async () => {
