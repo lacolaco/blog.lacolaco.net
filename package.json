@@ -35,6 +35,7 @@
     "@fontsource/zen-kaku-gothic-new": "5.2.7",
     "@resvg/resvg-js": "2.6.2",
     "astro": "6.3.7",
+    "budoux": "0.8.4",
     "cheerio": "1.2.0",
     "date-fns": "4.3.0",
     "escape-html": "^1.0.3",
@@ -85,5 +86,10 @@
     "typescript-eslint": "^8.33.1",
     "vitest": "4.1.7",
     "zod": "^3.22.4"
+  },
+  "pnpm": {
+    "overrides": {
+      "uuid": ">=10"
+    }
   }
 }
