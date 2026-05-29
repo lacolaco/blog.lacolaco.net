@@ -1,0 +1,9 @@
+# blog-contents の sync がこのリポジトリへ出力する際のファイル配置。
+# blog-contents 側コードではなくこのリポジトリが配置を所有する。
+postsDir: src/content/post/notion
+imagesDir: public/images
+videosDir: .tmp/r2-staging/videos
+manifestPath: manifest.json
+propertyOutputs:
+  tags: src/content/post/notion/tags.json
+  channels: src/content/post/notion/channels.json
