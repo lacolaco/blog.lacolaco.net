@@ -73,8 +73,13 @@ describe('image', () => {
       expect(phrases.join('')).toBe('TSKaigi 2026「いつテストを書くか？」発表資料');
     });
 
-    it('英文タイトルは分割されず1要素配列になる', () => {
-      expect(splitPhrases('20 Lines Simple Store with RxJS')).toEqual(['20 Lines Simple Store with RxJS']);
+    it('英文タイトルでも分割結果を結合すると元のタイトルに戻る', () => {
+      // BudouX が純英字をどこで分割するか (1 要素か複数か) はモデル依存であり API 契約ではない。
+      // splitPhrases の契約は「文字を欠落・改変せずに分割する」ことなので、結合一致で検証する。
+      const title = '20 Lines Simple Store with RxJS';
+      const phrases = splitPhrases(title);
+      expect(phrases.length).toBeGreaterThan(0);
+      expect(phrases.join('')).toBe(title);
     });
 
     it('空文字列は空配列を返す', () => {
@@ -144,6 +149,28 @@ describe('image', () => {
       // retina 対応のため 1x 設計 (1200×630) の 2 倍で生成する
       expect(options.width).toBe(2400);
       expect(options.height).toBe(1260);
+    });
+
+    it('長文 (tier s) タイトルは maxHeight + overflow:hidden のクリップ枠で行数を制限する', async () => {
+      const mockFontLoader = vi.fn().mockResolvedValue(new ArrayBuffer(0));
+      const mockedSatori = vi.mocked(satori).mockResolvedValue('<svg></svg>');
+
+      // visualLen >= 91 で tier s (fontSize 40 / maxLines 4)
+      const longTitle = 'あ'.repeat(120);
+      await buildOgImageSvg({
+        title: longTitle,
+        publishedDate: new Date('2026-05-24T00:00:00.000Z'),
+        siteDomainName: 'blog.lacolaco.net',
+        avatarDataUrl: fakeAvatarDataUrl,
+        fontLoader: mockFontLoader,
+      });
+
+      // tier s: Math.ceil(40 × 1.3 × 4) = 208 → px() で 2x して 416px。
+      // satori に渡す JSX に overflow:hidden のクリップ枠が含まれることを発生源で検証する
+      // (satori 側の overflow:hidden 実装は実レンダリングで tier s クリップを確認済み)。
+      const json = JSON.stringify(mockedSatori.mock.calls[0][0]);
+      expect(json).toContain('"maxHeight":"416px"');
+      expect(json).toContain('"overflow":"hidden"');
     });
   });
 });

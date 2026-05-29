@@ -161,8 +161,10 @@ export async function buildOgImageSvg(params: BuildOgImageParams): Promise<strin
             lineHeight: 1.3,
             letterSpacing: '-0.01em',
             flex: 1,
-            // fontSize × lineHeight(1.3) × maxLines は小数になり得るので、
-            // 最終行が 1px 足りずに欠けないよう Math.ceil で切り上げて余裕を持たせる
+            // maxLines を超える長文は maxHeight + overflow:hidden で行をクリップする。
+            // satori は overflow:hidden をサポートし、最長 tier s (40×1.3×4) でも実レンダリングで
+            // クリップされることを確認済み。fontSize × lineHeight(1.3) × maxLines は小数になり得るので、
+            // 最終行が 1px 足りずに欠けないよう Math.ceil で切り上げて余裕を持たせる。
             maxHeight: px(Math.ceil(fontSize * 1.3 * maxLines)),
             overflow: 'hidden',
           }}
