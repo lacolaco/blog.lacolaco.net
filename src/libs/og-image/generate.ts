@@ -1,11 +1,6 @@
-// アバター画像は build 時に base64 data URL として SSR バンドルに埋め込む。
-//
-// アバター画像を差し替えるときは public/icons/laco.png を更新したあとで以下を実行:
-// (OG は 2x 解像度。アバターは 160px 表示なので 2 倍の 320px で生成する)
-// -shave 1x1: laco.png は最外周 1px が黒枠なので、縮小時にグレーのにじみとなって
-//             円形アバターの上下左右に線が出る。生成前に黒枠を除去する。
-//   magick public/icons/laco.png -shave 1x1 -resize 320x320 -background white -alpha remove -alpha off \
-//     src/libs/og-image/avatar.png
+// アバターは build 時に base64 data URL として SSR バンドルへ埋め込む。差し替えは public/icons/laco.png 更新後に
+// 以下を実行 (320px = 右下160px表示×2x。-shave 1x1 は laco.png の最外周1px黒枠が縮小時にグレーのにじみ→円形縁の線になるのを防ぐ):
+//   magick public/icons/laco.png -shave 1x1 -resize 320x320 -background white -alpha remove -alpha off src/libs/og-image/avatar.png
 import avatarDataUrl from './avatar.png?inline';
 import { buildOgImageSvg, convertSvgToPngBuffer } from './image';
 

@@ -1,9 +1,7 @@
 import { TZDate } from '@date-fns/tz';
 import { Resvg } from '@resvg/resvg-js';
-// budoux はランタイムで loadDefaultJapaneseParser のみ使用する。
-// budoux の transitive deps (google-artifactregistry-auth / linkedom / commander) は
-// budoux 自身の CLI publish 用であり、Astro SSR の tree-shake で実行バンドルから除外される
-// (dist/server に当該 deps の参照なしを確認済み)。日本語文節分割のための意図的な採用。
+// budoux: 日本語文節分割に使用。transitive deps (google-artifactregistry-auth 等) は CLI publish 用で
+// Astro SSR の tree-shake により実行バンドルから除外される (dist/server に参照なしを確認済み)。
 import { loadDefaultJapaneseParser } from 'budoux';
 import { format } from 'date-fns';
 import satori from 'satori';
@@ -75,15 +73,9 @@ export interface BuildOgImageParams {
 }
 
 /**
- * OG 画像の SVG 文字列を生成する (2400×1260 = 1x 設計 1200×630 の 2 倍解像度)。
- *
- * レイアウト方針 (数値はすべて 1x 基準。描画時に px() で 2 倍化):
- *   - 純白背景、要素は四隅基準の絶対配置
- *   - 左上: 公開日 (yyyy-MM-dd, monospace) を eyebrow として配置、その下にタイトル
- *   - タイトルは左寄せで全幅 (maxWidth 1040) を使い、視覚的幅 (半角 0.5 / 全角 1.0) の
- *     tier で自動フォントサイズ + 最大行数。BudouX で文節分割し各文節を span で並べて改行
- *   - 右下: アバター (160px円 / borderRadius で円形クロップ)。左下: ドメイン
- *   - タイトルは上端から伸びるが最長 tier でも下端は右下アバター/左下ドメインに干渉しない
+ * OG 画像の SVG を生成 (2400×1260 = 1x 設計 1200×630 の 2x。数値は 1x 基準で px() が 2 倍化)。
+ * レイアウト: 左上に公開日(eyebrow)→その下にタイトル(左寄せ・全幅・tier 自動サイズ・BudouX 改行)、
+ * 右下にアバター(160px円)、左下にドメイン。全要素を四隅基準の絶対配置 (最長 tier でも非干渉)。
  */
 export async function buildOgImageSvg(params: BuildOgImageParams): Promise<string> {
   const { title, publishedDate, siteDomainName, avatarDataUrl, fontLoader = googleFontLoader } = params;
@@ -143,10 +135,8 @@ export async function buildOgImageSvg(params: BuildOgImageParams): Promise<strin
           color: '#1f2937',
           lineHeight: 1.3,
           letterSpacing: '-0.01em',
-          // maxLines を超える長文は maxHeight + overflow:hidden で行をクリップする。
-          // satori は overflow:hidden をサポートし、最長 tier s (40×1.3×4) でも実レンダリングで
-          // クリップされることを確認済み。fontSize × lineHeight(1.3) × maxLines は小数になり得るので、
-          // 最終行が 1px 足りずに欠けないよう Math.ceil で切り上げて余裕を持たせる。
+          // maxLines 超の長文は maxHeight + overflow:hidden でクリップ (satori 対応・実レンダリング確認済み)。
+          // fontSize × 1.3 × maxLines の端数は Math.ceil で切り上げ、最終行が 1px 欠けないようにする。
           maxHeight: px(Math.ceil(fontSize * 1.3 * maxLines)),
           overflow: 'hidden',
         }}
@@ -158,11 +148,8 @@ export async function buildOgImageSvg(params: BuildOgImageParams): Promise<strin
         ))}
       </div>
 
-      {/* 右下: アバター (160px円 / borderRadius で円形クロップ。
-          "50%" だと satori が四隅の正方形を残すことがあるため絶対値 px(80) で指定)。
-          width/height 属性は satori 推奨のサイズ指定方法、style はレイアウトボックス用。
-          どちらも 160px(1x)×SCALE。最終ラスタ上のアバターは 160×SCALE=320 device px で
-          描画されるため avatar.png も 320px で用意している (1x のままだと拡大されて荒くなる)。 */}
+      {/* 右下アバター。borderRadius は "50%" だと satori が四隅を残すため絶対値 px(80) で指定。
+          160px(1x)×SCALE=320 device px で描画されるため avatar.png も 320px で用意 (拡大による荒れ防止)。 */}
       <img
         src={avatarDataUrl}
         width={160 * SCALE}
