@@ -128,7 +128,7 @@ describe('image', () => {
       expect(json).toContain(fakeAvatarDataUrl);
     });
 
-    it('satori の canvas サイズは 1200x630', async () => {
+    it('satori の canvas サイズは 2x 解像度 (2400x1260)', async () => {
       const mockFontLoader = vi.fn().mockResolvedValue(new ArrayBuffer(0));
       const mockedSatori = vi.mocked(satori).mockResolvedValue('<svg></svg>');
 
@@ -141,8 +141,9 @@ describe('image', () => {
       });
 
       const options = mockedSatori.mock.calls[0][1];
-      expect(options.width).toBe(1200);
-      expect(options.height).toBe(630);
+      // retina 対応のため 1x 設計 (1200×630) の 2 倍で生成する
+      expect(options.width).toBe(2400);
+      expect(options.height).toBe(1260);
     });
   });
 });

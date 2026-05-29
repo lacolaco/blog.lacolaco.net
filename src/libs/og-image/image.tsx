@@ -60,6 +60,11 @@ export function splitPhrases(title: string): string[] {
   return phraseParser.parse(title);
 }
 
+// OG 画像は SNS の retina / 2x 表示でも鮮明にするため 2 倍解像度 (2400×1260) で生成する。
+// 設計値はすべて 1x 基準 (1200×630) で記述し、描画時に px() で SCALE を乗じる。
+const SCALE = 2;
+const px = (n: number): string => `${n * SCALE}px`;
+
 export interface BuildOgImageParams {
   title: string;
   publishedDate: Date;
@@ -70,9 +75,9 @@ export interface BuildOgImageParams {
 }
 
 /**
- * OG 画像の SVG 文字列を生成する (1200×630)。
+ * OG 画像の SVG 文字列を生成する (2400×1260 = 1x 設計 1200×630 の 2 倍解像度)。
  *
- * レイアウト方針:
+ * レイアウト方針 (数値はすべて 1x 基準。描画時に px() で 2 倍化):
  *   - 純白背景、装飾なし、上下中央の単一スタック
  *   - 左から: アバター (80px円 / borderRadius で円形クロップ) | 1px縦線 (96px高) | タイトル
  *   - 右上に公開日 (yyyy-MM-dd, monospace)、右下にドメイン
@@ -111,23 +116,26 @@ export async function buildOgImageSvg(params: BuildOgImageParams): Promise<strin
       <div
         style={{
           width: '100%',
-          paddingLeft: '80px',
-          paddingRight: '80px',
+          paddingLeft: px(80),
+          paddingRight: px(80),
           display: 'flex',
           alignItems: 'center',
-          gap: '32px',
+          gap: px(32),
         }}
       >
-        {/* アバター (80px円 / borderRadius: 40px で円形クロップ。
-            "50%" だと satori が四隅の正方形を残すことがあるため絶対値で指定) */}
+        {/* アバター (80px円 / borderRadius で円形クロップ。
+            "50%" だと satori が四隅の正方形を残すことがあるため絶対値 px(40) で指定)。
+            width/height 属性は satori 推奨のサイズ指定方法、style はレイアウトボックス用。
+            どちらも 80px(1x)×SCALE。最終ラスタ上のアバターは 80×SCALE=160 device px で
+            描画されるため avatar.png も 160px で用意している (1x のままだと拡大されて荒くなる)。 */}
         <img
           src={avatarDataUrl}
-          width={80}
-          height={80}
+          width={80 * SCALE}
+          height={80 * SCALE}
           style={{
-            width: '80px',
-            height: '80px',
-            borderRadius: '40px',
+            width: px(80),
+            height: px(80),
+            borderRadius: px(40),
             flexShrink: 0,
           }}
         />
@@ -135,8 +143,8 @@ export async function buildOgImageSvg(params: BuildOgImageParams): Promise<strin
         {/* 区切り線 */}
         <div
           style={{
-            width: '1px',
-            height: '96px',
+            width: px(1),
+            height: px(96),
             backgroundColor: '#d0d7de',
             flexShrink: 0,
           }}
@@ -147,13 +155,15 @@ export async function buildOgImageSvg(params: BuildOgImageParams): Promise<strin
           style={{
             display: 'flex',
             flexWrap: 'wrap',
-            fontSize: `${fontSize}px`,
+            fontSize: px(fontSize),
             fontWeight: 700,
             color: '#1f2937',
             lineHeight: 1.3,
             letterSpacing: '-0.01em',
             flex: 1,
-            maxHeight: `${Math.ceil(fontSize * 1.3 * maxLines)}px`,
+            // fontSize × lineHeight(1.3) × maxLines は小数になり得るので、
+            // 最終行が 1px 足りずに欠けないよう Math.ceil で切り上げて余裕を持たせる
+            maxHeight: px(Math.ceil(fontSize * 1.3 * maxLines)),
             overflow: 'hidden',
           }}
         >
@@ -169,9 +179,9 @@ export async function buildOgImageSvg(params: BuildOgImageParams): Promise<strin
       <div
         style={{
           position: 'absolute',
-          top: '56px',
-          right: '100px',
-          fontSize: '20px',
+          top: px(56),
+          right: px(100),
+          fontSize: px(20),
           color: '#6b7280',
           fontFamily: `"${FONT_FAMILY_MONO}", monospace`,
           letterSpacing: '0.02em',
@@ -185,9 +195,9 @@ export async function buildOgImageSvg(params: BuildOgImageParams): Promise<strin
       <div
         style={{
           position: 'absolute',
-          bottom: '56px',
-          right: '100px',
-          fontSize: '24px',
+          bottom: px(56),
+          right: px(100),
+          fontSize: px(24),
           fontWeight: 400,
           color: '#6b7280',
           letterSpacing: '0.02em',
@@ -198,8 +208,8 @@ export async function buildOgImageSvg(params: BuildOgImageParams): Promise<strin
       </div>
     </div>,
     {
-      width: 1200,
-      height: 630,
+      width: 1200 * SCALE,
+      height: 630 * SCALE,
       fonts: [
         { name: FONT_FAMILY, data: fontNormal, weight: 400, style: 'normal' },
         { name: FONT_FAMILY, data: fontBold, weight: 700, style: 'normal' },
