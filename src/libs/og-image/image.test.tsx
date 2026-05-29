@@ -172,5 +172,25 @@ describe('image', () => {
       expect(json).toContain('"maxHeight":"416px"');
       expect(json).toContain('"overflow":"hidden"');
     });
+
+    it('アバターは右下に絶対配置の円形 / 旧レイアウトの区切り線は存在しない', async () => {
+      const mockFontLoader = vi.fn().mockResolvedValue(new ArrayBuffer(0));
+      const mockedSatori = vi.mocked(satori).mockResolvedValue('<svg></svg>');
+
+      await buildOgImageSvg({
+        title: 'テスト記事',
+        publishedDate: new Date('2026-05-24T00:00:00.000Z'),
+        siteDomainName: 'blog.lacolaco.net',
+        avatarDataUrl: fakeAvatarDataUrl,
+        fontLoader: mockFontLoader,
+      });
+
+      const json = JSON.stringify(mockedSatori.mock.calls[0][0]);
+      // アバターは右下 (right 80×SCALE=160px) に絶対配置、円形 (borderRadius 80×SCALE=160px)
+      expect(json).toContain('"right":"160px"');
+      expect(json).toContain('"borderRadius":"160px"');
+      // 旧レイアウト (アバター横の縦区切り線 #d0d7de) は撤去済みで存在しない
+      expect(json).not.toContain('#d0d7de');
+    });
   });
 });

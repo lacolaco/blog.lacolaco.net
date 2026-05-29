@@ -78,11 +78,12 @@ export interface BuildOgImageParams {
  * OG 画像の SVG 文字列を生成する (2400×1260 = 1x 設計 1200×630 の 2 倍解像度)。
  *
  * レイアウト方針 (数値はすべて 1x 基準。描画時に px() で 2 倍化):
- *   - 純白背景、装飾なし、上下中央の単一スタック
- *   - 左から: アバター (80px円 / borderRadius で円形クロップ) | 1px縦線 (96px高) | タイトル
- *   - 右上に公開日 (yyyy-MM-dd, monospace)、右下にドメイン
- *   - タイトルは視覚的幅 (半角 0.5 / 全角 1.0) の tier で自動フォントサイズ + 最大行数
- *   - 日本語タイトルは BudouX で文節分割し、各文節を span として並べて自然な改行
+ *   - 純白背景、要素は四隅基準の絶対配置
+ *   - 左上: 公開日 (yyyy-MM-dd, monospace) を eyebrow として配置、その下にタイトル
+ *   - タイトルは左寄せで全幅 (maxWidth 1040) を使い、視覚的幅 (半角 0.5 / 全角 1.0) の
+ *     tier で自動フォントサイズ + 最大行数。BudouX で文節分割し各文節を span で並べて改行
+ *   - 右下: アバター (160px円 / borderRadius で円形クロップ)。左下: ドメイン
+ *   - タイトルは上端から伸びるが最長 tier でも下端は右下アバター/左下ドメインに干渉しない
  */
 export async function buildOgImageSvg(params: BuildOgImageParams): Promise<string> {
   const { title, publishedDate, siteDomainName, avatarDataUrl, fontLoader = googleFontLoader } = params;
@@ -108,81 +109,16 @@ export async function buildOgImageSvg(params: BuildOgImageParams): Promise<strin
         height: '100%',
         display: 'flex',
         position: 'relative',
-        alignItems: 'center',
         backgroundColor: '#ffffff',
         fontFamily: `"${FONT_FAMILY}", sans-serif`,
       }}
     >
-      <div
-        style={{
-          width: '100%',
-          paddingLeft: px(80),
-          paddingRight: px(80),
-          display: 'flex',
-          alignItems: 'center',
-          gap: px(32),
-        }}
-      >
-        {/* アバター (80px円 / borderRadius で円形クロップ。
-            "50%" だと satori が四隅の正方形を残すことがあるため絶対値 px(40) で指定)。
-            width/height 属性は satori 推奨のサイズ指定方法、style はレイアウトボックス用。
-            どちらも 80px(1x)×SCALE。最終ラスタ上のアバターは 80×SCALE=160 device px で
-            描画されるため avatar.png も 160px で用意している (1x のままだと拡大されて荒くなる)。 */}
-        <img
-          src={avatarDataUrl}
-          width={80 * SCALE}
-          height={80 * SCALE}
-          style={{
-            width: px(80),
-            height: px(80),
-            borderRadius: px(40),
-            flexShrink: 0,
-          }}
-        />
-
-        {/* 区切り線 */}
-        <div
-          style={{
-            width: px(1),
-            height: px(96),
-            backgroundColor: '#d0d7de',
-            flexShrink: 0,
-          }}
-        />
-
-        {/* タイトル */}
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            fontSize: px(fontSize),
-            fontWeight: 700,
-            color: '#1f2937',
-            lineHeight: 1.3,
-            letterSpacing: '-0.01em',
-            flex: 1,
-            // maxLines を超える長文は maxHeight + overflow:hidden で行をクリップする。
-            // satori は overflow:hidden をサポートし、最長 tier s (40×1.3×4) でも実レンダリングで
-            // クリップされることを確認済み。fontSize × lineHeight(1.3) × maxLines は小数になり得るので、
-            // 最終行が 1px 足りずに欠けないよう Math.ceil で切り上げて余裕を持たせる。
-            maxHeight: px(Math.ceil(fontSize * 1.3 * maxLines)),
-            overflow: 'hidden',
-          }}
-        >
-          {phrases.map((p, i) => (
-            <span key={i} style={{ wordBreak: 'keep-all' }}>
-              {p}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* 右上: 公開日 */}
+      {/* 左上: 公開日 (eyebrow / タイトルの上) */}
       <div
         style={{
           position: 'absolute',
-          top: px(56),
-          right: px(100),
+          top: px(80),
+          left: px(80),
           fontSize: px(20),
           color: '#6b7280',
           fontFamily: `"${FONT_FAMILY_MONO}", monospace`,
@@ -193,12 +129,60 @@ export async function buildOgImageSvg(params: BuildOgImageParams): Promise<strin
         {dateStr}
       </div>
 
-      {/* 右下: ドメイン */}
+      {/* タイトル (左上、日付の下)。アバターは右下にあるため全幅 (maxWidth 1040) を使える */}
+      <div
+        style={{
+          position: 'absolute',
+          top: px(128),
+          left: px(80),
+          maxWidth: px(1040),
+          display: 'flex',
+          flexWrap: 'wrap',
+          fontSize: px(fontSize),
+          fontWeight: 700,
+          color: '#1f2937',
+          lineHeight: 1.3,
+          letterSpacing: '-0.01em',
+          // maxLines を超える長文は maxHeight + overflow:hidden で行をクリップする。
+          // satori は overflow:hidden をサポートし、最長 tier s (40×1.3×4) でも実レンダリングで
+          // クリップされることを確認済み。fontSize × lineHeight(1.3) × maxLines は小数になり得るので、
+          // 最終行が 1px 足りずに欠けないよう Math.ceil で切り上げて余裕を持たせる。
+          maxHeight: px(Math.ceil(fontSize * 1.3 * maxLines)),
+          overflow: 'hidden',
+        }}
+      >
+        {phrases.map((p, i) => (
+          <span key={i} style={{ wordBreak: 'keep-all' }}>
+            {p}
+          </span>
+        ))}
+      </div>
+
+      {/* 右下: アバター (160px円 / borderRadius で円形クロップ。
+          "50%" だと satori が四隅の正方形を残すことがあるため絶対値 px(80) で指定)。
+          width/height 属性は satori 推奨のサイズ指定方法、style はレイアウトボックス用。
+          どちらも 160px(1x)×SCALE。最終ラスタ上のアバターは 160×SCALE=320 device px で
+          描画されるため avatar.png も 320px で用意している (1x のままだと拡大されて荒くなる)。 */}
+      <img
+        src={avatarDataUrl}
+        width={160 * SCALE}
+        height={160 * SCALE}
+        style={{
+          position: 'absolute',
+          bottom: px(56),
+          right: px(80),
+          width: px(160),
+          height: px(160),
+          borderRadius: px(80),
+        }}
+      />
+
+      {/* 左下: ドメイン */}
       <div
         style={{
           position: 'absolute',
           bottom: px(56),
-          right: px(100),
+          left: px(80),
           fontSize: px(24),
           fontWeight: 400,
           color: '#6b7280',
