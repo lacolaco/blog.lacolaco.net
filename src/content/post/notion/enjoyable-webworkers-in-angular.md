@@ -8,7 +8,6 @@ tags:
   - 'Web Worker'
 published: true
 locale: 'ja'
-category: 'Tech'
 channels:
   - 'Code'
   - 'Angular'
@@ -136,7 +135,7 @@ export class MarkdownService {
 }
 ```
 
-To use `worker/markdown.worker.ts` , import Comlink and create a proxied worker instance with `wrap` function as the below. A module worker instance is instanciated by `new Worker(new URL('../worker/markdown.worker', import.meta.url)`. This syntax is defined by [webpack’s Web Workers support](https://webpack.js.org/guides/web-workers/).
+To use `worker/markdown.worker.ts` , import Comlink and create a proxied worker instance with `wrap` function as the below. A module worker instance is instantiated by `new Worker(new URL('../worker/markdown.worker', import.meta.url)`. This syntax is defined by [webpack’s Web Workers support](https://webpack.js.org/guides/web-workers/).
 
 ```
 import { wrap } from 'comlink';
@@ -153,7 +152,7 @@ Now `worker` instance has functions exposed by `Comlink.expose` with its types.
 
 To retrieve type of `api`, pass `typeof import('../worker/markdown.worker).api` into `wrap<T>`. This `import` is not ES Module import but TypeScript’s feature that **import only type definition** without any JavaScript references which will be eliminated after TypeScript compilation process and it can be separated to different bundles.
 
-The following is the final example of `service/markdown.service.ts`. If the environment doesn’t support `window.Worker`, it will fallback to on-the-main theaed processing with dynamic `import()` to keep the initial bundle small.
+The following is the final example of `service/markdown.service.ts`. If the environment doesn’t support `window.Worker`, it will fallback to on-the-main thread processing with dynamic `import()` to keep the initial bundle small.
 
 ```
 import { Injectable } from '@angular/core';
