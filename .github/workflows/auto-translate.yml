@@ -8,8 +8,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'src/content/post/notion/**/*.md'
-      - '!src/content/post/notion/**/*.en.md' # en 自身の変更では起動しない (無限ループ防止)
+      - 'content/notion/posts/**/*.md'
+      - '!content/notion/posts/**/*.en.md' # en 自身の変更では起動しない (無限ループ防止)
   workflow_dispatch:
     # 任意 SHA に対する手動再実行 (en PR 作成途中の失敗復旧等)
     inputs:
@@ -57,7 +57,7 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           COMMIT_SHA: ${{ github.event.inputs.sha || github.sha }}
         run: |
-          if [[ -z "$(git status --porcelain src/content/post/notion)" ]]; then
+          if [[ -z "$(git status --porcelain content/notion/posts)" ]]; then
             echo "No translation changes"
             exit 0
           fi
@@ -74,7 +74,7 @@ jobs:
             git config user.name "lacolaco-actions-worker[bot]"
             git config user.email "lacolaco-actions-worker[bot]@users.noreply.github.com"
             git checkout -b "$BRANCH"
-            git add src/content/post/notion
+            git add content/notion/posts
             git commit -m "chore: auto-translate ja → en for ${COMMIT_SHA}"
             git push origin "$BRANCH"
           fi

@@ -7,7 +7,7 @@
 - TypeScript with Zod for schema validation, pnpm package manager
 
 ## Key Boundaries
-- DO NOT modify content files in `src/content/post/*.json` - these are auto-generated
+- DO NOT modify content files in `content/notion/**` - these are auto-generated
 - Application code is editable (components, utilities, styles)
 - Only suggest Astro components (.astro) when no client interactivity needed
 - React components (.tsx) should be used only when client-side interactivity is required

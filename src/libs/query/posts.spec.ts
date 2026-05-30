@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { queryAdjacentPosts, deduplicatePosts, attachTranslations, buildListPagePosts } from './posts';
+import {
+  queryAdjacentPosts,
+  deduplicatePosts,
+  attachTranslations,
+  buildListPagePosts,
+  assertUniqueSlugs,
+} from './posts';
 import type { CollectionEntry } from 'astro:content';
 
 // テスト用のモックデータを作成するヘルパー関数
@@ -42,6 +48,32 @@ function createMockEnPost(slug: string, createdTime: Date): CollectionEntry<'pos
       notion_url: 'https://notion.so/test',
     },
   } as CollectionEntry<'postsEn'>;
+}
+
+// id を明示指定したいケース用 (slug 重複検証で「同 locale・同 slug・別 id」を組み立てる)
+function createMockPostWithId(
+  id: string,
+  slug: string,
+  createdTime: Date,
+  locale: string = 'ja',
+): CollectionEntry<'posts'> {
+  return {
+    id,
+    slug,
+    body: '',
+    collection: 'posts',
+    data: {
+      slug,
+      title: `Test Post ${slug}`,
+      icon: '📝',
+      created_time: createdTime,
+      last_edited_time: createdTime,
+      tags: [],
+      published: true,
+      locale,
+      notion_url: 'https://notion.so/test',
+    },
+  } as CollectionEntry<'posts'>;
 }
 
 describe('queryAdjacentPosts', () => {
@@ -290,6 +322,58 @@ describe('attachTranslations', () => {
     expect(result[0].translations).toEqual({});
     expect(result[1].translations.en).toBeDefined();
     expect(result[2].translations).toEqual({});
+  });
+});
+
+describe('assertUniqueSlugs', () => {
+  it('空配列は何も throw しない', () => {
+    expect(() => assertUniqueSlugs([])).not.toThrow();
+  });
+
+  it('locale 内で slug が全て異なれば throw しない', () => {
+    const posts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
+      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-2', new Date('2023-01-02'), 'ja'),
+      createMockPost('post-3', new Date('2023-01-03'), 'ja'),
+    ];
+    expect(() => assertUniqueSlugs(posts)).not.toThrow();
+  });
+
+  it('同じ slug でも locale が異なれば throw しない (ja/en の i18n pair は正常)', () => {
+    const posts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
+      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockEnPost('post-1', new Date('2023-01-01')),
+    ];
+    expect(() => assertUniqueSlugs(posts)).not.toThrow();
+  });
+
+  it('同 locale (ja) で slug 重複があると throw する (Notion 由来 vs 直接執筆の衝突を検知)', () => {
+    const posts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
+      createMockPostWithId('notion/posts/dup.md', 'dup', new Date('2023-01-01'), 'ja'),
+      createMockPostWithId('posts/dup.md', 'dup', new Date('2023-01-02'), 'ja'),
+    ];
+    expect(() => assertUniqueSlugs(posts)).toThrow(/dup/);
+  });
+
+  it('throw 時のメッセージに衝突 entry の id が両方含まれる', () => {
+    const posts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
+      createMockPostWithId('notion/posts/foo.md', 'foo', new Date('2023-01-01'), 'ja'),
+      createMockPostWithId('posts/foo.md', 'foo', new Date('2023-01-02'), 'ja'),
+    ];
+    try {
+      assertUniqueSlugs(posts);
+      throw new Error('expected to throw');
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      expect(message).toContain('notion/posts/foo.md');
+      expect(message).toContain('posts/foo.md');
+    }
+  });
+
+  it('en collection 内で slug 重複があれば throw する', () => {
+    const en1 = createMockEnPost('shared', new Date('2023-01-01'));
+    const en2 = createMockEnPost('shared', new Date('2023-01-02'));
+    expect(() => assertUniqueSlugs([en1, en2])).toThrow(/shared/);
   });
 });
 

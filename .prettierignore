@@ -7,7 +7,8 @@ dist/
 .astro/
 
 # Auto-generated content (DO NOT EDIT OR FORMAT)
-src/content/post/
+content/notion/
+# 旧 src/content/{tags,categories} 配下の orphan は build に未参照だが、prettier 対象から外して退役状態を保つ
 src/content/tags/tags.json
 src/content/categories/categories.json
 

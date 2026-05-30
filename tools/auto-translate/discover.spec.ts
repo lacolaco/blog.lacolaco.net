@@ -91,6 +91,6 @@ describe('en path 算出', () => {
   });
 
   test('jaToEnPath: ネスト構造でも .en.md 拡張が付く', () => {
-    assert.equal(jaToEnPath('src/content/post/notion/abc-def.md'), 'src/content/post/notion/abc-def.en.md');
+    assert.equal(jaToEnPath('content/notion/posts/abc-def.md'), 'content/notion/posts/abc-def.en.md');
   });
 });

@@ -17,7 +17,43 @@ export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'post
       return true;
     })
     .sort((a, b) => compareDesc(a.data.created_time, b.data.created_time));
+
+  // 実際に publish される posts に対してのみ slug 衝突を fail-loud にする。
+  // draft (published: false) や未来日記が Notion 既存記事と slug 衝突しても build は通す
+  // — そうでないと content/posts/ を「Notion 昇格前の下書き置き場」として使えなくなる。
+  assertUniqueSlugs(availablePosts);
   return availablePosts;
+}
+
+/**
+ * (locale, slug) ペアの重複を検知して throw する。
+ *
+ * 同じ locale で slug が重複していると同じ URL を生成するページが 2 つ存在することになり、
+ * 動的ルートで競合する。ja と en で同 slug を持つのは i18n pair として正常なので許可。
+ *
+ * notion/posts 配下と posts 直下を 1 collection に束ねる設計のため、出自を跨いだ slug 衝突を
+ * build 時に fail-loud で検知することが目的。
+ *
+ * locale の判定は frontmatter ではなく collection (postsEn=en, posts=ja) を権威とする。
+ * frontmatter.locale は optional で書き忘れ・誤記がありうるが、filename↔collection の対応は
+ * Astro の glob loader が型レベルで保証するため、こちらを source of truth に取る。
+ */
+export function assertUniqueSlugs(entries: Array<CollectionEntry<'posts' | 'postsEn'>>): void {
+  const seen = new Map<string, CollectionEntry<'posts' | 'postsEn'>>();
+  for (const entry of entries) {
+    const locale = entry.collection === 'postsEn' ? 'en' : 'ja';
+    const key = `${locale}:${entry.data.slug}`;
+    const existing = seen.get(key);
+    if (existing) {
+      throw new Error(
+        `Duplicate post slug "${entry.data.slug}" in locale "${locale}":\n` +
+          `  - ${existing.id}\n` +
+          `  - ${entry.id}\n` +
+          `URL は frontmatter.slug 由来のため、同 locale 内では一意である必要があります。`,
+      );
+    }
+    seen.set(key, entry);
+  }
 }
 
 /**

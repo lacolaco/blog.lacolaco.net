@@ -285,7 +285,7 @@ async function main(): Promise<void> {
   }
 
   const rootDir = new URL('../..', import.meta.url).pathname;
-  const contentDir = path.join(rootDir, 'src/content/post/notion');
+  const contentDir = path.join(rootDir, 'content/notion/posts');
   const jaFiles = await listJaFiles(contentDir);
 
   console.log(`[auto-translate] scanning ${jaFiles.length} ja files in ${contentDir}`);

@@ -105,7 +105,7 @@ Before EVERY commit, you MUST ensure these checks pass:
 
 ### Protected Content (NEVER MODIFY)
 
-- `src/content/post/*.md` - Auto-generated from Notion via `pnpm notion-fetch`
+- `content/notion/posts/*.md` - Auto-generated from Notion via blog-contents sync
 - `public/images/` - Auto-managed by notion-fetch tool
 
 ## Operational Guidelines
