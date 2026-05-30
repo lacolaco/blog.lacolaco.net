@@ -51,6 +51,7 @@ merge を除いた以下は 1 単位として実行 (途中で止めるな):
 
 - `.md` (Notion → notion-sync) の問題 → **Notion で修正依頼**。勝手に直さない
 - `.en.md` (auto-translate 生成) の問題 → `tools/auto-translate/` パイプライン (prompt / proofreader / validator) で対応
+- **auto-translate のスコープは `content/notion/posts/` のみ**。直接執筆 (`content/posts/`) は対象外で、英訳が必要なら手書きで `<slug>.en.md` を置く (auto-translate は手動 en を `protect-manual` ロジックで上書きしない)
 - **sync-with-notion への force-push は sync workflow の正常動作**。「自分の修正が消された」と誤認して再 push せず、`origin/sync-with-notion` を fetch して**新しい真実として再観測**してから動く
 
 ### 3. TDD is Mandatory
