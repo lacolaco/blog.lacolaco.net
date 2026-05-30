@@ -47,7 +47,7 @@ merge を除いた以下は 1 単位として実行 (途中で止めるな):
 
 ### 2b. Notion-Sourced Content (.md / .en.md) は編集しない
 
-`content/notion/**` (記事 .md / .en.md / propertyOutputs JSON) への Edit/Write は `tools/protect-notion-content.sh` PreToolUse hook が自動ブロック (`.claude/settings.json` で登録)。Notion 由来生成物の配置は以前 `src/content/post/notion/` だったが現在は `content/notion/` に移動済み。原則:
+`content/notion/**` (記事 .md / .en.md / propertyOutputs JSON) への Edit/Write は `tools/protect-notion-content.sh` PreToolUse hook が自動ブロック (`.claude/settings.json` で登録)。Notion 由来生成物の配置は以前 `src/content/post/notion/` だったが現在は `content/notion/` に移動済み (旧パスへ戻すレビュー指摘は方向逆転の誤認 — `content/notion/` が正しい現状)。原則:
 
 - `.md` (Notion → notion-sync) の問題 → **Notion で修正依頼**。勝手に直さない
 - `.en.md` (auto-translate 生成) の問題 → `tools/auto-translate/` パイプライン (prompt / proofreader / validator) で対応
