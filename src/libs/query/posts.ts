@@ -7,22 +7,18 @@ export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'post
   const postsEn = await getCollection('postsEn');
   const allPosts = [...posts, ...postsEn];
 
-  const availablePosts = allPosts
-    .filter((entry) => {
-      // import.meta.env.MODE が 'production' の場合、公開済みの投稿のみを対象とする
-      if (import.meta.env.MODE === 'production') {
-        return entry.data.published && isPast(entry.data.created_time);
-      }
-      // 開発モードでは全ての投稿を対象とする
-      return true;
-    })
-    .sort((a, b) => compareDesc(a.data.created_time, b.data.created_time));
-
-  // 実際に publish される posts に対してのみ slug 衝突を fail-loud にする。
-  // draft (published: false) や未来日記が Notion 既存記事と slug 衝突しても build は通す
+  // 公開済み (published && 過去日) の集合だけが URL を生成する。
+  // slug 衝突 fail-loud はこの集合に対してのみ掛ける。
+  // draft (published: false) / 未来日記は URL を生成しないため衝突しても build を落とさない
   // — そうでないと content/posts/ を「Notion 昇格前の下書き置き場」として使えなくなる。
-  assertUniqueSlugs(availablePosts);
-  return availablePosts;
+  // この不変は production / dev 共通: dev でも draft slug は既存 Notion 記事と衝突可能だが
+  // dev サーバを落とす理由は無い (preview したいから走らせている)。
+  const publishedPosts = allPosts.filter((entry) => entry.data.published && isPast(entry.data.created_time));
+  assertUniqueSlugs(publishedPosts);
+
+  // production では publish 集合のみを返し、dev では draft を含む全件を返す。
+  const availablePosts = import.meta.env.MODE === 'production' ? publishedPosts : allPosts;
+  return availablePosts.sort((a, b) => compareDesc(a.data.created_time, b.data.created_time));
 }
 
 /**

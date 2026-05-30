@@ -25,11 +25,15 @@
 ## Structure & Extensions
 - `src/`
   - `components/*.astro|*.tsx` - UI components
-  - `content/*.json` - DO NOT EDIT (content files)
   - `layouts/*.astro` - Page layouts
   - `pages/*.astro|*.ts` - Routes and endpoints
   - `libs/*.ts` - Shared utilities
-- `tools/notion-fetch/*.ts` - Content pipeline
+- `content/`
+  - `notion/posts/*.md` - DO NOT EDIT (Notion sync output)
+  - `notion/{tags,channels}.json` - DO NOT EDIT (Notion propertyOutputs)
+  - `posts/*.md` - direct-write articles (editable)
+- `tools/auto-translate/*.ts` - ja→en translation pipeline
+- Notion sync itself lives in the external `lacolaco/blog-contents` repo and writes to `content/notion/` via cross-repo PR (no local sync command)
 
 ## i18n Implementation
 - Files follow `src/pages/[locale]/path.astro` pattern
@@ -43,8 +47,8 @@
 - Type/schema definitions: PascalCase with Type/Schema suffix
 
 ## Commands & Verification
-- Content fetch: `pnpm run notion-fetch`
 - Development: `pnpm run dev`
+- Translation: `pnpm run auto-translate` (runs ja→en for newly synced ja .md)
 - Always test changes with appropriate command
 
 ## Git Commit
