@@ -51,12 +51,10 @@ function createMockEnPost(slug: string, createdTime: Date): CollectionEntry<'pos
 }
 
 // id を明示指定したいケース用 (slug 重複検証で「同 locale・同 slug・別 id」を組み立てる)
-function createMockPostWithId(
-  id: string,
-  slug: string,
-  createdTime: Date,
-  locale: string = 'ja',
-): CollectionEntry<'posts'> {
+// 常に collection: 'posts' を返すため locale は ja で固定。
+// assertUniqueSlugs は entry.collection を権威にするので data.locale を変えても判定は変わらない。
+// en collection の重複は createMockEnPost を使うこと。
+function createMockPostWithId(id: string, slug: string, createdTime: Date): CollectionEntry<'posts'> {
   return {
     id,
     slug,
@@ -70,7 +68,7 @@ function createMockPostWithId(
       last_edited_time: createdTime,
       tags: [],
       published: true,
-      locale,
+      locale: 'ja',
       notion_url: 'https://notion.so/test',
     },
   } as CollectionEntry<'posts'>;
@@ -140,7 +138,7 @@ describe('queryAdjacentPosts', () => {
 
   it('ロケールが異なる記事も含まれる', () => {
     const posts = [
-      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-1', new Date('2023-01-01')),
       createMockPost('post-2', new Date('2023-01-02'), 'en'),
       createMockPost('post-3', new Date('2023-01-03'), 'ja'),
     ];
@@ -183,7 +181,7 @@ describe('queryAdjacentPosts', () => {
 describe('deduplicatePosts', () => {
   it('同じslugを持つ日本語版と英語版がある場合、日本語版のみが残る', () => {
     const posts = [
-      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-1', new Date('2023-01-01')),
       createMockEnPost('post-1', new Date('2023-01-01')),
     ];
 
@@ -196,7 +194,7 @@ describe('deduplicatePosts', () => {
 
   it('英語版のみの投稿は残る', () => {
     const posts = [
-      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-1', new Date('2023-01-01')),
       createMockEnPost('post-2', new Date('2023-01-02')),
     ];
 
@@ -208,10 +206,7 @@ describe('deduplicatePosts', () => {
   });
 
   it('日本語版のみの投稿は残る', () => {
-    const posts = [
-      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
-      createMockPost('post-2', new Date('2023-01-02'), 'ja'),
-    ];
+    const posts = [createMockPost('post-1', new Date('2023-01-01')), createMockPost('post-2', new Date('2023-01-02'))];
 
     const result = deduplicatePosts(posts);
 
@@ -222,9 +217,9 @@ describe('deduplicatePosts', () => {
 
   it('複数の記事で日英両方がある場合、それぞれ日本語版のみが残る', () => {
     const posts = [
-      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-1', new Date('2023-01-01')),
       createMockEnPost('post-1', new Date('2023-01-01')),
-      createMockPost('post-2', new Date('2023-01-02'), 'ja'),
+      createMockPost('post-2', new Date('2023-01-02')),
       createMockEnPost('post-2', new Date('2023-01-02')),
       createMockPost('post-3', new Date('2023-01-03'), 'ja'),
     ];
@@ -245,8 +240,8 @@ describe('deduplicatePosts', () => {
 
   it('重複がない場合、全ての投稿が残る', () => {
     const posts = [
-      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
-      createMockPost('post-2', new Date('2023-01-02'), 'ja'),
+      createMockPost('post-1', new Date('2023-01-01')),
+      createMockPost('post-2', new Date('2023-01-02')),
       createMockEnPost('post-3', new Date('2023-01-03')),
     ];
 
@@ -259,8 +254,8 @@ describe('deduplicatePosts', () => {
     const posts = [
       createMockPost('post-3', new Date('2023-01-03'), 'ja'),
       createMockEnPost('post-3', new Date('2023-01-03')),
-      createMockPost('post-2', new Date('2023-01-02'), 'ja'),
-      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-2', new Date('2023-01-02')),
+      createMockPost('post-1', new Date('2023-01-01')),
       createMockEnPost('post-1', new Date('2023-01-01')),
     ];
 
@@ -310,8 +305,8 @@ describe('attachTranslations', () => {
 
   it('元 posts の順序を維持する', () => {
     const jaPosts = [
-      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
-      createMockPost('post-2', new Date('2023-01-02'), 'ja'),
+      createMockPost('post-1', new Date('2023-01-01')),
+      createMockPost('post-2', new Date('2023-01-02')),
       createMockPost('post-3', new Date('2023-01-03'), 'ja'),
     ];
     const enPosts = [createMockEnPost('post-2', new Date('2023-01-02'))];
@@ -332,8 +327,8 @@ describe('assertUniqueSlugs', () => {
 
   it('locale 内で slug が全て異なれば throw しない', () => {
     const posts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
-      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
-      createMockPost('post-2', new Date('2023-01-02'), 'ja'),
+      createMockPost('post-1', new Date('2023-01-01')),
+      createMockPost('post-2', new Date('2023-01-02')),
       createMockPost('post-3', new Date('2023-01-03'), 'ja'),
     ];
     expect(() => assertUniqueSlugs(posts)).not.toThrow();
@@ -341,7 +336,7 @@ describe('assertUniqueSlugs', () => {
 
   it('同じ slug でも locale が異なれば throw しない (ja/en の i18n pair は正常)', () => {
     const posts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
-      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-1', new Date('2023-01-01')),
       createMockEnPost('post-1', new Date('2023-01-01')),
     ];
     expect(() => assertUniqueSlugs(posts)).not.toThrow();
@@ -349,16 +344,16 @@ describe('assertUniqueSlugs', () => {
 
   it('同 locale (ja) で slug 重複があると throw する (Notion 由来 vs 直接執筆の衝突を検知)', () => {
     const posts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
-      createMockPostWithId('notion/posts/dup.md', 'dup', new Date('2023-01-01'), 'ja'),
-      createMockPostWithId('posts/dup.md', 'dup', new Date('2023-01-02'), 'ja'),
+      createMockPostWithId('notion/posts/dup.md', 'dup', new Date('2023-01-01')),
+      createMockPostWithId('posts/dup.md', 'dup', new Date('2023-01-02')),
     ];
     expect(() => assertUniqueSlugs(posts)).toThrow(/dup/);
   });
 
   it('throw 時のメッセージに衝突 entry の id が両方含まれる', () => {
     const posts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
-      createMockPostWithId('notion/posts/foo.md', 'foo', new Date('2023-01-01'), 'ja'),
-      createMockPostWithId('posts/foo.md', 'foo', new Date('2023-01-02'), 'ja'),
+      createMockPostWithId('notion/posts/foo.md', 'foo', new Date('2023-01-01')),
+      createMockPostWithId('posts/foo.md', 'foo', new Date('2023-01-02')),
     ];
     try {
       assertUniqueSlugs(posts);
@@ -380,7 +375,7 @@ describe('assertUniqueSlugs', () => {
 describe('buildListPagePosts', () => {
   it('ja/en 両エントリのスラッグは ja に集約され translations.en が付く', () => {
     const allPosts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
-      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-1', new Date('2023-01-01')),
       createMockEnPost('post-1', new Date('2023-01-01')),
     ];
 
@@ -395,9 +390,7 @@ describe('buildListPagePosts', () => {
   });
 
   it('ja のみのエントリは translations が空', () => {
-    const allPosts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
-      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
-    ];
+    const allPosts: Array<CollectionEntry<'posts' | 'postsEn'>> = [createMockPost('post-1', new Date('2023-01-01'))];
 
     const result = buildListPagePosts(allPosts);
 
@@ -417,9 +410,9 @@ describe('buildListPagePosts', () => {
 
   it('混在: ja+en 重複 / ja のみ / en のみ をそれぞれ正しく扱う', () => {
     const allPosts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
-      createMockPost('post-1', new Date('2023-01-01'), 'ja'),
+      createMockPost('post-1', new Date('2023-01-01')),
       createMockEnPost('post-1', new Date('2023-01-01')),
-      createMockPost('post-2', new Date('2023-01-02'), 'ja'),
+      createMockPost('post-2', new Date('2023-01-02')),
       createMockEnPost('post-3', new Date('2023-01-03')),
     ];
 
