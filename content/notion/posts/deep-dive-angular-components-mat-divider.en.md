@@ -3,7 +3,7 @@ title: 'Deep Dive into Angular Components: MatDivider'
 slug: 'deep-dive-angular-components-mat-divider'
 icon: ''
 created_time: '2020-05-05T00:00:00.000Z'
-last_edited_time: '2026-03-28T16:23:00.000Z'
+last_edited_time: '2026-05-30T08:57:00.000Z'
 tags:
   - 'Angular Material'
 published: true
@@ -102,7 +102,7 @@ https://angular.io/api/core/Directive#host
 
 ### `'role': 'separator'`
 
-`<mat-divider>` host element has always `role="separator"` attribute. This is an **ARIA** role attribute. This arrtibute tells the User Agent this non-built-in HTML tag is a separator.
+`<mat-divider>` host element has always `role="separator"` attribute. This is an **ARIA** role attribute. This attribute tells the User Agent this non-built-in HTML tag is a separator.
 
 [The Roles Model | Accessible Rich Internet Applications (WAI-ARIA) 1.0](https://www.w3.org/WAI/PF/aria/roles#separator)
 
@@ -135,7 +135,7 @@ This line is similar to the above but interestingly `mat-divider-horizontal` cla
 - [https://github.com/angular/components/blob/master/src/material/divider/divider.scss](https://github.com/angular/components/blob/master/src/material/divider/divider.scss) 
 - [https://github.com/angular/components/blob/master/src/material/divider/_divider-theme.scss](https://github.com/angular/components/blob/master/src/material/divider/_divider-theme.scss) 
 
-As far I can imagine, this is set for user customization. Develoers can override horizontal-specific style by using `.mat-divider-hotizontal`. Angular Material supports user-customization at many points.
+As far I can imagine, this is set for user customization. Developers can override horizontal-specific style by using `.mat-divider-horizontal`. Angular Material supports user-customization at many points.
 
 ```scss
 .my-app {
@@ -167,11 +167,11 @@ This component has its own style. `divider.scss` will be compiled into `divider.
 
 ### `encapsulation: ViewEncapsulation.None`
 
-Interesting point! Angular Material components basically **don’t encapusulate its style**. It means styles in `divider.css` are exposed to document global.
+Interesting point! Angular Material components basically **don’t encapsulate its style**. It means styles in `divider.css` are exposed to document global.
 
 https://angular.io/api/core/Component#encapsulation
 
-`encapusulation` metadata is set to `Emulated` by default so we can use safely styles in the component template scope. But scoped styles cannot be overrided from outside even developer. Angular Material explicitly turns off the mechanism to allow user customization.
+`encapsulation` metadata is set to `Emulated` by default so we can use safely styles in the component template scope. But scoped styles cannot be overrided from outside even developer. Angular Material explicitly turns off the mechanism to allow user customization.
 
 ### `changeDetection: ChangeDetectionStrategy.OnPush`
 
@@ -218,7 +218,7 @@ Interesting point again! This is a special static field for communication with A
 
 [https://angular.io/guide/template-typecheck#input-setter-coercion](https://angular.io/guide/template-typecheck#input-setter-coercion)
 
-In short, sometimes an input field needs to accept a value which doesn’t match type. To allow user to write an input shorthand like `<mat-divider vertial>`, `vertial` setter has to accept `''` in addition to boolean value.
+In short, sometimes an input field needs to accept a value which doesn’t match type. To allow user to write an input shorthand like `<mat-divider vertical>`, `vertical` setter has to accept `''` in addition to boolean value.
 
 That is why`static ngAcceptInputType_vertical: BooleanInput;` exists. `BooleanInput` is a type provided from `@angular/cdk/coercion`. `ngAcceptInputType_vertical` tells AoT compier that `vertical` input can accept types `string | boolean | null | undefined`.
 

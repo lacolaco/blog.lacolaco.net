@@ -3,11 +3,10 @@ title: 'Angular: Test Reactiveness with OnPush strategy'
 slug: 'angular-app-reactiveness'
 icon: ''
 created_time: '2020-03-18T00:00:00.000Z'
-last_edited_time: '2026-03-28T16:16:00.000Z'
+last_edited_time: '2026-05-30T09:03:00.000Z'
 tags: []
 published: true
 locale: 'en'
-category: 'Tech'
 channels:
   - 'Code'
   - 'Angular'
@@ -18,7 +17,7 @@ features:
   tweet: false
 ---
 
-`OnPush` change detection strategy can test “reactiveness” of an Angular application. Using OnPush is not neccessary to remove Zone.js, but reactiveness is still important in the _zone-less_ world. Removing Zone.js brings both control and responsibility about application rendering to a developer. It is not recommendable for everyone. So before doing that, understand how much Angular and Zone.js have been helping us enough.
+`OnPush` change detection strategy can test “reactiveness” of an Angular application. Using OnPush is not necessary to remove Zone.js, but reactiveness is still important in the _zone-less_ world. Removing Zone.js brings both control and responsibility about application rendering to a developer. It is not recommendable for everyone. So before doing that, understand how much Angular and Zone.js have been helping us enough.
 
 ## Things Zone.js does
 
@@ -122,7 +121,7 @@ export class AppComponent {
 }
 ```
 
-If you are familier to Ivy’s experimental secret APIs, use `ɵmarkDirty` instead.
+If you are familiar with Ivy’s experimental secret APIs, use `ɵmarkDirty` instead.
 
 ```
 readonly state$ = this.stateSubject.asObservable().pipe(
@@ -134,7 +133,7 @@ It works well! But… wait! Why we have to trigger change detection manually is 
 
 ### Pipe and `detectChanges()`
 
-This is the simplest alternative. Making a pipe similar to AsyncPipe but call `detectChanges()` insteat of `markForCheck()`.
+This is the simplest alternative. Making a pipe similar to AsyncPipe but call `detectChanges()` instead of `markForCheck()`.
 
 NgRx team are proposing a RFC about `ngrx/components` package and it says about that.
 
@@ -183,7 +182,7 @@ By the way, Pipes have a problem for handling asynchronous data. Read previous p
 - Both OnPush and Zone-less require reactiveness of an application.
 - OnPush-full application can go forward for Zone-less with less effort.
 
-Example app for this arcticle is avaiable on ng-run: [https://ng-run.com/edit/OCM8QyXr4CrgPQv5TZMT?open=app%2Fapp.component.ts](https://ng-run.com/edit/OCM8QyXr4CrgPQv5TZMT?open=app%2Fapp.component.ts)
+Example app for this article is available on ng-run: [https://ng-run.com/edit/OCM8QyXr4CrgPQv5TZMT?open=app%2Fapp.component.ts](https://ng-run.com/edit/OCM8QyXr4CrgPQv5TZMT?open=app%2Fapp.component.ts)
 
 Thanks!
 

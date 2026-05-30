@@ -579,8 +579,13 @@
     "filePath": "content/notion/posts/graphql-and-restful-backend.md"
   },
   "d98e8a7e-9853-4346-b12b-cc4bec8a0cb7": {
-    "lastModified": "2026-03-28T16:37:00.000Z",
-    "filePath": "content/notion/posts/enjoyable-webworkers-in-angular.md"
+    "lastModified": "2026-05-30T08:57:00.000Z",
+    "filePath": "content/notion/posts/enjoyable-webworkers-in-angular.md",
+    "imagePaths": [
+      "public/images/enjoyable-webworkers-in-angular/2021-05-26T11-16-04.9f6547d624a81df3.png",
+      "public/images/enjoyable-webworkers-in-angular/2021-05-26T11-20-53.823454186117111d.png",
+      "public/images/enjoyable-webworkers-in-angular/1__WghqP__ww8aX6KVZVQNzmeA.be7ff58c47d6e207.gif"
+    ]
   },
   "4218a5a9-be5f-46b9-b852-033819cb87da": {
     "lastModified": "2026-03-28T16:17:00.000Z",
@@ -711,7 +716,7 @@
     "filePath": "content/notion/posts/firebase-hosting-production-staging-with-targets.md"
   },
   "4d172266-5b4b-488d-8049-bf2ac4fee642": {
-    "lastModified": "2026-03-28T16:23:00.000Z",
+    "lastModified": "2026-05-30T08:57:00.000Z",
     "filePath": "content/notion/posts/deep-dive-angular-components-mat-divider.en.md"
   },
   "289a7964-b989-4c20-818f-45f429907bd1": {
@@ -739,7 +744,7 @@
     "filePath": "content/notion/posts/angular-content-projection-101.md"
   },
   "e2c2dfec-0816-45ec-91da-8e3b41c704ad": {
-    "lastModified": "2026-03-28T16:16:00.000Z",
+    "lastModified": "2026-05-30T09:03:00.000Z",
     "filePath": "content/notion/posts/angular-app-reactiveness.en.md"
   },
   "4552fa97-268f-4c15-b088-766732b2f74c": {
