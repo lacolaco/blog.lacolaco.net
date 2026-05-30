@@ -3,7 +3,7 @@ title: 'Angular: Test Reactiveness with OnPush strategy'
 slug: 'angular-app-reactiveness'
 icon: ''
 created_time: '2020-03-18T00:00:00.000Z'
-last_edited_time: '2026-05-30T08:57:00.000Z'
+last_edited_time: '2026-05-30T09:03:00.000Z'
 tags: []
 published: true
 locale: 'en'
@@ -133,7 +133,7 @@ It works well! But… wait! Why we have to trigger change detection manually is 
 
 ### Pipe and `detectChanges()`
 
-This is the simplest alternative. Making a pipe similar to AsyncPipe but call `detectChanges()` insteat of `markForCheck()`.
+This is the simplest alternative. Making a pipe similar to AsyncPipe but call `detectChanges()` instead of `markForCheck()`.
 
 NgRx team are proposing a RFC about `ngrx/components` package and it says about that.
 
