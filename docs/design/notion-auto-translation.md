@@ -69,7 +69,7 @@ pnpm auto-translate    # ja markdown → en markdown
 
 ## 翻訳対象の決定ロジック（auto-translate 側）
 
-`auto-translate` ツール起動時、`src/content/post/notion/*.md` を glob で走査し、以下を**全て**満たすファイルを翻訳対象とする。
+`auto-translate` ツール起動時、`content/notion/posts/*.md` を glob で走査し、以下を**全て**満たすファイルを翻訳対象とする。
 
 1. ファイル名が `<slug>.en.md` ではない（ja ファイルのみ）
 2. frontmatter の `locale === 'ja'`
@@ -117,7 +117,7 @@ pnpm auto-translate    # ja markdown → en markdown
 
 ```
 auto-translate main
-  ├─ src/content/post/notion/*.md を glob で走査
+  ├─ content/notion/posts/*.md を glob で走査
   ├─ 翻訳対象を決定（前節のロジック）
   ├─ 各対象に対して translateOne() を順次実行
   └─ 結果集計（translated/skipped/failed）をログ出力

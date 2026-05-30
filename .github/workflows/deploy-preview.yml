@@ -7,8 +7,8 @@ on:
     paths:
       # Source code and components
       - 'src/**'
-      # Content updates
-      - 'src/content/**'
+      # Content updates (Notion 由来生成物 + 直接執筆)
+      - 'content/**'
       # Configuration files
       - 'astro.config.ts'
       - 'tailwind.config.js'

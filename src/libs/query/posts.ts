@@ -7,17 +7,49 @@ export async function queryAvailablePosts(): Promise<Array<CollectionEntry<'post
   const postsEn = await getCollection('postsEn');
   const allPosts = [...posts, ...postsEn];
 
-  const availablePosts = allPosts
-    .filter((entry) => {
-      // import.meta.env.MODE が 'production' の場合、公開済みの投稿のみを対象とする
-      if (import.meta.env.MODE === 'production') {
-        return entry.data.published && isPast(entry.data.created_time);
-      }
-      // 開発モードでは全ての投稿を対象とする
-      return true;
-    })
-    .sort((a, b) => compareDesc(a.data.created_time, b.data.created_time));
-  return availablePosts;
+  // 公開済み (published && 過去日) の集合だけが URL を生成する。
+  // slug 衝突 fail-loud はこの集合に対してのみ掛ける。
+  // draft (published: false) / 未来日記は URL を生成しないため衝突しても build を落とさない
+  // — そうでないと content/posts/ を「Notion 昇格前の下書き置き場」として使えなくなる。
+  // この不変は production / dev 共通: dev でも draft slug は既存 Notion 記事と衝突可能だが
+  // dev サーバを落とす理由は無い (preview したいから走らせている)。
+  const publishedPosts = allPosts.filter((entry) => entry.data.published && isPast(entry.data.created_time));
+  assertUniqueSlugs(publishedPosts);
+
+  // production では publish 集合のみを返し、dev では draft を含む全件を返す。
+  const availablePosts = import.meta.env.MODE === 'production' ? publishedPosts : allPosts;
+  return availablePosts.sort((a, b) => compareDesc(a.data.created_time, b.data.created_time));
+}
+
+/**
+ * (locale, slug) ペアの重複を検知して throw する。
+ *
+ * 同じ locale で slug が重複していると同じ URL を生成するページが 2 つ存在することになり、
+ * 動的ルートで競合する。ja と en で同 slug を持つのは i18n pair として正常なので許可。
+ *
+ * notion/posts 配下と posts 直下を 1 collection に束ねる設計のため、出自を跨いだ slug 衝突を
+ * build 時に fail-loud で検知することが目的。
+ *
+ * locale の判定は frontmatter ではなく collection (postsEn=en, posts=ja) を権威とする。
+ * frontmatter.locale は optional で書き忘れ・誤記がありうるが、filename↔collection の対応は
+ * Astro の glob loader が型レベルで保証するため、こちらを source of truth に取る。
+ */
+export function assertUniqueSlugs(entries: Array<CollectionEntry<'posts' | 'postsEn'>>): void {
+  const seen = new Map<string, CollectionEntry<'posts' | 'postsEn'>>();
+  for (const entry of entries) {
+    const locale = entry.collection === 'postsEn' ? 'en' : 'ja';
+    const key = `${locale}:${entry.data.slug}`;
+    const existing = seen.get(key);
+    if (existing) {
+      throw new Error(
+        `Duplicate post slug "${entry.data.slug}" in locale "${locale}":\n` +
+          `  - ${existing.id}\n` +
+          `  - ${entry.id}\n` +
+          `URL は frontmatter.slug 由来のため、同 locale 内では一意である必要があります。`,
+      );
+    }
+    seen.set(key, entry);
+  }
 }
 
 /**

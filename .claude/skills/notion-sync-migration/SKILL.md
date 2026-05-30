@@ -113,7 +113,7 @@ pnpm build
 `--mode=all` での実行後、以下を確認する:
 
 1. `Sync completed: { succeeded: N, failed: 0 }` のNが想定件数以上
-2. 更新された記事のfrontmatter（`git diff src/content/post/notion/*.md`）が期待通りのフィールド構成
+2. 更新された記事のfrontmatter（`git diff content/notion/posts/*.md`）が期待通りのフィールド構成
 3. `queryFilter`、`propertyOutputs`、`getImageOutput` が正しく動作した痕跡がログに残っている
 
 「exit 0」だけで検証完了と判断しない。出力に検証対象が実行された痕跡を確認するまで次に進まない。

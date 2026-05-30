@@ -1,5 +1,5 @@
-import notionTagsJson from '../../content/post/notion/tags.json';
-import notionChannelsJson from '../../content/post/notion/channels.json';
+import notionTagsJson from '@content/notion/tags.json';
+import notionChannelsJson from '@content/notion/channels.json';
 import { Tag, Tags, Channel, Channels } from './schema';
 
 export const tags = Tags.parse(notionTagsJson);

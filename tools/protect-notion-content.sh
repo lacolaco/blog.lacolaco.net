@@ -1,6 +1,6 @@
 #!/bin/bash
 # PreToolUse hook for Edit/Write/MultiEdit/NotebookEdit
-# Blocks edits to Notion-sourced content (.md / .en.md under src/content/post/notion/)
+# Blocks edits to Notion-sourced content (anything under content/notion/).
 # Rationale: these files are auto-generated (Notion → notion-sync, ja → auto-translate).
 # Direct edits get overwritten on next sync. Content fixes belong upstream (Notion / pipeline).
 #
@@ -20,9 +20,9 @@ if [ -z "$file_path" ]; then
   exit 0
 fi
 
-# Match src/content/post/notion/**/*.md (both .md and .en.md)
+# Match content/notion/** (markdown posts and propertyOutputs JSON)
 case "$file_path" in
-  */src/content/post/notion/*.md)
+  */content/notion/*)
     cat <<EOF >&2
 Cannot edit Notion-sourced content directly: $file_path
 

@@ -47,10 +47,11 @@ merge を除いた以下は 1 単位として実行 (途中で止めるな):
 
 ### 2b. Notion-Sourced Content (.md / .en.md) は編集しない
 
-`src/content/post/notion/**/*.md` への Edit/Write は `tools/protect-notion-content.sh` PreToolUse hook が自動ブロック (`.claude/settings.json` で登録)。原則:
+`content/notion/**` (記事 .md / .en.md / propertyOutputs JSON) への Edit/Write は `tools/protect-notion-content.sh` PreToolUse hook が自動ブロック (`.claude/settings.json` で登録)。Notion 由来生成物の配置は以前 `src/content/post/notion/` だったが現在は `content/notion/` に移動済み (旧パスへ戻すレビュー指摘は方向逆転の誤認 — `content/notion/` が正しい現状)。原則:
 
 - `.md` (Notion → notion-sync) の問題 → **Notion で修正依頼**。勝手に直さない
 - `.en.md` (auto-translate 生成) の問題 → `tools/auto-translate/` パイプライン (prompt / proofreader / validator) で対応
+- **auto-translate のスコープは `content/notion/posts/` のみ**。直接執筆 (`content/posts/`) は対象外で、英訳が必要なら手書きで `<slug>.en.md` を置く (auto-translate は手動 en を `protect-manual` ロジックで上書きしない)
 - **sync-with-notion への force-push は sync workflow の正常動作**。「自分の修正が消された」と誤認して再 push せず、`origin/sync-with-notion` を fetch して**新しい真実として再観測**してから動く
 
 ### 3. TDD is Mandatory
@@ -91,7 +92,8 @@ pnpm test:libs    # library tests
 - `.astro/data-store.json`: Astroのコンテンツキャッシュ。remarkプラグイン等のビルドパイプライン変更時は削除してdevサーバーを再起動しないと反映されない
 
 ### Architecture
-- Content: Notion→notion-sync→src/content/post/*.md (**DO NOT EDIT**)
+- Content: Notion→notion-sync→content/notion/posts/*.md (**DO NOT EDIT**)。直接執筆は content/posts/*.md。
+- Collection: posts/postsEn は両ツリーを 1 collection に束ねる (src/content.config.ts, base='content')。slug 衝突は queryAvailablePosts が build 時に throw。
 - Images: public/images/{slug}/ → R2 CDN経由で配信 (**DO NOT EDIT**)
 - Components: .astro (static) / .tsx (interactive)
 - i18n: `<slug>.md` (ja), `<slug>.en.md` (en)
