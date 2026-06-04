@@ -37,7 +37,7 @@
     "astro": "6.4.2",
     "budoux": "0.8.4",
     "cheerio": "1.2.0",
-    "date-fns": "4.3.0",
+    "date-fns": "4.4.0",
     "escape-html": "^1.0.3",
     "hast-util-from-html": "^2.0.3",
     "katex": "0.17.0",
