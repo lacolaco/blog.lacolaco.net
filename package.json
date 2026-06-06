@@ -62,7 +62,7 @@
     "@types/gtag.js": "^0.0.20",
     "@types/katex": "0.16.8",
     "@types/node": "24.12.4",
-    "@types/react": "19.2.15",
+    "@types/react": "19.2.16",
     "@types/react-dom": "19.2.3",
     "eslint": "^10.0.0",
     "husky": "^9.1.7",
