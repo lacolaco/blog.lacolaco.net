@@ -3,7 +3,7 @@ title: 'k1LoW/deck の Page key を活用する'
 slug: 'using-deck-with-page-key'
 icon: ''
 created_time: '2026-06-10T14:16:00.000Z'
-last_edited_time: '2026-06-10T14:16:00.000Z'
+last_edited_time: '2026-06-10T14:35:00.000Z'
 tags:
   - 'deck'
   - 'Claude Code'
@@ -51,7 +51,7 @@ https://github.com/k1LoW/deck/pull/527
 
 ## lacolaco/deck-skills
 
-`key`フィールドを使った指示で円滑にスライド編集作業をするために作った自分用のAgent Skillsがあるので、この際公開してしまうことにした。keyフィールドの使い方の一例として誰かの参考になれば幸い。とはいえ、他人が使うことは想定してないので汎用性についてはあしからず。
+`key`フィールドを使った指示で円滑にスライド編集作業をするために作った自分用のAgent Skillsがあるので、この際公開してしまうことにした。`key`フィールドの使い方の一例として誰かの参考になれば幸い。とはいえ、他人が使うことは想定してないので汎用性についてはあしからず。
 
 https://github.com/lacolaco/deck-skills
 
