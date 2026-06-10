@@ -670,5 +670,11 @@
     "name": "deck",
     "color": "yellow",
     "description": null
+  },
+  {
+    "id": "3c35cc30-7ea1-4d58-9bda-f3ec3388d613",
+    "name": "Agent Skills",
+    "color": "pink",
+    "description": null
   }
 ]
