@@ -664,5 +664,11 @@
     "name": "TSKaigi",
     "color": "default",
     "description": null
+  },
+  {
+    "id": "be3100d7-941c-474b-bbf5-f821abad92af",
+    "name": "deck",
+    "color": "yellow",
+    "description": null
   }
 ]
