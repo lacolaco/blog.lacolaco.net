@@ -1446,5 +1446,12 @@
   "37b3521b-014a-807c-a153-deb675ae2e81": {
     "lastModified": "2026-06-10T14:35:00.000Z",
     "filePath": "content/notion/posts/using-deck-with-page-key.md"
+  },
+  "37f3521b-014a-80a2-95c5-edd1c3c64ae5": {
+    "lastModified": "2026-06-14T07:45:00.000Z",
+    "filePath": "content/notion/posts/kurutoga-metal.md",
+    "imagePaths": [
+      "public/images/kurutoga-metal/654.503adec57422b83a.jpg"
+    ]
   }
 }
