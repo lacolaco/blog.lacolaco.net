@@ -23,7 +23,7 @@
     "lint": "eslint .",
     "prepare": "husky"
   },
-  "packageManager": "pnpm@10.34.1",
+  "packageManager": "pnpm@10.34.2",
   "dependencies": {
     "@astrojs/node": "^10.0.4",
     "@astrojs/prism": "4.0.2",
