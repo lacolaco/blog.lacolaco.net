@@ -3,7 +3,7 @@ title: '変更容易性の2層モデル'
 slug: 'two-layer-modifiability-model'
 icon: ''
 created_time: '2026-06-15T00:29:00.000Z'
-last_edited_time: '2026-06-15T00:54:00.000Z'
+last_edited_time: '2026-06-15T06:26:00.000Z'
 tags:
   - 'TSKaigi'
   - 'Software Design'
@@ -13,6 +13,7 @@ locale: 'ja'
 channels:
   - 'Thought'
 notion_url: 'https://app.notion.com/p/2-37f3521b014a80bb9782f55c614989c2'
+auto_translate: true
 features:
   katex: false
   mermaid: false

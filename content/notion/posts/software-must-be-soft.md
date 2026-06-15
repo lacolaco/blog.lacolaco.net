@@ -3,7 +3,7 @@ title: 'ソフトウェアはソフトでなければならない'
 slug: 'software-must-be-soft'
 icon: ''
 created_time: '2026-06-07T08:28:00.000Z'
-last_edited_time: '2026-06-07T08:28:00.000Z'
+last_edited_time: '2026-06-15T06:26:00.000Z'
 tags:
   - 'Software Design'
 published: true
@@ -11,6 +11,7 @@ locale: 'ja'
 channels:
   - 'Thought'
 notion_url: 'https://app.notion.com/p/3773521b014a80a1866bc7418afaa21e'
+auto_translate: true
 features:
   katex: false
   mermaid: false
