@@ -676,5 +676,11 @@
     "name": "Agent Skills",
     "color": "pink",
     "description": null
+  },
+  {
+    "id": "429043f1-6f95-4865-b668-dd194d3a66fa",
+    "name": "変更容易性",
+    "color": "pink",
+    "description": null
   }
 ]
