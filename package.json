@@ -21,7 +21,8 @@
     "test:libs": "vitest run",
     "test": "pnpm test:tools && pnpm test:libs",
     "lint": "eslint .",
-    "prepare": "husky"
+    "prepare": "husky",
+    "postinstall": "astro sync"
   },
   "packageManager": "pnpm@10.34.2",
   "dependencies": {
