@@ -11,10 +11,12 @@ These 3 rules are NON-NEGOTIABLE. Violating any = STOP and reassess.
 **TRIGGER**: After lint/format/build pass, BEFORE `git commit`
 
 For significant changes (new features, refactoring, multi-file):
-1. Run code-critic agent
+1. Run ビルトイン `/code-review` (既定 `medium`)
 2. Fix all findings
-3. Run code-critic AGAIN to verify
+3. Run `/code-review` AGAIN to verify
 4. Only then commit
+
+重い PR や設計変更が大きいときは、 ユーザーが手で `/code-review ultra` を重ねる (user-triggered で課金される)。
 
 **"lint/build passed" ≠ "ready to commit"**
 
