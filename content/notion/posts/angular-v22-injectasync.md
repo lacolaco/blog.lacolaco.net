@@ -2,8 +2,8 @@
 title: 'Angular v22: injectAsync でビジネスロジックを遅延読み込みする'
 slug: 'angular-v22-injectasync'
 icon: ''
-created_time: '2026-06-21T23:46:00.000Z'
-last_edited_time: '2026-06-21T23:46:00.000Z'
+created_time: '2026-06-21T23:49:00.000Z'
+last_edited_time: '2026-06-21T23:49:00.000Z'
 tags:
   - 'TypeScript'
   - 'Dependency Injection'
@@ -62,7 +62,7 @@ export class ReportView {
 
 ### 利用上の制約
 
-injectAsyncが使えるのは、`@Injectable({ providedIn: 'root'})` か、`@Service()` デコレータで宣言されたサービスだけだ。モジュールの読み込みに応じて動的に依存性の注入システムに組み込まれる都合上、複雑なプロバイダー定義には対応していない。
+injectAsyncが使えるのは、`@Injectable({ providedIn: 'root' })` か、`@Service()` デコレータで宣言されたサービスだけだ。モジュールの読み込みに応じて動的に依存性の注入システムに組み込まれる都合上、複雑なプロバイダー定義には対応していない。
 
 ## 遅延読み込みの方法とユースケース
 
