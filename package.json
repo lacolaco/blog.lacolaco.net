@@ -24,7 +24,7 @@
     "prepare": "husky",
     "postinstall": "astro sync"
   },
-  "packageManager": "pnpm@10.34.3",
+  "packageManager": "pnpm@10.34.4",
   "dependencies": {
     "@astrojs/node": "^10.0.4",
     "@astrojs/prism": "4.0.2",
@@ -35,7 +35,7 @@
     "@fontsource/source-code-pro": "5.2.7",
     "@fontsource/zen-kaku-gothic-new": "5.2.7",
     "@resvg/resvg-js": "2.6.2",
-    "astro": "6.4.7",
+    "astro": "6.4.8",
     "budoux": "0.8.4",
     "cheerio": "1.2.0",
     "date-fns": "4.4.0",
