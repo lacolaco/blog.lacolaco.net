@@ -124,7 +124,7 @@ jobs:
             echo "::group::PR #$PR"
             if output=$(gh pr update-branch "$PR" 2>&1); then
               echo "$output"
-            elif echo "$output" | grep -qi "already up.to.date\|already up to date"; then
+            elif echo "$output" | grep -qi "already up.to.date"; then  # `.` は space と `-` の両方にマッチ
               echo "PR #$PR is already up to date"
             else
               echo "::warning::Failed to update PR #$PR (possible conflict): $output"
