@@ -87,9 +87,8 @@ jobs:
               event_type: 'notion-sync-blog-lacolaco',
             });
 
-  # main push 時に自リポの open な auto-translate PR を main に追従させる。
-  # GitHub auto-merge は base behind を自動解決しないため、push-trigger と同じ責務 (main 更新で
-  # behind になる PR を refresh する) の自リポ側実装として並置する。
+  # main push 時に自リポの open な auto-translate PR を main に追従させる
+  # (auto-merge は base behind を自動解決しない)
   refresh-auto-translate-prs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
@@ -110,26 +109,20 @@ jobs:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          # --limit を明示しないと default 30 件で頭打ちになり、auto-translate PR が滞留したときに古いものから漏れる。
           PRS=$(gh pr list --state open --limit 100 --json number,headRefName \
             --jq '.[] | select(.headRefName | startswith("auto-translate/")) | .number')
           if [[ -z "$PRS" ]]; then
             echo "No open auto-translate PRs"
             exit 0
           fi
-          # gh pr update-branch の出力をケース分け:
-          #   - 成功 (新 merge commit 追加): 普通の info
-          #   - 既に最新: info (PR が既に追従済みなだけで異常ではない)
-          #   - それ以外 (conflict / auth / network 等): warning で個別 PR を記録するが job は止めない
-          #     (batch の他 PR を止めず、次の push で再試行できるように warning に留める)
           for PR in $PRS; do
             echo "::group::PR #$PR"
             if output=$(gh pr update-branch "$PR" 2>&1); then
               echo "$output"
-            elif echo "$output" | grep -qi "already up.to.date"; then  # `.` は space と `-` の両方にマッチ
+            elif echo "$output" | grep -qi "already up.to.date"; then
               echo "PR #$PR is already up to date"
             else
-              echo "::warning::Failed to update PR #$PR (possible conflict): $output"
+              echo "::warning::Failed to update PR #$PR: $output"
             fi
             echo "::endgroup::"
           done
