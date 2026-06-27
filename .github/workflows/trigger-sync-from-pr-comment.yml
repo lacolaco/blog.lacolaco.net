@@ -59,9 +59,9 @@ jobs:
               event_type: 'notion-sync-blog-lacolaco',
             });
 
-  # main push 時にも dispatch を投げ、blog-contents 側の既存 sync PR を最新 main base で refresh する
-  # (renovate / 人手 PR / sync PR merge → main 更新 → 既存 sync PR が base behind になる問題への対処)
-  push-trigger:
+  # blog-contents 側 sync PR を最新 main base で refresh するための dispatch
+  # (main 更新で sync PR が base behind になる問題への対処)
+  dispatch-blog-contents-sync:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
@@ -86,3 +86,26 @@ jobs:
               repo: 'blog-contents',
               event_type: 'notion-sync-blog-lacolaco',
             });
+
+  # auto-translate.yml は content/notion/posts/ 変更を含む push しか自動起動しない。
+  # コード push でも main は進むので、追従していない翻訳 PR を捕まえるため明示的に再送する。
+  dispatch-auto-translate:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Generate App token (for self repo)
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.WORKER_APP_ID }}
+          private-key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
+
+      - name: Re-dispatch auto-translate workflow
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh workflow run auto-translate.yml --ref main
