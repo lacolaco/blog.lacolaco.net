@@ -78,6 +78,16 @@ jobs:
             git commit -m "chore: auto-translate ja → en for ${COMMIT_SHA}"
             git push origin "$BRANCH"
           fi
-          gh pr create --base main --head "$BRANCH" \
+          NEW_PR_URL=$(gh pr create --base main --head "$BRANCH" \
             --title "chore: auto-translate ja → en (${COMMIT_SHA:0:7})" \
-            --body "Automated translation for content merged in ${COMMIT_SHA}."
+            --body "Automated translation for content merged in ${COMMIT_SHA}.")
+          NEW_PR_NUMBER="${NEW_PR_URL##*/}"
+
+          # 旧 SHA で作られた open な auto-translate PR は新 PR に置き換わるため close する
+          # (放置すると base behind PR が滞留し、stuck と分裂を生む)
+          gh pr list --state open --limit 100 --json number,headRefName \
+            --jq ".[] | select(.headRefName | startswith(\"auto-translate/\")) | select(.number != $NEW_PR_NUMBER) | .number" \
+            | while read -r OLD_PR; do
+              [[ -z "$OLD_PR" ]] && continue
+              gh pr close "$OLD_PR" --delete-branch --comment "Superseded by #$NEW_PR_NUMBER"
+            done
