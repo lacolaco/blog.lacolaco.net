@@ -59,9 +59,10 @@ jobs:
               event_type: 'notion-sync-blog-lacolaco',
             });
 
-  # main push 時にも dispatch を投げ、blog-contents 側の既存 sync PR を最新 main base で refresh する
-  # (renovate / 人手 PR / sync PR merge → main 更新 → 既存 sync PR が base behind になる問題への対処)
-  push-trigger:
+  # main push 時に:
+  #   - blog-contents 側の既存 sync PR を最新 main base で refresh する dispatch を投げる
+  #   - 自リポの open な auto-translate PR を main に追従させる (auto-merge は base behind を自動解決しない)
+  propagate-main-update:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
@@ -87,16 +88,8 @@ jobs:
               event_type: 'notion-sync-blog-lacolaco',
             });
 
-  # main push 時に自リポの open な auto-translate PR を main に追従させる
-  # (auto-merge は base behind を自動解決しない)
-  refresh-auto-translate-prs:
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    steps:
       - name: Generate App token (for self repo)
-        id: app-token
+        id: self-app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
           app-id: ${{ secrets.WORKER_APP_ID }}
@@ -106,7 +99,7 @@ jobs:
 
       - name: Update stale auto-translate PRs
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ steps.self-app-token.outputs.token }}
           GH_REPO: ${{ github.repository }}
         run: |
           PRS=$(gh pr list --state open --limit 100 --json number,headRefName \
