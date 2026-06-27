@@ -59,10 +59,10 @@ jobs:
               event_type: 'notion-sync-blog-lacolaco',
             });
 
-  # main push 契機:
-  #   - blog-contents 側 sync PR への dispatch
-  #   - 自リポ auto-translate PR を main に追従させる (auto-merge は base behind を解決しない)
-  refresh-stale-prs:
+  # main push 契機で下流の sync 系ワークフローを再送する:
+  #   - blog-contents 側 sync workflow (Notion → md)
+  #   - 自リポ auto-translate workflow (ja → en)
+  dispatch-syncs:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
@@ -97,25 +97,8 @@ jobs:
           owner: ${{ github.repository_owner }}
           repositories: ${{ github.event.repository.name }}
 
-      - name: Update stale auto-translate PRs
+      - name: Re-dispatch auto-translate workflow
         env:
           GH_TOKEN: ${{ steps.self-app-token.outputs.token }}
           GH_REPO: ${{ github.repository }}
-        run: |
-          PRS=$(gh pr list --state open --limit 100 --json number,headRefName \
-            --jq '.[] | select(.headRefName | startswith("auto-translate/")) | .number')
-          if [[ -z "$PRS" ]]; then
-            echo "No open auto-translate PRs"
-            exit 0
-          fi
-          for PR in $PRS; do
-            echo "::group::PR #$PR"
-            if output=$(gh pr update-branch "$PR" 2>&1); then
-              echo "$output"
-            elif echo "$output" | grep -qi "already up.to.date"; then
-              echo "PR #$PR is already up to date"
-            else
-              echo "::warning::Failed to update PR #$PR: $output"
-            fi
-            echo "::endgroup::"
-          done
+        run: gh workflow run auto-translate.yml --ref main
