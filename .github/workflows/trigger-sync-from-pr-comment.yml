@@ -59,7 +59,8 @@ jobs:
               event_type: 'notion-sync-blog-lacolaco',
             });
 
-  # main push 時に blog-contents 側の sync workflow を再送する
+  # blog-contents 側 sync PR を最新 main base で refresh するための dispatch
+  # (main 更新で sync PR が base behind になる問題への対処)
   dispatch-blog-contents-sync:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
@@ -86,7 +87,8 @@ jobs:
               event_type: 'notion-sync-blog-lacolaco',
             });
 
-  # main push 時に自リポの auto-translate workflow を再送する
+  # auto-translate.yml は content/notion/posts/ 変更を含む push しか自動起動しない。
+  # コード push でも main は進むので、追従していない翻訳 PR を捕まえるため明示的に再送する。
   dispatch-auto-translate:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
