@@ -18,6 +18,11 @@ on:
         required: false
         type: string
 
+# 並走時に互いの新 PR を「旧」と誤判定して close し合う race を防ぐため直列化する
+concurrency:
+  group: auto-translate
+  cancel-in-progress: false
+
 jobs:
   translate:
     runs-on: ubuntu-latest
@@ -82,6 +87,7 @@ jobs:
             --title "chore: auto-translate ja → en (${COMMIT_SHA:0:7})" \
             --body "Automated translation for content merged in ${COMMIT_SHA}.")
           NEW_PR_NUMBER="${NEW_PR_URL##*/}"
+          [[ "$NEW_PR_NUMBER" =~ ^[0-9]+$ ]] || { echo "::error::Failed to extract PR number from: $NEW_PR_URL"; exit 1; }
 
           # 旧 SHA で作られた open な auto-translate PR は新 PR に置き換わるため close する
           # (放置すると base behind PR が滞留し、stuck と分裂を生む)
