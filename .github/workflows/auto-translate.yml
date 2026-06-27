@@ -71,6 +71,9 @@ jobs:
           BRANCH="auto-translate"
           git config user.name "lacolaco-actions-worker[bot]"
           git config user.email "lacolaco-actions-worker[bot]@users.noreply.github.com"
+          # fetch-depth:1 の checkout では remote-tracking ref がないため、
+          # --force-with-lease を機能させるには明示的に fetch する必要がある
+          git fetch origin "$BRANCH" || true
           git checkout -B "$BRANCH"
           git add content/notion/posts
           git commit -m "chore: auto-translate ja → en for ${COMMIT_SHA}"
