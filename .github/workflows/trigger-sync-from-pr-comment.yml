@@ -102,6 +102,8 @@ jobs:
         with:
           app-id: ${{ secrets.WORKER_APP_ID }}
           private-key: ${{ secrets.WORKER_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: ${{ github.event.repository.name }}
 
       - name: Update stale auto-translate PRs
         env:
