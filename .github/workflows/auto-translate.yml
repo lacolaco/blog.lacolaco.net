@@ -91,9 +91,11 @@ jobs:
 
           # 旧 SHA で作られた open な auto-translate PR は新 PR に置き換わるため close する
           # (放置すると base behind PR が滞留し、stuck と分裂を生む)
-          gh pr list --state open --limit 100 --json number,headRefName \
+          # --limit は正常運用なら 1〜数件しか open しないが、過去の異常時の取り残しまで拾えるよう余裕を持たせる
+          gh pr list --state open --limit 200 --json number,headRefName \
             --jq ".[] | select(.headRefName | startswith(\"auto-translate/\")) | select(.number != $NEW_PR_NUMBER) | .number" \
             | while read -r OLD_PR; do
               [[ -z "$OLD_PR" ]] && continue
-              gh pr close "$OLD_PR" --delete-branch --comment "Superseded by #$NEW_PR_NUMBER"
+              gh pr close "$OLD_PR" --delete-branch --comment "Superseded by #$NEW_PR_NUMBER" \
+                || echo "::warning::Failed to close PR #$OLD_PR"
             done
