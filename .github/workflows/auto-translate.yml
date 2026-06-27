@@ -18,6 +18,11 @@ on:
         required: false
         type: string
 
+# 同 PR への並行 force-push を防ぐため直列化する
+concurrency:
+  group: auto-translate
+  cancel-in-progress: false
+
 jobs:
   translate:
     runs-on: ubuntu-latest
@@ -52,7 +57,7 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
-      - name: Create PR for translated files
+      - name: Create or update auto-translate PR
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           COMMIT_SHA: ${{ github.event.inputs.sha || github.sha }}
@@ -61,23 +66,22 @@ jobs:
             echo "No translation changes"
             exit 0
           fi
-          BRANCH="auto-translate/${COMMIT_SHA}"
-          # 再実行時の冪等性ガード: branch 存在 → PR 状態 (open/closed/merged) の 2 段判定
-          if git ls-remote --exit-code --heads origin "refs/heads/$BRANCH" >/dev/null 2>&1; then
-            PR_COUNT=$(gh pr list --head "$BRANCH" --state all --json number --jq 'length')
-            if [ "$PR_COUNT" -gt 0 ]; then
-              echo "Branch $BRANCH と PR が既存 (open/closed/merged のいずれか)、skipping"
-              exit 0
-            fi
-            echo "Branch $BRANCH exists but no PR record, creating PR only"
-          else
-            git config user.name "lacolaco-actions-worker[bot]"
-            git config user.email "lacolaco-actions-worker[bot]@users.noreply.github.com"
-            git checkout -b "$BRANCH"
-            git add content/notion/posts
-            git commit -m "chore: auto-translate ja → en for ${COMMIT_SHA}"
-            git push origin "$BRANCH"
+          # 固定ブランチに翻訳結果を毎回 force-push し、PR は 1 本を再利用する
+          # (SHA ごとに別ブランチ + 別 PR を作る設計は base behind や PR 分裂の原因になる)
+          BRANCH="auto-translate"
+          git config user.name "lacolaco-actions-worker[bot]"
+          git config user.email "lacolaco-actions-worker[bot]@users.noreply.github.com"
+          # fetch-depth:1 の checkout では remote-tracking ref がないため、
+          # --force-with-lease を機能させるには明示的に fetch する必要がある
+          git fetch origin "$BRANCH" || true
+          git checkout -B "$BRANCH"
+          git add content/notion/posts
+          git commit -m "chore: auto-translate ja → en for ${COMMIT_SHA}"
+          git push --force-with-lease origin "$BRANCH"
+
+          # 初回のみ作成、以降は force-push が synchronize イベントで CI を再起動するだけで PR 再利用
+          if [[ "$(gh pr list --state open --head "$BRANCH" --json number --jq 'length')" -eq 0 ]]; then
+            gh pr create --base main --head "$BRANCH" \
+              --title "chore: auto-translate ja → en" \
+              --body "Latest automated translation (force-pushed on every main update)."
           fi
-          gh pr create --base main --head "$BRANCH" \
-            --title "chore: auto-translate ja → en (${COMMIT_SHA:0:7})" \
-            --body "Automated translation for content merged in ${COMMIT_SHA}."
