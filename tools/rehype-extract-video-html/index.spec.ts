@@ -102,4 +102,49 @@ describe('rehypeExtractVideoHtml', () => {
     const html = await processMarkdownWithImageCdn(md, 'https://images.example.com');
     assert.ok(html.includes('src="https://images.example.com/videos/foo/bar.mp4"'));
   });
+
+  test('<img src="/images/..."> を含む raw HTML が element に展開される', async () => {
+    const html = await processMarkdown('<img src="/images/slug/pic.png" alt="cap">\n');
+    assert.ok(html.includes('<img src="/images/slug/pic.png" alt="cap">'));
+  });
+
+  test('<figure><img><figcaption></figure> 全体が element に展開される', async () => {
+    const md = '<figure>\n  <img src="/images/slug/pic.png" alt="cap">\n  <figcaption>cap</figcaption>\n</figure>\n';
+    const html = await processMarkdown(md);
+    assert.ok(html.includes('<figure>'));
+    assert.ok(html.includes('<img src="/images/slug/pic.png" alt="cap">'));
+    assert.ok(html.includes('<figcaption>cap</figcaption>'));
+    assert.ok(html.includes('</figure>'));
+  });
+
+  test('src が `/images/` 以外を指す <img> は raw のまま (contents 配下でない外部画像に触らない)', async () => {
+    const md = '<img src="https://other.example.com/x.png" alt="ext">\n';
+    const html = await processMarkdown(md);
+    assert.ok(html.includes('<img src="https://other.example.com/x.png" alt="ext">'));
+  });
+
+  test('説明テキスト中の `<img>` は誤検知しない (raw のまま)', async () => {
+    const md = '<p>The <img> tag is defined in HTML.</p>\n';
+    const html = await processMarkdown(md);
+    assert.ok(html.includes('<p>The <img> tag is defined in HTML.</p>'));
+  });
+
+  test('HTML コメント中の <img> 言及は誤検知しない (raw のまま)', async () => {
+    const md = '<!-- <img src="/images/x/y.png"> sample -->\n';
+    const html = await processMarkdown(md);
+    assert.ok(html.includes('<!-- <img src="/images/x/y.png"> sample -->'));
+  });
+
+  test('大文字の <IMG> や <Img> も element 化される (case-insensitive)', async () => {
+    const upper = await processMarkdown('<IMG src="/images/u/up.png" alt="U">\n');
+    assert.ok(upper.includes('<img src="/images/u/up.png" alt="U">'));
+    const mixed = await processMarkdown('<Img src="/images/m/mx.png" alt="M">\n');
+    assert.ok(mixed.includes('<img src="/images/m/mx.png" alt="M">'));
+  });
+
+  test('rehype-image-cdn と連結すると <img src="/images/..."> が CDN URL に書き換わる (パイプライン統合)', async () => {
+    const md = '<figure><img src="/images/slug/pic.png" alt="cap"><figcaption>c</figcaption></figure>\n';
+    const html = await processMarkdownWithImageCdn(md, 'https://images.example.com');
+    assert.ok(html.includes('src="https://images.example.com/slug/pic.png"'));
+  });
 });
