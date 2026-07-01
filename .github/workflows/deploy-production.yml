@@ -86,5 +86,8 @@ jobs:
           deploy-image: 'asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}'
           revision-traffic: 'LATEST=100'
           # GCP_PROJECT_IDはCloud Runメタデータサーバーから取得するため不要
+          # IMAGE_CDN_BASE_URL は SSR 実行時 (rehype-image-cdn) が読むため runtime env にも渡す。
+          # Build 時のみ渡すと Astro server build の <img src> が生パスのまま Cloud Run で返され CDN 未変換になる
           env-vars: |
             FIRESTORE_DATABASE=likes-production
+            IMAGE_CDN_BASE_URL=${{ vars.IMAGE_CDN_BASE_URL }}
