@@ -1,3 +1,4 @@
+import { unified } from '@astrojs/markdown-remark';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
@@ -43,6 +44,11 @@ export default defineConfig({
   },
 
   markdown: {
+    // Astro v7 のデフォルト Markdown プロセッサは Sätteri に変わったが、
+    // remarkPlugins / rehypePlugins を継続使用するには @astrojs/markdown-remark の
+    // unified() を processor に明示指定する必要がある。
+    // 参考: https://github.com/withastro/astro/blob/main/packages/astro/CHANGELOG.md#700
+    processor: unified(),
     gfm: true,
     remarkPlugins: [remarkBreaks, remarkMath, remarkEmbed],
     // rehypeExtractVideoHtml は notion-sync が出力する <video> を含む raw ノードのみを

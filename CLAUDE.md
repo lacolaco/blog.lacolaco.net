@@ -74,9 +74,9 @@ Kent Beck style. Tests = spec. Fix implementation, not tests.
 ---
 
 ### Stack
-- Astro 5.x blog, Notion CMS, bilingual (ja/en)
-- Node.js 24+, pnpm 10.20.0, TS strict
-- Astro 5.x+React, Tailwind 4.x
+- Astro 7.x blog, Notion CMS, bilingual (ja/en)
+- Node.js 24+, pnpm 10.34.4, TS strict
+- Astro 7.x+React, Tailwind 4.x
 - GCP: Cloud Run
 - Cloudflare: R2 (画像CDN), CDN (OG画像キャッシュ)
 
