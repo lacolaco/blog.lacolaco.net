@@ -81,6 +81,10 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+        # postinstall の `astro sync` が content-layer cache を生成する時点で IMAGE_CDN_BASE_URL を評価するため
+        # install step にも env を渡す。build step にだけ渡すと cache 済みの生パスがそのまま prerender に流れる
+        env:
+          IMAGE_CDN_BASE_URL: ${{ vars.IMAGE_CDN_BASE_URL }}
 
       - name: Build
         run: pnpm run build
