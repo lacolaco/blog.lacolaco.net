@@ -10,7 +10,7 @@ import remarkBreaks from 'remark-breaks';
 import remarkMath from 'remark-math';
 import remarkEmbed from './tools/remark-embed';
 import rehypeImageCdn from './tools/rehype-image-cdn';
-import rehypeExtractVideoHtml from './tools/rehype-extract-video-html';
+import rehypeExtractMediaHtml from './tools/rehype-extract-media-html';
 
 import node from '@astrojs/node';
 
@@ -45,11 +45,12 @@ export default defineConfig({
   markdown: {
     gfm: true,
     remarkPlugins: [remarkBreaks, remarkMath, remarkEmbed],
-    // rehypeExtractVideoHtml は notion-sync が出力する <video> を含む raw ノードのみを
-    // element 化する最小スコープのプラグイン。後段の rehype-image-cdn が <video> を
-    // visit できるようにするため先頭に置く。<video> を含まない raw HTML には触れない
+    // rehypeExtractMediaHtml は notion-sync が出力する <video src="/videos/..."> と
+    // 記事本文が使う <img src="/images/..."> を含む raw ノードのみを element 化する
+    // 最小スコープのプラグイン。後段の rehype-image-cdn が visit できるようにするため
+    // 先頭に置く。対象タグを含まない raw HTML には触れない
     rehypePlugins: [
-      rehypeExtractVideoHtml,
+      rehypeExtractMediaHtml,
       rehypeGithubEmoji,
       rehypeGithubAlert,
       rehypeKatex,

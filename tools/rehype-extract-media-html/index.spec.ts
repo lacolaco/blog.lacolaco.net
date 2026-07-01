@@ -5,7 +5,7 @@ import remarkParse from 'remark-parse';
 import remarkRehype from 'remark-rehype';
 import { unified } from 'unified';
 import rehypeImageCdn from '../rehype-image-cdn/index.ts';
-import rehypeExtractVideoHtml from './index.ts';
+import rehypeExtractMediaHtml from './index.ts';
 
 async function processMarkdown(md: string) {
   const result = await unified()
@@ -13,7 +13,7 @@ async function processMarkdown(md: string) {
     // (astro と同じ前段挙動)
     .use(remarkParse)
     .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeExtractVideoHtml)
+    .use(rehypeExtractMediaHtml)
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(md);
   return String(result);
@@ -23,14 +23,14 @@ async function processMarkdownWithImageCdn(md: string, baseUrl: string) {
   const result = await unified()
     .use(remarkParse)
     .use(remarkRehype, { allowDangerousHtml: true })
-    .use(rehypeExtractVideoHtml)
+    .use(rehypeExtractMediaHtml)
     .use(rehypeImageCdn, { baseUrl })
     .use(rehypeStringify, { allowDangerousHtml: true })
     .process(md);
   return String(result);
 }
 
-describe('rehypeExtractVideoHtml', () => {
+describe('rehypeExtractMediaHtml', () => {
   test('<video> を含む raw HTML が element に展開される', async () => {
     const html = await processMarkdown('<video src="/videos/foo/bar.mp4" controls></video>\n');
     assert.ok(html.includes('<video src="/videos/foo/bar.mp4" controls></video>'));

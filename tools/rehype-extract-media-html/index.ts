@@ -19,7 +19,7 @@ import { SKIP, visit } from 'unist-util-visit';
 const VIDEO_TAG_PATTERN = /<video\s[^>]*\bsrc=["']\/videos\//i;
 const IMG_TAG_PATTERN = /<img\s[^>]*\bsrc=["']\/images\//i;
 
-const rehypeExtractVideoHtml: Plugin<[], Root> = () => {
+const rehypeExtractMediaHtml: Plugin<[], Root> = () => {
   return (tree: Root) => {
     visit(tree, 'raw', (node, index, parent) => {
       if (typeof node.value !== 'string') return;
@@ -38,4 +38,4 @@ const rehypeExtractVideoHtml: Plugin<[], Root> = () => {
   };
 };
 
-export default rehypeExtractVideoHtml;
+export default rehypeExtractMediaHtml;
