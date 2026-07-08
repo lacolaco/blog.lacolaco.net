@@ -83,7 +83,7 @@
     "remark-rehype": "^11.1.2",
     "sass": "1.101.0",
     "tailwindcss": "4.3.2",
-    "tsx": "4.22.5",
+    "tsx": "4.23.0",
     "typescript-eslint": "^8.33.1",
     "vitest": "4.1.9",
     "zod": "^3.22.4"
