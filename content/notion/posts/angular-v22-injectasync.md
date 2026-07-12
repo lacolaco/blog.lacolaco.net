@@ -3,7 +3,7 @@ title: 'Angular v22: injectAsync でビジネスロジックを遅延読み込�
 slug: 'angular-v22-injectasync'
 icon: ''
 created_time: '2026-06-21T23:49:00.000Z'
-last_edited_time: '2026-06-22T00:00:00.000Z'
+last_edited_time: '2026-07-12T00:37:00.000Z'
 tags:
   - 'TypeScript'
   - 'Dependency Injection'
@@ -12,6 +12,7 @@ locale: 'ja'
 canonical_url: 'https://zenn.dev/lacolaco/articles/angular-v22-injectasync'
 channels:
   - 'Angular'
+  - 'Code'
 notion_url: 'https://app.notion.com/p/Angular-v22-injectAsync-3813521b014a80c7aad1d3778117c09c'
 auto_translate: true
 features:

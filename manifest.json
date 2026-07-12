@@ -1459,11 +1459,24 @@
     "filePath": "content/notion/posts/two-layer-modifiability-model.md"
   },
   "3813521b-014a-80c7-aad1-d3778117c09c": {
-    "lastModified": "2026-06-22T00:00:00.000Z",
+    "lastModified": "2026-07-12T00:37:00.000Z",
     "filePath": "content/notion/posts/angular-v22-injectasync.md"
   },
   "3933521b-014a-814f-b371-e712d25678b9": {
     "lastModified": "2026-07-04T15:27:00.000Z",
     "filePath": "content/notion/posts/speaking-schedule-2026-july.md"
+  },
+  "39a3521b-014a-80de-bcf4-cc76adf1cce6": {
+    "lastModified": "2026-07-12T01:03:00.000Z",
+    "filePath": "content/notion/posts/angular-resource-apis-system.md",
+    "imagePaths": [
+      "public/images/angular-resource-apis-system/CleanShot_2026-07-11_at_11.51.182x.fdf21ad17d3f63fd.png",
+      "public/images/angular-resource-apis-system/image.ff98702a7dff205e.png",
+      "public/images/angular-resource-apis-system/image.7f6a2e84c7c8d5a2.png",
+      "public/images/angular-resource-apis-system/image.fde3b6c4bcd8bb56.png",
+      "public/images/angular-resource-apis-system/image.bd16716569684d27.png",
+      "public/images/angular-resource-apis-system/image.d794691b3e377a98.png",
+      "public/images/angular-resource-apis-system/image.016a63cf56466503.png"
+    ]
   }
 }
