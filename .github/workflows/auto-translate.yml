@@ -74,6 +74,7 @@ jobs:
           # 旧デザイン (SHA ベースブランチ auto-translate/<sha>) の残骸が残っていると
           # git ref の directory/file 衝突で push が失敗する。push 前にクリーンアップする
           # SHA 形式 (7-40桁の hex) のみ削除し、意図しないブランチの誤削除を防ぐ
+          # 削除失敗は || true で許容する (best-effort: 本来の翻訳処理を止めない)
           for ref in $(git ls-remote --heads origin "refs/heads/${BRANCH}/*" | awk '{print $2}'); do
             branch_name="${ref#refs/heads/}"
             suffix="${branch_name#${BRANCH}/}"
