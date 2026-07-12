@@ -71,6 +71,12 @@ jobs:
           BRANCH="auto-translate"
           git config user.name "lacolaco-actions-worker[bot]"
           git config user.email "lacolaco-actions-worker[bot]@users.noreply.github.com"
+          # 旧デザイン (SHA ベースブランチ) の残骸が auto-translate/* に残っていると
+          # git ref の directory/file 衝突で push が失敗する。push 前にクリーンアップする
+          for ref in $(git ls-remote --heads origin "refs/heads/${BRANCH}/*" | awk '{print $2}'); do
+            echo "Deleting conflicting ref: $ref"
+            git push origin --delete "${ref#refs/heads/}" || true
+          done
           # fetch-depth:1 の checkout では remote-tracking ref がないため、
           # --force-with-lease を機能させるには明示的に fetch する必要がある
           git fetch origin "$BRANCH" || true
