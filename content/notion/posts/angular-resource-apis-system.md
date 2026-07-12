@@ -3,11 +3,12 @@ title: 'Angular: Resource APIファミリーの体系図'
 slug: 'angular-resource-apis-system'
 icon: ''
 created_time: '2026-07-12T00:57:00.000Z'
-last_edited_time: '2026-07-12T01:03:00.000Z'
+last_edited_time: '2026-07-12T13:16:00.000Z'
 tags:
   - 'Signals'
 published: true
 locale: 'ja'
+canonical_url: 'https://zenn.dev/lacolaco/articles/angular-resource-apis-system'
 channels:
   - 'Angular'
   - 'Code'
