@@ -77,7 +77,7 @@ jobs:
           for ref in $(git ls-remote --heads origin "refs/heads/${BRANCH}/*" | awk '{print $2}'); do
             branch_name="${ref#refs/heads/}"
             suffix="${branch_name#${BRANCH}/}"
-            if echo "$suffix" | grep -qE '^[0-9a-f]{7,40}$'; then
+            if [[ "$suffix" =~ ^[0-9a-f]{7,40}$ ]]; then
               echo "Deleting stale SHA-based ref: $ref"
               git push origin --delete "$branch_name" || true
             else
