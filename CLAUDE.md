@@ -10,7 +10,7 @@ These 3 rules are NON-NEGOTIABLE. Violating any = STOP and reassess.
 
 **TRIGGER**: After lint/format/build pass, BEFORE `git commit`
 
-For significant changes (new features, refactoring, multi-file):
+For significant changes (new features, refactoring, multi-file, CI/CD workflow, deployment configuration):
 1. Run ビルトイン `/code-review` (既定 `medium`)
 2. Fix all findings
 3. Run `/code-review` AGAIN to verify
@@ -55,6 +55,7 @@ merge を除いた以下は 1 単位として実行 (途中で止めるな):
 - `.en.md` (auto-translate 生成) の問題 → `tools/auto-translate/` パイプライン (prompt / proofreader / validator) で対応
 - **auto-translate のスコープは `content/notion/posts/` のみ**。直接執筆 (`content/posts/`) は対象外で、英訳が必要なら手書きで `<slug>.en.md` を置く (auto-translate は手動 en を `protect-manual` ロジックで上書きしない)
 - **sync-with-notion への force-push は sync workflow の正常動作**。「自分の修正が消された」と誤認して再 push せず、`origin/sync-with-notion` を fetch して**新しい真実として再観測**してから動く
+- **自動ワークフロー (auto-translate, sync-with-notion, deploy 等) を実行・待機した後は、次の行動の前に実際の状態を確認せよ**。ワークフロー成功 ≠ 手動対応が必要。content-only PR は ci.yml の auto-merge ゲート (content-review pass + code-review skip) で自動マージされる。確認コマンド: `gh pr list --state merged --search "auto-translate" --limit 3` / `gh pr view <PR> --json state,mergedAt`。推測でリトライするな
 
 ### 3. TDD is Mandatory
 Kent Beck style. Tests = spec. Fix implementation, not tests.
@@ -263,6 +264,11 @@ Before implementing with external libraries:
 - Web Speech API (SpeechSynthesis)
 - Components: TTSControls.tsx, src/libs/tts/
 - Analytics: tts_start, tts_complete, tts_error
+
+### Auto-translate (ja → en)
+- `content/notion/posts/*.md` 変更時に auto-translate.yml が起動し、EN版を生成して固定ブランチ `auto-translate` に force-push
+- content-only PR は ci.yml の auto-merge ゲートで自動マージされる（条件は ci.yml 冒頭コメント参照）
+- 本文未変更でもフロントマター差分 (channels 等) があれば `frontmatter-only` で EN 版を更新する
 
 ### Image CDN (Cloudflare R2)
 - 画像はビルド時にR2 CDN URLに書き換え

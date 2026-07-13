@@ -71,11 +71,19 @@ jobs:
           BRANCH="auto-translate"
           git config user.name "lacolaco-actions-worker[bot]"
           git config user.email "lacolaco-actions-worker[bot]@users.noreply.github.com"
-          # 旧デザイン (SHA ベースブランチ) の残骸が auto-translate/* に残っていると
+          # 旧デザイン (SHA ベースブランチ auto-translate/<sha>) の残骸が残っていると
           # git ref の directory/file 衝突で push が失敗する。push 前にクリーンアップする
+          # SHA 形式 (7-40桁の hex) のみ削除し、意図しないブランチの誤削除を防ぐ
+          # 削除失敗は || true で許容する (best-effort: 本来の翻訳処理を止めない)
           for ref in $(git ls-remote --heads origin "refs/heads/${BRANCH}/*" | awk '{print $2}'); do
-            echo "Deleting conflicting ref: $ref"
-            git push origin --delete "${ref#refs/heads/}" || true
+            branch_name="${ref#refs/heads/}"
+            suffix="${branch_name#${BRANCH}/}"
+            if [[ "$suffix" =~ ^[0-9a-f]{7,40}$ ]]; then
+              echo "Deleting stale SHA-based ref: $ref"
+              git push origin --delete "$branch_name" || true
+            else
+              echo "Skipping non-SHA ref: $ref"
+            fi
           done
           # fetch-depth:1 の checkout では remote-tracking ref がないため、
           # --force-with-lease を機能させるには明示的に fetch する必要がある
