@@ -72,7 +72,7 @@ The reason the Angular team wants to promote `OnPush` more than ever is that the
 
 The Angular MCP Server also provides a tool called `onpush_zoneless_migration` to assist with `OnPush` migration and going Zoneless using AI agents.
 
-https://angular.jp/guide/zoneless
+https://angular.dev/guide/zoneless
 
 https://angular.dev/ai/mcp
 

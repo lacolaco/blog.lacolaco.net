@@ -41,7 +41,7 @@ Let's confirm their positions within the API family while explaining each one.
 
 This interface sits at the heart of the API family. The Resource API family can be broadly divided into APIs that represent Resource objects and factory APIs for creating Resource objects. The `Resource<T>` interface is the common base type for all Resource objects and serves as the return type for factory APIs.
 
-https://angular.jp/api/core/Resource
+https://angular.dev/api/core/Resource
 
 ```typescript
 export interface Resource<T> {
@@ -73,7 +73,7 @@ export interface WritableResource<T> extends Resource<T> {
 }
 ```
 
-https://angular.jp/api/core/ResourceRef
+https://angular.dev/api/core/ResourceRef
 
 ![image](/images/angular-resource-apis-system/image.ff98702a7dff205e.png)
 
@@ -89,7 +89,7 @@ export type ResourceSnapshot<T> =
   | {readonly status: 'error'; readonly error: Error};
 ```
 
-https://angular.jp/api/core/ResourceSnapshot
+https://angular.dev/api/core/ResourceSnapshot
 
 The `snapshot` field of `Resource<T>` is related in that it returns the state at the time of calling as a `ResourceSnapshot<T>` type object.
 
@@ -107,7 +107,7 @@ function resourceFromSnapshots<T>(
 ): Resource<T>;
 ```
 
-https://angular.jp/api/core/resourceFromSnapshots
+https://angular.dev/api/core/resourceFromSnapshots
 
 ```typescript
   const source = signal<ResourceSnapshot<string>>({status: 'idle', value: ''});
@@ -140,7 +140,7 @@ function resource<T, R>(
 ): ResourceRef<T>;
 ```
 
-https://angular.jp/api/core/resource
+https://angular.dev/api/core/resource
 
 I'll skip the details of how to use the API since you can find that in the documentation, but broadly speaking, you can construct a Resource object in two ways. One is by using a Loader that returns a Promise, and the other is by using a Loader that returns a Stream. By Stream, I mean a sequence of values—specifically, a `Signal<ResourceStreamItem<T>>`. `ResourceStreamItem<T>` specifically refers to `{value: T} | {error: Error}`.
 
@@ -186,7 +186,7 @@ const userId = signal<string>('id');
 const user = httpResource(() => `/api/user/${userId()}`);
 ```
 
-https://angular.jp/api/common/http/httpResource
+https://angular.dev/api/common/http/httpResource
 
 The `HttpResourceRef<T>` interface adds HTTP-specific states to `WritableResource<T>`. Since `value` is managed by `WritableResource<T>`, it is read-write, but response headers and status codes are read-only. Also, note that calling `asReadonly` will turn it into a plain `Resource<T>`, causing any HTTP-specific information to be lost.
 
