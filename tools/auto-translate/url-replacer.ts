@@ -27,11 +27,16 @@ function tryParse(url: string): URL | null {
 // URL#toString() で再構築すると正規化（例: https://angular.jp → https://angular.dev/）で
 // 原文と乖離するため、マッチ判定のみ URL パースで行い、置換は正規表現による文字列操作で行う
 
+// ホスト部はドメイン名が大文字小文字を区別しないため i フラグでマッチさせる
+// （hostname 判定は WHATWG URL の正規化で常に小文字になるのに対し、置換は原文文字列に
+// 対して行うため、フラグがないと大文字混じりドメインが置換から漏れる）。
+// 置換結果のホストは正規形（小文字）で出力する
+
 export const angularJpReplacer: UrlReplacer = {
   name: 'angular.jp',
   replace(url) {
     if (tryParse(url)?.hostname !== 'angular.jp') return null;
-    return url.replace(/^(https?:\/\/)angular\.jp(?=[/:?#]|$)/, '$1angular.dev');
+    return url.replace(/^(https?:\/\/)angular\.jp(?=[/:?#]|$)/i, '$1angular.dev');
   },
 };
 
@@ -44,7 +49,7 @@ export const mdnJaReplacer: UrlReplacer = {
     const parsed = tryParse(url);
     if (parsed?.hostname !== 'developer.mozilla.org') return null;
     if (parsed.pathname !== '/ja' && !parsed.pathname.startsWith('/ja/')) return null;
-    return url.replace(/^(https?:\/\/developer\.mozilla\.org)\/ja(?=[/?#]|$)/, '$1/en-US');
+    return url.replace(/^(https?:\/\/)developer\.mozilla\.org\/ja(?=[/?#]|$)/i, '$1developer.mozilla.org/en-US');
   },
 };
 

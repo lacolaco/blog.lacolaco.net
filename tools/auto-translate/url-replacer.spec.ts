@@ -35,6 +35,10 @@ describe('angularJpReplacer', () => {
   test('パース不能な文字列は null', () => {
     assert.equal(angularJpReplacer.replace('not a url'), null);
   });
+
+  test('大文字混じりドメインも置換され、ホストは正規形（小文字）で出力される', () => {
+    assert.equal(angularJpReplacer.replace('https://ANGULAR.JP/guide/signals'), 'https://angular.dev/guide/signals');
+  });
 });
 
 describe('mdnJaReplacer', () => {
@@ -68,6 +72,13 @@ describe('mdnJaReplacer', () => {
 
   test('MDN 以外のホストの /ja/ パスは置換しない', () => {
     assert.equal(mdnJaReplacer.replace('https://example.com/ja/docs/page'), null);
+  });
+
+  test('大文字混じりドメインも置換され、ホストは正規形（小文字）で出力される', () => {
+    assert.equal(
+      mdnJaReplacer.replace('https://DEVELOPER.MOZILLA.ORG/ja/docs/Web/CSS/color'),
+      'https://developer.mozilla.org/en-US/docs/Web/CSS/color',
+    );
   });
 });
 
