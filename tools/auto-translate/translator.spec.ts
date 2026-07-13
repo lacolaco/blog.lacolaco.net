@@ -635,6 +635,55 @@ describe('translateOne', () => {
     });
   });
 
+  describe('URL 置換の統合', () => {
+    test('翻訳成功時、出力 en の angular.jp / MDN ja URL が英語版 URL に置換される', async () => {
+      const jaWithUrls = buildJaContent({
+        body: '[ガイド](https://angular.jp/guide/signals) を参照。\n\nhttps://developer.mozilla.org/ja/docs/Web/API/Window/fetch\n',
+      });
+      const geminiClient: GeminiClient = mock.fn(() =>
+        Promise.resolve({
+          title_en: 'Title',
+          body_en:
+            'See [the guide](https://angular.jp/guide/signals).\n\nhttps://developer.mozilla.org/ja/docs/Web/API/Window/fetch\n',
+        }),
+      );
+      const result = await translateOne(makeArgs({ jaContent: jaWithUrls, geminiClient }));
+      assert.equal(result.kind, 'translated');
+      assert.ok('enContent' in result);
+      assert.match(result.enContent, /https:\/\/angular\.dev\/guide\/signals/);
+      assert.match(result.enContent, /https:\/\/developer\.mozilla\.org\/en-US\/docs\/Web\/API\/Window\/fetch/);
+      assert.ok(!result.enContent.includes('angular.jp'));
+      assert.ok(!result.enContent.includes('/ja/docs/'));
+    });
+
+    test('キャッシュヒット時、既存 en body の未置換 URL が置換されて frontmatter-only で更新される', async () => {
+      // 置換ルール導入前に生成された en（angular.jp のまま）がキャッシュヒットするシナリオ。
+      // LLM を呼ばずに置換だけが適用されること = ルール変更がキャッシュ済み記事へ波及することの検証
+      const jaBody = '[ガイド](https://angular.jp/guide/signals) を参照。\n';
+      const ja = buildJaContent({ body: jaBody });
+      const hash = computeBodyHash(jaBody, 'タイトル', MODEL);
+      const staleEnBody = 'See [the guide](https://angular.jp/guide/signals).\n';
+      const en = buildEnContent(hash, staleEnBody);
+      const client = makeOkClient();
+      const result = await translateOne(makeArgs({ jaContent: ja, enContent: en, geminiClient: client }));
+      assert.equal(result.kind, 'frontmatter-only');
+      assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 0);
+      assert.ok('enContent' in result && result.enContent.includes('https://angular.dev/guide/signals'));
+    });
+
+    test('キャッシュヒット時、既存 en body が置換済みなら skipped（冪等）', async () => {
+      const jaBody = '[ガイド](https://angular.jp/guide/signals) を参照。\n';
+      const ja = buildJaContent({ body: jaBody });
+      const hash = computeBodyHash(jaBody, 'タイトル', MODEL);
+      const replacedEnBody = 'See [the guide](https://angular.dev/guide/signals).\n';
+      const en = buildEnContent(hash, replacedEnBody);
+      const client = makeOkClient();
+      const result = await translateOne(makeArgs({ jaContent: ja, enContent: en, geminiClient: client }));
+      assert.equal(result.kind, 'skipped');
+      assert.equal((client as unknown as { mock: { calls: unknown[] } }).mock.calls.length, 0);
+    });
+  });
+
   describe('エラーハンドリング', () => {
     test('API throw → failed、既存温存', async () => {
       const client: GeminiClient = mock.fn(() => Promise.reject(new Error('network error')));
