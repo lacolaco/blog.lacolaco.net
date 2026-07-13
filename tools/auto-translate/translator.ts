@@ -6,6 +6,7 @@ import { translateCodeBlock, type CodeTranslatorClient } from './code-translator
 import { buildEnFrontmatter, getAutoTranslatedFrom, isAutoTranslated, type Frontmatter } from './frontmatter.ts';
 import { proofread, formatProofIssues, type ProofreaderClient } from './proofreader.ts';
 import { validateStructure, type ValidationResult } from './structure-validator.ts';
+import { replaceUrls } from './url-replacer.ts';
 
 // PROMPT_VERSION: プロンプト/モデル/構造検証ロジックが変わったらインクリメントしてキャッシュを invalidate する。
 // バージョン履歴は git log で追える（変更時はコミットメッセージに「PROMPT_VERSION N → N+1」と記載）
@@ -319,14 +320,16 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
     }
   }
 
-  // キャッシュヒット: API 呼ばず frontmatter 再構築
+  // キャッシュヒット: API 呼ばず frontmatter 再構築。
+  // body にも replaceUrls を適用する（決定的・冪等なため）ことで、URL 置換ルールの
+  // 追加・変更が LLM 再翻訳なしにキャッシュ済み記事へ波及する
   if (existingEnHash === newHash && cachedTranslatedTitle !== undefined && cachedEnBody !== undefined) {
     const newEnFrontmatter = buildEnFrontmatter({
       jaFrontmatter: ja.frontmatter,
       translatedTitle: cachedTranslatedTitle,
       bodyHash: newHash,
     });
-    const newEnContent = joinFrontmatter(newEnFrontmatter, cachedEnBody);
+    const newEnContent = joinFrontmatter(newEnFrontmatter, replaceUrls(cachedEnBody));
     if (newEnContent === enContent) {
       return { kind: 'skipped' };
     }
@@ -399,6 +402,7 @@ export async function translateOne(args: TranslateOneArgs): Promise<TranslateRes
     translatedTitle: outcome.output.title_en,
     bodyHash: newHash,
   });
-  const enFullContent = joinFrontmatter(enFrontmatter, outcome.output.body_en);
+  // URL 置換は構造検証・proofread 完了後の最終 body に適用する（リンク数は不変なので構造検証に影響しない）
+  const enFullContent = joinFrontmatter(enFrontmatter, replaceUrls(outcome.output.body_en));
   return { kind: 'translated', enContent: enFullContent };
 }
