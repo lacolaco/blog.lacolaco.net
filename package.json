@@ -46,7 +46,7 @@
     "p-retry": "^8.0.0",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "satori": "^0.26.0",
+    "satori": "^0.28.0",
     "unist-util-visit": "^5.0.0",
     "yaml": "^2.8.0"
   },
