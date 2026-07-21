@@ -277,6 +277,12 @@ Before implementing with external libraries:
 - 環境変数: IMAGE_CDN_BASE_URL
 - Dockerイメージから画像除外（.dockerignore）
 
+### Auto Translate (URL Replacer)
+- tools/auto-translate/url-replacer.ts: 翻訳後の en body への後処理として日本語向けURLを英語版に置換 (angular.jp→angular.dev、MDN /ja/→/en-US/)
+- ルール追加は `UrlReplacer` を 1 つ書いて `defaultUrlReplacers` に足す。ドメイン判定系 replacer のテストには大文字混在ドメインのケースを必ず含める (hostname は URL パースで小文字正規化されるが、置換は原文文字列に対して行うため不整合が起きやすい)
+- 置換は決定的・冪等で、キャッシュヒット経路にも適用される。**ルール追加・変更時に PROMPT_VERSION の bump は不要** (LLM 再翻訳なしで既存 .en.md へ波及する)
+- **ja ソース側では置換しない**。en 出力への後処理のみ
+
 ### Deployment
 - GCP Cloud Run via GitHub Actions
 - Production: main→deploy-production.yml
