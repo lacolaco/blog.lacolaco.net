@@ -53,9 +53,10 @@ merge を除いた以下は 1 単位として実行 (途中で止めるな):
 
 - `.md` (Notion → notion-sync) の問題 → **Notion で修正依頼**。勝手に直さない
 - `.en.md` (auto-translate 生成) の問題 → `tools/auto-translate/` パイプライン (prompt / proofreader / validator) で対応
+- **`.en.md` は拡張子だけでは出自を判別できない**。Notion 上の en ページ (locale=en) も `<slug>.en.md` として sync される。判定は frontmatter の `auto_translated_from` (auto-translate 生成物) と `manifest.json` の `filePath` (notion-sync 由来)。`notion_url` は `buildEnFrontmatter` が ja から複製するので判定に使えない
 - **auto-translate のスコープは `content/notion/posts/` のみ**。直接執筆 (`content/posts/`) は対象外で、英訳が必要なら手書きで `<slug>.en.md` を置く (auto-translate は手動 en を `protect-manual` ロジックで上書きしない)
 - **sync-with-notion への force-push は sync workflow の正常動作**。「自分の修正が消された」と誤認して再 push せず、`origin/sync-with-notion` を fetch して**新しい真実として再観測**してから動く
-- **自動ワークフロー (auto-translate, sync-with-notion, deploy 等) を実行・待機した後は、次の行動の前に実際の状態を確認せよ**。ワークフロー成功 ≠ 手動対応が必要。content-only PR は ci.yml の auto-merge ゲート (content-review pass + code-review skip) で自動マージされる。確認コマンド: `gh pr list --state merged --search "auto-translate" --limit 3` / `gh pr view <PR> --json state,mergedAt`。推測でリトライするな
+- **自動ワークフロー (auto-translate, sync-with-notion, deploy 等) を実行・待機した後は、次の行動の前に実際の状態を確認せよ**。ワークフロー成功 ≠ 手動対応が必要。content-only PR は ci.yml の auto-merge ゲートで自動マージされる (auto-translate PR は content-review なしで通る)。確認コマンド: `gh pr list --state merged --search "auto-translate" --limit 3` / `gh pr view <PR> --json state,mergedAt`。推測でリトライするな
 
 ### 3. TDD is Mandatory
 Kent Beck style. Tests = spec. Fix implementation, not tests.
@@ -268,6 +269,7 @@ Before implementing with external libraries:
 ### Auto-translate (ja → en)
 - `content/notion/posts/*.md` 変更時に auto-translate.yml が起動し、EN版を生成して固定ブランチ `auto-translate` に force-push
 - content-only PR は ci.yml の auto-merge ゲートで自動マージされる（条件は ci.yml 冒頭コメント参照）
+- **auto-translate PR に content-review は走らない**。翻訳ループ (`translator.ts`) が structure-validator + proofreader + retry を通し、恒久的に失敗した訳は書き出さず既存 `.en.md` を保持するため、CI 側の重複レビューを外している。auto-merge は content-review なしで成立する
 - 本文未変更でもフロントマター差分 (channels 等) があれば `frontmatter-only` で EN 版を更新する
 
 ### Image CDN (Cloudflare R2)
