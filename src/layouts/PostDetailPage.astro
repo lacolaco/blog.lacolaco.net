@@ -138,7 +138,7 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
         </div>
 
         <div class="mt-6">
-          <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
+          <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} locale={locale || 'ja'} />
         </div>
 
         <PostNavigation prev={adjacentPosts.prev} next={adjacentPosts.next} />

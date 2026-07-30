@@ -1,15 +1,21 @@
 ---
+import NativeShareButton from './NativeShareButton';
+
 type Props = {
   title: string;
   url: string;
+  locale?: string;
 };
 
-const { title, url } = Astro.props;
+const { title, url, locale = 'ja' } = Astro.props;
 
 const encodedTitle = encodeURIComponent(title);
 ---
 
 <section class="flex items-center gap-3">
+  {/* Web Share API 対応ブラウザのみクライアント側で描画される */}
+  <NativeShareButton title={title} url={url} locale={locale} client:idle />
+
   <a
     href={`https://twitter.com/intent/tweet?original_referer=${url}&text=${encodedTitle}&url=${url}`}
     target="_blank"
