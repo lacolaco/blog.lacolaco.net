@@ -2,8 +2,8 @@
 title: 'Angular v22.1 における oxc-parser の採用'
 slug: 'angular-v22-1-oxc-parser'
 icon: ''
-created_time: '2026-07-30T03:02:00.000Z'
-last_edited_time: '2026-07-30T03:02:00.000Z'
+created_time: '2026-07-30T03:57:00.000Z'
+last_edited_time: '2026-07-30T03:57:00.000Z'
 tags:
   - 'Angular CLI'
   - 'oxc'
@@ -20,7 +20,7 @@ features:
   tweet: false
 ---
 
-Angular CLI v22.1.0では、`@angular/build` のビルドパイプラインの一部が Babel から oxc-parser + magic-string に移行された。CHANGELOG に記載されているのは以下の2件。
+Angular CLI v22.1.0では、`@angular/build` のビルドパイプラインの一部が Babel から oxc-parser + magic-string に移行された。
 
 https://github.com/angular/angular-cli/commit/10dc30f9c680f46f65b5beb030f2a75c422a3e71
 
@@ -155,6 +155,8 @@ if (options.advancedOptimizations) {
 ```
 
 `babelPlugins` に積まれる可能性があるのは、カバレッジ計装と Angular Linker の2つだけになった。この2つが不要な場合は `transformAsync` に到達せず、`@babel/core` の動的 import も発生しない。Linker が必要になるのは `ɵɵngDeclare` を含むファイル、すなわち partial compilation されたライブラリに限られる。
+
+以上がビルド時最適化におけるoxc-parserの導入で、同様にi18nインライン化処理もBabelをバイパスできるようになった。
 
 ## 今後の見通し
 
