@@ -324,7 +324,7 @@ jobs:
             ISSUES=$(echo "$REVIEW_RESULT" | jq -r '.issues[] | "- **\(.file)**: \(.description)"')
             gh pr comment "$PR_NUMBER" --body "## コンテンツレビュー NG
 
-          @${OWNER} 原稿の修正が必要です。PR 内のファイルを直接編集しても、次の sync / auto-translate で上書きされます。
+          @${OWNER}
 
           ${SUMMARY}
 
