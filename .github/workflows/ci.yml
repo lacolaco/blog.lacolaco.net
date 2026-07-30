@@ -14,13 +14,24 @@ name: CI
 #
 # レビュー条件 (排他ではない。code+content PRでは両方実行される):
 #   - renovate-review: author == renovate[bot] かつ non-renovateコミットなし
-#   - content-review:  content_changed && author != renovate[bot]
+#   - content-review:  content_changed && author != renovate[bot] && head_ref != auto-translate
 #   - code-review:     code_changed && (author != renovate[bot] or non-renovateコミットあり)
 #
+# auto-translate PR (head_ref == auto-translate) で content-review を実行しない理由:
+#   tools/auto-translate の翻訳ループが 1 記事ごとに placeholder 復元検証 →
+#   structure-validator (Markdown 構造) → proofreader (別人格 LLM: 英文法・技術用語・
+#   識別子整合) を通し、恒久的に失敗した訳は書き出さず既存 .en.md を保持する。
+#   content-review のチェック項目 (typo / 技術用語 / Markdown 構文) はこの部分集合で、
+#   かつ ja 原文を参照しないため proofreader より弱い。二重実行になるので除外する。
+#
 # 自動マージ条件:
-#   ok成功 かつ (renovate-review成功 or (content-review成功 かつ code-review未実行))
+#   ok成功 かつ (renovate-review成功
+#              or (content-review成功 かつ code-review未実行)
+#              or (auto-translate PR かつ review 全未実行))
 #   → code変更を含むPRは手動マージ
 #   → renovate PR + non-renovateコミット → code-review実行, auto-merge対象外, 手動マージ
+#   → auto-translate PR は content-review を実行しないため、skipped を明示的に許可する
+#     (author は sync PR と同じ bot なので head_ref で判定する)
 #
 # draft PR:
 #   - CI jobsのみ実行
@@ -258,7 +269,8 @@ jobs:
     needs: classify
     if: >-
       needs.classify.outputs.content_changed == 'true' &&
-      github.event.pull_request.user.login != 'renovate[bot]'
+      github.event.pull_request.user.login != 'renovate[bot]' &&
+      github.head_ref != 'auto-translate'
     runs-on: ubuntu-latest
     outputs:
       approved: ${{ steps.gate.outputs.approved }}
@@ -519,7 +531,13 @@ jobs:
       needs.ok.result == 'success' &&
       (
         needs.renovate-review.result == 'success' ||
-        (needs.content-review.result == 'success' && needs.code-review.result == 'skipped')
+        (needs.content-review.result == 'success' && needs.code-review.result == 'skipped') ||
+        (
+          github.head_ref == 'auto-translate' &&
+          !github.event.pull_request.draft &&
+          needs.content-review.result == 'skipped' &&
+          needs.code-review.result == 'skipped'
+        )
       )
     runs-on: ubuntu-latest
     permissions:
