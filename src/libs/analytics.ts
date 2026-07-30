@@ -33,6 +33,17 @@ export const ttsEvents = {
   }),
 };
 
+/** ネイティブ共有（Web Share API）イベントファクトリー */
+export const shareEvents = {
+  complete: (): AnalyticsEvent => ({ name: 'share_complete' }),
+  /** ユーザーが共有シートを閉じた場合。エラーと区別して記録する */
+  cancel: (): AnalyticsEvent => ({ name: 'share_cancel' }),
+  error: (errorMessage: string): AnalyticsEvent => ({
+    name: 'share_error',
+    params: { error_message: errorMessage },
+  }),
+};
+
 /** いいねイベントファクトリー */
 export const likeEvents = {
   toggle: (slug: string, liked: boolean): AnalyticsEvent => ({
