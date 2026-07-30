@@ -19,7 +19,7 @@ name: CI
 #
 # 自動マージ条件:
 #   draftでない かつ ok成功
-#   かつ (renovate-review成功 or auto-translate PR or (code変更なし かつ content-review成功))
+#   かつ (renovate-review成功 or auto-translate PR or (content-review成功 かつ code-review未実行))
 #   → code変更を含むPRは手動マージ
 #   → renovate PR + non-renovateコミット → renovate-review未実行, 手動マージ
 #
@@ -262,12 +262,6 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           fetch-depth: 1
-      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version-file: .node-version
-          cache: 'pnpm'
-      - run: pnpm install --frozen-lockfile
 
       - name: Review content with Claude
         id: review
@@ -327,7 +321,14 @@ jobs:
           EOF
           )"
           else
-            gh pr comment "$PR_NUMBER" --body "$(pnpm exec tsx tools/content-review/main.ts)"
+            ISSUES=$(echo "$REVIEW_RESULT" | jq -r '.issues[] | "- **\(.file)**: \(.description)"')
+            gh pr comment "$PR_NUMBER" --body "## コンテンツレビュー NG
+
+          @${OWNER} 原稿の修正が必要です。PR 内のファイルを直接編集しても、次の sync / auto-translate で上書きされます。
+
+          ${SUMMARY}
+
+          ${ISSUES}"
             exit 1
           fi
 
@@ -432,7 +433,7 @@ jobs:
   # === Auto-merge ===
 
   auto-merge:
-    needs: [classify, ok, renovate-review, content-review, code-review]
+    needs: [ok, renovate-review, content-review, code-review]
     if: >-
       !cancelled() &&
       !github.event.pull_request.draft &&
@@ -440,10 +441,7 @@ jobs:
       (
         needs.renovate-review.result == 'success' ||
         github.head_ref == 'auto-translate' ||
-        (
-          needs.classify.outputs.code_changed != 'true' &&
-          needs.content-review.result == 'success'
-        )
+        (needs.content-review.result == 'success' && needs.code-review.result == 'skipped')
       )
     runs-on: ubuntu-latest
     permissions:
