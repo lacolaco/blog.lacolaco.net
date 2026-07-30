@@ -321,78 +321,7 @@ jobs:
           EOF
           )"
           else
-            ISSUES=$(echo "$REVIEW_RESULT" | jq -r '.issues[] | "- **\(.file)**: \(.description)"')
-
-            NOTION_PATHS=$(jq -r '.[].filePath // empty' manifest.json 2>/dev/null || true)
-            NOTION_SOURCES=''
-            TRANSLATED=''
-            DIRECT=''
-            while read -r f; do
-              [[ -n "$f" && "$f" == *.md && -f "$f" ]] || continue
-              if grep -q '^auto_translated_from:' "$f"; then
-                JA="${f%.en.md}.md"
-                if [[ -f "$JA" ]]; then
-                  TRANSLATED="${TRANSLATED}- \`${f}\` (翻訳元: \`${JA}\`)"$'\n'
-                else
-                  TRANSLATED="${TRANSLATED}- \`${f}\`"$'\n'
-                fi
-              elif grep -qxF -- "$f" <<<"$NOTION_PATHS"; then
-                URL=$(grep -m1 '^notion_url:' "$f" | cut -d' ' -f2- | tr -d "\"'" || true)
-                NOTION_SOURCES="${NOTION_SOURCES}- \`${f}\`: ${URL:-(notion_url なし)}"$'\n'
-              else
-                DIRECT="${DIRECT}- \`${f}\`"$'\n'
-              fi
-            done < <(echo "$REVIEW_RESULT" | jq -r '.issues[].file' | sort -u)
-
-            BODY="## コンテンツレビュー NG
-
-          @${OWNER} 修正が必要です。
-
-          ${SUMMARY}
-
-          ${ISSUES}"
-
-            if [[ -n "$NOTION_SOURCES" ]]; then
-              BODY="${BODY}
-
-          ### Notion 原稿を修正
-
-          ${NOTION_SOURCES}
-          原稿を修正すると sync でこの PR が更新されます。"
-            fi
-
-            if [[ -n "$TRANSLATED" ]]; then
-              BODY="${BODY}
-
-          ### auto-translate 生成物
-
-          ${TRANSLATED}
-          翻訳文の誤りは tools/auto-translate/ のパイプライン側、ja 原稿由来の誤りは翻訳元の Notion 原稿を修正してください。"
-            fi
-
-            if [[ -n "$DIRECT" ]]; then
-              BODY="${BODY}
-
-          ### 直接管理されているファイル
-
-          ${DIRECT}
-          生成物ではないため、このファイルを直接修正してください。"
-            fi
-
-            if [[ -n "$NOTION_SOURCES" || -n "$TRANSLATED" ]]; then
-              if [[ -n "$NOTION_SOURCES" && -n "$TRANSLATED" ]]; then
-                REGEN='sync / auto-translate'
-              elif [[ -n "$NOTION_SOURCES" ]]; then
-                REGEN='sync'
-              else
-                REGEN='auto-translate'
-              fi
-              BODY="${BODY}
-
-          生成物を PR 内で直接編集しても、次の ${REGEN} で上書きされます。"
-            fi
-
-            gh pr comment "$PR_NUMBER" --body "$BODY"
+            gh pr comment "$PR_NUMBER" --body "$(tools/content-review-ng-comment.sh)"
             exit 1
           fi
 
