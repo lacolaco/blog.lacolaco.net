@@ -17,42 +17,18 @@ name: CI
 #   - content-review:  content_changed && author != renovate[bot] && head_ref != auto-translate
 #   - code-review:     code_changed && (author != renovate[bot] or non-renovateコミットあり)
 #
-# auto-translate PR (head_ref == auto-translate) で content-review を実行しない理由:
-#   tools/auto-translate の翻訳ループが 1 記事ごとに placeholder 復元検証 →
-#   structure-validator (Markdown 構造) → proofreader (別人格 LLM: 英文法・技術用語・
-#   識別子整合) を通し、恒久的に失敗した訳は書き出さず既存 .en.md を保持する。
-#   content-review のチェック項目 (typo / 技術用語 / Markdown 構文) はこの部分集合で、
-#   かつ ja 原文を参照しないため proofreader より弱い。二重実行になるので除外する。
-#
 # 自動マージ条件:
-#   ok成功 かつ (renovate-review成功
-#              or (content-review成功 かつ code-review未実行)
-#              or (auto-translate PR かつ draftでない かつ content-review未実行 かつ code-review未実行))
+#   draftでない かつ ok成功
+#   かつ (renovate-review成功 or auto-translate PR or (code変更なし かつ content-review成功))
 #   → code変更を含むPRは手動マージ
-#   → renovate PR + non-renovateコミット → code-review実行, auto-merge対象外, 手動マージ
-#   → auto-translate PR は content-review を実行しないため、skipped を明示的に許可する
-#     (author は sync PR と同じ bot なので head_ref で判定する。renovate-review の結果は
-#      この節の条件に含めない: author != renovate[bot] なので必ず skipped になる)
+#   → renovate PR + non-renovateコミット → renovate-review未実行, 手動マージ
 #
 # draft PR:
 #   - CI jobsのみ実行
 #   - content-review, code-review: classifyの出力にdraft条件を組み込みスキップ
 #   - renovate-review: renovate botはdraft PRを作らないため対象外
-#   - auto-merge: renovate-review成功もcontent-review成功も無いため最初の2節は不成立。
-#     ただしauto-translate PRの節はskippedを許可する条件なのでdraftでも成立してしまう。
-#     draft PRではauto-mergeを有効化できないため、その節でdraftを明示的に除外している
+#   - auto-merge: jobの条件でdraftを除外
 #   - draft解除時にready_for_reviewで再実行
-#
-# content-review NG時:
-#   - 指摘ファイルの出自ごとに修正先が違うため、NGコメントで分けて案内する
-#     (区分は tools/protect-notion-content.sh と同じ)
-#       1. auto_translated_from あり → auto-translate 生成物。翻訳文の誤りはパイプライン側、
-#          ja 原稿由来の誤りは翻訳元の Notion 原稿
-#       2. manifest.json の filePath → notion-sync 由来。Notion 原稿を修正すると
-#          sync で PR が更新される
-#       3. どちらでもない → 直接管理されているファイル。そのファイルを修正する
-#     notion_url は auto-translate が ja から複製するため出自の判定には使えない
-#   - @owner メンションで通知する (PR author が bot だと Actions 失敗通知が人間に届かない)
 #
 # claude-code-action失敗時（ワークフロー変更PR等）:
 #   - Gateステップ(if: always())がapproved=falseでfail
@@ -347,18 +323,11 @@ jobs:
           else
             ISSUES=$(echo "$REVIEW_RESULT" | jq -r '.issues[] | "- **\(.file)**: \(.description)"')
 
-            # 指摘ファイルは出自ごとに修正先が違う (tools/protect-notion-content.sh と同じ区分)。
-            # frontmatter の notion_url は auto-translate が ja から複製するため
-            # (tools/auto-translate/frontmatter.ts buildEnFrontmatter)、出自の判定には使えない。
-            #   1. auto_translated_from あり → auto-translate 生成物
-            #   2. manifest.json の filePath → notion-sync 由来
-            #   3. どちらでもない            → リポジトリで直接管理されているファイル
             NOTION_PATHS=$(jq -r '.[].filePath // empty' manifest.json 2>/dev/null || true)
             NOTION_SOURCES=''
             TRANSLATED=''
             DIRECT=''
             while read -r f; do
-              # 記事本文のみ分類する (画像・manifest.json 等はレビュー対象外)
               [[ -n "$f" && "$f" == *.md && -f "$f" ]] || continue
               if grep -q '^auto_translated_from:' "$f"; then
                 JA="${f%.en.md}.md"
@@ -528,18 +497,17 @@ jobs:
   # === Auto-merge ===
 
   auto-merge:
-    needs: [ok, renovate-review, content-review, code-review]
+    needs: [classify, ok, renovate-review, content-review, code-review]
     if: >-
       !cancelled() &&
+      !github.event.pull_request.draft &&
       needs.ok.result == 'success' &&
       (
         needs.renovate-review.result == 'success' ||
-        (needs.content-review.result == 'success' && needs.code-review.result == 'skipped') ||
+        github.head_ref == 'auto-translate' ||
         (
-          github.head_ref == 'auto-translate' &&
-          !github.event.pull_request.draft &&
-          needs.content-review.result == 'skipped' &&
-          needs.code-review.result == 'skipped'
+          needs.classify.outputs.code_changed != 'true' &&
+          needs.content-review.result == 'success'
         )
       )
     runs-on: ubuntu-latest
