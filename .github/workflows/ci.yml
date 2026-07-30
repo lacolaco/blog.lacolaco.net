@@ -27,17 +27,20 @@ name: CI
 # 自動マージ条件:
 #   ok成功 かつ (renovate-review成功
 #              or (content-review成功 かつ code-review未実行)
-#              or (auto-translate PR かつ review 全未実行))
+#              or (auto-translate PR かつ draftでない かつ content-review未実行 かつ code-review未実行))
 #   → code変更を含むPRは手動マージ
 #   → renovate PR + non-renovateコミット → code-review実行, auto-merge対象外, 手動マージ
 #   → auto-translate PR は content-review を実行しないため、skipped を明示的に許可する
-#     (author は sync PR と同じ bot なので head_ref で判定する)
+#     (author は sync PR と同じ bot なので head_ref で判定する。renovate-review の結果は
+#      この節の条件に含めない: author != renovate[bot] なので必ず skipped になる)
 #
 # draft PR:
 #   - CI jobsのみ実行
 #   - content-review, code-review: classifyの出力にdraft条件を組み込みスキップ
 #   - renovate-review: renovate botはdraft PRを作らないため対象外
-#   - auto-merge: reviewが全スキップで条件不成立のためスキップ
+#   - auto-merge: renovate-review成功もcontent-review成功も無いため最初の2節は不成立。
+#     ただしauto-translate PRの節はskippedを許可する条件なのでdraftでも成立してしまう。
+#     draft PRではauto-mergeを有効化できないため、その節でdraftを明示的に除外している
 #   - draft解除時にready_for_reviewで再実行
 #
 # content-review NG時:
