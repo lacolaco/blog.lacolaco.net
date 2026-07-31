@@ -39,8 +39,9 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
-          # workflow_dispatch で sha が指定されていればそれを使い、なければ trigger commit
-          ref: ${{ github.event.inputs.sha || github.sha }}
+          # trigger commit ではなく最新 main を見る。trigger commit に固定すると、
+          # 先行 run の翻訳が auto-merge された後に同じ commit を再翻訳し、重複 PR が生まれる
+          ref: ${{ github.event.inputs.sha || 'main' }}
           token: ${{ steps.app-token.outputs.token }}
           fetch-depth: 1
       - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
@@ -60,15 +61,20 @@ jobs:
       - name: Create or update auto-translate PR
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
-          COMMIT_SHA: ${{ github.event.inputs.sha || github.sha }}
         run: |
-          if [[ -z "$(git status --porcelain content/notion/posts)" ]]; then
-            echo "No translation changes"
-            exit 0
-          fi
           # 固定ブランチに翻訳結果を毎回 force-push し、PR は 1 本を再利用する
           # (SHA ごとに別ブランチ + 別 PR を作る設計は base behind や PR 分裂の原因になる)
           BRANCH="auto-translate"
+          if [[ -z "$(git status --porcelain content/notion/posts)" ]]; then
+            echo "No translation changes"
+            # 提案する差分がないのに PR を残すと、main だけが進んで conflict したまま固まる。
+            # 閉じても次に差分が出れば作り直されるので畳んでよい
+            PR="$(gh pr list --state open --head "$BRANCH" --json number --jq '.[0].number // empty')"
+            if [[ -n "$PR" ]]; then
+              gh pr close "$PR" --delete-branch
+            fi
+            exit 0
+          fi
           git config user.name "lacolaco-actions-worker[bot]"
           git config user.email "lacolaco-actions-worker[bot]@users.noreply.github.com"
           # 旧デザイン (SHA ベースブランチ auto-translate/<sha>) の残骸が残っていると
@@ -88,9 +94,11 @@ jobs:
           # fetch-depth:1 の checkout では remote-tracking ref がないため、
           # --force-with-lease を機能させるには明示的に fetch する必要がある
           git fetch origin "$BRANCH" || true
+          # ref は main 解決なので github.sha とは限らない。実際に翻訳した commit を記録する
+          BASE_SHA="$(git rev-parse HEAD)"
           git checkout -B "$BRANCH"
           git add content/notion/posts
-          git commit -m "chore: auto-translate ja → en for ${COMMIT_SHA}"
+          git commit -m "chore: auto-translate ja → en for ${BASE_SHA}"
           git push --force-with-lease origin "$BRANCH"
 
           # 初回のみ作成、以降は force-push が synchronize イベントで CI を再起動するだけで PR 再利用
