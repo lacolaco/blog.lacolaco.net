@@ -15,15 +15,12 @@ import ArticleSummarizer from '../components/ArticleSummarizer';
 import LikeButton from '../components/LikeButton';
 import ImageLightbox from '../components/ImageLightbox.astro';
 import { SITE_TITLE } from '../consts';
-import { queryAvailablePosts } from '@lib/query';
+import { queryAvailablePosts, type AdjacentPosts } from '@lib/query';
 import { getRelativePostUrl, getChannels } from '../libs/compat';
 
 type Props = {
   entry: CollectionEntry<'posts'>;
-  adjacentPosts: {
-    prev: CollectionEntry<'posts'> | null;
-    next: CollectionEntry<'posts'> | null;
-  };
+  adjacentPosts: AdjacentPosts;
 };
 
 const { entry, adjacentPosts } = Astro.props;

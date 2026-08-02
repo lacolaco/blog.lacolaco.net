@@ -134,19 +134,36 @@ export async function queryListPagePosts(): Promise<PostWithTranslations[]> {
   return buildListPagePosts(allPosts);
 }
 
+/** 記事詳細ページの前後記事。同一 locale 内の時系列で決まる */
+export interface AdjacentPosts {
+  prev: CollectionEntry<'posts' | 'postsEn'> | null;
+  next: CollectionEntry<'posts' | 'postsEn'> | null;
+}
+
 /**
- * 時系列順に前後の記事を取得する
- * カテゴリやロケールは区別しない
+ * 同じ locale の記事の中から、時系列順に前後の記事を取得する。
+ * カテゴリは区別しない。
+ *
+ * 読者に提示する導線は、その読者が読んでいる言語の記事に閉じる。
+ * locale を混ぜると、翻訳版 (同 slug の en 版) が ja 記事と同時刻かその後の created_time を持つため
+ * 時系列順で隣に並びやすい。修正前は、ja/en 両方を持つ 15 記事のうち 14 件で「次の記事」が
+ * 自分の翻訳版になっていた。
+ *
+ * current を slug 文字列ではなく entry で受け取るのは、slug と locale の組が食い違わないようにするため。
  */
 export function queryAdjacentPosts(
-  posts: Array<CollectionEntry<'posts'>>,
-  currentSlug: string,
-): { prev: CollectionEntry<'posts'> | null; next: CollectionEntry<'posts'> | null } {
-  // 時系列順（古い順）にソート
-  const sortedPosts = [...posts].sort((a, b) => compareAsc(a.data.created_time, b.data.created_time));
+  posts: Array<CollectionEntry<'posts' | 'postsEn'>>,
+  current: CollectionEntry<'posts' | 'postsEn'>,
+): AdjacentPosts {
+  // 同じ locale の記事に絞り、時系列順（古い順）にソート
+  const sortedPosts = posts
+    .filter((post) => post.data.locale === current.data.locale)
+    .sort((a, b) => compareAsc(a.data.created_time, b.data.created_time));
 
-  // 現在の記事のインデックスを取得
-  const currentIndex = sortedPosts.findIndex((post) => post.data.slug === currentSlug);
+  // 現在の記事のインデックスを取得する。
+  // slug ではなく id で照合するのは、dev では draft も含む全件が渡り (queryAvailablePosts)、
+  // content/posts/ の下書きが Notion 由来の記事と slug 衝突しうるため。id は衝突しない
+  const currentIndex = sortedPosts.findIndex((post) => post.id === current.id);
 
   if (currentIndex === -1) {
     return { prev: null, next: null };
