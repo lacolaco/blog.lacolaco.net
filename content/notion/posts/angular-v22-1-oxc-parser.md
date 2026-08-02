@@ -3,7 +3,7 @@ title: 'Angular v22.1 における oxc-parser の採用'
 slug: 'angular-v22-1-oxc-parser'
 icon: ''
 created_time: '2026-07-30T03:57:00.000Z'
-last_edited_time: '2026-07-30T03:57:00.000Z'
+last_edited_time: '2026-08-02T01:15:00.000Z'
 tags:
   - 'Angular CLI'
   - 'oxc'
@@ -14,6 +14,7 @@ channels:
   - 'Angular'
   - 'Code'
 notion_url: 'https://app.notion.com/p/Angular-v22-1-oxc-parser-3ad3521b014a8112a97de82bb32e5d55'
+auto_translate: true
 features:
   katex: false
   mermaid: false
