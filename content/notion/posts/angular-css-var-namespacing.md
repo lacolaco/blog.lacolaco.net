@@ -2,8 +2,8 @@
 title: 'Angular v22.1: CSS変数のネームスペース化'
 slug: 'angular-css-var-namespacing'
 icon: ''
-created_time: '2026-08-03T23:15:00.000Z'
-last_edited_time: '2026-08-03T23:31:00.000Z'
+created_time: '2026-08-04T01:54:00.000Z'
+last_edited_time: '2026-08-04T01:54:00.000Z'
 tags:
   - 'CSS'
 published: true
@@ -146,7 +146,7 @@ import { CssVarNamespacer } from '@angular/platform-browser';
 @Component({
   selector: 'app-root',
   template: `
-    <p [style.color]="textColor">Component Scope Text (inline)</p>
+    <p [style.color]="'var(' + textColor + ')'">Component Scope Text (inline)</p>
   `,
   styles: `
     :host {
@@ -155,7 +155,7 @@ import { CssVarNamespacer } from '@angular/platform-browser';
   `,
 })
 export class App {
-  // namespaced `var('--text-color')` 
+  // namespaced `--text-color` 
   textColor = inject(CssVarNamespacer).namespace('--text-color'); 
 }
 
