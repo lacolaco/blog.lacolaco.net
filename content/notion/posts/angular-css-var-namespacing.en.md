@@ -1,9 +1,9 @@
 ---
-title: 'Angular v22.1: CSS Variable Namespacing'
+title: 'Angular v22.1: Namespacing CSS Variables'
 slug: 'angular-css-var-namespacing'
 icon: ''
-created_time: '2026-08-04T01:54:00.000Z'
-last_edited_time: '2026-08-04T01:54:00.000Z'
+created_time: '2026-08-04T02:25:00.000Z'
+last_edited_time: '2026-08-04T02:25:00.000Z'
 tags:
   - 'CSS'
 published: true
@@ -17,18 +17,18 @@ features:
   katex: false
   mermaid: false
   tweet: false
-auto_translated_from: 'bce643a46c52ed38fb460304726055ec2f5f2b0cfd864145e4eb81ec3daa4d4b'
+auto_translated_from: '7c9534b7f8e64aa1255e287f5ad2c897230036e24a03be4fa51f70624857e03d'
 ---
 
 https://github.com/angular/angular/pull/68846
 
-A new feature for namespacing CSS variables was added in Angular v22.1. I'd like to introduce how to use it.
+In Angular v22.1, a new feature for namespacing CSS variables was added. I'll introduce how to use it.
 
 ## Namespaced CSS Variables
 
-**CSS variable namespacing** is a mechanism to isolate CSS variables declared within an Angular application component's CSS into a namespace so they don't collide with variables from other applications or libraries. For example, common CSS variable names like `--primary-color` often clash with third-party UI libraries when used in an application. To avoid this problem, it's common practice to manually add a specific prefix to variable names to separate namespaces, but this new feature automates that process.
+**Namespacing CSS variables** is a mechanism to isolate CSS variables declared in an Angular component's CSS into a namespace to prevent them from colliding with variables in other applications or libraries. For instance, common CSS variable names like `--primary-color` often conflict with third-party UI libraries when used in an application. While it's common practice to manually prefix variable names to separate namespaces, this feature automates that process.
 
-CSS variable namespacing is an opt-in feature, so the existing behavior won't change unless you enable it. To enable it, you add the `provideCssVarNamespacing` provider to your application configuration.
+Namespacing CSS variables is an opt-in feature, so behavior remains unchanged unless you enable it. To enable it, you add the `provideCssVarNamespacing` provider to the application configuration.
 
 ```typescript
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
@@ -43,7 +43,7 @@ export const appConfig: ApplicationConfig = {
 
 ```
 
-By default, it namespaces using the application's `APP_ID`. For component CSS like the following, an `--ng_` prefix is automatically inserted as shown in the image.
+By default, it uses the application's `APP_ID` for namespacing. For component CSS like the following, an `--ng_` prefix is automatically inserted, as shown in the image.
 
 ```typescript
 @Component({
@@ -80,9 +80,9 @@ export const appConfig: ApplicationConfig = {
 
 ## Using Global CSS Variables
 
-When you enable this namespacing, it might seem like you can no longer use global CSS variables or modify their values within component CSS, but a proper method is provided for those cases.
+When this namespacing is enabled, it might seem like you can't use global CSS variables or change their values within a component's CSS, but a way to do that has been properly provided.
 
-For example, let's say a `--text-color` variable is also declared in the global CSS. If you do nothing, the p tag inside the component will have the namespaced variable applied, so it won't be affected by the global CSS and the color won't change.
+For example, let's say a `--text-color` variable is also declared in the global CSS. If you do nothing, the variable applied to the p tag inside the component is namespaced, so it isn't affected by the global CSS and the color won't change.
 
 ```css
 /* styles.css */
@@ -98,7 +98,7 @@ p {
 
 ![image](/images/angular-css-var-namespacing/CleanShot_2026-08-04_at_07.52.432x.32b37803f08da4eb.png)
 
-When you want to reference the global `--text-color` variable inside a component, you can explicitly disable namespacing by using the dedicated `--global` prefix. When this prefix is present, namespacing is skipped, and the remaining part after removing the `--global` prefix is actually applied. Of course, you can not only reference it but also overwrite the value.
+When you want to reference a global `--text-color` variable inside a component, you can explicitly disable namespacing using the dedicated `--global` prefix. When this prefix is present, namespacing is skipped, and the remaining part with the `--global` prefix removed is actually applied. Of course, you can not only reference it but also overwrite the value.
 
 ```typescript
 @Component({
@@ -129,16 +129,16 @@ export class App {}
 
 ## Caveats
 
-By enabling namespacing, if CSS variables are used in a design system built outside the application, you can still incorporate and use them while ensuring that using CSS variables inside the application won't break the design system. I think it's a feature you'd generally want to enable in projects that make extensive use of CSS variables.
+By enabling namespacing, if CSS variables are used in design systems built outside the application, you can import and use them, while ensuring that using CSS variables inside the application won't break the design system. It seems like a feature that would generally be worth enabling for projects that make use of CSS variables.
 
-However, there is one thing to be careful about. As of v22.1.0, CSS variable namespace insertion only applies to component CSS. In other words, values given to the style attribute within the template HTML are not covered.
+However, there are some points to note. As of v22.1.0, the insertion of CSS variable namespaces only applies to component CSS. In other words, values provided to the style attribute in the template HTML are not covered.
 
 ```html
-<!-- Refer to the global --text-color -->
+<!-- Refer to global --text-color -->
 <p [style.color]="'var(--text-color)'"> 
 ```
 
-If you want to use namespaced CSS variables within the template HTML, you need to resolve them on the TypeScript side using the `CssVarNamespacer` service. By binding the return value resolved with the namespace method of `CssVarNamespacer` as follows, you can apply namespacing to dynamic styling as well.
+If you want to use namespaced CSS variables within the template HTML, you need to resolve them on the TypeScript side using the `CssVarNamespacer` service. By binding the return value resolved by the `namespace` method of `CssVarNamespacer` as follows, you can apply namespacing to dynamic styling as well.
 
 ```typescript
 import { CssVarNamespacer } from '@angular/platform-browser';
@@ -161,10 +161,12 @@ export class App {
 
 ```
 
+Also, another point that might be easily misunderstood is that this namespacing is **isolation at the application level**, not the **component level**. It exists as a different mechanism from View Encapsulation, which scopes component CSS, and variables still affect components according to parent-child relationships on the DOM tree as before. Rather, the fact that CSS variables can be injected across component boundaries in this way is part of the point, so it's not a flaw, but let's be careful not to confuse it with the behavior of namespacing.
+
 ## Conclusion
 
-CSS variable namespacing in Angular v22.1 is a practical improvement that automatically avoids variable collisions in component CSS and can replace existing manual practices (like adding prefixes). It can be introduced just by adding `provideCssVarNamespacing()`, and you can also specify an arbitrary prefix if needed.
+Namespacing CSS variables in Angular v22.1 is a practical improvement that automatically avoids variable collisions within component CSS and can replace existing manual practices (like adding prefixes). It can be introduced just by adding `provideCssVarNamespacing()`, and an arbitrary prefix can be specified if necessary.
 
-Also, for cases where you want to reference or overwrite global variables, an explicit escape hatch via the `--global` prefix is provided. On the other hand, at this point, it is not automatically applied to inline styles in templates. In use cases involving template HTML, it seems necessary to resolve them with `CssVarNamespacer` before use.
+Furthermore, an explicit bypass method using the `--global` prefix is provided for cases where you want to reference or overwrite global variables. On the other hand, at this point, it is not automatically applied to inline styles in templates. In use cases involving template HTML, it's necessary to resolve them using `CssVarNamespacer`.
 
-Since projects that utilize CSS variables extensively will benefit the most, I think it's worth trying it out as an opt-in first.
+Projects that make extensive use of CSS variables will likely benefit the most, so I think it's worth trying out on an opt-in basis first.
