@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { mkdtempSync, writeFileSync, mkdirSync, cpSync, readFileSync } from 'node:fs';
+import { describe, it, expect, afterEach } from 'vitest';
+import { mkdtempSync, writeFileSync, mkdirSync, cpSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import {
@@ -14,9 +14,24 @@ import {
 const markdown = '---\ntitle: テスト記事\n---\n\n本文である。\n';
 const fingerprint = 'ffffffffffffffff';
 
+const createdDirs: string[] = [];
+
+afterEach(() => {
+  for (const dir of createdDirs.splice(0)) {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+/** テスト終了時に片付ける一時ディレクトリを作る */
+function createTempDir(prefix: string): string {
+  const dir = mkdtempSync(join(tmpdir(), prefix));
+  createdDirs.push(dir);
+  return dir;
+}
+
 /** レンダラ実装ファイル群を持つ擬似プロジェクトルートを作る */
 function createFakeRoot(): string {
-  const root = mkdtempSync(join(tmpdir(), 'og-root-'));
+  const root = createTempDir('og-root-');
   for (const rel of [...RENDERER_SOURCE_FILES, 'package.json']) {
     const path = join(root, rel);
     mkdirSync(dirname(path), { recursive: true });
@@ -82,7 +97,7 @@ describe('computeRendererFingerprint', () => {
 describe('computeOgImageHashFromFile', () => {
   // ビルド時とCIが「同じファイルの全文」以外を入力にできないことがこの関数の存在理由
   it('ファイル全文をそのまま入力としたhashと一致する', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'og-hash-'));
+    const dir = createTempDir('og-hash-');
     const filePath = join(dir, 'post.md');
     writeFileSync(filePath, markdown, 'utf8');
 
@@ -91,7 +106,7 @@ describe('computeOgImageHashFromFile', () => {
 
   // frontmatter に title があるため、本文だけを入力にするとタイトル変更が反映されない
   it('frontmatterのtitleだけが違うファイルで異なるhashになる', () => {
-    const dir = mkdtempSync(join(tmpdir(), 'og-hash-'));
+    const dir = createTempDir('og-hash-');
     const a = join(dir, 'a.md');
     const b = join(dir, 'b.md');
     writeFileSync(a, "---\ntitle: '古いタイトル'\n---\n\n本文である。\n", 'utf8');

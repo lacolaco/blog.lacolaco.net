@@ -25,21 +25,29 @@ export const RENDERER_DEPENDENCIES = ['satori', '@resvg/resvg-js', 'budoux', 'da
 const HASH_LENGTH = 16;
 
 /** ビルド時専用であることを呼び出し側に伝えるためのエラー */
+function rendererInputError(path: string, cause: unknown): Error {
+  return new Error(
+    `OG画像の指紋を算出できない: ${path} を読めなかった。この関数はリポジトリのソースを参照するためビルド時にのみ使える`,
+    { cause },
+  );
+}
+
 function readRendererInput(path: string): Buffer {
   try {
     return readFileSync(path);
   } catch (cause) {
-    throw new Error(
-      `OG画像の指紋を算出できない: ${path} を読めなかった。この関数はリポジトリのソースを参照するためビルド時にのみ使える`,
-      { cause },
-    );
+    throw rendererInputError(path, cause);
   }
 }
 
 /** ファイル内容を読まずに変更を検知するための軽量キー */
 function statKey(path: string): string {
-  const stat = statSync(path);
-  return `${stat.mtimeMs}:${stat.size}`;
+  try {
+    const stat = statSync(path);
+    return `${stat.mtimeMs}:${stat.size}`;
+  } catch (cause) {
+    throw rendererInputError(path, cause);
+  }
 }
 
 const fingerprintCache = new Map<string, string>();

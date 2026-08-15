@@ -26,6 +26,15 @@ describe('generateOgImage', () => {
     expect(vi.mocked(buildOgImageSvg).mock.calls[0]?.[0]).toMatchObject({ avatarDataUrl });
   });
 
+  // 記事情報の描画パラメータを転送することがこの関数の主目的
+  it('titleとpublishedDateをそのままSVG生成に引き渡す', async () => {
+    const publishedDate = new Date('2026-08-15T00:00:00Z');
+
+    await generateOgImage({ title: 'テスト記事', publishedDate, avatarDataUrl });
+
+    expect(vi.mocked(buildOgImageSvg).mock.calls[0]?.[0]).toMatchObject({ title: 'テスト記事', publishedDate });
+  });
+
   it('サイトのドメイン名を渡す', async () => {
     await generateOgImage({
       title: 'テスト記事',
