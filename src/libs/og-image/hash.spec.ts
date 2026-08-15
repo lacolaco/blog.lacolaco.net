@@ -98,6 +98,33 @@ describe('computeRendererFingerprint', () => {
 
     expect(computeRendererFingerprint(root)).not.toBe(before);
   });
+
+  // 別ディレクトリの指紋がキャッシュ衝突で混ざってはいけない
+  it('実装が異なる別のrootDirでは別の値を返す', () => {
+    const original = createFakeRoot();
+    const modified = createFakeRoot();
+    writeFileSync(join(modified, RENDERER_SOURCE_FILES[0]), 'changed');
+
+    expect(computeRendererFingerprint(modified)).not.toBe(computeRendererFingerprint(original));
+  });
+
+  // 握りつぶすと依存の更新を検知できず、古い描画が永久に配信され続ける
+  it('lockfileの構造が想定と違うとエラーになる', () => {
+    const root = createFakeRoot();
+    writeFileSync(join(root, 'pnpm-lock.yaml'), stringifyYaml({ lockfileVersion: '9.0' }), 'utf8');
+
+    expect(() => computeRendererFingerprint(root)).toThrow();
+  });
+
+  it.each(RENDERER_DEPENDENCIES)('lockfileに %s がないとエラーになる', (missing) => {
+    const root = createFakeRoot();
+    const versions = Object.fromEntries(
+      RENDERER_DEPENDENCIES.filter((dep) => dep !== missing).map((dep) => [dep, '1.0.0']),
+    );
+    writeLockfile(root, versions);
+
+    expect(() => computeRendererFingerprint(root)).toThrow(missing);
+  });
 });
 
 describe('computeOgImageHashFromFile', () => {

@@ -62,13 +62,31 @@ function statKey(path: string): string {
   }
 }
 
-/** lockfile の解決済みバージョンを依存名から引ける形で読む */
+/**
+ * lockfile から描画に関わる依存の解決済みバージョンを読む。
+ * 読めなかった場合に空文字へフォールバックすると依存の更新を検知できなくなり、
+ * 古い描画が永久に配信され続けるため、必ず失敗させる。
+ */
 function readResolvedVersions(lockfilePath: string): Record<string, string> {
   const lockfile = parseYaml(readRendererInput(lockfilePath).toString('utf8')) as {
     importers?: Record<string, { dependencies?: Record<string, { version?: string }> }>;
   };
-  const dependencies = lockfile.importers?.['.']?.dependencies ?? {};
-  return Object.fromEntries(Object.entries(dependencies).map(([name, entry]) => [name, entry.version ?? '']));
+  const dependencies = lockfile.importers?.['.']?.dependencies;
+  if (!dependencies) {
+    throw new Error(
+      `${lockfilePath} から importers['.'].dependencies を読めなかった。lockfileの形式が変わった可能性がある`,
+    );
+  }
+
+  const versions: Record<string, string> = {};
+  for (const name of RENDERER_DEPENDENCIES) {
+    const version = dependencies[name]?.version;
+    if (!version) {
+      throw new Error(`${lockfilePath} に ${name} の解決済みバージョンがない。指紋が依存の更新を検知できなくなる`);
+    }
+    versions[name] = version;
+  }
+  return versions;
 }
 
 const fingerprintCache = new Map<string, string>();
@@ -79,9 +97,9 @@ const fingerprintCache = new Map<string, string>();
  */
 export function computeRendererFingerprint(rootDir: string = process.cwd()): string {
   const lockfilePath = join(rootDir, LOCKFILE);
-  const cacheKey = [rootDir, ...RENDERER_SOURCE_FILES.map((p) => join(rootDir, p)), lockfilePath]
-    .map(statKey)
-    .join('|');
+  // rootDir は一意性のために生の文字列で持つ。ディレクトリのstatは中のファイル変更で更新されない
+  const watched = [...RENDERER_SOURCE_FILES.map((relativePath) => join(rootDir, relativePath)), lockfilePath];
+  const cacheKey = [rootDir, ...watched.map(statKey)].join('|');
 
   const cached = fingerprintCache.get(cacheKey);
   if (cached) {
@@ -98,10 +116,7 @@ export function computeRendererFingerprint(rootDir: string = process.cwd()): str
 
   const versions = readResolvedVersions(lockfilePath);
   for (const name of RENDERER_DEPENDENCIES) {
-    hash
-      .update(name)
-      .update('\0')
-      .update(versions[name] ?? '');
+    hash.update(name).update('\0').update(versions[name]);
   }
 
   const fingerprint = hash.digest('hex').slice(0, HASH_LENGTH);
