@@ -1,8 +1,5 @@
+import { FONT_FAMILY_MONO, FONT_FAMILY_SANS } from '../../src/libs/og-image/constants.ts';
 import { googleFontLoader } from '../../src/libs/og-image/font-loader.ts';
-
-/** image.tsx が使うフォント。描画対象ごとに family と weight が決まっている */
-const SANS_FAMILY = 'Zen Kaku Gothic New';
-const MONO_FAMILY = 'Source Code Pro';
 
 /** 日付 (yyyy-MM-dd) の描画に必要な文字 */
 const DATE_CHARS = '0123456789-';
@@ -44,9 +41,9 @@ export async function createBatchedFontLoader(
   const loaded = new Map<string, ArrayBuffer>();
   await Promise.all(
     [
-      { font: SANS_FAMILY, weight: 400, text: siteDomainName },
-      { font: SANS_FAMILY, weight: 700, text: titleText },
-      { font: MONO_FAMILY, weight: 400, text: DATE_CHARS },
+      { font: FONT_FAMILY_SANS, weight: 400, text: siteDomainName },
+      { font: FONT_FAMILY_SANS, weight: 700, text: titleText },
+      { font: FONT_FAMILY_MONO, weight: 400, text: DATE_CHARS },
     ].map(async ({ font, weight, text }) => {
       loaded.set(fontKey(font, weight), await fetchFont(text, font, weight));
     }),

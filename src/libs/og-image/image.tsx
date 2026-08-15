@@ -5,10 +5,8 @@ import { Resvg } from '@resvg/resvg-js';
 import { loadDefaultJapaneseParser } from 'budoux';
 import { format } from 'date-fns';
 import satori from 'satori';
+import { FONT_FAMILY_MONO, FONT_FAMILY_SANS } from './constants.js';
 import { googleFontLoader } from './font-loader.js';
-
-const FONT_FAMILY = 'Zen Kaku Gothic New';
-const FONT_FAMILY_MONO = 'Source Code Pro';
 
 const phraseParser = loadDefaultJapaneseParser();
 
@@ -89,8 +87,8 @@ export async function buildOgImageSvg(params: BuildOgImageParams): Promise<strin
   // フォント subset を描画される文字種ごとに絞る:
   //   weight 400 (sans) = ドメイン / weight 700 (sans) = タイトル / mono 400 = 日付
   const [fontNormal, fontBold, fontMono] = await Promise.all([
-    fontLoader(siteDomainName, FONT_FAMILY, 400),
-    fontLoader(title, FONT_FAMILY, 700),
+    fontLoader(siteDomainName, FONT_FAMILY_SANS, 400),
+    fontLoader(title, FONT_FAMILY_SANS, 700),
     fontLoader(dateStr, FONT_FAMILY_MONO, 400),
   ]);
 
@@ -102,7 +100,7 @@ export async function buildOgImageSvg(params: BuildOgImageParams): Promise<strin
         display: 'flex',
         position: 'relative',
         backgroundColor: '#ffffff',
-        fontFamily: `"${FONT_FAMILY}", sans-serif`,
+        fontFamily: `"${FONT_FAMILY_SANS}", sans-serif`,
       }}
     >
       {/* 左上: 公開日 (eyebrow / タイトルの上) */}
@@ -184,8 +182,8 @@ export async function buildOgImageSvg(params: BuildOgImageParams): Promise<strin
       width: 1200 * SCALE,
       height: 630 * SCALE,
       fonts: [
-        { name: FONT_FAMILY, data: fontNormal, weight: 400, style: 'normal' },
-        { name: FONT_FAMILY, data: fontBold, weight: 700, style: 'normal' },
+        { name: FONT_FAMILY_SANS, data: fontNormal, weight: 400, style: 'normal' },
+        { name: FONT_FAMILY_SANS, data: fontBold, weight: 700, style: 'normal' },
         { name: FONT_FAMILY_MONO, data: fontMono, weight: 400, style: 'normal' },
       ],
     },
