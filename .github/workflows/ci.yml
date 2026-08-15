@@ -57,6 +57,8 @@ jobs:
               - 'content/**'
               - 'public/images/**'
               - 'manifest.json'
+              # OG画像のマニフェスト。sync PR に含まれるため content 扱いにしないと auto-merge から外れる
+              - 'og-manifest.json'
 
       - uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4.0.2
         id: code-paths
@@ -68,6 +70,7 @@ jobs:
               - '!content/**'
               - '!public/images/**'
               - '!manifest.json'
+              - '!og-manifest.json'
 
       - name: Check for non-renovate commits
         id: non-renovate-commits
@@ -359,7 +362,7 @@ jobs:
           prompt: |
             このPRのコード変更をレビューしてください。
             `gh pr diff ${{ github.event.pull_request.number }}` でdiffを取得し、コードファイルの変更のみを対象にレビューを行ってください。
-            コンテンツ変更（content/**, public/images/**, manifest.json）が含まれる場合がありますが、レビュー対象外です。
+            コンテンツ変更（content/**, public/images/**, manifest.json, og-manifest.json）が含まれる場合がありますが、レビュー対象外です。
 
             レビュー観点:
             - コード品質とベストプラクティス
@@ -420,8 +423,50 @@ jobs:
 
   # === Gate ===
 
+  # og-manifest.json は blog-contents の sync が所有する。エントリは「その画像がR2に存在する」
+  # という主張であり、画像は gitignore されているため手元の実行結果を持ち込むと、
+  # CIが全件を生成済みと誤認してR2に何もアップロードしなくなる
+  og-manifest-guard:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 0
+
+      - name: og-manifest.json の変更元を検査
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          set -euo pipefail
+          # パイプのまま判定すると git diff の失敗が grep の終了ステータスに隠れ、
+          # 手元でコミットされた変更を見逃す
+          changed="$(git diff --name-only "origin/${BASE_REF}...HEAD")"
+          if ! printf '%s\n' "$changed" | grep -qx 'og-manifest.json'; then
+            exit 0
+          fi
+          if [ "$HEAD_REF" = 'notion-sync-from-blog-contents' ]; then
+            exit 0
+          fi
+          echo "::error file=og-manifest.json::og-manifest.json は blog-contents の sync が更新する。手元で pnpm og-image-sync を実行した結果はコミットしない"
+          exit 1
+
   ok:
-    needs: [classify, build, lint, format, test, terraform, renovate-review, content-review, code-review]
+    needs:
+      [
+        classify,
+        build,
+        lint,
+        format,
+        test,
+        terraform,
+        og-manifest-guard,
+        renovate-review,
+        content-review,
+        code-review,
+      ]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:

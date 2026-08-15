@@ -34,8 +34,12 @@ export async function createBatchedFontLoader(
 
   // サブセットは記事数に比例して伸びる。上限に達したときに Google Fonts が何を返すかは
   // 保証されないため、URLとして無理のない長さを超えたら黙って進まず落とす
-  if (encodeURIComponent(titleText).length > MAX_SUBSET_LENGTH) {
-    throw new Error(`フォントのサブセットが大きすぎる (${titleText.length}文字)。記事数の増加に対して分割取得が要る`);
+  const encodedLength = encodeURIComponent(titleText).length;
+  if (encodedLength > MAX_SUBSET_LENGTH) {
+    throw new Error(
+      `フォントのサブセットが大きすぎる (${titleText.length}文字、エンコード後${encodedLength}、上限${MAX_SUBSET_LENGTH})。` +
+        `記事数の増加に対して分割取得が要る`,
+    );
   }
 
   const loaded = new Map<string, ArrayBuffer>();

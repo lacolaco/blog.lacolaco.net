@@ -46,7 +46,14 @@ export function readFrontmatter(filePath: string): Record<string, unknown> {
   if (!match) {
     throw new ArticleValidationError(`${filePath} に frontmatter がない`);
   }
-  return parseYaml(match[1]) as Record<string, unknown>;
+  // 空文書やコメントだけの場合 parseYaml は null を返す。
+  // そのまま返すと呼び出し側がプロパティ参照で TypeError になり、
+  // 記事の不備として扱えず手書きツリーでもスキップできない
+  const parsed: unknown = parseYaml(match[1]);
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new ArticleValidationError(`${filePath} の frontmatter が空か、マップになっていない`);
+  }
+  return parsed as Record<string, unknown>;
 }
 
 /**

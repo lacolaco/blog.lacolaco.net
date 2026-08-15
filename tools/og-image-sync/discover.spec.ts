@@ -103,6 +103,37 @@ describe('parseTarget', () => {
     rmSync(root, { recursive: true, force: true });
   });
 
+  // yaml.parse は空文書やコメントのみで null を返す。オブジェクトとして扱うと TypeError になる
+  test('空のfrontmatterはエラーになる', () => {
+    const root = createContentDir();
+    const filePath = join(root, 'notion/posts/empty.md');
+    // 区切りだけの `---\n---` は frontmatter の正規表現に一致せず別のエラーになるため、
+    // 中身が空文字になる形にして parseYaml が null を返す経路を通す
+    writeFileSync(filePath, '---\n\n---\n\n本文\n', 'utf8');
+
+    assert.throws(() => parseTarget(filePath), /frontmatter が空/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  test('コメントのみのfrontmatterはエラーになる', () => {
+    const root = createContentDir();
+    const filePath = join(root, 'notion/posts/comment-only.md');
+    writeFileSync(filePath, '---\n# メモ\n---\n\n本文\n', 'utf8');
+
+    assert.throws(() => parseTarget(filePath), /frontmatter が空/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 区切りだけの形は正規表現に一致せず、空ガードではなく不在エラーになる
+  test('区切りだけのfrontmatterは不在として扱う', () => {
+    const root = createContentDir();
+    const filePath = join(root, 'notion/posts/delimiters-only.md');
+    writeFileSync(filePath, '---\n---\n\n本文\n', 'utf8');
+
+    assert.throws(() => parseTarget(filePath), /frontmatter がない/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
   test('CRLFのファイルでもfrontmatterを読める', () => {
     const root = createContentDir();
     const filePath = join(root, 'notion/posts/crlf.md');
@@ -146,6 +177,16 @@ describe('toTargetOrSkip', () => {
     const root = createContentDir();
     const filePath = join(root, 'notion/posts/draft.md');
     writeFileSync(filePath, frontmatter.replace('published: true', 'published: false'), 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath), null);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // yaml.parse が null を返すケースも「記事として扱えない」に含める
+  test('手書き記事の空frontmatterはスキップする', () => {
+    const root = createContentDir();
+    const filePath = join(root, 'posts/empty-frontmatter.md');
+    writeFileSync(filePath, '---\n# メモ\n---\n\n本文\n', 'utf8');
 
     assert.equal(toTargetOrSkip(filePath), null);
     rmSync(root, { recursive: true, force: true });

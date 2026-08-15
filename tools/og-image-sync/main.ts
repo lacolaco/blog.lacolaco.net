@@ -38,8 +38,8 @@ async function main(): Promise<void> {
 
   console.log(`[og-image-sync] ${files.length} files, ${targets.length} published, ${toGenerate.length} to generate`);
 
-  // 生成のたびに書き出す。描画は記事ごとにGoogle Fontsへの取得を伴い、
-  // 一度の失敗で全件の進捗を捨てると再実行のコストが大きい
+  // 生成のたびに書き出す。全件生成の途中で失敗しても、成功した分のエントリが残り、
+  // マニフェストが指す先とR2の内容がずれた状態を手作業で切り分けられる
   const manifest = seedManifest(carryOver, toGenerate, previous);
   writeManifest(manifestPath, manifest);
 
