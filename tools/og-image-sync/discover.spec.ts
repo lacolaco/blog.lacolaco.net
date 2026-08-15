@@ -3,7 +3,7 @@ import { test, describe } from 'node:test';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { localeOf, parseTarget, listArticleFiles, isPublished } from './discover.ts';
+import { localeOf, parseTarget, listArticleFiles, isPublished, toTargetOrSkip } from './discover.ts';
 
 const frontmatter = [
   '---',
@@ -129,6 +129,76 @@ describe('isPublished', () => {
 
   test('published の指定がなければ対象外', () => {
     assert.equal(isPublished({ created_time: '2024-01-01T00:00:00.000Z' }), false);
+  });
+});
+
+describe('toTargetOrSkip', () => {
+  test('公開記事は生成対象になる', () => {
+    const root = createContentDir();
+    const filePath = join(root, 'notion/posts/my-post.md');
+    writeFileSync(filePath, frontmatter, 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath)?.slug, 'my-post');
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  test('未公開の記事は対象外', () => {
+    const root = createContentDir();
+    const filePath = join(root, 'notion/posts/draft.md');
+    writeFileSync(filePath, frontmatter.replace('published: true', 'published: false'), 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath), null);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 手書きツリーには README など記事でないファイルが紛れうる
+  test('手書き記事のfrontmatter不在はスキップする', () => {
+    const root = createContentDir();
+    const filePath = join(root, 'posts/README.md');
+    writeFileSync(filePath, '# 覚書\n', 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath), null);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // parseTarget のバリデーション失敗も1件のスキップで済ませる
+  test('手書き記事のtitle欠落はスキップする', () => {
+    const root = createContentDir();
+    const filePath = join(root, 'posts/broken.md');
+    writeFileSync(filePath, frontmatter.replace("title: 'テスト記事'", "description: 'x'"), 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath), null);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  test('手書き記事の不正なslugはスキップする', () => {
+    const root = createContentDir();
+    const filePath = join(root, 'posts/bad-slug.md');
+    writeFileSync(filePath, frontmatter.replace("slug: 'my-post'", "slug: '../escaped'"), 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath), null);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // sync の出力の不備は異常。黙って落とすとその記事だけOG画像を持たないまま公開される
+  test('sync出力のtitle欠落は失敗させる', () => {
+    const root = createContentDir();
+    const filePath = join(root, 'content/notion/posts/broken.md');
+    mkdirSync(join(root, 'content/notion/posts'), { recursive: true });
+    writeFileSync(filePath, frontmatter.replace("title: 'テスト記事'", "description: 'x'"), 'utf8');
+
+    assert.throws(() => toTargetOrSkip(filePath), /title/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  test('sync出力のfrontmatter不在は失敗させる', () => {
+    const root = createContentDir();
+    const filePath = join(root, 'content/notion/posts/broken.md');
+    mkdirSync(join(root, 'content/notion/posts'), { recursive: true });
+    writeFileSync(filePath, '本文のみ\n', 'utf8');
+
+    assert.throws(() => toTargetOrSkip(filePath), /frontmatter/);
+    rmSync(root, { recursive: true, force: true });
   });
 });
 

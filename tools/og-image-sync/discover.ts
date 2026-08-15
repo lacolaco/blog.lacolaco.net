@@ -5,6 +5,8 @@ import { parse as parseYaml } from 'yaml';
 import { buildOgImageFileName, computeOgImageHashFromFile } from '../../src/libs/og-image/hash.ts';
 
 /** Notion sync の出力は flat、直接執筆はサブディレクトリを許す (src/content.config.ts と対称) */
+const CONTENT_DIR_NAME = 'content';
+const NOTION_DIR_NAME = 'notion';
 const NOTION_POSTS_DIR = 'notion/posts';
 const AUTHORED_POSTS_DIR = 'posts';
 
@@ -94,6 +96,35 @@ export function parseTarget(filePath: string, rootDir: string = process.cwd()): 
     publishedDate: new Date(createdTime),
     fileName: buildOgImageFileName(slug, locale, hash),
   };
+}
+
+/** sync の出力かどうか。手書きの記事とは不備への対処を変える */
+export function isSyncOutput(filePath: string): boolean {
+  return filePath.includes(join(CONTENT_DIR_NAME, NOTION_DIR_NAME));
+}
+
+/**
+ * 公開記事なら生成対象に変換する。対象外なら null を返す。
+ *
+ * content/posts は手で書く再帰ツリーなので、frontmatter を持たないファイル (README 等) や
+ * 記述の不備が紛れうる。1件で全体を止めず、記事として扱えないものは対象から外す。
+ *
+ * content/notion/posts は sync の出力であり、不備は異常である。黙って落とすと
+ * その記事だけマニフェストから消え、OG画像を持たないまま公開されるため失敗させる。
+ */
+export function toTargetOrSkip(filePath: string, rootDir: string = process.cwd()): OgImageTarget | null {
+  try {
+    if (!isPublished(readFrontmatter(filePath))) {
+      return null;
+    }
+    return parseTarget(filePath, rootDir);
+  } catch (cause) {
+    if (isSyncOutput(filePath)) {
+      throw cause;
+    }
+    console.warn(`[og-image-sync] skip ${filePath}: ${(cause as Error).message}`);
+    return null;
+  }
 }
 
 async function listMarkdown(dir: string, recursive: boolean): Promise<string[]> {

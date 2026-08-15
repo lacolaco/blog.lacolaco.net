@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { isPublished, listArticleFiles, parseTarget, readFrontmatter } from './discover.ts';
+import { listArticleFiles, toTargetOrSkip } from './discover.ts';
 import { SITE_DOMAIN_NAME } from '../../src/libs/og-image/constants.ts';
 import { assertNotTruncating, manifestKey, planGeneration, readManifest, writeManifest } from './manifest.ts';
 import { createBatchedFontLoader } from './fonts.ts';
@@ -16,28 +16,6 @@ const MANIFEST_PATH = 'og-manifest.json';
  * R2へのアップロードは行わない。blog-contents の sync ワークフローが public/images を
  * まとめてアップロードするため、書き込み経路をそちらに一本化している。
  */
-/**
- * 公開記事かを判定する。
- *
- * content/posts は手で書く再帰ツリーなので、frontmatter を持たないファイル (README 等) が
- * 紛れうる。1件で全体を止めず、記事として扱えないものは対象から外す。
- *
- * content/notion/posts は sync の出力であり、frontmatter を持たないファイルは異常である。
- * 黙って落とすとその記事だけマニフェストから消え、OG画像を持たないまま公開されるため失敗させる。
- */
-function isPublishedArticle(filePath: string): boolean {
-  const isSyncOutput = filePath.includes(join(CONTENT_DIR, 'notion'));
-  try {
-    return isPublished(readFrontmatter(filePath));
-  } catch (cause) {
-    if (isSyncOutput) {
-      throw cause;
-    }
-    console.warn(`[og-image-sync] skip ${filePath}: ${(cause as Error).message}`);
-    return false;
-  }
-}
-
 async function main(): Promise<void> {
   const rootDir = process.cwd();
   const outputDir = join(rootDir, OUTPUT_DIR);
@@ -45,7 +23,7 @@ async function main(): Promise<void> {
 
   const files = await listArticleFiles(join(rootDir, CONTENT_DIR));
   const previous = readManifest(manifestPath);
-  const targets = files.filter(isPublishedArticle).map((filePath) => parseTarget(filePath, rootDir));
+  const targets = files.map((filePath) => toTargetOrSkip(filePath, rootDir)).filter((t) => t !== null);
 
   assertNotTruncating(targets.length, previous);
 
