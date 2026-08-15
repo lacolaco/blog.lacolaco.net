@@ -1,7 +1,8 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { mkdtempSync, writeFileSync, mkdirSync, cpSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, mkdirSync, cpSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
+import { stringify as stringifyYaml } from 'yaml';
 import {
   computeOgImageHash,
   computeOgImageHashFromFile,
@@ -29,15 +30,23 @@ function createTempDir(prefix: string): string {
   return dir;
 }
 
-/** レンダラ実装ファイル群を持つ擬似プロジェクトルートを作る */
+/** レンダラ実装ファイル群と、依存の解決済みバージョンを持つ擬似プロジェクトルートを作る */
 function createFakeRoot(): string {
   const root = createTempDir('og-root-');
-  for (const rel of [...RENDERER_SOURCE_FILES, 'package.json']) {
+  for (const rel of RENDERER_SOURCE_FILES) {
     const path = join(root, rel);
     mkdirSync(dirname(path), { recursive: true });
     cpSync(join(process.cwd(), rel), path);
   }
+  writeLockfile(root, Object.fromEntries(RENDERER_DEPENDENCIES.map((name) => [name, '1.0.0'])));
   return root;
+}
+
+function writeLockfile(rootDir: string, versions: Record<string, string>): void {
+  const dependencies = Object.fromEntries(
+    Object.entries(versions).map(([name, version]) => [name, { specifier: `^${version}`, version }]),
+  );
+  writeFileSync(join(rootDir, 'pnpm-lock.yaml'), stringifyYaml({ importers: { '.': { dependencies } } }), 'utf8');
 }
 
 describe('computeOgImageHash', () => {
@@ -79,16 +88,13 @@ describe('computeRendererFingerprint', () => {
     expect(computeRendererFingerprint(root)).not.toBe(before);
   });
 
-  // 描画に使う依存のバージョンが変わるとグリフ配置が変わりうる
-  it.each(RENDERER_DEPENDENCIES)('%s のバージョンが変わるとfingerprintが変わる', (name) => {
+  // 描画に使う依存のバージョンが変わるとグリフ配置が変わりうる。
+  // package.json の宣言は caret レンジを含むため、lockfileの解決済みバージョンを見る必要がある
+  it.each(RENDERER_DEPENDENCIES)('%s の解決済みバージョンが変わるとfingerprintが変わる', (name) => {
     const root = createFakeRoot();
     const before = computeRendererFingerprint(root);
-    const packageJsonPath = join(root, 'package.json');
-    const packageJson = JSON.parse(readFileSync(packageJsonPath, 'utf8')) as {
-      dependencies: Record<string, string>;
-    };
-    packageJson.dependencies[name] = '0.0.0-changed';
-    writeFileSync(packageJsonPath, JSON.stringify(packageJson), 'utf8');
+    const versions = Object.fromEntries(RENDERER_DEPENDENCIES.map((dep) => [dep, '1.0.0']));
+    writeLockfile(root, { ...versions, [name]: '1.0.1' });
 
     expect(computeRendererFingerprint(root)).not.toBe(before);
   });

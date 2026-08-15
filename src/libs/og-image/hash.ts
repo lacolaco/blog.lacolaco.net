@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { parse as parseYaml } from 'yaml';
 
 /**
  * OG画像の描画結果を左右する実装ファイル。
@@ -16,10 +17,21 @@ export const RENDERER_SOURCE_FILES = [
 ] as const;
 
 /**
- * 描画結果を左右する依存。バージョンが変わるとグリフ配置や分節が変わりうるため、
- * package.json 上のバージョン指定を指紋の入力に含める。
+ * 描画結果を左右する依存。バージョンが変わるとグリフ配置や分節が変わりうるため指紋の入力に含める。
+ * package.json の宣言は caret レンジ (例: satori の `^0.28.0`) を含み、lockfileだけが更新された
+ * ケースを取りこぼす。node_modules の実バージョンも環境ごとにずれうるため、
+ * リポジトリにコミットされた lockfile の解決済みバージョンを唯一の出所とする。
  */
 export const RENDERER_DEPENDENCIES = ['satori', '@resvg/resvg-js', 'budoux', 'date-fns'] as const;
+
+const LOCKFILE = 'pnpm-lock.yaml';
+
+/**
+ * 指紋が捕捉できない変更が一つある。font-loader.ts は生成のたびにGoogle Fonts へ
+ * フォントを取りに行くため、Google側でグリフやhintingが更新されても指紋は変わらない。
+ * 描画が変わったのに再生成されない状況になったら、RENDERER_SOURCE_FILES のいずれかを
+ * 編集すれば全記事の再生成を強制できる。
+ */
 
 /** 既存の画像ファイル (`<name>.<hash>.<ext>`) と桁数を揃える */
 const HASH_LENGTH = 16;
@@ -50,6 +62,15 @@ function statKey(path: string): string {
   }
 }
 
+/** lockfile の解決済みバージョンを依存名から引ける形で読む */
+function readResolvedVersions(lockfilePath: string): Record<string, string> {
+  const lockfile = parseYaml(readRendererInput(lockfilePath).toString('utf8')) as {
+    importers?: Record<string, { dependencies?: Record<string, { version?: string }> }>;
+  };
+  const dependencies = lockfile.importers?.['.']?.dependencies ?? {};
+  return Object.fromEntries(Object.entries(dependencies).map(([name, entry]) => [name, entry.version ?? '']));
+}
+
 const fingerprintCache = new Map<string, string>();
 
 /**
@@ -57,9 +78,10 @@ const fingerprintCache = new Map<string, string>();
  * devサーバーのように長寿命なプロセスでも実装の編集を拾えるよう、mtimeとサイズをキャッシュキーに含める。
  */
 export function computeRendererFingerprint(rootDir: string = process.cwd()): string {
-  const paths = RENDERER_SOURCE_FILES.map((relativePath) => join(rootDir, relativePath));
-  const packageJsonPath = join(rootDir, 'package.json');
-  const cacheKey = [rootDir, ...paths.map(statKey), statKey(packageJsonPath)].join('|');
+  const lockfilePath = join(rootDir, LOCKFILE);
+  const cacheKey = [rootDir, ...RENDERER_SOURCE_FILES.map((p) => join(rootDir, p)), lockfilePath]
+    .map(statKey)
+    .join('|');
 
   const cached = fingerprintCache.get(cacheKey);
   if (cached) {
@@ -74,14 +96,12 @@ export function computeRendererFingerprint(rootDir: string = process.cwd()): str
       .update(readRendererInput(join(rootDir, relativePath)));
   }
 
-  const packageJson = JSON.parse(readRendererInput(packageJsonPath).toString('utf8')) as {
-    dependencies?: Record<string, string>;
-  };
+  const versions = readResolvedVersions(lockfilePath);
   for (const name of RENDERER_DEPENDENCIES) {
     hash
       .update(name)
       .update('\0')
-      .update(packageJson.dependencies?.[name] ?? '');
+      .update(versions[name] ?? '');
   }
 
   const fingerprint = hash.digest('hex').slice(0, HASH_LENGTH);
