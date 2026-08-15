@@ -3,7 +3,14 @@ import { test, describe } from 'node:test';
 import { mkdtempSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { manifestKey, readManifest, writeManifest, planGeneration, assertNotTruncating } from './manifest.ts';
+import {
+  manifestKey,
+  readManifest,
+  writeManifest,
+  planGeneration,
+  assertNotTruncating,
+  seedManifest,
+} from './manifest.ts';
 import type { OgImageTarget } from './discover.ts';
 
 function target(slug: string, locale: 'ja' | 'en', hash: string): OgImageTarget {
@@ -92,6 +99,40 @@ describe('assertNotTruncating', () => {
     const previous = Object.fromEntries(Array.from({ length: 100 }, (_, i) => [`p${i}.ja`, `p${i}.ja.x.png`]));
 
     assert.doesNotThrow(() => assertNotTruncating(98, previous));
+  });
+});
+
+describe('seedManifest', () => {
+  // 生成前に書き出す初期状態。中断しても開始前の状態を下回らないことが要件
+  test('生成不要なエントリをそのまま含む', () => {
+    const ja = target('kept', 'ja', 'aaaaaaaaaaaaaaaa');
+
+    assert.deepEqual(seedManifest({ 'kept.ja': ja.fileName }, [], {}), { 'kept.ja': ja.fileName });
+  });
+
+  // R2上の旧オブジェクトは削除しないので、旧ファイル名は依然として有効
+  test('再生成待ちのキーには旧ファイル名を残す', () => {
+    const next = target('changed', 'ja', 'bbbbbbbbbbbbbbbb');
+    const previous = { 'changed.ja': 'changed.ja.aaaaaaaaaaaaaaaa.png' };
+
+    assert.deepEqual(seedManifest({}, [next], previous), previous);
+  });
+
+  test('新規記事は生成が終わるまで含めない', () => {
+    const fresh = target('new-post', 'ja', 'aaaaaaaaaaaaaaaa');
+
+    assert.deepEqual(seedManifest({}, [fresh], {}), {});
+  });
+
+  test('引き継ぎと旧エントリを併せて返す', () => {
+    const kept = target('kept', 'ja', 'aaaaaaaaaaaaaaaa');
+    const changed = target('changed', 'ja', 'bbbbbbbbbbbbbbbb');
+
+    const seeded = seedManifest({ 'kept.ja': kept.fileName }, [changed], {
+      'changed.ja': 'changed.ja.old.png',
+    });
+
+    assert.deepEqual(seeded, { 'kept.ja': kept.fileName, 'changed.ja': 'changed.ja.old.png' });
   });
 });
 

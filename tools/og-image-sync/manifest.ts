@@ -40,6 +40,25 @@ export function writeManifest(path: string, manifest: OgManifest): void {
   writeFileSync(path, `${JSON.stringify(sorted, null, 2)}\n`, 'utf8');
 }
 
+/**
+ * 生成を始める前に書き出すマニフェストを組み立てる。
+ *
+ * 再生成待ちのキーには旧ファイル名を残す。R2上の旧オブジェクトは削除しないため
+ * 旧ファイル名は依然として有効であり、中断しても開始前の状態を下回らない。
+ * 新規記事は指す先がまだ存在しないので、生成が終わるまで含めない。
+ */
+export function seedManifest(carryOver: OgManifest, toGenerate: OgImageTarget[], previous: OgManifest): OgManifest {
+  const seeded: OgManifest = { ...carryOver };
+  for (const target of toGenerate) {
+    const key = manifestKey(target.slug, target.locale);
+    const stale = previous[key];
+    if (stale) {
+      seeded[key] = stale;
+    }
+  }
+  return seeded;
+}
+
 /** 記事の削除は正常な操作なので、この割合を下回る減少だけを異常とみなす */
 const TRUNCATION_RATIO = 0.5;
 

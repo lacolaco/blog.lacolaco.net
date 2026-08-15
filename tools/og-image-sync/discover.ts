@@ -60,9 +60,11 @@ export function isPublished(frontmatter: Record<string, unknown>): boolean {
   return new Date(createdTime).getTime() <= Date.now();
 }
 
-export function parseTarget(filePath: string, rootDir: string = process.cwd()): OgImageTarget {
-  const frontmatter = readFrontmatter(filePath);
-
+export function parseTarget(
+  filePath: string,
+  rootDir: string = process.cwd(),
+  frontmatter: Record<string, unknown> = readFrontmatter(filePath),
+): OgImageTarget {
   const slug = frontmatter.slug;
   if (typeof slug !== 'string' || slug.length === 0) {
     throw new Error(`${filePath} に slug がない`);
@@ -114,10 +116,12 @@ export function isSyncOutput(filePath: string): boolean {
  */
 export function toTargetOrSkip(filePath: string, rootDir: string = process.cwd()): OgImageTarget | null {
   try {
-    if (!isPublished(readFrontmatter(filePath))) {
+    // 同じファイルを2度読まないよう、判定に使った frontmatter をそのまま渡す
+    const frontmatter = readFrontmatter(filePath);
+    if (!isPublished(frontmatter)) {
       return null;
     }
-    return parseTarget(filePath, rootDir);
+    return parseTarget(filePath, rootDir, frontmatter);
   } catch (cause) {
     if (isSyncOutput(filePath)) {
       throw cause;

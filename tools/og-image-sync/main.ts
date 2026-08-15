@@ -2,7 +2,14 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { listArticleFiles, toTargetOrSkip } from './discover.ts';
 import { SITE_DOMAIN_NAME } from '../../src/libs/og-image/constants.ts';
-import { assertNotTruncating, manifestKey, planGeneration, readManifest, writeManifest } from './manifest.ts';
+import {
+  assertNotTruncating,
+  manifestKey,
+  planGeneration,
+  readManifest,
+  seedManifest,
+  writeManifest,
+} from './manifest.ts';
 import { createBatchedFontLoader } from './fonts.ts';
 import { renderOgImage } from './render.ts';
 
@@ -32,17 +39,8 @@ async function main(): Promise<void> {
   console.log(`[og-image-sync] ${files.length} files, ${targets.length} published, ${toGenerate.length} to generate`);
 
   // 生成のたびに書き出す。描画は記事ごとにGoogle Fontsへの取得を伴い、
-  // 一度の失敗で全件の進捗を捨てると再実行のコストが大きい。
-  // 再生成待ちのキーは旧ファイル名のまま残す。R2上の旧オブジェクトは削除しないので、
-  // 中断しても開始前の状態を下回らない
-  const manifest = { ...carryOver };
-  for (const target of toGenerate) {
-    const key = manifestKey(target.slug, target.locale);
-    const stale = previous[key];
-    if (stale) {
-      manifest[key] = stale;
-    }
-  }
+  // 一度の失敗で全件の進捗を捨てると再実行のコストが大きい
+  const manifest = seedManifest(carryOver, toGenerate, previous);
   writeManifest(manifestPath, manifest);
 
   // 記事ごとにGoogle Fontsへ問い合わせると記事数×3回になるため、全記事分を一度に取得する
