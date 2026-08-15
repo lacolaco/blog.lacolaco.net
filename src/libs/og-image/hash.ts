@@ -7,13 +7,17 @@ import { parse as parseYaml } from 'yaml';
  * OG画像の描画結果を左右する実装ファイル。
  * 手動のバージョン番号だと更新漏れに気付けない (R2オブジェクトはイミュータブルなため、
  * hashが変わらなければ古い描画が永久に配信され続ける) ので、内容そのものをhashの入力にする。
- * generate.ts は画像に描かれるサイトのドメイン名を保持するため対象に含める。
+ * 描画に影響する定数は constants.ts に集約している。generate.ts はSSRルート専用で
+ * 段階4で削除されるため対象に含めない。
  */
 export const RENDERER_SOURCE_FILES = [
   'src/libs/og-image/image.tsx',
-  'src/libs/og-image/generate.ts',
+  'src/libs/og-image/constants.ts',
   'src/libs/og-image/avatar.png',
   'src/libs/og-image/font-loader.ts',
+  // CI生成の描画経路。ここも描画結果を左右する
+  'tools/og-image-sync/render.ts',
+  'tools/og-image-sync/fonts.ts',
 ] as const;
 
 /**
@@ -125,7 +129,7 @@ function loadLockfileEntries(lockfilePath: string): Record<string, LockfileEntry
 /**
  * レンダラ実装の指紋。実装を変更すると全記事のhashが変わり、CIが全件を再生成する。
  * 実装ファイルは毎回読み直す。devサーバーのような長寿命プロセスで編集を取りこぼさないためで、
- * 対象は4ファイル計100KB弱なので記事数だけ繰り返しても実測で100ms未満に収まる。
+ * 対象は6ファイル計100KB強なので記事数だけ繰り返しても実測で200ms未満に収まる。
  */
 export function computeRendererFingerprint(rootDir: string = process.cwd()): string {
   const hash = createHash('sha256');
