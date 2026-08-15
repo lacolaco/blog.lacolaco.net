@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { MetadataService, FirestoreClient } from './client';
+import { MetadataService, FirestoreClient, type TokenProvider } from './client';
 
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);
@@ -268,5 +268,52 @@ describe('FirestoreClient', () => {
       expect(mockFetch).toHaveBeenCalledTimes(2);
       expect(getCallHeaders(1)).toMatchObject({ Authorization: 'Bearer new-token' });
     });
+  });
+});
+
+describe('FirestoreClient with custom TokenProvider', () => {
+  beforeEach(() => {
+    mockFetch.mockReset();
+  });
+
+  // メタデータサーバーが存在しない実行環境向けに、認証だけを差し替えられることを担保する
+  it('MetadataService以外のTokenProvider実装を注入できる', async () => {
+    const customProvider: TokenProvider = {
+      getToken: () => Promise.resolve('custom-token'),
+      getProjectId: () => Promise.resolve('custom-project'),
+      invalidate: () => {},
+    };
+    const client = new FirestoreClient('custom-db', customProvider);
+    mockFetch.mockResolvedValueOnce({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({ fields: {} }),
+    });
+
+    await client.getDocument('post_likes/some-slug');
+
+    expect(mockFetch).toHaveBeenCalledWith(
+      'https://firestore.googleapis.com/v1/projects/custom-project/databases/custom-db/documents/post_likes/some-slug',
+      expect.anything(),
+    );
+    expect(getCallHeaders(0)).toMatchObject({ Authorization: 'Bearer custom-token' });
+  });
+
+  // 401リトライは TokenProvider の実装に依存せず FirestoreClient 側で成立する必要がある
+  it('注入したTokenProviderでも401リトライが機能する', async () => {
+    const invalidate = vi.fn();
+    const getToken = vi.fn().mockResolvedValueOnce('stale-token').mockResolvedValueOnce('fresh-token');
+    const customProvider: TokenProvider = {
+      getToken,
+      getProjectId: () => Promise.resolve('custom-project'),
+      invalidate,
+    };
+    const client = new FirestoreClient('custom-db', customProvider);
+    mockFetch.mockResolvedValueOnce({ ok: false, status: 401 }).mockResolvedValueOnce({ ok: true, status: 200 });
+
+    await client.commit([{ update: { name: 'dummy', fields: {} } }]);
+
+    expect(invalidate).toHaveBeenCalled();
+    expect(getCallHeaders(1)).toMatchObject({ Authorization: 'Bearer fresh-token' });
   });
 });

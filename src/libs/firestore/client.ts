@@ -3,8 +3,19 @@ import type { FirestoreDocument, FirestoreWrite } from './types';
 const METADATA_BASE = 'http://metadata.google.internal/computeMetadata/v1';
 const METADATA_HEADERS = { 'Metadata-Flavor': 'Google' } as const;
 
+/**
+ * Firestore REST APIの認証に必要な値を供給する。
+ * 実行環境ごとに取得経路が異なる (Cloud Runはメタデータサーバー、それ以外は自己署名JWT) ため、
+ * FirestoreClientはこのインターフェースにだけ依存する。
+ */
+export interface TokenProvider {
+  getToken(): Promise<string>;
+  getProjectId(): Promise<string>;
+  invalidate(): void;
+}
+
 /** GCPメタデータサーバーからトークンとproject IDを取得するクラス */
-export class MetadataService {
+export class MetadataService implements TokenProvider {
   #cachedToken: string | null = null;
   #expiresAt: number = 0;
   #pendingFetch: Promise<string> | null = null;
@@ -80,9 +91,9 @@ interface FetchOptions {
 /** Firestore REST APIクライアント */
 export class FirestoreClient {
   #database: string;
-  #metadata: MetadataService;
+  #metadata: TokenProvider;
 
-  constructor(database: string, metadata: MetadataService) {
+  constructor(database: string, metadata: TokenProvider) {
     this.#database = database;
     this.#metadata = metadata;
   }
