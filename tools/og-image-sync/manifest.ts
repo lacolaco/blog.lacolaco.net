@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, renameSync, writeFileSync } from 'node:fs';
 import type { Locale, OgImageTarget } from './discover.ts';
 
 /** slug + locale から R2 上のオブジェクト名を引くマップ */
@@ -34,10 +34,16 @@ export function readManifest(path: string): OgManifest {
  * キーをソートして書き出す。差分を読みやすく保つため。
  * localeCompare は ICU の照合順序と環境の既定ロケールに依存し、実行環境によって
  * 並び順が変わって無意味な差分を生むため、コードポイント順で比較する。
+ *
+ * 生成1件ごとに呼ばれるため、書き込み途中でプロセスが終了する機会が多い。
+ * 直接上書きすると壊れたJSONが残り、次回の readManifest が失敗してパイプラインが止まる。
+ * 一時ファイルへ書いてから rename することで、内容が中途半端な状態を観測させない。
  */
 export function writeManifest(path: string, manifest: OgManifest): void {
   const sorted = Object.fromEntries(Object.entries(manifest).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)));
-  writeFileSync(path, `${JSON.stringify(sorted, null, 2)}\n`, 'utf8');
+  const temporaryPath = `${path}.tmp`;
+  writeFileSync(temporaryPath, `${JSON.stringify(sorted, null, 2)}\n`, 'utf8');
+  renameSync(temporaryPath, path);
 }
 
 /**

@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert';
 import { test, describe } from 'node:test';
-import { mkdtempSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, readFileSync, readdirSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
@@ -57,6 +57,16 @@ describe('readManifest', () => {
 
     const written = readFileSync(path, 'utf8');
     assert.ok(written.indexOf('"a.ja"') < written.indexOf('"b.ja"'));
+    rmSync(dir, { recursive: true, force: true });
+  });
+
+  // 書き込み途中でプロセスが終了しても壊れたJSONを残さない
+  test('一時ファイルを残さない', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'og-manifest-'));
+    const path = join(dir, 'og-manifest.json');
+    writeManifest(path, { 'a.ja': 'a.ja.x.png' });
+
+    assert.deepEqual(readdirSync(dir), ['og-manifest.json']);
     rmSync(dir, { recursive: true, force: true });
   });
 
