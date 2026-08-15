@@ -16,6 +16,7 @@
     "format:check": "prettier --cache --check 'src' 'tools'",
     "astro": "astro",
     "auto-translate": "tsx --env-file .env tools/auto-translate/main.ts",
+    "og-image-sync": "tsx tools/og-image-sync/main.ts",
     "test:tools": "tsx --test --test-reporter spec tools/**/*.spec.ts",
     "test:remark-embed": "tsx --test --test-reporter spec tools/remark-embed/**/*.spec.ts",
     "test:libs": "vitest run",

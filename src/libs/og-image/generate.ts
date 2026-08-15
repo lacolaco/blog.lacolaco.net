@@ -2,15 +2,14 @@
 // 以下を実行 (320px = 右下160px表示×2x。-shave 1x1 は laco.png の最外周1px黒枠が縮小時にグレーのにじみ→円形縁の線になるのを防ぐ):
 //   magick public/icons/laco.png -shave 1x1 -resize 320x320 -background white -alpha remove -alpha off src/libs/og-image/avatar.png
 import avatarDataUrl from './avatar.png?inline';
+import { SITE_DOMAIN_NAME } from './constants';
 import { buildOgImageSvg, convertSvgToPngBuffer } from './image';
-
-const siteDomainName = 'blog.lacolaco.net';
 
 export async function generateOgImage(params: { title: string; publishedDate: Date }): Promise<Buffer> {
   const svg = await buildOgImageSvg({
     title: params.title,
     publishedDate: params.publishedDate,
-    siteDomainName,
+    siteDomainName: SITE_DOMAIN_NAME,
     avatarDataUrl,
   });
   return convertSvgToPngBuffer(svg);

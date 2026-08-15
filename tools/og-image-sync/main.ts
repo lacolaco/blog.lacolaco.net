@@ -1,0 +1,91 @@
+import { mkdir, writeFile } from 'node:fs/promises';
+import { join } from 'node:path';
+import { isPublished, listArticleFiles, parseTarget, readFrontmatter } from './discover.ts';
+import { SITE_DOMAIN_NAME } from '../../src/libs/og-image/constants.ts';
+import { assertNotTruncating, manifestKey, planGeneration, readManifest, writeManifest } from './manifest.ts';
+import { createBatchedFontLoader } from './fonts.ts';
+import { renderOgImage } from './render.ts';
+
+const CONTENT_DIR = 'content';
+const OUTPUT_DIR = 'public/images/og';
+const MANIFEST_PATH = 'og-manifest.json';
+
+/**
+ * OG画像を事前生成し、マニフェストを更新する。
+ *
+ * R2へのアップロードは行わない。blog-contents の sync ワークフローが public/images を
+ * まとめてアップロードするため、書き込み経路をそちらに一本化している。
+ */
+/**
+ * 公開記事かを判定する。
+ *
+ * content/posts は手で書く再帰ツリーなので、frontmatter を持たないファイル (README 等) が
+ * 紛れうる。1件で全体を止めず、記事として扱えないものは対象から外す。
+ *
+ * content/notion/posts は sync の出力であり、frontmatter を持たないファイルは異常である。
+ * 黙って落とすとその記事だけマニフェストから消え、OG画像を持たないまま公開されるため失敗させる。
+ */
+function isPublishedArticle(filePath: string): boolean {
+  const isSyncOutput = filePath.includes(join(CONTENT_DIR, 'notion'));
+  try {
+    return isPublished(readFrontmatter(filePath));
+  } catch (cause) {
+    if (isSyncOutput) {
+      throw cause;
+    }
+    console.warn(`[og-image-sync] skip ${filePath}: ${(cause as Error).message}`);
+    return false;
+  }
+}
+
+async function main(): Promise<void> {
+  const rootDir = process.cwd();
+  const outputDir = join(rootDir, OUTPUT_DIR);
+  const manifestPath = join(rootDir, MANIFEST_PATH);
+
+  const files = await listArticleFiles(join(rootDir, CONTENT_DIR));
+  const previous = readManifest(manifestPath);
+  const targets = files.filter(isPublishedArticle).map((filePath) => parseTarget(filePath, rootDir));
+
+  assertNotTruncating(targets.length, previous);
+
+  const { toGenerate, carryOver } = planGeneration(targets, previous);
+
+  console.log(`[og-image-sync] ${files.length} files, ${targets.length} published, ${toGenerate.length} to generate`);
+
+  // 生成のたびに書き出す。描画は記事ごとにGoogle Fontsへの取得を伴い、
+  // 一度の失敗で全件の進捗を捨てると再実行のコストが大きい。
+  // 再生成待ちのキーは旧ファイル名のまま残す。R2上の旧オブジェクトは削除しないので、
+  // 中断しても開始前の状態を下回らない
+  const manifest = { ...carryOver };
+  for (const target of toGenerate) {
+    const key = manifestKey(target.slug, target.locale);
+    const stale = previous[key];
+    if (stale) {
+      manifest[key] = stale;
+    }
+  }
+  writeManifest(manifestPath, manifest);
+
+  // 記事ごとにGoogle Fontsへ問い合わせると記事数×3回になるため、全記事分を一度に取得する
+  const fontLoader =
+    toGenerate.length > 0
+      ? await createBatchedFontLoader(
+          toGenerate.map((t) => t.title),
+          SITE_DOMAIN_NAME,
+        )
+      : undefined;
+
+  await mkdir(outputDir, { recursive: true });
+  for (const [index, target] of toGenerate.entries()) {
+    const png = await renderOgImage(target, rootDir, fontLoader);
+    await writeFile(join(outputDir, target.fileName), png);
+    manifest[manifestKey(target.slug, target.locale)] = target.fileName;
+    writeManifest(manifestPath, manifest);
+    console.log(`[og-image-sync] (${index + 1}/${toGenerate.length}) ${target.fileName}`);
+  }
+
+  console.log(`[og-image-sync] wrote ${MANIFEST_PATH} with ${Object.keys(manifest).length} entries`);
+}
+
+await main();
