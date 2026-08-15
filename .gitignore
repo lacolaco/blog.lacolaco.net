@@ -37,5 +37,5 @@ pnpm-debug.log*
 *.tfstate
 *.tfstate.backup
 
-# OG画像は生成物。R2へは blog-contents の r2-sync がディレクトリ走査でアップロードするためgit管理しない
+# OG画像は sync の実行ごとに作られ、r2-sync がディレクトリ走査でアップロードする
 public/images/og/

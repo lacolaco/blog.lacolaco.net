@@ -3,7 +3,15 @@ import { test, describe } from 'node:test';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { localeOf, parseTarget, listArticleFiles, isPublished, toTargetOrSkip } from './discover.ts';
+import {
+  localeOf,
+  parseTarget,
+  listArticleFiles,
+  isPublished,
+  toTargetOrSkip,
+  resolveRequestedFiles,
+  assertUniqueTargets,
+} from './discover.ts';
 
 const frontmatter = [
   '---',
@@ -17,6 +25,13 @@ const frontmatter = [
   '本文である。',
   '',
 ].join('\n');
+
+/** リポジトリルート相当。content/ 配下に記事を置く */
+function createRepoRoot(): string {
+  const root = mkdtempSync(join(tmpdir(), 'og-repo-'));
+  mkdirSync(join(root, 'content/notion/posts'), { recursive: true });
+  return root;
+}
 
 function createContentDir(): string {
   const root = mkdtempSync(join(tmpdir(), 'og-discover-'));
@@ -210,6 +225,89 @@ describe('toTargetOrSkip', () => {
     writeFileSync(filePath, '本文のみ\n', 'utf8');
 
     assert.throws(() => toTargetOrSkip(filePath), /frontmatter/);
+    rmSync(root, { recursive: true, force: true });
+  });
+});
+
+describe('resolveRequestedFiles', () => {
+  // sync は削除やリネームも作業ツリーの差分に出す。消えたファイルで全体を止めない
+  test('存在しないファイルは除外する', () => {
+    const root = createRepoRoot();
+    const exists = join(root, 'content/notion/posts/a.md');
+    writeFileSync(exists, frontmatter, 'utf8');
+
+    const resolved = resolveRequestedFiles(['content/notion/posts/a.md', 'content/notion/posts/deleted.md'], root);
+
+    assert.deepEqual(resolved, [exists]);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 記事以外の出力 (tags.json 等) が同じディレクトリに置かれる
+  test('markdown以外は除外する', () => {
+    const root = createRepoRoot();
+    const article = join(root, 'content/notion/posts/a.md');
+    writeFileSync(article, frontmatter, 'utf8');
+    writeFileSync(join(root, 'content/notion/posts/tags.json'), '{}', 'utf8');
+
+    const resolved = resolveRequestedFiles(['content/notion/posts/a.md', 'content/notion/posts/tags.json'], root);
+
+    assert.deepEqual(resolved, [article]);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 呼び出し側は別リポジトリなので、絶対パスで渡されることがある
+  test('絶対パスをそのまま解決する', () => {
+    const root = createRepoRoot();
+    const article = join(root, 'content/notion/posts/a.md');
+    writeFileSync(article, frontmatter, 'utf8');
+
+    assert.deepEqual(resolveRequestedFiles([article], root), [article]);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // content 配下でないパスは記事ではない。任意の .md が対象になると
+  // 実在しない記事のOG画像が公開バケットに置かれる
+  test('content配下でないパスは除外する', () => {
+    const root = createRepoRoot();
+    writeFileSync(join(root, 'README.md'), frontmatter, 'utf8');
+
+    assert.deepEqual(resolveRequestedFiles(['README.md'], root), []);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  test('同じファイルを重ねて渡しても1件になる', () => {
+    const root = createRepoRoot();
+    const article = join(root, 'content/notion/posts/a.md');
+    writeFileSync(article, frontmatter, 'utf8');
+
+    assert.deepEqual(resolveRequestedFiles(['content/notion/posts/a.md', article], root), [article]);
+    rmSync(root, { recursive: true, force: true });
+  });
+});
+
+describe('assertUniqueTargets', () => {
+  // ビルド側の assertUniqueSlugs と同じく、同じ slug+locale が2つあれば落とす
+  test('slugとlocaleが重複するとエラーになる', () => {
+    const root = createContentDir();
+    const a = join(root, 'notion/posts/a.md');
+    const b = join(root, 'posts/b.md');
+    writeFileSync(a, frontmatter, 'utf8');
+    writeFileSync(b, frontmatter, 'utf8');
+
+    const targets = [parseTarget(a), parseTarget(b)];
+
+    assert.throws(() => assertUniqueTargets(targets), /重複/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  test('slugが違えば通る', () => {
+    const root = createContentDir();
+    const a = join(root, 'notion/posts/a.md');
+    const b = join(root, 'notion/posts/b.md');
+    writeFileSync(a, frontmatter, 'utf8');
+    writeFileSync(b, frontmatter.replace("slug: 'my-post'", "slug: 'other-post'"), 'utf8');
+
+    assert.doesNotThrow(() => assertUniqueTargets([parseTarget(a), parseTarget(b)]));
     rmSync(root, { recursive: true, force: true });
   });
 });

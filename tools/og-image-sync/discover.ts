@@ -1,10 +1,11 @@
 import { readdir } from 'node:fs/promises';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { isAbsolute, join, resolve, sep } from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import { buildOgImageFileName, computeOgImageHashFromFile } from '../../src/libs/og-image/hash.ts';
 
 /** Notion sync の出力は flat、直接執筆はサブディレクトリを許す (src/content.config.ts と対称) */
+export const CONTENT_DIR = 'content';
 const NOTION_POSTS_DIR = 'notion/posts';
 const AUTHORED_POSTS_DIR = 'posts';
 
@@ -134,6 +135,54 @@ export function toTargetOrSkip(filePath: string, rootDir: string = process.cwd()
     }
     console.warn(`[og-image-sync] skip ${filePath}: ${cause.message}`);
     return null;
+  }
+}
+
+/**
+ * 呼び出し側から渡されたパスを生成対象に整える。
+ *
+ * 呼び出し側 (blog-contents の sync) は作業ツリーの差分をそのまま渡すため、
+ * 削除された記事や記事以外の出力 (tags.json 等) が混ざる。1件で全体を止めないよう、
+ * 対象になりえないものはここで落とす。別リポジトリから呼ばれるので絶対パスも受ける。
+ */
+export function resolveRequestedFiles(paths: string[], rootDir: string = process.cwd()): string[] {
+  const contentDir = join(rootDir, CONTENT_DIR) + sep;
+  const resolved = new Set<string>();
+  for (const path of paths) {
+    const absolute = resolve(isAbsolute(path) ? path : join(rootDir, path));
+    // content 配下に限る。任意の .md を受けると、実在しない記事の画像が公開バケットに載る
+    if (!absolute.startsWith(contentDir)) {
+      continue;
+    }
+    if (!absolute.endsWith('.md')) {
+      continue;
+    }
+    if (!existsSync(absolute)) {
+      continue;
+    }
+    resolved.add(absolute);
+  }
+  return [...resolved];
+}
+
+/**
+ * 渡された対象の中で同じ slug と locale が2つあれば落とす。
+ * 黙って両方を描くと、片方が参照されないままR2に残る。
+ *
+ * 見るのは渡された範囲だけなので、更新されていない記事との衝突は検出できない。
+ * 全体の一意性はビルド時の assertUniqueSlugs が保証する。
+ */
+export function assertUniqueTargets(targets: OgImageTarget[]): void {
+  const seen = new Map<string, OgImageTarget>();
+  for (const target of targets) {
+    const key = `${target.locale}:${target.slug}`;
+    const existing = seen.get(key);
+    if (existing) {
+      throw new Error(
+        `slug "${target.slug}" (locale: ${target.locale}) が重複している:\n  ${existing.filePath}\n  ${target.filePath}`,
+      );
+    }
+    seen.set(key, target);
   }
 }
 
