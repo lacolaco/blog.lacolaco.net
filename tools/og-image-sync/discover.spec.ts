@@ -237,8 +237,8 @@ describe('resolveRequestedFiles', () => {
     writeFileSync(exists, frontmatter, 'utf8');
 
     const resolved = resolveRequestedFiles(['content/notion/posts/a.md', 'content/notion/posts/deleted.md'], root);
-
-    assert.deepEqual(resolved, [exists]);
+    assert.deepEqual(resolved.files, [exists]);
+    assert.deepEqual(resolved.dropped, ['content/notion/posts/deleted.md']);
     rmSync(root, { recursive: true, force: true });
   });
 
@@ -250,8 +250,8 @@ describe('resolveRequestedFiles', () => {
     writeFileSync(join(root, 'content/notion/posts/tags.json'), '{}', 'utf8');
 
     const resolved = resolveRequestedFiles(['content/notion/posts/a.md', 'content/notion/posts/tags.json'], root);
-
-    assert.deepEqual(resolved, [article]);
+    assert.deepEqual(resolved.files, [article]);
+    assert.deepEqual(resolved.dropped, ['content/notion/posts/tags.json']);
     rmSync(root, { recursive: true, force: true });
   });
 
@@ -261,7 +261,7 @@ describe('resolveRequestedFiles', () => {
     const article = join(root, 'content/notion/posts/a.md');
     writeFileSync(article, frontmatter, 'utf8');
 
-    assert.deepEqual(resolveRequestedFiles([article], root), [article]);
+    assert.deepEqual(resolveRequestedFiles([article], root).files, [article]);
     rmSync(root, { recursive: true, force: true });
   });
 
@@ -271,7 +271,7 @@ describe('resolveRequestedFiles', () => {
     const root = createRepoRoot();
     writeFileSync(join(root, 'README.md'), frontmatter, 'utf8');
 
-    assert.deepEqual(resolveRequestedFiles(['README.md'], root), []);
+    assert.deepEqual(resolveRequestedFiles(['README.md'], root).files, []);
     rmSync(root, { recursive: true, force: true });
   });
 
@@ -280,7 +280,7 @@ describe('resolveRequestedFiles', () => {
     const article = join(root, 'content/notion/posts/a.md');
     writeFileSync(article, frontmatter, 'utf8');
 
-    assert.deepEqual(resolveRequestedFiles(['content/notion/posts/a.md', article], root), [article]);
+    assert.deepEqual(resolveRequestedFiles(['content/notion/posts/a.md', article], root).files, [article]);
     rmSync(root, { recursive: true, force: true });
   });
 });

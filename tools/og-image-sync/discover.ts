@@ -145,24 +145,27 @@ export function toTargetOrSkip(filePath: string, rootDir: string = process.cwd()
  * 削除された記事や記事以外の出力 (tags.json 等) が混ざる。1件で全体を止めないよう、
  * 対象になりえないものはここで落とす。別リポジトリから呼ばれるので絶対パスも受ける。
  */
-export function resolveRequestedFiles(paths: string[], rootDir: string = process.cwd()): string[] {
+export interface ResolvedRequest {
+  /** 生成対象になるファイルの絶対パス */
+  files: string[];
+  /** 対象にならなかった入力。呼び出し側が気付けるよう内訳を残す */
+  dropped: string[];
+}
+
+export function resolveRequestedFiles(paths: string[], rootDir: string = process.cwd()): ResolvedRequest {
   const contentDir = join(rootDir, CONTENT_DIR) + sep;
-  const resolved = new Set<string>();
+  const files = new Set<string>();
+  const dropped: string[] = [];
   for (const path of paths) {
     const absolute = resolve(isAbsolute(path) ? path : join(rootDir, path));
     // content 配下に限る。任意の .md を受けると、実在しない記事の画像が公開バケットに載る
-    if (!absolute.startsWith(contentDir)) {
+    if (!absolute.startsWith(contentDir) || !absolute.endsWith('.md') || !existsSync(absolute)) {
+      dropped.push(path);
       continue;
     }
-    if (!absolute.endsWith('.md')) {
-      continue;
-    }
-    if (!existsSync(absolute)) {
-      continue;
-    }
-    resolved.add(absolute);
+    files.add(absolute);
   }
-  return [...resolved];
+  return { files: [...files], dropped };
 }
 
 /**

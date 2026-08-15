@@ -28,10 +28,10 @@ async function main(): Promise<void> {
   const outputDir = join(rootDir, OUTPUT_DIR);
   const requested = process.argv.slice(2);
 
-  const files =
+  const { files, dropped } =
     requested.length > 0
       ? resolveRequestedFiles(requested, rootDir)
-      : await listArticleFiles(join(rootDir, CONTENT_DIR));
+      : { files: await listArticleFiles(join(rootDir, CONTENT_DIR)), dropped: [] };
 
   // 記事を1件も見つけられないのは、パスの基準やチェックアウトの誤りを疑うべき状況である。
   // 静かに0枚で成功すると、生成されなかったことに気付けないまま参照だけが公開される
@@ -41,6 +41,12 @@ async function main(): Promise<void> {
         ? `渡された ${requested.length} 件のパスがどれも ${CONTENT_DIR} 配下の記事として解決できない: ${requested.join(' ')}`
         : `${CONTENT_DIR} 配下に記事が見つからない。実行位置とチェックアウトを確認する`,
     );
+  }
+
+  // 一部だけ落ちた場合は、正常な運用 (記事の削除、tags.json 等) と誤りの区別がつかない。
+  // 総数だけでは気付けないため内訳を出す
+  if (dropped.length > 0) {
+    console.warn(`[og-image-sync] ${dropped.length}/${requested.length} 件を対象外にした: ${dropped.join(' ')}`);
   }
 
   const targets = files.map((filePath) => toTargetOrSkip(filePath, rootDir)).filter((target) => target !== null);
