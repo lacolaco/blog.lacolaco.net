@@ -1,6 +1,5 @@
 import { queryAvailablePosts } from '@lib/query';
 import type { APIContext } from 'astro';
-import avatarDataUrl from '../../libs/og-image/avatar.png?inline';
 import { generateOgImage } from '../../libs/og-image/generate';
 
 export const prerender = false;
@@ -16,7 +15,7 @@ export async function GET({ params }: APIContext) {
   const publishedDate = post.data.created_time;
 
   try {
-    const pngBuffer = await generateOgImage({ title, publishedDate, avatarDataUrl });
+    const pngBuffer = await generateOgImage({ title, publishedDate });
     return new Response(new Uint8Array(pngBuffer).buffer, {
       headers: {
         'content-type': 'image/png',
