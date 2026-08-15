@@ -5,13 +5,18 @@ import { parse as parseYaml } from 'yaml';
 import { buildOgImageFileName, computeOgImageHashFromFile } from '../../src/libs/og-image/hash.ts';
 
 /** Notion sync の出力は flat、直接執筆はサブディレクトリを許す (src/content.config.ts と対称) */
-const CONTENT_DIR_NAME = 'content';
-const NOTION_DIR_NAME = 'notion';
 const NOTION_POSTS_DIR = 'notion/posts';
 const AUTHORED_POSTS_DIR = 'posts';
 
 /** OG画像の出力先ディレクトリ名。記事slugがこれと衝突すると画像の置き場が重なる */
 export const OG_OUTPUT_DIR_NAME = 'og';
+
+/**
+ * 記事の記述自体の不備。手書きツリーではスキップの対象になる。
+ * hash算出などツール側の失敗と区別するために型を分ける。区別しないと、
+ * ツールのバグで1記事が永久にマニフェストから落ちても警告しか出ない。
+ */
+export class ArticleValidationError extends Error {}
 
 export type Locale = 'ja' | 'en';
 
@@ -39,7 +44,7 @@ export function readFrontmatter(filePath: string): Record<string, unknown> {
   const raw = readFileSync(filePath, 'utf8');
   const match = /^---\r?\n([\s\S]*?)\r?\n---/.exec(raw);
   if (!match) {
-    throw new Error(`${filePath} に frontmatter がない`);
+    throw new ArticleValidationError(`${filePath} に frontmatter がない`);
   }
   return parseYaml(match[1]) as Record<string, unknown>;
 }
@@ -67,25 +72,25 @@ export function parseTarget(
 ): OgImageTarget {
   const slug = frontmatter.slug;
   if (typeof slug !== 'string' || slug.length === 0) {
-    throw new Error(`${filePath} に slug がない`);
+    throw new ArticleValidationError(`${filePath} に slug がない`);
   }
   // ファイル名として書き出すため、ディレクトリを跨げる文字だけを拒む。
   // slug は Astro 側でURL生成に使われ文字種の制限がないので、ここで狭めると正当な記事を落とす
   if (slug.includes('/') || slug.includes('\\') || slug.includes('..')) {
-    throw new Error(`${filePath} の slug "${slug}" はファイル名に使えない`);
+    throw new ArticleValidationError(`${filePath} の slug "${slug}" はファイル名に使えない`);
   }
   // slug "og" の記事画像は public/images/og/ に置かれ、OG画像の出力先と重なる。
   // 出力先は gitignore されているため、その記事の画像だけが黙ってコミットされなくなる
   if (slug === OG_OUTPUT_DIR_NAME) {
-    throw new Error(`${filePath} の slug "${slug}" はOG画像の出力先と衝突する`);
+    throw new ArticleValidationError(`${filePath} の slug "${slug}" はOG画像の出力先と衝突する`);
   }
   const title = frontmatter.title;
   if (typeof title !== 'string' || title.length === 0) {
-    throw new Error(`${filePath} に title がない`);
+    throw new ArticleValidationError(`${filePath} に title がない`);
   }
   const createdTime = frontmatter.created_time;
   if (typeof createdTime !== 'string') {
-    throw new Error(`${filePath} に created_time がない`);
+    throw new ArticleValidationError(`${filePath} に created_time がない`);
   }
 
   const locale = localeOf(filePath);
@@ -102,7 +107,7 @@ export function parseTarget(
 
 /** sync の出力かどうか。手書きの記事とは不備への対処を変える */
 export function isSyncOutput(filePath: string): boolean {
-  return filePath.includes(join(CONTENT_DIR_NAME, NOTION_DIR_NAME));
+  return filePath.includes(NOTION_POSTS_DIR);
 }
 
 /**
@@ -123,10 +128,11 @@ export function toTargetOrSkip(filePath: string, rootDir: string = process.cwd()
     }
     return parseTarget(filePath, rootDir, frontmatter);
   } catch (cause) {
-    if (isSyncOutput(filePath)) {
+    // 記事の不備でない失敗 (hash算出の異常など) はツール側の問題なので握りつぶさない
+    if (isSyncOutput(filePath) || !(cause instanceof ArticleValidationError)) {
       throw cause;
     }
-    console.warn(`[og-image-sync] skip ${filePath}: ${(cause as Error).message}`);
+    console.warn(`[og-image-sync] skip ${filePath}: ${cause.message}`);
     return null;
   }
 }

@@ -191,6 +191,18 @@ describe('toTargetOrSkip', () => {
     rmSync(root, { recursive: true, force: true });
   });
 
+  // hash算出の失敗はツール側の問題。記事の不備として握りつぶすと、
+  // そのバグに気付かないまま1記事が永久にマニフェストから落ちる
+  test('手書き記事でもhash算出の失敗は握りつぶさない', () => {
+    const root = createContentDir();
+    const filePath = join(root, 'posts/valid.md');
+    writeFileSync(filePath, frontmatter, 'utf8');
+
+    // レンダラ実装を読めないrootDirを渡すと指紋の算出が失敗する
+    assert.throws(() => toTargetOrSkip(filePath, join(root, 'missing')), /指紋を算出できない/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
   test('sync出力のfrontmatter不在は失敗させる', () => {
     const root = createContentDir();
     const filePath = join(root, 'content/notion/posts/broken.md');
