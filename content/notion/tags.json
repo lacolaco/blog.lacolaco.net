@@ -688,5 +688,17 @@
     "name": "oxc",
     "color": "orange",
     "description": null
+  },
+  {
+    "id": "97de2c23-7357-4baa-9633-07eb58d54561",
+    "name": "倫理",
+    "color": "purple",
+    "description": null
+  },
+  {
+    "id": "1efb436a-93dc-44c3-b126-2e049c5ee0e7",
+    "name": "社会",
+    "color": "red",
+    "description": null
   }
 ]
