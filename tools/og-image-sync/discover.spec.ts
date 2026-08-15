@@ -207,7 +207,7 @@ describe('toTargetOrSkip', () => {
   });
 
   // hash算出の失敗はツール側の問題。記事の不備として握りつぶすと、
-  // そのバグに気付かないまま1記事が永久にマニフェストから落ちる
+  // そのバグに気付かないまま記事が黙って落ちる
   test('手書き記事でもhash算出の失敗は握りつぶさない', () => {
     const root = createContentDir();
     const filePath = join(root, 'posts/valid.md');

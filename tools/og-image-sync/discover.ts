@@ -15,7 +15,7 @@ export const OG_OUTPUT_DIR_NAME = 'og';
 /**
  * 記事の記述自体の不備。手書きツリーではスキップの対象になる。
  * hash算出などツール側の失敗と区別するために型を分ける。区別しないと、
- * ツールのバグで1記事が永久にマニフェストから落ちても警告しか出ない。
+ * ツールのバグで記事が黙って落ちても警告しか出ない。
  */
 export class ArticleValidationError extends Error {}
 
@@ -52,8 +52,7 @@ export function readFrontmatter(filePath: string): Record<string, unknown> {
 
 /**
  * 公開済みかを判定する。ビルド側の queryAvailablePosts と同じ規則。
- * 未公開・未来日付の記事を対象にすると、その slug が公開リポジトリのマニフェストに載り、
- * タイトルを描画した画像が公開バケットに置かれてしまう。
+ * 未公開・未来日付の記事を対象にすると、そのタイトルを描画した画像が公開バケットに置かれてしまう。
  */
 export function isPublished(frontmatter: Record<string, unknown>): boolean {
   if (frontmatter.published !== true) {
@@ -118,7 +117,7 @@ export function isSyncOutput(filePath: string): boolean {
  * 記述の不備が紛れうる。1件で全体を止めず、記事として扱えないものは対象から外す。
  *
  * content/notion/posts は sync の出力であり、不備は異常である。黙って落とすと
- * その記事だけマニフェストから消え、OG画像を持たないまま公開されるため失敗させる。
+ * その記事だけOG画像を持たないまま公開されるため失敗させる。
  */
 export function toTargetOrSkip(filePath: string, rootDir: string = process.cwd()): OgImageTarget | null {
   try {
@@ -138,13 +137,6 @@ export function toTargetOrSkip(filePath: string, rootDir: string = process.cwd()
   }
 }
 
-/**
- * 呼び出し側から渡されたパスを生成対象に整える。
- *
- * 呼び出し側 (blog-contents の sync) は作業ツリーの差分をそのまま渡すため、
- * 削除された記事や記事以外の出力 (tags.json 等) が混ざる。1件で全体を止めないよう、
- * 対象になりえないものはここで落とす。別リポジトリから呼ばれるので絶対パスも受ける。
- */
 export interface ResolvedRequest {
   /** 生成対象になるファイルの絶対パス */
   files: string[];
@@ -152,6 +144,13 @@ export interface ResolvedRequest {
   dropped: string[];
 }
 
+/**
+ * 呼び出し側から渡されたパスを生成対象に整える。
+ *
+ * 呼び出し側 (blog-contents の sync) は作業ツリーの差分をそのまま渡すため、
+ * 削除された記事や記事以外の出力 (tags.json 等) が混ざる。1件で全体を止めないよう、
+ * 対象になりえないものはここで落とす。別リポジトリから呼ばれるので絶対パスも受ける。
+ */
 export function resolveRequestedFiles(paths: string[], rootDir: string = process.cwd()): ResolvedRequest {
   const contentDir = join(rootDir, CONTENT_DIR) + sep;
   const files = new Set<string>();
@@ -195,7 +194,7 @@ async function listMarkdown(dir: string, recursive: boolean): Promise<string[]> 
     entries = await readdir(dir, { withFileTypes: true });
   } catch (cause) {
     // ディレクトリの不在だけを許容する。権限エラー等を空扱いにすると
-    // 記事0件と誤認してマニフェストを空に切り詰めてしまう
+    // 記事0件と誤認し、何も生成しないまま成功したように見えてしまう
     if ((cause as NodeJS.ErrnoException).code === 'ENOENT') {
       return [];
     }
