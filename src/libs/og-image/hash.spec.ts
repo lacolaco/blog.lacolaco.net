@@ -38,15 +38,30 @@ function createFakeRoot(): string {
     mkdirSync(dirname(path), { recursive: true });
     cpSync(join(process.cwd(), rel), path);
   }
-  writeLockfile(root, Object.fromEntries(RENDERER_DEPENDENCIES.map((name) => [name, '1.0.0'])));
+  writeLockfile(root, defaultVersions());
   return root;
 }
 
-function writeLockfile(rootDir: string, versions: Record<string, string>): void {
-  const dependencies = Object.fromEntries(
+function writeLockfile(
+  rootDir: string,
+  versions: Record<string, string>,
+  options: { section?: string; snapshots?: Record<string, unknown> } = {},
+): void {
+  const declared = Object.fromEntries(
     Object.entries(versions).map(([name, version]) => [name, { specifier: `^${version}`, version }]),
   );
-  writeFileSync(join(rootDir, 'pnpm-lock.yaml'), stringifyYaml({ importers: { '.': { dependencies } } }), 'utf8');
+  const snapshots =
+    options.snapshots ??
+    Object.fromEntries(Object.entries(versions).map(([name, version]) => [`${name}@${version}`, { dependencies: {} }]));
+  writeFileSync(
+    join(rootDir, 'pnpm-lock.yaml'),
+    stringifyYaml({ importers: { '.': { [options.section ?? 'dependencies']: declared } }, snapshots }),
+    'utf8',
+  );
+}
+
+function defaultVersions(): Record<string, string> {
+  return Object.fromEntries(RENDERER_DEPENDENCIES.map((name) => [name, '1.0.0']));
 }
 
 describe('computeOgImageHash', () => {
@@ -93,19 +108,48 @@ describe('computeRendererFingerprint', () => {
   it.each(RENDERER_DEPENDENCIES)('%s の解決済みバージョンが変わるとfingerprintが変わる', (name) => {
     const root = createFakeRoot();
     const before = computeRendererFingerprint(root);
-    const versions = Object.fromEntries(RENDERER_DEPENDENCIES.map((dep) => [dep, '1.0.0']));
-    writeLockfile(root, { ...versions, [name]: '1.0.1' });
+    writeLockfile(root, { ...defaultVersions(), [name]: '1.0.1' });
 
     expect(computeRendererFingerprint(root)).not.toBe(before);
   });
 
-  // 別ディレクトリの指紋がキャッシュ衝突で混ざってはいけない
-  it('実装が異なる別のrootDirでは別の値を返す', () => {
-    const original = createFakeRoot();
-    const modified = createFakeRoot();
-    writeFileSync(join(modified, RENDERER_SOURCE_FILES[0]), 'changed');
+  // satori 等はレイアウトエンジンを推移的依存に持つため、自身のバージョンが動かなくても描画が変わる
+  it.each(RENDERER_DEPENDENCIES)('%s の推移的依存が変わるとfingerprintが変わる', (name) => {
+    const root = createFakeRoot();
+    const before = computeRendererFingerprint(root);
+    const versions = defaultVersions();
+    const snapshots = Object.fromEntries(
+      Object.entries(versions).map(([dep, version]) => [
+        `${dep}@${version}`,
+        { dependencies: dep === name ? { 'yoga-layout': '3.2.2' } : {} },
+      ]),
+    );
+    writeLockfile(root, versions, { snapshots });
 
-    expect(computeRendererFingerprint(modified)).not.toBe(computeRendererFingerprint(original));
+    expect(computeRendererFingerprint(root)).not.toBe(before);
+  });
+
+  // ビルド時にしか使わない依存は devDependencies に移されうる。宣言セクションで結果が変わってはいけない
+  it.each(['devDependencies', 'optionalDependencies'])('%s で宣言された依存も読める', (section) => {
+    const root = createFakeRoot();
+    const before = computeRendererFingerprint(root);
+    writeLockfile(root, defaultVersions(), { section });
+
+    expect(computeRendererFingerprint(root)).toBe(before);
+  });
+
+  // 内容が同一なら別ディレクトリでも同じ値でなければならない (キャッシュ衝突の検出)
+  it('内容が同一の別のrootDirでは同じ値を返す', () => {
+    expect(computeRendererFingerprint(createFakeRoot())).toBe(computeRendererFingerprint(createFakeRoot()));
+  });
+
+  // 同じrootDirで実装を編集したとき、キャッシュが古い値を返してはいけない
+  it('同じrootDirでも実装を編集すれば新しい値を返す', () => {
+    const root = createFakeRoot();
+    const before = computeRendererFingerprint(root);
+    writeFileSync(join(root, RENDERER_SOURCE_FILES[0]), 'changed');
+
+    expect(computeRendererFingerprint(root)).not.toBe(before);
   });
 
   // 握りつぶすと依存の更新を検知できず、古い描画が永久に配信され続ける
@@ -114,6 +158,14 @@ describe('computeRendererFingerprint', () => {
     writeFileSync(join(root, 'pnpm-lock.yaml'), stringifyYaml({ lockfileVersion: '9.0' }), 'utf8');
 
     expect(() => computeRendererFingerprint(root)).toThrow();
+  });
+
+  // 握りつぶすと推移的依存への感度を失ったまま気付けない
+  it('lockfileにsnapshotsがないとエラーになる', () => {
+    const root = createFakeRoot();
+    writeLockfile(root, defaultVersions(), { snapshots: {} });
+
+    expect(() => computeRendererFingerprint(root)).toThrow(/snapshots/);
   });
 
   it.each(RENDERER_DEPENDENCIES)('lockfileに %s がないとエラーになる', (missing) => {

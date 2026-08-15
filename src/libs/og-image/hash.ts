@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { readFileSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { parse as parseYaml } from 'yaml';
 
@@ -21,8 +21,16 @@ export const RENDERER_SOURCE_FILES = [
  * package.json の宣言は caret レンジ (例: satori の `^0.28.0`) を含み、lockfileだけが更新された
  * ケースを取りこぼす。node_modules の実バージョンも環境ごとにずれうるため、
  * リポジトリにコミットされた lockfile の解決済みバージョンを唯一の出所とする。
+ *
+ * 解決済みバージョンに加えて lockfile の snapshot (その依存が直接引き込む依存の一覧) も入力にする。
+ * satori のレイアウトエンジンや字形整形は yoga-layout / @shuding/opentype.js / linebreak が担っており、
+ * satori 自身のバージョンが動かないまま推移的依存だけが更新されると描画が変わるため。
+ *
+ * 捕捉できるのは1階層下までで、推移的閉包ではない。例えば @shuding/opentype.js が引き込む fflate の
+ * 更新は指紋に現れない。lockfile 全体をハッシュすれば取りこぼしはなくなるが、無関係な依存更新のたびに
+ * 全記事が再生成されるので採らない。
  */
-export const RENDERER_DEPENDENCIES = ['satori', '@resvg/resvg-js', 'budoux', 'date-fns'] as const;
+export const RENDERER_DEPENDENCIES = ['satori', '@resvg/resvg-js', 'budoux', 'date-fns', '@date-fns/tz'] as const;
 
 const LOCKFILE = 'pnpm-lock.yaml';
 
@@ -52,60 +60,74 @@ function readRendererInput(path: string): Buffer {
   }
 }
 
-/** ファイル内容を読まずに変更を検知するための軽量キー */
-function statKey(path: string): string {
-  try {
-    const stat = statSync(path);
-    return `${stat.mtimeMs}:${stat.size}`;
-  } catch (cause) {
-    throw rendererInputError(path, cause);
-  }
-}
+type LockfileEntry = { version: string; snapshot: string };
 
 /**
- * lockfile から描画に関わる依存の解決済みバージョンを読む。
+ * lockfile から描画に関わる依存の解決済みバージョンと推移的依存の集合を読む。
  * 読めなかった場合に空文字へフォールバックすると依存の更新を検知できなくなり、
  * 古い描画が永久に配信され続けるため、必ず失敗させる。
  */
-function readResolvedVersions(lockfilePath: string): Record<string, string> {
-  const lockfile = parseYaml(readRendererInput(lockfilePath).toString('utf8')) as {
-    importers?: Record<string, { dependencies?: Record<string, { version?: string }> }>;
+function readLockfileEntries(raw: string, lockfilePath: string): Record<string, LockfileEntry> {
+  const lockfile = parseYaml(raw) as {
+    importers?: Record<string, { [section: string]: Record<string, { version?: string }> | undefined }>;
+    snapshots?: Record<string, unknown>;
   };
-  const dependencies = lockfile.importers?.['.']?.dependencies;
-  if (!dependencies) {
-    throw new Error(
-      `${lockfilePath} から importers['.'].dependencies を読めなかった。lockfileの形式が変わった可能性がある`,
-    );
+  const importer = lockfile.importers?.['.'];
+  if (!importer) {
+    throw new Error(`${lockfilePath} から importers['.'] を読めなかった。lockfileの形式が変わった可能性がある`);
   }
 
-  const versions: Record<string, string> = {};
+  // 生成はビルド時にしか走らないため、依存がどのセクションで宣言されていても等しく扱う
+  const declared: Record<string, { version?: string }> = {
+    ...importer.dependencies,
+    ...importer.devDependencies,
+    ...importer.optionalDependencies,
+  };
+
+  const entries: Record<string, LockfileEntry> = {};
   for (const name of RENDERER_DEPENDENCIES) {
-    const version = dependencies[name]?.version;
+    const version = declared[name]?.version;
     if (!version) {
       throw new Error(`${lockfilePath} に ${name} の解決済みバージョンがない。指紋が依存の更新を検知できなくなる`);
     }
-    versions[name] = version;
+    const snapshotKey = `${name}@${version}`;
+    const snapshot = lockfile.snapshots?.[snapshotKey];
+    if (snapshot === undefined) {
+      throw new Error(
+        `${lockfilePath} に snapshots['${snapshotKey}'] がない。指紋が推移的依存の更新を検知できなくなる`,
+      );
+    }
+    entries[name] = { version, snapshot: JSON.stringify(snapshot) };
   }
-  return versions;
+  return entries;
 }
 
-const fingerprintCache = new Map<string, string>();
+/**
+ * lockfile のパース結果だけを覚えておく。264KBのYAMLを記事数だけパースし直すと遅いが、
+ * 指紋そのものを覚えると実装ファイルの編集を取りこぼすため、キャッシュはここに限る。
+ *
+ * キーは内容そのもののハッシュにする。バージョンだけの書き換え (`1.0.0` → `1.0.1`) は
+ * バイト長が変わらないため、mtimeとサイズによる判定では粗いmtime粒度の環境で取りこぼしうる。
+ */
+let lockfileCache: { path: string; key: string; entries: Record<string, LockfileEntry> } | null = null;
+
+function loadLockfileEntries(lockfilePath: string): Record<string, LockfileEntry> {
+  const raw = readRendererInput(lockfilePath);
+  const key = createHash('sha256').update(raw).digest('hex');
+  if (lockfileCache?.path === lockfilePath && lockfileCache.key === key) {
+    return lockfileCache.entries;
+  }
+  const entries = readLockfileEntries(raw.toString('utf8'), lockfilePath);
+  lockfileCache = { path: lockfilePath, key, entries };
+  return entries;
+}
 
 /**
  * レンダラ実装の指紋。実装を変更すると全記事のhashが変わり、CIが全件を再生成する。
- * devサーバーのように長寿命なプロセスでも実装の編集を拾えるよう、mtimeとサイズをキャッシュキーに含める。
+ * 実装ファイルは毎回読み直す。devサーバーのような長寿命プロセスで編集を取りこぼさないためで、
+ * 対象は4ファイル計100KB弱なので記事数だけ繰り返しても実測で100ms未満に収まる。
  */
 export function computeRendererFingerprint(rootDir: string = process.cwd()): string {
-  const lockfilePath = join(rootDir, LOCKFILE);
-  // rootDir は一意性のために生の文字列で持つ。ディレクトリのstatは中のファイル変更で更新されない
-  const watched = [...RENDERER_SOURCE_FILES.map((relativePath) => join(rootDir, relativePath)), lockfilePath];
-  const cacheKey = [rootDir, ...watched.map(statKey)].join('|');
-
-  const cached = fingerprintCache.get(cacheKey);
-  if (cached) {
-    return cached;
-  }
-
   const hash = createHash('sha256');
   for (const relativePath of RENDERER_SOURCE_FILES) {
     hash
@@ -114,14 +136,13 @@ export function computeRendererFingerprint(rootDir: string = process.cwd()): str
       .update(readRendererInput(join(rootDir, relativePath)));
   }
 
-  const versions = readResolvedVersions(lockfilePath);
+  const entries = loadLockfileEntries(join(rootDir, LOCKFILE));
   for (const name of RENDERER_DEPENDENCIES) {
-    hash.update(name).update('\0').update(versions[name]);
+    const entry = entries[name];
+    hash.update(name).update('\0').update(entry.version).update('\0').update(entry.snapshot);
   }
 
-  const fingerprint = hash.digest('hex').slice(0, HASH_LENGTH);
-  fingerprintCache.set(cacheKey, fingerprint);
-  return fingerprint;
+  return hash.digest('hex').slice(0, HASH_LENGTH);
 }
 
 /**
