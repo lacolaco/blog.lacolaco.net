@@ -1,10 +1,11 @@
 import { readdir } from 'node:fs/promises';
-import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
+import { isAbsolute, join, resolve, sep } from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import { buildOgImageFileName, computeOgImageHashFromFile } from '../../src/libs/og-image/hash.ts';
 
 /** Notion sync の出力は flat、直接執筆はサブディレクトリを許す (src/content.config.ts と対称) */
+export const CONTENT_DIR = 'content';
 const NOTION_POSTS_DIR = 'notion/posts';
 const AUTHORED_POSTS_DIR = 'posts';
 
@@ -14,7 +15,7 @@ export const OG_OUTPUT_DIR_NAME = 'og';
 /**
  * 記事の記述自体の不備。手書きツリーではスキップの対象になる。
  * hash算出などツール側の失敗と区別するために型を分ける。区別しないと、
- * ツールのバグで1記事が永久にマニフェストから落ちても警告しか出ない。
+ * ツールのバグで記事が黙って落ちても警告しか出ない。
  */
 export class ArticleValidationError extends Error {}
 
@@ -50,19 +51,19 @@ export function readFrontmatter(filePath: string): Record<string, unknown> {
 }
 
 /**
- * 公開済みかを判定する。ビルド側の queryAvailablePosts と同じ規則。
- * 未公開・未来日付の記事を対象にすると、その slug が公開リポジトリのマニフェストに載り、
- * タイトルを描画した画像が公開バケットに置かれてしまう。
+ * 記事として配信されうるかを判定する。
+ *
+ * 公開日は見ない。日付が到来しても記事に差分は出ないため生成が起動せず、
+ * サイトだけが公開されてOG画像が404になる。予約投稿でも先に描いておく。
+ *
+ * ビルド側の queryAvailablePosts は `published && isPast` で絞るが、あれはURL生成の判定であり、
+ * 画像を用意しておくかどうかとは別の関心である。
+ *
+ * なお sync は Notion 側で published のものだけを取得するため (queryFilter)、
+ * content/notion/posts に未公開記事は現れない。この判定は手書きツリー向けの保険である。
  */
 export function isPublished(frontmatter: Record<string, unknown>): boolean {
-  if (frontmatter.published !== true) {
-    return false;
-  }
-  const createdTime = frontmatter.created_time;
-  if (typeof createdTime !== 'string') {
-    return false;
-  }
-  return new Date(createdTime).getTime() <= Date.now();
+  return frontmatter.published === true;
 }
 
 export function parseTarget(
@@ -117,7 +118,7 @@ export function isSyncOutput(filePath: string): boolean {
  * 記述の不備が紛れうる。1件で全体を止めず、記事として扱えないものは対象から外す。
  *
  * content/notion/posts は sync の出力であり、不備は異常である。黙って落とすと
- * その記事だけマニフェストから消え、OG画像を持たないまま公開されるため失敗させる。
+ * その記事だけOG画像を持たないまま公開されるため失敗させる。
  */
 export function toTargetOrSkip(filePath: string, rootDir: string = process.cwd()): OgImageTarget | null {
   try {
@@ -137,13 +138,71 @@ export function toTargetOrSkip(filePath: string, rootDir: string = process.cwd()
   }
 }
 
+export interface ResolvedRequest {
+  /** 生成対象になるファイルの絶対パス */
+  files: string[];
+  /** 対象にならなかった入力。呼び出し側が気付けるよう内訳を残す */
+  dropped: string[];
+}
+
+/**
+ * 呼び出し側から渡されたパスを生成対象に整える。
+ *
+ * 呼び出し側 (blog-contents の sync) は作業ツリーの差分をそのまま渡すため、
+ * 削除された記事や記事以外の出力 (tags.json 等) が混ざる。1件で全体を止めないよう、
+ * 対象になりえないものはここで落とす。別リポジトリから呼ばれるので絶対パスも受ける。
+ */
+export function resolveRequestedFiles(paths: string[], rootDir: string = process.cwd()): ResolvedRequest {
+  // listArticleFiles と同じ範囲に限る。ずれると、個別指定でだけ描かれて
+  // サイトが参照しない画像が公開バケットに残る
+  const notionDir = join(rootDir, CONTENT_DIR, NOTION_POSTS_DIR) + sep;
+  const authoredDir = join(rootDir, CONTENT_DIR, AUTHORED_POSTS_DIR) + sep;
+
+  const files = new Set<string>();
+  const dropped: string[] = [];
+  for (const path of paths) {
+    const absolute = resolve(isAbsolute(path) ? path : join(rootDir, path));
+    // notion/posts は flat、posts は再帰。listArticleFiles の非対称性に合わせる
+    const inScope =
+      (absolute.startsWith(notionDir) && !absolute.slice(notionDir.length).includes(sep)) ||
+      absolute.startsWith(authoredDir);
+    if (!inScope || !absolute.endsWith('.md') || !existsSync(absolute)) {
+      dropped.push(path);
+      continue;
+    }
+    files.add(absolute);
+  }
+  return { files: [...files], dropped };
+}
+
+/**
+ * 渡された対象の中で同じ slug と locale が2つあれば落とす。
+ * 黙って両方を描くと、片方が参照されないままR2に残る。
+ *
+ * 見るのは渡された範囲だけなので、更新されていない記事との衝突は検出できない。
+ * 全体の一意性はビルド時の assertUniqueSlugs が保証する。
+ */
+export function assertUniqueTargets(targets: OgImageTarget[]): void {
+  const seen = new Map<string, OgImageTarget>();
+  for (const target of targets) {
+    const key = `${target.locale}:${target.slug}`;
+    const existing = seen.get(key);
+    if (existing) {
+      throw new Error(
+        `slug "${target.slug}" (locale: ${target.locale}) が重複している:\n  ${existing.filePath}\n  ${target.filePath}`,
+      );
+    }
+    seen.set(key, target);
+  }
+}
+
 async function listMarkdown(dir: string, recursive: boolean): Promise<string[]> {
   let entries;
   try {
     entries = await readdir(dir, { withFileTypes: true });
   } catch (cause) {
     // ディレクトリの不在だけを許容する。権限エラー等を空扱いにすると
-    // 記事0件と誤認してマニフェストを空に切り詰めてしまう
+    // 記事0件と誤認し、何も生成しないまま成功したように見えてしまう
     if ((cause as NodeJS.ErrnoException).code === 'ENOENT') {
       return [];
     }

@@ -3,7 +3,15 @@ import { test, describe } from 'node:test';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { localeOf, parseTarget, listArticleFiles, isPublished, toTargetOrSkip } from './discover.ts';
+import {
+  localeOf,
+  parseTarget,
+  listArticleFiles,
+  isPublished,
+  toTargetOrSkip,
+  resolveRequestedFiles,
+  assertUniqueTargets,
+} from './discover.ts';
 
 const frontmatter = [
   '---',
@@ -17,6 +25,13 @@ const frontmatter = [
   '本文である。',
   '',
 ].join('\n');
+
+/** リポジトリルート相当。content/ 配下に記事を置く */
+function createRepoRoot(): string {
+  const root = mkdtempSync(join(tmpdir(), 'og-repo-'));
+  mkdirSync(join(root, 'content/notion/posts'), { recursive: true });
+  return root;
+}
 
 function createContentDir(): string {
   const root = mkdtempSync(join(tmpdir(), 'og-discover-'));
@@ -114,21 +129,22 @@ describe('parseTarget', () => {
 });
 
 describe('isPublished', () => {
-  // ビルド側 (queryAvailablePosts) と同じ規則。未公開記事のslugを公開リポジトリに出さない
   test('published: false は対象外', () => {
     assert.equal(isPublished({ published: false, created_time: '2024-01-01T00:00:00.000Z' }), false);
   });
 
-  test('公開日が未来の記事は対象外', () => {
-    assert.equal(isPublished({ published: true, created_time: '2999-01-01T00:00:00.000Z' }), false);
+  test('published の指定がなければ対象外', () => {
+    assert.equal(isPublished({ created_time: '2024-01-01T00:00:00.000Z' }), false);
   });
 
-  test('published かつ公開日が過去なら対象', () => {
+  test('published なら対象', () => {
     assert.equal(isPublished({ published: true, created_time: '2024-01-01T00:00:00.000Z' }), true);
   });
 
-  test('published の指定がなければ対象外', () => {
-    assert.equal(isPublished({ created_time: '2024-01-01T00:00:00.000Z' }), false);
+  // 公開日が到来しても記事に差分は出ず、生成は起動しない。
+  // そのとき画像がないと、サイトだけが公開されてOG画像が404になる
+  test('公開日が未来でも対象にする', () => {
+    assert.equal(isPublished({ published: true, created_time: '2999-01-01T00:00:00.000Z' }), true);
   });
 });
 
@@ -192,7 +208,7 @@ describe('toTargetOrSkip', () => {
   });
 
   // hash算出の失敗はツール側の問題。記事の不備として握りつぶすと、
-  // そのバグに気付かないまま1記事が永久にマニフェストから落ちる
+  // そのバグに気付かないまま記事が黙って落ちる
   test('手書き記事でもhash算出の失敗は握りつぶさない', () => {
     const root = createContentDir();
     const filePath = join(root, 'posts/valid.md');
@@ -210,6 +226,109 @@ describe('toTargetOrSkip', () => {
     writeFileSync(filePath, '本文のみ\n', 'utf8');
 
     assert.throws(() => toTargetOrSkip(filePath), /frontmatter/);
+    rmSync(root, { recursive: true, force: true });
+  });
+});
+
+describe('resolveRequestedFiles', () => {
+  // sync は削除やリネームも作業ツリーの差分に出す。消えたファイルで全体を止めない
+  test('存在しないファイルは除外する', () => {
+    const root = createRepoRoot();
+    const exists = join(root, 'content/notion/posts/a.md');
+    writeFileSync(exists, frontmatter, 'utf8');
+
+    const resolved = resolveRequestedFiles(['content/notion/posts/a.md', 'content/notion/posts/deleted.md'], root);
+    assert.deepEqual(resolved.files, [exists]);
+    assert.deepEqual(resolved.dropped, ['content/notion/posts/deleted.md']);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 記事以外の出力 (tags.json 等) が同じディレクトリに置かれる
+  test('markdown以外は除外する', () => {
+    const root = createRepoRoot();
+    const article = join(root, 'content/notion/posts/a.md');
+    writeFileSync(article, frontmatter, 'utf8');
+    writeFileSync(join(root, 'content/notion/posts/tags.json'), '{}', 'utf8');
+
+    const resolved = resolveRequestedFiles(['content/notion/posts/a.md', 'content/notion/posts/tags.json'], root);
+    assert.deepEqual(resolved.files, [article]);
+    assert.deepEqual(resolved.dropped, ['content/notion/posts/tags.json']);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 呼び出し側は別リポジトリなので、絶対パスで渡されることがある
+  test('絶対パスをそのまま解決する', () => {
+    const root = createRepoRoot();
+    const article = join(root, 'content/notion/posts/a.md');
+    writeFileSync(article, frontmatter, 'utf8');
+
+    assert.deepEqual(resolveRequestedFiles([article], root).files, [article]);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // --all の列挙対象と揃える。ずれると、個別指定でだけ描かれてサイトが参照しない画像が残る
+  test('notion/posts のサブディレクトリは除外する', () => {
+    const root = createRepoRoot();
+    mkdirSync(join(root, 'content/notion/posts/sub'), { recursive: true });
+    writeFileSync(join(root, 'content/notion/posts/sub/a.md'), frontmatter, 'utf8');
+
+    assert.deepEqual(resolveRequestedFiles(['content/notion/posts/sub/a.md'], root).files, []);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  test('posts のサブディレクトリは対象にする', () => {
+    const root = createRepoRoot();
+    mkdirSync(join(root, 'content/posts/nested'), { recursive: true });
+    const nested = join(root, 'content/posts/nested/a.md');
+    writeFileSync(nested, frontmatter, 'utf8');
+
+    assert.deepEqual(resolveRequestedFiles(['content/posts/nested/a.md'], root).files, [nested]);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // content 配下でないパスは記事ではない。任意の .md が対象になると
+  // 実在しない記事のOG画像が公開バケットに置かれる
+  test('content配下でないパスは除外する', () => {
+    const root = createRepoRoot();
+    writeFileSync(join(root, 'README.md'), frontmatter, 'utf8');
+
+    assert.deepEqual(resolveRequestedFiles(['README.md'], root).files, []);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  test('同じファイルを重ねて渡しても1件になる', () => {
+    const root = createRepoRoot();
+    const article = join(root, 'content/notion/posts/a.md');
+    writeFileSync(article, frontmatter, 'utf8');
+
+    assert.deepEqual(resolveRequestedFiles(['content/notion/posts/a.md', article], root).files, [article]);
+    rmSync(root, { recursive: true, force: true });
+  });
+});
+
+describe('assertUniqueTargets', () => {
+  // ビルド側の assertUniqueSlugs と同じく、同じ slug+locale が2つあれば落とす
+  test('slugとlocaleが重複するとエラーになる', () => {
+    const root = createContentDir();
+    const a = join(root, 'notion/posts/a.md');
+    const b = join(root, 'posts/b.md');
+    writeFileSync(a, frontmatter, 'utf8');
+    writeFileSync(b, frontmatter, 'utf8');
+
+    const targets = [parseTarget(a), parseTarget(b)];
+
+    assert.throws(() => assertUniqueTargets(targets), /重複/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  test('slugが違えば通る', () => {
+    const root = createContentDir();
+    const a = join(root, 'notion/posts/a.md');
+    const b = join(root, 'notion/posts/b.md');
+    writeFileSync(a, frontmatter, 'utf8');
+    writeFileSync(b, frontmatter.replace("slug: 'my-post'", "slug: 'other-post'"), 'utf8');
+
+    assert.doesNotThrow(() => assertUniqueTargets([parseTarget(a), parseTarget(b)]));
     rmSync(root, { recursive: true, force: true });
   });
 });
