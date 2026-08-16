@@ -2,8 +2,10 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import {
   CONTENT_DIR,
+  OG_OUTPUT_DIR_NAME,
   assertUniqueTargets,
   listArticleFiles,
+  assertRequestResolved,
   resolveRequestedFiles,
   toTargetOrSkip,
 } from './discover.ts';
@@ -12,7 +14,14 @@ import { parseArgs } from './args.ts';
 import { createBatchedFontLoader } from './fonts.ts';
 import { renderOgImage } from './render.ts';
 
-const OUTPUT_DIR = 'public/images/og';
+/**
+ * R2へ送るためだけの置き場。git 管理下には置かない。
+ *
+ * `og/` を内側に持つのは、r2-sync が sourceDir からの相対パスをそのままキーにするため。
+ * このディレクトリを sourceDir に渡すと `og/<file>` というキーになり、
+ * 記事画像 (`<slug>/<file>`) や動画 (`videos/...`) と衝突しない。
+ */
+const OUTPUT_DIR = join('.tmp/og-staging', OG_OUTPUT_DIR_NAME);
 
 /**
  * OG画像を生成する。
@@ -24,8 +33,8 @@ const OUTPUT_DIR = 'public/images/og';
  * 引数なしを全件と解釈すると、呼び出し側が空の差分をそのまま渡したときに
  * 気付かないまま全件再生成が走る。それはこの設計が避けようとしている無駄そのものである。
  *
- * R2へのアップロードは行わない。blog-contents の sync ワークフローが public/images を
- * まとめてアップロードするため、書き込み経路をそちらに一本化している。
+ * R2へのアップロードは行わない。書き込み経路は blog-contents が持っており、
+ * こちらは OUTPUT_DIR に置くところまでを担う。
  */
 async function main(): Promise<void> {
   const rootDir = process.cwd();
@@ -38,14 +47,19 @@ async function main(): Promise<void> {
     return;
   }
 
-  const { files, dropped } = renderAll
+  const resolved = renderAll
     ? { files: await listArticleFiles(join(rootDir, CONTENT_DIR)), dropped: [] }
     : resolveRequestedFiles(requested, rootDir);
+  const { files, dropped } = resolved;
 
   // 対象外にした内訳は必ず出す。記事の削除や tags.json の混入は正常だが、
   // パスの基準を取り違えた場合も同じ形で現れるため、件数だけでは区別できない
   if (dropped.length > 0) {
     console.warn(`[og-image-sync] ${dropped.length} 件を対象外にした (対象 ${files.length} 件): ${dropped.join(' ')}`);
+  }
+
+  if (!renderAll) {
+    assertRequestResolved(requested, resolved);
   }
 
   // --all で0件は、実行位置かチェックアウトの誤りしかありえない
@@ -57,6 +71,10 @@ async function main(): Promise<void> {
   assertUniqueTargets(targets);
 
   console.log(`[og-image-sync] ${files.length} files, ${targets.length} to render`);
+
+  // 0件でも先に掘る。アップロード側 (r2-sync) は sourceDir の不在を警告して正常終了するため、
+  // ディレクトリがないと「このツールが動いていない」と「描くものがなかった」を区別できない
+  await mkdir(outputDir, { recursive: true });
   if (targets.length === 0) {
     // 対象が全て未公開・下書きだった場合。ファイルは見えているので異常ではない
     return;
@@ -68,7 +86,6 @@ async function main(): Promise<void> {
     SITE_DOMAIN_NAME,
   );
 
-  await mkdir(outputDir, { recursive: true });
   for (const [index, target] of targets.entries()) {
     const png = await renderOgImage(target, rootDir, fontLoader);
     await writeFile(join(outputDir, target.fileName), png);

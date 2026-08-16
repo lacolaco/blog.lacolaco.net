@@ -9,7 +9,7 @@ export const CONTENT_DIR = 'content';
 const NOTION_POSTS_DIR = 'notion/posts';
 const AUTHORED_POSTS_DIR = 'posts';
 
-/** OG画像の出力先ディレクトリ名。記事slugがこれと衝突すると画像の置き場が重なる */
+/** OG画像のR2キー接頭辞。記事slugがこれと衝突すると名前空間が重なる */
 export const OG_OUTPUT_DIR_NAME = 'og';
 
 /**
@@ -80,8 +80,8 @@ export function parseTarget(
   if (slug.includes('/') || slug.includes('\\') || slug.includes('..')) {
     throw new ArticleValidationError(`${filePath} の slug "${slug}" はファイル名に使えない`);
   }
-  // slug "og" の記事画像は public/images/og/ に置かれ、OG画像の出力先と重なる。
-  // 出力先は gitignore されているため、その記事の画像だけが黙ってコミットされなくなる
+  // 記事画像のR2キーは `<slug>/<file>`、OG画像は `og/<file>` になる。
+  // slug が "og" だと両者が同じ名前空間に入り、互いを上書きしうる
   if (slug === OG_OUTPUT_DIR_NAME) {
     throw new ArticleValidationError(`${filePath} の slug "${slug}" はOG画像の出力先と衝突する`);
   }
@@ -173,6 +173,24 @@ export function resolveRequestedFiles(paths: string[], rootDir: string = process
     files.add(absolute);
   }
   return { files: [...files], dropped };
+}
+
+/**
+ * 渡されたパスが1件も対象にならなかったら失敗させる。
+ *
+ * 呼び出し側 (blog-contents の sync) は blog-content.config.yaml の postsDir を基準に
+ * パスを集めるが、こちらは CONTENT_DIR と NOTION_POSTS_DIR を持っている。設定を変えると
+ * 両者がずれ、全件が dropped に落ちて警告だけを出して正常終了する。
+ * 記事は同期されOG画像だけが欠けたまま公開されるため、警告では足りない。
+ *
+ * 一部だけ落ちるのは正常 (削除された記事など) なので、全件のときだけ止める。
+ */
+export function assertRequestResolved(requested: string[], resolved: ResolvedRequest): void {
+  if (requested.length > 0 && resolved.files.length === 0) {
+    throw new Error(
+      `指定された ${requested.length} 件すべてが対象外になった。パスの基準がずれている可能性がある: ${resolved.dropped.join(' ')}`,
+    );
+  }
 }
 
 /**

@@ -37,5 +37,3 @@ pnpm-debug.log*
 *.tfstate
 *.tfstate.backup
 
-# OG画像は sync の実行ごとに作られ、r2-sync がディレクトリ走査でアップロードする
-public/images/og/
