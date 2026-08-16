@@ -13,12 +13,18 @@ import { renderOgImage } from './render.ts';
 
 const OUTPUT_DIR = 'public/images/og';
 
+/** 全記事の作り直しを明示するフラグ */
+const ALL_FLAG = '--all';
+
 /**
  * OG画像を生成する。
  *
  * 対象は引数で受け取る。呼び出し側 (blog-contents の sync) が「今回書き出した記事」を
- * 知っているため、こちらで差分を判定しない。引数がなければ全記事を対象にする
- * (レンダラ実装を変更したときの作り直し)。
+ * 知っているため、こちらで差分を判定しない。
+ *
+ * 全記事の作り直し (レンダラ実装を変更したとき) は `--all` で明示する。
+ * 引数なしを全件と解釈すると、呼び出し側が空の差分をそのまま渡したときに
+ * 気付かないまま全件再生成が走る。それはこの設計が避けようとしている無駄そのものである。
  *
  * R2へのアップロードは行わない。blog-contents の sync ワークフローが public/images を
  * まとめてアップロードするため、書き込み経路をそちらに一本化している。
@@ -26,27 +32,32 @@ const OUTPUT_DIR = 'public/images/og';
 async function main(): Promise<void> {
   const rootDir = process.cwd();
   const outputDir = join(rootDir, OUTPUT_DIR);
-  const requested = process.argv.slice(2);
+  const args = process.argv.slice(2);
+  const renderAll = args.includes(ALL_FLAG);
+  const requested = args.filter((arg) => arg !== ALL_FLAG);
 
-  const { files, dropped } =
-    requested.length > 0
-      ? resolveRequestedFiles(requested, rootDir)
-      : { files: await listArticleFiles(join(rootDir, CONTENT_DIR)), dropped: [] };
+  if (!renderAll && requested.length === 0) {
+    throw new Error(`生成対象が指定されていない。記事のパスを渡すか、全記事を作り直すなら ${ALL_FLAG} を付ける`);
+  }
+
+  const { files, dropped } = renderAll
+    ? { files: await listArticleFiles(join(rootDir, CONTENT_DIR)), dropped: [] }
+    : resolveRequestedFiles(requested, rootDir);
 
   // 記事を1件も見つけられないのは、パスの基準やチェックアウトの誤りを疑うべき状況である。
   // 静かに0枚で成功すると、生成されなかったことに気付けないまま参照だけが公開される
   if (files.length === 0) {
     throw new Error(
-      requested.length > 0
-        ? `渡された ${requested.length} 件のパスがどれも ${CONTENT_DIR} 配下の記事として解決できない: ${requested.join(' ')}`
-        : `${CONTENT_DIR} 配下に記事が見つからない。実行位置とチェックアウトを確認する`,
+      renderAll
+        ? `${CONTENT_DIR} 配下に記事が見つからない。実行位置とチェックアウトを確認する`
+        : `渡された ${requested.length} 件のパスがどれも ${CONTENT_DIR} 配下の記事として解決できない: ${requested.join(' ')}`,
     );
   }
 
   // 一部だけ落ちた場合は、正常な運用 (記事の削除、tags.json 等) と誤りの区別がつかない。
-  // 総数だけでは気付けないため内訳を出す
+  // 総数だけでは気付けないため内訳を出す。重複を除いた対象数と並べる
   if (dropped.length > 0) {
-    console.warn(`[og-image-sync] ${dropped.length}/${requested.length} 件を対象外にした: ${dropped.join(' ')}`);
+    console.warn(`[og-image-sync] ${dropped.length} 件を対象外にした (対象 ${files.length} 件): ${dropped.join(' ')}`);
   }
 
   const targets = files.map((filePath) => toTargetOrSkip(filePath, rootDir)).filter((target) => target !== null);
