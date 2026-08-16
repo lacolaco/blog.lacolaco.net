@@ -51,18 +51,19 @@ export function readFrontmatter(filePath: string): Record<string, unknown> {
 }
 
 /**
- * 公開済みかを判定する。ビルド側の queryAvailablePosts と同じ規則。
- * 未公開・未来日付の記事を対象にすると、そのタイトルを描画した画像が公開バケットに置かれてしまう。
+ * 記事として配信されうるかを判定する。
+ *
+ * 公開日は見ない。日付が到来しても記事に差分は出ないため生成が起動せず、
+ * サイトだけが公開されてOG画像が404になる。予約投稿でも先に描いておく。
+ *
+ * ビルド側の queryAvailablePosts は `published && isPast` で絞るが、あれはURL生成の判定であり、
+ * 画像を用意しておくかどうかとは別の関心である。
+ *
+ * なお sync は Notion 側で published のものだけを取得するため (queryFilter)、
+ * content/notion/posts に未公開記事は現れない。この判定は手書きツリー向けの保険である。
  */
 export function isPublished(frontmatter: Record<string, unknown>): boolean {
-  if (frontmatter.published !== true) {
-    return false;
-  }
-  const createdTime = frontmatter.created_time;
-  if (typeof createdTime !== 'string') {
-    return false;
-  }
-  return new Date(createdTime).getTime() <= Date.now();
+  return frontmatter.published === true;
 }
 
 export function parseTarget(

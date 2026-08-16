@@ -129,21 +129,22 @@ describe('parseTarget', () => {
 });
 
 describe('isPublished', () => {
-  // ビルド側 (queryAvailablePosts) と同じ規則。未公開記事のslugを公開リポジトリに出さない
   test('published: false は対象外', () => {
     assert.equal(isPublished({ published: false, created_time: '2024-01-01T00:00:00.000Z' }), false);
   });
 
-  test('公開日が未来の記事は対象外', () => {
-    assert.equal(isPublished({ published: true, created_time: '2999-01-01T00:00:00.000Z' }), false);
+  test('published の指定がなければ対象外', () => {
+    assert.equal(isPublished({ created_time: '2024-01-01T00:00:00.000Z' }), false);
   });
 
-  test('published かつ公開日が過去なら対象', () => {
+  test('published なら対象', () => {
     assert.equal(isPublished({ published: true, created_time: '2024-01-01T00:00:00.000Z' }), true);
   });
 
-  test('published の指定がなければ対象外', () => {
-    assert.equal(isPublished({ created_time: '2024-01-01T00:00:00.000Z' }), false);
+  // 公開日が到来しても記事に差分は出ず、生成は起動しない。
+  // そのとき画像がないと、サイトだけが公開されてOG画像が404になる
+  test('公開日が未来でも対象にする', () => {
+    assert.equal(isPublished({ published: true, created_time: '2999-01-01T00:00:00.000Z' }), true);
   });
 });
 
