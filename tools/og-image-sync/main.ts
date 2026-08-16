@@ -8,13 +8,11 @@ import {
   toTargetOrSkip,
 } from './discover.ts';
 import { SITE_DOMAIN_NAME } from '../../src/libs/og-image/constants.ts';
+import { parseArgs } from './args.ts';
 import { createBatchedFontLoader } from './fonts.ts';
 import { renderOgImage } from './render.ts';
 
 const OUTPUT_DIR = 'public/images/og';
-
-/** 全記事の作り直しを明示するフラグ */
-const ALL_FLAG = '--all';
 
 /**
  * OG画像を生成する。
@@ -32,13 +30,7 @@ const ALL_FLAG = '--all';
 async function main(): Promise<void> {
   const rootDir = process.cwd();
   const outputDir = join(rootDir, OUTPUT_DIR);
-  const args = process.argv.slice(2);
-  const renderAll = args.includes(ALL_FLAG);
-  const requested = args.filter((arg) => arg !== ALL_FLAG);
-
-  if (!renderAll && requested.length === 0) {
-    throw new Error(`生成対象が指定されていない。記事のパスを渡すか、全記事を作り直すなら ${ALL_FLAG} を付ける`);
-  }
+  const { renderAll, requested } = parseArgs(process.argv.slice(2));
 
   const { files, dropped } = renderAll
     ? { files: await listArticleFiles(join(rootDir, CONTENT_DIR)), dropped: [] }
