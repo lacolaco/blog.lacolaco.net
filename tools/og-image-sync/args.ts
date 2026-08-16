@@ -11,9 +11,8 @@ export interface ParsedArgs {
 /**
  * コマンドライン引数を解釈する。
  *
- * 引数なしを全記事と解釈すると、呼び出し側が空の差分をそのまま渡したときに
- * 気付かないまま全件再生成が走る。それはこの設計が避けようとしている無駄そのものなので、
- * 全記事は明示させる。
+ * 引数なしは「描くものがない」として扱う。記事の削除だけ、tags.json の更新だけ、
+ * という sync は正常にありうる。全記事と解釈すると、そのたびに全件再生成が走る。
  *
  * 併用を黙って無視すると、渡したのに描かれなかったことに気付けない。
  */
@@ -24,9 +23,5 @@ export function parseArgs(argv: string[]): ParsedArgs {
   if (renderAll && requested.length > 0) {
     throw new Error(`${ALL_FLAG} と記事のパスは同時に指定できない: ${requested.join(' ')}`);
   }
-  if (!renderAll && requested.length === 0) {
-    throw new Error(`生成対象が指定されていない。記事のパスを渡すか、全記事を作り直すなら ${ALL_FLAG} を付ける`);
-  }
-
   return { renderAll, requested };
 }

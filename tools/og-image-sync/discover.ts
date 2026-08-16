@@ -153,13 +153,20 @@ export interface ResolvedRequest {
  * 対象になりえないものはここで落とす。別リポジトリから呼ばれるので絶対パスも受ける。
  */
 export function resolveRequestedFiles(paths: string[], rootDir: string = process.cwd()): ResolvedRequest {
-  const contentDir = join(rootDir, CONTENT_DIR) + sep;
+  // listArticleFiles と同じ範囲に限る。ずれると、個別指定でだけ描かれて
+  // サイトが参照しない画像が公開バケットに残る
+  const notionDir = join(rootDir, CONTENT_DIR, NOTION_POSTS_DIR) + sep;
+  const authoredDir = join(rootDir, CONTENT_DIR, AUTHORED_POSTS_DIR) + sep;
+
   const files = new Set<string>();
   const dropped: string[] = [];
   for (const path of paths) {
     const absolute = resolve(isAbsolute(path) ? path : join(rootDir, path));
-    // content 配下に限る。任意の .md を受けると、実在しない記事の画像が公開バケットに載る
-    if (!absolute.startsWith(contentDir) || !absolute.endsWith('.md') || !existsSync(absolute)) {
+    // notion/posts は flat、posts は再帰。listArticleFiles の非対称性に合わせる
+    const inScope =
+      (absolute.startsWith(notionDir) && !absolute.slice(notionDir.length).includes(sep)) ||
+      absolute.startsWith(authoredDir);
+    if (!inScope || !absolute.endsWith('.md') || !existsSync(absolute)) {
       dropped.push(path);
       continue;
     }

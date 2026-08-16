@@ -32,24 +32,25 @@ async function main(): Promise<void> {
   const outputDir = join(rootDir, OUTPUT_DIR);
   const { renderAll, requested } = parseArgs(process.argv.slice(2));
 
+  // 記事の削除だけ、tags.json の更新だけ、という sync は正常にありうる
+  if (!renderAll && requested.length === 0) {
+    console.log('[og-image-sync] 生成対象の指定がない');
+    return;
+  }
+
   const { files, dropped } = renderAll
     ? { files: await listArticleFiles(join(rootDir, CONTENT_DIR)), dropped: [] }
     : resolveRequestedFiles(requested, rootDir);
 
-  // 記事を1件も見つけられないのは、パスの基準やチェックアウトの誤りを疑うべき状況である。
-  // 静かに0枚で成功すると、生成されなかったことに気付けないまま参照だけが公開される
-  if (files.length === 0) {
-    throw new Error(
-      renderAll
-        ? `${CONTENT_DIR} 配下に記事が見つからない。実行位置とチェックアウトを確認する`
-        : `渡された ${requested.length} 件のパスがどれも ${CONTENT_DIR} 配下の記事として解決できない: ${requested.join(' ')}`,
-    );
-  }
-
-  // 一部だけ落ちた場合は、正常な運用 (記事の削除、tags.json 等) と誤りの区別がつかない。
-  // 総数だけでは気付けないため内訳を出す。重複を除いた対象数と並べる
+  // 対象外にした内訳は必ず出す。記事の削除や tags.json の混入は正常だが、
+  // パスの基準を取り違えた場合も同じ形で現れるため、件数だけでは区別できない
   if (dropped.length > 0) {
     console.warn(`[og-image-sync] ${dropped.length} 件を対象外にした (対象 ${files.length} 件): ${dropped.join(' ')}`);
+  }
+
+  // --all で0件は、実行位置かチェックアウトの誤りしかありえない
+  if (renderAll && files.length === 0) {
+    throw new Error(`${CONTENT_DIR} 配下に記事が見つからない。実行位置とチェックアウトを確認する`);
   }
 
   const targets = files.map((filePath) => toTargetOrSkip(filePath, rootDir)).filter((target) => target !== null);

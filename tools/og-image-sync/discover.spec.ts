@@ -266,6 +266,26 @@ describe('resolveRequestedFiles', () => {
     rmSync(root, { recursive: true, force: true });
   });
 
+  // --all の列挙対象と揃える。ずれると、個別指定でだけ描かれてサイトが参照しない画像が残る
+  test('notion/posts のサブディレクトリは除外する', () => {
+    const root = createRepoRoot();
+    mkdirSync(join(root, 'content/notion/posts/sub'), { recursive: true });
+    writeFileSync(join(root, 'content/notion/posts/sub/a.md'), frontmatter, 'utf8');
+
+    assert.deepEqual(resolveRequestedFiles(['content/notion/posts/sub/a.md'], root).files, []);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  test('posts のサブディレクトリは対象にする', () => {
+    const root = createRepoRoot();
+    mkdirSync(join(root, 'content/posts/nested'), { recursive: true });
+    const nested = join(root, 'content/posts/nested/a.md');
+    writeFileSync(nested, frontmatter, 'utf8');
+
+    assert.deepEqual(resolveRequestedFiles(['content/posts/nested/a.md'], root).files, [nested]);
+    rmSync(root, { recursive: true, force: true });
+  });
+
   // content 配下でないパスは記事ではない。任意の .md が対象になると
   // 実在しない記事のOG画像が公開バケットに置かれる
   test('content配下でないパスは除外する', () => {

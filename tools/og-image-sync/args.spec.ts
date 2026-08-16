@@ -14,9 +14,10 @@ describe('parseArgs', () => {
     assert.deepEqual(parseArgs(['--all']), { renderAll: true, requested: [] });
   });
 
-  // 引数なしを全記事と解釈すると、空の差分を渡されたときに全件再生成が走る
-  test('引数なしはエラーになる', () => {
-    assert.throws(() => parseArgs([]), /--all/);
+  // 記事の削除だけ、tags.json の更新だけ、という sync は正常にありうる。
+  // 引数なしを全記事と解釈すると全件再生成が走るので、対象なしとして扱う
+  test('引数なしは対象なしになる', () => {
+    assert.deepEqual(parseArgs([]), { renderAll: false, requested: [] });
   });
 
   // 黙って無視すると、渡したのに描かれなかったことに気付けない
