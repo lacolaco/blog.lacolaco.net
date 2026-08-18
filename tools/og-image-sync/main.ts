@@ -28,6 +28,7 @@ import { renderOgImage } from './render.ts';
  */
 async function main(): Promise<void> {
   const rootDir = process.cwd();
+  const stagingDir = join(rootDir, STAGING_DIR);
   const outputDir = join(rootDir, OUTPUT_DIR);
   const { renderAll, requested } = parseArgs(process.argv.slice(2));
 
@@ -44,7 +45,7 @@ async function main(): Promise<void> {
   // 対象の指定がない回では消さない。手元で描いた直後に引数なしで叩くだけで消え、
   // 続くアップロードが何も送らずに成功する。パスの基準を取り違えた実行では
   // 消したあとに判明するが、CI は毎回まっさらなので影響は手元の反復だけ
-  await rm(join(rootDir, STAGING_DIR), { recursive: true, force: true });
+  await rm(stagingDir, { recursive: true, force: true });
   await mkdir(outputDir, { recursive: true });
 
   // アップロード側 (r2-sync) に渡す sourceDir を出す。内側の OUTPUT_DIR を渡すとキーが
@@ -53,7 +54,7 @@ async function main(): Promise<void> {
   //
   // 掃除より後に出す。対象の指定がない回で出すと、前回の出力が残ったままの
   // ディレクトリを「今回の送信元」として案内することになる
-  console.log(`[og-image-sync] upload source: ${join(rootDir, STAGING_DIR)}`);
+  console.log(`[og-image-sync] upload source: ${stagingDir}`);
 
   const { files, dropped } = renderAll
     ? { files: await listArticleFiles(join(rootDir, CONTENT_DIR)), dropped: [] }
