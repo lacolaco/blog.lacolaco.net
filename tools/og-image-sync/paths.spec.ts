@@ -1,9 +1,11 @@
 import { strict as assert } from 'node:assert';
 import { test, describe } from 'node:test';
 import { spawnSync } from 'node:child_process';
-import { sep } from 'node:path';
+import { join, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { OUTPUT_DIR, STAGING_DIR } from './paths.ts';
+import { mkdtempSync, writeFileSync, rmSync, existsSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { OUTPUT_DIR, STAGING_DIR, prepareStaging } from './paths.ts';
 import { OG_OUTPUT_DIR_NAME } from './discover.ts';
 
 /** テストの実行位置に依存しないよう、このファイルからリポジトリルートを求める */
@@ -42,5 +44,50 @@ describe('出力先', () => {
   test('出力先の末尾はR2キーの接頭辞と一致する', () => {
     const segments = OUTPUT_DIR.split(sep);
     assert.equal(segments[segments.length - 1], OG_OUTPUT_DIR_NAME);
+  });
+});
+
+describe('prepareStaging', () => {
+  // アップロード側に渡すのは外側。内側を渡すとキーが og/ を失う
+  test('外側と内側の両方を返す', async (t) => {
+    const root = mkdtempSync(join(tmpdir(), 'og-staging-'));
+    t.after(() => rmSync(root, { recursive: true, force: true }));
+
+    const { stagingDir, outputDir } = await prepareStaging(root);
+
+    assert.equal(stagingDir, join(root, STAGING_DIR));
+    assert.equal(outputDir, join(root, OUTPUT_DIR));
+  });
+
+  test('出力先を作る', async (t) => {
+    const root = mkdtempSync(join(tmpdir(), 'og-staging-'));
+    t.after(() => rmSync(root, { recursive: true, force: true }));
+
+    const { outputDir } = await prepareStaging(root);
+
+    assert.equal(existsSync(outputDir), true);
+  });
+
+  // ここはそのままアップロードされる集合なので、残すと今回描いていない画像まで送られる
+  test('前回の出力を残さない', async (t) => {
+    const root = mkdtempSync(join(tmpdir(), 'og-staging-'));
+    t.after(() => rmSync(root, { recursive: true, force: true }));
+    const { outputDir } = await prepareStaging(root);
+    writeFileSync(join(outputDir, 'stale.png'), 'x', 'utf8');
+    // staging の直下に落ちた残骸も消す
+    writeFileSync(join(root, STAGING_DIR, 'stray.png'), 'x', 'utf8');
+
+    await prepareStaging(root);
+
+    assert.equal(existsSync(join(outputDir, 'stale.png')), false);
+    assert.equal(existsSync(join(root, STAGING_DIR, 'stray.png')), false);
+  });
+
+  // 初回や、掃除済みのチェックアウトでも落ちない
+  test('出力先が無くても落ちない', async (t) => {
+    const root = mkdtempSync(join(tmpdir(), 'og-staging-'));
+    t.after(() => rmSync(root, { recursive: true, force: true }));
+
+    await assert.doesNotReject(() => prepareStaging(root));
   });
 });

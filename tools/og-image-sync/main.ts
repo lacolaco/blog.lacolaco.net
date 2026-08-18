@@ -1,4 +1,4 @@
-import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import {
   CONTENT_DIR,
@@ -8,7 +8,7 @@ import {
   toTargetOrSkip,
 } from './discover.ts';
 import { SITE_DOMAIN_NAME } from '../../src/libs/og-image/constants.ts';
-import { OUTPUT_DIR, STAGING_DIR } from './paths.ts';
+import { prepareStaging } from './paths.ts';
 import { parseArgs } from './args.ts';
 import { createBatchedFontLoader } from './fonts.ts';
 import { renderOgImage } from './render.ts';
@@ -28,8 +28,6 @@ import { renderOgImage } from './render.ts';
  */
 async function main(): Promise<void> {
   const rootDir = process.cwd();
-  const stagingDir = join(rootDir, STAGING_DIR);
-  const outputDir = join(rootDir, OUTPUT_DIR);
   const { renderAll, requested } = parseArgs(process.argv.slice(2));
 
   // 記事の削除だけ、tags.json の更新だけ、という sync は正常にありうる
@@ -38,15 +36,11 @@ async function main(): Promise<void> {
     return;
   }
 
-  // 前回の出力は消す。この置き場はそのままアップロードされる集合なので、残すと
-  // 今回描いていない画像まで送られ、集合が実行ごとに変わる。
-  // アップロード1回につきこのツールの実行が1回であることを前提にする。
-  //
-  // 対象の指定がない回では消さない。手元で描いた直後に引数なしで叩くだけで消え、
-  // 続くアップロードが何も送らずに成功する。パスの基準を取り違えた実行では
-  // 消したあとに判明するが、CI は毎回まっさらなので影響は手元の反復だけ
-  await rm(stagingDir, { recursive: true, force: true });
-  await mkdir(outputDir, { recursive: true });
+  // 呼ぶのは対象の指定がある回だけ。上の早期 return より前に動かすと、手元で描いた直後に
+  // 引数なしで叩くだけで消え、続くアップロードが何も送らずに成功する。
+  // パスの基準を取り違えた実行では消したあとに判明するが、CI は毎回まっさらなので
+  // 影響は手元の反復だけ
+  const { stagingDir, outputDir } = await prepareStaging(rootDir);
 
   // アップロード側 (r2-sync) に渡す sourceDir を出す。内側の OUTPUT_DIR を渡すとキーが
   // og/ を失い、記事画像と衝突しないまま配信URLだけが 404 する。
