@@ -1,5 +1,5 @@
 import { readdir } from 'node:fs/promises';
-import { existsSync, readFileSync, realpathSync } from 'node:fs';
+import { lstatSync, readFileSync, realpathSync, statSync } from 'node:fs';
 import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import { buildOgImageFileName, computeOgImageHashFromFile } from '../../src/libs/og-image/hash.ts';
@@ -166,6 +166,48 @@ function resolveBestEffort(path: string): string {
 }
 
 /**
+ * パスの状態。投げない。不在と「あるが読めない」を呼び出し側で分けるため。
+ *
+ * 読めないだけの記事を「削除された」と分類すると、sync の出力ならその記事が
+ * OG画像を持たないまま公開される。一方で手書きツリーは不備が混ざる前提なので、
+ * 同じ状態でも1件で全体を止めない。判断も報告も呼び出し側に任せる
+ * (ここで警告すると、同じパスを見るたびに同じ行が出る)。
+ */
+type EntryState = 'exists' | 'absent' | 'unreadable';
+
+function entryStateOf(path: string): EntryState {
+  try {
+    statSync(path);
+    return 'exists';
+  } catch (cause) {
+    const code = (cause as NodeJS.ErrnoException).code;
+    if (code === 'ENOENT' || code === 'ENOTDIR') {
+      return 'absent';
+    }
+    return 'unreadable';
+  }
+}
+
+/** ディレクトリを指すか。辿った先で判定する */
+function isDirectorySync(path: string): boolean {
+  try {
+    return statSync(path).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+/** パスとしての入口があるか。実体を失った symlink は true、削除された記事は false */
+function isEntryPresent(path: string): boolean {
+  try {
+    lstatSync(path);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * notion 出力ディレクトリの実体。
  *
  * 覚えない。プロセス内で複数の root を扱うとき、消えた root のパスを後から別の root が
@@ -252,6 +294,9 @@ export function resolveRequestedFiles(paths: string[], rootDir: string = process
   // 値は渡された形のままにして、呼び出し側の見え方を変えない
   const files = new Map<string, string>();
   const dropped: string[] = [];
+  // 1件ずつ投げると、直すたびに次の1件で落ちる。まとめて報告する
+  const unreadable: string[] = [];
+  const directories: string[] = [];
   for (const path of paths) {
     const absolute = toAbsolutePath(path, rootDir);
     // 範囲の判定だけ実体で行う。返すのは絶対パスにした入力で、symlink は解決しない。
@@ -264,7 +309,35 @@ export function resolveRequestedFiles(paths: string[], rootDir: string = process
     // あるとその中の記事は対象外になる。listArticleFiles も symlink を辿らないので、
     // --all と個別指定で結果が変わらない
     const inScope = isSyncOutputReal(real, rootDir) || real.startsWith(authoredDir);
-    if (!inScope || !absolute.endsWith('.md') || !existsSync(absolute)) {
+    // 状態は1回だけ調べる。分岐ごとに調べると警告が重複し、CI のログでは
+    // 別々の記事が壊れているように見える。
+    // 親ディレクトリの権限で読めない場合は lstat も失敗するため、入口の有無は問わない
+    const state = entryStateOf(absolute);
+    // `*.md` という名前でもディレクトリ (やその symlink) のことがある。
+    // 記事として読むと EISDIR で落ちる。notion 配下なら sync の異常として止め、
+    // 手書きツリーなら対象外にする
+    if (absolute.endsWith('.md') && isDirectorySync(absolute)) {
+      if (isSyncOutputReal(real, rootDir)) {
+        directories.push(path);
+      } else {
+        dropped.push(path);
+      }
+      continue;
+    }
+    // 削除された記事は不在、実体を失った symlink や読めない記事は「入口はあるが読めない」。
+    // 後者が sync の出力なら異常なので、まとめて報告するために積む
+    if (
+      absolute.endsWith('.md') &&
+      isSyncOutputReal(real, rootDir) &&
+      (state === 'unreadable' || (state === 'absent' && isEntryPresent(absolute)))
+    ) {
+      unreadable.push(path);
+      continue;
+    }
+    if (state === 'unreadable') {
+      console.warn(`[og-image-sync] ${path} を確認できない`);
+    }
+    if (!inScope || !absolute.endsWith('.md') || state !== 'exists') {
       dropped.push(path);
       continue;
     }
@@ -274,6 +347,15 @@ export function resolveRequestedFiles(paths: string[], rootDir: string = process
       files.set(real, absolute);
     }
   }
+  // 種類ごとに投げ分けると、片方を直したあとにもう片方で落ちる。1回にまとめる
+  const anomalies = [
+    ...(directories.length > 0 ? [`notion の出力にディレクトリがある: ${directories.join(' ')}`] : []),
+    ...(unreadable.length > 0 ? [`sync が書き出した記事を読めない: ${unreadable.join(' ')}`] : []),
+  ];
+  if (anomalies.length > 0) {
+    throw new Error(anomalies.join('\n'));
+  }
+
   return { files: [...files.values()], dropped };
 }
 

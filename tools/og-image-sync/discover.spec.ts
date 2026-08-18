@@ -341,6 +341,82 @@ describe('resolveRequestedFiles', () => {
     rmSync(root, { recursive: true, force: true });
   });
 
+  // 削除された記事は正常に落とす。実体を失った symlink は sync の異常なので止める
+  test('実体を失った sync 出力は失敗させる', () => {
+    const root = createRepoRoot();
+    const broken = join(root, 'content/notion/posts/broken.md');
+    symlinkSync(join(root, 'missing-target.md'), broken);
+
+    assert.throws(() => resolveRequestedFiles([broken], root), /読めない/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  test('削除された記事は失敗させない', () => {
+    const root = createRepoRoot();
+
+    const resolved = resolveRequestedFiles([join(root, 'content/notion/posts/deleted.md')], root);
+
+    assert.deepEqual(resolved.files, []);
+    assert.equal(resolved.dropped.length, 1);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 1件ずつ投げると、直すたびに次の1件で落ちる
+  test('実体喪失をまとめて報告する', () => {
+    const root = createRepoRoot();
+    const a = join(root, 'content/notion/posts/a.md');
+    const b = join(root, 'content/notion/posts/b.md');
+    symlinkSync(join(root, 'missing-a.md'), a);
+    symlinkSync(join(root, 'missing-b.md'), b);
+
+    assert.throws(() => resolveRequestedFiles([a, b], root), /a\.md.*b\.md/s);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // `*.md` という名前でもディレクトリのことがある。記事として読むと EISDIR で全体が止まる
+  test('notion 配下の md という名前のディレクトリは失敗させる', () => {
+    const root = createRepoRoot();
+    const dir = join(root, 'linked');
+    mkdirSync(dir, { recursive: true });
+    const fake = join(root, 'content/notion/posts/fake.md');
+    symlinkSync(dir, fake);
+
+    assert.throws(() => resolveRequestedFiles([fake], root), /ディレクトリがある/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 手書きツリーは記事以外が混ざる前提なので、対象外にするだけでよい
+  test('手書きツリーの md という名前のディレクトリは対象外にする', () => {
+    const root = createRepoRoot();
+    mkdirSync(join(root, 'content/posts'), { recursive: true });
+    const fake = join(root, 'content/posts/fake.md');
+    mkdirSync(fake, { recursive: true });
+
+    const resolved = resolveRequestedFiles([fake], root);
+
+    assert.deepEqual(resolved.files, []);
+    assert.deepEqual(resolved.dropped, [fake]);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 手書きツリーは不備が混ざる前提。1件の symlink の輪で全体を止めない
+  test('手書きツリーの symlink の輪は対象外にする', () => {
+    const root = createRepoRoot();
+    mkdirSync(join(root, 'content/posts'), { recursive: true });
+    const a = join(root, 'content/posts/a.md');
+    const b = join(root, 'content/posts/b.md');
+    symlinkSync(b, a);
+    symlinkSync(a, b);
+    const article = join(root, 'content/notion/posts/ok.md');
+    writeFileSync(article, frontmatter, 'utf8');
+
+    const resolved = resolveRequestedFiles([a, article], root);
+
+    assert.deepEqual(resolved.files, [article]);
+    assert.deepEqual(resolved.dropped, [a]);
+    rmSync(root, { recursive: true, force: true });
+  });
+
   // 呼び出し側は別リポジトリから渡すため、symlink を経た形になりうる
   // (macOS の /var → /private/var など)。字句で比べると全件が対象外になる
   test('symlink を経たパスでも対象にする', () => {
