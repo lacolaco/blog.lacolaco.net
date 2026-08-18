@@ -341,6 +341,29 @@ describe('assertRequestResolved', () => {
     );
   });
 
+  // 呼び出し側は作業ツリーの差分をそのまま渡す。tags.json の更新だけ、という同期は正常で、
+  // ここで止めると無関係な変更で同期が落ちる
+  test('記事以外しか渡されていなければ通す', () => {
+    assert.doesNotThrow(() =>
+      assertRequestResolved(['content/notion/tags.json'], {
+        files: [],
+        dropped: ['content/notion/tags.json'],
+      }),
+    );
+  });
+
+  // 記事が混ざっていて1件も解決しないのは、基準のずれか記事の消失である
+  test('記事が混ざっていて全件対象外なら失敗する', () => {
+    assert.throws(
+      () =>
+        assertRequestResolved(['content/notion/tags.json', 'content/old/posts/a.md'], {
+          files: [],
+          dropped: ['content/notion/tags.json', 'content/old/posts/a.md'],
+        }),
+      /1 件の記事がすべて対象外/,
+    );
+  });
+
   test('1件でも対象があれば通す', () => {
     assert.doesNotThrow(() =>
       assertRequestResolved(['a.md', 'b.json'], {
