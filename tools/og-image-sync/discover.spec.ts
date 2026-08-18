@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert';
 import { test, describe } from 'node:test';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync, chmodSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { basename, dirname, join } from 'node:path';
 import {
@@ -385,21 +385,126 @@ describe('resolveRequestedFiles', () => {
     rmSync(root, { recursive: true, force: true });
   });
 
-  // 手書きツリーは記事以外が混ざる前提なので、対象外にするだけでよい
-  test('手書きツリーの md という名前のディレクトリは対象外にする', () => {
+  // 記事でない入力でも、読めなかったことは知らせる。混入 (正常) と区別できない
+  test('記事でない読めないパスは知らせる', () => {
+    const root = createRepoRoot();
+    const tags = join(root, 'content/notion/posts/tags.json');
+    symlinkSync(join(root, 'content/notion/posts/missing.json'), tags);
+    const warnings: string[] = [];
+    const original = console.warn;
+    console.warn = (message: string) => warnings.push(message);
+
+    let resolved;
+    try {
+      resolved = resolveRequestedFiles([tags], root);
+    } finally {
+      console.warn = original;
+    }
+
+    assert.deepEqual(resolved.dropped, [tags]);
+    assert.ok(
+      warnings.some((warning) => warning.includes('notion の出力の記事でないパスを読めない')),
+      `警告が出ていない: ${warnings.join(' / ')}`,
+    );
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 対象外の内訳では tags.json の混入 (正常) と権限の異常が同じ行に並ぶ
+  test('範囲外の読めないパスは知らせる', () => {
+    const root = createRepoRoot();
+    mkdirSync(join(root, 'content/other'), { recursive: true });
+    const outside = join(root, 'content/other/a.md');
+    symlinkSync(join(root, 'content/other/missing.md'), outside);
+    const warnings: string[] = [];
+    const original = console.warn;
+    console.warn = (message: string) => warnings.push(message);
+
+    try {
+      const resolved = resolveRequestedFiles([outside], root);
+      assert.deepEqual(resolved.dropped, [outside]);
+    } finally {
+      console.warn = original;
+    }
+
+    assert.ok(
+      warnings.some((warning) => warning.includes('対象範囲の外の記事を読めない')),
+      `警告が出ていない: ${warnings.join(' / ')}`,
+    );
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 届かない置き場所が2階層以上上にあることもある
+  test('置き場所の祖先が実体を失った symlink のとき消えたものと扱わない', () => {
+    const root = createRepoRoot();
+    rmSync(join(root, 'content/notion'), { recursive: true, force: true });
+    symlinkSync(join(root, 'content/nowhere'), join(root, 'content/notion'));
+
+    assert.throws(() => resolveRequestedFiles(['content/notion/posts/a.md'], root), /読めない/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // ディレクトリごと記事を消すのは正常な差分。sync はそれをそのまま渡してくる
+  test('ディレクトリごと消えた記事は対象外にする', () => {
+    const root = createRepoRoot();
+    const article = join(root, 'content/notion/posts/live.md');
+    writeFileSync(article, frontmatter, 'utf8');
+
+    const resolved = resolveRequestedFiles(['content/posts/gone-dir/a.md', article], root);
+
+    assert.deepEqual(resolved.files, [article]);
+    assert.deepEqual(resolved.dropped, ['content/posts/gone-dir/a.md']);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 置き場所そのものに届かない。記事が消えたのではない
+  test('置き場所が実体を失った symlink のとき消えたものと扱わない', () => {
+    const root = createRepoRoot();
+    rmSync(join(root, 'content/notion/posts'), { recursive: true, force: true });
+    symlinkSync(join(root, 'content/nowhere'), join(root, 'content/notion/posts'));
+
+    assert.throws(() => resolveRequestedFiles(['content/notion/posts/a.md'], root), /読めない/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 親がディレクトリでないのは削除ではない。個別指定だけが「記事が消えている」と
+  // 報告すると、--all の診断と原因の帰属がずれる
+  test('親がディレクトリでない記事を消えたものと扱わない', () => {
+    const root = createRepoRoot();
+    // notion/posts があるべき場所が通常ファイル
+    rmSync(join(root, 'content/notion/posts'), { recursive: true, force: true });
+    writeFileSync(join(root, 'content/notion/posts'), '', 'utf8');
+
+    assert.throws(() => resolveRequestedFiles(['content/notion/posts/a.md'], root), /読めない/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 対象外にするだけだが、なぜ落としたかは知らせる。--all は中の記事を拾うので警告しない
+  test('手書きツリーの md という名前のディレクトリは対象外にすることを知らせる', () => {
     const root = createRepoRoot();
     mkdirSync(join(root, 'content/posts'), { recursive: true });
     const fake = join(root, 'content/posts/fake.md');
     mkdirSync(fake, { recursive: true });
 
-    const resolved = resolveRequestedFiles([fake], root);
+    const warnings: string[] = [];
+    const original = console.warn;
+    console.warn = (message: string) => warnings.push(message);
+    let resolved;
+    try {
+      resolved = resolveRequestedFiles([fake], root);
+    } finally {
+      console.warn = original;
+    }
 
     assert.deepEqual(resolved.files, []);
     assert.deepEqual(resolved.dropped, [fake]);
+    assert.ok(
+      warnings.some((warning) => warning.includes('手書きツリーに記事の名前のディレクトリがある')),
+      `警告が出ていない: ${warnings.join(' / ')}`,
+    );
     rmSync(root, { recursive: true, force: true });
   });
 
-  // 手書きツリーは不備が混ざる前提。1件の symlink の輪で全体を止めない
+  // 列挙 (listArticleFiles) が手書きツリーを止めない以上、ここで止めると経路差になる
   test('手書きツリーの symlink の輪は対象外にする', () => {
     const root = createRepoRoot();
     mkdirSync(join(root, 'content/posts'), { recursive: true });
@@ -587,6 +692,242 @@ describe('assertUniqueTargets', () => {
 });
 
 describe('listArticleFiles', () => {
+  // sync の出力の異常は --all でも止める。個別指定は throw するのに --all が黙って飛ばすと、
+  // 作り直しのときだけ記事が欠ける
+  test('notion 配下の md という名前のディレクトリで失敗する', async () => {
+    const root = createContentDir();
+    writeFileSync(join(root, 'notion/posts/a.md'), frontmatter, 'utf8');
+    const dir = join(root, 'linked');
+    mkdirSync(dir, { recursive: true });
+    symlinkSync(dir, join(root, 'notion/posts/fake.md'));
+
+    await assert.rejects(() => listArticleFiles(root), /ディレクトリがある/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 記事の名前でないディレクトリは個別指定が黙って落とす。ここで失敗させると経路差になる
+  test('notion 配下の記事でない名前のディレクトリは対象外にする', async () => {
+    const root = createContentDir();
+    writeFileSync(join(root, 'notion/posts/a.md'), frontmatter, 'utf8');
+    mkdirSync(join(root, 'notion/posts/images'), { recursive: true });
+    writeFileSync(join(root, 'notion/posts/images/b.md'), frontmatter, 'utf8');
+
+    const files = await listArticleFiles(root);
+
+    assert.deepEqual(files, [join(root, 'notion/posts/a.md')]);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 手書きツリーだけが残っていると記事が0件にならず、main の0件ガードも通り抜ける
+  for (const [name, prepare] of [
+    ['ない', (root: string) => rmSync(join(root, 'notion/posts'), { recursive: true, force: true })],
+    ['空である', () => {}],
+  ] as const) {
+    test(`notion の出力が${name}と失敗する`, async () => {
+      const root = createContentDir();
+      writeFileSync(join(root, 'posts/authored.md'), frontmatter, 'utf8');
+      prepare(root);
+
+      await assert.rejects(() => listArticleFiles(root), /記事が1件もない/);
+      rmSync(root, { recursive: true, force: true });
+    });
+  }
+
+  // その先がディレクトリだったなら中の記事ごと消える。ただし種別は分からないので、
+  // 記事と無関係な壊れた symlink 1件で生成全体を落とさない
+  test('実体を失った symlink は対象外にすることを知らせる', async () => {
+    const root = createContentDir();
+    const synced = join(root, 'notion/posts/synced.md');
+    writeFileSync(synced, frontmatter, 'utf8');
+    symlinkSync(join(root, 'nowhere'), join(root, 'posts/sub'));
+    const warnings: string[] = [];
+    const original = console.warn;
+    console.warn = (message: string) => warnings.push(message);
+
+    let files;
+    try {
+      files = await listArticleFiles(root);
+    } finally {
+      console.warn = original;
+    }
+
+    assert.deepEqual(files, [synced]);
+    assert.ok(
+      warnings.some((warning) => warning.includes('sub')),
+      `警告が出ていない: ${warnings.join(' / ')}`,
+    );
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 実体を失った symlink でも readdir は ENOENT を返す。不在と同じ扱いにすると、
+  // ツリーの記事が丸ごと落ちたまま警告なしで成功する
+  test('手書きツリーの根が実体を失った symlink なら失敗する', async () => {
+    const root = createContentDir();
+    writeFileSync(join(root, 'notion/posts/synced.md'), frontmatter, 'utf8');
+    rmSync(join(root, 'posts'), { recursive: true, force: true });
+    symlinkSync(join(root, 'nowhere'), join(root, 'posts'));
+
+    await assert.rejects(() => listArticleFiles(root), /記事の置き場所を読めない/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 「記事が1件もない」はチェックアウトの誤りを疑わせる文面であり、原因の帰属が変わる
+  test('sync の出力の根が実体を失った symlink なら置き場所の問題として報告する', async () => {
+    const root = createContentDir();
+    writeFileSync(join(root, 'posts/authored.md'), frontmatter, 'utf8');
+    rmSync(join(root, 'notion/posts'), { recursive: true, force: true });
+    symlinkSync(join(root, 'nowhere'), join(root, 'notion/posts'));
+
+    await assert.rejects(() => listArticleFiles(root), /記事の置き場所を読めない/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 1件の不備ではなく、そのツリーの記事が丸ごと落ちる。緑のまま何も生成しないのを防ぐ
+  test('手書きツリーの根が読めないと失敗する', async () => {
+    const root = createContentDir();
+    writeFileSync(join(root, 'notion/posts/synced.md'), frontmatter, 'utf8');
+    rmSync(join(root, 'posts'), { recursive: true, force: true });
+    writeFileSync(join(root, 'posts'), '', 'utf8');
+
+    await assert.rejects(() => listArticleFiles(root), /記事の置き場所を読めない/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 内を指す symlink があっても、実体の側で同じ記事を拾うので取りこぼさない
+  test('ツリーの内を指す symlink の中の記事は実体の側で拾う', async () => {
+    const root = createContentDir();
+    const synced = join(root, 'notion/posts/synced.md');
+    writeFileSync(synced, frontmatter, 'utf8');
+    mkdirSync(join(root, 'posts/2024'), { recursive: true });
+    const article = join(root, 'posts/2024/x.md');
+    writeFileSync(article, frontmatter, 'utf8');
+    symlinkSync(join(root, 'posts/2024'), join(root, 'posts/link'));
+
+    const files = await listArticleFiles(root);
+
+    assert.deepEqual(files.sort(), [synced, article].sort());
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 読めないディレクトリで列挙を中断すると、その後に見つかるはずだった異常が消える
+  test('読めないディレクトリがあっても他の異常を報告する', async () => {
+    const root = createContentDir();
+    mkdirSync(join(root, 'notion/posts/fake.md'), { recursive: true });
+    // 手書きツリーがあるべき場所が通常ファイル。readdir が ENOTDIR で失敗する。
+    // 権限に依らないので root で実行しても成立する
+    rmSync(join(root, 'posts'), { recursive: true, force: true });
+    writeFileSync(join(root, 'posts'), '', 'utf8');
+    const original = console.warn;
+    console.warn = () => {};
+
+    try {
+      // 列挙が片方で失敗しても、もう片方で見つけた異常は報告される
+      await assert.rejects(
+        () => listArticleFiles(root),
+        (error: Error) => /ディレクトリがある/.test(error.message) && /記事の置き場所を読めない/.test(error.message),
+      );
+    } finally {
+      console.warn = original;
+    }
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 再帰の途中で中断すると、見つかる順によって報告される異常が変わる。
+  // root は権限を無視して readdir に成功するため、この検査は成立しない
+  test(
+    '再帰の途中で読めないディレクトリがあっても最後まで歩く',
+    { skip: typeof process.getuid !== 'function' || process.getuid() === 0 },
+    async () => {
+      const root = createContentDir();
+      writeFileSync(join(root, 'notion/posts/synced.md'), frontmatter, 'utf8');
+      // 列挙の順に依らないよう、読めないディレクトリを記事の前後どちらにも置く
+      for (const name of ['a-locked', 'z-locked']) {
+        mkdirSync(join(root, `posts/${name}`), { recursive: true });
+        chmodSync(join(root, `posts/${name}`), 0o000);
+      }
+      try {
+        // 読めないディレクトリは1件の不備ではない。その下の記事が丸ごと落ちる
+        await assert.rejects(
+          () => listArticleFiles(root),
+          (error: Error) => error.message.includes('a-locked') && error.message.includes('z-locked'),
+        );
+      } finally {
+        for (const name of ['a-locked', 'z-locked']) {
+          chmodSync(join(root, `posts/${name}`), 0o755);
+        }
+      }
+      rmSync(root, { recursive: true, force: true });
+    },
+  );
+
+  // symlink でなく実体のディレクトリでも同じ。dirent の種別だけで振り分けると取りこぼす
+  test('notion 配下の md という名前の実体のディレクトリで失敗する', async () => {
+    const root = createContentDir();
+    writeFileSync(join(root, 'notion/posts/a.md'), frontmatter, 'utf8');
+    mkdirSync(join(root, 'notion/posts/fake.md'), { recursive: true });
+
+    await assert.rejects(() => listArticleFiles(root), /ディレクトリがある/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // `*.md` という名前のディレクトリでも中は再帰する。個別指定なら中の記事は対象になるので、
+  // ここで止めると作り直しのときだけ記事が欠ける
+  test('手書きツリーの md という名前のディレクトリの中も拾う', async () => {
+    const root = createContentDir();
+    writeFileSync(join(root, 'notion/posts/synced.md'), frontmatter, 'utf8');
+    writeFileSync(join(root, 'posts/real.md'), frontmatter, 'utf8');
+    mkdirSync(join(root, 'posts/fake.md'), { recursive: true });
+    writeFileSync(join(root, 'posts/fake.md/nested.md'), frontmatter, 'utf8');
+
+    const files = await listArticleFiles(root);
+
+    assert.deepEqual(
+      files.sort(),
+      [join(root, 'notion/posts/synced.md'), join(root, 'posts/fake.md/nested.md'), join(root, 'posts/real.md')].sort(),
+    );
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 実体を失った symlink は読み込みで ENOENT になり、記事の不備でないため全体が止まる
+  test('notion 配下の実体を失った記事で失敗する', async () => {
+    const root = createContentDir();
+    writeFileSync(join(root, 'notion/posts/a.md'), frontmatter, 'utf8');
+    symlinkSync(join(root, 'missing-target.md'), join(root, 'notion/posts/broken.md'));
+
+    await assert.rejects(() => listArticleFiles(root), /読めない/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 手書きツリーの不備1件で生成全体を止めない。個別指定も同じ扱いにする
+  test('手書きツリーの実体を失った記事は対象外にする', async () => {
+    const root = createContentDir();
+    const synced = join(root, 'notion/posts/synced.md');
+    writeFileSync(synced, frontmatter, 'utf8');
+    writeFileSync(join(root, 'posts/real.md'), frontmatter, 'utf8');
+    symlinkSync(join(root, 'missing-target.md'), join(root, 'posts/broken.md'));
+
+    const files = await listArticleFiles(root);
+
+    assert.deepEqual(files.sort(), [synced, join(root, 'posts/real.md')].sort());
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // `*.md` という名前のディレクトリ symlink を記事扱いすると EISDIR で全体が止まる。
+  // 個別指定でも対象外にしており、経路で扱いを変えない
+  test('md という名前のディレクトリ symlink は記事にしない', async () => {
+    const root = createContentDir();
+    writeFileSync(join(root, 'notion/posts/synced.md'), frontmatter, 'utf8');
+    writeFileSync(join(root, 'posts/real.md'), frontmatter, 'utf8');
+    const dir = join(root, 'linked');
+    mkdirSync(dir, { recursive: true });
+    symlinkSync(dir, join(root, 'posts/fake.md'));
+
+    const files = await listArticleFiles(root);
+
+    assert.deepEqual(files, [join(root, 'notion/posts/synced.md'), join(root, 'posts/real.md')]);
+    rmSync(root, { recursive: true, force: true });
+  });
+
   test('notion/posts は非再帰、posts は再帰で列挙する', async () => {
     const root = createContentDir();
     writeFileSync(join(root, 'notion/posts/a.md'), frontmatter, 'utf8');
