@@ -9,7 +9,7 @@ export const CONTENT_DIR = 'content';
 const NOTION_POSTS_DIR = 'notion/posts';
 const AUTHORED_POSTS_DIR = 'posts';
 
-/** OG画像の出力先ディレクトリ名。記事slugがこれと衝突すると画像の置き場が重なる */
+/** OG画像のR2キー接頭辞。記事slugがこれと衝突すると名前空間が重なる */
 export const OG_OUTPUT_DIR_NAME = 'og';
 
 /**
@@ -80,10 +80,12 @@ export function parseTarget(
   if (slug.includes('/') || slug.includes('\\') || slug.includes('..')) {
     throw new ArticleValidationError(`${filePath} の slug "${slug}" はファイル名に使えない`);
   }
-  // slug "og" の記事画像は public/images/og/ に置かれ、OG画像の出力先と重なる。
-  // 出力先は gitignore されているため、その記事の画像だけが黙ってコミットされなくなる
+  // R2 では記事画像 `<slug>/<file>` と OG画像 `og/<file>` が同じ名前空間に入る。
+  // ここで止めるのは sync の出力だけで、手書きの記事は対象外にするだけである
+  // (記事画像の置き場 public/images/og/ は ignore されたままなので、
+  //  そちらの記事の画像は結局コミットされない)
   if (slug === OG_OUTPUT_DIR_NAME) {
-    throw new ArticleValidationError(`${filePath} の slug "${slug}" はOG画像の出力先と衝突する`);
+    throw new ArticleValidationError(`${filePath} の slug "${slug}" はOG画像のR2キー接頭辞と衝突する`);
   }
   const title = frontmatter.title;
   if (typeof title !== 'string' || title.length === 0) {

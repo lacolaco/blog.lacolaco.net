@@ -167,6 +167,26 @@ describe('toTargetOrSkip', () => {
     rmSync(root, { recursive: true, force: true });
   });
 
+  // slug "og" は R2 でOG画像のキー接頭辞と、リポジトリで記事画像の置き場と衝突する
+  test('sync出力のslug "og" は失敗させる', () => {
+    const root = createRepoRoot();
+    const filePath = join(root, 'content/notion/posts/og-post.md');
+    writeFileSync(filePath, frontmatter.replace("slug: 'my-post'", "slug: 'og'"), 'utf8');
+
+    assert.throws(() => toTargetOrSkip(filePath, root), /R2キー接頭辞と衝突/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 手書きツリーの不備は1件で全体を止めない。ただし画像も配信もされない
+  test('手書き記事のslug "og" はスキップする', () => {
+    const root = createContentDir();
+    const filePath = join(root, 'posts/og-post.md');
+    writeFileSync(filePath, frontmatter.replace("slug: 'my-post'", "slug: 'og'"), 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath), null);
+    rmSync(root, { recursive: true, force: true });
+  });
+
   // 手書きツリーには README など記事でないファイルが紛れうる
   test('手書き記事のfrontmatter不在はスキップする', () => {
     const root = createContentDir();
