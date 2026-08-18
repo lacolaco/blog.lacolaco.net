@@ -459,14 +459,21 @@ export function resolveRequestedFiles(paths: string[], rootDir: string = process
       // 権限の異常が同じ行に並ぶ。なぜ落としたかを言えるのはこちらだけである。
       // 文面は列挙 (listArticleFiles) と共通にして、経路で言葉が変わらないようにする
       // どのツリーの話かで文面が変わる。inScope で分けると、sync の出力の異常を
-      // 手書きツリーの不備として報告してしまう。
-      // sync の出力でここに来るのは記事でないパスだけである (記事の異常は手前で止まる)
-      const skipped = isSyncOutputReal(real, rootDir) ? syncSkipped : inScope ? authoredSkipped : outsideSkipped;
-      if (kind === 'unreadable') {
-        // 記事かどうかで文面を分ける。tags.json の混入は正常だが、読めないのは異常である
-        (isArticlePath ? skipped.unreadable : skipped.unreadableInputs).push(path);
-      } else if (isArticlePath && kind === 'directory') {
-        skipped.directories.push(path);
+      // 手書きツリーの不備として報告してしまう
+      if (isSyncOutputReal(real, rootDir)) {
+        // sync の出力でここに来るのは、記事でないパスと削除された記事だけである。
+        // 記事の異常は手前で止まる。削除は正常なので報告しない
+        if (kind === 'unreadable') {
+          syncSkipped.unreadableInputs.push(path);
+        }
+      } else {
+        const skipped = inScope ? authoredSkipped : outsideSkipped;
+        if (kind === 'unreadable') {
+          // 記事かどうかで文面を分ける。tags.json の混入は正常だが、読めないのは異常である
+          (isArticlePath ? skipped.unreadable : skipped.unreadableInputs).push(path);
+        } else if (isArticlePath && kind === 'directory') {
+          skipped.directories.push(path);
+        }
       }
       dropped.push(path);
       continue;
