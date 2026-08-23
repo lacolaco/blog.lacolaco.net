@@ -66,11 +66,6 @@ async function main(): Promise<void> {
     assertRequestResolved(requested, resolved);
   }
 
-  // --all で0件は、実行位置かチェックアウトの誤りしかありえない
-  if (renderAll && files.length === 0) {
-    throw new Error(`${CONTENT_DIR} 配下に記事が見つからない。実行位置とチェックアウトを確認する`);
-  }
-
   const targets = files.map((filePath) => toTargetOrSkip(filePath, rootDir)).filter((target) => target !== null);
   assertUniqueTargets(targets);
 
