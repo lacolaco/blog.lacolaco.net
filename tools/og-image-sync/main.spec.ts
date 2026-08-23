@@ -103,6 +103,8 @@ describe('main の報告', () => {
       staged: true,
       // macOS の /var は /private/var への symlink なので、実体で比べる
       outputDir: join(realpathSync(root), '.tmp/og-staging/og'),
+      // 送る場所も報告が持つ。呼び出し側に親から求めさせない
+      stagingDir: join(realpathSync(root), '.tmp/og-staging'),
     });
   });
 });
