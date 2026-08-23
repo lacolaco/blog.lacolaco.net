@@ -8,6 +8,7 @@ import {
   parseTarget,
   listArticleFiles,
   isPublished,
+  isTarget,
   toTargetOrSkip,
   resolveRequestedFiles,
   assertRequestResolved,
@@ -150,12 +151,107 @@ describe('isPublished', () => {
 });
 
 describe('toTargetOrSkip', () => {
+  // 外した理由を呼び出し側が数え分けられないと、未公開 (正常) と記述の不備 (異常) が
+  // 同じ「描かれなかった1件」に見え、静かな欠落を検知できない
+  test('未公開は理由を返す', () => {
+    const root = createRepoRoot();
+    const filePath = join(root, 'content/notion/posts/draft.md');
+    writeFileSync(filePath, '---\ntitle: a\nslug: a\ncreated_time: 2026-01-01\npublished: false\n---\n', 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath, root), 'unpublished');
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // README のような記事でないファイルは手書きツリーに普通にある。記述の不備と
+  // 同じ数に混ぜると、呼び出し側が毎回異常として扱うことになる
+  test('frontmatter を持たないファイルは記事でないと返す', () => {
+    const root = createRepoRoot();
+    mkdirSync(join(root, 'content/posts'), { recursive: true });
+    const filePath = join(root, 'content/posts/README.md');
+    writeFileSync(filePath, '# 覚書\n', 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath, root), 'not-an-article');
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // frontmatter が空だと parseYaml は null を返す。投げないので try では捕まらず、
+  // 直後の判定が TypeError になって手書きの1ファイルで同期全体が落ちる
+  test('空の frontmatter は記事でないと返す', () => {
+    const root = createRepoRoot();
+    mkdirSync(join(root, 'content/posts'), { recursive: true });
+    const filePath = join(root, 'content/posts/empty.md');
+    writeFileSync(filePath, '---\n\n---\n本文\n', 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath, root), 'not-an-article');
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // YAML のタグで Set などにも解決する。オブジェクトではあるが記事の形ではなく、
+  // 未公開 (正常) として数えると記述の不備が正常な混入に紛れる
+  test('素のオブジェクトでない frontmatter は記事でないと返す', () => {
+    const root = createRepoRoot();
+    mkdirSync(join(root, 'content/posts'), { recursive: true });
+    const filePath = join(root, 'content/posts/tagged.md');
+    writeFileSync(filePath, '---\n!!set\n? a\n---\n', 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath, root), 'not-an-article');
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 配列に解決する frontmatter も記事ではない。未公開として数えると、
+  // 記事でないファイルの混入と区別できなくなる
+  test('配列の frontmatter は記事でないと返す', () => {
+    const root = createRepoRoot();
+    mkdirSync(join(root, 'content/posts'), { recursive: true });
+    const filePath = join(root, 'content/posts/list.md');
+    writeFileSync(filePath, '---\n- a\n- b\n---\n', 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath, root), 'not-an-article');
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // スカラーに解決する frontmatter も記事ではない。未公開 (正常) として数えると、
+  // 記事でないファイルの混入と区別できなくなる
+  test('スカラーの frontmatter は記事でないと返す', () => {
+    const root = createRepoRoot();
+    mkdirSync(join(root, 'content/posts'), { recursive: true });
+    const filePath = join(root, 'content/posts/scalar.md');
+    writeFileSync(filePath, '---\nただの文字列\n---\n', 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath, root), 'not-an-article');
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 壊れた YAML は記述の不備そのものである。握りつぶさない扱いに入れると、
+  // 手書きの記事1件で同期全体が止まる
+  test('手書きツリーの壊れた YAML は理由を返す', () => {
+    const root = createRepoRoot();
+    mkdirSync(join(root, 'content/posts'), { recursive: true });
+    const filePath = join(root, 'content/posts/broken-yaml.md');
+    writeFileSync(filePath, "---\ntitle: 'a\ntags: [1,\n---\n", 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath, root), 'invalid');
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  test('手書きツリーの記述の不備は理由を返す', () => {
+    const root = createRepoRoot();
+    mkdirSync(join(root, 'content/posts'), { recursive: true });
+    const filePath = join(root, 'content/posts/broken.md');
+    writeFileSync(filePath, '---\ntitle: a\npublished: true\n---\n', 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath, root), 'invalid');
+    rmSync(root, { recursive: true, force: true });
+  });
+
   test('公開記事は生成対象になる', () => {
     const root = createContentDir();
     const filePath = join(root, 'notion/posts/my-post.md');
     writeFileSync(filePath, frontmatter, 'utf8');
 
-    assert.equal(toTargetOrSkip(filePath)?.slug, 'my-post');
+    const result = toTargetOrSkip(filePath);
+    assert.ok(isTarget(result));
+    assert.equal(result.slug, 'my-post');
     rmSync(root, { recursive: true, force: true });
   });
 
@@ -164,7 +260,7 @@ describe('toTargetOrSkip', () => {
     const filePath = join(root, 'notion/posts/draft.md');
     writeFileSync(filePath, frontmatter.replace('published: true', 'published: false'), 'utf8');
 
-    assert.equal(toTargetOrSkip(filePath), null);
+    assert.ok(!isTarget(toTargetOrSkip(filePath)));
     rmSync(root, { recursive: true, force: true });
   });
 
@@ -184,7 +280,7 @@ describe('toTargetOrSkip', () => {
     const filePath = join(root, 'posts/og-post.md');
     writeFileSync(filePath, frontmatter.replace("slug: 'my-post'", "slug: 'og'"), 'utf8');
 
-    assert.equal(toTargetOrSkip(filePath), null);
+    assert.ok(!isTarget(toTargetOrSkip(filePath)));
     rmSync(root, { recursive: true, force: true });
   });
 
@@ -197,7 +293,7 @@ describe('toTargetOrSkip', () => {
     const filePath = join(nested, 'content/posts/README.md');
     writeFileSync(filePath, '# 覚書\n', 'utf8');
 
-    assert.equal(toTargetOrSkip(filePath, nested), null);
+    assert.ok(!isTarget(toTargetOrSkip(filePath, nested)));
     rmSync(root, { recursive: true, force: true });
   });
 
@@ -260,7 +356,7 @@ describe('toTargetOrSkip', () => {
     const filePath = join(root, 'posts/README.md');
     writeFileSync(filePath, '# 覚書\n', 'utf8');
 
-    assert.equal(toTargetOrSkip(filePath), null);
+    assert.ok(!isTarget(toTargetOrSkip(filePath)));
     rmSync(root, { recursive: true, force: true });
   });
 
@@ -270,7 +366,7 @@ describe('toTargetOrSkip', () => {
     const filePath = join(root, 'posts/broken.md');
     writeFileSync(filePath, frontmatter.replace("title: 'テスト記事'", "description: 'x'"), 'utf8');
 
-    assert.equal(toTargetOrSkip(filePath), null);
+    assert.ok(!isTarget(toTargetOrSkip(filePath)));
     rmSync(root, { recursive: true, force: true });
   });
 
@@ -279,7 +375,7 @@ describe('toTargetOrSkip', () => {
     const filePath = join(root, 'posts/bad-slug.md');
     writeFileSync(filePath, frontmatter.replace("slug: 'my-post'", "slug: '../escaped'"), 'utf8');
 
-    assert.equal(toTargetOrSkip(filePath), null);
+    assert.ok(!isTarget(toTargetOrSkip(filePath)));
     rmSync(root, { recursive: true, force: true });
   });
 
@@ -610,57 +706,122 @@ describe('resolveRequestedFiles', () => {
     assert.deepEqual(resolveRequestedFiles(['content/notion/posts/a.md', article], root).files, [article]);
     rmSync(root, { recursive: true, force: true });
   });
+
+  // 呼び出し側は files の要素で所属を引く。キーが渡された形のままだと引けず、
+  // 実体の解決をやり直すことになる
+  test('所属は返すパスで引ける', () => {
+    const root = createRepoRoot();
+    const filePath = join(root, 'content/notion/posts/a.md');
+    writeFileSync(filePath, frontmatter, 'utf8');
+
+    const resolved = resolveRequestedFiles(['content/notion/posts/a.md'], root);
+
+    assert.deepEqual(resolved.files, [filePath]);
+    assert.equal(resolved.inSyncOutputOf.get(resolved.files[0]), true);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 対象外にしたパスも呼び出し側がツリー別に数える
+  test('対象外にしたパスでも所属を引ける', () => {
+    const root = createRepoRoot();
+
+    const resolved = resolveRequestedFiles(['content/notion/tags.json'], root);
+
+    assert.deepEqual(resolved.dropped, ['content/notion/tags.json']);
+    assert.equal(resolved.inSyncOutputOf.get('content/notion/tags.json'), false);
+    rmSync(root, { recursive: true, force: true });
+  });
 });
 
 describe('assertRequestResolved', () => {
+  // 誤った cwd で起動すると、範囲は字句で解決されるためパスは範囲内に見えたまま
+  // 全件が不在になる。ここを通すと記事だけ同期され OG画像が欠けたまま公開される。
+  // 呼び出し側は削除された記事を渡さない (収集が --diff-filter=d で除く)
+  test('渡した記事が全件対象外なら失敗させる', () => {
+    assert.throws(
+      () =>
+        assertRequestResolved(['content/notion/posts/gone.md'], {
+          files: [],
+          dropped: ['content/notion/posts/gone.md'],
+          outOfScope: [],
+          inSyncOutputOf: new Map(),
+        }),
+      /すべて対象外/,
+    );
+  });
+
+  // 基準がずれると範囲の外を指す。記事は同期され OG画像だけが欠けたまま公開される
+  test('範囲外の記事があれば失敗させる', () => {
+    assert.throws(
+      () =>
+        assertRequestResolved(['posts/a.md'], {
+          files: [],
+          dropped: ['posts/a.md'],
+          outOfScope: ['posts/a.md'],
+          inSyncOutputOf: new Map(),
+        }),
+      /基準/,
+    );
+  });
+
+  // 一部が範囲外でも見逃さない。残りが描かれるので全件の判定では捕まらない
+  test('一部が範囲外でも失敗させる', () => {
+    assert.throws(
+      () =>
+        assertRequestResolved(['content/notion/posts/a.md', 'posts/b.md'], {
+          files: ['content/notion/posts/a.md'],
+          dropped: ['posts/b.md'],
+          outOfScope: ['posts/b.md'],
+          inSyncOutputOf: new Map(),
+        }),
+      /基準/,
+    );
+  });
+
   // 呼び出し側が渡したパスの基準 (blog-content.config.yaml の postsDir) と
   // このツールが見るディレクトリがずれると、全件が対象外になって黙って何も生成されなくなる
-  test('全件が対象外なら失敗する', () => {
+  // 範囲の外を指していれば基準のずれである。content/old のような別のツリーが該当する
+  test('別のツリーを指していれば失敗する', () => {
     assert.throws(
       () =>
         assertRequestResolved(['content/old/posts/a.md'], {
           files: [],
           dropped: ['content/old/posts/a.md'],
+          outOfScope: ['content/old/posts/a.md'],
+          inSyncOutputOf: new Map(),
         }),
-      /対象外/,
+      /基準/,
     );
   });
 
-  // 呼び出し側は作業ツリーの差分をそのまま渡す。tags.json の更新だけ、という同期は正常で、
-  // ここで止めると無関係な変更で同期が落ちる
+  // 一部が対象外になるのは正常に起こる。ここを締めると通常の同期が落ちる
+  test('1件でも対象があれば通す', () => {
+    assert.doesNotThrow(() =>
+      assertRequestResolved(['content/notion/posts/a.md', 'content/notion/tags.json'], {
+        files: ['/repo/content/notion/posts/a.md'],
+        dropped: ['content/notion/tags.json'],
+        outOfScope: [],
+        inSyncOutputOf: new Map(),
+      }),
+    );
+  });
+
+  // tags.json だけ、という同期は正常である
   test('記事以外しか渡されていなければ通す', () => {
     assert.doesNotThrow(() =>
       assertRequestResolved(['content/notion/tags.json'], {
         files: [],
         dropped: ['content/notion/tags.json'],
+        outOfScope: [],
+        inSyncOutputOf: new Map(),
       }),
     );
   });
 
-  // 記事が混ざっていて1件も解決しないのは、基準のずれか記事の消失である
-  test('記事が混ざっていて全件対象外なら失敗する', () => {
-    assert.throws(
-      () =>
-        assertRequestResolved(['content/notion/tags.json', 'content/old/posts/a.md'], {
-          files: [],
-          dropped: ['content/notion/tags.json', 'content/old/posts/a.md'],
-        }),
-      /1 件の記事がすべて対象外/,
-    );
-  });
-
-  test('1件でも対象があれば通す', () => {
-    assert.doesNotThrow(() =>
-      assertRequestResolved(['a.md', 'b.json'], {
-        files: ['/repo/content/notion/posts/a.md'],
-        dropped: ['b.json'],
-      }),
-    );
-  });
-
-  // 削除だけの sync などで対象が空になるのは正常。ここは全件が来ない
   test('入力が空なら通す', () => {
-    assert.doesNotThrow(() => assertRequestResolved([], { files: [], dropped: [] }));
+    assert.doesNotThrow(() =>
+      assertRequestResolved([], { files: [], dropped: [], outOfScope: [], inSyncOutputOf: new Map() }),
+    );
   });
 });
 

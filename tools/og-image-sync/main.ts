@@ -1,4 +1,3 @@
-import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import {
   CONTENT_DIR,
@@ -6,13 +5,26 @@ import {
   assertUniqueTargets,
   listArticleFiles,
   resolveRequestedFiles,
+  isSyncOutput,
+  isTarget,
+  type ResolvedRequest,
+  type SkipReason,
   toTargetOrSkip,
 } from './discover.ts';
 import { SITE_DOMAIN_NAME } from '../../src/libs/og-image/constants.ts';
 import { prepareStaging } from './paths.ts';
 import { parseArgs } from './args.ts';
+import {
+  REPORT_FILE,
+  buildEmptyRenderReport,
+  buildRenderReport,
+  buildTreeReport,
+  clearRenderReport,
+  writeRenderReport,
+} from './report.ts';
 import { createBatchedFontLoader } from './fonts.ts';
 import { renderOgImage } from './render.ts';
+import { writeRenderedImages } from './write.ts';
 
 /**
  * OG画像を生成する。
@@ -29,11 +41,17 @@ import { renderOgImage } from './render.ts';
  */
 async function main(): Promise<void> {
   const rootDir = process.cwd();
-  const { renderAll, requested } = parseArgs(process.argv.slice(2));
+  // 何よりも先に消す。引数の解釈で落ちる回もあり、前回の数が残ると
+  // 呼び出し側が今回の枚数と突き合わせて取り違える
+  clearRenderReport(rootDir);
+  console.log(`[og-image-sync] render report: ${join(rootDir, REPORT_FILE)}`);
+  const { renderAll, requested: requestedPaths } = parseArgs(process.argv.slice(2));
 
   // 記事の削除だけ、tags.json の更新だけ、という sync は正常にありうる
-  if (!renderAll && requested.length === 0) {
+  if (!renderAll && requestedPaths.length === 0) {
     console.log('[og-image-sync] 生成対象の指定がない');
+    // 出力先は作り直していない。前の回の画像が残りうるので突き合わせには使えない
+    writeRenderReport(rootDir, buildEmptyRenderReport());
     return;
   }
 
@@ -51,10 +69,15 @@ async function main(): Promise<void> {
   // ディレクトリを「今回の送信元」として案内することになる
   console.log(`[og-image-sync] upload source: ${stagingDir}`);
 
-  const resolved = renderAll
-    ? { files: await listArticleFiles(join(rootDir, CONTENT_DIR)), dropped: [] }
-    : resolveRequestedFiles(requested, rootDir);
-  const { files, dropped } = resolved;
+  const resolved: ResolvedRequest = renderAll
+    ? {
+        files: await listArticleFiles(join(rootDir, CONTENT_DIR)),
+        dropped: [],
+        outOfScope: [],
+        inSyncOutputOf: new Map(),
+      }
+    : resolveRequestedFiles(requestedPaths, rootDir);
+  const { files, dropped, inSyncOutputOf } = resolved;
 
   // 対象外にした内訳は必ず出す。記事の削除や tags.json の混入は正常だが、
   // パスの基準を取り違えた場合も同じ形で現れるため、件数だけでは区別できない
@@ -63,15 +86,43 @@ async function main(): Promise<void> {
   }
 
   if (!renderAll) {
-    assertRequestResolved(requested, resolved);
+    assertRequestResolved(requestedPaths, resolved);
   }
 
-  const targets = files.map((filePath) => toTargetOrSkip(filePath, rootDir)).filter((target) => target !== null);
+  // 外した理由ごとに、ツリー別に数える。未公開 (正常) と記述の不備 (異常) を
+  // 同じ数にまとめると静かな欠落を見分けられず、ツリーをまとめると
+  // 手書きが混ざった回に sync の出力の異常まで見逃す
+  // 所属は1度だけ決める。判定は実体の解決を伴うので、引き直すと入力の数だけ余計に
+  // ファイルシステムを叩く。個別指定は resolveRequestedFiles が済ませているため
+  // 必ず引ける。引けないのは --all の列挙だけで、そちらはここで判定する
+  const belongsToSync = (path: string) => inSyncOutputOf.get(path) ?? isSyncOutput(path, rootDir);
+  const results = files.map((filePath) => ({
+    inSync: belongsToSync(filePath),
+    result: toTargetOrSkip(filePath, rootDir),
+  }));
+  const droppedByTree = dropped.map((path) => ({ inSync: belongsToSync(path), path }));
+  const targets = results.map(({ result }) => result).filter(isTarget);
+  const treeReport = (inSync: boolean) => {
+    const mine = results.filter((entry) => entry.inSync === inSync);
+    const countOf = (reason: SkipReason) => mine.filter(({ result }) => result === reason).length;
+    return buildTreeReport(
+      mine.length,
+      droppedByTree.filter((entry) => entry.inSync === inSync).map(({ path }) => path),
+      {
+        unpublished: countOf('unpublished'),
+        notAnArticle: countOf('not-an-article'),
+        invalid: countOf('invalid'),
+      },
+    );
+  };
+  const sync = treeReport(true);
+  const authored = treeReport(false);
   assertUniqueTargets(targets);
 
   console.log(`[og-image-sync] ${files.length} files, ${targets.length} to render`);
   if (targets.length === 0) {
     // 対象が全て未公開・下書きだった場合。ファイルは見えているので異常ではない
+    writeRenderReport(rootDir, buildRenderReport({ sync, authored, rendered: 0, outputDir }));
     return;
   }
 
@@ -81,11 +132,15 @@ async function main(): Promise<void> {
     SITE_DOMAIN_NAME,
   );
 
-  for (const [index, target] of targets.entries()) {
-    const png = await renderOgImage(target, rootDir, fontLoader);
-    await writeFile(join(outputDir, target.fileName), png);
-    console.log(`[og-image-sync] (${index + 1}/${targets.length}) ${target.fileName}`);
-  }
+  const rendered = await writeRenderedImages(
+    targets,
+    outputDir,
+    (target) => renderOgImage(target, rootDir, fontLoader),
+    (target, index) => console.log(`[og-image-sync] (${index + 1}/${targets.length}) ${target.fileName}`),
+  );
+
+  // 数と書き出しは1か所に閉じてある。ここで数え直すと、その対応が崩れても気付けない
+  writeRenderReport(rootDir, buildRenderReport({ sync, authored, rendered, outputDir }));
 }
 
 await main();
