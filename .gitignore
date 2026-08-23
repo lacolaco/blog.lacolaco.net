@@ -37,5 +37,8 @@ pnpm-debug.log*
 *.tfstate
 *.tfstate.backup
 
-# OG画像は sync の実行ごとに作られ、r2-sync がディレクトリ走査でアップロードする
+# 旧構成の出力先。いまは .tmp/og-staging に置く。この作業ツリーには残っていないが、
+# 旧実装を走らせた他のチェックアウトには 368枚が残るため、外すと git add -A で
+# 75MB がコミットされうる。
+# tools/og-image-sync/discover.ts の slug "og" ガードの説明がこの行を前提にしている
 public/images/og/

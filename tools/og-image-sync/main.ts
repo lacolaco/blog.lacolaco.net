@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from 'node:fs/promises';
+import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import {
   CONTENT_DIR,
@@ -8,11 +8,10 @@ import {
   toTargetOrSkip,
 } from './discover.ts';
 import { SITE_DOMAIN_NAME } from '../../src/libs/og-image/constants.ts';
+import { prepareStaging } from './paths.ts';
 import { parseArgs } from './args.ts';
 import { createBatchedFontLoader } from './fonts.ts';
 import { renderOgImage } from './render.ts';
-
-const OUTPUT_DIR = 'public/images/og';
 
 /**
  * OG画像を生成する。
@@ -24,12 +23,11 @@ const OUTPUT_DIR = 'public/images/og';
  * 引数なしを全件と解釈すると、呼び出し側が空の差分をそのまま渡したときに
  * 気付かないまま全件再生成が走る。それはこの設計が避けようとしている無駄そのものである。
  *
- * R2へのアップロードは行わない。blog-contents の sync ワークフローが public/images を
- * まとめてアップロードするため、書き込み経路をそちらに一本化している。
+ * R2へのアップロードは行わない。書き込み経路は blog-contents が持っており、
+ * こちらは OUTPUT_DIR に置くところまでを担う。
  */
 async function main(): Promise<void> {
   const rootDir = process.cwd();
-  const outputDir = join(rootDir, OUTPUT_DIR);
   const { renderAll, requested } = parseArgs(process.argv.slice(2));
 
   // 記事の削除だけ、tags.json の更新だけ、という sync は正常にありうる
@@ -37,6 +35,20 @@ async function main(): Promise<void> {
     console.log('[og-image-sync] 生成対象の指定がない');
     return;
   }
+
+  // 呼ぶのは対象の指定がある回だけ。上の早期 return より前に動かすと、手元で描いた直後に
+  // 引数なしで叩くだけで消え、続くアップロードが何も送らずに成功する。
+  // パスの基準を取り違えた実行では消したあとに判明するが、CI は毎回まっさらなので
+  // 影響は手元の反復だけ
+  const { stagingDir, outputDir } = await prepareStaging(rootDir);
+
+  // アップロード側 (r2-sync) に渡す sourceDir を出す。内側の OUTPUT_DIR を渡すとキーが
+  // og/ を失い、記事画像と衝突しないまま配信URLだけが 404 する。
+  // 絶対パスで出すのは、2つのチェックアウトが混在する CI ログで照合するため。
+  //
+  // 掃除より後に出す。対象の指定がない回で出すと、前回の出力が残ったままの
+  // ディレクトリを「今回の送信元」として案内することになる
+  console.log(`[og-image-sync] upload source: ${stagingDir}`);
 
   const { files, dropped } = renderAll
     ? { files: await listArticleFiles(join(rootDir, CONTENT_DIR)), dropped: [] }
@@ -68,7 +80,6 @@ async function main(): Promise<void> {
     SITE_DOMAIN_NAME,
   );
 
-  await mkdir(outputDir, { recursive: true });
   for (const [index, target] of targets.entries()) {
     const png = await renderOgImage(target, rootDir, fontLoader);
     await writeFile(join(outputDir, target.fileName), png);
