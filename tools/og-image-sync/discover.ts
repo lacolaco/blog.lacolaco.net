@@ -178,6 +178,34 @@ export function resolveRequestedFiles(paths: string[], rootDir: string = process
 }
 
 /**
+ * 渡されたパスが1件も対象にならなかったら失敗させる。
+ *
+ * 呼び出し側 (blog-contents の sync) は blog-content.config.yaml の postsDir を基準に
+ * パスを集めるが、こちらは CONTENT_DIR と NOTION_POSTS_DIR を持っている。設定を変えると
+ * 両者がずれ、全件が dropped に落ちて警告だけを出して正常終了する。
+ * 記事は同期されOG画像だけが欠けたまま公開されるため、警告では足りない。
+ *
+ * 同じ条件は「渡された記事がすべて消えている」でも成立する。依頼から実行までの間に
+ * 記事が削除された場合などで、原因が違うので文言に併記する。
+ *
+ * 記事以外しか渡されなかった回は見ない。tags.json の更新だけ、という同期は正常であり、
+ * 「基準がずれている」と区別できないまま止めると、無関係な変更で同期が落ちる。
+ *
+ * 一部だけ落ちるのは正常 (削除された記事など) なので、全件のときだけ止める。
+ */
+export function assertRequestResolved(requested: string[], resolved: ResolvedRequest): void {
+  // 記事になりうる入力が1件も無い回は、描くものが無くて当然である。呼び出し側は
+  // 作業ツリーの差分をそのまま渡すため、tags.json の更新だけ、という回がある
+  const articleLike = requested.filter((path) => path.endsWith('.md'));
+  if (articleLike.length > 0 && resolved.files.length === 0) {
+    throw new Error(
+      `指定された ${articleLike.length} 件の記事がすべて対象外になった。` +
+        `パスの基準がずれているか、渡された記事がすべて消えている: ${resolved.dropped.join(' ')}`,
+    );
+  }
+}
+
+/**
  * 渡された対象の中で同じ slug と locale が2つあれば落とす。
  * 黙って両方を描くと、片方が参照されないままR2に残る。
  *

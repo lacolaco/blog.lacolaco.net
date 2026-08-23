@@ -10,6 +10,7 @@ import {
   isPublished,
   toTargetOrSkip,
   resolveRequestedFiles,
+  assertRequestResolved,
   assertUniqueTargets,
 } from './discover.ts';
 
@@ -323,6 +324,58 @@ describe('resolveRequestedFiles', () => {
 
     assert.deepEqual(resolveRequestedFiles(['content/notion/posts/a.md', article], root).files, [article]);
     rmSync(root, { recursive: true, force: true });
+  });
+});
+
+describe('assertRequestResolved', () => {
+  // 呼び出し側が渡したパスの基準 (blog-content.config.yaml の postsDir) と
+  // このツールが見るディレクトリがずれると、全件が対象外になって黙って何も生成されなくなる
+  test('全件が対象外なら失敗する', () => {
+    assert.throws(
+      () =>
+        assertRequestResolved(['content/old/posts/a.md'], {
+          files: [],
+          dropped: ['content/old/posts/a.md'],
+        }),
+      /対象外/,
+    );
+  });
+
+  // 呼び出し側は作業ツリーの差分をそのまま渡す。tags.json の更新だけ、という同期は正常で、
+  // ここで止めると無関係な変更で同期が落ちる
+  test('記事以外しか渡されていなければ通す', () => {
+    assert.doesNotThrow(() =>
+      assertRequestResolved(['content/notion/tags.json'], {
+        files: [],
+        dropped: ['content/notion/tags.json'],
+      }),
+    );
+  });
+
+  // 記事が混ざっていて1件も解決しないのは、基準のずれか記事の消失である
+  test('記事が混ざっていて全件対象外なら失敗する', () => {
+    assert.throws(
+      () =>
+        assertRequestResolved(['content/notion/tags.json', 'content/old/posts/a.md'], {
+          files: [],
+          dropped: ['content/notion/tags.json', 'content/old/posts/a.md'],
+        }),
+      /1 件の記事がすべて対象外/,
+    );
+  });
+
+  test('1件でも対象があれば通す', () => {
+    assert.doesNotThrow(() =>
+      assertRequestResolved(['a.md', 'b.json'], {
+        files: ['/repo/content/notion/posts/a.md'],
+        dropped: ['b.json'],
+      }),
+    );
+  });
+
+  // 削除だけの sync などで対象が空になるのは正常。ここは全件が来ない
+  test('入力が空なら通す', () => {
+    assert.doesNotThrow(() => assertRequestResolved([], { files: [], dropped: [] }));
   });
 });
 

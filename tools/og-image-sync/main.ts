@@ -2,6 +2,7 @@ import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import {
   CONTENT_DIR,
+  assertRequestResolved,
   assertUniqueTargets,
   listArticleFiles,
   resolveRequestedFiles,
@@ -50,14 +51,19 @@ async function main(): Promise<void> {
   // ディレクトリを「今回の送信元」として案内することになる
   console.log(`[og-image-sync] upload source: ${stagingDir}`);
 
-  const { files, dropped } = renderAll
+  const resolved = renderAll
     ? { files: await listArticleFiles(join(rootDir, CONTENT_DIR)), dropped: [] }
     : resolveRequestedFiles(requested, rootDir);
+  const { files, dropped } = resolved;
 
   // 対象外にした内訳は必ず出す。記事の削除や tags.json の混入は正常だが、
   // パスの基準を取り違えた場合も同じ形で現れるため、件数だけでは区別できない
   if (dropped.length > 0) {
     console.warn(`[og-image-sync] ${dropped.length} 件を対象外にした (対象 ${files.length} 件): ${dropped.join(' ')}`);
+  }
+
+  if (!renderAll) {
+    assertRequestResolved(requested, resolved);
   }
 
   // --all で0件は、実行位置かチェックアウトの誤りしかありえない
