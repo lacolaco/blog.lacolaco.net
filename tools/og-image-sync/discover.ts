@@ -1,6 +1,6 @@
 import { readdir } from 'node:fs/promises';
-import { existsSync, readFileSync } from 'node:fs';
-import { isAbsolute, join, resolve, sep } from 'node:path';
+import { existsSync, readFileSync, realpathSync } from 'node:fs';
+import { basename, dirname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { parse as parseYaml } from 'yaml';
 import { buildOgImageFileName, computeOgImageHashFromFile } from '../../src/libs/og-image/hash.ts';
 
@@ -108,9 +108,95 @@ export function parseTarget(
   };
 }
 
-/** sync の出力かどうか。手書きの記事とは不備への対処を変える */
-export function isSyncOutput(filePath: string): boolean {
-  return filePath.includes(NOTION_POSTS_DIR);
+/** rootDir 基準で絶対パスにする。基準を取り違えると範囲判定が丸ごとずれる */
+function toAbsolutePath(path: string, rootDir: string = process.cwd()): string {
+  return resolve(isAbsolute(path) ? path : join(rootDir, path));
+}
+
+/**
+ * 実体のパスに揃える。
+ *
+ * 呼び出し側は別リポジトリから絶対パスを渡すため、symlink を経た形になりうる
+ * (macOS の /var → /private/var など)。文字列のまま比べると同じ場所を別物と判定する。
+ */
+function toRealPath(path: string, rootDir: string = process.cwd()): string {
+  const absolute = toAbsolutePath(path, rootDir);
+  // 末端は解決しない。記事そのものが symlink の場合に、実体の置き場所で範囲を判定すると
+  // notion 配下の記事が範囲外に見えて黙って落ちる。目的は /var → /private/var のような
+  // 途中経路の差を吸収することなので、親だけを解決すれば足りる
+  return join(resolveBestEffort(dirname(absolute)), basename(absolute));
+}
+
+/** ディレクトリの基準。末端まで解決する。ファイルと違い symlink 自体が対象ではない */
+function toRealDir(path: string): string {
+  return resolveBestEffort(path);
+}
+
+/** 実体をそのまま解決する。存在しなければ null */
+function resolveExact(path: string): string | null {
+  try {
+    return realpathSync.native(path);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * 実在する祖先まで遡って解決し、残りは字句のまま繋ぐ。
+ *
+ * 不在のパスも渡る (削除された記事など)。権限エラーなども同じく遡る。ここで投げると
+ * 1件の失敗で無関係な記事の生成まで止まる。
+ */
+function resolveBestEffort(path: string): string {
+  const absolute = resolve(path);
+  const tail: string[] = [];
+  let current = absolute;
+  for (;;) {
+    const resolved = resolveExact(current);
+    if (resolved !== null) {
+      return join(resolved, ...tail.slice().reverse());
+    }
+    const parent = dirname(current);
+    if (parent === current) {
+      return absolute;
+    }
+    tail.push(basename(current));
+    current = parent;
+  }
+}
+
+/**
+ * notion 出力ディレクトリの実体。
+ *
+ * 覚えない。プロセス内で複数の root を扱うとき、消えた root のパスを後から別の root が
+ * 引き当てると古い実体を返し、全記事が範囲外と判定される。
+ */
+function notionDirOf(rootDir: string): string {
+  return toRealDir(resolve(rootDir, CONTENT_DIR, NOTION_POSTS_DIR));
+}
+
+/** 外に出ているか。外に出るパスは必ず区切りを含むか `..` そのものになる */
+function isOutside(rel: string): boolean {
+  return rel === '' || rel === '..' || rel.startsWith('..' + sep) || isAbsolute(rel);
+}
+
+/**
+ * sync の出力かどうか。手書きの記事とは不備への対処を変える。
+ *
+ * 部分一致で見ないのは、チェックアウト先の親に `notion/posts` を含むパス
+ * (例: `~/notion/posts/blog.lacolaco.net`) だと手書きの記事まで sync 出力と誤判定するため。
+ *
+ * 対象は直下のファイルに限る。resolveRequestedFiles の範囲と揃える。
+ * 区切りの有無で見るのは、`..foo.md` のような名前を親への参照と取り違えないため。
+ */
+function isSyncOutput(filePath: string, rootDir: string): boolean {
+  return isSyncOutputReal(toRealPath(filePath, rootDir), rootDir);
+}
+
+/** 解決済みのパスで判定する。呼び出し側が既に実体を持っているときに使う */
+function isSyncOutputReal(real: string, rootDir: string): boolean {
+  const rel = relative(notionDirOf(rootDir), real);
+  return !isOutside(rel) && !rel.includes(sep);
 }
 
 /**
@@ -132,7 +218,7 @@ export function toTargetOrSkip(filePath: string, rootDir: string = process.cwd()
     return parseTarget(filePath, rootDir, frontmatter);
   } catch (cause) {
     // 記事の不備でない失敗 (hash算出の異常など) はツール側の問題なので握りつぶさない
-    if (isSyncOutput(filePath) || !(cause instanceof ArticleValidationError)) {
+    if (isSyncOutput(filePath, rootDir) || !(cause instanceof ArticleValidationError)) {
       throw cause;
     }
     console.warn(`[og-image-sync] skip ${filePath}: ${cause.message}`);
@@ -157,24 +243,38 @@ export interface ResolvedRequest {
 export function resolveRequestedFiles(paths: string[], rootDir: string = process.cwd()): ResolvedRequest {
   // listArticleFiles と同じ範囲に限る。ずれると、個別指定でだけ描かれて
   // サイトが参照しない画像が公開バケットに残る
-  const notionDir = join(rootDir, CONTENT_DIR, NOTION_POSTS_DIR) + sep;
-  const authoredDir = join(rootDir, CONTENT_DIR, AUTHORED_POSTS_DIR) + sep;
+  // isSyncOutput と同じ正規化を通す。ここで基準がずれると、呼び出し側が symlink を経た
+  // パスを渡しただけで全件が対象外になる
+  const authoredDir = toRealDir(resolve(rootDir, CONTENT_DIR, AUTHORED_POSTS_DIR)) + sep;
 
-  const files = new Set<string>();
+  // 実体で重複を除く。同じ記事を2つの形で渡されたときに2件とも残すと、
+  // assertUniqueTargets が slug の重複として全体を落とし、原因を取り違えさせる。
+  // 値は渡された形のままにして、呼び出し側の見え方を変えない
+  const files = new Map<string, string>();
   const dropped: string[] = [];
   for (const path of paths) {
-    const absolute = resolve(isAbsolute(path) ? path : join(rootDir, path));
-    // notion/posts は flat、posts は再帰。listArticleFiles の非対称性に合わせる
-    const inScope =
-      (absolute.startsWith(notionDir) && !absolute.slice(notionDir.length).includes(sep)) ||
-      absolute.startsWith(authoredDir);
+    const absolute = toAbsolutePath(path, rootDir);
+    // 範囲の判定だけ実体で行う。返すのは絶対パスにした入力で、symlink は解決しない。
+    // 解決して返すと、locale をファイル名から決めている前提 (localeOf) と食い違う
+    const real = toRealPath(absolute, rootDir);
+    // notion/posts は flat、posts は再帰。listArticleFiles の非対称性に合わせる。
+    // notion 側は isSyncOutput に判定を委ねる。同じ規則を2か所に書くとずれる。
+    //
+    // 手書き側は実体で判定するため、content/posts の下に外を指す symlink ディレクトリが
+    // あるとその中の記事は対象外になる。listArticleFiles も symlink を辿らないので、
+    // --all と個別指定で結果が変わらない
+    const inScope = isSyncOutputReal(real, rootDir) || real.startsWith(authoredDir);
     if (!inScope || !absolute.endsWith('.md') || !existsSync(absolute)) {
       dropped.push(path);
       continue;
     }
-    files.add(absolute);
+    // 先勝ちにする。後勝ちだと、同じ実体を2つの形で渡されたときにどちらが返るか定まらず、
+    // ログやエラー文がリポジトリ外のパスを指すことがある
+    if (!files.has(real)) {
+      files.set(real, absolute);
+    }
   }
-  return { files: [...files], dropped };
+  return { files: [...files.values()], dropped };
 }
 
 /**

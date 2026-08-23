@@ -1,8 +1,8 @@
 import { strict as assert } from 'node:assert';
 import { test, describe } from 'node:test';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { basename, dirname, join } from 'node:path';
 import {
   localeOf,
   parseTarget,
@@ -188,6 +188,72 @@ describe('toTargetOrSkip', () => {
     rmSync(root, { recursive: true, force: true });
   });
 
+  // 部分一致で判定すると、チェックアウト先の親に notion/posts を含むパスで
+  // 手書きの記事まで sync 出力と誤判定され、下書きがあるだけで失敗する
+  test('親ディレクトリ名に notion/posts を含んでも手書き記事は対象外', () => {
+    const root = mkdtempSync(join(tmpdir(), 'og-nested-'));
+    const nested = join(root, 'notion/posts/checkout');
+    mkdirSync(join(nested, 'content/posts'), { recursive: true });
+    const filePath = join(nested, 'content/posts/README.md');
+    writeFileSync(filePath, '# 覚書\n', 'utf8');
+
+    assert.equal(toTargetOrSkip(filePath, nested), null);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // `..` で始まるファイル名を親への参照と取り違えると、sync 出力の不備を握りつぶす
+  test('.. で始まる名前でも sync 出力と判定する', () => {
+    const root = createRepoRoot();
+    const filePath = join(root, 'content/notion/posts/..foo.md');
+    writeFileSync(filePath, '# frontmatterなし\n', 'utf8');
+
+    assert.throws(() => toTargetOrSkip(filePath, root), /frontmatter/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 記事そのものが symlink のことがある。実体の置き場所で判定すると範囲外に見えて
+  // 黙って落ちる。範囲は渡されたパスの位置で決める
+  test('記事が symlink でも sync 出力と判定する', () => {
+    const root = createRepoRoot();
+    const outside = join(root, 'outside.md');
+    writeFileSync(outside, '# frontmatterなし\n', 'utf8');
+    const filePath = join(root, 'content/notion/posts/linked.md');
+    symlinkSync(outside, filePath);
+
+    assert.throws(() => toTargetOrSkip(filePath, root), /frontmatter/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 記事の置き場所そのものが symlink のことがある。基準側だけ末端を残すと、
+  // 配下の記事が範囲外に見えて全件が対象外になる
+  test('notion/posts 自体が symlink でも sync 出力と判定する', () => {
+    const root = mkdtempSync(join(tmpdir(), 'og-dirlink-'));
+    const real = join(root, 'store/posts');
+    mkdirSync(real, { recursive: true });
+    mkdirSync(join(root, 'content/notion'), { recursive: true });
+    symlinkSync(real, join(root, 'content/notion/posts'));
+    const filePath = join(root, 'content/notion/posts/a.md');
+    writeFileSync(filePath, '# frontmatterなし\n', 'utf8');
+
+    assert.throws(() => toTargetOrSkip(filePath, root), /frontmatter/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
+  // 呼び出し側は別リポジトリで、symlink を経由したパスを渡しうる (macOS の /var → /private/var)。
+  // 文字列の前置一致だけだと sync 出力を手書き記事と誤判定し、不備を握りつぶす
+  test('symlink を経たパスでも sync 出力と判定する', () => {
+    const root = mkdtempSync(join(tmpdir(), 'og-symlink-'));
+    const real = join(root, 'real');
+    mkdirSync(join(real, 'content/notion/posts'), { recursive: true });
+    const link = join(root, 'link');
+    symlinkSync(real, link);
+    const filePath = join(link, 'content/notion/posts/broken.md');
+    writeFileSync(filePath, '# frontmatterなし\n', 'utf8');
+
+    assert.throws(() => toTargetOrSkip(filePath, real), /frontmatter/);
+    rmSync(root, { recursive: true, force: true });
+  });
+
   // 手書きツリーには README など記事でないファイルが紛れうる
   test('手書き記事のfrontmatter不在はスキップする', () => {
     const root = createContentDir();
@@ -219,12 +285,11 @@ describe('toTargetOrSkip', () => {
 
   // sync の出力の不備は異常。黙って落とすとその記事だけOG画像を持たないまま公開される
   test('sync出力のtitle欠落は失敗させる', () => {
-    const root = createContentDir();
+    const root = createRepoRoot();
     const filePath = join(root, 'content/notion/posts/broken.md');
-    mkdirSync(join(root, 'content/notion/posts'), { recursive: true });
     writeFileSync(filePath, frontmatter.replace("title: 'テスト記事'", "description: 'x'"), 'utf8');
 
-    assert.throws(() => toTargetOrSkip(filePath), /title/);
+    assert.throws(() => toTargetOrSkip(filePath, root), /title/);
     rmSync(root, { recursive: true, force: true });
   });
 
@@ -241,12 +306,11 @@ describe('toTargetOrSkip', () => {
   });
 
   test('sync出力のfrontmatter不在は失敗させる', () => {
-    const root = createContentDir();
+    const root = createRepoRoot();
     const filePath = join(root, 'content/notion/posts/broken.md');
-    mkdirSync(join(root, 'content/notion/posts'), { recursive: true });
     writeFileSync(filePath, '本文のみ\n', 'utf8');
 
-    assert.throws(() => toTargetOrSkip(filePath), /frontmatter/);
+    assert.throws(() => toTargetOrSkip(filePath, root), /frontmatter/);
     rmSync(root, { recursive: true, force: true });
   });
 });
@@ -275,6 +339,46 @@ describe('resolveRequestedFiles', () => {
     assert.deepEqual(resolved.files, [article]);
     assert.deepEqual(resolved.dropped, ['content/notion/posts/tags.json']);
     rmSync(root, { recursive: true, force: true });
+  });
+
+  // 呼び出し側は別リポジトリから渡すため、symlink を経た形になりうる
+  // (macOS の /var → /private/var など)。字句で比べると全件が対象外になる
+  test('symlink を経たパスでも対象にする', () => {
+    const root = createRepoRoot();
+    const article = join(root, 'content/notion/posts/a.md');
+    writeFileSync(article, frontmatter, 'utf8');
+    const link = join(dirname(root), `${basename(root)}-link`);
+    symlinkSync(root, link);
+
+    try {
+      const resolved = resolveRequestedFiles([join(link, 'content/notion/posts/a.md')], root);
+
+      assert.equal(resolved.files.length, 1);
+      assert.deepEqual(resolved.dropped, []);
+    } finally {
+      rmSync(link, { force: true });
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  // 同じ実体を2つの形で渡されうる。2件とも残すと assertUniqueTargets が
+  // slug の重複として全体を落とし、原因を取り違えさせる
+  test('同じ実体を指す入力は1件に畳む', () => {
+    const root = createRepoRoot();
+    const article = join(root, 'content/notion/posts/a.md');
+    writeFileSync(article, frontmatter, 'utf8');
+    const link = join(dirname(root), `${basename(root)}-dup`);
+    symlinkSync(root, link);
+
+    try {
+      const resolved = resolveRequestedFiles([article, join(link, 'content/notion/posts/a.md')], root);
+
+      // 先に渡された形を返す。後勝ちだとリポジトリ外を指すパスが残りうる
+      assert.deepEqual(resolved.files, [article]);
+    } finally {
+      rmSync(link, { force: true });
+      rmSync(root, { recursive: true, force: true });
+    }
   });
 
   // 呼び出し側は別リポジトリなので、絶対パスで渡されることがある
