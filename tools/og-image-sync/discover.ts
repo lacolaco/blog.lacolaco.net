@@ -179,12 +179,13 @@ type EntryState = 'exists' | 'absent' | 'unreadable';
 interface EntryStatus {
   state: EntryState;
   code?: string;
+  /** state が exists のときだけある。種別の判定で同じパスを2度 stat しないために持ち回る */
+  isDirectory?: boolean;
 }
 
 function statusOf(path: string): EntryStatus {
   try {
-    statSync(path);
-    return { state: 'exists' };
+    return { state: 'exists', isDirectory: statSync(path).isDirectory() };
   } catch (cause) {
     const code = (cause as NodeJS.ErrnoException).code;
     // ENOTDIR は親がディレクトリでないという意味で、削除とは違う。absent に混ぜると
@@ -198,15 +199,6 @@ function statusOf(path: string): EntryStatus {
 
 function entryStateOf(path: string): EntryState {
   return statusOf(path).state;
-}
-
-/** ディレクトリを指すか。辿った先で判定する */
-function isDirectorySync(path: string): boolean {
-  try {
-    return statSync(path).isDirectory();
-  } catch {
-    return false;
-  }
 }
 
 /** 記事として扱えなかったもの。種類ごとに分けて持ち、呼び出し側が扱いを決める */
@@ -277,11 +269,11 @@ function anomalyMessages(anomalies: Partial<WalkAnomalies>, tree: 'sync' | 'auth
 type EntryKind = 'present' | 'directory' | 'unreadable' | 'missing';
 
 function classifyEntry(path: string, stopAt: string): EntryKind {
+  const { state, isDirectory } = statusOf(path);
   // ディレクトリを先に見る。記事として読むと EISDIR で落ちる
-  if (isDirectorySync(path)) {
+  if (isDirectory) {
     return 'directory';
   }
-  const state = entryStateOf(path);
   // 削除された記事は不在、実体を失った symlink や読めない記事は「入口はあるが読めない」
   if (state === 'unreadable' || (state === 'absent' && isEntryPresent(path))) {
     return 'unreadable';
