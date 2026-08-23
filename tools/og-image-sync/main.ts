@@ -122,7 +122,7 @@ async function main(): Promise<void> {
   console.log(`[og-image-sync] ${files.length} files, ${targets.length} to render`);
   if (targets.length === 0) {
     // 対象が全て未公開・下書きだった場合。ファイルは見えているので異常ではない
-    writeRenderReport(rootDir, buildRenderReport({ sync, authored, rendered: 0, outputDir }));
+    writeRenderReport(rootDir, buildRenderReport({ sync, authored, rendered: 0, outputDir, stagingDir }));
     return;
   }
 
@@ -140,7 +140,7 @@ async function main(): Promise<void> {
   );
 
   // 数と書き出しは1か所に閉じてある。ここで数え直すと、その対応が崩れても気付けない
-  writeRenderReport(rootDir, buildRenderReport({ sync, authored, rendered, outputDir }));
+  writeRenderReport(rootDir, buildRenderReport({ sync, authored, rendered, outputDir, stagingDir }));
 }
 
 await main();

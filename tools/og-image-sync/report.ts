@@ -42,11 +42,20 @@ export interface RenderReport {
   /**
    * `rendered` と数を突き合わせる場所。作り直していない回は無い。
    *
-   * 呼び出し側に組み立てさせない。アップロードに渡すのはこの1つ上であり、
-   * そちらを数えると `og/` 1件になって必ず食い違う。
+   * 呼び出し側に組み立てさせない。ここを数えないと (アップロードに渡す stagingDir を
+   * 数えるなど) `og/` 1件になって必ず食い違う。送る場所は stagingDir が持つので、
+   * ここから導かないこと。
    * `staged` を見落としても別の場所を数えずに済むよう、無い回は null にする
    */
   outputDir: string | null;
+  /**
+   * アップロードに渡す場所。作り直していない回は無い。
+   *
+   * `outputDir` の親から求めさせない。出力の階層を1段深くしただけで、
+   * 呼び出し側が `og/` 自体を送ることになり、R2 のキーから `og/` が落ちて
+   * 配信URLだけが404する
+   */
+  stagingDir: string | null;
 }
 
 /**
@@ -61,13 +70,15 @@ export function buildRenderReport({
   authored,
   rendered,
   outputDir,
+  stagingDir,
 }: {
   sync: TreeReport;
   authored: TreeReport;
   rendered: number;
   outputDir: string;
+  stagingDir: string;
 }): RenderReport {
-  return { sync, authored, rendered, staged: true, outputDir };
+  return { sync, authored, rendered, staged: true, outputDir, stagingDir };
 }
 
 /** ツリー1つ分の内訳を作る。記事でない入力は数えない (混入は正常であり、異常が埋もれる) */
@@ -87,7 +98,7 @@ export function buildTreeReport(targeted: number, dropped: string[], skipped: Tr
  */
 export function buildEmptyRenderReport(): RenderReport {
   const empty = () => buildTreeReport(0, [], { unpublished: 0, notAnArticle: 0, invalid: 0 });
-  return { sync: empty(), authored: empty(), rendered: 0, staged: false, outputDir: null };
+  return { sync: empty(), authored: empty(), rendered: 0, staged: false, outputDir: null, stagingDir: null };
 }
 
 /**

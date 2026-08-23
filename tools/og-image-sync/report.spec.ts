@@ -43,16 +43,36 @@ describe('buildRenderReport', () => {
     const sync = { ...empty, targeted: 2 };
     const authored = { ...empty, targeted: 1, skipped: { unpublished: 1, notAnArticle: 0, invalid: 0 } };
 
-    const report = buildRenderReport({ sync, authored, rendered: 2, outputDir: '/tmp/og' });
+    const report = buildRenderReport({ sync, authored, rendered: 2, outputDir: '/tmp/og', stagingDir: '/tmp' });
 
     assert.deepEqual(report.sync, sync);
     assert.deepEqual(report.authored, authored);
     assert.equal(report.rendered, 2);
   });
 
+  // 送る場所を呼び出し側に導かせない。出力先の親から求めさせると、階層を1段
+  // 深くしただけで送信元が og/ 自体になり、R2 のキーから og/ が落ちて配信URLが404する
+  test('送る場所も載せる', () => {
+    const report = buildRenderReport({
+      sync: empty,
+      authored: empty,
+      rendered: 0,
+      outputDir: '/repo/.tmp/og-staging/og',
+      stagingDir: '/repo/.tmp/og-staging',
+    });
+
+    assert.equal(report.stagingDir, '/repo/.tmp/og-staging');
+  });
+
   // 描いた回は必ず出力先を作り直している。偽で報告すると突き合わせが行われない
   test('作り直したことを常に報告する', () => {
-    const report = buildRenderReport({ sync: empty, authored: empty, rendered: 0, outputDir: '/tmp/og' });
+    const report = buildRenderReport({
+      sync: empty,
+      authored: empty,
+      rendered: 0,
+      outputDir: '/tmp/og',
+      stagingDir: '/tmp',
+    });
 
     assert.equal(report.staged, true);
     assert.equal(report.outputDir, '/tmp/og');
@@ -66,6 +86,7 @@ describe('buildRenderReport', () => {
       rendered: 0,
       staged: false,
       outputDir: null,
+      stagingDir: null,
     });
   });
 });
@@ -94,6 +115,7 @@ describe('render report', () => {
       rendered: 3,
       staged: true,
       outputDir: '/tmp/og',
+      stagingDir: '/tmp',
     });
 
     assert.deepEqual(readReport(root), {
@@ -102,6 +124,7 @@ describe('render report', () => {
       rendered: 3,
       staged: true,
       outputDir: '/tmp/og',
+      stagingDir: '/tmp',
     });
   });
 
@@ -121,6 +144,7 @@ describe('render report', () => {
       rendered: 5,
       staged: true,
       outputDir: '/tmp/og',
+      stagingDir: '/tmp',
     });
 
     clearRenderReport(root);
@@ -146,6 +170,7 @@ describe('render report', () => {
       rendered: 1,
       staged: true,
       outputDir: '/tmp/og',
+      stagingDir: '/tmp',
     });
 
     assert.equal(existsSync(join(root, REPORT_FILE)), true);
@@ -160,6 +185,7 @@ describe('render report', () => {
       rendered: 123456,
       staged: true,
       outputDir: '/tmp/og',
+      stagingDir: '/tmp',
     });
 
     writeRenderReport(root, {
@@ -168,6 +194,7 @@ describe('render report', () => {
       rendered: 0,
       staged: false,
       outputDir: '/tmp/og',
+      stagingDir: '/tmp',
     });
 
     assert.deepEqual(readReport(root), {
@@ -176,6 +203,7 @@ describe('render report', () => {
       rendered: 0,
       staged: false,
       outputDir: '/tmp/og',
+      stagingDir: '/tmp',
     });
   });
 });
