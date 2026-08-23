@@ -19,6 +19,12 @@ export const OG_OUTPUT_DIR_NAME = 'og';
  */
 export class ArticleValidationError extends Error {}
 
+/**
+ * 記事ではないファイル。手書きツリーには README などが普通に混ざる。
+ * 記述の不備と同じ扱いにすると、正常な混入で毎回異常が立つ
+ */
+export class NotAnArticleError extends ArticleValidationError {}
+
 export type Locale = 'ja' | 'en';
 
 export interface OgImageTarget {
@@ -45,9 +51,24 @@ export function readFrontmatter(filePath: string): Record<string, unknown> {
   const raw = readFileSync(filePath, 'utf8');
   const match = /^---\r?\n([\s\S]*?)\r?\n---/.exec(raw);
   if (!match) {
-    throw new ArticleValidationError(`${filePath} に frontmatter がない`);
+    throw new NotAnArticleError(`${filePath} に frontmatter がない`);
   }
-  return parseYaml(match[1]) as Record<string, unknown>;
+  let parsed: unknown;
+  try {
+    parsed = parseYaml(match[1]);
+  } catch (cause) {
+    // 壊れた YAML は記述の不備である。ツール側の失敗として扱うと、
+    // 手書きの記事1件で同期全体が止まる
+    throw new ArticleValidationError(`${filePath} の frontmatter を読めない: ${(cause as Error).message}`);
+  }
+  // 空の frontmatter は null に、地の文だけなら文字列に、箇条書きなら配列に、
+  // YAML のタグ次第では Set などに解決する。いずれも投げないので、そのまま返すと
+  // 後続の判定が TypeError になるか、記事でないものを未公開 (正常) として数えてしまう。
+  // 記事の frontmatter は素のオブジェクトなので、それ以外を弾く
+  if (typeof parsed !== 'object' || parsed === null || Object.getPrototypeOf(parsed) !== Object.prototype) {
+    throw new NotAnArticleError(`${filePath} の frontmatter が記事の形をしていない`);
+  }
+  return parsed as Record<string, unknown>;
 }
 
 /**
@@ -344,7 +365,7 @@ function isOutside(rel: string): boolean {
  * 対象は直下のファイルに限る。resolveRequestedFiles の範囲と揃える。
  * 区切りの有無で見るのは、`..foo.md` のような名前を親への参照と取り違えないため。
  */
-function isSyncOutput(filePath: string, rootDir: string): boolean {
+export function isSyncOutput(filePath: string, rootDir: string): boolean {
   return isSyncOutputReal(toRealPath(filePath, rootDir), rootDir);
 }
 
@@ -355,7 +376,15 @@ function isSyncOutputReal(real: string, rootDir: string): boolean {
 }
 
 /**
- * 公開記事なら生成対象に変換する。対象外なら null を返す。
+ * 描かなかった理由。
+ *
+ * 未公開と、記事でないファイルの混入は正常である。記述の不備だけが異常であり、
+ * 同じ「描かれなかった1件」にまとめると呼び出し側が静かな欠落を見分けられない
+ */
+export type SkipReason = 'unpublished' | 'invalid' | 'not-an-article';
+
+/**
+ * 公開記事なら生成対象に変換する。描かない場合は理由を返す。
  *
  * content/posts は手で書く再帰ツリーなので、frontmatter を持たないファイル (README 等) や
  * 記述の不備が紛れうる。1件で全体を止めず、記事として扱えないものは対象から外す。
@@ -363,12 +392,12 @@ function isSyncOutputReal(real: string, rootDir: string): boolean {
  * content/notion/posts は sync の出力であり、不備は異常である。黙って落とすと
  * その記事だけOG画像を持たないまま公開されるため失敗させる。
  */
-export function toTargetOrSkip(filePath: string, rootDir: string = process.cwd()): OgImageTarget | null {
+export function toTargetOrSkip(filePath: string, rootDir: string = process.cwd()): OgImageTarget | SkipReason {
   try {
     // 同じファイルを2度読まないよう、判定に使った frontmatter をそのまま渡す
     const frontmatter = readFrontmatter(filePath);
     if (!isPublished(frontmatter)) {
-      return null;
+      return 'unpublished';
     }
     return parseTarget(filePath, rootDir, frontmatter);
   } catch (cause) {
@@ -377,13 +406,30 @@ export function toTargetOrSkip(filePath: string, rootDir: string = process.cwd()
       throw cause;
     }
     console.warn(`[og-image-sync] skip ${filePath}: ${cause.message}`);
-    return null;
+    return cause instanceof NotAnArticleError ? 'not-an-article' : 'invalid';
   }
+}
+
+/** 対象か、外した理由か */
+export function isTarget(result: OgImageTarget | SkipReason): result is OgImageTarget {
+  return typeof result !== 'string';
 }
 
 export interface ResolvedRequest {
   /** 生成対象になるファイルの絶対パス */
   files: string[];
+  /**
+   * sync の出力かどうか。呼び出し側が実体を引き直さずに済む。
+   * 渡された形 (dropped の要素) と絶対パスにした形 (files の要素) の両方で引ける
+   */
+  inSyncOutputOf: Map<string, boolean>;
+  /**
+   * 範囲の外を指していた記事。
+   *
+   * 削除された記事 (範囲内で不在) と区別する。前者は基準のずれで、記事は同期されて
+   * OG画像だけが欠ける。後者は正常に起こる
+   */
+  outOfScope: string[];
   /** 対象にならなかった入力。呼び出し側が気付けるよう内訳を残す */
   dropped: string[];
 }
@@ -392,9 +438,12 @@ export interface ResolvedRequest {
  * 呼び出し側から渡されたパスを生成対象に整える。
  *
  * 呼び出し側 (blog-contents の sync) は作業ツリーの差分をそのまま渡すため、
- * 削除された記事や記事以外の出力 (tags.json 等) が混ざる。これらは対象外にするだけで、
- * 1件で全体を止めない。読めない記事とディレクトリは環境側の失敗だが、止めるのは
- * sync の出力の場合だけである。別リポジトリから呼ばれるので絶対パスも受ける。
+ * 記事以外の出力 (tags.json 等) が混ざる。これらは対象外にするだけで、1件で全体を
+ * 止めない。読めない記事とディレクトリは環境側の失敗だが、止めるのは sync の出力の
+ * 場合だけである。別リポジトリから呼ばれるので絶対パスも受ける。
+ *
+ * 削除された記事は渡ってこない (収集が --diff-filter=d で除く)。全件が対象外になる回は
+ * 異常として assertRequestResolved が落とす。
  */
 export function resolveRequestedFiles(paths: string[], rootDir: string = process.cwd()): ResolvedRequest {
   // listArticleFiles と同じ範囲に限る。ずれると、個別指定でだけ描かれて
@@ -413,6 +462,8 @@ export function resolveRequestedFiles(paths: string[], rootDir: string = process
   const directories: string[] = [];
   // 止めずに知らせるだけのもの。ツリーごとに分けて、報告の言葉を列挙と揃える
   const syncSkipped: WalkAnomalies = emptyAnomalies();
+  const outOfScope: string[] = [];
+  const inSyncOutputOf = new Map<string, boolean>();
   const authoredSkipped: WalkAnomalies = emptyAnomalies();
   const outsideSkipped: WalkAnomalies = emptyAnomalies();
   for (const path of paths) {
@@ -425,10 +476,17 @@ export function resolveRequestedFiles(paths: string[], rootDir: string = process
     //
     // 手書き側は実体で判定するため、content/posts の下に外を指す symlink ディレクトリが
     // あるとその中の記事は対象外になる。listArticleFiles も symlink を辿らないので、
-    // --all と個別指定で結果が変わらない。
+    // どちらの経路でも描かれない。ただし扱いは異なり、個別指定は範囲外として止め、
+    // --all は黙って飛ばす。渡された記事が描かれないことは異常だが、
+    // 列挙で見えないものは要求されていない。
     // 内を指す symlink 経由で渡された記事は対象になるが、--all も実体の側で同じ記事を
     // 拾う (slug はファイル名から決まる)。どちらの経路でも同じ画像になる
     const inSyncOutput = isSyncOutputReal(real, rootDir);
+    // 判定はここで済ませる。呼び出し側が引き直すと、入力ごとに実体の解決が2度走る。
+    // 渡された形と返す形の両方で引けるようにする。files に入るのは絶対パスにしたもので、
+    // dropped に入るのは渡された形そのままなので、片方だけだと必ず引けない側が出る
+    inSyncOutputOf.set(path, inSyncOutput);
+    inSyncOutputOf.set(absolute, inSyncOutput);
     const inScope = inSyncOutput || real.startsWith(authoredDir);
     // 不在と「あるが読めない」を分ける。この2つを同じ扱いにすると、
     // 読めないだけの記事を削除された記事として黙って落とす
@@ -446,6 +504,10 @@ export function resolveRequestedFiles(paths: string[], rootDir: string = process
     if (isArticlePath && inSyncOutput && kind === 'unreadable') {
       unreadable.push(path);
       continue;
+    }
+    if (isArticlePath && !inScope) {
+      // 範囲の外を指す記事。基準がずれた回にだけ現れる
+      outOfScope.push(path);
     }
     if (!inScope || !isArticlePath || kind !== 'present') {
       // 対象外の内訳にも並ぶが、そこでは tags.json の混入 (正常) と
@@ -498,7 +560,7 @@ export function resolveRequestedFiles(paths: string[], rootDir: string = process
     throw new Error(anomalies.join('\n'));
   }
 
-  return { files: [...files.values()], dropped };
+  return { files: [...files.values()], dropped, outOfScope, inSyncOutputOf };
 }
 
 /**
@@ -509,22 +571,30 @@ export function resolveRequestedFiles(paths: string[], rootDir: string = process
  * 両者がずれ、全件が dropped に落ちて警告だけを出して正常終了する。
  * 記事は同期されOG画像だけが欠けたまま公開されるため、警告では足りない。
  *
- * 同じ条件は「渡された記事がすべて消えている」でも成立する。依頼から実行までの間に
- * 記事が削除された場合などで、原因が違うので文言に併記する。
+ * 見るのは2つ。範囲の外を指しているか (基準のずれ) と、範囲内に見えたまま全件が
+ * 対象外になったか (誤った実行位置など、字句の解決では範囲外にならない場合) である。
  *
- * 記事以外しか渡されなかった回は見ない。tags.json の更新だけ、という同期は正常であり、
- * 「基準がずれている」と区別できないまま止めると、無関係な変更で同期が落ちる。
+ * 範囲外は一部だけでも止める。残りが描かれるので、全件の判定では捕まらない。
  *
- * 一部だけ落ちるのは正常 (削除された記事など) なので、全件のときだけ止める。
+ * 記事以外しか渡されなかった回は見ない。tags.json の更新だけ、という同期は正常である。
  */
 export function assertRequestResolved(requested: string[], resolved: ResolvedRequest): void {
-  // 記事になりうる入力が1件も無い回は、描くものが無くて当然である。呼び出し側は
-  // 作業ツリーの差分をそのまま渡すため、tags.json の更新だけ、という回がある
+  // 範囲の外を指すのは基準のずれである。一部だけでも見逃さない
+  if (resolved.outOfScope.length > 0) {
+    throw new Error(
+      `指定された ${resolved.outOfScope.length} 件の記事が範囲の外を指している。` +
+        `パスの基準がずれている: ${resolved.outOfScope.join(' ')}`,
+    );
+  }
+  // 範囲内に見えたまま全件が不在になる回もある。誤った cwd で起動された場合など、
+  // 範囲の解決が字句で行われるため範囲外にはならない。
+  // 呼び出し側は削除された記事を渡さない (収集が --diff-filter=d で除く) ので、
+  // 記事を渡したのに1件も残らないのは異常である
   const articleLike = requested.filter((path) => path.endsWith('.md'));
   if (articleLike.length > 0 && resolved.files.length === 0) {
     throw new Error(
       `指定された ${articleLike.length} 件の記事がすべて対象外になった。` +
-        `パスの基準がずれているか、渡された記事がすべて消えている: ${resolved.dropped.join(' ')}`,
+        `実行位置か記事の置き場所を確認する: ${resolved.dropped.join(' ')}`,
     );
   }
 }
