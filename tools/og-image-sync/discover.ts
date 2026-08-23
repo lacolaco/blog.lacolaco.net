@@ -428,13 +428,14 @@ export function resolveRequestedFiles(paths: string[], rootDir: string = process
     // --all と個別指定で結果が変わらない。
     // 内を指す symlink 経由で渡された記事は対象になるが、--all も実体の側で同じ記事を
     // 拾う (slug はファイル名から決まる)。どちらの経路でも同じ画像になる
-    const inScope = isSyncOutputReal(real, rootDir) || real.startsWith(authoredDir);
+    const inSyncOutput = isSyncOutputReal(real, rootDir);
+    const inScope = inSyncOutput || real.startsWith(authoredDir);
     // 不在と「あるが読めない」を分ける。この2つを同じ扱いにすると、
     // 読めないだけの記事を削除された記事として黙って落とす
     const kind = classifyEntry(absolute, rootDir);
     const isArticlePath = absolute.endsWith('.md');
     // ディレクトリは sync の出力なら異常。手書きツリーでは中の記事が別途対象になる
-    if (isArticlePath && kind === 'directory' && isSyncOutputReal(real, rootDir)) {
+    if (isArticlePath && kind === 'directory' && inSyncOutput) {
       directories.push(path);
       continue;
     }
@@ -442,7 +443,7 @@ export function resolveRequestedFiles(paths: string[], rootDir: string = process
     // OG画像を持たないまま緑で通るためである。手書きツリーは対象外にして知らせるだけにする。
     // 列挙 (listArticleFiles) は読めないディレクトリを手書きツリーでも止めるが、あちらは
     // その下の記事が丸ごと落ちることを観測できる。こちらは渡された1件しか見えない
-    if (isArticlePath && isSyncOutputReal(real, rootDir) && kind === 'unreadable') {
+    if (isArticlePath && inSyncOutput && kind === 'unreadable') {
       unreadable.push(path);
       continue;
     }
@@ -452,7 +453,7 @@ export function resolveRequestedFiles(paths: string[], rootDir: string = process
       // 文面は列挙 (listArticleFiles) と共通にして、経路で言葉が変わらないようにする
       // どのツリーの話かで文面が変わる。inScope で分けると、sync の出力の異常を
       // 手書きツリーの不備として報告してしまう
-      if (isSyncOutputReal(real, rootDir)) {
+      if (inSyncOutput) {
         // sync の出力でここに来るのは、記事でないパスと削除された記事だけである。
         // 記事の異常は手前で止まる。削除は正常なので報告しない
         if (kind === 'unreadable') {
