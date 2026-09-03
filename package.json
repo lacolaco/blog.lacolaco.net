@@ -86,7 +86,7 @@
     "tailwindcss": "4.3.2",
     "tsx": "4.23.12",
     "typescript-eslint": "^8.33.1",
-    "vitest": "4.1.10",
+    "vitest": "4.1.11",
     "zod": "^3.22.4"
   },
   "pnpm": {
