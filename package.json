@@ -37,7 +37,7 @@
     "@fontsource/zen-kaku-gothic-new": "5.2.7",
     "@resvg/resvg-js": "2.6.2",
     "astro": "6.4.8",
-    "budoux": "0.8.4",
+    "budoux": "0.9.1",
     "cheerio": "1.2.0",
     "date-fns": "4.4.0",
     "escape-html": "^1.0.3",
