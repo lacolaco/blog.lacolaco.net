@@ -42,8 +42,8 @@ importers:
         specifier: 6.4.8
         version: 6.4.8(@types/node@24.13.3)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.50.0)(sass@1.103.1)(tsx@4.23.13)(yaml@2.9.0)
       budoux:
-        specifier: 0.8.4
-        version: 0.8.4
+        specifier: 0.9.1
+        version: 0.9.1
       cheerio:
         specifier: 1.2.0
         version: 1.2.0
@@ -1848,8 +1848,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
-  budoux@0.8.4:
-    resolution: {integrity: sha512-EogZewMIXDePuJeBetf2hQphKsTWup3oTaf4q4ibc3NPPW+wAvfpk5AsC71BxcfowGeO/5cHvzGd/d0x8bIYXQ==}
+  budoux@0.9.1:
+    resolution: {integrity: sha512-LFjvPGRgeEYIDY6cmB8273RmTigGbfIXssBrhT89Aq3dfXfDQls02QFwpnlWmxbvXBfh42WGsWmXKtJ8LAX7UA==}
     hasBin: true
 
   buffer-equal-constant-time@1.0.1:
@@ -1914,9 +1914,9 @@ packages:
     resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
     engines: {node: '>=16'}
 
-  commander@14.0.3:
-    resolution: {integrity: sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==}
-    engines: {node: '>=20'}
+  commander@15.0.0:
+    resolution: {integrity: sha512-z67u4ZhzCL/Tydu1lJARtEZYWbWaN7oYLHbsuzocr6y4N6WZAagG3RQ4FW61V1/0+jImpj293XfrcYnd1qxtPg==}
+    engines: {node: '>=22.12.0'}
 
   commander@7.2.0:
     resolution: {integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==}
@@ -5577,9 +5577,9 @@ snapshots:
       node-releases: 2.0.23
       update-browserslist-db: 1.1.3(browserslist@4.26.3)
 
-  budoux@0.8.4:
+  budoux@0.9.1:
     dependencies:
-      commander: 14.0.3
+      commander: 15.0.0
       google-artifactregistry-auth: 3.5.0
       linkedom: 0.18.12
     transitivePeerDependencies:
@@ -5650,7 +5650,7 @@ snapshots:
 
   commander@11.1.0: {}
 
-  commander@14.0.3: {}
+  commander@15.0.0: {}
 
   commander@7.2.0: {}
 
