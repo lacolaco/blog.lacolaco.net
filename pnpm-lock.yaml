@@ -30,11 +30,11 @@ importers:
         specifier: ^1.2.0
         version: 1.5.0
       '@fontsource/source-code-pro':
-        specifier: 5.2.7
-        version: 5.2.7
+        specifier: 5.3.0
+        version: 5.3.0
       '@fontsource/zen-kaku-gothic-new':
-        specifier: 5.2.7
-        version: 5.2.7
+        specifier: 5.3.0
+        version: 5.3.0
       '@resvg/resvg-js':
         specifier: 2.6.2
         version: 2.6.2
@@ -762,11 +762,11 @@ packages:
       '@noble/hashes':
         optional: true
 
-  '@fontsource/source-code-pro@5.2.7':
-    resolution: {integrity: sha512-7papq9TH94KT+S5VSY8cU7tFmwuGkIe3qxXRMscuAXH6AjMU+KJI75f28FzgBVDrlMfA0jjlTV4/x5+H5o/5EQ==}
+  '@fontsource/source-code-pro@5.3.0':
+    resolution: {integrity: sha512-JxaCODU69HDS3mVra9u96nyBF911La6IvtGLgpQD+PZLxJ1i9IxooNfLR6Y37kx06IFjVGkvoUmg3WPwh/8gBg==}
 
-  '@fontsource/zen-kaku-gothic-new@5.2.7':
-    resolution: {integrity: sha512-tfGiyBqeeBjUURHm+RIuBJCxIKhZFp46/+LEc+zCxR4sLslKwlVpWda0ZOnX/mTvOHpfr4DYjiV/pVosRXHWaw==}
+  '@fontsource/zen-kaku-gothic-new@5.3.0':
+    resolution: {integrity: sha512-2t88gAaUkqIAFARfO8GkT1x57QBRx8A0pWeB0CIrIahnzdanWjcV4thPCSv9BJmpeRndq6qbFx1KYglHykiPhw==}
 
   '@fortawesome/fontawesome-free@6.7.2':
     resolution: {integrity: sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==}
@@ -4532,9 +4532,9 @@ snapshots:
 
   '@exodus/bytes@1.15.0': {}
 
-  '@fontsource/source-code-pro@5.2.7': {}
+  '@fontsource/source-code-pro@5.3.0': {}
 
-  '@fontsource/zen-kaku-gothic-new@5.2.7': {}
+  '@fontsource/zen-kaku-gothic-new@5.3.0': {}
 
   '@fortawesome/fontawesome-free@6.7.2': {}
 
