@@ -42,7 +42,7 @@
     "date-fns": "4.4.0",
     "escape-html": "^1.0.3",
     "hast-util-from-html": "^2.0.3",
-    "katex": "0.17.0",
+    "katex": "0.18.4",
     "mermaid": "11.16.1",
     "p-retry": "^8.0.0",
     "react": "19.2.8",
