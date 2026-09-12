@@ -3,10 +3,11 @@ title: '変更容易性の二元モデル'
 slug: 'dual-modifiability-model'
 icon: ''
 created_time: '2026-09-12T02:43:00.000Z'
-last_edited_time: '2026-09-12T02:43:00.000Z'
+last_edited_time: '2026-09-12T02:53:00.000Z'
 tags:
   - 'Testing'
   - '変更容易性'
+  - 'Software Design'
 published: true
 locale: 'ja'
 channels:
