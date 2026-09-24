@@ -2,8 +2,8 @@
 title: 'Angular: プライベートフィールドの意味論再考'
 slug: 'angular-private-fields'
 icon: ''
-created_time: '2026-09-24T22:36:00.000Z'
-last_edited_time: '2026-09-24T22:36:00.000Z'
+created_time: '2026-09-24T22:51:00.000Z'
+last_edited_time: '2026-09-24T22:51:00.000Z'
 tags: []
 published: true
 locale: 'ja'
@@ -153,7 +153,7 @@ export class ProfileEditorComponent {
 
 ### 方針1: コンポーネント内の情報隠蔽を維持する
 
-[Kaplan氏の提案](https://github.com/angular/angular/pull/70188#issuecomment-5645787054)は、TypeScriptの`private`とECMAScriptの`#private`を異なる可視性として使い分けるものである。
+一つは、TypeScriptの`private`とECMAScriptの`#private`を異なる可視性として使い分けるものである。
 
 - `private`: クラスとテンプレートで共有する、コンポーネント内部のAPI
 - `#private`: テンプレートからも隠蔽し、クラス本体だけで使う実装詳細
@@ -195,7 +195,7 @@ export class UserListComponent {
 
 ### 方針2: コンポーネント内の情報隠蔽を責務分離へ置き換える
 
-私が提案するもう一つの方針は、テンプレートとクラスはコンポーネントとしてひとつのまとまりだと解釈し、**コンポーネント内部での情報隠蔽は行わない**ことにする。その代わり、テンプレートから隠す必要がある実装詳細はそもそもコンポーネントに持たせないようにする。
+私の好みであるもう一つの方針は、テンプレートとクラスはコンポーネントとしてひとつのまとまりだと解釈し、**コンポーネント内部での情報隠蔽は行わない**ことにする。その代わり、テンプレートから隠す必要がある実装詳細はそもそもコンポーネントに持たせないようにする。
 
 今回の変更が許可するのは、テンプレートからコンポーネント自身の`private`フィールドへのアクセスである。ネストしたオブジェクトの`private`フィールドまで公開されるわけではない。この性質を利用し、テンプレートへ公開しない依存・状態・処理などをFacade、ViewModel、Storeなど別のオブジェクトへ移す。
 
