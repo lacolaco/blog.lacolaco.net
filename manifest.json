@@ -1529,5 +1529,9 @@
     "imagePaths": [
       "public/images/dual-modifiability-model/psychological-physical-modifiability.f23f0ad47337060e.png"
     ]
+  },
+  "3e53521b-014a-804c-8c2f-d56fecda60ed": {
+    "lastModified": "2026-09-24T22:36:00.000Z",
+    "filePath": "content/notion/posts/angular-private-fields.md"
   }
 }
