@@ -2,8 +2,8 @@
 title: 'Angular: Rethinking the Semantics of Private Fields'
 slug: 'angular-private-fields'
 icon: ''
-created_time: '2026-09-24T22:51:00.000Z'
-last_edited_time: '2026-09-24T22:51:00.000Z'
+created_time: '2026-09-24T22:56:00.000Z'
+last_edited_time: '2026-09-24T22:56:00.000Z'
 tags: []
 published: true
 locale: 'en'
