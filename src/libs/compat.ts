@@ -10,6 +10,16 @@ export function getRelativePostUrl(post: CollectionEntry<'posts' | 'postsEn'>): 
   return `/posts/${post.data.slug}${localeSuffix}`;
 }
 
+/**
+ * 記事の OG 画像パス。ja と en は同じ slug を共有するため、en では locale を明示しないと
+ * OG ルートが ja 記事を描画してしまう。ja は既存の CDN キャッシュ URL を変えないようパラメータを付けない。
+ * t (last_edited_time) は Cloudflare CDN のキャッシュ無効化用。
+ */
+export function getOgImagePath(post: CollectionEntry<'posts' | 'postsEn'>): string {
+  const localeParam = post.data.locale === 'en' ? '&locale=en' : '';
+  return `/og/${post.data.slug}.png?t=${post.data.last_edited_time.getTime()}${localeParam}`;
+}
+
 export function getTitle(post: CollectionEntry<'posts' | 'postsEn'>): string {
   return post.data.title;
 }

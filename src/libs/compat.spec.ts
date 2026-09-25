@@ -72,3 +72,37 @@ describe('getChannels', () => {
     expect(getChannels(post)).toEqual([]);
   });
 });
+
+describe('getOgImagePath', () => {
+  const lastEdited = new Date('2024-02-03T04:05:06Z');
+
+  function createPost(locale: 'ja' | 'en'): CollectionEntry<'posts' | 'postsEn'> {
+    return {
+      id: locale === 'en' ? 'test.en.md' : 'test.md',
+      slug: 'test',
+      body: '',
+      collection: locale === 'en' ? 'postsEn' : 'posts',
+      data: {
+        slug: 'test',
+        title: 'Test',
+        created_time: new Date('2024-01-01'),
+        last_edited_time: lastEdited,
+        tags: [],
+        published: true,
+        locale,
+      },
+    } as CollectionEntry<'posts' | 'postsEn'>;
+  }
+
+  it('ja記事はlocaleパラメータを含まない (既存のCDNキャッシュURLを維持する)', async () => {
+    const { getOgImagePath } = await import('./compat');
+    expect(getOgImagePath(createPost('ja'))).toBe(`/og/test.png?t=${lastEdited.getTime()}`);
+  });
+
+  it('en記事はlocale=enを含み、ja記事と異なるURLになる', async () => {
+    const { getOgImagePath } = await import('./compat');
+    const enPath = getOgImagePath(createPost('en'));
+    expect(enPath).toBe(`/og/test.png?t=${lastEdited.getTime()}&locale=en`);
+    expect(enPath).not.toBe(getOgImagePath(createPost('ja')));
+  });
+});

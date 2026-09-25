@@ -16,7 +16,7 @@ import LikeButton from '../components/LikeButton';
 import ImageLightbox from '../components/ImageLightbox.astro';
 import { SITE_TITLE } from '../consts';
 import { queryAvailablePosts, type AdjacentPosts } from '@lib/query';
-import { getRelativePostUrl, getChannels } from '../libs/compat';
+import { getRelativePostUrl, getChannels, getOgImagePath } from '../libs/compat';
 
 type Props = {
   entry: CollectionEntry<'posts'>;
@@ -44,7 +44,7 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
     <BaseHead
       title={`${title} | ${SITE_TITLE}`}
       description={''}
-      image={`/og/${slug}.png?t=${last_edited_time.getTime()}`}
+      image={getOgImagePath(entry)}
       gtagProps={{
         post_slug: `${slug}`,
         post_locale: `${locale}`,

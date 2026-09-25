@@ -53,6 +53,19 @@ export function assertUniqueSlugs(entries: Array<CollectionEntry<'posts' | 'post
 }
 
 /**
+ * slug と locale の組で記事を1件引く。
+ * ja と en は同じ slug を共有するため、slug だけで引くと並び順で先に来る ja 記事が返る。
+ * 指定 locale の記事がなければ別 locale にフォールバックせず undefined を返す。
+ */
+export function findPostBySlugAndLocale(
+  posts: Array<CollectionEntry<'posts' | 'postsEn'>>,
+  slug: string,
+  locale: 'ja' | 'en',
+): CollectionEntry<'posts' | 'postsEn'> | undefined {
+  return posts.find((post) => post.data.slug === slug && post.data.locale === locale);
+}
+
+/**
  * 重複する記事を除外する
  * 同じslugを持つ記事が複数ある場合、日本語版（locale: 'ja'）を優先し、英語版を除外する
  */

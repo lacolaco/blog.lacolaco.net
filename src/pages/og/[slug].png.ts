@@ -1,14 +1,16 @@
-import { queryAvailablePosts } from '@lib/query';
+import { findPostBySlugAndLocale, queryAvailablePosts } from '@lib/query';
 import type { APIContext } from 'astro';
 import { generateOgImage } from '../../libs/og-image/generate';
 
 export const prerender = false;
 
-export async function GET({ params }: APIContext) {
+export async function GET({ params, url }: APIContext) {
   const { slug } = params;
   if (!slug) return new Response(null, { status: 404 });
 
-  const post = (await queryAvailablePosts()).find((post) => post.data.slug === slug);
+  // ja と en は同じ slug を共有するため locale で区別する (URL は getOgImagePath が組み立てる)
+  const locale = url.searchParams.get('locale') === 'en' ? 'en' : 'ja';
+  const post = findPostBySlugAndLocale(await queryAvailablePosts(), slug, locale);
   if (!post) return new Response(null, { status: 404 });
 
   const title = post.data.title;

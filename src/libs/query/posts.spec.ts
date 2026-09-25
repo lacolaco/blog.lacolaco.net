@@ -5,6 +5,7 @@ import {
   attachTranslations,
   buildListPagePosts,
   assertUniqueSlugs,
+  findPostBySlugAndLocale,
 } from './posts';
 import type { CollectionEntry } from 'astro:content';
 
@@ -493,5 +494,35 @@ describe('buildListPagePosts', () => {
     expect(bySlug.get('post-2')?.translations).toEqual({});
     expect(bySlug.get('post-3')?.post.data.locale).toBe('en');
     expect(bySlug.get('post-3')?.translations).toEqual({});
+  });
+});
+
+describe('findPostBySlugAndLocale', () => {
+  const created = new Date('2024-01-01');
+  // queryAvailablePosts は ja → en の順に連結して安定ソートするため、同一 slug では ja が先に来る
+  const posts = [
+    createMockPost('shared', created),
+    createMockEnPost('shared', created),
+    createMockPost('ja-only', created),
+  ];
+
+  it('locale=en では同じ slug の英語版を返す', () => {
+    const found = findPostBySlugAndLocale(posts, 'shared', 'en');
+    expect(found?.data.locale).toBe('en');
+    expect(found?.data.title).toBe('Test Post shared (EN)');
+  });
+
+  it('locale=ja では同じ slug の日本語版を返す', () => {
+    const found = findPostBySlugAndLocale(posts, 'shared', 'ja');
+    expect(found?.data.locale).toBe('ja');
+    expect(found?.data.title).toBe('Test Post shared');
+  });
+
+  it('英語版が存在しない slug を locale=en で引くと undefined を返す (日本語版にフォールバックしない)', () => {
+    expect(findPostBySlugAndLocale(posts, 'ja-only', 'en')).toBeUndefined();
+  });
+
+  it('存在しない slug は undefined を返す', () => {
+    expect(findPostBySlugAndLocale(posts, 'missing', 'ja')).toBeUndefined();
   });
 });
