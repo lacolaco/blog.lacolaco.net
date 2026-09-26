@@ -8,7 +8,12 @@ export async function GET({ params }: APIContext) {
   const { slug } = params;
   if (!slug) return new Response(null, { status: 404 });
 
-  const post = (await queryAvailablePosts()).find((post) => post.data.slug === slug);
+  const isEnglish = slug.endsWith('.en');
+  const postSlug = isEnglish ? slug.slice(0, -3) : slug;
+  const collection = isEnglish ? 'postsEn' : 'posts';
+  const post = (await queryAvailablePosts()).find(
+    (post) => post.data.slug === postSlug && post.collection === collection,
+  );
   if (!post) return new Response(null, { status: 404 });
 
   const title = post.data.title;
