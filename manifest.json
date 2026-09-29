@@ -1535,10 +1535,10 @@
     "filePath": "content/notion/posts/angular-private-fields.md"
   },
   "3ea3521b-014a-805a-8f9a-ebbf82f0dde8": {
-    "lastModified": "2026-09-29T15:29:00.000Z",
-    "filePath": "content/notion/posts/angular-ngp.md",
+    "lastModified": "2026-09-29T23:47:00.000Z",
+    "filePath": "content/notion/posts/angular-ngp-overview.md",
     "imagePaths": [
-      "public/images/angular-ngp/image.5e1f3cdef2b3e79b.png"
+      "public/images/angular-ngp-overview/image.5e1f3cdef2b3e79b.png"
     ]
   }
 }
