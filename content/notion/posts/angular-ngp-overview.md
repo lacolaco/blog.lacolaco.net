@@ -3,7 +3,7 @@ title: 'Angular: Rustで書かれる新しいコンパイラ ngp（Angular Prepr
 slug: 'angular-ngp-overview'
 icon: ''
 created_time: '2026-09-29T15:29:00.000Z'
-last_edited_time: '2026-09-29T23:47:00.000Z'
+last_edited_time: '2026-09-29T23:52:00.000Z'
 tags:
   - 'Rust'
   - 'oxc'
