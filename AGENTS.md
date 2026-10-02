@@ -203,7 +203,6 @@ pnpm test:libs    # library tests
 - commit→push→PR→CI watch の不可分性は CRITICAL RULES §2d を参照
 - branch 目的と staged changes の整合性検査は CRITICAL RULES §2c を参照
 - **PRマージ時に`--delete-branch`を付けるな**。リモートブランチはマージ後に自動削除される（GitHub設定）
-- Use a git/GitHub operations agent (e.g. git-github-ops) for complex operations, if available
 - NEVER `git reset --hard` with uncommitted changes you need
 - **push前に`git fetch origin main`してブランチがmainの最新に追従しているか確認せよ**。outdatedなブランチをpushするな
 - pushするとCIは再実行される。古いCI watchの結果は無効
