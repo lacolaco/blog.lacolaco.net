@@ -3,7 +3,7 @@ title: 'Angular: Rustで書かれる新しいコンパイラ ngp（Angular Prepr
 slug: 'angular-ngp-overview'
 icon: ''
 created_time: '2026-09-29T15:29:00.000Z'
-last_edited_time: '2026-09-29T23:52:00.000Z'
+last_edited_time: '2026-09-30T00:35:00.000Z'
 tags:
   - 'Rust'
   - 'oxc'
@@ -48,10 +48,7 @@ Angularで書かれたアプリケーションは、TypeScriptのコードをそ
 
 今回発表された `ngp`（Angular Preprocessor）はその名のとおり、コンポーネントやディレクティブなどAngular固有の扱いが必要なコードを先に処理するものだ。そして、実行用のTypeScriptコードと、型チェック用のTypeScriptコードを生成する。後続のTypeScriptコンパイラやesbuildなどは、その出力を通常のTypeScriptとして扱えるようになる。モノリシックなひとつのコンパイラではなく、複数のツールを統合したビルドツールチェインとして再構築するわけだ。
 
-<figure>
-  <img src="/images/angular-ngp-overview/image.5e1f3cdef2b3e79b.png" alt="https://blog.angular.dev/an-update-on-angulars-typescript-7-powered-compiler-9619a35e2b0a">
-  <figcaption>https://blog.angular.dev/an-update-on-angulars-typescript-7-powered-compiler-9619a35e2b0a</figcaption>
-</figure>
+![image](/images/angular-ngp-overview/image.5e1f3cdef2b3e79b.png)
 
 ## なぜRustなのか
 
