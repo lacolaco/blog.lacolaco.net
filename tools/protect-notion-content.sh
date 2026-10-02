@@ -30,7 +30,7 @@ These files are auto-generated:
   - .md      → Notion (via notion-sync). Fix in Notion.
   - .en.md   → ja .md (via auto-translate). Fix in tools/auto-translate/ pipeline (prompt / proofreader / validator).
 
-Direct edits are overwritten on next sync. See CLAUDE.md rule 2b.
+Direct edits are overwritten on next sync. See AGENTS.md rule 2b.
 EOF
     exit 2
     ;;

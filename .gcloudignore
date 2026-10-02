@@ -21,6 +21,7 @@ node_modules/
 .*
 GEMINI.md
 CLAUDE.md
+AGENTS.md
 
 tools/
 public/
