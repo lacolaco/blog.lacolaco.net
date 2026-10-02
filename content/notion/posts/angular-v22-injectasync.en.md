@@ -23,7 +23,7 @@ auto_translated_from: 'b90f88266398885cf2ef78a2a4e0bcb7bbde2ce5661b42ea2abcd8c06
 
 The `injectAsync` function added in Angular v22 provides a new option for improving loading speeds. I'll introduce this new API while reviewing the lazy loading APIs that have existed until now.
 
-https://angular.jp/guide/di/lazy-loading-services
+https://angular.dev/guide/di/lazy-loading-services
 
 ## `injectAsync` 
 
@@ -94,7 +94,7 @@ export const routes: Routes = [
 
 In cases where accessible pages are clearly separated, such as by user permissions, introducing route-based lazy loading would likely be effective.
 
-https://angular.jp/best-practices/performance/lazy-loaded-routes
+https://angular.dev/best-practices/performance/lazy-loaded-routes
 
 ### Lazy Loading Partial Views
 
@@ -112,13 +112,13 @@ This is an option when a specific component within a descendant view has a large
 
 In cases where the frequency and timing of feature use vary depending on the screen area, lazy loading views with `@defer` would work effectively.
 
-https://angular.jp/best-practices/performance/defer
+https://angular.dev/best-practices/performance/defer
 
 ### Lazy Loading Services
 
 When a part of the logic, rather than the view, is deferrable, `injectAsync`, which I've introduced here, is the choice. If logic that uses a large third-party library is not needed for the initial load and its loading can be triggered when needed, that's where `injectAsync` comes in.
 
-https://angular.jp/best-practices/performance/lazy-loading-services
+https://angular.dev/best-practices/performance/lazy-loading-services
 
 ### Lazy Loading Modules
 

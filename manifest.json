@@ -1478,5 +1478,67 @@
       "public/images/angular-resource-apis-system/image.d794691b3e377a98.png",
       "public/images/angular-resource-apis-system/image.016a63cf56466503.png"
     ]
+  },
+  "3aa3521b-014a-8097-855b-ebdb45df75fc": {
+    "lastModified": "2026-07-27T00:54:00.000Z",
+    "filePath": "content/notion/posts/angular-update-guide-skill.md"
+  },
+  "3ad3521b-014a-8112-a97d-e82bb32e5d55": {
+    "lastModified": "2026-08-02T01:15:00.000Z",
+    "filePath": "content/notion/posts/angular-v22-1-oxc-parser.md"
+  },
+  "3b13521b-014a-8021-9d1c-e585fc92df77": {
+    "lastModified": "2026-08-04T02:25:00.000Z",
+    "filePath": "content/notion/posts/angular-css-var-namespacing.md",
+    "imagePaths": [
+      "public/images/angular-css-var-namespacing/CleanShot_2026-08-04_at_07.45.572x.875f648658105d02.png",
+      "public/images/angular-css-var-namespacing/CleanShot_2026-08-04_at_07.48.302x.278a376db158f1b1.png",
+      "public/images/angular-css-var-namespacing/CleanShot_2026-08-04_at_07.52.432x.32b37803f08da4eb.png",
+      "public/images/angular-css-var-namespacing/CleanShot_2026-08-04_at_07.58.392x.98219dd25053b751.png"
+    ]
+  },
+  "3bd3521b-014a-805e-a0ab-c3d2984d50c5": {
+    "lastModified": "2026-08-15T01:45:00.000Z",
+    "filePath": "content/notion/posts/propaganda-the-basics.md",
+    "imagePaths": [
+      "public/images/propaganda-the-basics/image.bd5a9b13a844e03a.png"
+    ]
+  },
+  "3c43521b-014a-8026-8cde-ec9c93bc9e0c": {
+    "lastModified": "2026-08-23T01:04:00.000Z",
+    "filePath": "content/notion/posts/making-of-printmd.md",
+    "imagePaths": [
+      "public/images/making-of-printmd/image.a504882203a8a4f4.png",
+      "public/images/making-of-printmd/CleanShot_2026-08-23_at_09.14.242x.a771e00da8b5d5e9.png",
+      "public/images/making-of-printmd/CleanShot_2026-08-23_at_09.19.392x.288743a74d6be57e.png",
+      "public/images/making-of-printmd/CleanShot_2026-08-23_at_09.25.272x.dc4ba79b00c5aa18.png",
+      "public/images/making-of-printmd/CleanShot_2026-08-23_at_09.28.562x.2449b7149f0445b6.png"
+    ]
+  },
+  "3cd3521b-014a-80ac-9006-e143997fbdfb": {
+    "lastModified": "2026-09-01T14:22:00.000Z",
+    "filePath": "content/notion/posts/path-by-obstacles.md",
+    "imagePaths": [
+      "public/images/path-by-obstacles/image.992471eb2cad4e07.png",
+      "public/images/path-by-obstacles/image.32ae3ecc78c0bcf1.png"
+    ]
+  },
+  "3d83521b-014a-80e8-bd7a-dd61e3a40a2a": {
+    "lastModified": "2026-09-12T02:53:00.000Z",
+    "filePath": "content/notion/posts/dual-modifiability-model.md",
+    "imagePaths": [
+      "public/images/dual-modifiability-model/psychological-physical-modifiability.f23f0ad47337060e.png"
+    ]
+  },
+  "3e53521b-014a-804c-8c2f-d56fecda60ed": {
+    "lastModified": "2026-09-24T22:56:00.000Z",
+    "filePath": "content/notion/posts/angular-private-fields.md"
+  },
+  "3ea3521b-014a-805a-8f9a-ebbf82f0dde8": {
+    "lastModified": "2026-09-30T00:35:00.000Z",
+    "filePath": "content/notion/posts/angular-ngp-overview.md",
+    "imagePaths": [
+      "public/images/angular-ngp-overview/image.5e1f3cdef2b3e79b.png"
+    ]
   }
 }

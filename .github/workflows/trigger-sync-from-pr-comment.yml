@@ -6,20 +6,20 @@ on:
   push:
     branches: [main]
 
-# 連打 / 複数 main push を debounce、blog-contents 側 sync workflow の concurrency と協調
-# group キーは以下の 2 軸で scope:
-#   - event_name: comment-trigger と push-trigger が互いを cancel しないように分離
-#   - issue.number (comment 時) / 'push' (push 時): PR ごと / push 全体で独立した group に
-# こうすることで silent-drop UX バグを以下のいずれの軸でも回避できる:
-#   - `.sync` コメント実行中に main push が来ても comment-trigger は cancel されない
-#   - PR #1 の `.sync` 実行中に PR #2 の `.sync` が来ても PR #1 は cancel されない
-concurrency:
-  group: dispatch-blog-contents-sync-${{ github.event_name }}-${{ github.event.issue.number || 'push' }}
-  cancel-in-progress: true
-
+# workflow レベルの concurrency は job の if と無関係に run を group へ入れるため、
+# `.sync` 実行中に無関係なコメントが 1 件付くと先行 run が cancel され、
+# どちらの run も dispatch されないまま 👀 が 👎 に変わるだけの silent-drop が起きる。
+# comment-trigger には concurrency を付けず、push 起動の job にのみ job レベルで付ける。
 jobs:
   comment-trigger:
-    if: github.event_name == 'issue_comment'
+    # 判定の正は github/command 側の triggerCheck。ここは無関係なコメントでランナーを
+    # 起動させないための粗いフィルタなので、本判定より必ず広く取ること。
+    # (action は body.trim() してから startsWith するため、ここで startsWith を使うと
+    #  先頭に空白や改行が付いた `.sync` を取りこぼし、job ごと skip されて無反応になる)
+    if: >-
+      github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '.sync')
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -32,7 +32,13 @@ jobs:
           command: '.sync'
           allowed_contexts: pull_request
           reaction: 'eyes'
+          # この job は blog-contents へ dispatch するだけで PR を読まない。
+          # PR 側の状態 (CI / review / draft / fork) で門前払いさせない。
+          # skip_reviews が無いと ci.yml の code-review job が付けた CHANGES_REQUESTED で弾かれる
           skip_ci: true
+          skip_reviews: true
+          allow_drafts: true
+          allow_forks: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
           allowlist: lacolaco
 
@@ -62,6 +68,11 @@ jobs:
   # blog-contents 側 sync PR を最新 main base で refresh するための dispatch
   # (main 更新で sync PR が base behind になる問題への対処)
   dispatch-blog-contents-sync:
+    # 連打 / 複数 main push を debounce。dispatch-auto-translate と同一 run 内で
+    # 同じ group を共有すると互いを cancel し合うため、job ごとに group 名を分ける
+    concurrency:
+      group: dispatch-blog-contents-sync-push
+      cancel-in-progress: true
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
@@ -90,6 +101,11 @@ jobs:
   # auto-translate.yml は content/notion/posts/ 変更を含む push しか自動起動しない。
   # コード push でも main は進むので、追従していない翻訳 PR を捕まえるため明示的に再送する。
   dispatch-auto-translate:
+    # 連打 / 複数 main push を debounce。dispatch-blog-contents-sync と同一 run 内で
+    # 同じ group を共有すると互いを cancel し合うため、job ごとに group 名を分ける
+    concurrency:
+      group: dispatch-auto-translate-push
+      cancel-in-progress: true
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:

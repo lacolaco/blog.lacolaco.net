@@ -82,7 +82,7 @@ describe('queryAdjacentPosts', () => {
       createMockPost('post-3', new Date('2023-01-03')),
     ];
 
-    const result = queryAdjacentPosts(posts, 'post-2');
+    const result = queryAdjacentPosts(posts, posts[1]);
 
     expect(result.prev).not.toBeNull();
     expect(result.prev?.data.slug).toBe('post-1');
@@ -97,7 +97,7 @@ describe('queryAdjacentPosts', () => {
       createMockPost('post-3', new Date('2023-01-03')),
     ];
 
-    const result = queryAdjacentPosts(posts, 'post-1');
+    const result = queryAdjacentPosts(posts, posts[0]);
 
     expect(result.prev).toBeNull();
     expect(result.next).not.toBeNull();
@@ -111,7 +111,7 @@ describe('queryAdjacentPosts', () => {
       createMockPost('post-3', new Date('2023-01-03')),
     ];
 
-    const result = queryAdjacentPosts(posts, 'post-3');
+    const result = queryAdjacentPosts(posts, posts[2]);
 
     expect(result.prev).not.toBeNull();
     expect(result.prev?.data.slug).toBe('post-2');
@@ -121,35 +121,33 @@ describe('queryAdjacentPosts', () => {
   it('記事が1つしかない場合、両方nullになる', () => {
     const posts = [createMockPost('post-1', new Date('2023-01-01'))];
 
-    const result = queryAdjacentPosts(posts, 'post-1');
+    const result = queryAdjacentPosts(posts, posts[0]);
 
     expect(result.prev).toBeNull();
     expect(result.next).toBeNull();
   });
 
-  it('存在しないスラッグの場合、両方nullになる', () => {
+  it('集合に含まれない記事の場合、両方nullになる', () => {
     const posts = [createMockPost('post-1', new Date('2023-01-01')), createMockPost('post-2', new Date('2023-01-02'))];
+    const current = createMockPost('non-existent', new Date('2023-01-03'));
 
-    const result = queryAdjacentPosts(posts, 'non-existent');
+    const result = queryAdjacentPosts(posts, current);
 
     expect(result.prev).toBeNull();
     expect(result.next).toBeNull();
   });
 
-  it('ロケールが異なる記事も含まれる', () => {
-    const posts = [
+  it('ロケールが異なる記事は隣接記事に含まれない', () => {
+    const posts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
       createMockPost('post-1', new Date('2023-01-01')),
-      createMockPost('post-2', new Date('2023-01-02'), 'en'),
-      createMockPost('post-3', new Date('2023-01-03'), 'ja'),
+      createMockEnPost('post-2', new Date('2023-01-02')),
+      createMockPost('post-3', new Date('2023-01-03')),
     ];
 
-    const result = queryAdjacentPosts(posts, 'post-2');
+    const result = queryAdjacentPosts(posts, posts[0]);
 
-    // ロケールが異なっても前後の記事として取得される
-    expect(result.prev).not.toBeNull();
-    expect(result.prev?.data.slug).toBe('post-1');
-    expect(result.prev?.data.locale).toBe('ja');
-    expect(result.next).not.toBeNull();
+    // ja 記事の隣接記事は ja のみ。間にある en 記事は飛ばされる
+    expect(result.prev).toBeNull();
     expect(result.next?.data.slug).toBe('post-3');
     expect(result.next?.data.locale).toBe('ja');
   });
@@ -161,7 +159,7 @@ describe('queryAdjacentPosts', () => {
       createMockPost('post-2', new Date('2023-01-02')),
     ];
 
-    const result = queryAdjacentPosts(posts, 'post-2');
+    const result = queryAdjacentPosts(posts, posts[2]);
 
     // ソート後、post-1 → post-2 → post-3 となる
     expect(result.prev?.data.slug).toBe('post-1');
@@ -171,10 +169,79 @@ describe('queryAdjacentPosts', () => {
   it('空の配列の場合、両方nullになる', () => {
     const posts: Array<CollectionEntry<'posts'>> = [];
 
-    const result = queryAdjacentPosts(posts, 'post-1');
+    const result = queryAdjacentPosts(posts, createMockPost('post-1', new Date('2023-01-01')));
 
     expect(result.prev).toBeNull();
     expect(result.next).toBeNull();
+  });
+
+  it('ja 記事の隣接記事に自分の翻訳版が現れない', () => {
+    // 翻訳版は ja とほぼ同じ created_time を持つため、locale を混ぜると必ず隣に並ぶ
+    const jaPost = createMockPost('post-1', new Date('2023-01-01'));
+    const posts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
+      createMockPost('post-0', new Date('2022-12-30')),
+      jaPost,
+      createMockEnPost('post-1', new Date('2023-01-01')),
+      createMockPost('post-2', new Date('2023-01-03')),
+    ];
+
+    const result = queryAdjacentPosts(posts, jaPost);
+
+    expect(result.prev?.data.slug).toBe('post-0');
+    expect(result.next?.data.slug).toBe('post-2');
+    expect(result.next?.data.locale).toBe('ja');
+  });
+
+  it('翻訳版の created_time が ja より前でも prev に現れない', () => {
+    const jaPost = createMockPost('post-1', new Date('2023-01-02'));
+    const posts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
+      createMockPost('post-0', new Date('2022-12-30')),
+      createMockEnPost('post-1', new Date('2023-01-01')),
+      jaPost,
+    ];
+
+    const result = queryAdjacentPosts(posts, jaPost);
+
+    expect(result.prev?.data.slug).toBe('post-0');
+    expect(result.prev?.data.locale).toBe('ja');
+  });
+
+  it('同 locale で slug が衝突していても現在の記事を id で特定する', () => {
+    // dev では draft を含む全件が渡るため (queryAvailablePosts)、
+    // content/posts/ の下書きが Notion 由来の記事と slug 衝突しうる
+    const draft = createMockPostWithId('posts/foo.md', 'foo', new Date('2023-01-02'));
+    const published = createMockPostWithId('notion/posts/foo.md', 'foo', new Date('2023-01-04'));
+    const posts = [
+      createMockPost('post-1', new Date('2023-01-01')),
+      draft,
+      published,
+      createMockPost('post-2', new Date('2023-01-05')),
+    ];
+
+    const result = queryAdjacentPosts(posts, published);
+
+    expect(result.prev?.id).toBe('posts/foo.md');
+    expect(result.next?.data.slug).toBe('post-2');
+  });
+
+  it('en 記事の隣接記事は en 記事から選ばれる', () => {
+    // 同 slug の ja 記事が先に見つかって位置がずれる回帰を防ぐ
+    const enPost = createMockEnPost('post-2', new Date('2023-01-02'));
+    const posts: Array<CollectionEntry<'posts' | 'postsEn'>> = [
+      createMockPost('post-1', new Date('2023-01-01')),
+      createMockEnPost('post-1', new Date('2023-01-01')),
+      createMockPost('post-2', new Date('2023-01-02')),
+      enPost,
+      createMockPost('post-3', new Date('2023-01-03')),
+      createMockEnPost('post-3', new Date('2023-01-03')),
+    ];
+
+    const result = queryAdjacentPosts(posts, enPost);
+
+    expect(result.prev?.data.slug).toBe('post-1');
+    expect(result.prev?.data.locale).toBe('en');
+    expect(result.next?.data.slug).toBe('post-3');
+    expect(result.next?.data.locale).toBe('en');
   });
 });
 

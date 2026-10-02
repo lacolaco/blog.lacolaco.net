@@ -15,15 +15,12 @@ import ArticleSummarizer from '../components/ArticleSummarizer';
 import LikeButton from '../components/LikeButton';
 import ImageLightbox from '../components/ImageLightbox.astro';
 import { SITE_TITLE } from '../consts';
-import { queryAvailablePosts } from '@lib/query';
+import { queryAvailablePosts, type AdjacentPosts } from '@lib/query';
 import { getRelativePostUrl, getChannels } from '../libs/compat';
 
 type Props = {
   entry: CollectionEntry<'posts'>;
-  adjacentPosts: {
-    prev: CollectionEntry<'posts'> | null;
-    next: CollectionEntry<'posts'> | null;
-  };
+  adjacentPosts: AdjacentPosts;
 };
 
 const { entry, adjacentPosts } = Astro.props;
@@ -47,7 +44,7 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
     <BaseHead
       title={`${title} | ${SITE_TITLE}`}
       description={''}
-      image={`/og/${slug}.png?t=${last_edited_time.getTime()}`}
+      image={`/og/${slug}${locale === 'en' ? '.en' : ''}.png?t=${last_edited_time.getTime()}`}
       gtagProps={{
         post_slug: `${slug}`,
         post_locale: `${locale}`,
@@ -138,7 +135,7 @@ const alternatePost = alternateLocalePosts.length > 0 ? alternateLocalePosts[0] 
         </div>
 
         <div class="mt-6">
-          <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} />
+          <ShareButtons url={Astro.url.toString()} title={`${title} | ${SITE_TITLE}`} locale={locale || 'ja'} />
         </div>
 
         <PostNavigation prev={adjacentPosts.prev} next={adjacentPosts.next} />

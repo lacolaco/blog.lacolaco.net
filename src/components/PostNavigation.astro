@@ -1,11 +1,8 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+import type { AdjacentPosts } from '../libs/query';
 import { getRelativePostUrl } from '../libs/compat';
 
-type Props = {
-  prev: CollectionEntry<'posts'> | null;
-  next: CollectionEntry<'posts'> | null;
-};
+type Props = AdjacentPosts;
 
 const { prev, next } = Astro.props;
 
