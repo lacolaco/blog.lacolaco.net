@@ -289,7 +289,7 @@ async function main(): Promise<void> {
   // 直接執筆ディレクトリ `content/posts/` は対象外: frontmatter の `auto_translate` フラグや
   // structured metadata を Notion の database property 経由で立てる前提のパイプライン設計のため、
   // 直接執筆記事の翻訳が必要な場合は手書きで `<slug>.en.md` を作る (auto-translate は手動 en を
-  // 上書きせず skip する protect-manual 経路がある)。CLAUDE.md §2b 参照。
+  // 上書きせず skip する protect-manual 経路がある)。AGENTS.md §2b 参照。
   const contentDir = path.join(rootDir, 'content/notion/posts');
   const jaFiles = await listJaFiles(contentDir);
 
