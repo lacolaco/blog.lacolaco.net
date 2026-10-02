@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 ---
 ## 🚨 CRITICAL RULES (STOP IF VIOLATED)
@@ -11,12 +11,12 @@ These 3 rules are NON-NEGOTIABLE. Violating any = STOP and reassess.
 **TRIGGER**: After lint/format/build pass, BEFORE `git commit`
 
 For significant changes (new features, refactoring, multi-file, CI/CD workflow, deployment configuration):
-1. Run ビルトイン `/code-review` (既定 `medium`)
+1. Run コードレビュー (Claude Code ではビルトイン `/code-review`、既定 `medium`)
 2. Fix all findings
-3. Run `/code-review` AGAIN to verify
+3. Run コードレビュー AGAIN to verify
 4. Only then commit
 
-重い PR や設計変更が大きいときは、 ユーザーが手で `/code-review ultra` を重ねる (user-triggered で課金される)。
+重い PR や設計変更が大きいときは、 ユーザーが手でより深いクラウド実行のレビューを重ねる (Claude Code では `/code-review ultra`。user-triggered で課金される)。
 
 **"lint/build passed" ≠ "ready to commit"**
 
@@ -49,7 +49,7 @@ merge を除いた以下は 1 単位として実行 (途中で止めるな):
 
 ### 2b. Notion-Sourced Content (.md / .en.md) は編集しない
 
-`content/notion/**` (記事 .md / .en.md / propertyOutputs JSON) への Edit/Write は `tools/protect-notion-content.sh` PreToolUse hook が自動ブロック (`.claude/settings.json` で登録)。Notion 由来生成物の配置は以前 `src/content/post/notion/` だったが現在は `content/notion/` に移動済み (旧パスへ戻すレビュー指摘は方向逆転の誤認 — `content/notion/` が正しい現状)。原則:
+`content/notion/**` (記事 .md / .en.md / propertyOutputs JSON) への編集 (Edit/Write 相当) は、Claude Code では `tools/protect-notion-content.sh` PreToolUse hook が自動ブロックする (`.claude/settings.json` で登録)。他のハーネスにはこのフックが無いので、自分で編集しないよう守れ。Notion 由来生成物の配置は以前 `src/content/post/notion/` だったが現在は `content/notion/` に移動済み (旧パスへ戻すレビュー指摘は方向逆転の誤認 — `content/notion/` が正しい現状)。原則:
 
 - `.md` (Notion → notion-sync) の問題 → **Notion で修正依頼**。勝手に直さない
 - `.en.md` (auto-translate 生成) の問題 → `tools/auto-translate/` パイプライン (prompt / proofreader / validator) で対応
@@ -113,18 +113,18 @@ pnpm test:libs    # library tests
 ---
 
 ### UI変更の動作確認
-- UI変更は必ず自分でブラウザ確認（chrome-devtools等）まで完了させること
+- UI変更は必ず自分でブラウザ確認（Chrome DevTools MCP等）まで完了させること
 - ユーザーに確認を委ねるな。「確認してください」は禁止
-- スクリーンショットは必ず`filePath`で`/private/tmp/`に保存し、パスをユーザーに伝えること。`filePath`なしの`take_screenshot`はユーザーに表示されない
+- スクリーンショットは必ず`/private/tmp/`へファイルとして保存し、パスをユーザーに伝えること。保存先を指定せずに撮影した画像はユーザーに表示されない (Chrome DevTools MCP の `take_screenshot` なら `filePath` を指定する)
 - 変更前後の比較が必要な場合は、変更前のスクリーンショットも保存してから変更を適用すること
 - **未完成品を提示するな。提示は完了宣言と同義**。セルフレビューで発見可能な問題を残したまま見せると信頼を失う。DevToolsの数値一致だけでなくレンダリング結果（font-smoothing、line-height等の視覚的影響）まで検証してから提示せよ
-- **ビューポート設定**: `mcp__chrome-devtools__emulate`の`viewport`パラメータを使用すること。`resize_page`はDevToolsパネル分ビューポートが狭くなる
+- **ビューポート設定**: DevToolsパネル分ビューポートが狭くならない手段（エミュレーションのviewport指定）を使用すること。ウィンドウ/ページのリサイズはDevToolsパネル分ビューポートが狭くなる (Chrome DevTools MCP なら `emulate` の `viewport` パラメータを使い、`resize_page` は使わない)
 - **全幅検証必須**: UI変更後は最低4幅（375px, 768px, 1024px, 1440px）で確認せよ。1幅だけの確認は検証ではない。変更したコンポーネントだけでなく、それを使う全ページで確認する
 - **定量計測必須**: 変更が影響する品質指標（CLS, LCP, アクセシビリティ等）は目視ではなくツール（Lighthouse, Performance trace等）で計測せよ。スクリーンショットは定量計測の代替にならない
 
 ### クリーンアップ
 - 自分が生成したファイル（スクリーンショット、一時ファイル等）はタスク完了時に必ず削除せよ。放置するな
-- 長時間実行コマンド（CI watch、devサーバー等）は常に`run_in_background`で実行すること
+- 長時間実行コマンド（CI watch、devサーバー等）は常にバックグラウンド実行 (Claude Code では `run_in_background`) で行うこと
 
 ### Error Handling
 - ANY error = STOP immediately, analyze, report to user
@@ -134,7 +134,7 @@ pnpm test:libs    # library tests
 - Test failures after your changes = assume your fault until proven otherwise
 
 ### ドキュメント精読
-- ユーザーが「読め」と指示したドキュメントは**Readツールで全文取得**してから行動する。grepでの部分検索は精読の代替にならない
+- ユーザーが「読め」と指示したドキュメントは**ファイル読み取りツールで全文取得**してから行動する。grepでの部分検索は精読の代替にならない
 - **メジャーバージョンアップ時は旧知識を全て捨てろ**。新バージョンのREADME/CHANGELOG/Migration Guideを先に読むまで、旧知識に基づく行動（issue作成、方針決定、コード変更）を一切禁止
 
 ### 既存コードの修正ルール
@@ -190,7 +190,7 @@ pnpm test:libs    # library tests
   PROXY_PORT=$(echo "$JAVA_TOOL_OPTIONS" | grep -oP '(?<=Dhttps.proxyPort=)[^ ]+')
   export https_proxy="http://${PROXY_USER}:${PROXY_PASS}@${PROXY_HOST}:${PROXY_PORT}"
 
-  # check run IDはmcp__github__pull_request_readのget_check_runsで取得
+  # check run IDはGitHub MCP (pull_request_readのget_check_runs) や gh CLI で取得
   curl -s "https://api.github.com/repos/lacolaco/blog.lacolaco.net/check-runs/{job_id}/annotations" \
     -H "Accept: application/vnd.github+json"
   ```
@@ -203,22 +203,22 @@ pnpm test:libs    # library tests
 - commit→push→PR→CI watch の不可分性は CRITICAL RULES §2d を参照
 - branch 目的と staged changes の整合性検査は CRITICAL RULES §2c を参照
 - **PRマージ時に`--delete-branch`を付けるな**。リモートブランチはマージ後に自動削除される（GitHub設定）
-- Use git-github-ops agent for complex operations
+- Use a git/GitHub operations agent (e.g. git-github-ops) for complex operations, if available
 - NEVER `git reset --hard` with uncommitted changes you need
 - **push前に`git fetch origin main`してブランチがmainの最新に追従しているか確認せよ**。outdatedなブランチをpushするな
 - pushするとCIは再実行される。古いCI watchの結果は無効
 - push後は必ず `gh pr checks --watch` をバックグラウンドで新たに開始せよ。完了したらユーザーに報告すること。CIの開始にはラグがあるため `sleep 15 &&` を前置する
 
 ### Tool Usage Priority
-1. mcp__ide__getDiagnostics (for errors)
-2. Read/Edit tools (for files)
-3. Bash (last resort, NOT for file editing)
+1. IDE diagnostics (for errors)
+2. Dedicated file read/edit tools (for files)
+3. Shell (last resort, NOT for file editing)
 
 ### When User Corrects You
-1. 即座にCLAUDE.mdに反映せよ。口頭宣言（「今後は〜します」）は学習ではない。CLAUDE.mdに書いて初めて学習
-2. CLAUDE.mdを変更したらコミット→push→CI watchまで一気に実行せよ。途中で止めるな
+1. 即座にAGENTS.mdに反映せよ。口頭宣言（「今後は〜します」）は学習ではない。AGENTS.mdに書いて初めて学習
+2. AGENTS.mdを変更したらコミット→push→CI watchまで一気に実行せよ。途中で止めるな
 3. 同じパターンがこのセッション内で再発していないか確認
-4. **CLAUDE.mdルール追加は最後の手段**。まず決定論的ガードレール（CI, hook, lint, スクリプト）で対策せよ。プロセスルールは破られる
+4. **AGENTS.mdルール追加は最後の手段**。まず決定論的ガードレール（CI, hook, lint, スクリプト）で対策せよ。プロセスルールは破られる
 5. 2回以上同じ指摘を受けた場合: STOP して原因分析
 
 ---
@@ -237,9 +237,9 @@ Before implementing with external libraries:
 3. Upgrade before custom implementation
 
 ### File Editing
-- Read file before Edit/Write
+- Read file before editing/writing
 - Match existing patterns (language, format, structure)
-- Use Edit tool, not Bash sed/awk
+- Use the dedicated file edit tool, not shell sed/awk
 
 ### Agent Outputs
 - Never trust without verification
