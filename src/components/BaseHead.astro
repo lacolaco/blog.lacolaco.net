@@ -59,9 +59,11 @@ const imageCdnOrigin = imageCdnBaseUrl ? new URL(imageCdnBaseUrl).origin : null;
 <script src="https://www.googletagmanager.com/gtag/js?id=G-0BEKSBSM5X"></script>
 <script is:inline define:vars={{ gtagProps }}>
   window.dataLayer = window.dataLayer || [];
-  function gtag() {
+  // define:vars は script を IIFE で包むので、関数宣言だけでは window.gtag が生えない。
+  // src/libs/analytics.ts の trackEvent が window.gtag を呼ぶため、明示的に公開する
+  window.gtag = function gtag() {
     window.dataLayer.push(arguments);
-  }
+  };
   gtag('js', new Date());
   gtag('config', 'G-0BEKSBSM5X', gtagProps ?? {});
 </script>
