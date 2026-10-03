@@ -3,7 +3,7 @@ title: 'Angular v22.2アップデートのまとめ'
 slug: 'angular-v22-2-update'
 icon: ''
 created_time: '2026-10-03T02:39:00.000Z'
-last_edited_time: '2026-10-03T02:39:00.000Z'
+last_edited_time: '2026-10-03T02:47:00.000Z'
 tags:
   - 'Angular CLI'
   - 'Angular Material'
@@ -16,6 +16,7 @@ channels:
   - 'Angular'
   - 'Code'
 notion_url: 'https://app.notion.com/p/Angular-v22-2-3de3521b014a80f5991afe2520dc8cd1'
+auto_translate: true
 features:
   katex: false
   mermaid: false
