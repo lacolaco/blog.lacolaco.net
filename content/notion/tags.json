@@ -48,6 +48,12 @@
     "description": null
   },
   {
+    "id": "78145fee-d877-471d-9b47-79e60ca04d8f",
+    "name": "Angular Update",
+    "color": "red",
+    "description": null
+  },
+  {
     "id": "30591110-7705-4cde-ba21-f50693865f05",
     "name": "Forms",
     "color": "red",
