@@ -10,6 +10,10 @@ terraform {
       source  = "integrations/github"
       version = "~> 6.13"
     }
+    time = {
+      source  = "hashicorp/time"
+      version = "~> 0.14"
+    }
     random = {
       source  = "hashicorp/random"
       version = "~> 3.9"

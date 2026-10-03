@@ -25,17 +25,24 @@
 - アカウントトークン (`cloudflare_account_token`) を選んだ理由は、Cloudflare の公式文書が CI/CD のように作成者が離れても動き続けるべき連携にアカウントトークンを勧めているため。`cloudflare_api_token` は作成者個人に紐づく。
 - permission group の ID は `cf user tokens permission-groups list` で取得できる。
 
+### 未確認事項
+
+Workers Previews の作成と削除、Durable Objects のデプロイが、上記の権限だけで足りるかは未確認である。Cloudflare の文書に明記がなく、検索 API の CI の実デプロイで確かめる。権限が足りなければ `main.tf` の policies に permission group を足す。
+
 ### 責務の分担
 
 Worker 側の secret (本番と Preview) への `SEARCH_ADMIN_TOKEN` の反映は、検索 API の CI が GitHub の secret から行う。このモジュールは GitHub の secret を用意するところまでを扱う。
 
 ## 有効期限とローテーション
 
-デプロイ用トークンの有効期限は 1 年 (`variables.tf` の `token_expires_on`)。期限が切れると検索 API のデプロイが止まるので、期限の前に更新する。
+デプロイ用トークンの有効期限は、`time_rotating.search_deploy_token` の基準時刻から 1 年である。固定の日付は持たない。
+
+- `time_rotating` は作成から 300 日で期限に達し、その後の最初の `plan` で置き換えが提案される。`replace_triggered_by` により、トークンも同時に作り直されて新しい期限と値を得る。GitHub の secret も新しい値に更新される。
+- 有効期限 (365 日) の 65 日前から置き換えが提案されるので、その間に `terraform apply` を実行する。期限を過ぎると検索 API のデプロイが止まる。
+- 手動で今すぐ更新するときは次を実行する。
 
 ```bash
-# variables.tf の token_expires_on を 1 年先へ更新してから実行する
-terraform apply -replace=cloudflare_account_token.search_deploy
+terraform apply -replace=time_rotating.search_deploy_token
 ```
 
 `SEARCH_ADMIN_TOKEN` を更新するときは次を実行し、そのあと検索 API の CI を再実行して Worker 側の secret へ反映する。
@@ -86,7 +93,7 @@ terraform apply
 
 ### state を紛失したとき
 
-- `cloudflare_account_token` は `terraform import cloudflare_account_token.search_deploy '<account_id>/<token_id>'` で取り込める。ただし `value` は取り込まれない (公式文書の記述)。そのため取り込んだあと `terraform apply -replace=cloudflare_account_token.search_deploy` で作り直し、GitHub secret を更新する。
+- `cloudflare_account_token` は `terraform import cloudflare_account_token.search_deploy '<account_id>/<token_id>'` で取り込める。ただし `value` は取り込まれない (公式文書の記述)。そのため取り込んだあと `terraform apply -replace=time_rotating.search_deploy_token` で作り直し、GitHub secret を更新する。
 - 古いトークンは `cf accounts tokens delete <token-id>` で削除する。ダッシュボードでも削除できる。
 - `random_password` は import できない。再生成して `SEARCH_ADMIN_TOKEN` を更新する。
 - GitHub の secret と variable は同名のものが既にあると apply が失敗する場合がある。そのときは `terraform import` で取り込むか、先に削除する。

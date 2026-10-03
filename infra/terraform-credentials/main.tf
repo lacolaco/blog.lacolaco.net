@@ -38,9 +38,20 @@ resource "cloudflare_account_token" "search_deploy" {
     },
   ]
 
-  # 有効期限は 1 年。期限が切れると CI のデプロイが止まるため、更新手順は README に書いてある。
-  # 期限なしのトークンは漏えい時の被害期間が無制限になるので避ける。
-  expires_on = var.token_expires_on
+  # 有効期限は time_rotating の基準時刻から 1 年。固定の日付だと更新を忘れたときに過去日を送ってしまうため、
+  # 基準時刻から導出する。期限なしのトークンは漏えい時の被害期間が無制限になるので避ける。
+  expires_on = timeadd(time_rotating.search_deploy_token.rfc3339, "8760h")
+
+  # time_rotating が置き換わる (= ローテーション期限を過ぎた) とトークンも作り直し、新しい期限を得る。
+  lifecycle {
+    replace_triggered_by = [time_rotating.search_deploy_token]
+  }
+}
+
+# ローテーション期限の 300 日を過ぎたあとの最初の plan/apply で置き換えが提案される。
+# トークンの有効期限 (365 日) より 65 日早いので、その間に apply すれば CI のデプロイは止まらない。
+resource "time_rotating" "search_deploy_token" {
+  rotation_days = 300
 }
 
 # 検索 API の管理用エンドポイントのトークン。記号を除くのは HTTP ヘッダーやシェルで扱いやすくするため。
