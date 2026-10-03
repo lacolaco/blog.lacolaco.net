@@ -1,9 +1,9 @@
 ---
 title: 'Angular v22.2アップデートのまとめ'
-slug: 'summary-of-angular-v22-2-update'
+slug: 'angular-v22-2-update'
 icon: ''
-created_time: '2026-10-03T02:21:00.000Z'
-last_edited_time: '2026-10-03T02:21:00.000Z'
+created_time: '2026-10-03T02:39:00.000Z'
+last_edited_time: '2026-10-03T02:39:00.000Z'
 tags:
   - 'Angular CLI'
   - 'Angular Material'
@@ -11,7 +11,7 @@ tags:
   - 'Angular Update'
 published: true
 locale: 'ja'
-canonical_url: 'https://zenn.dev/lacolaco/articles/summary-of-angular-v22-2-update'
+canonical_url: 'https://zenn.dev/lacolaco/articles/angular-v22-2-update'
 channels:
   - 'Angular'
   - 'Code'
@@ -30,7 +30,7 @@ Angular v22.2.0がリリースされた。マンスリーのマイナーアッ�
 
 https://github.com/angular/angular/blob/main/CHANGELOG.md#2220
 
-## テンプレートからプライベートメンバへのアクセス許可
+### テンプレートからプライベートメンバへのアクセス許可
 
 https://github.com/angular/angular/commit/48a0fd6e8a8d14bdc1d901ee5615f4b0ab698fe8
 
@@ -38,7 +38,7 @@ https://github.com/angular/angular/commit/48a0fd6e8a8d14bdc1d901ee5615f4b0ab698f
 
 https://blog.lacolaco.net/posts/angular-private-fields
 
-## `strictUnclaimedEventNames`の追加
+### `strictUnclaimedEventNames`の追加
 
 https://github.com/angular/angular/commit/312e1d808902116fb8cd4e02d936260113453999
 
@@ -49,7 +49,7 @@ https://github.com/angular/angular/commit/312e1d808902116fb8cd4e02d9362601134539
 <button (unknownEvent)="...">
 ```
 
-## `@Component.deferredImports`の追加
+### `@Component.deferredImports`の追加
 
 https://github.com/angular/angular/commit/7d9f55da11319da8f273d9edcd38ff2983bdbb0c
 
@@ -71,7 +71,7 @@ https://github.com/angular/angular/commit/7d9f55da11319da8f273d9edcd38ff2983bdbb
 export class App {}
 ```
 
-## ErrorBoundary機能の追加
+### ErrorBoundary機能の追加
 
 https://github.com/angular/angular/commit/f6afb807c1e62d26b8b665f2b4a9a52c2433a673
 
@@ -92,7 +92,7 @@ https://github.com/angular/angular/pull/70463
 
 `ErrorHandler`にも`onViewError`フックが追加され、描画エラーの詳細を受け取れるようになった。あわせてAngular Language Serviceも`@boundary`と`@error`に対応し、入力補完やホバー、定義への移動、ブロックの折りたたみなどで新しい構文を扱えるようになっている。
 
-## ディレクティブ用のテストユーティリティ追加
+### ディレクティブ用のテストユーティリティ追加
 
 https://github.com/angular/angular/commit/05c4d5a8354228100b51176f295ed5dee4f3febc
 
@@ -127,7 +127,7 @@ it('入力に応じてホスト要素のクラスを切り替える', () => {
 });
 ```
 
-## ビュー・コンテンツクエリでの`Injector`取得
+### ビュー・コンテンツクエリでの`Injector`取得
 
 https://github.com/angular/angular/commit/bd9b45b5cc1dd904cc4a5de45f6de8e1564b70b6
 
@@ -157,7 +157,7 @@ class AppComponent {
 }
 ```
 
-## Signal Formsで非表示固定のフィールドを指定
+### Signal Formsで非表示固定のフィールドを指定
 
 https://github.com/angular/angular/commit/d5e8b1ef7a02c84d4fd70a6b4d748ead9ff815bf
 
@@ -185,7 +185,7 @@ class ProfileComponent {
 
 `hidden`はフォームデータ上のフィールドの状態を指定するルールで、DOMを自動的に非表示にするものではない。表示の切り替えは上の例のようにテンプレート側で`hidden()`を参照する。
 
-## `containsTree`APIの公開
+### `containsTree`APIの公開
 
 https://github.com/angular/angular/commit/2720362818cdeb2a940171e4ab6f21cf78c6a302
 
@@ -203,7 +203,7 @@ containsTree(container, target, { paths: 'exact' });  // false
 containsTree(container, target, { queryParams: 'exact' }); // false
 ```
 
-## `RedirectCommand`のthrowによるリダイレクト
+### `RedirectCommand`のthrowによるリダイレクト
 
 https://github.com/angular/angular/commit/b65dea4f03e5fc01093a718c990c72ae9165c43f
 
@@ -227,7 +227,7 @@ export const idResolver: ResolveFn<string> = (route) => {
 };
 ```
 
-## Router Resources APIの公開
+### Router Resources APIの公開
 
 https://github.com/angular/angular/commit/3064f3f1dccd78177bf3b86f8ea231102884f0d7
 
@@ -235,7 +235,7 @@ https://github.com/angular/angular/commit/3064f3f1dccd78177bf3b86f8ea231102884f0
 
 使い方や従来のリゾルバとの違いについては、後日別の記事で詳しく書く予定。
 
-## ルート別インジェクタ自動破棄機能の安定化
+### ルート別インジェクタ自動破棄機能の安定化
 
 https://github.com/angular/angular/commit/7137a41223079b4b172aeccb5031347fcc947b79
 
@@ -253,7 +253,7 @@ export const appConfig: ApplicationConfig = {
 };
 ```
 
-## CSSネイティブネスト構文のカプセル化対応
+### CSSネイティブネスト構文のカプセル化対応
 
 https://github.com/angular/angular/commit/d0d7f57e0810a24ba16dbb1f2ab9f079a096fa3d
 
@@ -271,7 +271,7 @@ CSSネイティブのネスト構文を、`ViewEncapsulation.Emulated`のスタ�
 }
 ```
 
-## `animate.enter`・`animate.leave`への関数・Signalのバインディング
+### `animate.enter`・`animate.leave`への関数・Signalのバインディング
 
 https://github.com/angular/angular/commit/de5889ec4fab2b337e394eb994c8d428272d5ec9
 
@@ -303,7 +303,7 @@ Angular CLIの主な変更は以下。
 
 https://github.com/angular/angular-cli/blob/main/CHANGELOG.md#2220
 
-## MCPサーバーのルートディレクトリ指定
+### MCPサーバーのルートディレクトリ指定
 
 https://github.com/angular/angular-cli/commit/41555dfb3b71d08cdfe2853bf2cbeca5b6942f67
 
@@ -315,7 +315,7 @@ ng mcp --root /path/to/app-a --root /path/to/app-b
 
 MCPクライアントが`listRoots()`でルートを提供する場合は、そちらが優先される。クライアントが対応していない場合や空のリストを返す場合は`--root`の指定が使われ、どちらもなければカレントディレクトリが使われる。
 
-## テスト対象に合わせたコンパイル範囲の絞り込み
+### テスト対象に合わせたコンパイル範囲の絞り込み
 
 https://github.com/angular/angular-cli/commit/f47f77f5f6db5cda1493652f813c98c26f172ea9
 
@@ -325,13 +325,13 @@ https://github.com/angular/angular-cli/commit/f47f77f5f6db5cda1493652f813c98c26f
 ng test --include='src/app/services/test.service.spec.ts'
 ```
 
-## ファイル監視のネイティブ実装への移行
+### ファイル監視のネイティブ実装への移行
 
 https://github.com/angular/angular-cli/commit/a6ef9cfbeace725d58c0f7f65640ef6de9b39c33
 
 `@angular/build`のファイル監視が、`watchpack`から`@parcel/watcher`を中心とした実装に置き換わった。C++のネイティブバインディングを通じてOSのファイル監視APIを利用し、watchモードでのCPU・メモリ使用量を削減する。ポーリングを使う場合やネイティブ監視が利用できない環境では、`chokidar`にフォールバックする。
 
-## Sassコンパイラのネイティブ実装への移行
+### Sassコンパイラのネイティブ実装への移行
 
 https://github.com/angular/angular-cli/commit/ecbcd87b8857225e4df3df7896b3236d63553f23
 
@@ -345,7 +345,7 @@ https://github.com/angular/angular-cli/commit/ecbcd87b8857225e4df3df7896b3236d63
 
 計測例では、大規模アプリは時間短縮よりメモリ削減の効果が大きい。
 
-## SSRのCritical CSS処理の事前コンパイル
+### SSRのCritical CSS処理の事前コンパイル
 
 https://github.com/angular/angular-cli/commit/23e3d44a7f051cd3bb67700b8d8407f73b7aa7f3
 
@@ -357,7 +357,7 @@ Angular CDKやAria、Materialなどの主な変更点は以下。
 
 https://github.com/angular/components/blob/main/CHANGELOG.md#2220
 
-## Material Symbolsの自動判別
+### Material Symbolsの自動判別
 
 https://github.com/angular/components/commit/5d64e397b47e722e6ec8cd9eed69cd032766f656
 
@@ -374,7 +374,7 @@ https://github.com/angular/components/commit/5d64e397b47e722e6ec8cd9eed69cd03276
 
 上の例では`material-symbols-outlined`クラスが自動的に付与される。フォント自体を自動で読み込む機能ではないので、フォントの読み込みは別途必要。旧Material IconsとMaterial Symbolsの両方が読み込まれている場合は、互換性のため従来の`material-icons`が優先される。
 
-## `MatMenuItem`の`disabledInteractive` サポート
+### `MatMenuItem`の`disabledInteractive` サポート
 
 https://github.com/angular/components/commit/cacab5551ba8a4af365b0e99132ef21e87c3b3f5
 
@@ -393,7 +393,7 @@ https://github.com/angular/components/commit/cacab5551ba8a4af365b0e99132ef21e87c
 
 通常の`disabled`と異なり、ネイティブの`disabled`属性は付かず、`aria-disabled`で無効状態を伝える。
 
-## Angular Aria: `MenuItem`の`value`省略対応
+### Angular Aria: `MenuItem`の`value`省略対応
 
 https://github.com/angular/components/commit/cd9c7da8b6caf503cf1c0b1de1e7e861077abefb
 
@@ -406,7 +406,7 @@ https://github.com/angular/components/commit/cd9c7da8b6caf503cf1c0b1de1e7e861077
 </div>
 ```
 
-## `MatFormFieldControl`のSignal Forms対応
+### `MatFormFieldControl`のSignal Forms対応
 
 https://github.com/angular/components/commit/42c72bf2ebb0a8ba0b38c5614814385b25df43e9
 
