@@ -4,6 +4,8 @@
 
 @theme {
   --text-3xl: 2rem;
+  /* EN バッジの背景色。白文字とのコントラスト比が WCAG 2.2 AA (4.5:1) を満たす blue-600 (5.26:1)。bg-badge-en で参照する */
+  --color-badge-en: var(--color-blue-600);
   --like-particle-duration: 600ms;
   --animate-like-particle: like-particle var(--like-particle-duration) ease-out forwards;
 }
