@@ -13,12 +13,31 @@ import rehypeImageCdn from './tools/rehype-image-cdn';
 import rehypeExtractMediaHtml from './tools/rehype-extract-media-html';
 
 import node from '@astrojs/node';
+import type { AstroIntegration } from 'astro';
+import { existsSync, mkdirSync, renameSync } from 'node:fs';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+// prerender された検索 DB (dist/client/search-db.bin) を dist/server/search.db へ移す。
+// dist/client は静的配信されるため、DB を公開 URL に残さない。dist/server は Docker イメージの dist に含まれる。
+const moveSearchDb = (): AstroIntegration => ({
+  name: 'move-search-db',
+  hooks: {
+    'astro:build:done': ({ dir }) => {
+      const from = fileURLToPath(new URL('search-db.bin', dir));
+      const to = fileURLToPath(new URL('../server/search.db', dir));
+      if (!existsSync(from)) throw new Error(`search-db.bin not found: ${from}`);
+      mkdirSync(dirname(to), { recursive: true });
+      renameSync(from, to);
+    },
+  },
+});
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://blog.lacolaco.net',
   outDir: 'dist',
-  integrations: [sitemap(), react()],
+  integrations: [sitemap(), react(), moveSearchDb()],
 
   vite: {
     plugins: [tailwindcss()],
