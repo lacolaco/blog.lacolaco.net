@@ -168,6 +168,8 @@ jobs:
             terraform:
               - 'infra/terraform/**'
               - 'infra/workflows/**'
+            terraform_credentials:
+              - 'infra/terraform-credentials/**'
 
       - name: Google Auth
         if: steps.tf-paths.outputs.terraform == 'true'
@@ -177,7 +179,7 @@ jobs:
           service_account: 'github-actions@blog-lacolaco-net.iam.gserviceaccount.com'
 
       - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4
-        if: steps.tf-paths.outputs.terraform == 'true'
+        if: steps.tf-paths.outputs.terraform == 'true' || steps.tf-paths.outputs.terraform_credentials == 'true'
         with:
           terraform_version: 1.14.5
           terraform_wrapper: false
@@ -201,6 +203,20 @@ jobs:
         if: steps.tf-paths.outputs.terraform == 'true'
         working-directory: infra/terraform
         run: terraform plan -no-color
+
+      # infra/terraform-credentials はローカルで apply する独立モジュール。
+      # 認証情報なしでできる構文検査だけを行い、plan と apply は CI で実行しない。
+      - name: Terraform fmt (credentials)
+        if: steps.tf-paths.outputs.terraform_credentials == 'true'
+        working-directory: infra/terraform-credentials
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate (credentials)
+        if: steps.tf-paths.outputs.terraform_credentials == 'true'
+        working-directory: infra/terraform-credentials
+        run: |
+          terraform init -backend=false
+          terraform validate
 
   # === Reviews (standard interface: outputs.approved) ===
 
