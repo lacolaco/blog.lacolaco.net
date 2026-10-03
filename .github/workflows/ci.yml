@@ -144,6 +144,8 @@ jobs:
           node-version-file: .node-version
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
+      # ビルド成果物 (dist/client) を検証するテストがあるため、先にビルドする
+      - run: pnpm run build
       - run: pnpm test:tools
 
   terraform:
