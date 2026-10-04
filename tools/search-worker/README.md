@@ -52,6 +52,7 @@ GET /api/search?q=<語>&locale=ja|en
 
 PR ごとに `wrangler preview --name pr-<番号>` で [Workers の Previews](https://developers.cloudflare.com/workers/previews/) を作る。Preview は本番の設定を継承せず、Durable Object の名前空間とストレージが Preview ごとに自動で別になる。本番や他の PR の索引とは混ざらない。
 
+- Preview URL の発行には Worker の `preview_urls: true` が要る。routes があると既定が false になり、URL が空になる。本番の workers.dev は `workers_dev: false` で公開しない。
 - `deploy-preview.yml` が Preview を作り、その Preview URL (workers.dev) へ索引を入れる。サイトのビルドには環境変数 `PUBLIC_SEARCH_API_URL` で URL を渡す。
 - Preview の Worker は別オリジンなので、`previews.vars.ALLOWED_ORIGIN_PATTERN` に一致する Cloud Run のプレビューのオリジンにだけ CORS を許可する。
 - `shutdown-preview.yml` が PR を閉じたときに `wrangler preview delete` で Preview を削除する。Durable Object のデータも一緒に消える。

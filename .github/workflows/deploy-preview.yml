@@ -104,7 +104,9 @@ jobs:
           pnpm exec wrangler preview -c tools/search-worker/wrangler.jsonc \
             --name "$PREVIEW_NAME" --secrets-file "$secrets_file" --json > "$RUNNER_TEMP/search-preview.json"
           rm -f "$secrets_file"
-          echo "url=$(jq -er '.preview.urls[0]' "$RUNNER_TEMP/search-preview.json")" >> "$GITHUB_OUTPUT"
+          # URL が取れなければ (null や空) ここで失敗させる。コマンド置換の中の失敗は echo に握りつぶされるため、変数に分けて確かめる
+          url="$(jq -er '.preview.urls[0]' "$RUNNER_TEMP/search-preview.json")"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Build
         run: pnpm run build

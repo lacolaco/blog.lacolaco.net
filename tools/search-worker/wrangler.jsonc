@@ -3,6 +3,13 @@
   "name": "blog-search",
   "main": "worker/index.ts",
   "compatibility_date": "2026-09-01",
+
+  // routes があると workers_dev の既定値は false になり、preview_urls の初期値も false になる (公式の設定リファレンス)。
+  // その場合 Preview の URL は発行されない (wrangler preview の urls が空)。Preview の URL だけが必要なので、
+  // preview_urls を true にし、本番の workers.dev (blog-search.<subdomain>.workers.dev) は workers_dev: false のまま公開しない。
+  // 本番は blog.lacolaco.net/api/search* のルートで足りる。新規作成した Worker で、この組み合わせで Preview の URL が発行されることを確かめた
+  "workers_dev": false,
+  "preview_urls": true,
   "observability": { "enabled": true },
 
   // 本番は同一オリジンの blog.lacolaco.net/api/search* だけを Worker に向ける。
