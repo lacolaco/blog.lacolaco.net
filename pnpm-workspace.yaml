@@ -1,0 +1,25 @@
+# pnpm 10.34 の設定はここに置く。pnpm.io の Settings (pnpm-workspace.yaml) が
+# 設定の置き場として案内しており、.npmrc は認証系の設定向けとされている。
+
+# 公開から 5 日 (7200 分) 未満のバージョンはインストールしない。
+# Renovate の minimumReleaseAge ("5 days", .github/renovate.json) と同じ基準にして、
+# 手で追加する依存と推移的依存にも同じ待機期間を適用する。単位は分。
+minimumReleaseAge: 7200
+
+# allowBuilds に載っていない依存にビルドスクリプトがあれば install を失敗させる。
+strictDepBuilds: true
+
+# 依存のビルドスクリプトの可否。いずれも各プラットフォーム向けの配布済みバイナリ
+# (optionalDependencies) を使うため、スクリプトを実行しなくてもビルドとテストが通る。
+# - esbuild: postinstall はバイナリの検証と最適化のみ
+# - sharp: install は配布済みバイナリの有無を確認し、無い場合だけソースからビルドする
+# - @parcel/watcher: install は配布済みバイナリが無い場合のソースビルド
+# - protobufjs: postinstall はバージョン指定の書式を警告するだけ
+# - @google/genai: preinstall は何もしない (no-op)
+# 新しい依存でビルドスクリプトが必要になったら、根拠を確認して true にする。
+allowBuilds:
+  '@google/genai': false
+  '@parcel/watcher': false
+  esbuild: false
+  protobufjs: false
+  sharp: false
