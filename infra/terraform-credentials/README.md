@@ -2,7 +2,7 @@
 
 検索 API (Cloudflare Workers `blog-search`) の CI が使う認証情報を作り、GitHub Actions に登録するモジュール。クラウドをまたぐ連携をコードに残し、後から構成を追えるようにする。
 
-`infra/terraform/` (CI が apply、state は GCS) とは独立している。**apply はローカルだけで行い、state もローカルに置く。** CI では `fmt` と `validate` (`init -backend=false`) だけを実行し、plan と apply は実行しない。
+`infra/terraform/` (CI が apply、state は GCS) とは独立している。**apply はローカルだけで行う。state は GCS (`gs://blog-lacolaco-net-tfstate` の prefix `terraform-credentials/state`) に置く。** CI では `fmt` と `validate` (`init -backend=false`) だけを実行し、plan と apply は実行しない。
 
 ## 作るもの
 
@@ -88,8 +88,10 @@ terraform apply
 
 ## state の扱い
 
-- state はローカル (`terraform.tfstate`) に置く。トークンの値が平文で入るため、リモート backend にもコミットにも載せない。`.gitignore` の `*.tfstate` `*.tfstate.*` と `**/.terraform/` で除外される。確認方法は `git check-ignore -v infra/terraform-credentials/terraform.tfstate`。
-- バックアップは、パスワードマネージャーなど暗号化された保管先に置くことを勧める。ただし必須ではない。失っても次のとおり戻せる。
+- state は GCS の `gs://blog-lacolaco-net-tfstate` の prefix `terraform-credentials/state` に置く。トークンの値が平文で入るため、手元のディスクにもコミットにも置かない。GCS の backend では、Terraform は実行中だけ state をメモリに持つ。
+- bucket は均一なバケットレベルのアクセスで、読めるのはプロジェクトのオーナー、編集者、閲覧者と、`storage.admin` を持つ CI のサービスアカウントである。CI は GitHub の secret から同じトークンを直接使えるため、state を GCS に置いても読める範囲は広がらない。
+- 認証は gcloud の ADC (`gcloud auth application-default login`) で行う。
+- bucket のオブジェクトのバージョニングで過去の state が残る場合は、トークンを作り直したあとも古い値が残る。
 
 ### state を紛失したとき
 
