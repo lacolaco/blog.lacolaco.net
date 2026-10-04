@@ -4,5 +4,7 @@
     "lib": ["es2020"],
     "types": ["node"]
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts"],
+  // Cloudflare Workers の型 (workers-types) は Node の型と衝突するので、Worker は専用の tsconfig で検査する
+  "exclude": ["search-worker/worker"]
 }
