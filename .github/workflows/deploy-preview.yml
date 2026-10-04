@@ -110,7 +110,11 @@ jobs:
           fi
           rm -f "$secrets_file"
           # URL が取れなければ (null や空) ここで失敗させる。コマンド置換の中の失敗は echo に握りつぶされるため、変数に分けて確かめる
-          url="$(jq -er '.preview.urls[0]' "$RUNNER_TEMP/search-preview.json")"
+          if ! url="$(jq -er '.preview.urls[0]' "$RUNNER_TEMP/search-preview.json")"; then
+            echo "::error::Preview の URL が取得できなかった。wrangler の出力 (env を除く):"
+            jq 'del(.preview.env, .deployment.env)' "$RUNNER_TEMP/search-preview.json"
+            exit 1
+          fi
           echo "url=$url" >> "$GITHUB_OUTPUT"
 
       - name: Build
