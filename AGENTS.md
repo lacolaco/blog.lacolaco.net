@@ -73,9 +73,6 @@ Kent Beck style. Tests = spec. Fix implementation, not tests.
 - ❌ getTags()の戻り値をフィルタするテスト → 表示層のテストでありNotionデータの問題を検出できない
 - ✅ markdownのfrontmatterにAngularタグが存在しないことを検証するテスト → データ発生源で検証、表示フィルタでは通らない
 
-失敗例（#2038 / #2039 / #2040）:
-- ❌ ビルド後のHTMLに `window.gtag =` があるか、ENバッジの色クラスが残っていないかを確かめるテストを追加し、そのためにCIのtestジョブへビルドを前置した → 一回限りの確認をCIに残し、ソースのテストの前提を崩した
-
 ---
 ## Project Info
 ---
