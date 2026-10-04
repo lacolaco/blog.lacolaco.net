@@ -1,5 +1,10 @@
 # インフラ構成
 
+## Terraform モジュール
+
+- `infra/terraform/`: GCP のリソース。CI が apply する (`infra/terraform/README.md`)。
+- `infra/terraform-credentials/`: 検索 API の CI が使う Cloudflare のトークンと GitHub Actions の secret。ローカルだけで apply する (`infra/terraform-credentials/README.md`)。
+
 ## Likes BIダッシュボード
 
 ### 構成
