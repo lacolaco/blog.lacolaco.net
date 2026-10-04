@@ -272,6 +272,13 @@ Before implementing with external libraries:
 - **auto-translate PR に content-review は走らない**。翻訳ループ (`translator.ts`) が structure-validator + proofreader + retry を通し、恒久的に失敗した訳は書き出さず既存 `.en.md` を保持するため、CI 側の重複レビューを外している。auto-merge は content-review なしで成立する
 - 本文未変更でもフロントマター差分 (channels 等) があれば `frontmatter-only` で EN 版を更新する
 
+### Search API (Cloudflare Workers)
+- `tools/search-worker/`: Worker `blog-search` + Durable Object (SQLite FTS5 trigram)。詳細は `tools/search-worker/README.md`
+- `GET /api/search?q=&locale=` は本番ルート `blog.lacolaco.net/api/search*` で Worker に向く。Cloud Run の他の `/api/*` には影響しない
+- 索引はデプロイのたびに全件入れ替える (ビルドの `dist/client/search-docs.json` を CI が送る)。PR は Workers Previews (`pr-<番号>`) で本番と別の索引を持つ
+- 品質は `tools/search-worker/search.spec.ts` (`pnpm test:tools`、ビルド不要) で検証する
+- デプロイと Preview の操作は `wrangler` を使う (`cf` は Preview の削除ができず、直下に Astro があるこのリポジトリでは `astro build` を実行してしまう)
+
 ### Image CDN (Cloudflare R2)
 - 画像はビルド時にR2 CDN URLに書き換え
 - tools/rehype-image-cdn/: 画像CDN URL変換・srcset/width/height付与rehypeプラグイン

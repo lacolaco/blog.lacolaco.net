@@ -78,6 +78,23 @@ jobs:
           terraform init
           terraform apply -auto-approve
 
+      # --- Search API deploy (Cloudflare Workers) ---
+      # ルート blog.lacolaco.net/api/search* を含めてデプロイし、ビルドが出力した記事データで索引を全件入れ替える。
+      # Cloud Run のデプロイより前に行い、新しいサイトが存在しない API を呼ばないようにする
+
+      - name: Deploy search API
+        uses: ./.github/actions/wrangler-search
+        with:
+          command: deploy
+          admin-token: ${{ secrets.SEARCH_ADMIN_TOKEN }}
+          cloudflare-api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          cloudflare-account-id: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Push search index
+        env:
+          SEARCH_ADMIN_TOKEN: ${{ secrets.SEARCH_ADMIN_TOKEN }}
+        run: pnpm exec tsx tools/search-worker/push-index.ts https://blog.lacolaco.net
+
       # --- App deploy ---
 
       - name: Deploy to Cloud Run

@@ -1,0 +1,32 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "blog-search",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-09-01",
+
+  // routes があると workers_dev の既定値は false になり、preview_urls の初期値も false になる (公式の設定リファレンス)。
+  // その場合 Preview の URL は発行されない (wrangler preview の urls が空)。Preview の URL だけが必要なので、
+  // preview_urls を true にし、本番の workers.dev (blog-search.<subdomain>.workers.dev) は workers_dev: false のまま公開しない。
+  // 本番は blog.lacolaco.net/api/search* のルートで足りる。新規作成した Worker で、この組み合わせで Preview の URL が発行されることを確かめた
+  "workers_dev": false,
+  "preview_urls": true,
+  "observability": { "enabled": true },
+
+  // 本番は同一オリジンの blog.lacolaco.net/api/search* だけを Worker に向ける。
+  // Cloud Run の他の /api/* (likes など) には影響しない。ルートは本番にだけ付き、Preview には付かない
+  "routes": [{ "pattern": "blog.lacolaco.net/api/search*", "zone_name": "lacolaco.net" }],
+
+  // 検索は同じ 1 つの SearchDO (SQLite) に届く。ADMIN_TOKEN は secret で、CI が --secrets-file で渡す
+  "durable_objects": { "bindings": [{ "name": "SEARCH", "class_name": "SearchDO" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["SearchDO"] }],
+
+  // Preview は本番の設定を継承しないので、ここで宣言する。
+  // Durable Object は Preview ごとに名前空間とストレージが自動で別になり、本番の索引と混ざらない
+  "previews": {
+    "durable_objects": { "bindings": [{ "name": "SEARCH", "class_name": "SearchDO" }] },
+    "vars": {
+      // プレビューのサイト (Cloud Run のタグ付きリビジョン) だけに CORS を許可する
+      "ALLOWED_ORIGIN_PATTERN": "^https://pr-[0-9]+---web-[a-z0-9]+-an\\.a\\.run\\.app$",
+    },
+  },
+}

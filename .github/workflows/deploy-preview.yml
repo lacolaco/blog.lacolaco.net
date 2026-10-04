@@ -16,6 +16,8 @@ on:
       # Package dependencies
       - 'package.json'
       - 'pnpm-lock.yaml'
+      # 検索 API (Cloudflare Workers) のコードと設定
+      - 'tools/search-worker/**'
       # Remark plugins and tools affecting build
       - 'tools/remark-embed/**'
       - 'tools/rehype-image-cdn/**'
@@ -29,6 +31,7 @@ on:
       - '.github/workflows/deploy-preview.yml'
       # Composite actions
       - '.github/actions/deploy-cloudrun/**'
+      - '.github/actions/wrangler-search/**'
       # Ignore non-content markdown files
       - '!*.md'
       - '!docs/**'
@@ -86,10 +89,42 @@ jobs:
         env:
           IMAGE_CDN_BASE_URL: ${{ vars.IMAGE_CDN_BASE_URL }}
 
+      # 検索 API の Preview (PR ごとに隔離された Worker)。Durable Object の名前空間とストレージは
+      # Preview ごとに自動で別になり、本番の索引と混ざらない。Preview URL をビルドへ渡すため、ビルドより前に作る
+      - name: Deploy search API Preview
+        id: search-preview
+        uses: ./.github/actions/wrangler-search
+        with:
+          command: preview
+          args: --name pr-${{ github.event.number }} --json
+          output-file: ${{ runner.temp }}/search-preview.json
+          admin-token: ${{ secrets.SEARCH_ADMIN_TOKEN }}
+          cloudflare-api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          cloudflare-account-id: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Get search API Preview URL
+        id: search-preview-url
+        run: |
+          # URL が取れなければ (null や空) ここで失敗させる。コマンド置換の中の失敗は echo に握りつぶされるため、変数に分けて確かめる
+          if ! url="$(jq -er '.preview.urls[0]' "$RUNNER_TEMP/search-preview.json")"; then
+            echo "::error::Preview の URL が取得できなかった。wrangler の出力 (env を除く):"
+            jq 'del(.preview.env, .deployment.env)' "$RUNNER_TEMP/search-preview.json"
+            exit 1
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+
       - name: Build
         run: pnpm run build
         env:
           IMAGE_CDN_BASE_URL: ${{ vars.IMAGE_CDN_BASE_URL }}
+          # プレビューのサイトが呼ぶ検索 API。Preview の Worker は別オリジンなので、その Worker が CORS で許可する
+          PUBLIC_SEARCH_API_URL: ${{ steps.search-preview-url.outputs.url }}
+
+      - name: Push search index to Preview
+        env:
+          SEARCH_ADMIN_TOKEN: ${{ secrets.SEARCH_ADMIN_TOKEN }}
+          SEARCH_API_URL: ${{ steps.search-preview-url.outputs.url }}
+        run: pnpm exec tsx tools/search-worker/push-index.ts "$SEARCH_API_URL"
 
       - name: Deploy to Cloud Run
         id: deploy-cloudrun

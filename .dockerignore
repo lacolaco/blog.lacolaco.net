@@ -3,3 +3,5 @@ node_modules
 # 画像はR2 CDNから配信するためDockerイメージから除外
 dist/client/images
 public/images
+# 検索 Worker へ送る索引の入力。サイトの配信物ではない
+dist/client/search-docs.json

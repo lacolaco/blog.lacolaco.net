@@ -1,0 +1,50 @@
+name: 'Run wrangler for search API'
+description: '管理用トークンを secrets-file 経由で渡して、検索 API の Worker に wrangler を実行する (deploy と preview 共通)'
+
+inputs:
+  command:
+    description: 'wrangler のサブコマンド (deploy または preview)'
+    required: true
+  args:
+    description: 'wrangler へ追加で渡す引数 (例: --name pr-123 --json)'
+    required: false
+    default: ''
+  output-file:
+    description: '指定すると wrangler の標準出力をこのファイルへ書く。失敗したときはその内容を表示する (--json は失敗の詳細も標準出力へ出すため)'
+    required: false
+  admin-token:
+    description: '管理用エンドポイントのトークン。Worker の secret ADMIN_TOKEN に渡る'
+    required: true
+  cloudflare-api-token:
+    description: 'Cloudflare の API トークン'
+    required: true
+  cloudflare-account-id:
+    description: 'Cloudflare のアカウント ID'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Run wrangler
+      shell: bash
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ inputs.cloudflare-api-token }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ inputs.cloudflare-account-id }}
+        SEARCH_ADMIN_TOKEN: ${{ inputs.admin-token }}
+        WRANGLER_COMMAND: ${{ inputs.command }}
+        WRANGLER_ARGS: ${{ inputs.args }}
+        OUTPUT_FILE: ${{ inputs.output-file }}
+      run: |
+        umask 077
+        secrets_file="$(mktemp)"
+        trap 'rm -f "$secrets_file"' EXIT
+        printf 'ADMIN_TOKEN=%s\n' "$SEARCH_ADMIN_TOKEN" > "$secrets_file"
+        # WRANGLER_ARGS は空白区切りで展開する (値に空白を含む引数は渡せない)
+        # shellcheck disable=SC2086
+        set -- $WRANGLER_ARGS
+        if [[ -z "$OUTPUT_FILE" ]]; then
+          pnpm exec wrangler "$WRANGLER_COMMAND" -c tools/search-worker/wrangler.jsonc --secrets-file "$secrets_file" "$@"
+        elif ! pnpm exec wrangler "$WRANGLER_COMMAND" -c tools/search-worker/wrangler.jsonc --secrets-file "$secrets_file" "$@" > "$OUTPUT_FILE"; then
+          cat "$OUTPUT_FILE"
+          exit 1
+        fi
