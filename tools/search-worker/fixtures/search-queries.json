@@ -1,0 +1,386 @@
+[
+  {
+    "id": "ja-001",
+    "q": "ネームスペース",
+    "locale": "ja",
+    "category": "ja-compound"
+  },
+  {
+    "id": "ja-002",
+    "q": "プライベートフィールド",
+    "locale": "ja",
+    "category": "ja-compound"
+  },
+  {
+    "id": "ja-003",
+    "q": "遅延読み込み",
+    "locale": "ja",
+    "category": "ja-compound"
+  },
+  {
+    "id": "ja-004",
+    "q": "非同期データバインディング",
+    "locale": "ja",
+    "category": "ja-compound"
+  },
+  {
+    "id": "ja-005",
+    "q": "ヘッドレスCMS",
+    "locale": "ja",
+    "category": "ja-compound"
+  },
+  {
+    "id": "ja-006",
+    "q": "プリレンダリング",
+    "locale": "ja",
+    "category": "ja-compound"
+  },
+  {
+    "id": "ja-007",
+    "q": "ブラウザ拡張機能",
+    "locale": "ja",
+    "category": "ja-compound"
+  },
+  {
+    "id": "ja-008",
+    "q": "変更容易性",
+    "locale": "ja",
+    "category": "ja-compound"
+  },
+  {
+    "id": "ja-009",
+    "q": "状態管理",
+    "locale": "ja",
+    "category": "ja-compound"
+  },
+  {
+    "id": "ja-010",
+    "q": "ネームスペース CSS",
+    "locale": "ja",
+    "category": "ja-compound"
+  },
+  {
+    "id": "ja-011",
+    "q": "木",
+    "locale": "ja",
+    "category": "ja-short-kanji"
+  },
+  {
+    "id": "ja-012",
+    "q": "型",
+    "locale": "ja",
+    "category": "ja-short-kanji"
+  },
+  {
+    "id": "ja-013",
+    "q": "要約",
+    "locale": "ja",
+    "category": "ja-short-kanji"
+  },
+  {
+    "id": "ja-014",
+    "q": "してみた",
+    "locale": "ja",
+    "category": "ja-hiragana-phrase"
+  },
+  {
+    "id": "ja-015",
+    "q": "ことができる",
+    "locale": "ja",
+    "category": "ja-hiragana-phrase"
+  },
+  {
+    "id": "ja-016",
+    "q": "かいつまんで",
+    "locale": "ja",
+    "category": "ja-hiragana-phrase"
+  },
+  {
+    "id": "ja-017",
+    "q": "injectAsync",
+    "locale": "ja",
+    "category": "ja-tech-term"
+  },
+  {
+    "id": "ja-018",
+    "q": "debounced",
+    "locale": "ja",
+    "category": "ja-tech-term"
+  },
+  {
+    "id": "ja-019",
+    "q": "oxc-parser",
+    "locale": "ja",
+    "category": "ja-tech-term"
+  },
+  {
+    "id": "ja-020",
+    "q": "linkedSignal",
+    "locale": "ja",
+    "category": "ja-tech-term"
+  },
+  {
+    "id": "ja-021",
+    "q": "httpResource",
+    "locale": "ja",
+    "category": "ja-tech-term"
+  },
+  {
+    "id": "ja-022",
+    "q": "provideZonelessChangeDetection",
+    "locale": "ja",
+    "category": "ja-tech-term"
+  },
+  {
+    "id": "ja-023",
+    "q": "ChangeDetectionStrategy",
+    "locale": "ja",
+    "category": "ja-tech-term"
+  },
+  {
+    "id": "ja-024",
+    "q": "Comlink",
+    "locale": "ja",
+    "category": "ja-tech-term"
+  },
+  {
+    "id": "ja-025",
+    "q": "afterNextRender",
+    "locale": "ja",
+    "category": "ja-tech-term"
+  },
+  {
+    "id": "ja-026",
+    "q": "linkedSignal computed",
+    "locale": "ja",
+    "category": "ja-tech-term"
+  },
+  {
+    "id": "ja-027",
+    "q": "signal",
+    "locale": "ja",
+    "category": "prefix"
+  },
+  {
+    "id": "ja-028",
+    "q": "observ",
+    "locale": "ja",
+    "category": "prefix"
+  },
+  {
+    "id": "ja-029",
+    "q": "inject",
+    "locale": "ja",
+    "category": "prefix"
+  },
+  {
+    "id": "en-030",
+    "q": "compon",
+    "locale": "en",
+    "category": "prefix"
+  },
+  {
+    "id": "en-031",
+    "q": "injectAsync",
+    "locale": "en",
+    "category": "en"
+  },
+  {
+    "id": "en-032",
+    "q": "MatDivider",
+    "locale": "en",
+    "category": "en"
+  },
+  {
+    "id": "en-033",
+    "q": "Differential Loading",
+    "locale": "en",
+    "category": "en"
+  },
+  {
+    "id": "en-034",
+    "q": "oxc-parser",
+    "locale": "en",
+    "category": "en"
+  },
+  {
+    "id": "en-035",
+    "q": "namespacing",
+    "locale": "en",
+    "category": "en"
+  },
+  {
+    "id": "en-036",
+    "q": "lazy loading",
+    "locale": "en",
+    "category": "en"
+  },
+  {
+    "id": "en-037",
+    "q": "modifiability model",
+    "locale": "en",
+    "category": "en"
+  },
+  {
+    "id": "en-038",
+    "q": "zoneless router",
+    "locale": "en",
+    "category": "en"
+  },
+  {
+    "id": "en-039",
+    "q": "private fields",
+    "locale": "en",
+    "category": "en"
+  },
+  {
+    "id": "en-040",
+    "q": "browser extension",
+    "locale": "en",
+    "category": "en"
+  },
+  {
+    "id": "en-041",
+    "q": "debounced",
+    "locale": "en",
+    "category": "en"
+  },
+  {
+    "id": "en-042",
+    "q": "change detection",
+    "locale": "en",
+    "category": "en"
+  },
+  {
+    "id": "ja-043",
+    "q": "nonexistentword",
+    "locale": "ja",
+    "category": "negative-latin"
+  },
+  {
+    "id": "ja-044",
+    "q": "xqz",
+    "locale": "ja",
+    "category": "negative-latin"
+  },
+  {
+    "id": "ja-045",
+    "q": "kubernetesoperator",
+    "locale": "ja",
+    "category": "negative-latin"
+  },
+  {
+    "id": "en-046",
+    "q": "nonexistentword",
+    "locale": "en",
+    "category": "negative-latin"
+  },
+  {
+    "id": "en-047",
+    "q": "xqz",
+    "locale": "en",
+    "category": "negative-latin"
+  },
+  {
+    "id": "en-048",
+    "q": "zxqvjkwplm",
+    "locale": "en",
+    "category": "negative-latin"
+  },
+  {
+    "id": "en-049",
+    "q": "Pneumonoultramicroscopic",
+    "locale": "en",
+    "category": "negative-latin"
+  },
+  {
+    "id": "en-050",
+    "q": "kubernetesoperator",
+    "locale": "en",
+    "category": "negative-latin"
+  },
+  {
+    "id": "en-051",
+    "q": "qwertyuiopasdf",
+    "locale": "en",
+    "category": "negative-latin"
+  },
+  {
+    "id": "ja-052",
+    "q": "zxqvjkwplm",
+    "locale": "ja",
+    "category": "negative-latin"
+  },
+  {
+    "id": "ja-053",
+    "q": "Pneumonoultramicroscopic",
+    "locale": "ja",
+    "category": "negative-latin"
+  },
+  {
+    "id": "ja-054",
+    "q": "量子コンピュータ",
+    "locale": "ja",
+    "category": "negative-ja"
+  },
+  {
+    "id": "ja-055",
+    "q": "鬱蒼",
+    "locale": "ja",
+    "category": "negative-ja"
+  },
+  {
+    "id": "ja-056",
+    "q": "麒麟児",
+    "locale": "ja",
+    "category": "negative-ja"
+  },
+  {
+    "id": "ja-057",
+    "q": "ぬるぽ",
+    "locale": "ja",
+    "category": "negative-ja"
+  },
+  {
+    "id": "ja-058",
+    "q": "遅延読み込み 量子コンピュータ",
+    "locale": "ja",
+    "category": "negative-ja"
+  },
+  {
+    "id": "ja-059",
+    "q": "ｓｉｇｎａｌ",
+    "locale": "ja",
+    "category": "variant"
+  },
+  {
+    "id": "ja-060",
+    "q": "ﾃﾞｨﾚｸﾃｨﾌﾞ",
+    "locale": "ja",
+    "category": "variant"
+  },
+  {
+    "id": "ja-061",
+    "q": "INJECTASYNC",
+    "locale": "ja",
+    "category": "variant"
+  },
+  {
+    "id": "ja-062",
+    "q": "Ｏｘｃ－ｐａｒｓｅｒ",
+    "locale": "ja",
+    "category": "variant"
+  },
+  {
+    "id": "en-063",
+    "q": "differential LOADING",
+    "locale": "en",
+    "category": "variant"
+  },
+  {
+    "id": "en-064",
+    "q": "ＭａｔＤｉｖｉｄｅｒ",
+    "locale": "en",
+    "category": "variant"
+  }
+]

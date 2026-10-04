@@ -1,0 +1,162 @@
+[
+  {
+    "q": "遅延読み込み",
+    "locale": "ja",
+    "ids": ["angular-v22-injectasync:ja"]
+  },
+  {
+    "q": "ネームスペース",
+    "locale": "ja",
+    "ids": ["angular-css-var-namespacing:ja"]
+  },
+  {
+    "q": "プライベートフィールド",
+    "locale": "ja",
+    "ids": ["angular-private-fields:ja"]
+  },
+  {
+    "q": "非同期データバインディング",
+    "locale": "ja",
+    "ids": ["async-pipe-initial-null-problem:ja"]
+  },
+  {
+    "q": "oxc-parser",
+    "locale": "ja",
+    "ids": ["angular-v22-1-oxc-parser:ja"]
+  },
+  {
+    "q": "debounced",
+    "locale": "ja",
+    "ids": ["angular-debounced-resource:ja"]
+  },
+  {
+    "q": "injectAsync",
+    "locale": "ja",
+    "ids": ["angular-v22-injectasync:ja"]
+  },
+  {
+    "q": "変更容易性",
+    "locale": "ja",
+    "ids": ["dual-modifiability-model:ja", "two-layer-modifiability-model:ja"]
+  },
+  {
+    "q": "プリレンダリング",
+    "locale": "ja",
+    "ids": ["angular-v19-prerendering:ja"]
+  },
+  {
+    "q": "ブラウザ拡張機能",
+    "locale": "ja",
+    "ids": ["wxt-angular-browser-extension:ja"]
+  },
+  {
+    "q": "provideZonelessChangeDetection",
+    "locale": "ja",
+    "ids": ["wxt-angular-browser-extension:ja"]
+  },
+  {
+    "q": "linkedSignal",
+    "locale": "ja",
+    "ids": ["angular-v19-linked-signal:ja"]
+  },
+  {
+    "q": "httpResource",
+    "locale": "ja",
+    "ids": ["angular-http-resource-quick-overview:ja"]
+  },
+  {
+    "q": "ヘッドレスCMS",
+    "locale": "ja",
+    "ids": ["notion-headless-cms-1:ja", "notion-headless-cms-2:ja", "notion-headless-cms-3:ja"]
+  },
+  {
+    "q": "Comlink",
+    "locale": "ja",
+    "ids": ["enjoyable-webworkers-in-angular.ja:ja"]
+  },
+  {
+    "q": "ChangeDetectionStrategy",
+    "locale": "ja",
+    "ids": ["angular-v22-onpush-by-default:ja"]
+  },
+  {
+    "q": "INJECTASYNC",
+    "locale": "ja",
+    "ids": ["angular-v22-injectasync:ja"]
+  },
+  {
+    "q": "Ｏｘｃ－ｐａｒｓｅｒ",
+    "locale": "ja",
+    "ids": ["angular-v22-1-oxc-parser:ja"]
+  },
+  {
+    "q": "ネームスペース CSS",
+    "locale": "ja",
+    "ids": ["angular-css-var-namespacing:ja"]
+  },
+  {
+    "q": "injectAsync",
+    "locale": "en",
+    "ids": ["angular-v22-injectasync:en"]
+  },
+  {
+    "q": "MatDivider",
+    "locale": "en",
+    "ids": ["deep-dive-angular-components-mat-divider:en"]
+  },
+  {
+    "q": "Differential Loading",
+    "locale": "en",
+    "ids": ["differential-loading-a-new-feature-of-angular-cli-v8:en"]
+  },
+  {
+    "q": "oxc-parser",
+    "locale": "en",
+    "ids": ["angular-v22-1-oxc-parser:en"]
+  },
+  {
+    "q": "namespacing",
+    "locale": "en",
+    "ids": ["angular-css-var-namespacing:en"]
+  },
+  {
+    "q": "lazy loading",
+    "locale": "en",
+    "ids": ["angular-v22-injectasync:en", "network-aware-preloading-strategy-for-angular-lazy-loading:en"]
+  },
+  {
+    "q": "modifiability model",
+    "locale": "en",
+    "ids": ["dual-modifiability-model:en", "two-layer-modifiability-model:en"]
+  },
+  {
+    "q": "zoneless router",
+    "locale": "en",
+    "ids": ["angular-zoneless-router-activation:en"]
+  },
+  {
+    "q": "private fields",
+    "locale": "en",
+    "ids": ["angular-private-fields:en"]
+  },
+  {
+    "q": "browser extension",
+    "locale": "en",
+    "ids": ["wxt-angular-browser-extension:en"]
+  },
+  {
+    "q": "debounced",
+    "locale": "en",
+    "ids": ["angular-debounced-resource:en"]
+  },
+  {
+    "q": "differential LOADING",
+    "locale": "en",
+    "ids": ["differential-loading-a-new-feature-of-angular-cli-v8:en"]
+  },
+  {
+    "q": "ＭａｔＤｉｖｉｄｅｒ",
+    "locale": "en",
+    "ids": ["deep-dive-angular-components-mat-divider:en"]
+  }
+]
