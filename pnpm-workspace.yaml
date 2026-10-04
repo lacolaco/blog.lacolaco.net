@@ -16,6 +16,7 @@ strictDepBuilds: true
 # - @parcel/watcher: install は配布済みバイナリが無い場合のソースビルド
 # - protobufjs: postinstall はバージョン指定の書式を警告するだけ
 # - @google/genai: preinstall は何もしない (no-op)
+# - workerd: postinstall は配布済みバイナリのハードリンクによる起動の最適化とバージョン検証のみで、実バイナリは optionalDependencies の @cloudflare/workerd-<platform> で入る
 # 新しい依存でビルドスクリプトが必要になったら、根拠を確認して true にする。
 allowBuilds:
   '@google/genai': false
@@ -23,3 +24,4 @@ allowBuilds:
   esbuild: false
   protobufjs: false
   sharp: false
+  workerd: false
