@@ -28,7 +28,7 @@ await pRetry(
     });
     const text = await res.text();
     // 再試行で直らないもの (トークンの誤り、本文の誤り) だけすぐ止める。
-    // 404 は本番のルートが反映される前に Cloud Run へ届いた場合、5xx は作りたての Preview の
+    // 404 は本番のルートが反映される前に Cloud Run へ届いた場合や、作ったばかりの Worker の workers.dev が反映される前 (数分かかることがある)、5xx は作りたての Preview の
     // Durable Object が使えるようになる前 (数秒から十数秒続く) に起こるので、待って再試行する
     if (res.status === 400 || res.status === 401 || res.status === 405) throw new AbortError(`${res.status} ${text}`);
     if (!res.ok) throw new Error(`${res.status} ${text}`);
