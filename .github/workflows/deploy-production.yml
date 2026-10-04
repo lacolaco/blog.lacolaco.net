@@ -83,16 +83,12 @@ jobs:
       # Cloud Run のデプロイより前に行い、新しいサイトが存在しない API を呼ばないようにする
 
       - name: Deploy search API
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-          SEARCH_ADMIN_TOKEN: ${{ secrets.SEARCH_ADMIN_TOKEN }}
-        run: |
-          umask 077
-          secrets_file="$(mktemp)"
-          printf 'ADMIN_TOKEN=%s\n' "$SEARCH_ADMIN_TOKEN" > "$secrets_file"
-          pnpm exec wrangler deploy -c tools/search-worker/wrangler.jsonc --secrets-file "$secrets_file"
-          rm -f "$secrets_file"
+        uses: ./.github/actions/wrangler-search
+        with:
+          command: deploy
+          admin-token: ${{ secrets.SEARCH_ADMIN_TOKEN }}
+          cloudflare-api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          cloudflare-account-id: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
 
       - name: Push search index
         env:
