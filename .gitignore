@@ -36,6 +36,7 @@ pnpm-debug.log*
 *.tfvars
 *.tfstate
 *.tfstate.backup
+*.tfstate.*
 
 # 旧構成の出力先。いまは .tmp/og-staging に置く。この作業ツリーには残っていないが、
 # 旧実装を走らせた他のチェックアウトには 368枚が残るため、外すと git add -A で
