@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { corsHeaders, isBearerAuthorized, isIndexDocs } from './http.ts';
+import { corsHeaders, isBearerAuthorized, isIndexDocs, parseIndexDocs } from './http.ts';
 
 describe('corsHeaders', () => {
   const pattern = '^https://pr-[0-9]+---web-[a-z0-9]+-an\\.a\\.run\\.app$';
@@ -33,6 +33,11 @@ describe('isBearerAuthorized', () => {
     assert.equal(await isBearerAuthorized('Bearer ', ''), false);
     assert.equal(await isBearerAuthorized(null, ''), false);
   });
+
+  it('サーバー側のトークンが未設定 (undefined) なら、"Bearer undefined" を送っても通さない', async () => {
+    assert.equal(await isBearerAuthorized('Bearer undefined', undefined as unknown as string), false);
+    assert.equal(await isBearerAuthorized(null, undefined as unknown as string), false);
+  });
 });
 
 describe('isIndexDocs', () => {
@@ -49,5 +54,20 @@ describe('isIndexDocs', () => {
     assert.equal(isIndexDocs([{ ...doc, channels: [1] }]), false);
     assert.equal(isIndexDocs([{ ...doc, body: undefined }]), false);
     assert.equal(isIndexDocs([null]), false);
+  });
+});
+
+describe('parseIndexDocs', () => {
+  const doc = { slug: 'a', locale: 'ja', title: 't', date: '2026-01-01', channels: [], body: 'b' };
+  const req = (body: string) => new Request('https://example.com', { method: 'PUT', body });
+
+  it('正しい本文は記事の配列を返す', async () => {
+    assert.deepEqual(await parseIndexDocs(req(JSON.stringify([doc]))), [doc]);
+  });
+
+  it('JSON として壊れた本文や形の違う本文は undefined を返す (例外を投げない)', async () => {
+    assert.equal(await parseIndexDocs(req('{broken')), undefined);
+    assert.equal(await parseIndexDocs(req('')), undefined);
+    assert.equal(await parseIndexDocs(req('{}')), undefined);
   });
 });

@@ -8,9 +8,10 @@ export function corsHeaders(origin: string | null, pattern: string | undefined):
   return { 'access-control-allow-origin': origin, vary: 'origin' };
 }
 
-/** Authorization ヘッダーが `Bearer <token>` と一致するか。サーバー側のトークンが空なら常に拒否する */
-export async function isBearerAuthorized(header: string | null, token: string): Promise<boolean> {
-  if (token === '') return false;
+/** Authorization ヘッダーが `Bearer <token>` と一致するか。サーバー側のトークンが未設定か空なら常に拒否する */
+export async function isBearerAuthorized(header: string | null, token: string | undefined): Promise<boolean> {
+  // 未設定 (undefined) と空文字は拒否する。未設定のまま照合すると期待値が "Bearer undefined" になり、その文字列で通ってしまう
+  if (!token) return false;
   // 長さの違いから token の長さが漏れないよう、SHA-256 で固定長にしてから全バイトを比べる
   const digest = async (s: string) =>
     new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));
@@ -37,4 +38,15 @@ export function isIndexDocs(x: unknown): x is IndexDoc[] {
       );
     })
   );
+}
+
+/** 本文を JSON として読み、記事の配列ならそれを返す。壊れた JSON や形の違う本文は undefined (呼び出し側が 400 にする) */
+export async function parseIndexDocs(req: Request): Promise<IndexDoc[] | undefined> {
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return undefined;
+  }
+  return isIndexDocs(body) ? body : undefined;
 }

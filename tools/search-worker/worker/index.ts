@@ -1,7 +1,7 @@
 // サイト内検索の Worker。HTTP の窓口と Durable Object (SQLite ストレージ) を 1 つの Worker に持つ。
 // SQL と順位付けは search.ts にあり、品質テストと同じコードを実行する。
 import { DurableObject } from 'cloudflare:workers';
-import { corsHeaders, isBearerAuthorized, isIndexDocs } from '../http.ts';
+import { corsHeaders, isBearerAuthorized, parseIndexDocs } from '../http.ts';
 import {
   ensureSchema,
   replaceAll,
@@ -15,7 +15,7 @@ import {
 interface Env {
   SEARCH: DurableObjectNamespace<SearchDO>;
   /** 管理用エンドポイントの Bearer トークン (secret) */
-  ADMIN_TOKEN: string;
+  ADMIN_TOKEN?: string;
   /** CORS で許可するオリジンの正規表現。本番は同一オリジンなので未設定 (プレビューだけ設定する) */
   ALLOWED_ORIGIN_PATTERN?: string;
 }
@@ -69,8 +69,8 @@ async function handle(req: Request, env: Env): Promise<Response> {
     if (!(await isBearerAuthorized(req.headers.get('authorization'), env.ADMIN_TOKEN)))
       return json({ error: 'unauthorized' }, { status: 401 });
     if (req.method === 'PUT') {
-      const docs: unknown = await req.json();
-      if (!isIndexDocs(docs)) return json({ error: 'invalid body' }, { status: 400 });
+      const docs = await parseIndexDocs(req);
+      if (!docs) return json({ error: 'invalid body' }, { status: 400 });
       return json(await stub.replace(docs));
     }
     return json({ error: 'method not allowed' }, { status: 405 });
