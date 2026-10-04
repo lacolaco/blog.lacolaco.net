@@ -26,3 +26,5 @@ state は `gs://blog-lacolaco-net-tfstate` の prefix `terraform-github/state` �
 ## 適用の順序
 
 `code-review.yml` を main に取り込む PR のマージ前に apply する。詳細はその PR の説明を参照する。
+
+apply してから `code-review.yml` が main に入るまでの間、オープン中のすべての PR は `code-review-gate` が報告されず、マージできない。`code-review.yml` が main に入ったあとも、既存の PR は push するか main に追従してワークフローを再実行するまで `code-review-gate` を待ち続ける。
