@@ -2,37 +2,44 @@ name: CI
 
 # PR検証・レビュー・自動マージの統合ワークフロー
 #
+# コードレビュー (code-review) は code-review.yml へ分離した。
+# claude-code-action は自分のワークフローファイルがデフォルトブランチと同一でないと
+# 実行されないため、ci.yml の変更でレビューが動かなくなるのを避けている。
+# code-review の結果 (check 名 code-review-gate) は ok には含まれず、
+# infra/terraform-github の ruleset で別の必須チェックにしている。
+#
 # フロー:
 #   ┌─ classify ─→ content-review (needs: classify)
-#   │             → code-review    (needs: classify)
 #   ├─ CI jobs (build, lint, format, test)
 #   ├─ renovate-review (needs: classify, non-renovateコミットがなければ実行)
 #   ↓
-#   ok (alls-green gate, 唯一のrequired check)
+#   ok (alls-green gate, 必須チェックの一つ。code-review-gate は別の必須チェック)
 #   ↓
 #   auto-merge
 #
 # レビュー条件 (排他ではない。code+content PRでは両方実行される):
 #   - renovate-review: author == renovate[bot] かつ non-renovateコミットなし
 #   - content-review:  content_changed && author != renovate[bot] && head_ref != auto-translate
-#   - code-review:     code_changed && (author != renovate[bot] or non-renovateコミットあり)
+#   - code-review:     code-review.yml 側。code_changed && (author != renovate[bot] or non-renovateコミットあり)
 #
 # 自動マージ条件:
 #   draftでない かつ ok成功
-#   かつ (renovate-review成功 or auto-translate PR or (content-review成功 かつ code-review未実行))
+#   かつ (renovate-review成功 or auto-translate PR or (content-review成功 かつ code_changedでない))
 #   → code変更を含むPRは手動マージ
 #   → renovate PR + non-renovateコミット → renovate-review未実行, 手動マージ
+#   (自動マージは gh pr merge --auto なので、必須チェックの code-review-gate も満たされるまでマージされない)
 #
 # draft PR:
 #   - CI jobsのみ実行
-#   - content-review, code-review: classifyの出力にdraft条件を組み込みスキップ
+#   - content-review: classifyの出力にdraft条件を組み込みスキップ
 #   - renovate-review: renovate botはdraft PRを作らないため対象外
 #   - auto-merge: jobの条件でdraftを除外
 #   - draft解除時にready_for_reviewで再実行
 #
 # claude-code-action失敗時（ワークフロー変更PR等）:
-#   - Gateステップ(if: always())がapproved=falseでfail
-#   - ok fail → 人間がレビューして手動マージ
+#   - Gateステップ(if: always())がfail
+#   - content-review失敗 → ok fail、code-review失敗 → code-review-gate fail
+#   - → 人間がレビューして手動マージ
 
 on:
   pull_request:
@@ -332,108 +339,22 @@ jobs:
             exit 1
           fi
 
-  code-review:
-    needs: classify
-    if: >-
-      needs.classify.outputs.code_changed == 'true' &&
-      (github.event.pull_request.user.login != 'renovate[bot]' || needs.classify.outputs.has_non_renovate_commits == 'true')
-    runs-on: ubuntu-latest
-    outputs:
-      approved: ${{ steps.gate.outputs.approved }}
-    permissions:
-      contents: read
-      pull-requests: write
-      issues: read
-      id-token: write
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          fetch-depth: 1
-
-      - name: Review code with Claude
-        id: review
-        uses: anthropics/claude-code-action@833fb0f8c9f6686b33d963a8bae0a94f4936ab2a # v1.0.211
-        with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          allowed_bots: 'lacolaco-actions-worker[bot]'
-          prompt: |
-            このPRのコード変更をレビューしてください。
-            `gh pr diff ${{ github.event.pull_request.number }}` でdiffを取得し、コードファイルの変更のみを対象にレビューを行ってください。
-            コンテンツ変更（content/**, public/images/**, manifest.json）が含まれる場合がありますが、レビュー対象外です。
-
-            レビュー観点:
-            - コード品質とベストプラクティス
-            - 潜在的なバグや問題点
-            - パフォーマンスの考慮事項
-            - セキュリティの懸念
-            - テストカバレッジ
-
-            リポジトリのAGENTS.mdを参照し、スタイルや慣例に従ってください。
-
-            結果をJSONで返してください。
-            - issues が空（このPRで修正すべき問題がない）の場合のみ approved: true
-            - このPRで修正可能な問題があれば、重大度を問わず issues に含め、approved: false とする
-            - このPRのスコープ外の問題（既存コードの技術的負債等）は issues に含めない
-            summary にレビューの要約、issues 配列に具体的な指摘を入れてください。
-          claude_args: >-
-            --allowed-tools "Bash(gh pr diff:*),Bash(gh pr view:*)"
-            --json-schema '{"type":"object","properties":{"approved":{"type":"boolean"},"summary":{"type":"string"},"issues":{"type":"array","items":{"type":"object","properties":{"file":{"type":"string"},"description":{"type":"string"}},"required":["file","description"]}}},"required":["approved","summary","issues"]}'
-
-      - name: Gate
-        id: gate
-        if: always()
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          REVIEW_RESULT: ${{ steps.review.outputs.structured_output }}
-        run: |
-          if [[ -z "$REVIEW_RESULT" ]]; then
-            echo "::error::structured_output is empty"
-            echo "approved=false" >> "$GITHUB_OUTPUT"
-            gh pr comment "$PR_NUMBER" --body "## コードレビュー失敗
-
-          自動レビューを実行できませんでした。人間のレビューが必要です。"
-            exit 1
-          fi
-
-          APPROVED=$(echo "$REVIEW_RESULT" | jq -r '.approved')
-          SUMMARY=$(echo "$REVIEW_RESULT" | jq -r '.summary')
-          echo "approved=$APPROVED" >> "$GITHUB_OUTPUT"
-
-          ISSUES=$(echo "$REVIEW_RESULT" | jq -r '.issues[] | "- **\(.file)**: \(.description)"')
-
-          if [[ "$APPROVED" == "true" && -z "$ISSUES" ]]; then
-            # 指摘ゼロの場合のみapprove
-            gh pr review "$PR_NUMBER" --approve --body "$SUMMARY"
-          else
-            BODY="${SUMMARY}"
-            if [[ -n "$ISSUES" ]]; then
-              BODY="${BODY}
-
-          ### 指摘
-
-          ${ISSUES}"
-            fi
-            gh pr review "$PR_NUMBER" --request-changes --body "$BODY"
-            exit 1
-          fi
-
   # === Gate ===
 
   ok:
-    needs: [classify, build, lint, format, test, terraform, renovate-review, content-review, code-review]
+    needs: [classify, build, lint, format, test, terraform, renovate-review, content-review]
     if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     steps:
       - uses: re-actors/alls-green@b5b5b37504aa4183270bd3d855c52a67f212be35 # v1.3.0
         with:
-          allowed-skips: renovate-review, content-review, code-review
+          allowed-skips: renovate-review, content-review
           jobs: ${{ toJSON(needs) }}
 
   # === Auto-merge ===
 
   auto-merge:
-    needs: [ok, renovate-review, content-review, code-review]
+    needs: [classify, ok, renovate-review, content-review]
     if: >-
       !cancelled() &&
       !github.event.pull_request.draft &&
@@ -441,7 +362,7 @@ jobs:
       (
         needs.renovate-review.result == 'success' ||
         github.head_ref == 'auto-translate' ||
-        (needs.content-review.result == 'success' && needs.code-review.result == 'skipped')
+        (needs.content-review.result == 'success' && needs.classify.outputs.code_changed != 'true')
       )
     runs-on: ubuntu-latest
     permissions:
