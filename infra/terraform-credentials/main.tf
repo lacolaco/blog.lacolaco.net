@@ -1,15 +1,31 @@
+data "cloudflare_zone" "this" {
+  filter = {
+    name = var.zone_name
+  }
+}
+
+# 名前から permission group の ID を引く。ユーザー向けの一覧を使うのは、アカウント向けの一覧が
+# 作成前のトークンでは 403 になりうるため。名前の部分一致で複数返りうるので、名前が完全一致するものだけを取る。
+data "cloudflare_api_token_permission_groups_list" "workers_scripts_write" {
+  name = "Workers Scripts Write"
+}
+
+data "cloudflare_api_token_permission_groups_list" "workers_routes_write" {
+  name = "Workers Routes Write"
+}
+
 locals {
-  repository = "blog.lacolaco.net"
+  cloudflare_account_id = data.cloudflare_zone.this.account.id
+  cloudflare_zone_id    = data.cloudflare_zone.this.zone_id
 
-  cloudflare_account_id = "1b603c7fcf83d8b1d0306c84390c854b"
-  # ゾーン lacolaco.net の ID。秘密ではない。
-  cloudflare_zone_id = "3a33d35c65800e7c8d15453a85895b78"
-
-  # Cloudflare の permission group ID。`cf user tokens permission-groups list` で取得したもの。
   # Durable Objects には専用の permission group がなく、Workers Scripts Write の範囲で
   # クラス定義とマイグレーションを含むスクリプトをデプロイできる。
-  permission_group_workers_scripts_write = "e086da7e2179491d91ee5f35b3ca210a"
-  permission_group_workers_routes_write  = "28f4b596e7d643029c524985477ae49a"
+  permission_group_workers_scripts_write = one([
+    for g in data.cloudflare_api_token_permission_groups_list.workers_scripts_write.result : g.id if g.name == "Workers Scripts Write"
+  ])
+  permission_group_workers_routes_write = one([
+    for g in data.cloudflare_api_token_permission_groups_list.workers_routes_write.result : g.id if g.name == "Workers Routes Write"
+  ])
 }
 
 # アカウント所有トークンを使う (cloudflare_api_token は作成者個人に紐づくユーザートークン)。
@@ -62,20 +78,20 @@ resource "random_password" "search_admin_token" {
 
 # Worker 側の secret への反映は、検索 API の CI がこの GitHub secret から行う (ここでは扱わない)。
 resource "github_actions_secret" "cloudflare_api_token" {
-  repository      = local.repository
+  repository      = var.github_repository
   secret_name     = "CLOUDFLARE_API_TOKEN"
   plaintext_value = cloudflare_account_token.search_deploy.value
 }
 
 resource "github_actions_secret" "search_admin_token" {
-  repository      = local.repository
+  repository      = var.github_repository
   secret_name     = "SEARCH_ADMIN_TOKEN"
   plaintext_value = random_password.search_admin_token.result
 }
 
 # アカウント ID は秘密ではないので variable にする。
 resource "github_actions_variable" "cloudflare_account_id" {
-  repository    = local.repository
+  repository    = var.github_repository
   variable_name = "CLOUDFLARE_ACCOUNT_ID"
   value         = local.cloudflare_account_id
 }

@@ -18,12 +18,12 @@
 
 | permission group | 対象 | 用途 |
 |---|---|---|
-| Workers Scripts Write | アカウント `1b603c7fcf83d8b1d0306c84390c854b` のみ | Worker スクリプトのデプロイ、Workers Previews の作成と削除、Durable Objects のマイグレーション |
+| Workers Scripts Write | ゾーン lacolaco.net が属するアカウントのみ | Worker スクリプトのデプロイ、Workers Previews の作成と削除、Durable Objects のマイグレーション |
 | Workers Routes Write | ゾーン `lacolaco.net` のみ | ルート `blog.lacolaco.net/api/search*` の編集 |
 
 - Durable Objects には専用の permission group がない。Workers Scripts Write の範囲で扱う。
 - アカウントトークン (`cloudflare_account_token`) を選んだ理由は、Cloudflare の公式文書が CI/CD のように作成者が離れても動き続けるべき連携にアカウントトークンを勧めているため。`cloudflare_api_token` は作成者個人に紐づく。
-- permission group の ID は `cf user tokens permission-groups list` で取得できる。
+- ID は直書きしない。入力はゾーン名 (`zone_name`) と GitHub のリポジトリ名 (`github_repository`) で、`variables.tf` の既定値に置いてある。アカウント ID とゾーン ID は `data.cloudflare_zone` に、permission group の ID は `data.cloudflare_api_token_permission_groups_list` に名前で引かせる。そのため、apply に使う一時トークンには Zone Read も必要になる。
 
 ### 未確認事項
 
@@ -68,7 +68,7 @@ export GITHUB_TOKEN="$(gh auth token)"
 トークンを作るには、トークン作成権限を持つ認証情報が必要になる。`cf auth login` の OAuth トークンにはその権限がなく、`/accounts/<id>/tokens` が 403 を返す。次の一時トークンをダッシュボードで作り、`CLOUDFLARE_API_TOKEN` に渡す。
 
 1. ダッシュボードの「アカウントのAPIトークン」でカスタムトークンを作る。
-2. 権限は Account API Tokens Write (アカウント) に加え、Workers Scripts Write (アカウント) と Workers Routes Write (ゾーン lacolaco.net) を付ける。アカウントトークンは作成者に付与された権限の部分集合しか付与できないため、付与する権限も必要になる。
+2. 権限は Account API Tokens Write (アカウント) に加え、Zone Read (ゾーン lacolaco.net)、Workers Scripts Write (アカウント)、Workers Routes Write (ゾーン lacolaco.net) を付ける。アカウントトークンは作成者に付与された権限の部分集合しか付与できないため、付与する権限も必要になる。
 3. 有効期限は短く (数時間) 設定し、apply 後に削除する。
 
 ```bash
