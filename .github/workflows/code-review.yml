@@ -1,0 +1,152 @@
+name: Code Review
+
+# コードレビュー専用のワークフロー (ci.yml から分離)
+#
+# 分離の理由:
+#   claude-code-action は、自分が実行されているワークフローファイルがデフォルトブランチと
+#   同一であることを検証し、異なればレビューを実行しない。ci.yml に同居させると、
+#   ビルドやテストの設定を変えるだけの ci.yml の変更でもレビューが動かず、PR がブロックされる。
+#   専用ファイルに分けることで、レビューが動かないのはこのファイル自体を変える PR だけになる。
+#
+# 必須チェック:
+#   job `code-review` の check 名 `code-review-gate` を、ブランチの保護とは別の ruleset の
+#   必須チェックにする (infra/terraform-github)。ci.yml の ok はこのジョブを参照できない。
+#   必須チェックは「結果が報告されること」が前提なので、レビューが不要な PR でも
+#   このジョブは必ず実行し、成功を報告する (paths フィルタでワークフロー自体を
+#   起動しない構成にはしない。起動しないと必須チェックが待機中のまま残り、全 PR がブロックされる)。
+#
+# レビュー要否の判定 (ci.yml の classify と同じ条件):
+#   code_changed && (author != renovate[bot] || non-renovateコミットあり)
+#   code_changed は draft でない かつ content/**, public/images/**, manifest.json 以外の変更を含む
+#
+# レビュー不要のときは、レビューの手順を飛ばして成功する。
+# レビューが必要なときは、Gate ステップが approved でなければ fail する。
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  code-review:
+    # check 名。ci.yml に残る可能性のある同名ジョブと区別するため、job id と別の名前にする
+    name: code-review-gate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          fetch-depth: 1
+
+      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        id: code-paths
+        with:
+          predicate-quantifier: 'every'
+          filters: |
+            code:
+              - '**'
+              - '!content/**'
+              - '!public/images/**'
+              - '!manifest.json'
+
+      - name: Check for non-renovate commits
+        id: non-renovate-commits
+        if: github.event.pull_request.user.login == 'renovate[bot]'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          NON_RENOVATE=$(gh api "repos/${REPO}/pulls/${PR_NUMBER}/commits" --paginate --jq '[.[].author.login // empty] | .[]' | grep -v 'renovate\[bot\]' | head -1 || true)
+          if [[ -n "$NON_RENOVATE" ]]; then
+            echo "has_non_renovate_commits=true" >> "$GITHUB_OUTPUT"
+            echo "Non-renovate commits detected by: $NON_RENOVATE"
+          else
+            echo "has_non_renovate_commits=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Decide whether review is required
+        id: needed
+        env:
+          DRAFT: ${{ github.event.pull_request.draft }}
+          CODE: ${{ steps.code-paths.outputs.code }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          HAS_NON_RENOVATE: ${{ steps.non-renovate-commits.outputs.has_non_renovate_commits }}
+        run: |
+          if [[ "$DRAFT" != "true" && "$CODE" == "true" && ( "$AUTHOR" != "renovate[bot]" || "$HAS_NON_RENOVATE" == "true" ) ]]; then
+            echo "required=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "required=false" >> "$GITHUB_OUTPUT"
+            echo "Code review is not required for this PR."
+          fi
+
+      - name: Review code with Claude
+        id: review
+        if: steps.needed.outputs.required == 'true'
+        uses: anthropics/claude-code-action@833fb0f8c9f6686b33d963a8bae0a94f4936ab2a # v1.0.211
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          allowed_bots: 'lacolaco-actions-worker[bot]'
+          prompt: |
+            このPRのコード変更をレビューしてください。
+            `gh pr diff ${{ github.event.pull_request.number }}` でdiffを取得し、コードファイルの変更のみを対象にレビューを行ってください。
+            コンテンツ変更（content/**, public/images/**, manifest.json）が含まれる場合がありますが、レビュー対象外です。
+
+            レビュー観点:
+            - コード品質とベストプラクティス
+            - 潜在的なバグや問題点
+            - パフォーマンスの考慮事項
+            - セキュリティの懸念
+            - テストカバレッジ
+
+            リポジトリのAGENTS.mdを参照し、スタイルや慣例に従ってください。
+
+            結果をJSONで返してください。
+            - issues が空（このPRで修正すべき問題がない）の場合のみ approved: true
+            - このPRで修正可能な問題があれば、重大度を問わず issues に含め、approved: false とする
+            - このPRのスコープ外の問題（既存コードの技術的負債等）は issues に含めない
+            summary にレビューの要約、issues 配列に具体的な指摘を入れてください。
+          claude_args: >-
+            --allowed-tools "Bash(gh pr diff:*),Bash(gh pr view:*)"
+            --json-schema '{"type":"object","properties":{"approved":{"type":"boolean"},"summary":{"type":"string"},"issues":{"type":"array","items":{"type":"object","properties":{"file":{"type":"string"},"description":{"type":"string"}},"required":["file","description"]}}},"required":["approved","summary","issues"]}'
+
+      - name: Gate
+        id: gate
+        if: always() && steps.needed.outputs.required == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REVIEW_RESULT: ${{ steps.review.outputs.structured_output }}
+        run: |
+          if [[ -z "$REVIEW_RESULT" ]]; then
+            echo "::error::structured_output is empty"
+            gh pr comment "$PR_NUMBER" --body "## コードレビュー失敗
+
+          自動レビューを実行できませんでした。人間のレビューが必要です。"
+            exit 1
+          fi
+
+          APPROVED=$(echo "$REVIEW_RESULT" | jq -r '.approved')
+          SUMMARY=$(echo "$REVIEW_RESULT" | jq -r '.summary')
+
+          ISSUES=$(echo "$REVIEW_RESULT" | jq -r '.issues[] | "- **\(.file)**: \(.description)"')
+
+          if [[ "$APPROVED" == "true" && -z "$ISSUES" ]]; then
+            # 指摘ゼロの場合のみapprove
+            gh pr review "$PR_NUMBER" --approve --body "$SUMMARY"
+          else
+            BODY="${SUMMARY}"
+            if [[ -n "$ISSUES" ]]; then
+              BODY="${BODY}
+
+          ### 指摘
+
+          ${ISSUES}"
+            fi
+            gh pr review "$PR_NUMBER" --request-changes --body "$BODY"
+            exit 1
+          fi
