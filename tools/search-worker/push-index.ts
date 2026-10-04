@@ -35,9 +35,9 @@ await pRetry(
     console.log(text);
   },
   {
-    retries: 8,
+    retries: 15,
     minTimeout: 2000,
-    maxTimeout: 15000,
+    maxTimeout: 20000,
     onFailedAttempt: (e) => console.warn(`再試行: ${e.error.message}`),
   },
 );
