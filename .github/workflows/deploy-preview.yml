@@ -16,6 +16,8 @@ on:
       # Package dependencies
       - 'package.json'
       - 'pnpm-lock.yaml'
+      # 検索 API (Cloudflare Workers) のコードと設定
+      - 'tools/search-worker/**'
       # Remark plugins and tools affecting build
       - 'tools/remark-embed/**'
       - 'tools/rehype-image-cdn/**'
@@ -86,10 +88,36 @@ jobs:
         env:
           IMAGE_CDN_BASE_URL: ${{ vars.IMAGE_CDN_BASE_URL }}
 
+      # 検索 API の Preview (PR ごとに隔離された Worker)。Durable Object の名前空間とストレージは
+      # Preview ごとに自動で別になり、本番の索引と混ざらない。Preview URL をビルドへ渡すため、ビルドより前に作る
+      - name: Deploy search API Preview
+        id: search-preview
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          SEARCH_ADMIN_TOKEN: ${{ secrets.SEARCH_ADMIN_TOKEN }}
+          PREVIEW_NAME: pr-${{ github.event.number }}
+        run: |
+          umask 077
+          secrets_file="$(mktemp)"
+          printf 'ADMIN_TOKEN=%s\n' "$SEARCH_ADMIN_TOKEN" > "$secrets_file"
+          pnpm exec wrangler preview -c tools/search-worker/wrangler.jsonc \
+            --name "$PREVIEW_NAME" --secrets-file "$secrets_file" --json > "$RUNNER_TEMP/search-preview.json"
+          rm -f "$secrets_file"
+          echo "url=$(jq -er '.preview.urls[0]' "$RUNNER_TEMP/search-preview.json")" >> "$GITHUB_OUTPUT"
+
       - name: Build
         run: pnpm run build
         env:
           IMAGE_CDN_BASE_URL: ${{ vars.IMAGE_CDN_BASE_URL }}
+          # プレビューのサイトが呼ぶ検索 API。Preview の Worker は別オリジンなので、その Worker が CORS で許可する
+          PUBLIC_SEARCH_API_URL: ${{ steps.search-preview.outputs.url }}
+
+      - name: Push search index to Preview
+        env:
+          SEARCH_ADMIN_TOKEN: ${{ secrets.SEARCH_ADMIN_TOKEN }}
+          SEARCH_API_URL: ${{ steps.search-preview.outputs.url }}
+        run: pnpm exec tsx tools/search-worker/push-index.ts "$SEARCH_API_URL"
 
       - name: Deploy to Cloud Run
         id: deploy-cloudrun
