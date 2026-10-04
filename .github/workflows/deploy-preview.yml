@@ -101,8 +101,13 @@ jobs:
           umask 077
           secrets_file="$(mktemp)"
           printf 'ADMIN_TOKEN=%s\n' "$SEARCH_ADMIN_TOKEN" > "$secrets_file"
-          pnpm exec wrangler preview -c tools/search-worker/wrangler.jsonc \
-            --name "$PREVIEW_NAME" --secrets-file "$secrets_file" --json > "$RUNNER_TEMP/search-preview.json"
+          # --json は失敗の詳細も標準出力へ出すので、失敗したときは出力ファイルを表示してから終了する (secret は含まれない)
+          if ! pnpm exec wrangler preview -c tools/search-worker/wrangler.jsonc \
+            --name "$PREVIEW_NAME" --secrets-file "$secrets_file" --json > "$RUNNER_TEMP/search-preview.json"; then
+            cat "$RUNNER_TEMP/search-preview.json"
+            rm -f "$secrets_file"
+            exit 1
+          fi
           rm -f "$secrets_file"
           # URL が取れなければ (null や空) ここで失敗させる。コマンド置換の中の失敗は echo に握りつぶされるため、変数に分けて確かめる
           url="$(jq -er '.preview.urls[0]' "$RUNNER_TEMP/search-preview.json")"
