@@ -15,6 +15,15 @@ describe('corsHeaders', () => {
     assert.deepEqual(corsHeaders('https://pr-12---web-abc123-an.a.run.app.evil.com', pattern), {});
   });
 
+  it('パターンに ^ と $ が無くても、オリジン全体が一致したときだけ許可する', () => {
+    const unanchored = 'https://pr-[0-9]+---web-[a-z0-9]+-an\\.a\\.run\\.app';
+    assert.deepEqual(corsHeaders('https://evil.com/https://pr-1---web-abc-an.a.run.app', unanchored), {});
+    assert.deepEqual(corsHeaders('https://pr-1---web-abc-an.a.run.app', unanchored), {
+      'access-control-allow-origin': 'https://pr-1---web-abc-an.a.run.app',
+      vary: 'origin',
+    });
+  });
+
   it('パターン未設定 (本番の同一オリジン) では何も許可しない', () => {
     assert.deepEqual(corsHeaders('https://blog.lacolaco.net', undefined), {});
     assert.deepEqual(corsHeaders(null, pattern), {});

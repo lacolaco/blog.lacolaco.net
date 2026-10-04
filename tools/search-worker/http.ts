@@ -4,7 +4,8 @@ import type { IndexDoc } from './search.ts';
 /** オリジンが許可パターンに一致するときだけ CORS のヘッダーを返す。パターン未設定 (同一オリジン) は何も許可しない */
 export function corsHeaders(origin: string | null, pattern: string | undefined): Record<string, string> {
   if (!origin || !pattern) return {};
-  if (!new RegExp(pattern).test(origin)) return {};
+  // パターンの書き手が ^ と $ を忘れても、オリジンの一部に一致しただけで許可しないよう、全体一致に包む
+  if (!new RegExp(`^(?:${pattern})$`).test(origin)) return {};
   return { 'access-control-allow-origin': origin, vary: 'origin' };
 }
 
