@@ -12,3 +12,9 @@ variable "github_repository" {
   type        = string
   default     = "blog.lacolaco.net"
 }
+
+variable "image_cdn_base_url" {
+  description = "画像 CDN (Cloudflare R2 のカスタムドメイン) のベース URL。ビルド時の画像 URL 書き換えが使う。"
+  type        = string
+  default     = "https://images.blog.lacolaco.net"
+}

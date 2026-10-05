@@ -95,3 +95,12 @@ resource "github_actions_variable" "cloudflare_account_id" {
   variable_name = "CLOUDFLARE_ACCOUNT_ID"
   value         = local.cloudflare_account_id
 }
+
+# 画像 CDN のベース URL も秘密ではないので variable にする。
+# R2 のバケットとカスタムドメインはこの構成の管理外 (Terraform のリソースが無い) ため、data source からは引けない。
+# そのため値は variables.tf の入力で与える。
+resource "github_actions_variable" "image_cdn_base_url" {
+  repository    = var.github_repository
+  variable_name = "IMAGE_CDN_BASE_URL"
+  value         = var.image_cdn_base_url
+}

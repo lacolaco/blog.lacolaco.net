@@ -13,6 +13,7 @@
 | `github_actions_secret.cloudflare_api_token` | `lacolaco/blog.lacolaco.net` の secret `CLOUDFLARE_API_TOKEN` |
 | `github_actions_secret.search_admin_token` | 同 secret `SEARCH_ADMIN_TOKEN` |
 | `github_actions_variable.cloudflare_account_id` | 同 variable `CLOUDFLARE_ACCOUNT_ID` (秘密ではない) |
+| `github_actions_variable.image_cdn_base_url` | 同 variable `IMAGE_CDN_BASE_URL` (秘密ではない)。画像 CDN は R2 のカスタムドメインで、バケットとドメインはこの構成の管理外のため、値は入力 `image_cdn_base_url` で与える。既存の variable は `terraform import github_actions_variable.image_cdn_base_url blog.lacolaco.net:IMAGE_CDN_BASE_URL` で取り込む |
 
 ### トークンの権限
 
@@ -32,6 +33,39 @@ Workers Previews の作成と削除、Durable Objects のデプロイが、上�
 ### 責務の分担
 
 Worker 側の secret (本番と Preview) への `SEARCH_ADMIN_TOKEN` の反映は、検索 API の CI が GitHub の secret から行う。このモジュールは GitHub の secret を用意するところまでを扱う。
+
+## リポジトリの secret と variable の全件
+
+`lacolaco/blog.lacolaco.net` の Actions secret 12 件と variable 2 件 (`gh secret list`、`gh variable list` で確認、手作業の secret `CLOUDFLARE_ACCOUNT_ID` と `CLOUDFLARE_ZONE_ID` の削除後) の管理状況を示す。参照するワークフローは `main` の `.github` を `secrets.<名前>` と `vars.<名前>` で検索した結果である。値は書かない。
+
+### Terraform のコードで追えるもの
+
+| 種別 | 名前 | 管理 | 参照するワークフロー |
+|---|---|---|---|
+| secret | `CLOUDFLARE_API_TOKEN` | このモジュール | `deploy-production.yml`、`deploy-preview.yml`、`shutdown-preview.yml` |
+| secret | `SEARCH_ADMIN_TOKEN` | このモジュール | `deploy-production.yml`、`deploy-preview.yml` |
+| variable | `CLOUDFLARE_ACCOUNT_ID` | このモジュール | `deploy-production.yml`、`deploy-preview.yml`、`shutdown-preview.yml` |
+| variable | `IMAGE_CDN_BASE_URL` | このモジュール。値は `variables.tf` の `image_cdn_base_url` で与える | `deploy-production.yml`、`deploy-preview.yml` |
+
+### Terraform のコードで追えないもの
+
+いずれも手作業で登録した secret である。外部サービスが発行した認証情報は、Terraform で作る手段がないか、作る対象がこの構成の管理外にある。参照するワークフローが無いものは、Terraform へ取り込まず、別項目で削除を検討する候補とする。再登録は `gh secret set <名前>` で行う。
+
+| 種別 | 名前 | 追えない理由 | 参照するワークフロー |
+|---|---|---|---|
+| secret | `CLAUDE_CODE_OAUTH_TOKEN` | Claude Code の OAuth トークン。Terraform のリソースにない | `claude.yml`、`ci.yml`、`code-review.yml` |
+| secret | `GEMINI_API_KEY` | Gemini の API キー。Terraform のリソースにない | `auto-translate.yml` |
+| secret | `WORKER_APP_ID` | GitHub App (アプリ ID) の設定値。アプリはダッシュボードで作る | `auto-translate.yml`、`ci.yml`、`trigger-sync-from-pr-comment.yml` |
+| secret | `WORKER_APP_PRIVATE_KEY` | 同アプリの秘密鍵。ダッシュボードで発行する | 同上 |
+| secret | `NOTION_AUTH_TOKEN` | Notion のインテグレーションのトークン | 参照なし |
+| secret | `NOTION_DATABASE_ID` | 秘密でない ID。どのワークフローも参照せず、取り込まずに削除を検討する候補 | 参照なし |
+| secret | `ANTHROPIC_API_KEY` | Anthropic の API キー | 参照なし |
+| secret | `R2_ACCESS_KEY_ID` | Cloudflare R2 の API トークンから得るキー | 参照なし |
+| secret | `R2_SECRET_ACCESS_KEY` | 同上 | 参照なし |
+| secret | `R2_BUCKET_NAME` | 秘密でないバケット名。どのワークフローも参照せず、取り込まずに削除を検討する候補 | 参照なし |
+
+- `R2_*` と `NOTION_*` は `tools/` のローカル実行 (`tools/env.d.ts`、`.env.example`) が環境変数で読むが、`main` のワークフローは参照しない。
+- `NOTION_AUTH_TOKEN`、`ANTHROPIC_API_KEY`、`R2_ACCESS_KEY_ID`、`R2_SECRET_ACCESS_KEY` も参照するワークフローが無く、削除を別項目で検討する。
 
 ## 有効期限とローテーション
 
