@@ -539,7 +539,8 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
     font-size: 12px;
     line-height: 1.5;
     color: var(--color-text-secondary);
-    min-height: 12px;
+    /* 結果が多いと ss-results (flex: 1 1 0) との配分で縮み、文字が下の最初のカードに重なって切れる。縮めない */
+    flex: none;
   }
   .ss-status:empty {
     display: none;
