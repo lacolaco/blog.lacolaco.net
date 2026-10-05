@@ -1,0 +1,721 @@
+---
+// サイト内検索のモーダル。Header の検索ボタンまたは Cmd/Ctrl+K で開く。
+// 検索は検索 API (tools/search-worker) に任せ、この要素は入力・表示・キー操作だけを担う。
+import { channels } from '@lib/post';
+
+// 記事の channels は名前だけで返るので、名前から色を引くための表を HTML に埋め込む (一覧の ChannelBadge と同じ色)
+const channelColors = Object.fromEntries(channels.map((c) => [c.name, c.color]));
+// プレビューは検索 API の Preview (別オリジン) を、本番は同一オリジンの /api/search を呼ぶ
+const apiBase = import.meta.env.PUBLIC_SEARCH_API_URL;
+const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
+---
+
+<site-search hidden data-endpoint={endpoint} data-channel-colors={JSON.stringify(channelColors)}>
+  <dialog class="site-search-dialog" closedby="any">
+    <div class="ss-head">
+      <div class="ss-field">
+        <span class="icon-[material-symbols--search] ss-field-icon" aria-hidden="true"></span>
+        <input
+          type="search"
+          class="ss-input"
+          role="combobox"
+          aria-expanded="false"
+          aria-controls="ss-results"
+          aria-autocomplete="list"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          enterkeyhint="go"
+        />
+        <button type="button" class="ss-clear" hidden></button>
+      </div>
+      <button type="button" class="ss-close">
+        <span class="icon-[material-symbols--close] text-[22px]" aria-hidden="true"></span>
+      </button>
+    </div>
+    <div class="ss-body">
+      <!-- 見た目用の状態表示。読み上げは下の ss-sr に間引いて流す -->
+      <p class="ss-status" aria-hidden="true"></p>
+      <p class="ss-sr" role="status"></p>
+      <!-- APG の combobox: popup の listbox は Tab の順序に入れず、入力欄から aria-activedescendant で操作する -->
+      <div class="ss-results" id="ss-results" role="listbox" tabindex="-1"></div>
+    </div>
+    <!-- EN バッジ。記事一覧 (src/layouts/List.astro) の英語記事のバッジと同じマークアップ。見た目は一覧側と常に揃える -->
+    <template id="ss-en-badge">
+      <span class="inline-block text-[10px] font-bold text-white bg-badge-en py-px px-1.5 rounded-[3px] ml-1.5 align-middle"
+        >EN</span
+      >
+    </template>
+    <div class="ss-foot" aria-hidden="true">
+      <span><kbd>↑</kbd><kbd>↓</kbd><span class="ss-hint-move"></span></span>
+      <span><kbd>↵</kbd><span class="ss-hint-open"></span></span>
+      <span><kbd>esc</kbd><span class="ss-hint-close"></span></span>
+    </div>
+  </dialog>
+</site-search>
+
+<script>
+  import { renderHighlighted } from '../libs/search/highlight';
+  import { createLatestSearch, type SearchHit } from '../libs/search/latest-search';
+  import { createBackdropDismiss, isOutsideRect } from '../libs/search/backdrop-dismiss';
+  import { buildSearchUrl, localeOf } from '../libs/search/request';
+
+  const MESSAGES = {
+    ja: {
+      dialog: 'サイト内検索',
+      results: '検索結果',
+      searchButton: '検索',
+      placeholder: '記事を検索',
+      clear: 'クリア',
+      loading: '検索中…',
+      error: '検索に失敗しました。時間をおいてもう一度お試しください',
+      none: (q: string) => `「${q}」に一致する記事はありません`,
+      count: (q: string, n: number) => `「${q}」の検索結果 ${n} 件`,
+      move: '移動',
+      open: '開く',
+      close: '閉じる',
+    },
+    en: {
+      dialog: 'Search the site',
+      results: 'Search results',
+      searchButton: 'Search',
+      placeholder: 'Search posts',
+      clear: 'Clear',
+      loading: 'Searching…',
+      error: 'Search failed. Please try again later',
+      none: (q: string) => `No posts match "${q}"`,
+      count: (q: string, n: number) => `${n} ${n === 1 ? 'result' : 'results'} for "${q}"`,
+      move: 'Navigate',
+      open: 'Open',
+      close: 'Close',
+    },
+  } as const;
+
+  /** 入力が止まってから要求するまでの待ち時間 (ms) */
+  const DEBOUNCE_MS = 200;
+
+  class SiteSearch extends HTMLElement {
+    private dialog = this.querySelector('dialog')!;
+    private input = this.querySelector<HTMLInputElement>('.ss-input')!;
+    private clearBtn = this.querySelector<HTMLButtonElement>('.ss-clear')!;
+    private status = this.querySelector<HTMLElement>('.ss-status')!;
+    private live = this.querySelector<HTMLElement>('.ss-sr')!;
+    private liveTimer = 0;
+    private debounceTimer = 0;
+    private composing = false;
+    private opener: HTMLElement | null = null;
+    private resultsEl = this.querySelector<HTMLElement>('.ss-results')!;
+    private locale = localeOf(document.documentElement.lang);
+    private m = MESSAGES[this.locale];
+    private endpoint = this.dataset.endpoint ?? '/api/search';
+    private channelColors: Record<string, string> = JSON.parse(this.dataset.channelColors ?? '{}');
+    private search = createLatestSearch();
+    private items: HTMLAnchorElement[] = [];
+    private active = -1;
+    private lastQuery = '';
+
+    connectedCallback() {
+      this.hidden = false;
+      this.dialog.setAttribute('aria-label', this.m.dialog);
+      this.resultsEl.setAttribute('aria-label', this.m.results);
+      this.querySelector('.ss-close')!.setAttribute('aria-label', this.m.close);
+      // Header の検索ボタンの名前を、ページの言語に合わせる
+      const toggle = document.querySelector('search-toggle-button button');
+      toggle?.setAttribute('aria-label', this.m.searchButton);
+      toggle?.setAttribute('title', this.m.searchButton);
+      this.input.placeholder = this.m.placeholder;
+      this.input.setAttribute('aria-label', this.m.placeholder);
+      this.clearBtn.textContent = this.m.clear;
+      this.querySelector('.ss-hint-move')!.textContent = this.m.move;
+      this.querySelector('.ss-hint-open')!.textContent = this.m.open;
+      this.querySelector('.ss-hint-close')!.textContent = this.m.close;
+
+      this.input.addEventListener('input', () => this.schedule());
+      this.input.addEventListener('keydown', (e) => this.onKeydown(e));
+      this.input.addEventListener('compositionstart', () => (this.composing = true));
+      this.input.addEventListener('compositionend', () => (this.composing = false));
+      // 入力欄の外 (余白) を押しても入力欄にフォーカスする
+      this.querySelector('.ss-field')!.addEventListener('click', () => this.input.focus());
+      // IME の変換中の Esc は変換の取り消しにだけ使い、dialog を閉じない
+      this.dialog.addEventListener('cancel', (e) => {
+        if (this.composing) e.preventDefault();
+      });
+      // 閉じたら進行中の要求を捨て、開く前にフォーカスがあった要素へ戻す (<dialog> の既定の復帰に加えて、取りこぼしを防ぐ)
+      this.dialog.addEventListener('close', () => {
+        clearTimeout(this.debounceTimer);
+        this.search.cancel();
+        this.announce('', true);
+        if (this.opener?.isConnected) this.opener.focus();
+        this.opener = null;
+      });
+      // Cmd/Ctrl+K で開く。修飾キーつきなので WCAG 2.1.4 (文字キーのショートカット) の対象外。
+      // 入力欄・テキスト領域・contenteditable にフォーカスがあるとき、開いているときは発火させない
+      document.addEventListener('keydown', (e) => {
+        if (e.key.toLowerCase() !== 'k' || !(e.metaKey || e.ctrlKey) || e.shiftKey || e.altKey || e.isComposing) return;
+        if (this.dialog.open) return;
+        const t = e.target as Element | null;
+        if (t?.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])')) return;
+        e.preventDefault();
+        this.open();
+      });
+      this.clearBtn.addEventListener('click', () => {
+        this.input.value = '';
+        this.schedule(true);
+        this.input.focus();
+      });
+      this.querySelector('.ss-close')!.addEventListener('click', () => this.dialog.close());
+      // 背景の操作で閉じるのは、押した位置と離した位置の両方が背景のときだけにする。
+      // 標準の closedby="any" がその規則 (WHATWG HTML の Dialog light dismiss) で、Chrome 134+ と Firefox 141+ が対応する
+      // (MDN browser-compat-data: Safari は preview のみ)。未対応のブラウザには同じ規則の代替を足す。
+      // click は押した位置と離した位置の共通の祖先 (dialog) が target になり、モーダル内で押して外で離した操作
+      // (抜粋や入力欄の文字の選択) でも閉じるので使わない。
+      if (!('closedBy' in this.dialog)) {
+        const dismiss = createBackdropDismiss();
+        const onBackdrop = (e: PointerEvent) =>
+          e.target === this.dialog && isOutsideRect(this.dialog.getBoundingClientRect(), e.clientX, e.clientY);
+        this.dialog.addEventListener('pointerdown', (e) => dismiss.down(onBackdrop(e)));
+        this.dialog.addEventListener('pointerup', (e) => {
+          if (dismiss.up(onBackdrop(e))) this.dialog.close();
+        });
+        this.dialog.addEventListener('pointercancel', () => dismiss.cancel());
+      }
+      // 検索ボタンは Header にあるので、イベントで開く
+      document.addEventListener('site-search:open', () => this.open());
+    }
+
+    open() {
+      if (!this.dialog.open) {
+        this.opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        this.dialog.showModal();
+      }
+      this.input.focus();
+      this.input.select();
+      // 閉じる前の入力が残っているので、その結果を出し直す
+      this.schedule(true);
+    }
+
+    /** 入力のたびに要求せず、入力が止まってから要求する。now なら待たずに実行する */
+    private schedule(now = false) {
+      clearTimeout(this.debounceTimer);
+      const q = this.input.value;
+      this.clearBtn.hidden = q === '';
+      this.lastQuery = q.trim();
+      if (!this.lastQuery) {
+        // 空になったら進行中の要求も捨てる
+        this.search.cancel();
+        this.renderResults([], '');
+        return;
+      }
+      if (now) void this.run();
+      else this.debounceTimer = window.setTimeout(() => void this.run(), DEBOUNCE_MS);
+    }
+
+    private async run() {
+      const q = this.lastQuery;
+      const url = buildSearchUrl(this.endpoint, q, this.locale);
+      if (!url) return;
+      // 結果を出すまでの間は読み込み中を示す。前の結果は新しい結果で置き換わるまで残す
+      this.status.classList.remove('is-error');
+      this.status.classList.add('is-loading');
+      this.setStatus(this.m.loading);
+      const outcome = await this.search(url);
+      // 古い要求の応答は捨てる (新しい要求の応答が表示を担う)
+      if (outcome.status === 'stale') return;
+      this.status.classList.remove('is-loading');
+      if (outcome.status === 'error') {
+        this.renderError();
+        return;
+      }
+      this.renderResults(outcome.hits, q);
+    }
+
+    /** 結果以外の状態表示 (エラー)。無言で 0 件にしない */
+    private renderError() {
+      this.clearList();
+      this.status.classList.add('is-error');
+      this.setStatus(this.m.error);
+      this.syncPopup();
+    }
+
+    private clearList() {
+      this.resultsEl.replaceChildren();
+      this.items = [];
+      this.active = -1;
+      this.status.classList.remove('is-error');
+    }
+
+    /** 状態表示を更新し、読み上げ用にも間引いて流す */
+    private setStatus(text: string) {
+      this.status.textContent = text;
+      this.announce(text);
+    }
+
+    /** 入力のたびに読み上げが重ならないよう、更新が止まってから読み上げ用の領域に反映する */
+    private announce(text: string, now = false) {
+      clearTimeout(this.liveTimer);
+      if (now) {
+        this.live.textContent = text;
+        return;
+      }
+      this.liveTimer = window.setTimeout(() => (this.live.textContent = text), 400);
+    }
+
+    /** APG の combobox: 結果の一覧 (popup) を出している間だけ aria-expanded を true にし、古い activedescendant を残さない */
+    private syncPopup() {
+      this.input.setAttribute('aria-expanded', String(this.items.length > 0));
+      this.input.removeAttribute('aria-activedescendant');
+    }
+
+    /** `q` は結果を要求した時点の語。応答を待つ間に入力が進んでも、件数の文言を結果と食い違わせない */
+    private renderResults(hits: SearchHit[], q: string) {
+      this.clearList();
+      this.status.classList.remove('is-loading');
+      if (!q) {
+        this.setStatus('');
+        this.syncPopup();
+        return;
+      }
+      if (hits.length === 0) {
+        this.setStatus(this.m.none(q));
+        this.syncPopup();
+        return;
+      }
+      this.setStatus(this.m.count(q, hits.length));
+
+      const suffix = this.locale === 'en' ? '.en' : '';
+
+      for (const hit of hits) {
+        const group = document.createElement('div');
+        group.className = 'ss-group';
+        group.setAttribute('role', 'none');
+
+        const main = document.createElement('a');
+        main.href = `/posts/${encodeURIComponent(hit.slug)}${suffix}`;
+        main.className = 'ss-item ss-main';
+        main.id = `ss-item-${this.items.length}`;
+        main.setAttribute('role', 'option');
+        main.tabIndex = -1;
+        this.items.push(main);
+
+        const title = document.createElement('div');
+        title.className = 'ss-title';
+        // API は題名の一致範囲を返さないので、題名は強調しない
+        title.append(hit.title);
+        // 記事一覧 (List.astro) の EN バッジと同じ規則: en 記事の題名の後ろに付ける
+        if (this.locale === 'en') {
+          title.append(this.querySelector<HTMLTemplateElement>('#ss-en-badge')!.content.cloneNode(true));
+        }
+        main.append(title);
+        if (hit.snippet) {
+          const ex = document.createElement('div');
+          ex.className = 'ss-excerpt';
+          ex.append(renderHighlighted(hit.snippet, hit.highlights));
+          main.append(ex);
+        }
+        // メタデータの行: 日付とチャンネル。記事一覧と同じく日付が左、チャンネルが右
+        const meta = document.createElement('div');
+        meta.className = 'ss-meta';
+        const date = document.createElement('time');
+        date.className = 'ss-date';
+        date.dateTime = hit.date;
+        date.textContent = hit.date;
+        meta.append(date);
+        if (hit.channels.length > 0) {
+          const chs = document.createElement('div');
+          chs.className = 'ss-channels';
+          hit.channels.forEach((name, i) => {
+            if (i > 0) {
+              const sep = document.createElement('span');
+              sep.className = 'ss-channel-sep';
+              sep.setAttribute('aria-hidden', 'true');
+              sep.textContent = '/';
+              chs.append(sep);
+            }
+            // カード全体が <a> なので、ChannelBadge のリンクではなく span にする
+            const span = document.createElement('span');
+            span.className = 'ss-channel';
+            span.style.setProperty('--color-channel', `var(--color-tag-text-${this.channelColors[name] ?? 'default'})`);
+            span.textContent = name;
+            chs.append(span);
+          });
+          meta.append(chs);
+        }
+        main.append(meta);
+        // 読み上げ名は題名だけにし、日付とチャンネルは説明にする。抜粋は視覚用 (名前に入れると長すぎる)
+        const n = this.items.length - 1;
+        title.id = `ss-title-${n}`;
+        meta.id = `ss-meta-${n}`;
+        main.setAttribute('aria-labelledby', title.id);
+        main.setAttribute('aria-describedby', meta.id);
+        group.append(main);
+
+        this.resultsEl.append(group);
+      }
+      this.resultsEl.scrollTop = 0;
+      this.syncPopup();
+    }
+
+    private select(i: number) {
+      this.items[this.active]?.removeAttribute('aria-selected');
+      this.active = i;
+      const el = this.items[i];
+      if (!el) {
+        this.input.removeAttribute('aria-activedescendant');
+        return;
+      }
+      el.setAttribute('aria-selected', 'true');
+      this.input.setAttribute('aria-activedescendant', el.id);
+      // 結果の一覧だけをスクロールする。scrollIntoView は背後のページまでスクロールしてしまう
+      const r = el.getBoundingClientRect();
+      const c = this.resultsEl.getBoundingClientRect();
+      const margin = 8;
+      if (r.top < c.top + margin) this.resultsEl.scrollTop -= c.top + margin - r.top;
+      else if (r.bottom > c.bottom - margin) this.resultsEl.scrollTop += r.bottom - (c.bottom - margin);
+    }
+
+    private onKeydown(e: KeyboardEvent) {
+      const n = this.items.length;
+      if (e.key === 'ArrowDown' && n) {
+        e.preventDefault();
+        this.select(this.active + 1 >= n ? 0 : this.active + 1);
+      } else if (e.key === 'ArrowUp' && n) {
+        e.preventDefault();
+        this.select(this.active <= 0 ? n - 1 : this.active - 1);
+      } else if ((e.key === 'Home' || e.key === 'End') && !e.shiftKey && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        // APG: Home/End は視覚フォーカスを入力欄に戻し、キャレットを先頭/末尾へ動かす。
+        // macOS の Chrome では End が背後のページのスクロールとして働くので、キャレットは自前で動かす
+        e.preventDefault();
+        this.select(-1);
+        const at = e.key === 'Home' ? 0 : this.input.value.length;
+        this.input.setSelectionRange(at, at);
+      } else if (e.key === 'PageDown' || e.key === 'PageUp') {
+        // 入力欄で押すと背後のページがスクロールするので、結果の一覧をスクロールする
+        e.preventDefault();
+        this.resultsEl.scrollBy({ top: (e.key === 'PageDown' ? 1 : -1) * this.resultsEl.clientHeight * 0.9 });
+      } else if (e.key === 'Escape' && !e.isComposing && !this.composing) {
+        // type=search は Esc で入力を消すだけで dialog が閉じないので、1回で閉じる。
+        // IME の変換中は変換の取り消しに任せる
+        e.preventDefault();
+        this.dialog.close();
+      } else if (e.key === 'Enter' && !e.isComposing && !this.composing) {
+        // 選択中の結果があるときだけ遷移する。選択が見えない状態で先頭へ飛ぶ隠れた動作を避ける
+        if (this.active >= 0) {
+          e.preventDefault();
+          location.href = this.items[this.active].href;
+        }
+      }
+    }
+  }
+
+  customElements.define('site-search', SiteSearch);
+</script>
+
+<style is:global>
+  /* サイトの色とフォントは global.css の変数を使う。サイズは参考サイトの modal の実測値 (幅 560、上余白 80、角丸 16) */
+  .site-search-dialog {
+    --ss-accent: var(--color-text-accent);
+    font-family: var(--font-sans);
+    color: var(--color-text-default);
+    background: var(--color-bg-default);
+    border: 0;
+    padding: 0;
+    margin: 80px auto 0;
+    width: min(560px, calc(100vw - 32px));
+    max-height: calc(100dvh - 160px);
+    border-radius: 16px;
+    box-shadow:
+      0 0 0 1px rgb(0 0 0 / 0.06),
+      0 20px 48px rgb(0 0 0 / 0.22);
+    overflow: hidden;
+  }
+  .site-search-dialog[open] {
+    display: flex;
+    flex-direction: column;
+  }
+  .site-search-dialog::backdrop {
+    background: rgb(0 0 0 / 0.4);
+  }
+  .ss-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--color-border-medium);
+  }
+  .ss-field {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 8px 0 12px;
+    border: 1px solid var(--color-border-default);
+    border-radius: 8px;
+    background: var(--color-bg-default);
+  }
+  .ss-field:focus-within {
+    border-color: var(--ss-accent);
+    box-shadow: 0 0 0 1px var(--ss-accent);
+    /* forced-colors (Windows の強制カラー) では box-shadow が消えるので、透明の outline を足して枠を残す */
+    outline: 2px solid transparent;
+  }
+  .ss-field-icon {
+    font-size: 20px;
+    color: var(--color-text-secondary);
+    flex: none;
+  }
+  .ss-input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font: inherit;
+    /* 16px 未満だと iOS Safari が入力時に拡大する */
+    font-size: 16px;
+    color: inherit;
+    appearance: none;
+  }
+  /* 既定の placeholder は文字色の 50% 透過で、白背景に対して約 3:1 しかない */
+  .ss-input::placeholder {
+    color: var(--color-text-secondary);
+    opacity: 1;
+  }
+  .ss-input::-webkit-search-cancel-button {
+    display: none;
+  }
+  .ss-clear {
+    flex: none;
+    font: inherit;
+    font-size: 12px;
+    /* 背景が hover で --color-bg-hover (#f0f1f3) になるため、--color-text-secondary (#6b7280) では 4.28:1 で AA に届かない。--color-text-muted (#57606a) は同じ背景で 5.65:1 */
+    color: var(--color-text-muted);
+    background: var(--color-bg-muted);
+    border: 0;
+    border-radius: 6px;
+    padding: 6px 8px;
+    cursor: pointer;
+  }
+  .ss-clear:focus-visible,
+  .ss-close:focus-visible {
+    outline: 2px solid var(--ss-accent);
+    outline-offset: 2px;
+  }
+  /* タッチ端末では :hover がタップ後も残って灰色の背景が居座るので、hover できる環境に限る */
+  @media (hover: hover) {
+    .ss-clear:hover {
+      background: var(--color-bg-hover);
+    }
+    .ss-item:hover {
+      background: var(--color-bg-muted);
+      text-decoration: none;
+    }
+  }
+  .ss-sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+  .ss-close {
+    display: none;
+    flex: none;
+    width: 36px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: var(--color-text-default);
+    cursor: pointer;
+    border-radius: 999px;
+  }
+  .ss-body {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .ss-status {
+    margin: 0;
+    padding: 10px 16px 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    /* 結果が多いと ss-results (flex: 1 1 0) との配分で縮み、文字が下の最初のカードに重なって切れる。縮めない */
+    flex: none;
+  }
+  .ss-status:empty {
+    display: none;
+  }
+  /* 失敗は 0 件の表示と見分けがつくよう、通常の説明より濃い色にする */
+  .ss-status.is-error {
+    color: var(--color-text-default);
+  }
+  .ss-status.is-loading::before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 8px;
+    vertical-align: -2px;
+    border: 2px solid var(--color-border-separator);
+    border-top-color: var(--ss-accent);
+    border-radius: 50%;
+    animation: ss-spin 0.8s linear infinite;
+  }
+  @keyframes ss-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  /* 動きを減らす設定では回転させない。「準備中」の文言が状態を伝える */
+  @media (prefers-reduced-motion: reduce) {
+    .ss-status.is-loading::before {
+      animation: none;
+    }
+  }
+  .ss-results {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 4px 16px 12px;
+  }
+  .ss-group {
+    margin-bottom: 8px;
+  }
+  .ss-item {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    border: 1px solid var(--color-border-medium);
+    border-radius: 8px;
+    background: var(--color-bg-default);
+  }
+  .ss-item[aria-selected='true'] {
+    background: var(--color-bg-muted);
+    text-decoration: none;
+    /* 選択中 (視覚フォーカス) は outline で示す。box-shadow は forced-colors で消える */
+    border-color: var(--ss-accent);
+    outline: 2px solid var(--ss-accent);
+    outline-offset: -1px;
+  }
+  .ss-main {
+    padding: 10px 12px;
+  }
+  /* メタデータの行。文字サイズと行の高さは行で1つだけ指定し、子は継承するので、文字は揃う */
+  .ss-meta {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+  .ss-date {
+    color: var(--color-text-muted);
+  }
+  .ss-channels {
+    display: flex;
+    gap: 4px;
+  }
+  .ss-channel {
+    font-weight: 500;
+    color: var(--color-channel);
+  }
+  .ss-channel-sep {
+    color: var(--color-border-separator);
+  }
+  @media (min-width: 1024px) {
+    .ss-date {
+      color: var(--color-text-secondary);
+    }
+    .ss-channels {
+      margin-left: auto;
+    }
+  }
+  .ss-title {
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+  .ss-excerpt {
+    margin-top: 2px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .ss-excerpt mark {
+    background: transparent;
+    color: var(--color-text-default);
+    font-weight: 700;
+  }
+  .ss-foot {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    padding: 10px 16px;
+    border-top: 1px solid var(--color-border-medium);
+    font-size: 12px;
+    color: var(--color-text-secondary);
+  }
+  .ss-foot span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .ss-foot kbd {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    line-height: 1;
+    min-width: 20px;
+    text-align: center;
+    padding: 3px 5px;
+    border: 1px solid var(--color-border-medium);
+    border-radius: 4px;
+    background: var(--color-bg-muted);
+    color: var(--color-text-muted);
+  }
+  .ss-foot kbd + span {
+    margin-left: 2px;
+  }
+
+  /* SP: 画面全体を使う。閉じるボタンを出し、キーボード操作のヒントは物理キーボードが無いので隠す */
+  @media (max-width: 639px) {
+    .site-search-dialog {
+      margin: 0;
+      width: 100vw;
+      max-width: none;
+      height: 100dvh;
+      max-height: none;
+      border-radius: 0;
+    }
+    .ss-close {
+      display: inline-flex;
+    }
+    .ss-head {
+      padding: 12px;
+    }
+    .ss-results {
+      padding: 4px 12px 12px;
+    }
+    .ss-status {
+      padding: 10px 12px 6px;
+    }
+    .ss-foot {
+      display: none;
+    }
+  }
+</style>
