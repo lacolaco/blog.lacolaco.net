@@ -33,6 +33,41 @@ Workers Previews の作成と削除、Durable Objects のデプロイが、上�
 
 Worker 側の secret (本番と Preview) への `SEARCH_ADMIN_TOKEN` の反映は、検索 API の CI が GitHub の secret から行う。このモジュールは GitHub の secret を用意するところまでを扱う。
 
+## リポジトリの secret と variable の全件
+
+`lacolaco/blog.lacolaco.net` の Actions secret 14 件と variable 2 件 (`gh secret list`、`gh variable list` で確認、2026-10-05 時点) の管理状況を示す。参照するワークフローは `main` の `.github` を `secrets.<名前>` と `vars.<名前>` で検索した結果である。値は書かない。
+
+### Terraform のコードで追えるもの
+
+| 種別 | 名前 | 管理 | 参照するワークフロー |
+|---|---|---|---|
+| secret | `CLOUDFLARE_API_TOKEN` | このモジュール | `deploy-production.yml`、`deploy-preview.yml`、`shutdown-preview.yml` |
+| secret | `SEARCH_ADMIN_TOKEN` | このモジュール | `deploy-production.yml`、`deploy-preview.yml` |
+| variable | `CLOUDFLARE_ACCOUNT_ID` | このモジュール | `deploy-production.yml`、`deploy-preview.yml`、`shutdown-preview.yml` |
+
+### Terraform のコードで追えないもの
+
+いずれも外部サービスが発行した値で、Terraform で作る手段がないか、作る対象が別のリポジトリや手元の環境にある。値を持つ手作業の登録である。再登録は `gh secret set <名前>` で行う。
+
+| 種別 | 名前 | 追えない理由 | 参照するワークフロー |
+|---|---|---|---|
+| secret | `CLAUDE_CODE_OAUTH_TOKEN` | Claude Code の OAuth トークン。Terraform のリソースにない | `claude.yml`、`ci.yml`、`code-review.yml` |
+| secret | `GEMINI_API_KEY` | Gemini の API キー。Terraform のリソースにない | `auto-translate.yml` |
+| secret | `WORKER_APP_ID` | GitHub App (アプリ ID) の設定値。アプリはダッシュボードで作る | `auto-translate.yml`、`ci.yml`、`trigger-sync-from-pr-comment.yml` |
+| secret | `WORKER_APP_PRIVATE_KEY` | 同アプリの秘密鍵。ダッシュボードで発行する | 同上 |
+| secret | `NOTION_AUTH_TOKEN` | Notion のインテグレーションのトークン | 参照なし |
+| secret | `NOTION_DATABASE_ID` | Notion の記事データベースの ID | 参照なし |
+| secret | `ANTHROPIC_API_KEY` | Anthropic の API キー | 参照なし |
+| secret | `R2_ACCESS_KEY_ID` | Cloudflare R2 の API トークンから得るキー | 参照なし |
+| secret | `R2_SECRET_ACCESS_KEY` | 同上 | 参照なし |
+| secret | `R2_BUCKET_NAME` | R2 のバケット名 | 参照なし |
+| secret | `CLOUDFLARE_ACCOUNT_ID` | 値は variable と同じ。手作業で登録された | 参照なし (削除予定、LACO-612) |
+| secret | `CLOUDFLARE_ZONE_ID` | 手作業で登録された | 参照なし (削除予定、LACO-612) |
+| variable | `IMAGE_CDN_BASE_URL` | 秘密ではない設定値 (`https://images.blog.lacolaco.net`)。リソースの出力ではなく手で登録した | `deploy-production.yml`、`deploy-preview.yml` |
+
+- `R2_*` と `NOTION_*` は `tools/` のローカル実行 (`tools/env.d.ts`、`.env.example`) が環境変数で読むが、`main` のワークフローは参照しない。
+- `CLOUDFLARE_ACCOUNT_ID` と `CLOUDFLARE_ZONE_ID` の secret は、同名の variable と別物である。ワークフローが使うのは variable (`vars.`) で、secret (`secrets.`) を参照するものは `main` にない。
+
 ## 有効期限とローテーション
 
 デプロイ用トークンの有効期限は、`time_rotating.search_deploy_token` の基準時刻から 1 年である。固定の日付は持たない。
