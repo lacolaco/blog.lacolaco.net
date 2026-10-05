@@ -270,6 +270,20 @@ describe('抜粋と一致箇所', () => {
     assert.ok(!hit.snippet.includes('\u0001') && !hit.snippet.includes('\u0002'), JSON.stringify(hit.snippet));
   });
 
+  it('抜粋より長い一致でも、一致範囲を返す', () => {
+    const word = 'あ'.repeat(130);
+    const hit = hitOf(`${'前置き。'.repeat(40)}${word}。後ろ。`, word);
+    assert.equal(hit.highlights.length, 1);
+    assert.equal(marked(hit)[0], word);
+  });
+
+  it('一致が数万件ある本文でも、抜粋は一致数に対して線形の時間で求まる', () => {
+    const start = Date.now();
+    const hit = hitOf('e '.repeat(30000), 'e');
+    assert.ok(hit.highlights.length > 0);
+    assert.ok(Date.now() - start < 2000, `${Date.now() - start}ms`);
+  });
+
   it('JSON に直列化しても形が保たれる', () => {
     const hit = hitOf('<b>x</b> loading', 'loading');
     const round = JSON.parse(JSON.stringify(hit)) as typeof hit;

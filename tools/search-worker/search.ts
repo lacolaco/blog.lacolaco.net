@@ -171,13 +171,16 @@ const isWordChar = (c: string | undefined) => c !== undefined && /[A-Za-z0-9]/.t
 function excerpt(text: string, ranges: Highlight[]): { snippet: string; highlights: Highlight[] } {
   if (text.length <= EXCERPT_LENGTH) return { snippet: text, highlights: ranges };
 
-  // 抜粋の先頭に置く一致: 抜粋に入る一致の数が最も多いもの (同数なら先に出るもの)
+  // 抜粋の先頭に置く一致: 抜粋に入る一致の数が最も多いもの (同数なら先に出るもの)。
+  // どの一致も入りきらないときも、その一致自身は数える (最小 1)。しゃくとり法で線形時間にする
   let anchor = 0;
   let best = 0;
+  let last = 0;
   ranges.forEach(([s], i) => {
-    const count = ranges.slice(i).filter(([, e]) => e <= s + EXCERPT_LENGTH - EXCERPT_LEAD).length;
-    if (count > best) {
-      best = count;
+    last = Math.max(last, i + 1);
+    while (last < ranges.length && ranges[last][1] <= s + EXCERPT_LENGTH - EXCERPT_LEAD) last++;
+    if (last - i > best) {
+      best = last - i;
       anchor = s;
     }
   });
