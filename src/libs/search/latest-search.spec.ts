@@ -1,7 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { createLatestSearch, type SearchHit } from './latest-search';
 
-const hit = (slug: string): SearchHit => ({ slug, title: slug, date: '2026-01-01', channels: [], snippet: '' });
+const hit = (slug: string): SearchHit => ({
+  slug,
+  title: slug,
+  date: '2026-01-01',
+  channels: [],
+  snippet: '',
+  highlights: [],
+});
 
 /** 外から応答の返し方を決められる fetch の代役。中断の信号は無視する (中断に頼らず古い応答を捨てることを確かめるため) */
 function controlledFetch() {
@@ -60,6 +67,51 @@ describe('createLatestSearch', () => {
     const p = search('/x?q=a');
     pending[0].resolve(json({ hits: [] }));
     expect(await p).toEqual({ status: 'error' });
+  });
+
+  it.each([
+    ['highlights が無い', undefined],
+    ['範囲が組でない', [[1]]],
+    ['範囲が整数でない', [[0.5, 2]]],
+    ['範囲が空', [[2, 2]]],
+    ['範囲が抜粋の外', [[0, 99]]],
+    ['範囲が負', [[-1, 2]]],
+    [
+      '範囲が昇順でない',
+      [
+        [3, 4],
+        [0, 2],
+      ],
+    ],
+    [
+      '範囲が重なる',
+      [
+        [0, 3],
+        [2, 4],
+      ],
+    ],
+  ])('一致範囲の形が違う応答 (%s) は error にする', async (_name, highlights) => {
+    const { fetcher, pending, json } = controlledFetch();
+    const search = createLatestSearch(fetcher);
+    const p = search('/x?q=a');
+    pending[0].resolve(json([{ ...hit('a'), snippet: 'abcde', highlights }]));
+    expect(await p).toEqual({ status: 'error' });
+  });
+
+  it('範囲が隣り合う (終端と次の始端が同じ) 応答は受け入れる', async () => {
+    const { fetcher, pending, json } = controlledFetch();
+    const search = createLatestSearch(fetcher);
+    const p = search('/x?q=a');
+    const h = {
+      ...hit('a'),
+      snippet: 'abcde',
+      highlights: [
+        [0, 2],
+        [2, 5],
+      ],
+    };
+    pending[0].resolve(json([h]));
+    expect(await p).toEqual({ status: 'ok', hits: [h] });
   });
 
   it('中断された要求は stale で、error にしない', async () => {

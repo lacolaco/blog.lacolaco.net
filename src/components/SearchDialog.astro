@@ -55,7 +55,7 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
 </site-search>
 
 <script>
-  import { highlightSegments, queryTerms } from '../libs/search/highlight';
+  import { renderHighlighted } from '../libs/search/highlight';
   import { createLatestSearch, type SearchHit } from '../libs/search/latest-search';
   import { buildSearchUrl, localeOf } from '../libs/search/request';
 
@@ -92,21 +92,6 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
 
   /** 入力が止まってから要求するまでの待ち時間 (ms) */
   const DEBOUNCE_MS = 200;
-
-  /** 一致語を <mark> で包んだ DOM 断片。HTML 文字列を作らず text として入れるので、本文中の記号は解釈されない */
-  function highlight(text: string, terms: string[]): DocumentFragment {
-    const frag = document.createDocumentFragment();
-    for (const seg of highlightSegments(text, terms)) {
-      if (seg.match) {
-        const mark = document.createElement('mark');
-        mark.textContent = seg.text;
-        frag.append(mark);
-      } else {
-        frag.append(seg.text);
-      }
-    }
-    return frag;
-  }
 
   class SiteSearch extends HTMLElement {
     private dialog = this.querySelector('dialog')!;
@@ -288,7 +273,6 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
       }
       this.setStatus(this.m.count(this.lastQuery, hits.length));
 
-      const terms = queryTerms(this.lastQuery);
       const suffix = this.locale === 'en' ? '.en' : '';
 
       for (const hit of hits) {
@@ -306,7 +290,8 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
 
         const title = document.createElement('div');
         title.className = 'ss-title';
-        title.append(highlight(hit.title, terms));
+        // API は題名の一致範囲を返さないので、題名は強調しない
+        title.append(hit.title);
         // 記事一覧 (List.astro) の EN バッジと同じ規則: en 記事の題名の後ろに付ける
         if (this.locale === 'en') {
           title.append(this.querySelector<HTMLTemplateElement>('#ss-en-badge')!.content.cloneNode(true));
@@ -315,7 +300,7 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
         if (hit.snippet) {
           const ex = document.createElement('div');
           ex.className = 'ss-excerpt';
-          ex.append(highlight(hit.snippet, terms));
+          ex.append(renderHighlighted(hit.snippet, hit.highlights));
           main.append(ex);
         }
         // メタデータの行: 日付とチャンネル。記事一覧と同じく日付が左、チャンネルが右
@@ -661,13 +646,10 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  .ss-item mark {
-    background: transparent;
-    color: inherit;
-    font-weight: 700;
-  }
   .ss-excerpt mark {
+    background: transparent;
     color: var(--color-text-default);
+    font-weight: 700;
   }
   .ss-foot {
     display: flex;

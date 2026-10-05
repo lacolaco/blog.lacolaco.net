@@ -1,5 +1,29 @@
-/** 検索 API (tools/search-worker) の 1 件分の応答 */
-export type SearchHit = { slug: string; title: string; date: string; channels: string[]; snippet: string };
+import type { HighlightRange } from './highlight';
+
+/** 検索 API (tools/search-worker) の 1 件分の応答。`highlights` は `snippet` の中の一致範囲 */
+export type SearchHit = {
+  slug: string;
+  title: string;
+  date: string;
+  channels: string[];
+  snippet: string;
+  highlights: HighlightRange[];
+};
+
+/** 範囲が整数の組で、抜粋の内側にあり、昇順で重ならない。DOM を組む側が検査なしで slice できるようにする */
+const isHighlights = (x: unknown, length: number): x is HighlightRange[] => {
+  if (!Array.isArray(x)) return false;
+  let last = 0;
+  for (const r of x as unknown[]) {
+    if (!Array.isArray(r) || r.length !== 2) return false;
+    const [start, end] = r as [unknown, unknown];
+    if (!Number.isInteger(start) || !Number.isInteger(end)) return false;
+    if (typeof start !== 'number' || typeof end !== 'number') return false;
+    if (start < last || end <= start || end > length) return false;
+    last = end;
+  }
+  return true;
+};
 
 export type SearchOutcome = { status: 'ok'; hits: SearchHit[] } | { status: 'stale' } | { status: 'error' };
 
@@ -13,6 +37,7 @@ const isHit = (x: unknown): x is SearchHit => {
     typeof r.title === 'string' &&
     typeof r.date === 'string' &&
     typeof r.snippet === 'string' &&
+    isHighlights(r.highlights, r.snippet.length) &&
     Array.isArray(r.channels) &&
     r.channels.every((c) => typeof c === 'string')
   );

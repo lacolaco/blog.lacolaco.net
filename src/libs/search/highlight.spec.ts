@@ -1,61 +1,59 @@
+// @vitest-environment jsdom
 import { describe, expect, it } from 'vitest';
-import { highlightSegments, queryTerms } from './highlight';
+import { renderHighlighted } from './highlight';
 
-describe('queryTerms', () => {
-  it('空白で区切って空要素を除く', () => {
-    expect(queryTerms('  遅延  読み込み ')).toEqual(['遅延', '読み込み']);
-  });
-  it('空や空白だけなら空配列', () => {
-    expect(queryTerms('')).toEqual([]);
-    expect(queryTerms(' 　 ')).toEqual([]);
-  });
-});
+/** 断片を、強調された片を [] で囲んだ文字列にして比べる */
+function shape(frag: DocumentFragment): string {
+  return Array.from(frag.childNodes)
+    .map((n) => (n instanceof Element ? `[${n.tagName.toLowerCase()}:${n.textContent}]` : n.textContent))
+    .join('');
+}
 
-describe('highlightSegments', () => {
-  it('検索語が無ければ全体を強調なしの1片にする', () => {
-    expect(highlightSegments('本文です', [])).toEqual([{ text: '本文です', match: false }]);
+describe('renderHighlighted', () => {
+  it('範囲が無ければ全体を強調なしの文字列にする', () => {
+    const frag = renderHighlighted('本文です', []);
+    expect(frag.querySelector('mark')).toBeNull();
+    expect(frag.textContent).toBe('本文です');
   });
-  it('一致しなければ全体を強調なしの1片にする', () => {
-    expect(highlightSegments('本文です', ['zzz'])).toEqual([{ text: '本文です', match: false }]);
+  it('1 つの範囲を mark にする', () => {
+    expect(shape(renderHighlighted('遅延読み込み', [[0, 2]]))).toBe('[mark:遅延]読み込み');
   });
-  it('複数の一致を強調する', () => {
-    expect(highlightSegments('遅延読み込みと遅延評価', ['遅延'])).toEqual([
-      { text: '遅延', match: true },
-      { text: '読み込みと', match: false },
-      { text: '遅延', match: true },
-      { text: '評価', match: false },
-    ]);
+  it('複数の範囲を mark にし、間の文字列を保つ', () => {
+    expect(
+      shape(
+        renderHighlighted('遅延読み込みと遅延評価', [
+          [0, 2],
+          [7, 9],
+        ]),
+      ),
+    ).toBe('[mark:遅延]読み込みと[mark:遅延]評価');
   });
-  it('複数の語を強調し、大文字小文字は本文の表記を保つ', () => {
-    expect(highlightSegments('Lazy Loading', ['lazy', 'LOADING'])).toEqual([
-      { text: 'Lazy', match: true },
-      { text: ' ', match: false },
-      { text: 'Loading', match: true },
-    ]);
+  it('先頭と末尾の端まで届く範囲でも空の文字列を作らない', () => {
+    const frag = renderHighlighted('abc', [[0, 3]]);
+    expect(frag.childNodes).toHaveLength(1);
+    expect(shape(frag)).toBe('[mark:abc]');
   });
-  it('全角と半角の表記ゆれは NFKC で一致させる', () => {
-    expect(highlightSegments('ＡＢＣ def', ['abc'])).toEqual([
-      { text: 'ＡＢＣ', match: true },
-      { text: ' def', match: false },
-    ]);
+  it('サロゲートペアは UTF-16 の位置で切り、文字を壊さない', () => {
+    // 𠮷 は UTF-16 で 2 単位 (位置 1 と 2)
+    const text = 'あ𠮷a';
+    expect(shape(renderHighlighted(text, [[1, 3]]))).toBe('あ[mark:𠮷]a');
+    expect(shape(renderHighlighted(text, [[3, 4]]))).toBe('あ𠮷[mark:a]');
   });
-  it('HTML の特殊文字や正規表現の記号は、そのまま文字として扱う', () => {
-    const text = '<img src=x onerror=alert(1)> a.b (c) & "d"';
-    expect(highlightSegments(text, [])).toEqual([{ text, match: false }]);
-    expect(highlightSegments(text, ['<img', 'a.b', '(c)'])).toEqual([
-      { text: '<img', match: true },
-      { text: ' src=x onerror=alert(1)> ', match: false },
-      { text: 'a.b', match: true },
-      { text: ' ', match: false },
-      { text: '(c)', match: true },
-      { text: ' & "d"', match: false },
-    ]);
+  it('HTML の特殊文字は要素にならず文字として出る', () => {
+    const text = '<img src=x onerror=alert(1)> & "d"';
+    const frag = renderHighlighted(text, [[0, 4]]);
+    expect(frag.querySelector('img')).toBeNull();
+    expect(Array.from(frag.children).map((e) => e.tagName)).toEqual(['MARK']);
+    expect(frag.querySelector('mark')!.textContent).toBe('<img');
+    expect(frag.textContent).toBe(text);
   });
   it('片を連結すると元の文字列に戻る', () => {
     const text = '…injectAsync は <b>遅延</b> します…';
-    const joined = highlightSegments(text, ['injectasync', '遅延', 'b'])
-      .map((s) => s.text)
-      .join('');
-    expect(joined).toBe(text);
+    const frag = renderHighlighted(text, [
+      [1, 12],
+      [18, 20],
+    ]);
+    expect(frag.textContent).toBe(text);
+    expect(Array.from(frag.querySelectorAll('mark')).map((m) => m.textContent)).toEqual(['injectAsync', '遅延']);
   });
 });
