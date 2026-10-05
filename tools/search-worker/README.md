@@ -22,11 +22,29 @@
 GET /api/search?q=<語>&locale=ja|en
 ```
 
-上位 20 件の `{ slug, title, date, channels, snippet }` を関連度順に返す。
+上位 20 件の `{ slug, title, date, channels, snippet, highlights }` を関連度順に返す。
 
 - `date` は `yyyy-MM-dd` (Asia/Tokyo)、`channels` は一覧 (`List.astro`) と同じ並び順。どちらも `src/pages/search-docs.json.ts` が一覧と同じ取得元から作る。
 - `q` は空白区切りの AND 検索。3 文字以上の語は FTS5 の trigram で引き、3 文字未満の語は本文への LIKE で絞る。大文字小文字は trigram の既定 (`case_sensitive 0`) に任せる。全角と半角などの表記ゆれは、索引と検索語の両方に NFKC 正規化を掛けて吸収する。
-- `snippet` は 3 文字以上の語を含むクエリでは FTS5 の `snippet()`、3 文字未満の語だけのクエリでは `snippet()` が使えない (MATCH を使うクエリ専用) ため、SQLite 標準の `instr()` と `substr()` で一致位置の周辺を切り出す。どちらも本文の大文字小文字を保つ。
+- `snippet` は一致箇所の周辺を切り出した平文 (HTML ではない。改行を含まない)。`highlights` は `snippet` の中の一致範囲で、`[start, end)` の UTF-16 の位置 (JS の `slice` と同じ数え方) の組の配列である。昇順で、互いに重ならない。本文に一致が無い (題名だけの一致の) 結果は `highlights` が空で、`snippet` は本文の先頭になる。
+  - 変更前は `snippet` だけで (約 50 文字、一致箇所なし)、UI が本文を再走査して強調していた。`snippet` は平文のまま残し、`highlights` を足した。
+
+  ```json
+  {
+    "snippet": "…<loading-wrapper [loading]=\"isLoading$ | async\"> <div>Done!</div> </loading-wrapper>…",
+    "highlights": [
+      [1, 8],
+      [19, 26]
+    ]
+  }
+  ```
+
+  - 強調するときは、`snippet` を `highlights` で分割し、一致部分を `<mark>` などの要素の `textContent` にする。`snippet` を HTML として挿入してはならない。一致箇所を本文の文字列に埋め込む形 (`<mark>` や `**` で囲んだ文字列) にしなかったのは、本文に `<` や `&` が含まれると、HTML として解釈される危険と、本文由来の記号と区別できない曖昧さが生じるため。位置の組なら、本文を一切加工せずに済み、文字列として表示するだけで安全である。
+  - 位置は、索引に入っている NFKC 正規化後の本文での位置である。`snippet` は正規化後の文字列 (全角の英数字は半角になる) で、`highlights` はその `snippet` の位置を指す。
+  - 3 文字以上の語の一致は、FTS5 の `highlight()` が挟む区切り文字 (本文に出ない制御文字 U+0001、U+0002。索引に入れる時に本文と題名から取り除く) から求める。エンジンが一致と判定した範囲だけが入る。trigram は部分文字列一致なので、`loading` は `Preloading` の途中にも一致する。隣り合う一致 (`changeDetection` の `change` と `Detection` など) は `highlight()` の仕様で 1 つの範囲になる。
+  - 3 文字未満の語は FTS5 を使わず LIKE で絞るので、LIKE と同じ判定 (ASCII の大文字小文字を区別しない部分一致) の出現位置を範囲にする。3 文字以上と 3 文字未満の語が混在するクエリでは両方の範囲が入る。
+  - 抜粋の長さは約 160 文字 (文の境目を探すので最大でおよそ 260 文字)。FTS5 の `snippet()` は 64 トークンまでで、trigram では約 66 文字にしかならないため使わず、`highlight()` で本文全体の一致を得て、一致が最も多く入る範囲を文の境目 (`。` `！` `？` `.` など) で切り出す。省略した側には `…` を付ける。
+
 - 検索語は構造化ログ (`console.log` の JSON 1 行: `event`、`q`、`locale`、`hits`、`ms`) に出る。Workers Logs で検索できる。
 
 ## 索引の更新
