@@ -11,7 +11,7 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
 ---
 
 <site-search hidden data-endpoint={endpoint} data-channel-colors={JSON.stringify(channelColors)}>
-  <dialog class="site-search-dialog">
+  <dialog class="site-search-dialog" closedby="any">
     <div class="ss-head">
       <div class="ss-field">
         <span class="icon-[material-symbols--search] ss-field-icon" aria-hidden="true"></span>
@@ -57,6 +57,7 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
 <script>
   import { renderHighlighted } from '../libs/search/highlight';
   import { createLatestSearch, type SearchHit } from '../libs/search/latest-search';
+  import { createBackdropDismiss, isOutsideRect } from '../libs/search/backdrop-dismiss';
   import { buildSearchUrl, localeOf } from '../libs/search/request';
 
   const MESSAGES = {
@@ -163,14 +164,21 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
         this.input.focus();
       });
       this.querySelector('.ss-close')!.addEventListener('click', () => this.dialog.close());
-      // backdrop クリックで閉じる。dialog 自体が click の target になるのは backdrop か dialog の余白を押したときなので、
-      // dialog の矩形の外を押したときだけ閉じる
-      this.dialog.addEventListener('click', (e) => {
-        if (e.target !== this.dialog) return;
-        const r = this.dialog.getBoundingClientRect();
-        const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
-        if (!inside) this.dialog.close();
-      });
+      // 背景の操作で閉じるのは、押した位置と離した位置の両方が背景のときだけにする。
+      // 標準の closedby="any" がその規則 (WHATWG HTML の Dialog light dismiss) で、Chrome 134+ と Firefox 141+ が対応する
+      // (MDN browser-compat-data: Safari は preview のみ)。未対応のブラウザには同じ規則の代替を足す。
+      // click は押した位置と離した位置の共通の祖先 (dialog) が target になり、モーダル内で押して外で離した操作
+      // (抜粋や入力欄の文字の選択) でも閉じるので使わない。
+      if (!('closedBy' in this.dialog)) {
+        const dismiss = createBackdropDismiss();
+        const onBackdrop = (e: PointerEvent) =>
+          e.target === this.dialog && isOutsideRect(this.dialog.getBoundingClientRect(), e.clientX, e.clientY);
+        this.dialog.addEventListener('pointerdown', (e) => dismiss.down(onBackdrop(e)));
+        this.dialog.addEventListener('pointerup', (e) => {
+          if (dismiss.up(onBackdrop(e))) this.dialog.close();
+        });
+        this.dialog.addEventListener('pointercancel', () => dismiss.cancel());
+      }
       // 検索ボタンは Header にあるので、イベントで開く
       document.addEventListener('site-search:open', () => this.open());
     }
