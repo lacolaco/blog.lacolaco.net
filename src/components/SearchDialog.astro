@@ -195,7 +195,7 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
       if (!this.lastQuery) {
         // 空になったら進行中の要求も捨てる
         this.search.cancel();
-        this.renderResults([]);
+        this.renderResults([], '');
         return;
       }
       if (now) void this.run();
@@ -218,7 +218,7 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
         this.renderError();
         return;
       }
-      this.renderResults(outcome.hits);
+      this.renderResults(outcome.hits, q);
     }
 
     /** 結果以外の状態表示 (エラー)。無言で 0 件にしない */
@@ -258,20 +258,21 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
       this.input.removeAttribute('aria-activedescendant');
     }
 
-    private renderResults(hits: SearchHit[]) {
+    /** `q` は結果を要求した時点の語。応答を待つ間に入力が進んでも、件数の文言を結果と食い違わせない */
+    private renderResults(hits: SearchHit[], q: string) {
       this.clearList();
       this.status.classList.remove('is-loading');
-      if (!this.lastQuery) {
+      if (!q) {
         this.setStatus('');
         this.syncPopup();
         return;
       }
       if (hits.length === 0) {
-        this.setStatus(this.m.none(this.lastQuery));
+        this.setStatus(this.m.none(q));
         this.syncPopup();
         return;
       }
-      this.setStatus(this.m.count(this.lastQuery, hits.length));
+      this.setStatus(this.m.count(q, hits.length));
 
       const suffix = this.locale === 'en' ? '.en' : '';
 
