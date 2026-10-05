@@ -18,7 +18,7 @@ Linear の MCP サーバー (`claude.ai Linear`) のツールで操作する。
 
 ## スクラム
 
-`micro-scrum` スキルで進め、このプロジェクトでは次のとおり決める。
+スクラムで進め、このプロジェクトでは次のとおり決める。
 
 - トラッカーとスプリントの単位: Linear の lacolaco チームのプロジェクト `blog.lacolaco.net`
 - 表し方:
