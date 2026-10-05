@@ -16,9 +16,9 @@ const isHighlights = (x: unknown, length: number): x is HighlightRange[] => {
   let last = 0;
   for (const r of x as unknown[]) {
     if (!Array.isArray(r) || r.length !== 2) return false;
-    const [start, end] = r as [unknown, unknown];
+    // 型は number と見なすが、実行時の検査は Number.isInteger が行う (number 以外では常に false)
+    const [start, end] = r as [number, number];
     if (!Number.isInteger(start) || !Number.isInteger(end)) return false;
-    if (typeof start !== 'number' || typeof end !== 'number') return false;
     if (start < last || end <= start || end > length) return false;
     last = end;
   }
