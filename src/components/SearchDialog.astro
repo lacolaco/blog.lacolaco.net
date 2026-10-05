@@ -481,7 +481,8 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
     flex: none;
     font: inherit;
     font-size: 12px;
-    color: var(--color-text-secondary);
+    /* 背景が hover で --color-bg-hover (#f0f1f3) になるため、--color-text-secondary (#6b7280) では 4.28:1 で AA に届かない。--color-text-muted (#57606a) は同じ背景で 5.9:1 */
+    color: var(--color-text-muted);
     background: var(--color-bg-muted);
     border: 0;
     border-radius: 6px;
