@@ -154,3 +154,192 @@ describe('検索結果の形', () => {
     assert.equal(search(run, '遅延読み込み', 'ja')[0].slug, 'sample');
   });
 });
+
+describe('抜粋と一致箇所', () => {
+  const sentence = (i: number) => `これは${i}番目の説明文で、特に変わった内容はありません。`;
+  const filler = (from: number, n: number) => Array.from({ length: n }, (_, i) => sentence(from + i)).join('');
+  const base: IndexDoc = { slug: 'a', locale: 'ja', title: '題名', date: '2026-01-02', channels: [], body: '' };
+  const hitOf = (body: string, q: string, title = '題名') => {
+    const { exec: run, inTransaction: tx } = openMemoryDb();
+    tx(() => replaceAll(run, [{ ...base, title, body }]));
+    const [hit] = search(run, q, 'ja');
+    assert.ok(hit, `「${q}」がヒットしない`);
+    return hit;
+  };
+  /** 応答だけから、一致箇所の文字列を取り出す */
+  const marked = (h: { snippet: string; highlights: [number, number][] }) =>
+    h.highlights.map(([s, e]) => h.snippet.slice(s, e));
+
+  it('3文字以上の語: 応答の一致範囲が、エンジンの一致判定 (語の出現) と同じ', () => {
+    const hit = hitOf(`${filler(0, 10)}Preloading と loading の違い。${filler(10, 10)}`, 'loading');
+    assert.deepEqual(marked(hit), ['loading', 'loading']);
+  });
+
+  it('3文字以上の語: 本文の大文字小文字を保ったまま範囲を返す', () => {
+    const hit = hitOf(`${filler(0, 5)}InjectAsync は遅延読み込みを行う。${filler(5, 5)}`, 'injectasync');
+    assert.deepEqual(marked(hit), ['InjectAsync']);
+  });
+
+  it('複数の語: 各語の出現だけが範囲になる', () => {
+    const hit = hitOf('Angular と Signals の話。Angular は便利だ。', 'angular signals');
+    assert.deepEqual(marked(hit), ['Angular', 'Signals', 'Angular']);
+  });
+
+  it('3文字未満の語のみ: 一致範囲を返す (大文字小文字は本文のまま)', () => {
+    const hit = hitOf(`${filler(0, 10)}An ab AB と Ab、abc。${filler(10, 10)}`, 'ab');
+    assert.deepEqual(marked(hit), ['ab', 'AB', 'Ab', 'ab']);
+  });
+
+  it('3文字未満の語のみ: 複数の語も範囲になる', () => {
+    const hit = hitOf('xy と zw と xy', 'xy zw');
+    assert.deepEqual(marked(hit), ['xy', 'zw', 'xy']);
+  });
+
+  it('3文字以上と3文字未満の語が混在しても、どちらの一致も範囲になる', () => {
+    const hit = hitOf('Angular は ab と相性がよい', 'angular ab');
+    assert.deepEqual(marked(hit), ['Angular', 'ab']);
+  });
+
+  it('一致範囲は昇順で重ならず、抜粋の範囲に収まる', () => {
+    const hit = hitOf(`${filler(0, 8)}loading loading loading ${filler(8, 8)}`, 'loading');
+    let prev = 0;
+    for (const [s, e] of hit.highlights) {
+      assert.ok(prev <= s && s < e && e <= hit.snippet.length, JSON.stringify(hit.highlights));
+      prev = e;
+    }
+  });
+
+  it('本文に一致が無い (題名だけの一致) ときは範囲が空で、本文の先頭を抜粋にする', () => {
+    const hit = hitOf(filler(0, 10), '特別な題名', '特別な題名のサンプル');
+    assert.deepEqual(hit.highlights, []);
+    assert.ok(hit.snippet.startsWith('これは0番目'), hit.snippet);
+  });
+
+  it('本文の先頭と末尾に届く抜粋は省略記号を付けない', () => {
+    const hit = hitOf('短い本文に loading がある。', 'loading');
+    assert.equal(hit.snippet, '短い本文に loading がある。');
+  });
+
+  it('`<` と `&` を含む本文は、エスケープせず平文のまま返し、範囲は平文の位置を指す', () => {
+    for (const q of ['loading', 'ab']) {
+      const hit = hitOf('<b>タグ</b> & &amp; <script>x</script> loading ab <i>', q);
+      assert.ok(hit.snippet.includes('</script> loading'), hit.snippet);
+      assert.ok(hit.snippet.includes('<'), hit.snippet);
+      assert.ok(!hit.snippet.includes('&lt;'), hit.snippet);
+      assert.deepEqual(marked(hit), [q]);
+    }
+  });
+
+  it('範囲は NFKC 正規化後の抜粋の位置を指す (全角の本文)', () => {
+    const hit = hitOf('ＡＮＧＵＬＡＲ　ａｂ　ｌｏａｄｉｎｇ', 'angular loading ab');
+    assert.equal(hit.snippet, 'ANGULAR ab loading');
+    assert.deepEqual(marked(hit), ['ANGULAR', 'ab', 'loading']);
+  });
+
+  it('範囲は UTF-16 の位置で数える (サロゲートペアを含む本文)', () => {
+    const hit = hitOf('😀😀 loading 😀 ab', 'loading ab');
+    assert.deepEqual(marked(hit), ['loading', 'ab']);
+  });
+
+  it('改行を含む本文でも範囲がずれない', () => {
+    const hit = hitOf('一行目\n\n  二行目の loading\n三行目 ab', 'loading ab');
+    assert.ok(!hit.snippet.includes('\n'), hit.snippet);
+    assert.deepEqual(marked(hit), ['loading', 'ab']);
+  });
+
+  it('内部で使う区切り文字を本文が含んでいても、一致範囲が壊れず応答に残らない', () => {
+    const hit = hitOf('前\u0001中\u0002後 loading\u0001', 'loading');
+    assert.deepEqual(marked(hit), ['loading']);
+    assert.ok(!hit.snippet.includes('\u0001') && !hit.snippet.includes('\u0002'), JSON.stringify(hit.snippet));
+  });
+
+  it('抜粋は現状の約50文字より長く、FTS5 の snippet() の上限 (64 トークン) に収まる', () => {
+    for (const q of ['loading', 'ab']) {
+      const hit = hitOf(`${filler(0, 30)}loading と ab の話。${filler(30, 30)}`, q);
+      // 64 トークン = 66 文字 (trigram) + 両端の省略記号
+      assert.ok(hit.snippet.length > 60, `${hit.snippet.length}: ${hit.snippet}`);
+      assert.ok(hit.snippet.length <= 68, `${hit.snippet.length}: ${hit.snippet}`);
+    }
+  });
+
+  it('本文の途中から始まる抜粋と、途中で終わる抜粋には省略記号が付く (snippet() の標準の扱い)', () => {
+    for (const q of ['loading', 'ab']) {
+      const hit = hitOf(`${filler(0, 30)}loading と ab の話。${filler(30, 30)}`, q);
+      assert.ok(hit.snippet.startsWith('…') && hit.snippet.endsWith('…'), hit.snippet);
+    }
+  });
+
+  it('3文字以上の語の抜粋は、FTS5 の snippet() の結果そのものである', () => {
+    const phrase = (t: string) => `"${t}"`;
+    let checked = 0;
+    for (const { q, locale } of positive) {
+      const terms = normalize(q).split(/\s+/).filter(Boolean);
+      if (terms.some((t) => [...t].length < 3)) continue;
+      const rows = exec(
+        `SELECT slug, snippet(fts_${locale}, 5, '', '', '…', 64) AS s FROM fts_${locale} WHERE fts_${locale} MATCH ?`,
+        terms.map((t) => phrase(t.toLowerCase())).join(' AND '),
+      );
+      const engine = new Map(rows.map((r) => [String(r.slug), String(r.s).replace(/\s+/g, ' ').trim()]));
+      for (const hit of search(exec, q, locale)) {
+        assert.equal(hit.snippet, engine.get(hit.slug), `「${q}」の ${hit.slug}`);
+        checked++;
+      }
+    }
+    assert.ok(checked > 100, `${checked}`);
+  });
+
+  it('実記事: 抜粋は snippet() の上限に収まり、多くは現状の約50文字より長い', () => {
+    const lengths: number[] = [];
+    for (const { q, locale } of positive) for (const hit of search(exec, q, locale)) lengths.push(hit.snippet.length);
+    assert.ok(Math.max(...lengths) <= 68, `${Math.max(...lengths)}`);
+    assert.ok(mean(lengths) > 60, `平均 ${mean(lengths)}`);
+  });
+
+  it('JSON に直列化しても形が保たれる', () => {
+    const hit = hitOf('<b>x</b> loading', 'loading');
+    const round = JSON.parse(JSON.stringify(hit)) as typeof hit;
+    assert.deepEqual(round.highlights, hit.highlights);
+    assert.equal(round.snippet, hit.snippet);
+  });
+
+  const isConcatenationOf = (text: string, terms: string[]): boolean =>
+    text === '' || terms.some((t) => text.startsWith(t) && isConcatenationOf(text.slice(t.length), terms));
+  const positive = queries.filter((x) => !x.category.startsWith('negative'));
+
+  it('実記事: すべての一致範囲が、検索語の出現と同じ文字列である', () => {
+    let checked = 0;
+    for (const { q, locale } of positive) {
+      const terms = normalize(q).split(/\s+/).filter(Boolean);
+      for (const hit of search(exec, q, locale)) {
+        for (const [s, e] of hit.highlights) {
+          const text = normalize(hit.snippet.slice(s, e));
+          // 隣り合う一致 (例: changeDetection の change と Detection) は 1 つの範囲にまとまるので、語の連なりとして分解できればよい
+          // snippet() の端で切れた一致 (例: oxc-parser の oxc-p) は、語の先頭か末尾の一部だけが範囲になる
+          const atEdge = s <= 1 || e >= hit.snippet.length - 1;
+          const folded = text.toLowerCase().replace(/\s+/g, '');
+          assert.ok(
+            isConcatenationOf(folded, terms) || (atEdge && terms.some((t) => t.includes(folded))),
+            `「${q}」の範囲 ${JSON.stringify(text)} が語に一致しない`,
+          );
+          checked++;
+        }
+      }
+    }
+    assert.ok(checked > 100, `検査した範囲が少ない: ${checked}`);
+  });
+
+  it('実記事: 本文に一致がある結果は、必ず一致範囲を持つ', () => {
+    const byId = new Map(corpus.map((d) => [idOf(d.slug, d.locale), d]));
+    let checked = 0;
+    for (const { q, locale } of positive) {
+      const terms = normalize(q).split(/\s+/).filter(Boolean);
+      for (const hit of search(exec, q, locale)) {
+        const body = normalize(byId.get(idOf(hit.slug, locale))!.body);
+        if (!terms.every((t) => body.includes(t))) continue;
+        assert.ok(hit.highlights.length > 0, `「${q}」の ${hit.slug} に範囲がない`);
+        checked++;
+      }
+    }
+    assert.ok(checked > 100, `${checked}`);
+  });
+});
