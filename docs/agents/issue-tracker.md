@@ -46,7 +46,8 @@ Linear の MCP サーバー (`claude.ai Linear`) のツールで操作する。
 変更の種類ごとに加える条件:
 
 - UI: プレビューで 375/768/1024/1440px のスクリーンショットを確かめ、axe-core の違反が 0 件である。
-- Terraform: plan に想定外の destroy と replace が無い。apply したら、apply 後の状態を確かめる。
+- UI: 操作できる要素の状態 (ホバー、押下中、フォーカス、選択中) ごとに、4つの幅でコントラストを確かめる。
+- UI: ポインタを押した位置と離した位置が違う操作 (ドラッグして外へ出るなど) で、意図しない動作が起きない。- Terraform: plan に想定外の destroy と replace が無い。apply したら、apply 後の状態を確かめる。
 
 ## Pull Request をトリアージの対象にするか
 
