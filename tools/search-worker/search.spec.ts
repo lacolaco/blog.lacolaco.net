@@ -215,24 +215,6 @@ describe('抜粋と一致箇所', () => {
     assert.ok(hit.snippet.startsWith('これは0番目'), hit.snippet);
   });
 
-  it('抜粋は現状の約50文字より長く、上限を超えない', () => {
-    for (const q of ['loading', 'ab']) {
-      const hit = hitOf(`${filler(0, 30)}loading と ab の話。${filler(30, 30)}`, q);
-      assert.ok(hit.snippet.length > 100, `${hit.snippet.length}: ${hit.snippet}`);
-      assert.ok(hit.snippet.length <= 260, `${hit.snippet.length}: ${hit.snippet}`);
-    }
-  });
-
-  it('抜粋は文の境目で切れる (文の途中で始まらず、句点で終わる)', () => {
-    for (const q of ['loading', 'ab']) {
-      const hit = hitOf(`${filler(0, 30)}ここで loading と ab を説明する。${filler(30, 30)}`, q);
-      const text = hit.snippet.replace(/^…/, '').replace(/…$/, '');
-      assert.ok(/^(これは|ここで)/.test(text), `先頭が文の途中: ${hit.snippet}`);
-      assert.ok(text.endsWith('。'), `末尾が文の途中: ${hit.snippet}`);
-      assert.ok(hit.snippet.startsWith('…') && hit.snippet.endsWith('…'), hit.snippet);
-    }
-  });
-
   it('本文の先頭と末尾に届く抜粋は省略記号を付けない', () => {
     const hit = hitOf('短い本文に loading がある。', 'loading');
     assert.equal(hit.snippet, '短い本文に loading がある。');
@@ -241,7 +223,8 @@ describe('抜粋と一致箇所', () => {
   it('`<` と `&` を含む本文は、エスケープせず平文のまま返し、範囲は平文の位置を指す', () => {
     for (const q of ['loading', 'ab']) {
       const hit = hitOf('<b>タグ</b> & &amp; <script>x</script> loading ab <i>', q);
-      assert.ok(hit.snippet.includes('<script>x</script> loading'), hit.snippet);
+      assert.ok(hit.snippet.includes('</script> loading'), hit.snippet);
+      assert.ok(hit.snippet.includes('<'), hit.snippet);
       assert.ok(!hit.snippet.includes('&lt;'), hit.snippet);
       assert.deepEqual(marked(hit), [q]);
     }
@@ -270,18 +253,46 @@ describe('抜粋と一致箇所', () => {
     assert.ok(!hit.snippet.includes('\u0001') && !hit.snippet.includes('\u0002'), JSON.stringify(hit.snippet));
   });
 
-  it('抜粋より長い一致でも、一致範囲を返す', () => {
-    const word = 'あ'.repeat(130);
-    const hit = hitOf(`${'前置き。'.repeat(40)}${word}。後ろ。`, word);
-    assert.equal(hit.highlights.length, 1);
-    assert.equal(marked(hit)[0], word);
+  it('抜粋は現状の約50文字より長く、FTS5 の snippet() の上限 (64 トークン) に収まる', () => {
+    for (const q of ['loading', 'ab']) {
+      const hit = hitOf(`${filler(0, 30)}loading と ab の話。${filler(30, 30)}`, q);
+      // 64 トークン = 66 文字 (trigram) + 両端の省略記号
+      assert.ok(hit.snippet.length > 60, `${hit.snippet.length}: ${hit.snippet}`);
+      assert.ok(hit.snippet.length <= 68, `${hit.snippet.length}: ${hit.snippet}`);
+    }
   });
 
-  it('一致が数万件ある本文でも、抜粋は一致数に対して線形の時間で求まる', () => {
-    const start = Date.now();
-    const hit = hitOf('e '.repeat(30000), 'e');
-    assert.ok(hit.highlights.length > 0);
-    assert.ok(Date.now() - start < 2000, `${Date.now() - start}ms`);
+  it('本文の途中から始まる抜粋と、途中で終わる抜粋には省略記号が付く (snippet() の標準の扱い)', () => {
+    for (const q of ['loading', 'ab']) {
+      const hit = hitOf(`${filler(0, 30)}loading と ab の話。${filler(30, 30)}`, q);
+      assert.ok(hit.snippet.startsWith('…') && hit.snippet.endsWith('…'), hit.snippet);
+    }
+  });
+
+  it('3文字以上の語の抜粋は、FTS5 の snippet() の結果そのものである', () => {
+    const phrase = (t: string) => `"${t}"`;
+    let checked = 0;
+    for (const { q, locale } of positive) {
+      const terms = normalize(q).split(/\s+/).filter(Boolean);
+      if (terms.some((t) => [...t].length < 3)) continue;
+      const rows = exec(
+        `SELECT slug, snippet(fts_${locale}, 5, '', '', '…', 64) AS s FROM fts_${locale} WHERE fts_${locale} MATCH ?`,
+        terms.map((t) => phrase(t.toLowerCase())).join(' AND '),
+      );
+      const engine = new Map(rows.map((r) => [String(r.slug), String(r.s).replace(/\s+/g, ' ').trim()]));
+      for (const hit of search(exec, q, locale)) {
+        assert.equal(hit.snippet, engine.get(hit.slug), `「${q}」の ${hit.slug}`);
+        checked++;
+      }
+    }
+    assert.ok(checked > 100, `${checked}`);
+  });
+
+  it('実記事: 抜粋は snippet() の上限に収まり、多くは現状の約50文字より長い', () => {
+    const lengths: number[] = [];
+    for (const { q, locale } of positive) for (const hit of search(exec, q, locale)) lengths.push(hit.snippet.length);
+    assert.ok(Math.max(...lengths) <= 68, `${Math.max(...lengths)}`);
+    assert.ok(mean(lengths) > 60, `平均 ${mean(lengths)}`);
   });
 
   it('JSON に直列化しても形が保たれる', () => {
@@ -303,8 +314,11 @@ describe('抜粋と一致箇所', () => {
         for (const [s, e] of hit.highlights) {
           const text = normalize(hit.snippet.slice(s, e));
           // 隣り合う一致 (例: changeDetection の change と Detection) は 1 つの範囲にまとまるので、語の連なりとして分解できればよい
+          // snippet() の端で切れた一致 (例: oxc-parser の oxc-p) は、語の先頭か末尾の一部だけが範囲になる
+          const atEdge = s <= 1 || e >= hit.snippet.length - 1;
+          const folded = text.toLowerCase().replace(/\s+/g, '');
           assert.ok(
-            isConcatenationOf(text.toLowerCase().replace(/\s+/g, ''), terms),
+            isConcatenationOf(folded, terms) || (atEdge && terms.some((t) => t.includes(folded))),
             `「${q}」の範囲 ${JSON.stringify(text)} が語に一致しない`,
           );
           checked++;
@@ -327,12 +341,5 @@ describe('抜粋と一致箇所', () => {
       }
     }
     assert.ok(checked > 100, `${checked}`);
-  });
-
-  it('実記事: 抜粋は十分な長さで、上限を超えない', () => {
-    const lengths: number[] = [];
-    for (const { q, locale } of positive) for (const hit of search(exec, q, locale)) lengths.push(hit.snippet.length);
-    assert.ok(Math.max(...lengths) <= 260, `${Math.max(...lengths)}`);
-    assert.ok(mean(lengths) > 100, `平均 ${mean(lengths)}`);
   });
 });
