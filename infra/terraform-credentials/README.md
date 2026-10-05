@@ -13,6 +13,7 @@
 | `github_actions_secret.cloudflare_api_token` | `lacolaco/blog.lacolaco.net` の secret `CLOUDFLARE_API_TOKEN` |
 | `github_actions_secret.search_admin_token` | 同 secret `SEARCH_ADMIN_TOKEN` |
 | `github_actions_variable.cloudflare_account_id` | 同 variable `CLOUDFLARE_ACCOUNT_ID` (秘密ではない) |
+| `github_actions_variable.image_cdn_base_url` | 同 variable `IMAGE_CDN_BASE_URL` (秘密ではない)。画像 CDN は R2 のカスタムドメインで、バケットとドメインはこの構成の管理外のため、値は入力 `image_cdn_base_url` で与える。既存の variable は `terraform import github_actions_variable.image_cdn_base_url blog.lacolaco.net:IMAGE_CDN_BASE_URL` で取り込む |
 
 ### トークンの権限
 
@@ -44,6 +45,7 @@ Worker 側の secret (本番と Preview) への `SEARCH_ADMIN_TOKEN` の反映�
 | secret | `CLOUDFLARE_API_TOKEN` | このモジュール | `deploy-production.yml`、`deploy-preview.yml`、`shutdown-preview.yml` |
 | secret | `SEARCH_ADMIN_TOKEN` | このモジュール | `deploy-production.yml`、`deploy-preview.yml` |
 | variable | `CLOUDFLARE_ACCOUNT_ID` | このモジュール | `deploy-production.yml`、`deploy-preview.yml`、`shutdown-preview.yml` |
+| variable | `IMAGE_CDN_BASE_URL` | このモジュール。値は `variables.tf` の `image_cdn_base_url` で与える | `deploy-production.yml`、`deploy-preview.yml` |
 
 ### Terraform のコードで追えないもの
 
@@ -63,7 +65,6 @@ Worker 側の secret (本番と Preview) への `SEARCH_ADMIN_TOKEN` の反映�
 | secret | `R2_BUCKET_NAME` | R2 のバケット名 | 参照なし |
 | secret | `CLOUDFLARE_ACCOUNT_ID` | 値は variable と同じ。手作業で登録された | 参照なし (削除予定、LACO-612) |
 | secret | `CLOUDFLARE_ZONE_ID` | 手作業で登録された | 参照なし (削除予定、LACO-612) |
-| variable | `IMAGE_CDN_BASE_URL` | 秘密ではない設定値 (`https://images.blog.lacolaco.net`)。リソースの出力ではなく手で登録した | `deploy-production.yml`、`deploy-preview.yml` |
 
 - `R2_*` と `NOTION_*` は `tools/` のローカル実行 (`tools/env.d.ts`、`.env.example`) が環境変数で読むが、`main` のワークフローは参照しない。
 - `CLOUDFLARE_ACCOUNT_ID` と `CLOUDFLARE_ZONE_ID` の secret は、同名の variable と別物である。ワークフローが使うのは variable (`vars.`) で、secret (`secrets.`) を参照するものは `main` にない。
