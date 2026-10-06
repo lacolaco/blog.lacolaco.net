@@ -12,6 +12,11 @@
   "preview_urls": true,
   "observability": { "enabled": true },
 
+  // Workers Trace Events を Logpush で送れるようにする (検索語のデータレイク分析用)。
+  // 送るジョブは infra/terraform-credentials の logpush.tf で、ScriptName が blog-search のイベントだけを送る。
+  // Preview は別名の Worker なので送られない (本番の検索語だけが対象)
+  "logpush": true,
+
   // 本番は同一オリジンの blog.lacolaco.net/api/search* だけを Worker に向ける。
   // Cloud Run の他の /api/* (likes など) には影響しない。ルートは本番にだけ付き、Preview には付かない
   "routes": [{ "pattern": "blog.lacolaco.net/api/search*", "zone_name": "lacolaco.net" }],
