@@ -11,6 +11,9 @@ locals {
   cloudflare_logpush_service_account = "logpush@cloudflare-data.iam.gserviceaccount.com"
 }
 
+# 保持期間 (lifecycle_rule) は設けない。検索語に個人情報が含まれる見込みが無いというプロダクトオーナーの判断
+# (2026-10-06、LACO-611) により、マスクも保持期間の制限も行わない。生データの削除は外部表から行が消えるため、
+# 分析の蓄積を保つ目的でも消さない。個人情報が含まれると分かったら、ここに lifecycle_rule を足す。
 resource "google_storage_bucket" "search_logs" {
   name     = "${data.google_project.current.project_id}-search-logs"
   location = "ASIA-NORTHEAST1" # BigQuery の likes_analytics (asia-northeast1) と同じ。外部表は同じロケーションの bucket しか読めない
