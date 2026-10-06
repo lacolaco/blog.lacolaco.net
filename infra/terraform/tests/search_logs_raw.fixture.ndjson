@@ -1,0 +1,4 @@
+{"EventTimestampMs":1791299099573,"Outcome":"ok","ScriptName":"blog-search","Logs":[{"Level":"log","Message":["{\"event\":\"search\",\"q\":\"angular signals\",\"locale\":\"en\",\"hits\":3,\"ms\":12}"],"TimestampMs":1791299099573}]}
+{"EventTimestampMs":1791299100000,"Outcome":"ok","ScriptName":"blog-search","Logs":[{"Level":"log","Message":["{\"event\":\"admin\",\"action\":\"index\",\"docs\":300}"],"TimestampMs":1791299100000},{"Level":"error","Message":["plain text line 日本語"],"TimestampMs":1791299100001}]}
+{"EventTimestampMs":1791299101000,"Outcome":"ok","ScriptName":"blog-search","Logs":[{"Level":"log","Message":["{\"event\":\"search\",\"q\":\"検索 語\",\"locale\":\"ja\",\"hits\":0,\"ms\":4}"],"TimestampMs":1791299101000},{"Level":"log","Message":["12345"],"TimestampMs":1791299101001}]}
+{"EventTimestampMs":1791299102000,"Outcome":"exception","ScriptName":"blog-search","Logs":[]}
