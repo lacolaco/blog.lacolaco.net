@@ -7,7 +7,11 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-python3 - <<'PY' > /tmp/search_events_test.sql
+# 一時ファイルは成功・失敗のどちらでも消す
+work="$(mktemp -d)"
+trap 'rm -rf "$work"' EXIT
+
+python3 - <<'PY' > "$work/test.sql"
 import json, re
 def lit(v):
     return json.dumps(v, ensure_ascii=False)
@@ -24,15 +28,14 @@ tpl = open('../search_events.sql.tftpl', encoding='utf-8').read().replace('${raw
 print(f"SELECT FORMAT_TIMESTAMP('%Y-%m-%dT%H:%M:%E*SZ', searched_at) AS t, q, locale, hits, ms FROM ({tpl}) ORDER BY searched_at")
 PY
 
-bq query --nouse_legacy_sql --format=csv --maximum_bytes_billed=10000000 < /tmp/search_events_test.sql \
+bq query --nouse_legacy_sql --format=csv --maximum_bytes_billed=10000000 < "$work/test.sql" \
   | tail -n +2 | python3 -c '
 import csv, sys
 for r in csv.reader(sys.stdin):
     print("\t".join(r))
-' > /tmp/search_events_actual.tsv
-rm -f /tmp/search_events_test.sql
+' > "$work/actual.tsv"
 
-if diff -u search_events.expected.tsv /tmp/search_events_actual.tsv; then
+if diff -u search_events.expected.tsv "$work/actual.tsv"; then
   echo "ok"
 else
   echo "ng" >&2; exit 1
