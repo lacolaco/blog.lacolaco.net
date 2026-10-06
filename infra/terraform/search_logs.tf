@@ -16,7 +16,7 @@ locals {
 # 分析の蓄積を保つ目的でも消さない。個人情報が含まれると分かったら、ここに lifecycle_rule を足す。
 resource "google_storage_bucket" "search_logs" {
   name     = "${data.google_project.current.project_id}-search-logs"
-  location = "ASIA-NORTHEAST1" # BigQuery の search_analytics (asia-northeast1) と同じ。外部表は同じロケーションの bucket しか読めない
+  location = "ASIA-NORTHEAST1" # BigQuery の blog_analytics (asia-northeast1) と同じ。外部表は同じロケーションの bucket しか読めない
 
   uniform_bucket_level_access = true
   public_access_prevention    = "enforced"
@@ -33,14 +33,15 @@ resource "google_storage_bucket_iam_member" "search_logs_logpush_writer" {
 # BigQuery: 生データの外部表と、検索イベントだけのビュー
 #
 
-# 検索ログ専用のデータセット。likes_analytics に混ぜると名前と中身が合わないため分ける。
+# ブログが自分で集めるデータ (検索ログ、今後のクリックの記録など) を置く汎用のデータセット。
+# 既存の likes_analytics (いいねの集計) とは分け、いいねの移行はこの変更に含めない。
 # github-actions SA にはデータセットを作る権限 (bigquery.datasets.create) が無く、プロジェクト全体へは広げない。
-# そのためデータセットとこのデータセットへの IAM (下の github_actions_search_analytics_data_owner) は、
+# そのためデータセットとこのデータセットへの IAM (下の github_actions_blog_analytics_data_owner) は、
 # 初回だけ権限のある利用者がローカルで apply して作る。作成後は CI の apply で差分が出ない。
-resource "google_bigquery_dataset" "search_analytics" {
-  dataset_id  = "search_analytics"
+resource "google_bigquery_dataset" "blog_analytics" {
+  dataset_id  = "blog_analytics"
   location    = "asia-northeast1"
-  description = "検索 API (Worker blog-search) の検索ログ。Logpush が GCS に書いた生データの外部表と、検索イベントだけのビュー"
+  description = "ブログが自分で集めるデータの置き場 (検索ログ、今後のクリックの記録など)。現在は検索 API (Worker blog-search) の検索ログで、Logpush が GCS に書いた生データの外部表と、検索イベントだけのビューがある"
 }
 
 # CI 上の Terraform は、このデータセットに対して次の API call を行う必要がある (iam.tf の likes_analytics と同じ理由):
@@ -49,9 +50,9 @@ resource "google_bigquery_dataset" "search_analytics" {
 # これらを同時に持つ既定ロールは、データセット単位では dataOwner のみ。当該データセットは公開ブログの検索語で
 # 機密性が低く、Terraform が触るのは表とビューの定義だけなので、custom role にせず dataOwner を採用する
 # (likes_analytics と同じ判断)。付与はこのデータセットに限り、プロジェクト全体の権限は広げない。
-resource "google_bigquery_dataset_iam_member" "github_actions_search_analytics_data_owner" {
+resource "google_bigquery_dataset_iam_member" "github_actions_blog_analytics_data_owner" {
   project    = data.google_project.current.project_id
-  dataset_id = google_bigquery_dataset.search_analytics.dataset_id
+  dataset_id = google_bigquery_dataset.blog_analytics.dataset_id
   role       = "roles/bigquery.dataOwner"
   member     = "serviceAccount:${data.google_service_account.github_actions.email}"
 }
@@ -60,7 +61,7 @@ resource "google_bigquery_dataset_iam_member" "github_actions_search_analytics_d
 # 一致し、同じ prefix に書かれる所有権確認の .txt ファイルを読まない。
 # 取り込み間隔は約 1 分だが、外部表は読むたびに GCS を走査するため、表の更新は不要。
 resource "google_bigquery_table" "search_logs_raw" {
-  dataset_id = google_bigquery_dataset.search_analytics.dataset_id
+  dataset_id = google_bigquery_dataset.blog_analytics.dataset_id
   table_id   = "search_logs_raw"
 
   description         = "Worker blog-search の Workers Trace Events (Logpush が GCS に書く NDJSON)。検索イベントの抽出は search_events ビューを使う"
@@ -94,7 +95,7 @@ resource "google_bigquery_table" "search_logs_raw" {
 # Logpush のフィルターは Logs (array) を条件に使えないため、検索イベントの選別はここで行う。
 # 検索以外のイベント (管理用エンドポイント、平文のログ) はこのビューに入らない。
 resource "google_bigquery_table" "search_events" {
-  dataset_id = google_bigquery_dataset.search_analytics.dataset_id
+  dataset_id = google_bigquery_dataset.blog_analytics.dataset_id
   table_id   = "search_events"
 
   description         = "検索 API の検索イベント (1 検索 1 行)。hits は API が返した件数 (上限 20) で、総数ではない"

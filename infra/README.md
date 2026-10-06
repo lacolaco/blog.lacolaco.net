@@ -13,8 +13,8 @@
 Worker blog-search (console.log の JSON 1 行、wrangler.jsonc の logpush: true)
   → Logpush ジョブ (Cloudflare、データセット workers_trace_events、ScriptName = blog-search) [約 1 分間隔]
     → GCS gs://blog-lacolaco-net-search-logs/workers/<日付>/*.log.gz (NDJSON、gzip)
-      → BigQuery 外部表 search_analytics.search_logs_raw
-        → ビュー search_analytics.search_events (検索イベントだけ。1 検索 1 行)
+      → BigQuery 外部表 blog_analytics.search_logs_raw
+        → ビュー blog_analytics.search_events (検索イベントだけ。1 検索 1 行)
 ```
 
 | 資源 | 管理 |
@@ -35,7 +35,7 @@ Worker blog-search (console.log の JSON 1 行、wrangler.jsonc の logpush: tru
 
 - Logpush のフィルターは `Logs` (array) を条件に使えないため、生データ (`search_logs_raw`) には管理用エンドポイントの呼び出しや平文のログも入る。検索のイベントだけを選ぶのは `search_events` の SQL (`infra/terraform/search_events.sql.tftpl`) である。分析には `search_events` を使う。
 - SQL の仕様は `infra/terraform/tests/search_events.test.sh` が固定の入力行で確かめる。BigQuery の認証が要るため CI では実行しない。SQL を変えたらローカルで実行する。
-- データセット `search_analytics` は検索ログ専用である (`likes_analytics` に混ぜると名前と中身が合わない)。CI のサービスアカウント (`github-actions`) はデータセットを作る権限 (`bigquery.datasets.create`) を持たず、その権限をプロジェクト全体へ広げないため、データセットとその IAM は初回だけ権限のある利用者が `infra/terraform` をローカルで apply して作った。作成後は CI の apply に差分が出ない。データセットを作り直すときも同じ手順で行う。
+- データセット `blog_analytics` は、ブログが自分で集めるデータ (検索ログ、今後のクリックの記録など) をまとめて置く汎用の置き場である。いいねの集計は既存の `likes_analytics` に残り、移行は別項目で扱う。CI のサービスアカウント (`github-actions`) はデータセットを作る権限 (`bigquery.datasets.create`) を持たず、その権限をプロジェクト全体へ広げないため、データセットとその IAM は初回だけ権限のある利用者が `infra/terraform` をローカルで apply して作った。作成後は CI の apply に差分が出ない。データセットを作り直すときも同じ手順で行う。
 - 検索語のマスクと保持期間の制限は設けない (個人情報を含む語が検索される見込みが無いというプロダクトオーナーの判断、2026-10-06)。バケットに削除のルールは無く、生データは残り続ける。個人情報が含まれると分かったら、`search_logs.tf` のバケットに `lifecycle_rule` を足す。
 - 外部表を読むには、問い合わせる主体がバケットの読み取り権限 (`storage.objects.get`) も要る。`lacolaco-dwh` など別プロジェクトからビュー経由で読むときは、読む側にこの権限を与える (承認済みビューはデータセットの権限だけを移す)。
 
@@ -44,7 +44,7 @@ Worker blog-search (console.log の JSON 1 行、wrangler.jsonc の logpush: tru
 | 主体 | 権限 | 理由 |
 |---|---|---|
 | `logpush@cloudflare-data.iam.gserviceaccount.com` (Cloudflare 共有) | バケットの `roles/storage.objectAdmin` | Logpush の書き込みと所有権の確認ファイルの読み書き (公式文書の指定)。鍵は発行しない |
-| `github-actions` (CI) | 既存の `storage.admin` と、`search_analytics` に限った `bigquery.dataOwner` | バケットの作成と、外部表・ビューの管理。プロジェクト全体の権限は広げない |
+| `github-actions` (CI) | 既存の `storage.admin` と、`blog_analytics` に限った `bigquery.dataOwner` | バケットの作成と、外部表・ビューの管理。プロジェクト全体の権限は広げない |
 | ジョブを作る Cloudflare のトークン (一時) | アカウントの Logs Write | `infra/terraform-credentials/README.md` を参照 |
 
 長期の認証情報 (JSON 鍵やトークン) は経路に無いため、ローテーションの対象は無い。
@@ -57,7 +57,7 @@ Worker blog-search (console.log の JSON 1 行、wrangler.jsonc の logpush: tru
 
    ```bash
    bq query --nouse_legacy_sql --maximum_bytes_billed=1000000000 \
-     'SELECT MAX(searched_at) AS latest FROM `blog-lacolaco-net.search_analytics.search_events`'
+     'SELECT MAX(searched_at) AS latest FROM `blog-lacolaco-net.blog_analytics.search_events`'
    ```
 
 2. Logpush ジョブの状態。`enabled` が `true` で、`last_error` と `error_message` が `null` であること。
