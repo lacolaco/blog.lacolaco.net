@@ -8,7 +8,8 @@ on:
 # 実行中のプレビューのデプロイ (deploy-preview.yml) と同じグループに入れ、デプロイの完了を待ってから片付ける。
 # グループが別だと、PR を閉じたときにデプロイが実行中の場合、片付けの後にデプロイがタグや Preview を付け直して残る (#2036)。
 # cancel-in-progress は false にする。true にすると実行中のデプロイを途中で止め、Cloud Run 側で作成中のリビジョンにタグが付く恐れがある。
-# デプロイ側は PR を閉じた後に起動しないので、待たされた片付けが後続のデプロイに取り消されることはない。
+# デプロイ側は PR を閉じた後は起動しない。例外は PR の再オープンで、デプロイ側の cancel-in-progress: true により実行中の片付けが
+# 取り消されるが、再オープンした PR にはプレビューが必要で、デプロイがタグと Preview を作り直すので問題にならない。
 concurrency:
   group: deploy-preview-${{ github.event.number }}
   cancel-in-progress: false
