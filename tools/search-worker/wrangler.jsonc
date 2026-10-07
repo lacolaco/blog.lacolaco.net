@@ -14,7 +14,9 @@
 
   // Workers Trace Events を Logpush で送れるようにする (検索語のデータレイク分析用)。
   // 送るジョブは infra/terraform-logpush の main.tf で、ScriptName が blog-search のイベントだけを送る。
-  // Preview は別名の Worker なので送られない (本番の検索語だけが対象)
+  // Preview はトップレベルの logpush を継承する (wrangler の previews?.logpush ?? logpush)。
+  // そのままだとプレビューの検索イベントも ScriptName = blog-search で送られ、本番の検索語に混ざる。
+  // そのため previews で false にして、本番の検索語だけを対象にする
   "logpush": true,
 
   // 本番は同一オリジンの blog.lacolaco.net/api/search* だけを Worker に向ける。
@@ -28,6 +30,7 @@
   // Preview は本番の設定を継承しないので、ここで宣言する。
   // Durable Object は Preview ごとに名前空間とストレージが自動で別になり、本番の索引と混ざらない
   "previews": {
+    "logpush": false,
     "durable_objects": { "bindings": [{ "name": "SEARCH", "class_name": "SearchDO" }] },
     "vars": {
       // プレビューのサイト (Cloud Run のタグ付きリビジョン) だけに CORS を許可する

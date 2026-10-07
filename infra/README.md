@@ -37,6 +37,8 @@ Worker blog-search (console.log の JSON 1 行、wrangler.jsonc の logpush: tru
 - Logpush のフィルターは `Logs` (array) を条件に使えないため、生データ (`search_logs_raw`) には管理用エンドポイントの呼び出しや平文のログも入る。検索のイベントだけを選ぶのは `search_events` の SQL (`infra/terraform/search_events.sql.tftpl`) である。分析には `search_events` を使う。
 - SQL の仕様は `infra/terraform/tests/search_events.test.sh` が固定の入力行で確かめる。BigQuery の認証が要るため CI では実行しない。SQL を変えたらローカルで実行する。
 - データセット `blog_analytics` は、ブログが自分で集めるデータ (検索ログ、今後のクリックの記録など) をまとめて置く汎用の置き場である。いいねの集計は既存の `likes_analytics` に残り、移行は別項目で扱う。CI のサービスアカウント (`github-actions`) はデータセットを作る権限 (`bigquery.datasets.create`) を持たず、その権限をプロジェクト全体へ広げないため、データセットとその IAM は初回だけ権限のある利用者が `infra/terraform` をローカルで apply して作った。作成後は CI の apply に差分が出ない。データセットを作り直すときも同じ手順で行う。
+- Workers Trace Events の `Logs` と `Exceptions` は合わせて 16,384 文字を超えると切り詰められる。切り詰められた JSON は解釈できず、ビューから落ちる。検索 1 回のログは短いため通常は起きないが、1 回の呼び出しに大量のログが出ると、その検索が欠けうる。
+- プレビューの Worker は `previews.logpush: false` で Logpush を止めている。wrangler のプレビューはトップレベルの `logpush` を継承し、止めないとプレビューの検索イベントが `ScriptName = blog-search` で送られて本番の検索語に混ざる。
 - 検索語のマスクと保持期間の制限は設けない (個人情報を含む語が検索される見込みが無いというプロダクトオーナーの判断、2026-10-06)。バケットに削除のルールは無く、生データは残り続ける。個人情報が含まれると分かったら、`search_logs.tf` のバケットに `lifecycle_rule` を足す。
 - 外部表を読むには、問い合わせる主体がバケットの読み取り権限 (`storage.objects.get`) も要る。`lacolaco-dwh` など別プロジェクトからビュー経由で読むときは、読む側にこの権限を与える (承認済みビューはデータセットの権限だけを移す)。
 

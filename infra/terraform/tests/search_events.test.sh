@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # search_events ビューの SQL を、固定の入力行 (search_logs_raw.fixture.ndjson) に対して BigQuery で実行し、
 # 期待する行 (search_events.expected.tsv) と一致することを確かめる。
-# 検索イベントだけが残り、管理用のログ・平文のログ・数値だけのログ・ログなしの行が入らないことが仕様である。
+# 検索イベントだけが残り、管理用のログ・平文のログ・数値だけのログ・ログなしの行・切り詰めで途中で切れた JSON が入らないことが仕様である。
+# 空の検索語と 200 文字の検索語は行として残る。
 # BigQuery への認証 (bq) が要るため CI では実行しない。ビューの SQL を変えたらローカルで実行する。
 #   使い方: bash infra/terraform/tests/search_events.test.sh
 set -euo pipefail
