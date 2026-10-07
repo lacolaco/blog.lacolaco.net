@@ -5,9 +5,19 @@ on:
     types: [closed]
     branches: [main]
 
+# 実行中のプレビューのデプロイ (deploy-preview.yml) と同じグループに入れ、デプロイの完了を待ってから片付ける。
+# グループが別だと、PR を閉じたときにデプロイが実行中の場合、片付けの後にデプロイがタグや Preview を付け直して残る (#2036)。
+# cancel-in-progress は false にする。true にすると実行中のデプロイを途中で止め、Cloud Run 側で作成中のリビジョンにタグが付く恐れがある。
+# デプロイ側は PR を閉じた後は起動しない。例外は PR の再オープンで、デプロイ側の cancel-in-progress: true により実行中の片付けが
+# 取り消されるが、再オープンした PR にはプレビューが必要で、デプロイがタグと Preview を作り直すので問題にならない。
+concurrency:
+  group: deploy-preview-${{ github.event.number }}
+  cancel-in-progress: false
+
 jobs:
   shutdown-preview:
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'deploy-preview')
+    # マージの有無を問わず、deploy-preview ラベルが付いた PR を片付ける
+    if: contains(github.event.pull_request.labels.*.name, 'deploy-preview')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -27,13 +37,14 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
 
+      # 存在しないタグを渡しても gcloud は成功する (終了コード 0) ので、デプロイが Cloud Run まで進まなかった PR でも失敗しない
       # https://cloud.google.com/run/docs/rollouts-rollbacks-traffic-migration?hl=ja#remove-tags
       - name: Remove revision tag from Cloud Run service
         run: |
           gcloud run services update-traffic web --region asia-northeast1 --remove-tags pr-${{ github.event.number }}
 
   # 検索 API の Preview を削除する。Preview の Durable Object のデータも一緒に削除される。
-  # マージの有無を問わず PR が閉じたときに行う (上の Cloud Run の片付けはマージ時だけで、そちらは変更していない)
+  # マージの有無を問わず PR が閉じたときに行う
   shutdown-search-preview:
     if: contains(github.event.pull_request.labels.*.name, 'deploy-preview')
     runs-on: ubuntu-latest
