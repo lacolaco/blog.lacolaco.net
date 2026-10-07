@@ -13,7 +13,7 @@
   "observability": { "enabled": true },
 
   // Workers Trace Events を Logpush で送れるようにする (検索語のデータレイク分析用)。
-  // 送るジョブは infra/terraform-credentials の logpush.tf で、ScriptName が blog-search のイベントだけを送る。
+  // 送るジョブは infra/terraform-logpush の main.tf で、ScriptName が blog-search のイベントだけを送る。
   // Preview は別名の Worker なので送られない (本番の検索語だけが対象)
   "logpush": true,
 

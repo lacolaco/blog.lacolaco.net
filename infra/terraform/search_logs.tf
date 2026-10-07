@@ -1,7 +1,7 @@
 #
 # 検索ログの送り先 (Workers Trace Events → Logpush → GCS)
 #
-# 経路: Worker blog-search → Logpush (infra/terraform-credentials) → この GCS バケット
+# 経路: Worker blog-search → Logpush (infra/terraform-logpush) → この GCS バケット
 #       → BigQuery 外部表 → 検索イベントだけのビュー。構成と運用は infra/README.md を参照。
 #
 
@@ -76,7 +76,7 @@ resource "google_bigquery_table" "search_logs_raw" {
     # Logpush の出力には Exceptions など使わない欄もある。スキーマに無い欄は無視する
     ignore_unknown_values = true
 
-    # Logpush の field_names (infra/terraform-credentials) と合わせる。Message は console.log の引数ごとの文字列配列
+    # Logpush の field_names (infra/terraform-logpush) と合わせる。Message は console.log の引数ごとの文字列配列
     schema = jsonencode([
       { name = "EventTimestampMs", type = "INT64" },
       { name = "ScriptName", type = "STRING" },
