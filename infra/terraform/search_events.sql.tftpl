@@ -1,0 +1,13 @@
+-- Logs[].Message[] は console.log の引数ごとの文字列。検索のログは JSON 文字列として入る。
+-- JSON として解釈できない要素 (平文のログ) は SAFE.PARSE_JSON が NULL にして取り除く。
+SELECT
+  TIMESTAMP_MILLIS(l.TimestampMs) AS searched_at,
+  JSON_VALUE(e, '$.q') AS q,
+  JSON_VALUE(e, '$.locale') AS locale,
+  SAFE_CAST(JSON_VALUE(e, '$.hits') AS INT64) AS hits,
+  SAFE_CAST(JSON_VALUE(e, '$.ms') AS INT64) AS ms
+FROM ${raw_table} AS r,
+  UNNEST(r.Logs) AS l,
+  UNNEST(l.Message) AS m,
+  UNNEST([SAFE.PARSE_JSON(m)]) AS e
+WHERE JSON_VALUE(e, '$.event') = 'search'

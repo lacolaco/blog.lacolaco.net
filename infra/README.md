@@ -4,6 +4,73 @@
 
 - `infra/terraform/`: GCP のリソース。CI が apply する (`infra/terraform/README.md`)。
 - `infra/terraform-credentials/`: 検索 API の CI が使う Cloudflare のトークンと GitHub Actions の secret。ローカルだけで apply する (`infra/terraform-credentials/README.md`)。
+- `infra/terraform-logpush/`: 検索ログの Logpush ジョブ。トークンを持たず、ログイン済みの `cf` CLI でローカルだけで apply する (`infra/terraform-logpush/README.md`)。
+
+## 検索ログの経路
+
+本番の検索 API (Worker `blog-search`) が出す検索語を、BigQuery で分析できるようにする経路。
+
+```
+Worker blog-search (console.log の JSON 1 行、wrangler.jsonc の logpush: true)
+  → Logpush ジョブ (Cloudflare、データセット workers_trace_events、ScriptName = blog-search) [約 1 分間隔]
+    → GCS gs://blog-lacolaco-net-search-logs/workers/<日付>/*.log.gz (NDJSON、gzip)
+      → BigQuery 外部表 blog_analytics.search_logs_raw
+        → ビュー blog_analytics.search_events (検索イベントだけ。1 検索 1 行)
+```
+
+| 資源 | 管理 |
+|---|---|
+| GCS バケット、Logpush の書き込み元への権限、外部表、ビュー | `infra/terraform/search_logs.tf` (CI が apply) |
+| Logpush ジョブ、所有権の確認 | `infra/terraform-logpush/` (ローカルで apply) |
+| Worker の `logpush: true` | `tools/search-worker/wrangler.jsonc` (CI がデプロイ) |
+
+### ビューの列
+
+| 列 | 内容 |
+|---|---|
+| `searched_at` | 検索の時刻 (TIMESTAMP) |
+| `q` | 検索語 |
+| `locale` | `ja` または `en` |
+| `hits` | API が返した件数。上限 20 で、総数ではない |
+| `ms` | Worker 内の所要時間 (ミリ秒) |
+
+- Logpush のフィルターは `Logs` (array) を条件に使えないため、生データ (`search_logs_raw`) には管理用エンドポイントの呼び出しや平文のログも入る。検索のイベントだけを選ぶのは `search_events` の SQL (`infra/terraform/search_events.sql.tftpl`) である。分析には `search_events` を使う。
+- SQL の仕様は `infra/terraform/tests/search_events.test.sh` が固定の入力行で確かめる。BigQuery の認証が要るため CI では実行しない。SQL を変えたらローカルで実行する。
+- データセット `blog_analytics` は、ブログが自分で集めるデータ (検索ログ、今後のクリックの記録など) をまとめて置く汎用の置き場である。いいねの集計は既存の `likes_analytics` に残り、移行は別項目で扱う。CI のサービスアカウント (`github-actions`) はデータセットを作る権限 (`bigquery.datasets.create`) を持たず、その権限をプロジェクト全体へ広げないため、データセットとその IAM は初回だけ権限のある利用者が `infra/terraform` をローカルで apply して作った。作成後は CI の apply に差分が出ない。データセットを作り直すときも同じ手順で行う。
+- Workers Trace Events の `Logs` と `Exceptions` は合わせて 16,384 文字を超えると切り詰められる。切り詰められた JSON は解釈できず、ビューから落ちる。検索 1 回のログは短いため通常は起きないが、1 回の呼び出しに大量のログが出ると、その検索が欠けうる。
+- プレビューの Worker は `previews.logpush: false` で Logpush を止めている。wrangler のプレビューはトップレベルの `logpush` を継承し、止めないとプレビューの検索イベントが `ScriptName = blog-search` で送られて本番の検索語に混ざる。
+- 検索語のマスクと保持期間の制限は設けない (個人情報を含む語が検索される見込みが無いというプロダクトオーナーの判断、2026-10-06)。バケットに削除のルールは無く、生データは残り続ける。個人情報が含まれると分かったら、`search_logs.tf` のバケットに `lifecycle_rule` を足す。
+- 外部表を読むには、問い合わせる主体がバケットの読み取り権限 (`storage.objects.get`) も要る。`lacolaco-dwh` など別プロジェクトからビュー経由で読むときは、読む側にこの権限を与える (承認済みビューはデータセットの権限だけを移す)。
+
+### 権限
+
+| 主体 | 権限 | 理由 |
+|---|---|---|
+| `logpush@cloudflare-data.iam.gserviceaccount.com` (Cloudflare 共有) | バケットの `roles/storage.objectAdmin` | Logpush の書き込みと所有権の確認ファイルの読み書き (公式文書の指定)。鍵は発行しない |
+| `github-actions` (CI) | 既存の `storage.admin` と、`blog_analytics` に限った `bigquery.dataOwner` | バケットの作成と、外部表・ビューの管理。プロジェクト全体の権限は広げない |
+| `cf auth login` の OAuth (Logpush ジョブの作成と削除) | Logpush の編集 | トークンを作らずに済ませる。理由は `infra/terraform-logpush/README.md` |
+
+長期の認証情報 (JSON 鍵やトークン) は経路に無いため、ローテーションの対象は無い。
+
+### 止まったときに気づく手段
+
+経路が止まる原因は、Logpush ジョブの停止 (送り先への書き込みが続けて失敗すると Cloudflare がジョブを止める)、バケットへの権限が外れること、Worker の `logpush` の解除である。検索 API は影響を受けず、検索語だけが届かなくなる。次を確かめる。
+
+1. 最新の検索の時刻 (数日検索が無いと止まって見えるため、本番の検索 API に固有の語で 1 回問い合わせてから、約 2 分後に確かめる)。
+
+   ```bash
+   bq query --nouse_legacy_sql --maximum_bytes_billed=1000000000 \
+     'SELECT MAX(searched_at) AS latest FROM `blog-lacolaco-net.blog_analytics.search_events`'
+   ```
+
+2. Logpush ジョブの状態 (名前は `blog-search-workers-trace-events`)。`enabled` が `true` で、`last_error` と `error_message` が `null` であること。`terraform -chdir=infra/terraform-logpush plan` の `check` も、ジョブが無い・止まっている・エラーがあるときに警告を出す。
+
+   ```bash
+   CLOUDFLARE_ACCOUNT_ID=<ゾーン lacolaco.net のアカウント ID> cf logpush account-jobs list
+   ```
+
+3. 停止していたら、権限 (`gcloud storage buckets get-iam-policy gs://blog-lacolaco-net-search-logs`) を確かめて直し、`terraform -chdir=infra/terraform-logpush apply -replace=terraform_data.logpush_job` でジョブを作り直す。ジョブを作り直した直後は、数分間のイベントが届かないことがある。
+4. Cloudflare のダッシュボードの「通知」で、Logpush のジョブの失敗 (Logpush Failed Job) の通知を有効にすると、ジョブの停止をメールで受け取れる。通知の設定はこの構成の管理外である。
 
 ## Likes BIダッシュボード
 
