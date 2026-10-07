@@ -6,10 +6,6 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "~> 5.26"
     }
-    google = {
-      source  = "hashicorp/google"
-      version = "~> 8.0"
-    }
     github = {
       source  = "integrations/github"
       version = "~> 6.13"

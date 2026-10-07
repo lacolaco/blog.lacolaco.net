@@ -170,6 +170,8 @@ jobs:
               - 'infra/workflows/**'
             terraform_credentials:
               - 'infra/terraform-credentials/**'
+            terraform_logpush:
+              - 'infra/terraform-logpush/**'
 
       - name: Google Auth
         if: steps.tf-paths.outputs.terraform == 'true'
@@ -179,7 +181,7 @@ jobs:
           service_account: 'github-actions@blog-lacolaco-net.iam.gserviceaccount.com'
 
       - uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4
-        if: steps.tf-paths.outputs.terraform == 'true' || steps.tf-paths.outputs.terraform_credentials == 'true'
+        if: steps.tf-paths.outputs.terraform == 'true' || steps.tf-paths.outputs.terraform_credentials == 'true' || steps.tf-paths.outputs.terraform_logpush == 'true'
         with:
           terraform_version: 1.14.5
           terraform_wrapper: false
@@ -214,6 +216,19 @@ jobs:
       - name: Terraform Validate (credentials)
         if: steps.tf-paths.outputs.terraform_credentials == 'true'
         working-directory: infra/terraform-credentials
+        run: |
+          terraform init -backend=false
+          terraform validate
+
+      # infra/terraform-logpush もローカルで apply する独立モジュール。構文検査だけを行う。
+      - name: Terraform fmt (logpush)
+        if: steps.tf-paths.outputs.terraform_logpush == 'true'
+        working-directory: infra/terraform-logpush
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate (logpush)
+        if: steps.tf-paths.outputs.terraform_logpush == 'true'
+        working-directory: infra/terraform-logpush
         run: |
           terraform init -backend=false
           terraform validate

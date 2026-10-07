@@ -3,7 +3,8 @@
 ## Terraform モジュール
 
 - `infra/terraform/`: GCP のリソース。CI が apply する (`infra/terraform/README.md`)。
-- `infra/terraform-credentials/`: 検索 API の CI が使う Cloudflare のトークンと GitHub Actions の secret、検索ログの Logpush ジョブ。ローカルだけで apply する (`infra/terraform-credentials/README.md`)。
+- `infra/terraform-credentials/`: 検索 API の CI が使う Cloudflare のトークンと GitHub Actions の secret。ローカルだけで apply する (`infra/terraform-credentials/README.md`)。
+- `infra/terraform-logpush/`: 検索ログの Logpush ジョブ。トークンを持たず、ログイン済みの `cf` CLI でローカルだけで apply する (`infra/terraform-logpush/README.md`)。
 
 ## 検索ログの経路
 
@@ -20,7 +21,7 @@ Worker blog-search (console.log の JSON 1 行、wrangler.jsonc の logpush: tru
 | 資源 | 管理 |
 |---|---|
 | GCS バケット、Logpush の書き込み元への権限、外部表、ビュー | `infra/terraform/search_logs.tf` (CI が apply) |
-| Logpush ジョブ、所有権の確認 | `infra/terraform-credentials/logpush.tf` (ローカルで apply) |
+| Logpush ジョブ、所有権の確認 | `infra/terraform-logpush/` (ローカルで apply) |
 | Worker の `logpush: true` | `tools/search-worker/wrangler.jsonc` (CI がデプロイ) |
 
 ### ビューの列
@@ -45,7 +46,7 @@ Worker blog-search (console.log の JSON 1 行、wrangler.jsonc の logpush: tru
 |---|---|---|
 | `logpush@cloudflare-data.iam.gserviceaccount.com` (Cloudflare 共有) | バケットの `roles/storage.objectAdmin` | Logpush の書き込みと所有権の確認ファイルの読み書き (公式文書の指定)。鍵は発行しない |
 | `github-actions` (CI) | 既存の `storage.admin` と、`blog_analytics` に限った `bigquery.dataOwner` | バケットの作成と、外部表・ビューの管理。プロジェクト全体の権限は広げない |
-| ジョブを作る Cloudflare のトークン (一時) | アカウントの Logs Write | `infra/terraform-credentials/README.md` を参照 |
+| `cf auth login` の OAuth (Logpush ジョブの作成と削除) | Logpush の編集 | トークンを作らずに済ませる。理由は `infra/terraform-logpush/README.md` |
 
 長期の認証情報 (JSON 鍵やトークン) は経路に無いため、ローテーションの対象は無い。
 
@@ -60,13 +61,13 @@ Worker blog-search (console.log の JSON 1 行、wrangler.jsonc の logpush: tru
      'SELECT MAX(searched_at) AS latest FROM `blog-lacolaco-net.blog_analytics.search_events`'
    ```
 
-2. Logpush ジョブの状態。`enabled` が `true` で、`last_error` と `error_message` が `null` であること。
+2. Logpush ジョブの状態 (名前は `blog-search-workers-trace-events`)。`enabled` が `true` で、`last_error` と `error_message` が `null` であること。`terraform -chdir=infra/terraform-logpush plan` の `check` も、ジョブが無い・止まっている・エラーがあるときに警告を出す。
 
    ```bash
    CLOUDFLARE_ACCOUNT_ID=<ゾーン lacolaco.net のアカウント ID> cf logpush account-jobs list
    ```
 
-3. 停止していたら、権限 (`gcloud storage buckets get-iam-policy gs://blog-lacolaco-net-search-logs`) を確かめて直し、`terraform -chdir=infra/terraform-credentials apply` でジョブを `enabled = true` に戻す。ジョブを作り直した直後は、数分間のイベントが届かないことがある。
+3. 停止していたら、権限 (`gcloud storage buckets get-iam-policy gs://blog-lacolaco-net-search-logs`) を確かめて直し、`terraform -chdir=infra/terraform-logpush apply -replace=terraform_data.logpush_job` でジョブを作り直す。ジョブを作り直した直後は、数分間のイベントが届かないことがある。
 4. Cloudflare のダッシュボードの「通知」で、Logpush のジョブの失敗 (Logpush Failed Job) の通知を有効にすると、ジョブの停止をメールで受け取れる。通知の設定はこの構成の管理外である。
 
 ## Likes BIダッシュボード

@@ -1,6 +1,6 @@
 # terraform-credentials
 
-検索 API (Cloudflare Workers `blog-search`) の CI が使う認証情報を作り、GitHub Actions に登録するモジュール。検索ログを GCS へ送る Cloudflare の Logpush ジョブも作る。クラウドをまたぐ連携をコードに残し、後から構成を追えるようにする。
+検索 API (Cloudflare Workers `blog-search`) の CI が使う認証情報を作り、GitHub Actions に登録するモジュール。クラウドをまたぐ連携をコードに残し、後から構成を追えるようにする。
 
 `infra/terraform/` (CI が apply、state は GCS) とは独立している。**apply はローカルだけで行う。state は GCS (`gs://blog-lacolaco-net-tfstate` の prefix `terraform-credentials/state`) に置く。** CI では `fmt` と `validate` (`init -backend=false`) だけを実行し、plan と apply は実行しない。
 
@@ -13,8 +13,6 @@
 | `github_actions_secret.cloudflare_api_token` | `lacolaco/blog.lacolaco.net` の secret `CLOUDFLARE_API_TOKEN` |
 | `github_actions_secret.search_admin_token` | 同 secret `SEARCH_ADMIN_TOKEN` |
 | `github_actions_variable.cloudflare_account_id` | 同 variable `CLOUDFLARE_ACCOUNT_ID` (秘密ではない) |
-| `cloudflare_logpush_ownership_challenge.search_logs` | Logpush の送り先 (GCS バケット) の所有権の確認。Cloudflare が確認ファイルをバケットに書く |
-| `cloudflare_logpush_job.search_logs` | Worker `blog-search` の Workers Trace Events を GCS バケット (`infra/terraform` が作る) に送るジョブ。確認ファイルの中身を `google_storage_bucket_object_content` で読んで `ownership_challenge` に渡す。経路の全体は `infra/README.md` の「検索ログの経路」 |
 | `github_actions_variable.image_cdn_base_url` | 同 variable `IMAGE_CDN_BASE_URL` (秘密ではない)。画像 CDN は R2 のカスタムドメインで、バケットとドメインはこの構成の管理外のため、値は入力 `image_cdn_base_url` で与える。既存の variable は `terraform import github_actions_variable.image_cdn_base_url blog.lacolaco.net:IMAGE_CDN_BASE_URL` で取り込む |
 
 ### トークンの権限
@@ -104,16 +102,12 @@ export GITHUB_TOKEN="$(gh auth token)"
 トークンを作るには、トークン作成権限を持つ認証情報が必要になる。`cf auth login` の OAuth トークンにはその権限がなく、`/accounts/<id>/tokens` が 403 を返す。次の一時トークンをダッシュボードで作り、`CLOUDFLARE_API_TOKEN` に渡す。
 
 1. ダッシュボードの「アカウントのAPIトークン」でカスタムトークンを作る。
-2. 権限は Account API Tokens Write (アカウント) と Logs Write (アカウント、Logpush のジョブ作成用) に加え、Zone Read (ゾーン lacolaco.net)、Workers Scripts Write (アカウント)、Workers Routes Write (ゾーン lacolaco.net) を付ける。アカウントトークンは作成者に付与された権限の部分集合しか付与できないため、付与する権限も必要になる。
+2. 権限は Account API Tokens Write (アカウント) に加え、Zone Read (ゾーン lacolaco.net)、Workers Scripts Write (アカウント)、Workers Routes Write (ゾーン lacolaco.net) を付ける。アカウントトークンは作成者に付与された権限の部分集合しか付与できないため、付与する権限も必要になる。
 3. 有効期限は短く (数時間) 設定し、apply 後に削除する。
 
 ```bash
 read -rs CLOUDFLARE_API_TOKEN && export CLOUDFLARE_API_TOKEN
 ```
-
-### GCP
-
-Logpush の所有権の確認ファイルをバケットから読むため、gcloud の ADC を使う (`gcloud auth application-default login`)。バケットは `infra/terraform` (CI が apply) が作るので、そのコードが `main` に反映されて apply されたあとに、このモジュールを apply する。バケットが無いと `terraform plan` が失敗する。
 
 ### 実行
 
@@ -126,15 +120,6 @@ terraform apply
 
 トークンの値は出力しない。`terraform output` にも出していない。
 
-## Logpush ジョブ
-
-- ジョブは account スコープで、ゾーン `lacolaco.net` が属するアカウントに作る (`cloudflare_zone` の `account.id` から引く)。
-- フィルターは `ScriptName = blog-search` だけにする。`Logs` と `Event` は array と object の欄でフィルターに使えないため、検索イベントだけを選ぶ処理は BigQuery のビューが担う。
-- ジョブの作成直後は、作成から数分の間のイベントが届かないことがある (作成の約 10 秒後のリクエストで取りこぼしを確かめた)。
-- 所有権の確認トークンは、ジョブの作成時にだけ使う。`lifecycle.ignore_changes` で、確認ファイルの内容が変わってもジョブを作り直さない。確認ファイルはバケットから消さない (消すと `plan` が読み込みに失敗する)。
-- ジョブを手動で止めた、または Cloudflare が止めたときは、`terraform apply` で `enabled = true` に戻る。
-- 止まったときに気づく手段は `infra/README.md` の「止まったときに気づく手段」にある。
-
 ## state の扱い
 
 - state は GCS の `gs://blog-lacolaco-net-tfstate` の prefix `terraform-credentials/state` に置く。トークンの値が平文で入るため、手元のディスクにもコミットにも置かない。GCS の backend では、Terraform は実行中だけ state をメモリに持つ。
@@ -146,6 +131,5 @@ terraform apply
 
 - `cloudflare_account_token` は `terraform import cloudflare_account_token.search_deploy '<account_id>/<token_id>'` で取り込める。ただし `value` は取り込まれない (公式文書の記述)。そのため取り込んだあと `terraform apply -replace=time_rotating.search_deploy_token` で作り直し、GitHub secret を更新する。
 - 古いトークンは `cf accounts tokens delete <token-id>` で削除する。ダッシュボードでも削除できる。
-- Logpush ジョブは `terraform import cloudflare_logpush_job.search_logs '<account_id>/<job_id>'` で取り込める (job_id は `cf logpush account-jobs list` で分かる)。確認トークンは取り込まれないが、`ignore_changes` で差分にならない。
 - `random_password` は import できない。再生成して `SEARCH_ADMIN_TOKEN` を更新する。
 - GitHub の secret と variable は同名のものが既にあると apply が失敗する場合がある。そのときは `terraform import` で取り込むか、先に削除する。

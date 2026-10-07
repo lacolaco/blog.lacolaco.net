@@ -3,11 +3,6 @@
 #   github:     GITHUB_TOKEN (例: `gh auth token`)
 provider "cloudflare" {}
 
-# 認証は gcloud の ADC。Logpush の所有権確認ファイルを GCS から読むためだけに使う。
-provider "google" {
-  project = "blog-lacolaco-net"
-}
-
 provider "github" {
   owner = "lacolaco"
 }
