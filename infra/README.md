@@ -53,7 +53,7 @@ WHERE log_date BETWEEN '20261001' AND '20261007'
 GROUP BY log_date ORDER BY log_date;
 ```
 
-- `log_date` の条件を他の列の条件と `OR` で結ぶと、絞り込みが効かず全ファイルを読む。`AND` で結ぶ。
+- `log_date` の条件を他の列の条件と `OR` で結ぶと、日付で絞り込まれず全ファイルを読む。`AND` で結ぶ。
 - 読む量は `bq query --maximum_bytes_billed=<上限>` で制限できる。外部表の dry-run は 0 バイトを返すので見積もりに使えない。実行後のジョブの `statistics.query.totalBytesProcessed` (`bq show -j --format=json <ジョブ ID>` の出力) で確かめる。`totalBytesBilled` は 1 問い合わせにつき 10 MiB が下限なので、読む量がそれに届くまでは、日付で絞っても絞らなくても同じ値になり、絞り込みの効果を確かめられない。
 - 絞り込みの効果は、2026-10-08 に一時のバケットと外部表 (同じビューの SQL、1 日あたり約 40MB、11 日と 21 日の蓄積) で `totalBytesProcessed` を測って確かめた。指定なしは 440,021,340 と 840,027,390 バイトと蓄積に比例して増え、`log_date` で 1 日を指定すると蓄積が増えても 40,001,940 バイトのままだった。
 - 外部表の hive パーティション (`mode=CUSTOM`、`source_uri_prefix` に `{log_date:STRING}`) は、`key=value` でない経路 `workers/<日付>/` では使えない。2026-10-08 に実データで試し、`Incompatible partition schemas` で問い合わせが失敗した。代わりに疑似列 `_FILE_NAME` から日付を取り出している。

@@ -5,7 +5,7 @@
 -- 外部表のパーティション (hive、mode=CUSTOM) は、key=value でないこの経路では使えない (実データで確認済み)。
 -- 代わりに疑似列 _FILE_NAME から取り出す。`WHERE log_date = '20261007'` のように log_date を直接比較すると、
 -- BigQuery はビューを通してもその日のファイルだけを読む。log_date の条件を他の列の条件と OR で結ぶと
--- ファイルの絞り込みが効かず、全ファイルを読む。想定外の経路のファイルは NULL になり、問い合わせは失敗しない。
+-- 日付で絞り込まれず、全ファイルを読む。想定外の経路のファイルは NULL になり、問い合わせは失敗しない。
 SELECT
   TIMESTAMP_MILLIS(l.TimestampMs) AS searched_at,
   JSON_VALUE(e, '$.q') AS q,
