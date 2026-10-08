@@ -73,7 +73,7 @@ GROUP BY log_date ORDER BY log_date;
 
 | 列 | 内容 |
 |---|---|
-| `log_date` | `search_events` の `log_date` と同じ。直接比較で絞ると、その日のファイルだけを読む |
+| `log_date` | `search_events` の `log_date` と同じ。直接比較で絞ると、その日のファイルだけを読む見込みである (読む量の測定は `search_events` で行った。このビューでは、存在しない日付で入力の読み込みが 0 行になることまで確かめた) |
 | `outcome` | Workers Trace Events の `Outcome`。`ok` 以外 (`exception`、`exceededCpu`、`exceededMemory`、`canceled` など) が例外の種類 |
 | `reason` | `search_events` との関係。実行ごとに次の順で最初に当てはまる 1 つ |
 | `invocations` | その `(log_date, outcome, reason)` の呼び出しの件数 |

@@ -11,7 +11,7 @@
 -- 検索が欠けたかもしれないのは truncated、exception、unparsable。other は取りこぼしに数えない。
 --
 -- log_date は search_events と同じ (読んだファイルの経路 workers/<YYYYMMDD>/ の UTC の日付)。
--- WHERE log_date = '...' で直接比較するとその日のファイルだけを読む。想定外の経路のファイルは NULL。
+-- WHERE log_date = '...' で直接比較するとその日のファイルだけを読む見込みである (search_events では測定済み)。想定外の経路のファイルは NULL。
 WITH per_run AS (
   SELECT
     REGEXP_EXTRACT(r._FILE_NAME, r'/workers/(\d{8})/') AS log_date,

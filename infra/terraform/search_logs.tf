@@ -117,7 +117,7 @@ resource "google_bigquery_table" "search_log_quality" {
   dataset_id = google_bigquery_dataset.blog_analytics.dataset_id
   table_id   = "search_log_quality"
 
-  description         = "検索ログの呼び出し (Logpush の 1 行 = Worker の 1 回の実行) を、search_events に入ったか、入らなかった理由は何かで分けた件数。取りこぼしの割合を出すために使う。Logpush 自体の欠落は数えられない。log_date で絞ると、その日のファイルだけを読む"
+  description         = "検索ログの呼び出し (Logpush の 1 行 = Worker の 1 回の実行) を、search_events に入ったか、入らなかった理由は何かで分けた件数。取りこぼしの割合を出すために使う。Logpush 自体の欠落は数えられない。log_date で絞ると、その日のファイルだけを読む見込みである"
   deletion_protection = true
 
   schema = jsonencode([
