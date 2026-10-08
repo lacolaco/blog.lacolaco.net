@@ -59,6 +59,8 @@ resource "google_bigquery_dataset_iam_member" "github_actions_blog_analytics_dat
 
 # 外部表の URI に使えるワイルドカードは 1 個だけ。`workers/*.log.gz` は Logpush の出力 (workers/<日付>/*.log.gz) に
 # 一致し、同じ prefix に書かれる所有権確認の .txt ファイルを読まない。
+# hive パーティション (mode=CUSTOM、{log_date:STRING}) は、key=value でない経路 workers/<日付>/ では使えない
+# (実データで Incompatible partition schemas になった)。日付で絞る手段は search_events ビューの log_date (疑似列 _FILE_NAME)。
 # 取り込み間隔は約 1 分だが、外部表は読むたびに GCS を走査するため、表の更新は不要。
 resource "google_bigquery_table" "search_logs_raw" {
   dataset_id = google_bigquery_dataset.blog_analytics.dataset_id
@@ -98,7 +100,7 @@ resource "google_bigquery_table" "search_events" {
   dataset_id = google_bigquery_dataset.blog_analytics.dataset_id
   table_id   = "search_events"
 
-  description         = "検索 API の検索イベント (1 検索 1 行)。hits は API が返した件数 (上限 20) で、総数ではない"
+  description         = "検索 API の検索イベント (1 検索 1 行)。hits は API が返した件数 (上限 20) で、総数ではない。log_date (経路の UTC の日付、YYYYMMDD) で絞ると、その日のファイルだけを読む"
   deletion_protection = true
 
   view {
