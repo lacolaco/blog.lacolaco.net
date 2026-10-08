@@ -1,0 +1,39 @@
+-- search_events が取り除いた呼び出しを数え、検索の取りこぼしの割合を出すためのビュー。
+-- 1 行は (log_date, outcome, reason) ごとの呼び出し (Logpush の 1 行 = Worker の 1 回の実行) の件数。
+-- 検索 API の 1 回の検索は 1 回の実行で、検索イベントは実行ごとに高々 1 件なので、実行を数えれば検索を数えたことになる。
+--
+-- reason は、実行ごとに次の順で最初に当てはまる 1 つ。
+--   kept       検索イベントが取れた (search_events に入った)
+--   truncated  検索イベントの JSON が切り詰めで途中で切れた (Logs が 16,384 文字を超えると Workers Trace Events が切る)
+--   exception  Outcome が ok でない (exception、exceededCpu、exceededMemory、canceled など。種類は outcome 列)
+--   unparsable JSON として解釈できないログがあり、上のどれでもない
+--   other      検索イベントも問題も無い (管理用エンドポイントの呼び出し、ログなしの実行)
+-- 検索が欠けたかもしれないのは truncated、exception、unparsable。other は取りこぼしに数えない。
+--
+-- log_date は search_events と同じ (読んだファイルの経路 workers/<YYYYMMDD>/ の UTC の日付)。
+-- WHERE log_date = '...' で直接比較するとその日のファイルだけを読む。想定外の経路のファイルは NULL。
+WITH per_run AS (
+  SELECT
+    REGEXP_EXTRACT(r._FILE_NAME, r'/workers/(\d{8})/') AS log_date,
+    r.Outcome AS outcome,
+    (SELECT COUNTIF(JSON_VALUE(SAFE.PARSE_JSON(m), '$.event') = 'search')
+       FROM UNNEST(r.Logs) AS l, UNNEST(l.Message) AS m) AS searches,
+    (SELECT COUNTIF(SAFE.PARSE_JSON(m) IS NULL AND STARTS_WITH(m, '{"event":"search"'))
+       FROM UNNEST(r.Logs) AS l, UNNEST(l.Message) AS m) AS truncated_lines,
+    (SELECT COUNTIF(SAFE.PARSE_JSON(m) IS NULL)
+       FROM UNNEST(r.Logs) AS l, UNNEST(l.Message) AS m) AS unparsable_lines
+  FROM ${raw_table} AS r
+)
+SELECT
+  log_date,
+  outcome,
+  CASE
+    WHEN searches > 0 THEN 'kept'
+    WHEN truncated_lines > 0 THEN 'truncated'
+    WHEN outcome IS DISTINCT FROM 'ok' THEN 'exception'
+    WHEN unparsable_lines > 0 THEN 'unparsable'
+    ELSE 'other'
+  END AS reason,
+  COUNT(*) AS invocations
+FROM per_run
+GROUP BY log_date, outcome, reason
