@@ -100,7 +100,7 @@ resource "google_bigquery_table" "search_events" {
   dataset_id = google_bigquery_dataset.blog_analytics.dataset_id
   table_id   = "search_events"
 
-  description         = "検索 API の検索イベント (1 検索 1 行)。hits は API が返した件数 (上限 20) で、総数ではない。log_date (経路の UTC の日付、YYYYMMDD) で絞ると、その日のファイルだけを読む"
+  description         = "検索 API の検索イベント (1 検索 1 行)。hits は API が返した件数 (上限 20) で、総数ではない。search_id は 1 回の検索の識別子で、同じ log_date で同じ search_id の行は 1 行にしてある (識別子を足す前の行は NULL で、そのまま残る)。log_date (経路の UTC の日付、YYYYMMDD) で絞ると、その日のファイルだけを読む"
   deletion_protection = true
 
   view {
