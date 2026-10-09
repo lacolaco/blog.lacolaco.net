@@ -23,6 +23,7 @@ Phase 1 の最小構成: Cloud Scheduler のみ。
 | `google_storage_bucket_iam_member.search_logs_logpush_writer` | `search_logs.tf` |
 | `google_bigquery_dataset.blog_analytics` (ブログが自分で集めるデータの汎用データセット)、`google_bigquery_dataset_iam_member.github_actions_blog_analytics_data_owner` | `search_logs.tf` (初回だけローカルで apply。理由はファイル内のコメントと `infra/README.md`) |
 | `google_bigquery_table.search_logs_raw` (外部表)、`google_bigquery_table.search_events` (ビュー) | `search_logs.tf`、`search_events.sql.tftpl` |
+| `google_bigquery_table.search_log_quality` (除いた呼び出しを数えるビュー) | `search_logs.tf`、`search_log_quality.sql.tftpl` |
 
 検索ログの経路の全体は `infra/README.md` の「検索ログの経路」を参照。
 

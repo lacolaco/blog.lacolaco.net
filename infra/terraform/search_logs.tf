@@ -110,3 +110,27 @@ resource "google_bigquery_table" "search_events" {
     use_legacy_sql = false
   }
 }
+
+# search_events が取り除いた呼び出しの件数。取りこぼしの割合の出し方は infra/README.md の「取りこぼしの割合」を参照。
+# 列の説明は schema に書く (BigQuery のコンソールと INFORMATION_SCHEMA から読める)。
+resource "google_bigquery_table" "search_log_quality" {
+  dataset_id = google_bigquery_dataset.blog_analytics.dataset_id
+  table_id   = "search_log_quality"
+
+  description         = "検索ログの呼び出し (Logpush の 1 行 = Worker の 1 回の実行) を、search_events に入ったか、入らなかった理由は何かで分けた件数。取りこぼしの割合を出すために使う。Logpush 自体の欠落は数えられない。log_date で絞ると、その日のファイルだけを読む"
+  deletion_protection = true
+
+  schema = jsonencode([
+    { name = "log_date", type = "STRING", mode = "NULLABLE", description = "読んだファイルの経路 workers/<YYYYMMDD>/ の日付 (例 '20261007')。Logpush が決める UTC の日付で、JST ではない。想定外の経路のファイルでは NULL" },
+    { name = "outcome", type = "STRING", mode = "NULLABLE", description = "Workers Trace Events の Outcome。正常は ok。ok 以外 (exception、exceededCpu、exceededMemory、canceled など) が例外の種類" },
+    { name = "reason", type = "STRING", mode = "NULLABLE", description = "search_events との関係。kept (検索イベントが取れた)、truncated (検索の JSON が切り詰めで途中で切れた)、exception (outcome が ok でない)、unparsable (JSON として解釈できないログがあり、上のどれでもない)、other (検索イベントも問題も無い。管理用の呼び出しなど)。実行ごとに最初に当てはまる 1 つ。取りこぼしの疑いは truncated、exception、unparsable" },
+    { name = "invocations", type = "INT64", mode = "NULLABLE", description = "その (log_date, outcome, reason) の呼び出しの件数" },
+  ])
+
+  view {
+    query = templatefile("${path.module}/search_log_quality.sql.tftpl", {
+      raw_table = "`${data.google_project.current.project_id}.${google_bigquery_table.search_logs_raw.dataset_id}.${google_bigquery_table.search_logs_raw.table_id}`"
+    })
+    use_legacy_sql = false
+  }
+}
