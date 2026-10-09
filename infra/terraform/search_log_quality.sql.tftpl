@@ -16,22 +16,22 @@ WITH per_run AS (
   SELECT
     REGEXP_EXTRACT(r._FILE_NAME, r'/workers/(\d{8})/') AS log_date,
     r.Outcome AS outcome,
-    (SELECT COUNTIF(JSON_VALUE(SAFE.PARSE_JSON(m), '$.event') = 'search')
-       FROM UNNEST(r.Logs) AS l, UNNEST(l.Message) AS m) AS searches,
-    (SELECT COUNTIF(SAFE.PARSE_JSON(m) IS NULL AND STARTS_WITH(m, '{"event":"search"'))
-       FROM UNNEST(r.Logs) AS l, UNNEST(l.Message) AS m) AS truncated_lines,
-    (SELECT COUNTIF(SAFE.PARSE_JSON(m) IS NULL)
-       FROM UNNEST(r.Logs) AS l, UNNEST(l.Message) AS m) AS unparsable_lines
+    -- Logs の行を 1 回だけ展開し、3 つの件数を同時に数える (行ごとに SAFE.PARSE_JSON を 1 回だけ評価する)
+    (SELECT AS STRUCT
+       COUNTIF(JSON_VALUE(parsed, '$.event') = 'search') AS searches,
+       COUNTIF(parsed IS NULL AND STARTS_WITH(m, '{"event":"search"')) AS truncated_lines,
+       COUNTIF(parsed IS NULL) AS unparsable_lines
+       FROM UNNEST(r.Logs) AS l, UNNEST(l.Message) AS m, UNNEST([SAFE.PARSE_JSON(m)]) AS parsed) AS counts
   FROM ${raw_table} AS r
 )
 SELECT
   log_date,
   outcome,
   CASE
-    WHEN searches > 0 THEN 'kept'
-    WHEN truncated_lines > 0 THEN 'truncated'
+    WHEN counts.searches > 0 THEN 'kept'
+    WHEN counts.truncated_lines > 0 THEN 'truncated'
     WHEN outcome IS DISTINCT FROM 'ok' THEN 'exception'
-    WHEN unparsable_lines > 0 THEN 'unparsable'
+    WHEN counts.unparsable_lines > 0 THEN 'unparsable'
     ELSE 'other'
   END AS reason,
   COUNT(*) AS invocations
