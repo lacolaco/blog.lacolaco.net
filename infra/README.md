@@ -33,6 +33,30 @@ Worker blog-search (console.log の JSON 1 行、wrangler.jsonc の logpush: tru
 | `locale` | `ja` または `en` |
 | `hits` | API が返した件数。上限 20 で、総数ではない |
 | `ms` | Worker 内の所要時間 (ミリ秒) |
+| `log_date` | 読んだファイルの経路 `workers/<YYYYMMDD>/` の日付 (STRING、例 `'20261007'`)。Logpush が決める UTC の日付で、JST ではない。`searched_at` の日付とは、JST の 0 時から 9 時の検索で一致しない。想定外の経路のファイルでは NULL |
+
+### 日付で絞って読む
+
+外部表は問い合わせのたびに GCS のファイルを読み、保持期間も設けないため、日付を指定しない問い合わせは蓄積した全ファイルを読む。読む量は蓄積とともに増える。`log_date` を指定すると、その日付のファイルだけを読む。蓄積が増えても、同じ日付の問い合わせの読む量は変わらない。
+
+```sql
+-- 1 日
+SELECT q, COUNT(*) AS searches
+FROM `blog-lacolaco-net.blog_analytics.search_events`
+WHERE log_date = '20261007'
+GROUP BY q ORDER BY searches DESC;
+
+-- 期間 (両端を含む)。YYYYMMDD の文字列は日付順に並ぶので BETWEEN で比べられる
+SELECT log_date, COUNT(*) AS searches
+FROM `blog-lacolaco-net.blog_analytics.search_events`
+WHERE log_date BETWEEN '20261001' AND '20261007'
+GROUP BY log_date ORDER BY log_date;
+```
+
+- `log_date` の条件を他の列の条件と `OR` で結ぶと、日付で絞り込まれず全ファイルを読む。`AND` で結ぶ。
+- 読む量は `bq query --maximum_bytes_billed=<上限>` で制限できる。外部表の dry-run は 0 バイトを返すので見積もりに使えない。実行後のジョブの `statistics.query.totalBytesProcessed` (`bq show -j --format=json <ジョブ ID>` の出力) で確かめる。`totalBytesBilled` は 1 問い合わせにつき 10 MiB が下限なので、読む量がそれに届くまでは、日付で絞っても絞らなくても同じ値になり、絞り込みの効果を確かめられない。
+- 絞り込みの効果は、2026-10-08 に一時のバケットと外部表 (同じビューの SQL、1 日あたり約 40MB、11 日と 21 日の蓄積) で `totalBytesProcessed` を測って確かめた。指定なしは 440,021,340 と 840,027,390 バイトと蓄積に比例して増え、`log_date` で 1 日を指定すると蓄積が増えても 40,001,940 バイトのままだった。
+- 外部表の hive パーティション (`mode=CUSTOM`、`source_uri_prefix` に `{log_date:STRING}`) は、`key=value` でない経路 `workers/<日付>/` では使えない。2026-10-08 に実データで試し、`Incompatible partition schemas` で問い合わせが失敗した。代わりに疑似列 `_FILE_NAME` から日付を取り出している。
 
 - Logpush のフィルターは `Logs` (array) を条件に使えないため、生データ (`search_logs_raw`) には管理用エンドポイントの呼び出しや平文のログも入る。検索のイベントだけを選ぶのは `search_events` の SQL (`infra/terraform/search_events.sql.tftpl`) である。分析には `search_events` を使う。
 - SQL の仕様は `infra/terraform/tests/search_events.test.sh` が固定の入力行で確かめる。BigQuery の認証が要るため CI では実行しない。SQL を変えたらローカルで実行する。

@@ -1,11 +1,18 @@
 -- Logs[].Message[] は console.log の引数ごとの文字列。検索のログは JSON 文字列として入る。
 -- JSON として解釈できない要素 (平文のログ) は SAFE.PARSE_JSON が NULL にして取り除く。
+--
+-- log_date は読んだファイルの経路 workers/<YYYYMMDD>/ の日付 (Logpush が決める UTC の日付。JST ではない)。
+-- 外部表のパーティション (hive、mode=CUSTOM) は、key=value でないこの経路では使えない (実データで確認済み)。
+-- 代わりに疑似列 _FILE_NAME から取り出す。`WHERE log_date = '20261007'` のように log_date を直接比較すると、
+-- BigQuery はビューを通してもその日のファイルだけを読む。log_date の条件を他の列の条件と OR で結ぶと
+-- 日付で絞り込まれず、全ファイルを読む。想定外の経路のファイルは NULL になり、問い合わせは失敗しない。
 SELECT
   TIMESTAMP_MILLIS(l.TimestampMs) AS searched_at,
   JSON_VALUE(e, '$.q') AS q,
   JSON_VALUE(e, '$.locale') AS locale,
   SAFE_CAST(JSON_VALUE(e, '$.hits') AS INT64) AS hits,
-  SAFE_CAST(JSON_VALUE(e, '$.ms') AS INT64) AS ms
+  SAFE_CAST(JSON_VALUE(e, '$.ms') AS INT64) AS ms,
+  REGEXP_EXTRACT(r._FILE_NAME, r'/workers/(\d{8})/') AS log_date
 FROM ${raw_table} AS r,
   UNNEST(r.Logs) AS l,
   UNNEST(l.Message) AS m,
