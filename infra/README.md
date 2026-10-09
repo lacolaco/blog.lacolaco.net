@@ -27,15 +27,25 @@ Worker blog-search (console.log の JSON 1 行、wrangler.jsonc の logpush: tru
 
 ### ビューの列
 
+`search_events` の列の説明は、BigQuery の列の説明 (`bq show --schema --format=prettyjson blog-lacolaco-net:blog_analytics.search_events`) にも同じ内容を入れてある。表を直したら `infra/terraform/search_logs.tf` の schema も直す (列の名前と順は `tools/search-worker/view-docs.spec.ts` が確かめる)。
+
 | 列 | 内容 |
 |---|---|
-| `searched_at` | 検索の時刻 (TIMESTAMP) |
-| `q` | 検索語 |
-| `locale` | `ja` または `en` |
-| `hits` | API が返した件数。上限 20 で、総数ではない |
-| `ms` | Worker 内の所要時間 (ミリ秒) |
-| `search_id` | 1 回の検索の識別子 (STRING、UUID v4)。Worker が検索ごとに乱数で作る。検索語や読者から導かないので、これ自体からは何も分からない。識別子を足す前に書かれた行は NULL |
+| `searched_at` | 検索の時刻 (TIMESTAMP、UTC)。元は Worker が検索ごとに出したログの出力時刻。日ごとの集計を JST で行うときは `DATE(searched_at, 'Asia/Tokyo')` を使う |
+| `q` | 検索語。大文字小文字と前後の空白は入力のまま (`Angular` と `angular` は別の語)。`q` を省略した検索は空文字列になる |
+| `locale` | `ja` または `en`。API はそれ以外を 400 で拒否し、ログも出さないので、この 2 値以外は入らない |
+| `hits` | API が返した件数。上限 20 で、総数ではない。20 は 20 件以上を意味する |
+| `ms` | Worker がリクエストを受けてから検索結果を得るまでの処理時間 (ミリ秒)。読者が待った時間ではなく、ネットワークの時間を含まない。Workers の時刻は I/O の後にしか進まず、粗い値になりうる |
+| `search_id` | 1 回の検索 (API へのリクエスト 1 回) の識別子 (STRING、UUID v4)。Worker が検索ごとに乱数で作る。検索語や読者から導かないので、これ自体からは何も分からない。識別子を足す前に書かれた行は NULL |
 | `log_date` | 読んだファイルの経路 `workers/<YYYYMMDD>/` の日付 (STRING、例 `'20261007'`)。Logpush が決める UTC の日付で、JST ではない。`searched_at` の日付とは、JST の 0 時から 9 時の検索で一致しない。想定外の経路のファイルでは NULL |
+
+行の数え方と欠け方:
+
+- 1 行は API へのリクエスト 1 回である。UI は入力が 200ms 止まるたびに検索を送るので、読者の 1 回の検索操作は、入力途中の語を含む複数の行になる。行数は検索操作の数ではなくリクエストの数である。
+- 行は欠けうる。ログが切り詰められた検索と、例外で終わった検索は、`search_events` に入らない。欠けた割合は `search_log_quality` で測る (下の「取りこぼしの割合」)。
+- 重複 (Logpush が同じ行を重ねて送ること) は、下の「重複を除いた検索の件数」のとおり `search_id` で除いてある。
+
+元のデータの事実 (列の意味、入力途中の語、行が欠けうること) はここに書く。lacolaco-dwh の側には加工後の意味だけを書き、ここを参照する。
 
 ### 重複を除いた検索の件数
 
@@ -82,6 +92,46 @@ GROUP BY log_date ORDER BY log_date;
 - プレビューの Worker は `previews.logpush: false` で Logpush を止めている。wrangler のプレビューはトップレベルの `logpush` を継承し、止めないとプレビューの検索イベントが `ScriptName = blog-search` で送られて本番の検索語に混ざる。
 - 検索語のマスクと保持期間の制限は設けない (個人情報を含む語が検索される見込みが無いというプロダクトオーナーの判断、2026-10-06)。バケットに削除のルールは無く、生データは残り続ける。個人情報が含まれると分かったら、`search_logs.tf` のバケットに `lifecycle_rule` を足す。
 - 外部表を読むには、問い合わせる主体がバケットの読み取り権限 (`storage.objects.get`) も要る。`lacolaco-dwh` など別プロジェクトからビュー経由で読むときは、読む側にこの権限を与える (承認済みビューはデータセットの権限だけを移す)。
+
+### 集計の例
+
+すべて `log_date` で読むファイルを絞ってある。日付の指定を外すと、蓄積した全ファイルを読む (上の「日付で絞って読む」)。`log_date` は UTC の経路の日付なので、JST の日で集計するときは、その日にかかる UTC の日の前後 1 日を `log_date` の範囲に入れ (JST の日は UTC の前日の 15 時から始まり、Logpush が書く日付は `searched_at` の日付とずれうる)、`DATE(searched_at, 'Asia/Tokyo')` で改めて絞る。日付と実行方法は例のものを置き換える。
+
+```bash
+bq query --nouse_legacy_sql --maximum_bytes_billed=1000000000 '<下の SQL>'
+```
+
+```sql
+-- 日 (JST) と locale ごとの検索回数 (2026-10-01 から 2026-10-07 の JST)。回数は API へのリクエストの数で、入力途中の語を含む
+SELECT DATE(searched_at, 'Asia/Tokyo') AS day_jst, locale, COUNT(*) AS requests
+FROM `blog-lacolaco-net.blog_analytics.search_events`
+WHERE log_date BETWEEN '20260930' AND '20261008'
+  AND DATE(searched_at, 'Asia/Tokyo') BETWEEN '2026-10-01' AND '2026-10-07'
+GROUP BY day_jst, locale ORDER BY day_jst, locale;
+
+-- 語ごとの検索回数 (大文字小文字と前後の空白をそろえる。空の語は除く)
+SELECT LOWER(TRIM(q)) AS term, COUNT(*) AS requests
+FROM `blog-lacolaco-net.blog_analytics.search_events`
+WHERE log_date BETWEEN '20261001' AND '20261007' AND TRIM(q) != ''
+GROUP BY term ORDER BY requests DESC LIMIT 50;
+
+-- ヒット 0 件の割合
+SELECT COUNTIF(hits = 0) AS zero_hits, COUNT(*) AS requests, SAFE_DIVIDE(COUNTIF(hits = 0), COUNT(*)) AS zero_hits_share
+FROM `blog-lacolaco-net.blog_analytics.search_events`
+WHERE log_date BETWEEN '20261001' AND '20261007';
+```
+
+- 語ごとの回数は、入力途中の語も別々に数える。「Angular」を打つ途中の「Ang」も 1 行になる。
+- `hits` は上限 20 なので、`hits = 0` は数えられるが、`hits` の合計や平均は総数にならない。
+- 行が欠けうるので、回数は取りこぼした分だけ少ない。割合は `search_log_quality` で測る。
+
+読む側に要る権限は、次の 3 つである。
+
+| 権限 | 付ける対象 | 理由 |
+|---|---|---|
+| `bigquery.jobs.create` (BigQuery ジョブユーザー) | 問い合わせを実行するプロジェクト | 問い合わせの実行 |
+| `bigquery.tables.getData` (BigQuery データ閲覧者) | データセット `blog_analytics` | ビューの読み取り |
+| `storage.objects.get` (Storage オブジェクト閲覧者) | バケット `blog-lacolaco-net-search-logs` | 外部表の元のファイルの読み取り |
 
 ### 取りこぼしの割合
 
