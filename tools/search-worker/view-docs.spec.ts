@@ -21,7 +21,7 @@ function schemaColumns(): { name: string; description: string }[] {
   const tf = read('infra/terraform/search_logs.tf');
   const block = tf.match(/resource "google_bigquery_table" "search_events" \{[\s\S]*?\n\}\n/);
   assert.ok(block, 'search_events のリソースが見つからない');
-  const schema = block[0].match(/schema = jsonencode\(\[([\s\S]*?)\n  \]\)/);
+  const schema = block[0].match(/schema = jsonencode\(\[([\s\S]*?)\n {2}\]\)/);
   assert.ok(schema, 'search_events に schema (列の説明) が無い');
   return [...schema[1].matchAll(/name = "(\w+)"[^\n]*?description = "((?:[^"\\]|\\.)*)"/g)].map((m) => ({
     name: m[1],
