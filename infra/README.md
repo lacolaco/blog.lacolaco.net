@@ -16,6 +16,7 @@ Worker blog-search (console.log の JSON 1 行、wrangler.jsonc の logpush: tru
     → GCS gs://blog-lacolaco-net-search-logs/workers/<日付>/*.log.gz (NDJSON、gzip)
       → BigQuery 外部表 blog_analytics.search_logs_raw
         → ビュー blog_analytics.search_events (検索イベントだけ。1 検索 1 行)
+        → ビュー blog_analytics.search_log_quality (search_events に入らなかった呼び出しの件数。取りこぼしの割合用)
 ```
 
 | 資源 | 管理 |
@@ -61,10 +62,56 @@ GROUP BY log_date ORDER BY log_date;
 - Logpush のフィルターは `Logs` (array) を条件に使えないため、生データ (`search_logs_raw`) には管理用エンドポイントの呼び出しや平文のログも入る。検索のイベントだけを選ぶのは `search_events` の SQL (`infra/terraform/search_events.sql.tftpl`) である。分析には `search_events` を使う。
 - SQL の仕様は `infra/terraform/tests/search_events.test.sh` が固定の入力行で確かめる。BigQuery の認証が要るため CI では実行しない。SQL を変えたらローカルで実行する。
 - データセット `blog_analytics` は、ブログが自分で集めるデータ (検索ログ、今後のクリックの記録など) をまとめて置く汎用の置き場である。いいねの集計は既存の `likes_analytics` に残り、移行は別項目で扱う。CI のサービスアカウント (`github-actions`) はデータセットを作る権限 (`bigquery.datasets.create`) を持たず、その権限をプロジェクト全体へ広げないため、データセットとその IAM は初回だけ権限のある利用者が `infra/terraform` をローカルで apply して作った。作成後は CI の apply に差分が出ない。データセットを作り直すときも同じ手順で行う。
-- Workers Trace Events の `Logs` と `Exceptions` は合わせて 16,384 文字を超えると切り詰められる。切り詰められた JSON は解釈できず、ビューから落ちる。検索 1 回のログは短いため通常は起きないが、1 回の呼び出しに大量のログが出ると、その検索が欠けうる。
+- Workers Trace Events の `Logs` と `Exceptions` は合わせて 16,384 文字を超えると切り詰められる。切り詰められた JSON は解釈できず、`search_events` から除かれる。除かれた数は `search_log_quality` で数える (下の「取りこぼしの割合」)。検索 1 回のログは短いため通常は起きないが、1 回の呼び出しに大量のログが出ると、その検索が欠けうる。
 - プレビューの Worker は `previews.logpush: false` で Logpush を止めている。wrangler のプレビューはトップレベルの `logpush` を継承し、止めないとプレビューの検索イベントが `ScriptName = blog-search` で送られて本番の検索語に混ざる。
 - 検索語のマスクと保持期間の制限は設けない (個人情報を含む語が検索される見込みが無いというプロダクトオーナーの判断、2026-10-06)。バケットに削除のルールは無く、生データは残り続ける。個人情報が含まれると分かったら、`search_logs.tf` のバケットに `lifecycle_rule` を足す。
 - 外部表を読むには、問い合わせる主体がバケットの読み取り権限 (`storage.objects.get`) も要る。`lacolaco-dwh` など別プロジェクトからビュー経由で読むときは、読む側にこの権限を与える (承認済みビューはデータセットの権限だけを移す)。
+
+### 取りこぼしの割合
+
+`search_events` は、検索の JSON が切り詰めで壊れた呼び出し、例外で終わった呼び出し、解釈できないログだけの呼び出しを黙って除く。除いた数は `search_log_quality` で数える。1 行は `(log_date, outcome, reason)` ごとの呼び出し (Logpush の 1 行 = Worker の 1 回の実行) の件数である。検索 API の 1 回の検索は 1 回の実行で、検索イベントは実行ごとに高々 1 件なので、実行を数えれば検索を数えたことになる。
+
+| 列 | 内容 |
+|---|---|
+| `log_date` | `search_events` の `log_date` と同じ。直接比較で絞ると、その日のファイルだけを読む。本番の外部表で `totalBytesProcessed` を測ると、データの無い 20261006 は 0 バイト、ある 20261007 は 1,335 バイトだった (本番は 1 日分しかないので、絞らない場合との差は比べられない) |
+| `outcome` | Workers Trace Events の `Outcome`。`ok` 以外 (`exception`、`exceededCpu`、`exceededMemory`、`canceled` など) が例外の種類 |
+| `reason` | `search_events` との関係。実行ごとに次の順で最初に当てはまる 1 つ |
+| `invocations` | その `(log_date, outcome, reason)` の呼び出しの件数 |
+
+| `reason` | 意味 | 取りこぼしに数える |
+|---|---|---|
+| `kept` | 検索イベントが取れた (`search_events` に入った) | 数えない (分母に入る) |
+| `truncated` | 検索の JSON が切り詰めで途中で切れた (`{"event":"search"` で始まり、JSON として解釈できない) | 数える |
+| `exception` | `outcome` が `ok` でない (`truncated` を除く) | 数える |
+| `unparsable` | JSON として解釈できないログがあり、上のどれでもない | 数える |
+| `other` | 検索イベントも問題も無い (管理用エンドポイントの呼び出し、ログなしの実行) | 数えない (分母にも入らない) |
+
+取りこぼしの割合は、取りこぼしに数える呼び出しを、`kept` と取りこぼしに数える呼び出しの合計で割った値である。
+
+```sql
+-- 期間 (両端を含む) の取りこぼしの件数と割合
+SELECT
+  SUM(IF(reason IN ('truncated', 'exception', 'unparsable'), invocations, 0)) AS dropped,
+  SUM(IF(reason != 'other', invocations, 0)) AS total,
+  SAFE_DIVIDE(
+    SUM(IF(reason IN ('truncated', 'exception', 'unparsable'), invocations, 0)),
+    SUM(IF(reason != 'other', invocations, 0))) AS dropped_share
+FROM `blog-lacolaco-net.blog_analytics.search_log_quality`
+WHERE log_date BETWEEN '20261001' AND '20261007';
+
+-- 除いた理由と例外の種類の内訳
+SELECT reason, outcome, SUM(invocations) AS invocations
+FROM `blog-lacolaco-net.blog_analytics.search_log_quality`
+WHERE log_date BETWEEN '20261001' AND '20261007' AND reason NOT IN ('kept', 'other')
+GROUP BY reason, outcome ORDER BY invocations DESC;
+```
+
+数え方の限界:
+
+- Logpush 自体の欠落 (ジョブの失敗の間のログ、バケットに届かなかったログ) は、このビューの外で起き、ここでは数えられない。割合は、バケットに届いたログの中での取りこぼしである。
+- `exception` と `unparsable` は、検索の呼び出しだけに限れない。管理用エンドポイントの呼び出しが例外で終わった場合も数えるので、割合は検索の取りこぼしの上限側の見積もりになる。
+- ログが 1 件も無い呼び出し (`other`) は、検索のログが失われたものか、検索ではない呼び出しか区別できないため、取りこぼしに数えない。
+- 重複 (同じ検索が複数の行になること) はこのビューでは扱わない。
 
 ### 権限
 
