@@ -2,6 +2,7 @@
 // SQL と順位付けは search.ts にあり、品質テストと同じコードを実行する。
 import { DurableObject } from 'cloudflare:workers';
 import { corsHeaders, isBearerAuthorized, parseIndexDocs } from '../http.ts';
+import { searchLogLine } from '../log.ts';
 import {
   ensureSchema,
   replaceAll,
@@ -94,7 +95,7 @@ async function handle(req: Request, env: Env): Promise<Response> {
 
   const hits = await stub.search(q, locale);
   // 検索語の収集用の構造化ログ (1 行の JSON)
-  console.log(JSON.stringify({ event: 'search', q, locale, hits: hits.length, ms: Date.now() - t0 }));
+  console.log(searchLogLine({ q, locale, hits: hits.length, ms: Date.now() - t0 }));
   return json(hits, { headers: cors });
 }
 

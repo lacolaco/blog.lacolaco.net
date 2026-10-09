@@ -1,7 +1,11 @@
-2026-10-06T15:04:59.573Z	angular signals	en	3	12	20261006
-2026-10-06T15:05:01Z	検索 語	ja	0	4	20261006
-2026-10-06T15:05:03Z		ja	0	1	20261007
-2026-10-06T15:05:04Z	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa	en	20	7	
-2026-10-06T15:05:10Z	outcome が ok でなくても取れた	ja	1	9	20261007
-2026-10-06T15:05:12Z	取れた検索と切れた検索が同居	ja	2	5	20261006
-2026-10-06T15:05:14Z		en			20261006
+2026-10-06T15:04:59.573Z	angular signals	en	3	12		20261006
+2026-10-06T15:05:01Z	検索 語	ja	0	4		20261006
+2026-10-06T15:05:03Z		ja	0	1		20261007
+2026-10-06T15:05:04Z	aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa	en	20	7		
+2026-10-06T15:05:10Z	outcome が ok でなくても取れた	ja	1	9		20261007
+2026-10-06T15:05:12Z	取れた検索と切れた検索が同居	ja	2	5		20261006
+2026-10-06T15:05:14Z		en				20261006
+2026-10-06T15:05:16Z	重複する検索	ja	2	5	aaaaaaaa-0000-4000-8000-000000000001	20261007
+2026-10-06T15:05:17Z	識別子つきの 1 件	ja	2	5	aaaaaaaa-0000-4000-8000-000000000002	20261007
+2026-10-06T15:05:18Z	日をまたぐ重複	ja	2	5	aaaaaaaa-0000-4000-8000-000000000003	20261006
+2026-10-06T15:05:18Z	日をまたぐ重複	ja	2	5	aaaaaaaa-0000-4000-8000-000000000003	20261007
