@@ -6,15 +6,34 @@
 -- 代わりに疑似列 _FILE_NAME から取り出す。`WHERE log_date = '20261007'` のように log_date を直接比較すると、
 -- BigQuery はビューを通してもその日のファイルだけを読む。log_date の条件を他の列の条件と OR で結ぶと
 -- 日付で絞り込まれず、全ファイルを読む。想定外の経路のファイルは NULL になり、問い合わせは失敗しない。
-SELECT
-  TIMESTAMP_MILLIS(l.TimestampMs) AS searched_at,
-  JSON_VALUE(e, '$.q') AS q,
-  JSON_VALUE(e, '$.locale') AS locale,
-  SAFE_CAST(JSON_VALUE(e, '$.hits') AS INT64) AS hits,
-  SAFE_CAST(JSON_VALUE(e, '$.ms') AS INT64) AS ms,
-  REGEXP_EXTRACT(r._FILE_NAME, r'/workers/(\d{8})/') AS log_date
-FROM ${raw_table} AS r,
-  UNNEST(r.Logs) AS l,
-  UNNEST(l.Message) AS m,
-  UNNEST([SAFE.PARSE_JSON(m)]) AS e
-WHERE JSON_VALUE(e, '$.event') = 'search'
+--
+-- search_id は Worker が 1 回の検索ごとに付ける乱数の識別子 (UUID。検索語や読者から導かない)。Logpush が同じ行を重ねて送っても、
+-- 同じ log_date で search_id が同じ行は 1 行にする (検索の時刻、次にファイルの経路の早いほうを残す)。search_id を持たない過去の行
+-- (識別子を足す前に書かれた行) は、重複を除けないのでそのまま残す。
+-- 重複を除く範囲を log_date ごとにしているのは、log_date の条件で読むファイルが限られるようにするため。
+-- 範囲を search_id だけにすると、log_date の条件がウィンドウの後ろに回り、全ファイルを読む。
+-- また、log_date は内側の副問い合わせで列にしてから PARTITION BY に使う。式を PARTITION BY に直接書くと日付で絞り込まれない (どちらも実データで確認済み)。
+-- 同じ search_id が別の log_date のファイルに重なった場合は、日ごとに 1 行ずつ残る。
+SELECT searched_at, q, locale, hits, ms, search_id, log_date
+FROM (
+  SELECT
+    searched_at, q, locale, hits, ms, search_id, log_date,
+    ROW_NUMBER() OVER (PARTITION BY log_date, search_id ORDER BY searched_at, file_name) AS rn
+  FROM (
+    SELECT
+      TIMESTAMP_MILLIS(l.TimestampMs) AS searched_at,
+      JSON_VALUE(e, '$.q') AS q,
+      JSON_VALUE(e, '$.locale') AS locale,
+      SAFE_CAST(JSON_VALUE(e, '$.hits') AS INT64) AS hits,
+      SAFE_CAST(JSON_VALUE(e, '$.ms') AS INT64) AS ms,
+      JSON_VALUE(e, '$.id') AS search_id,
+      REGEXP_EXTRACT(r._FILE_NAME, r'/workers/(\d{8})/') AS log_date,
+      r._FILE_NAME AS file_name
+    FROM ${raw_table} AS r,
+      UNNEST(r.Logs) AS l,
+      UNNEST(l.Message) AS m,
+      UNNEST([SAFE.PARSE_JSON(m)]) AS e
+    WHERE JSON_VALUE(e, '$.event') = 'search'
+  )
+)
+WHERE search_id IS NULL OR rn = 1

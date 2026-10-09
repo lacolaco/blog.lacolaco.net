@@ -34,7 +34,23 @@ Worker blog-search (console.log の JSON 1 行、wrangler.jsonc の logpush: tru
 | `locale` | `ja` または `en` |
 | `hits` | API が返した件数。上限 20 で、総数ではない |
 | `ms` | Worker 内の所要時間 (ミリ秒) |
+| `search_id` | 1 回の検索の識別子 (STRING、UUID v4)。Worker が検索ごとに乱数で作る。検索語や読者から導かないので、これ自体からは何も分からない。識別子を足す前に書かれた行は NULL |
 | `log_date` | 読んだファイルの経路 `workers/<YYYYMMDD>/` の日付 (STRING、例 `'20261007'`)。Logpush が決める UTC の日付で、JST ではない。`searched_at` の日付とは、JST の 0 時から 9 時の検索で一致しない。想定外の経路のファイルでは NULL |
+
+### 重複を除いた検索の件数
+
+Logpush が同じイベントを重ねて送ると、生データには同じ検索の行が複数できる。`search_events` は、同じ `log_date` で `search_id` が同じ行を 1 行にして返す。`COUNT(*)` がそのまま重複を除いた検索の件数になる。
+
+- `search_id` が NULL の行 (識別子を足す前の行) は重複を除けないので、すべて残る。重複があっても数え過ぎになるだけで、行は失われない。
+- 重複を除く範囲は `log_date` ごとである。同じ `search_id` が別の `log_date` のファイルに重なると、日ごとに 1 行ずつ残る。範囲を `search_id` だけにすると、`log_date` の条件で読むファイルが限られず、全ファイルを読むため (実データで確認した)。日をまたぐ重複がどれだけ起きるかは確かめていない (現在のバケットには 1 日分のデータしかない)。
+- `search_log_quality` の `invocations` は呼び出し (Logpush の 1 行) の数で、重複を除かない。`search_events` の件数とは一致しない。重複が結果の種類 (`kept`、`truncated`、`exception` など) によらず一様に起きるなら割合は変わらないが、一様かは確かめていない。重複が `kept` に偏れば割合は実際より小さく、取りこぼしの側に偏れば大きく出る。
+
+```sql
+-- 1 日の、重複を除いた検索の件数
+SELECT COUNT(*) AS searches
+FROM `blog-lacolaco-net.blog_analytics.search_events`
+WHERE log_date = '20261007';
+```
 
 ### 日付で絞って読む
 
@@ -69,7 +85,7 @@ GROUP BY log_date ORDER BY log_date;
 
 ### 取りこぼしの割合
 
-`search_events` は、検索の JSON が切り詰めで壊れた呼び出し、例外で終わった呼び出し、解釈できないログだけの呼び出しを黙って除く。除いた数は `search_log_quality` で数える。1 行は `(log_date, outcome, reason)` ごとの呼び出し (Logpush の 1 行 = Worker の 1 回の実行) の件数である。検索 API の 1 回の検索は 1 回の実行で、検索イベントは実行ごとに高々 1 件なので、実行を数えれば検索を数えたことになる。
+`search_events` は、検索の JSON が切り詰めで壊れた呼び出し、例外で終わった呼び出し、解釈できないログだけの呼び出しを黙って除く。除いた数は `search_log_quality` で数える。1 行は `(log_date, outcome, reason)` ごとの呼び出し (Logpush の 1 行 = Worker の 1 回の実行) の件数である。検索 API の 1 回の検索は 1 回の実行で、検索イベントは実行ごとに高々 1 件なので、実行の数は検索の数に対応する。ただし Logpush が同じ行を重ねて送った分は、重複したまま数える。
 
 | 列 | 内容 |
 |---|---|

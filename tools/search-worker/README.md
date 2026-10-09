@@ -7,6 +7,7 @@
 | パス                     | 内容                                                                                                             |
 | ------------------------ | ---------------------------------------------------------------------------------------------------------------- |
 | `search.ts`              | 索引の入れ替えと検索の SQL。Cloudflare にも Node にも依存しない純粋な関数。Worker と品質テストが同じコードを使う |
+| `log.ts`                 | 検索イベントのログ行を作る。`id` は検索ごとの乱数で、BigQuery のビューが重複を除く鍵に使う                       |
 | `http.ts`                | CORS、管理用トークンの照合、入力の検証                                                                           |
 | `plain.ts`               | markdown を検索用の平文にする。ビルド (`src/pages/search-docs.json.ts`) と品質テストが同じ関数を使う             |
 | `worker/index.ts`        | Worker の入口と Durable Object。`worker/tsconfig.json` は Workers の型で検査する                                 |
@@ -42,7 +43,7 @@ GET /api/search?q=<語>&locale=ja|en
   - 3 文字未満の語は FTS5 を使わず LIKE で絞るので、LIKE と同じ判定 (ASCII の大文字小文字を区別しない部分一致) の出現位置を範囲にする。3 文字以上と 3 文字未満の語が混在するクエリでは両方の範囲が入る。
   - 抜粋の長さと省略記号は `snippet()` に従う。トークン数は [公式文書](https://sqlite.org/fts5.html#the_snippet_function) が許す上限の 64 にしている。trigram では 1 トークンが 3 文字で 1 文字ずつずれるため約 66 文字になり、以前の 48 (約 50 文字) より長い。`…` は抜粋が本文の途中から始まる、または途中で終わるときだけ付く。自前で文の境目を探して切ることはしない。3 文字未満の語だけのクエリは `snippet()` が使えないので、`instr()` と `substr()` で同じ長さ (66 文字) を一致位置の 20 文字前から切り出し、`…` の付け方を揃える。
 
-- 検索語は構造化ログ (`console.log` の JSON 1 行: `event`、`q`、`locale`、`hits`、`ms`) に出る。Workers Logs で検索できる。本番の Worker は `logpush: true` で Logpush にも送り、BigQuery の `blog_analytics.search_events` で分析できる (経路と運用は `infra/README.md`)。
+- 検索語は構造化ログ (`console.log` の JSON 1 行: `event`、`id`、`q`、`locale`、`hits`、`ms`。`id` は検索ごとの乱数の UUID で、`log.ts` が作る) に出る。Workers Logs で検索できる。本番の Worker は `logpush: true` で Logpush にも送り、BigQuery の `blog_analytics.search_events` で分析できる (経路と運用は `infra/README.md`)。
 
 ## 索引の更新
 
