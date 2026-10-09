@@ -111,8 +111,8 @@ resource "google_bigquery_table" "search_events" {
     { name = "searched_at", type = "TIMESTAMP", mode = "NULLABLE", description = "検索の時刻 (UTC)。元は Worker が検索ごとに出したログの出力時刻 (Workers Trace Events の Logs[].TimestampMs)。日ごとの集計を JST で行うときは DATE(searched_at, 'Asia/Tokyo') を使う。読むファイルを絞る日付は searched_at ではなく log_date" },
     { name = "q", type = "STRING", mode = "NULLABLE", description = "検索語。大文字小文字と前後の空白は入力のまま (Angular と angular は別の語)。q を省略した検索は空文字列になる。1 回の検索操作で、入力途中の語も別の行になる (UI は入力が 200ms 止まるたびに検索を送る)。そのため行数は、検索操作の数ではなく API へのリクエストの数" },
     { name = "locale", type = "STRING", mode = "NULLABLE", description = "検索の言語。ja または en。API はそれ以外を 400 で拒否し、ログも出さないので、この 2 値以外は入らない" },
-    { name = "hits", type = "INTEGER", mode = "NULLABLE", description = "API が返した件数。上限は 20 で、総数ではない。20 は 20 件以上を意味する" },
-    { name = "ms", type = "INTEGER", mode = "NULLABLE", description = "Worker がリクエストを受けてから検索結果を得るまでの処理時間 (ミリ秒)。読者が待った時間ではなく、ネットワークの時間を含まない。Workers の時刻は I/O の後にしか進まず、粗い値になりうる" },
+    { name = "hits", type = "INT64", mode = "NULLABLE", description = "API が返した件数。上限は 20 で、総数ではない。20 は 20 件以上を意味する" },
+    { name = "ms", type = "INT64", mode = "NULLABLE", description = "Worker がリクエストを受けてから検索結果を得るまでの処理時間 (ミリ秒)。読者が待った時間ではなく、ネットワークの時間を含まない。Workers の時刻は I/O の後にしか進まず、粗い値になりうる" },
     { name = "search_id", type = "STRING", mode = "NULLABLE", description = "1 回の検索 (API へのリクエスト 1 回) の識別子。Worker が検索ごとに作る乱数の UUID で、検索語や読者から導かない。同じ log_date で search_id が同じ行は 1 行にしてある。識別子を足す前に書かれた行は NULL で、重複を除けずそのまま残る" },
     { name = "log_date", type = "STRING", mode = "NULLABLE", description = "読んだファイルの経路 workers/<YYYYMMDD>/ の日付 (例 '20261007')。Logpush が決める UTC の日付で、JST ではなく、searched_at の日付とも JST の 0 時から 9 時の検索で一致しない。WHERE log_date = '...' で直接比較すると、その日のファイルだけを読む。想定外の経路のファイルでは NULL" },
   ])
