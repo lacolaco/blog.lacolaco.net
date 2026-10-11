@@ -3,7 +3,7 @@ title: 'Angular: Router Resources解説'
 slug: 'angular-router-resources'
 icon: ''
 created_time: '2026-10-11T12:18:00.000Z'
-last_edited_time: '2026-10-11T14:43:00.000Z'
+last_edited_time: '2026-10-11T15:47:00.000Z'
 tags:
   - 'Signals'
   - 'Angular Router'
@@ -14,6 +14,7 @@ channels:
   - 'Code'
   - 'Angular'
 notion_url: 'https://app.notion.com/p/Angular-Router-Resources-3f13521b014a80f49acefae0cf5204c7'
+auto_translate: true
 features:
   katex: false
   mermaid: false
