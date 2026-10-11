@@ -2,15 +2,7 @@ import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
-import rehypeGithubAlert from 'rehype-github-alert';
-import rehypeGithubEmoji from 'rehype-github-emoji';
-import rehypeKatex from 'rehype-katex';
-import rehypeMermaid from 'rehype-mermaid';
-import remarkBreaks from 'remark-breaks';
-import remarkMath from 'remark-math';
-import remarkEmbed from './tools/remark-embed';
-import rehypeImageCdn from './tools/rehype-image-cdn';
-import rehypeExtractMediaHtml from './tools/rehype-extract-media-html';
+import { createMarkdownConfig } from './tools/markdown-pipeline';
 
 import node from '@astrojs/node';
 
@@ -18,6 +10,9 @@ import node from '@astrojs/node';
 export default defineConfig({
   site: 'https://blog.lacolaco.net',
   outDir: 'dist',
+  // Astro v7 の既定 ('jsx') はタグの間の空白を落とし、リンクや強調などインライン要素が
+  // 隣り合う箇所の見た目が変わりうる。v6 までの空白の扱いに合わせるため true にする
+  compressHTML: true,
   integrations: [sitemap(), react()],
 
   vite: {
@@ -42,29 +37,8 @@ export default defineConfig({
     locales: ['ja', 'en'],
   },
 
-  markdown: {
-    gfm: true,
-    remarkPlugins: [remarkBreaks, remarkMath, remarkEmbed],
-    // rehypeExtractMediaHtml は notion-sync が出力する <video src="/videos/..."> と
-    // 記事本文が使う <img src="/images/..."> を含む raw ノードのみを element 化する
-    // 最小スコープのプラグイン。後段の rehype-image-cdn が visit できるようにするため
-    // 先頭に置く。対象タグを含まない raw HTML には触れない
-    rehypePlugins: [
-      rehypeExtractMediaHtml,
-      rehypeGithubEmoji,
-      rehypeGithubAlert,
-      rehypeKatex,
-      [rehypeMermaid, { strategy: 'pre-mermaid' }],
-      rehypeImageCdn,
-    ],
-    syntaxHighlight: {
-      type: 'shiki',
-      excludeLangs: ['mermaid', 'math'],
-    },
-    shikiConfig: {
-      theme: 'github-light',
-    },
-  },
+  // 記事の変換設定は tools/markdown-pipeline にあり、処理系を unified にしている理由もそこに書いてある
+  markdown: createMarkdownConfig(),
 
   output: 'static',
   adapter: node({
