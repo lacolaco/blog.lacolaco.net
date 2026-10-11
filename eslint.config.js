@@ -23,7 +23,14 @@ export default tseslint.config(
     files: ['src/**/*.{ts,tsx}', 'tools/**/*.ts', 'astro.config.ts', 'vitest.config.ts'],
     plugins: { 'import-x': importX },
     rules: {
-      'import-x/no-extraneous-dependencies': ['error', { devDependencies: true }],
+      'import-x/no-extraneous-dependencies': [
+        'error',
+        {
+          // 本番イメージは pnpm install --prod で devDependencies を入れない。
+          // devDependencies の import を許すのは、本番に載らないファイルだけにする。
+          devDependencies: ['tools/**/*.ts', 'src/**/*.{spec,test}.{ts,tsx}', 'astro.config.ts', 'vitest.config.ts'],
+        },
+      ],
     },
   },
   {
