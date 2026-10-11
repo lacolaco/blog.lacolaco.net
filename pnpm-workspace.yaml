@@ -25,5 +25,5 @@ allowBuilds:
   esbuild: false
   protobufjs: false
   sharp: false
-  workerd: false
   unrs-resolver: false
+  workerd: false
