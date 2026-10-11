@@ -1,6 +1,7 @@
 // @ts-check
 import eslint from '@eslint/js';
 import { globalIgnores } from 'eslint/config';
+import { importX } from 'eslint-plugin-import-x';
 import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
@@ -14,6 +15,15 @@ export default tseslint.config(
     },
   },
   eslint.configs.recommended,
+  {
+    // 宣言していない依存は shamefully-hoist で偶然解決されるだけで、パッケージマネージャの更新で壊れる。
+    // 型だけの import も対象にして、@types/* の宣言漏れも検出する。
+    files: ['src/**/*.{ts,tsx}', 'tools/**/*.ts'],
+    plugins: { 'import-x': importX },
+    rules: {
+      'import-x/no-extraneous-dependencies': ['error', { devDependencies: true, includeTypes: true }],
+    },
+  },
   {
     files: ['src/**/*.ts', 'src/**/*.tsx'],
     settings: {},
