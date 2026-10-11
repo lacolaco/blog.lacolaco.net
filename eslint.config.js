@@ -18,7 +18,9 @@ export default tseslint.config(
   {
     // 宣言していない依存は shamefully-hoist で偶然解決されるだけで、パッケージマネージャの更新で壊れる。
     // 型だけの import (hast、mdast、unist など) の @types/* の宣言漏れは、このルールでは検出できない。
-    files: ['src/**/*.{ts,tsx}', 'tools/**/*.ts'],
+    // 対象外: *.js (eslint.config.js、tailwind.config.js) は globalIgnores で lint 自体の対象外、
+    // *.astro は ESLint のパーサーを設定していないため対象外。
+    files: ['src/**/*.{ts,tsx}', 'tools/**/*.ts', 'astro.config.ts', 'vitest.config.ts'],
     plugins: { 'import-x': importX },
     rules: {
       'import-x/no-extraneous-dependencies': ['error', { devDependencies: true }],
