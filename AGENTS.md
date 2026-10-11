@@ -150,7 +150,7 @@ pnpm test:libs    # library tests
 1. **外部サービス・APIの機能可否を推測で断定するな**。「使えない」「できない」と回答する前に実際にリクエストして確認しろ。推測は検証の代替にならない
 1. **環境差・バージョン差・CIだけで再現する挙動を「仕様」と推測で断定するな**。判断前に上流の issue / PR / changelog を必ず当たれ。二次情報（公式設定ドキュメントの解釈・記憶・他サイトの解説）を一次情報の代替にするな。「同じバージョンなのに環境で挙動が違う」「lockfile / cache が予期せず変わる」は既知バグの兆候として最初に疑え
 1. **「即時対応」と「根本対応」を分けて両方 push するな**。根本対応の方針が一次情報で確定するまで即時対応の push を保留しろ。根本が変われば即時対応の push が無駄になり、push 済みの即時対応に引きずられて根本判断が歪む
-2. **変更の影響範囲を設計フェーズで網羅的に列挙せよ**。1つの側面（例: 表示サイズ）だけで設計に入るな。関連する全側面（パフォーマンス、CLS、アクセシビリティ、既存機能との互換性、キャッシュ等）を初期設計で洗い出してから着手する
+2. **変更の影響範囲を設計フェーズで網羅的に列挙せよ**。1つの側面（例: 表示サイズ）だけで設計に入るな。関連する全側面（パフォーマンス、CLS、アクセシビリティ、既存機能との互換性、キャッシュ等）を初期設計で洗い出してから着手する。UIに限らない: 計測・分析基盤なら指標次元（PV/UU/セッション）とプライバシー表記、データ蓄積なら遡及可否・保持期間もこの列挙の対象
 3. 変更の期待結果をテストコードで書け（何が存在し、何が存在しないか）
 4. テストを実行して全て失敗することを確認しろ
 5. Search for similar existing code (Glob/Grep)
@@ -276,6 +276,10 @@ Before implementing with external libraries:
 - content-only PR は ci.yml の auto-merge ゲートで自動マージされる（条件は ci.yml 冒頭コメント参照）
 - **auto-translate PR に content-review は走らない**。翻訳ループ (`translator.ts`) が structure-validator + proofreader + retry を通し、恒久的に失敗した訳は書き出さず既存 `.en.md` を保持するため、CI 側の重複レビューを外している。auto-merge は content-review なしで成立する
 - 本文未変更でもフロントマター差分 (channels 等) があれば `frontmatter-only` で EN 版を更新する
+- **URL 置換後処理** (tools/auto-translate/url-replacer.ts): 翻訳後の en 本文の日本語向けURLを英語サイトのURLへ置換する (angular.jp→angular.dev、MDN /ja/→/en-US/)
+- 置換ルールの追加は `UrlReplacer` を 1 つ書いて `defaultUrlReplacers` に足す。ドメイン判定系 replacer のテストには大文字混在ドメインのケースを必ず含める (hostname は URL パースで小文字に正規化されるが、置換は原文文字列に対して行うため不整合が起きやすい)
+- 置換は決定的・冪等で、キャッシュヒット経路にも適用される。**ルール追加・変更時に PROMPT_VERSION を上げる必要はない** (LLM 再翻訳なしで既存 .en.md へ反映される)
+- **ja ソース側では置換しない**。en 出力への後処理のみ
 
 ### Search API (Cloudflare Workers)
 - `tools/search-worker/`: Worker `blog-search` + Durable Object (SQLite FTS5 trigram)。詳細は `tools/search-worker/README.md`
