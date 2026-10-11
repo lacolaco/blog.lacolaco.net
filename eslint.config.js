@@ -17,11 +17,11 @@ export default tseslint.config(
   eslint.configs.recommended,
   {
     // 宣言していない依存は shamefully-hoist で偶然解決されるだけで、パッケージマネージャの更新で壊れる。
-    // 型だけの import も対象にして、@types/* の宣言漏れも検出する。
+    // 型だけの import (hast、mdast、unist など) の @types/* の宣言漏れは、このルールでは検出できない。
     files: ['src/**/*.{ts,tsx}', 'tools/**/*.ts'],
     plugins: { 'import-x': importX },
     rules: {
-      'import-x/no-extraneous-dependencies': ['error', { devDependencies: true, includeTypes: true }],
+      'import-x/no-extraneous-dependencies': ['error', { devDependencies: true }],
     },
   },
   {
