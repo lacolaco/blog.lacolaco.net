@@ -17,6 +17,7 @@ strictDepBuilds: true
 # - protobufjs: postinstall はバージョン指定の書式を警告するだけ
 # - @google/genai: preinstall は何もしない (no-op)
 # - workerd: postinstall は配布済みバイナリのハードリンクによる起動の最適化とバージョン検証のみで、実バイナリは optionalDependencies の @cloudflare/workerd-<platform> で入る
+# - unrs-resolver: postinstall (napi-postinstall) は配布済みバイナリ (optionalDependencies) の有無を確認するのみ。eslint-plugin-import-x の依存
 # 新しい依存でビルドスクリプトが必要になったら、根拠を確認して true にする。
 allowBuilds:
   '@google/genai': false
@@ -24,4 +25,5 @@ allowBuilds:
   esbuild: false
   protobufjs: false
   sharp: false
+  unrs-resolver: false
   workerd: false
