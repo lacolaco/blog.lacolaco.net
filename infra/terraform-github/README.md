@@ -5,11 +5,28 @@ GitHub の管理者権限を要する設定をコード化する。`infra/terraf
 
 ## 管理対象
 
-| リソース                                        | 内容                                                                                    |
-| ----------------------------------------------- | --------------------------------------------------------------------------------------- |
-| `github_repository_ruleset.require_code_review` | `code-review-gate` (`.github/workflows/code-review.yml`) を main への必須チェックにする |
+| リソース                                             | 内容                                                                                             |
+| ---------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `github_repository_ruleset.require_code_review`      | `code-review-gate` (`.github/workflows/code-review.yml`) を main への必須チェックにする          |
+| `github_repository_dependabot_security_updates.blog` | Dependabot security updates を無効にする (`enabled = false`)。依存の更新は Renovate に一本化する |
 
 既存の ruleset (main: build, test) とブランチ保護には触れない。ruleset は重ねて評価される。
+
+## 依存の更新の一本化
+
+依存の更新の PR は Renovate (`.github/renovate.json`) だけが作る。Dependabot security updates は、同じ更新の PR を
+Dependabot も作り、その PR は `code-review-gate` と deploy が通らずマージできないまま残るため、無効にする。
+バージョンの更新 (version updates) は `.github/dependabot.yml` が無いので動いていない。
+
+**Dependabot alerts は有効のまま残し、Terraform の管理にも入れない。** Renovate は脆弱性の PR (`[security]`) の
+情報源に Dependabot alerts を使うので、alerts を止めると脆弱性の更新 PR が出なくなる。
+リポジトリ全体を表す `github_repository` も、取り込み時の記述の差で既存設定を意図せず変えないよう管理に入れない。
+
+### 戻し方
+
+Dependabot security updates を有効に戻すときは、`dependabot.tf` の `enabled` を `true` にして apply する。
+**コミットの revert やリソースの削除では戻らない。** このリソースは削除時にも自動セキュリティ修正の無効化を呼ぶため、
+リソースを消して apply しても無効のまま残る。
 
 ## apply の手順
 
