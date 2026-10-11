@@ -15,7 +15,4 @@ export type ShareContent = {
  * - error: 上記以外の失敗
  */
 export type ShareResult =
-  | { status: 'success' }
-  | { status: 'cancelled' }
-  | { status: 'unavailable' }
-  | { status: 'error'; message: string };
+  { status: 'success' } | { status: 'cancelled' } | { status: 'unavailable' } | { status: 'error'; message: string };
