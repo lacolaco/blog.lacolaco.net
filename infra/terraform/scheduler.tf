@@ -23,3 +23,4 @@ resource "google_cloud_scheduler_job" "likes_export_daily" {
     }
   }
 }
+# QA LACO-744 B

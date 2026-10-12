@@ -10,3 +10,4 @@ export const RSS_ITEMS_LIMIT = 20;
 export const RSS_FULL_ITEMS_LIMIT = 10;
 
 // QA LACO-744 A
+// QA LACO-744 B
