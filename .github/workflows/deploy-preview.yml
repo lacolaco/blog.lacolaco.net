@@ -61,6 +61,10 @@ jobs:
             });
 
   deploy:
+    # 共有サービス web への書き込みは cloud-run-web の group で 1 件ずつ実行する (理由は shutdown-preview.yml)。
+    concurrency:
+      group: cloud-run-web
+      queue: max
     runs-on: ubuntu-latest
     permissions:
       contents: read

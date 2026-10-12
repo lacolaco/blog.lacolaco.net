@@ -17,6 +17,16 @@ concurrency:
 
 jobs:
   shutdown-preview:
+    # 共有サービス web への書き込み (preview の配備、片付け、本番のデプロイ) は、同時に実行されると
+    # "ABORTED: Conflict for resource 'web'" で失敗する。3 つのジョブを同じ group に入れて 1 件ずつ実行する。
+    # - queue: max: 既定 (single) だと待機中の実行が最新の 1 件を残して取り消され、片付けや配備が実行されずに残る。
+    #   max なら待機を最大 100 件まで保ち、順に実行する。
+    # - ジョブ単位: ワークフロー単位の group にすると、PR ごとの group (cancel-in-progress の有無) と混ざる。
+    # - cancel-in-progress は付けない: queue: max と併用できず、実行中の書き込みを止めるとタグや配備が中途半端に残る。
+    # https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency
+    concurrency:
+      group: cloud-run-web
+      queue: max
     # マージの有無を問わず、deploy-preview ラベルが付いた PR を片付ける
     if: contains(github.event.pull_request.labels.*.name, 'deploy-preview')
     runs-on: ubuntu-latest
@@ -40,26 +50,8 @@ jobs:
 
       # 存在しないタグを渡しても gcloud は成功する (終了コード 0) ので、デプロイが Cloud Run まで進まなかった PR でも失敗しない
       # https://cloud.google.com/run/docs/rollouts-rollbacks-traffic-migration?hl=ja#remove-tags
-      #
-      # 共有サービス web は、同時に閉じた別の PR の片付けや配備と同時に書き換えられると
-      # "ABORTED: Conflict for resource 'web'" で失敗する。ABORTED は読み出しからの一連の操作ごと
-      # やり直すエラー (https://google.aip.dev/194) なので、ABORTED のときだけ待ってやり直す。
-      # それ以外のエラーはやり直さず失敗させる。
       - name: Remove revision tag from Cloud Run service
-        run: |
-          for attempt in 1 2 3 4 5; do
-            if out=$(gcloud run services update-traffic web --region asia-northeast1 --remove-tags pr-${{ github.event.number }} 2>&1); then
-              echo "$out"
-              exit 0
-            fi
-            echo "$out" >&2
-            if ! grep -q 'ABORTED' <<<"$out"; then
-              exit 1
-            fi
-            echo "web の更新が競合した (試行 ${attempt}/5)。待ってやり直す。" >&2
-            sleep $((attempt * 5 + RANDOM % 5))
-          done
-          exit 1
+        run: gcloud run services update-traffic web --region asia-northeast1 --remove-tags pr-${{ github.event.number }}
 
   # 検索 API の Preview を削除する。Preview の Durable Object のデータも一緒に削除される。
   # マージの有無を問わず PR が閉じたときに行う
