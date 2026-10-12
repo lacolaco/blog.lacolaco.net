@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
-import { chmodSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, it } from 'node:test';
@@ -288,15 +288,13 @@ esac
     writeFileSync(join(dir, 'sleep'), '#!/bin/bash\nexit 0\n');
     chmodSync(join(dir, 'gcloud'), 0o755);
     chmodSync(join(dir, 'sleep'), 0o755);
-    const script = step.run.replaceAll('${{ github.event.number }}', '42');
+    const script = step.run.split('${{ github.event.number }}').join('42');
     const r = spawnSync('bash', ['-eo', 'pipefail', '-c', script], {
       env: { ...process.env, PATH: `${dir}:${process.env.PATH}` },
       encoding: 'utf8',
     });
-    let calls: string[] = [];
-    try {
-      calls = readFileSync(join(dir, 'calls'), 'utf8').trim().split('\n');
-    } catch {}
+    const callsFile = join(dir, 'calls');
+    const calls = existsSync(callsFile) ? readFileSync(callsFile, 'utf8').trim().split('\n') : [];
     return { status: r.status, calls };
   }
 
@@ -317,7 +315,7 @@ esac
     assert.equal(r.calls.length, 1);
   });
   it('ABORTED が回数の上限まで続いたら失敗する', () => {
-    const r = runStep(Array(10).fill('ABORTED'));
+    const r = runStep(Array.from({ length: 10 }, () => 'ABORTED' as const));
     assert.notEqual(r.status, 0);
     assert.equal(r.calls.length, 5);
   });
