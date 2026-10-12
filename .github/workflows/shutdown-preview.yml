@@ -40,9 +40,26 @@ jobs:
 
       # 存在しないタグを渡しても gcloud は成功する (終了コード 0) ので、デプロイが Cloud Run まで進まなかった PR でも失敗しない
       # https://cloud.google.com/run/docs/rollouts-rollbacks-traffic-migration?hl=ja#remove-tags
+      #
+      # 共有サービス web は、同時に閉じた別の PR の片付けや配備と同時に書き換えられると
+      # "ABORTED: Conflict for resource 'web'" で失敗する。ABORTED は読み出しからの一連の操作ごと
+      # やり直すエラー (https://google.aip.dev/194) なので、ABORTED のときだけ待ってやり直す。
+      # それ以外のエラーはやり直さず失敗させる。
       - name: Remove revision tag from Cloud Run service
         run: |
-          gcloud run services update-traffic web --region asia-northeast1 --remove-tags pr-${{ github.event.number }}
+          for attempt in 1 2 3 4 5; do
+            if out=$(gcloud run services update-traffic web --region asia-northeast1 --remove-tags pr-${{ github.event.number }} 2>&1); then
+              echo "$out"
+              exit 0
+            fi
+            echo "$out" >&2
+            if ! grep -q 'ABORTED' <<<"$out"; then
+              exit 1
+            fi
+            echo "web の更新が競合した (試行 ${attempt}/5)。待ってやり直す。" >&2
+            sleep $((attempt * 5 + RANDOM % 5))
+          done
+          exit 1
 
   # 検索 API の Preview を削除する。Preview の Durable Object のデータも一緒に削除される。
   # マージの有無を問わず PR が閉じたときに行う
