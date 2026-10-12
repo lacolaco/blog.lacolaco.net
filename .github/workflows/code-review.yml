@@ -22,9 +22,10 @@ name: Code Review
 # レビュー不要のときは、レビューの手順を飛ばして成功する。
 # レビューが必要なときは、Gate ステップが approved でなければ fail する。
 
+# base のブランチは限らない。積み重ねた PR (base が main でない PR) でも、
+# マージ前にレビューの結果を PR に出すためである。
 on:
   pull_request:
-    branches: [main]
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
