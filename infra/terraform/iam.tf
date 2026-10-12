@@ -100,3 +100,5 @@ resource "google_service_account_iam_member" "github_actions_can_actas_scheduler
   role               = "roles/iam.serviceAccountUser"
   member             = "serviceAccount:${data.google_service_account.github_actions.email}"
 }
+
+# QA LACO-744 A2
