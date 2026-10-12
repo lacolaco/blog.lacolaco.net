@@ -39,7 +39,7 @@ inputs:
 outputs:
   url:
     description: 'Deployed service URL'
-    value: ${{ steps.deploy.outputs.url }}
+    value: ${{ steps.deploy-retry.outputs.url || steps.deploy.outputs.url }}
 
 runs:
   using: 'composite'
@@ -96,8 +96,35 @@ runs:
         retention-days: 30
 
     # Cloud Run デプロイ（事前ビルド済みイメージを使用）
+    #
+    # 共有サービス web は、ほかの PR の配備や片付け、本番のデプロイと同時に書き換えられると
+    # "ABORTED: Conflict for resource" で失敗する。ABORTED は読み出しからの一連の操作ごとやり直す
+    # エラーで (https://google.aip.dev/194)、deploy-cloudrun アクションにはやり直しが無い。
+    # そのため、失敗しても止めずに、待ってから同じ配備を 1 回やり直す。競合以外の失敗も 1 回やり直すが、
+    # 配備は同じイメージを同じ設定で適用するだけなので、やり直しで状態は変わらない。
+    # GitHub の concurrency group を全 PR 共通にする方法は、待機中の実行が取り消されるので採らない。
     - name: Deploy to Cloud Run
       id: deploy
+      continue-on-error: true
+      uses: 'google-github-actions/deploy-cloudrun@2028e2d7d30a78c6910e0632e48dd561b064884d' # v3.0.1
+      with:
+        service: ${{ inputs.service-name }}
+        region: ${{ inputs.region }}
+        image: ${{ inputs.deploy-image }}
+        no_traffic: ${{ inputs.no-traffic }}
+        tag: ${{ inputs.revision-tag }}
+        revision_traffic: ${{ inputs.revision-traffic }}
+        env_vars: ${{ inputs.env-vars }}
+        flags: '--allow-unauthenticated'
+
+    - name: Wait before retrying the deploy
+      if: steps.deploy.outcome == 'failure'
+      shell: bash
+      run: sleep $((5 + RANDOM % 10))
+
+    - name: Deploy to Cloud Run (retry)
+      id: deploy-retry
+      if: steps.deploy.outcome == 'failure'
       uses: 'google-github-actions/deploy-cloudrun@2028e2d7d30a78c6910e0632e48dd561b064884d' # v3.0.1
       with:
         service: ${{ inputs.service-name }}

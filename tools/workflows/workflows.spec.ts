@@ -1,5 +1,8 @@
 import assert from 'node:assert/strict';
-import { readdirSync, readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { chmodSync, mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, it } from 'node:test';
 import { parse } from 'yaml';
 
@@ -9,7 +12,15 @@ import { parse } from 'yaml';
 
 const workflowsDir = new URL('../../.github/workflows/', import.meta.url);
 
-type Step = { name?: string; if?: string; run?: string; env?: Record<string, string> };
+type Step = {
+  id?: string;
+  name?: string;
+  if?: string;
+  run?: string;
+  uses?: string;
+  'continue-on-error'?: boolean;
+  env?: Record<string, string>;
+};
 type Job = { if?: string; steps?: Step[] };
 type Workflow = {
   on: {
@@ -238,5 +249,112 @@ describe('ci.yml の Terraform plan', () => {
     const onStack = evaluate(lockArgs, { 'github.event.pull_request.base.ref': 'feature/stack-parent' });
     assert.equal(onMain, '');
     assert.equal(onStack, '-lock=false');
+  });
+});
+
+// --- Cloud Run の共有サービス web への書き込みの競合 ---
+//
+// preview の配備、片付けのタグ削除、本番のデプロイは、いずれも共有サービス web を
+// 読み出して書き戻す。同時に実行されると、後から書く側が
+// "ABORTED: Conflict for resource 'web'" で失敗する。
+// ABORTED は個々のリクエストでなく、読み出しからの一連の操作ごとやり直すエラーである
+// (https://google.aip.dev/194)。GitHub の concurrency group を全 PR で共通にすると、
+// 待機中の実行が最新の 1 件を残して取り消されるので、やり直しで対処する。
+
+describe('片付けのタグ削除は web の更新の競合でやり直す', () => {
+  const step = load('shutdown-preview.yml').jobs['shutdown-preview'].steps?.find((s) =>
+    s.run?.includes('update-traffic'),
+  );
+
+  // 偽の gcloud と sleep を PATH の先頭に置き、step の run をそのまま実行する。
+  // gcloud は呼び出しごとに results の次の行 (ABORTED / OTHER / OK) を返す。
+  function runStep(results: ('ABORTED' | 'OTHER' | 'OK')[]) {
+    assert.ok(step?.run, 'update-traffic を呼ぶ step がある');
+    const dir = mkdtempSync(join(tmpdir(), 'shutdown-'));
+    writeFileSync(join(dir, 'results'), results.join('\n') + '\n');
+    writeFileSync(
+      join(dir, 'gcloud'),
+      `#!/bin/bash
+echo "$@" >> "${dir}/calls"
+n=$(wc -l < "${dir}/calls")
+r=$(sed -n "$n"p "${dir}/results")
+case "$r" in
+  OK) exit 0 ;;
+  ABORTED) echo "ERROR: (gcloud.run.services.update-traffic) ABORTED: Conflict for resource 'web'" >&2; exit 1 ;;
+  *) echo "ERROR: (gcloud.run.services.update-traffic) PERMISSION_DENIED" >&2; exit 1 ;;
+esac
+`,
+    );
+    writeFileSync(join(dir, 'sleep'), '#!/bin/bash\nexit 0\n');
+    chmodSync(join(dir, 'gcloud'), 0o755);
+    chmodSync(join(dir, 'sleep'), 0o755);
+    const script = step.run.replaceAll('${{ github.event.number }}', '42');
+    const r = spawnSync('bash', ['-eo', 'pipefail', '-c', script], {
+      env: { ...process.env, PATH: `${dir}:${process.env.PATH}` },
+      encoding: 'utf8',
+    });
+    let calls: string[] = [];
+    try {
+      calls = readFileSync(join(dir, 'calls'), 'utf8').trim().split('\n');
+    } catch {}
+    return { status: r.status, calls };
+  }
+
+  it('競合なしなら 1 回で成功し、PR のタグを削除する', () => {
+    const r = runStep(['OK']);
+    assert.equal(r.status, 0);
+    assert.equal(r.calls.length, 1);
+    assert.match(r.calls[0], /--remove-tags pr-42/);
+  });
+  it('ABORTED が続いてもやり直して成功する', () => {
+    const r = runStep(['ABORTED', 'ABORTED', 'OK']);
+    assert.equal(r.status, 0);
+    assert.equal(r.calls.length, 3);
+  });
+  it('ABORTED 以外のエラーはやり直さず失敗する', () => {
+    const r = runStep(['OTHER', 'OK']);
+    assert.notEqual(r.status, 0);
+    assert.equal(r.calls.length, 1);
+  });
+  it('ABORTED が回数の上限まで続いたら失敗する', () => {
+    const r = runStep(Array(10).fill('ABORTED'));
+    assert.notEqual(r.status, 0);
+    assert.equal(r.calls.length, 5);
+  });
+});
+
+describe('deploy-cloudrun アクションは web の更新の競合でやり直す', () => {
+  const action = parse(
+    readFileSync(new URL('../../.github/actions/deploy-cloudrun/action.yml', import.meta.url), 'utf8'),
+  ) as {
+    outputs: { url: { value: string } };
+    runs: { steps: Step[] };
+  };
+  const steps = action.runs.steps;
+  const first = steps.find((s) => s.id === 'deploy');
+  const retry = steps.find((s) => s.id === 'deploy-retry');
+  const ctx = (outcome: string): Ctx => ({ 'steps.deploy.outcome': outcome });
+
+  it('最初の配備は失敗しても step を止めない', () => {
+    assert.ok(first?.uses?.startsWith('google-github-actions/deploy-cloudrun@'));
+    assert.equal(first['continue-on-error'], true);
+  });
+  it('最初の配備が失敗したときだけ、待ってから同じ配備をやり直す', () => {
+    assert.ok(retry?.uses?.startsWith('google-github-actions/deploy-cloudrun@'));
+    assert.equal(truthy(evaluate(retry.if ?? 'false', ctx('failure'))), true);
+    assert.equal(truthy(evaluate(retry.if ?? 'false', ctx('success'))), false);
+    const wait = steps[steps.indexOf(retry) - 1];
+    assert.equal(truthy(evaluate(wait.if ?? 'false', ctx('failure'))), true);
+    assert.equal(truthy(evaluate(wait.if ?? 'false', ctx('success'))), false);
+    assert.match(wait.run ?? '', /sleep/);
+  });
+  it('やり直しの入力は最初の配備と同じ', () => {
+    assert.deepEqual((retry as unknown as { with: unknown }).with, (first as unknown as { with: unknown }).with);
+  });
+  it('出力の url は、やり直した配備があればその値、なければ最初の配備の値', () => {
+    const value = action.outputs.url.value;
+    const run = (c: Ctx) => evaluate(value, c);
+    assert.equal(run({ 'steps.deploy.outputs.url': 'A', 'steps.deploy-retry.outputs.url': '' }), 'A');
+    assert.equal(run({ 'steps.deploy.outputs.url': '', 'steps.deploy-retry.outputs.url': 'B' }), 'B');
   });
 });
