@@ -16,13 +16,13 @@ importers:
         version: 7.3.2
       '@astrojs/node':
         specifier: 11.1.7
-        version: 11.1.7(astro@7.3.6(@astrojs/markdown-remark@7.3.2)(@types/node@24.13.3)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1))
+        version: 11.1.7(astro@7.3.6(@astrojs/markdown-remark@7.3.2)(@types/node@24.13.3)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))
       '@astrojs/prism':
         specifier: 4.0.2
         version: 4.0.2
       '@astrojs/react':
         specifier: 7.0.1
-        version: 7.0.1(@types/node@24.13.3)(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(esbuild@0.28.1)(jiti@2.7.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)
+        version: 7.0.1(@types/node@24.13.3)(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(esbuild@0.28.1)(jiti@2.7.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
       '@astrojs/rss':
         specifier: 4.0.19
         version: 4.0.19
@@ -43,7 +43,7 @@ importers:
         version: 2.6.2
       astro:
         specifier: 7.3.6
-        version: 7.3.6(@astrojs/markdown-remark@7.3.2)(@types/node@24.13.3)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)
+        version: 7.3.6(@astrojs/markdown-remark@7.3.2)(@types/node@24.13.3)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
       budoux:
         specifier: 0.9.3
         version: 0.9.3
@@ -101,10 +101,10 @@ importers:
         version: 1.2.0
       '@tailwindcss/vite':
         specifier: ^4.1.4
-        version: 4.3.3(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1))
+        version: 4.3.3(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))
       '@testing-library/jest-dom':
         specifier: ^7.0.0
-        version: 7.0.1(@testing-library/dom@10.4.1)(vitest@4.1.11(@types/node@24.13.3)(jsdom@30.1.2)(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)))
+        version: 7.0.1(@testing-library/dom@10.4.1)(vitest@4.1.11(@types/node@24.13.3)(jsdom@30.1.2)(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)))
       '@testing-library/react':
         specifier: ^16.3.2
         version: 16.3.3(@testing-library/dom@10.4.1)(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -193,8 +193,8 @@ importers:
         specifier: ^11.1.2
         version: 11.1.2
       sass:
-        specifier: 1.103.1
-        version: 1.103.1
+        specifier: 1.105.1
+        version: 1.105.1
       tailwindcss:
         specifier: 4.3.3
         version: 4.3.3
@@ -212,7 +212,7 @@ importers:
         version: 6.0.2
       vitest:
         specifier: 4.1.11
-        version: 4.1.11(@types/node@24.13.3)(jsdom@30.1.2)(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1))
+        version: 4.1.11(@types/node@24.13.3)(jsdom@30.1.2)(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))
       wrangler:
         specifier: 4.143.0
         version: 4.143.0(@cloudflare/workers-types@5.20261007.1)(@types/node@24.13.3)
@@ -3797,8 +3797,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  sass@1.103.1:
-    resolution: {integrity: sha512-9icZURbP51S6S0QGoyaeqk9uB06GNWxsFYWfH5RgpFgqK5FA8tJcM3AdVxrZEVJ7dz+L87nG95gBKf4VuaMHGw==}
+  sass@1.105.1:
+    resolution: {integrity: sha512-1CnAWPyrrnVQzXGB/DUep1vYCKCm1CIBr+YxjjiW6wk9qtzemnGP4qicH56T2F9S4Hjtv/Ne3jDz8JqfdDU4oA==}
     engines: {node: '>=20.19.0'}
     hasBin: true
 
@@ -4520,10 +4520,10 @@ snapshots:
       github-slugger: 2.0.0
       satteri: 0.10.5
 
-  '@astrojs/node@11.1.7(astro@7.3.6(@astrojs/markdown-remark@7.3.2)(@types/node@24.13.3)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1))':
+  '@astrojs/node@11.1.7(astro@7.3.6(@astrojs/markdown-remark@7.3.2)(@types/node@24.13.3)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))':
     dependencies:
       '@astrojs/internal-helpers': 0.12.0
-      astro: 7.3.6(@astrojs/markdown-remark@7.3.2)(@types/node@24.13.3)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)
+      astro: 7.3.6(@astrojs/markdown-remark@7.3.2)(@types/node@24.13.3)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
       send: 1.2.1
       server-destroy: 1.0.1
     transitivePeerDependencies:
@@ -4533,17 +4533,17 @@ snapshots:
     dependencies:
       prismjs: 1.30.0
 
-  '@astrojs/react@7.0.1(@types/node@24.13.3)(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(esbuild@0.28.1)(jiti@2.7.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)':
+  '@astrojs/react@7.0.1(@types/node@24.13.3)(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(esbuild@0.28.1)(jiti@2.7.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)':
     dependencies:
       '@astrojs/internal-helpers': 0.12.0
       '@types/react': 19.2.18
       '@types/react-dom': 19.2.5(@types/react@19.2.18)
-      '@vitejs/plugin-react': 6.1.2(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1))
+      '@vitejs/plugin-react': 6.1.2(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))
       devalue: 5.9.4
       react: 19.2.8
       react-dom: 19.2.8(react@19.2.8)
       ultrahtml: 1.7.0
-      vite: 8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)
+      vite: 8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
     transitivePeerDependencies:
       - '@rolldown/plugin-babel'
       - '@types/node'
@@ -5442,12 +5442,12 @@ snapshots:
       '@tailwindcss/oxide-win32-arm64-msvc': 4.3.3
       '@tailwindcss/oxide-win32-x64-msvc': 4.3.3
 
-  '@tailwindcss/vite@4.3.3(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1))':
+  '@tailwindcss/vite@4.3.3(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))':
     dependencies:
       '@tailwindcss/node': 4.3.3
       '@tailwindcss/oxide': 4.3.3
       tailwindcss: 4.3.3
-      vite: 8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)
+      vite: 8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
 
   '@testing-library/dom@10.4.1':
     dependencies:
@@ -5460,7 +5460,7 @@ snapshots:
       picocolors: 1.1.1
       pretty-format: 27.5.1
 
-  '@testing-library/jest-dom@7.0.1(@testing-library/dom@10.4.1)(vitest@4.1.11(@types/node@24.13.3)(jsdom@30.1.2)(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)))':
+  '@testing-library/jest-dom@7.0.1(@testing-library/dom@10.4.1)(vitest@4.1.11(@types/node@24.13.3)(jsdom@30.1.2)(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)))':
     dependencies:
       '@adobe/css-tools': 4.4.4
       '@testing-library/dom': 10.4.1
@@ -5470,7 +5470,7 @@ snapshots:
       picocolors: 1.1.1
       redent: 3.0.0
     optionalDependencies:
-      vitest: 4.1.11(@types/node@24.13.3)(jsdom@30.1.2)(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1))
+      vitest: 4.1.11(@types/node@24.13.3)(jsdom@30.1.2)(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))
 
   '@testing-library/react@16.3.3(@testing-library/dom@10.4.1)(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
     dependencies:
@@ -5845,10 +5845,10 @@ snapshots:
       d3-selection: 3.0.0
       d3-transition: 3.0.1(d3-selection@3.0.0)
 
-  '@vitejs/plugin-react@6.1.2(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1))':
+  '@vitejs/plugin-react@6.1.2(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))':
     dependencies:
       '@rolldown/pluginutils': 1.0.1
-      vite: 8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)
+      vite: 8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
 
   '@vitest/expect@4.1.11':
     dependencies:
@@ -5859,13 +5859,13 @@ snapshots:
       chai: 6.2.2
       tinyrainbow: 3.1.0
 
-  '@vitest/mocker@4.1.11(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1))':
+  '@vitest/mocker@4.1.11(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))':
     dependencies:
       '@vitest/spy': 4.1.11
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)
+      vite: 8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
 
   '@vitest/pretty-format@4.1.11':
     dependencies:
@@ -5931,7 +5931,7 @@ snapshots:
 
   astring@1.9.0: {}
 
-  astro@7.3.6(@astrojs/markdown-remark@7.3.2)(@types/node@24.13.3)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1):
+  astro@7.3.6(@astrojs/markdown-remark@7.3.2)(@types/node@24.13.3)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1):
     dependencies:
       '@astrojs/compiler-rs': 0.5.1
       '@astrojs/internal-helpers': 0.12.0
@@ -5981,8 +5981,8 @@ snapshots:
       unifont: 0.7.5
       unstorage: 1.17.5
       verkit: 0.5.0
-      vite: 8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)
-      vitefu: 1.1.3(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1))
+      vite: 8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
+      vitefu: 1.1.3(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))
       xxhash-wasm: 1.1.0
       yargs-parser: 22.0.0
       zod: 4.6.5
@@ -8369,7 +8369,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  sass@1.103.1:
+  sass@1.105.1:
     dependencies:
       chokidar: 5.0.0
       immutable: 5.1.5
@@ -8776,7 +8776,7 @@ snapshots:
       '@types/unist': 3.0.3
       vfile-message: 4.0.2
 
-  vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1):
+  vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
@@ -8788,18 +8788,18 @@ snapshots:
       esbuild: 0.28.1
       fsevents: 2.3.3
       jiti: 2.7.0
-      sass: 1.103.1
+      sass: 1.105.1
       tsx: 4.23.15
       yaml: 2.9.1
 
-  vitefu@1.1.3(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)):
+  vitefu@1.1.3(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)):
     optionalDependencies:
-      vite: 8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)
+      vite: 8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
 
-  vitest@4.1.11(@types/node@24.13.3)(jsdom@30.1.2)(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)):
+  vitest@4.1.11(@types/node@24.13.3)(jsdom@30.1.2)(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)):
     dependencies:
       '@vitest/expect': 4.1.11
-      '@vitest/mocker': 4.1.11(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1))
+      '@vitest/mocker': 4.1.11(vite@8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1))
       '@vitest/pretty-format': 4.1.11
       '@vitest/runner': 4.1.11
       '@vitest/snapshot': 4.1.11
@@ -8816,7 +8816,7 @@ snapshots:
       tinyexec: 1.3.1
       tinyglobby: 0.2.17
       tinyrainbow: 3.1.0
-      vite: 8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.103.1)(tsx@4.23.15)(yaml@2.9.1)
+      vite: 8.3.3(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(sass@1.105.1)(tsx@4.23.15)(yaml@2.9.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 24.13.3
