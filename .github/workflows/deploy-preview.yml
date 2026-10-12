@@ -1,9 +1,5 @@
 name: deploy-preview
 
-# base のブランチは限らない。積み重ねた PR (base が main でない PR) でも、プレビューで確かめられるようにする。
-# 片付け (shutdown-preview.yml) も同じ範囲で起動する。範囲が違うと、リビジョンタグと検索 API の Preview が残る。
-# 資源は PR ごとに別 (Cloud Run のリビジョンタグ pr-<PR 番号>、検索 API の Preview pr-<PR 番号>、
-# concurrency group deploy-preview-<PR 番号>) で、本番には影響しない (no_traffic で配備する)。
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -61,7 +57,6 @@ jobs:
             });
 
   deploy:
-    # 共有サービス web への書き込みは cloud-run-web の group で 1 件ずつ実行する (理由は shutdown-preview.yml)。
     concurrency:
       group: cloud-run-web
       queue: max

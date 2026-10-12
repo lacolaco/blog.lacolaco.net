@@ -1,7 +1,5 @@
 name: shutdown-preview
 
-# base のブランチは限らない。deploy-preview.yml と同じ範囲で起動し、積み重ねた PR (base が main でない PR) の
-# preview も片付ける。
 on:
   pull_request:
     types: [closed]
@@ -17,13 +15,7 @@ concurrency:
 
 jobs:
   shutdown-preview:
-    # 共有サービス web への書き込み (preview の配備、片付け、本番のデプロイ) は、同時に実行されると
-    # "ABORTED: Conflict for resource 'web'" で失敗する。3 つのジョブを同じ group に入れて 1 件ずつ実行する。
-    # - queue: max: 既定 (single) だと待機中の実行が最新の 1 件を残して取り消され、片付けや配備が実行されずに残る。
-    #   max なら待機を最大 100 件まで保ち、順に実行する。
-    # - ジョブ単位: ワークフロー単位の group にすると、PR ごとの group (cancel-in-progress の有無) と混ざる。
-    # - cancel-in-progress は付けない: queue: max と併用できず、実行中の書き込みを止めるとタグや配備が中途半端に残る。
-    # https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency
+    # web への同時の書き込みは ABORTED で失敗するため、配備・片付け・本番のデプロイを同じ group で 1 件ずつ実行する (queue: max で待機を取り消さない)
     concurrency:
       group: cloud-run-web
       queue: max

@@ -24,7 +24,6 @@ name: CI
 #
 # 自動マージ条件:
 #   draftでない かつ base が main かつ ok成功
-#   → 積み重ねた PR (base が main でない PR) は、親のブランチへ自動でマージされないよう実行しない
 #   かつ (renovate-review成功 or auto-translate PR or (content-review成功 かつ code_changedでない))
 #   → code変更を含むPRは手動マージ
 #   → renovate PR + non-renovateコミット → renovate-review未実行, 手動マージ
@@ -42,11 +41,6 @@ name: CI
 #   - content-review失敗 → ok fail、code-review失敗 → code-review-gate fail
 #   - → 人間がレビューして手動マージ
 
-# base のブランチは限らない。gh stack で積み重ねた中間の PR (base が main でない PR) でも、
-# CI とレビューの結果を PR に出すためである。本番に影響する操作は base が main の PR だけで行う:
-#   - 本番へのデプロイと Terraform の apply: deploy-production.yml の push (main) だけ
-#   - 自動マージ: auto-merge ジョブの条件で base が main の PR に限る
-#   - Terraform の plan: base が main でない PR は state のロックを取らない
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
@@ -206,12 +200,7 @@ jobs:
         working-directory: infra/terraform
         run: terraform validate
 
-      # plan は state を書かない (apply は deploy-production.yml の push (main) だけ)。
-      # 積み重ねた PR (base が main でない PR) は、同時に動く別の PR の plan や main の apply と
-      # state のロックを取り合って失敗させないよう、ロックを取らずに実行する。
-      # 別のプロセスがロックを保持している間でも、-lock=false の plan は同じ GCS backend に対して成功する
-      # (ロックありの plan は "Error acquiring the state lock" で失敗することを実機で確かめた)。
-      # base が main の PR は従来どおりロックを取る。
+      # 積み重ねた PR の plan は他の plan や apply とロックを取り合わないよう、ロックを取らない
       - name: Terraform Plan
         if: steps.tf-paths.outputs.terraform == 'true'
         working-directory: infra/terraform

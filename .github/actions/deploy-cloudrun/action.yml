@@ -96,7 +96,6 @@ runs:
         retention-days: 30
 
     # Cloud Run デプロイ（事前ビルド済みイメージを使用）
-    # 共有サービス web への同時の書き込みによる競合は、呼び出し側のジョブの concurrency (group: cloud-run-web) で避ける。
     - name: Deploy to Cloud Run
       id: deploy
       uses: 'google-github-actions/deploy-cloudrun@2028e2d7d30a78c6910e0632e48dd561b064884d' # v3.0.1

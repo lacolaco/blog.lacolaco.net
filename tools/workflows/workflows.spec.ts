@@ -3,10 +3,6 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
 import { parse } from 'yaml';
 
-// 積み重ねた PR (base が main でない PR) でも CI とコードレビューを実行しつつ、
-// 本番への操作と自動マージは base が main の PR だけに限る、というワークフローの構成を検証する。
-// ワークフローの YAML を直接読むので、ビルドは要らない。
-
 const workflowsDir = new URL('../../.github/workflows/', import.meta.url);
 
 type Step = {
@@ -31,9 +27,6 @@ type Workflow = {
 function load(file: string): Workflow {
   return parse(readFileSync(new URL(file, workflowsDir), 'utf8')) as Workflow;
 }
-
-// --- GitHub Actions の式 (if 条件で使う範囲) を評価する最小の評価器 ---
-// 対応: コンテキストの参照、文字列、true/false、!、==、!=、&&、||、括弧
 
 type Ctx = Record<string, string | boolean>;
 
@@ -103,8 +96,6 @@ describe('評価器の自己検査', () => {
   });
 });
 
-// --- 起動条件 ---
-
 describe('ci.yml と code-review.yml の起動条件', () => {
   for (const file of ['ci.yml', 'code-review.yml']) {
     it(`${file}: pull_request が base のブランチを限らない`, () => {
@@ -137,8 +128,6 @@ describe('preview の配備と片付けの起動範囲', () => {
   });
 });
 
-// --- 本番への操作 ---
-
 describe('本番への操作は main への push だけで起動する', () => {
   const files = readdirSync(workflowsDir).filter((f) => f.endsWith('.yml'));
 
@@ -156,13 +145,10 @@ describe('本番への操作は main への push だけで起動する', () => {
   });
 });
 
-// --- 自動マージ ---
-
 describe('ci.yml の auto-merge', () => {
   const condition = load('ci.yml').jobs['auto-merge'].if;
   assert.ok(condition, 'auto-merge に if 条件がある');
 
-  // 全ての条件が自動マージを許す入力。ここから 1 つずつ崩して分岐を確かめる
   const base: Ctx = {
     'github.event.pull_request.base.ref': 'main',
     'github.event.pull_request.draft': false,
@@ -174,7 +160,6 @@ describe('ci.yml の auto-merge', () => {
     // !cancelled() は関数呼び出しなので、評価器では真偽値の変数として扱う
     'always-not-cancelled': true,
   };
-  // 評価器は関数呼び出しを扱わないので、!cancelled() を除いた式で評価する
   const expr = condition.replace('!cancelled()', 'always-not-cancelled');
   const run = (over: Ctx) => truthy(evaluate(expr, { ...base, ...over }));
 
@@ -204,7 +189,6 @@ describe('ci.yml の auto-merge', () => {
     assert.equal(run({ 'needs.ok.result': 'failure' }), false);
   });
 
-  // base が main でない PR は、マージ可能に見える全ての経路でも実行しない
   it('base が main でない PR は、content だけの変更でもマージしない', () => {
     assert.equal(run(NOT_MAIN), false);
   });
@@ -227,8 +211,6 @@ describe('ci.yml の auto-merge', () => {
   });
 });
 
-// --- Terraform の plan ---
-
 describe('ci.yml の Terraform plan', () => {
   const plan = load('ci.yml').jobs.terraform.steps?.find((s) => s.name === 'Terraform Plan');
 
@@ -236,8 +218,6 @@ describe('ci.yml の Terraform plan', () => {
     assert.ok(plan);
   });
 
-  // 積み重ねた PR の plan が、別の PR の plan や main の apply と state のロックを取り合わないようにする。
-  // main 向けの PR の plan は従来どおりロックを取る。
   it('base が main でない PR だけ、state のロックを取らない', () => {
     assert.ok(plan?.run?.includes('$LOCK_ARGS'), 'plan に LOCK_ARGS を渡す');
     const lockArgs = plan?.env?.LOCK_ARGS;
@@ -248,14 +228,6 @@ describe('ci.yml の Terraform plan', () => {
     assert.equal(onStack, '-lock=false');
   });
 });
-
-// --- Cloud Run の共有サービス web への書き込みの直列化 ---
-//
-// preview の配備、片付けのタグ削除、本番のデプロイは、いずれも共有サービス web を読み出して書き戻す。
-// 同時に実行されると後から書く側が "ABORTED: Conflict for resource 'web'" で失敗するので、
-// 3 つのジョブを同じ concurrency group に入れて 1 件ずつ実行する。
-// 待機を 1 件に限る既定 (queue: single) では最新の 1 件を残して取り消されるので、queue: max にする。
-// queue: max は cancel-in-progress: true と併用できず、実行中の書き込みを止めない意味でも付けない。
 
 describe('web に書き込む 3 ジョブは同じ group で直列に実行する', () => {
   type Concurrency = { group?: string; queue?: string; 'cancel-in-progress'?: boolean };
