@@ -1,9 +1,10 @@
 name: shutdown-preview
 
+# base のブランチは限らない。deploy-preview.yml と同じ範囲で起動し、積み重ねた PR (base が main でない PR) の
+# preview も片付ける。
 on:
   pull_request:
     types: [closed]
-    branches: [main]
 
 # 実行中のプレビューのデプロイ (deploy-preview.yml) と同じグループに入れ、デプロイの完了を待ってから片付ける。
 # グループが別だと、PR を閉じたときにデプロイが実行中の場合、片付けの後にデプロイがタグや Preview を付け直して残る (#2036)。
