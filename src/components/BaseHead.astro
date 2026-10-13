@@ -55,17 +55,27 @@ const imageCdnOrigin = imageCdnBaseUrl ? new URL(imageCdnBaseUrl).origin : null;
 <!-- https://b.hatena.ne.jp/help/entry/nocomment -->
 <meta name="Hatena::Bookmark" content="nocomment" />
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script src="https://www.googletagmanager.com/gtag/js?id=G-0BEKSBSM5X"></script>
-<script is:inline define:vars={{ gtagProps }}>
-  window.dataLayer = window.dataLayer || [];
-  // define:vars は script を IIFE で包むので、関数宣言だけでは window.gtag が生えない。
-  // src/libs/analytics.ts の trackEvent が window.gtag を呼ぶため、明示的に公開する
-  window.gtag = function gtag() {
-    window.dataLayer.push(arguments);
+<meta name="gtag-props" content={JSON.stringify(gtagProps ?? {})} />
+<script is:inline>
+  // gtag.js は dataLayer の要素が Arguments オブジェクトであることを要求する (配列では処理されない)
+  window.pushToDataLayer = function () {
+    (window.dataLayer = window.dataLayer || []).push(arguments);
   };
-  gtag('js', new Date());
-  gtag('config', 'G-0BEKSBSM5X', gtagProps ?? {});
+</script>
+<script>
+  import { initAnalytics } from '../libs/analytics-gate';
+
+  initAnalytics({
+    hostname: location.hostname,
+    win: window,
+    loadScript: (src) => {
+      const el = document.createElement('script');
+      el.async = true;
+      el.src = src;
+      document.head.appendChild(el);
+    },
+    gtagProps: JSON.parse(document.querySelector('meta[name="gtag-props"]')?.getAttribute('content') ?? '{}'),
+  });
 </script>
 
 <script is:inline>
