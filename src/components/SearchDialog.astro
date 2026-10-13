@@ -59,7 +59,7 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
   import { createLatestSearch, type SearchHit } from '../libs/search/latest-search';
   import { createBackdropDismiss, isOutsideRect } from '../libs/search/backdrop-dismiss';
   import { buildSearchUrl, localeOf } from '../libs/search/request';
-  import { createSearchTermTracker } from '../libs/search/search-tracker';
+  import { createSearchReporter } from '../libs/search/search-tracker';
   import { searchEvents, trackEvent } from '../libs/analytics';
 
   const MESSAGES = {
@@ -115,7 +115,7 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
     private items: HTMLAnchorElement[] = [];
     private active = -1;
     private lastQuery = '';
-    private termTracker = createSearchTermTracker();
+    private reporter = createSearchReporter((term) => trackEvent(searchEvents.search(term)));
     private resultsQuery = '';
 
     connectedCallback() {
@@ -134,7 +134,10 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
       this.querySelector('.ss-hint-open')!.textContent = this.m.open;
       this.querySelector('.ss-hint-close')!.textContent = this.m.close;
 
-      this.input.addEventListener('input', () => this.schedule());
+      this.input.addEventListener('input', () => {
+        this.reporter.input();
+        this.schedule();
+      });
       this.input.addEventListener('keydown', (e) => this.onKeydown(e));
       this.input.addEventListener('compositionstart', () => (this.composing = true));
       this.input.addEventListener('compositionend', () => (this.composing = false));
@@ -146,6 +149,7 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
       });
       // 閉じたら進行中の要求を捨て、開く前にフォーカスがあった要素へ戻す (<dialog> の既定の復帰に加えて、取りこぼしを防ぐ)
       this.dialog.addEventListener('close', () => {
+        this.reporter.flush();
         clearTimeout(this.debounceTimer);
         this.search.cancel();
         this.announce('', true);
@@ -163,6 +167,7 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
         this.open('keyboard');
       });
       this.clearBtn.addEventListener('click', () => {
+        this.reporter.flush();
         this.input.value = '';
         this.schedule(true);
         this.input.focus();
@@ -194,6 +199,7 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
     open(method: 'button' | 'keyboard') {
       if (!this.dialog.open) {
         trackEvent(searchEvents.open(method));
+        this.reporter.reset();
         this.opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
         this.dialog.showModal();
       }
@@ -212,7 +218,7 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
       if (!this.lastQuery) {
         // 空になったら進行中の要求も捨てる
         this.search.cancel();
-        this.termTracker.reset();
+        this.reporter.reset();
         this.renderResults([], '');
         return;
       }
@@ -238,10 +244,11 @@ const endpoint = apiBase ? new URL('/api/search', apiBase).href : '/api/search';
       }
       this.renderResults(outcome.hits, q);
       this.resultsQuery = q;
-      if (this.termTracker.shouldCount(q)) trackEvent(searchEvents.search(q));
+      this.reporter.resultShown(q);
     }
 
     private trackSelect(a: HTMLAnchorElement) {
+      this.reporter.commit(this.resultsQuery);
       trackEvent(searchEvents.select(this.resultsQuery, a.dataset.slug ?? ''));
     }
 
