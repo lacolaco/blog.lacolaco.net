@@ -55,3 +55,16 @@ export const likeEvents = {
     params: { error_message: errorMessage },
   }),
 };
+
+const SEARCH_TERM_MAX_LENGTH = 100;
+
+const toSearchTerm = (term: string): string => Array.from(term.trim()).slice(0, SEARCH_TERM_MAX_LENGTH).join('');
+
+export const searchEvents = {
+  open: (method: 'button' | 'keyboard'): AnalyticsEvent => ({ name: 'search_open', params: { method } }),
+  search: (term: string): AnalyticsEvent => ({ name: 'search', params: { search_term: toSearchTerm(term) } }),
+  select: (term: string, slug: string): AnalyticsEvent => ({
+    name: 'search_select',
+    params: { search_term: toSearchTerm(term), slug },
+  }),
+};
