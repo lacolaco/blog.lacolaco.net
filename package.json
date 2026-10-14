@@ -96,7 +96,7 @@
     "unified": "^11.0.5",
     "unist-util-visit-parents": "^6.0.2",
     "vitest": "4.1.11",
-    "wrangler": "4.148.0",
+    "wrangler": "4.149.0",
     "zod": "^3.22.4"
   },
   "pnpm": {
