@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { searchEvents, trackEvent } from './analytics';
+import { searchEvents, trackEvent, zennLinkEvents } from './analytics';
 
 describe('searchEvents', () => {
   it('open は search_open と method を返す', () => {
@@ -31,6 +31,12 @@ describe('searchEvents', () => {
   it('サロゲートペアを途中で割らない', () => {
     const term = searchEvents.search('😀'.repeat(101)).params?.search_term as string;
     expect(Array.from(term)).toHaveLength(100);
+  });
+});
+
+describe('zennLinkEvents', () => {
+  it('click は zenn_link_click と slug を返す', () => {
+    expect(zennLinkEvents.click('my-post')).toEqual({ name: 'zenn_link_click', params: { slug: 'my-post' } });
   });
 });
 
