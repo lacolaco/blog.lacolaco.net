@@ -2,8 +2,8 @@
 title: 'Angular: Error Boundary解説'
 slug: 'angular-error-boundary'
 icon: ''
-created_time: '2026-10-18T14:57:00.000Z'
-last_edited_time: '2026-10-18T14:57:00.000Z'
+created_time: '2026-10-18T15:05:00.000Z'
+last_edited_time: '2026-10-18T15:05:00.000Z'
 tags: []
 published: true
 locale: 'ja'
@@ -18,7 +18,7 @@ features:
   tweet: false
 ---
 
-Angular v22.2で開発者プレビューとして導入された**Error Boundary（エラーバウンダリ）**機能について、この記事では基本的な使い方を具体的なユースケースを通して解説する。
+Angular v22.2で開発者プレビューとして導入された **Error Boundary（エラーバウンダリ）** 機能について、この記事では基本的な使い方を具体的なユースケースを通して解説する。
 
 https://blog.lacolaco.net/posts/angular-v22-2-update
 
