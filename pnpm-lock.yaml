@@ -92,7 +92,7 @@ importers:
         version: 10.0.1(eslint@10.12.0(jiti@2.7.0))
       '@google/genai':
         specifier: ^2.0.0
-        version: 2.29.0
+        version: 2.29.1
       '@iconify/json':
         specifier: ^2.2.161
         version: 2.2.542
@@ -798,8 +798,8 @@ packages:
     resolution: {integrity: sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==}
     engines: {node: '>=6'}
 
-  '@google/genai@2.29.0':
-    resolution: {integrity: sha512-jrgU07sEkMFX/K/gtEydDx+SH7NDbY5hdg8eLwDtfqHcJqPhsH68btd9QPrN7KqkrlURzSk49wVQYMKVJRy2Hw==}
+  '@google/genai@2.29.1':
+    resolution: {integrity: sha512-keU+JsY11fT4ykdFA6Q8iQHBgOAAVssFLxPtXRjCIEr5Zt2GzE75c22bBmq87XbhgtpuKaObnSgsrG60rj0ZMA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.25.2
@@ -4902,7 +4902,7 @@ snapshots:
 
   '@fortawesome/fontawesome-free@6.7.2': {}
 
-  '@google/genai@2.29.0':
+  '@google/genai@2.29.1':
     dependencies:
       google-auth-library: 10.9.1
       p-retry: 4.6.2
