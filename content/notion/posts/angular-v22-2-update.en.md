@@ -3,7 +3,7 @@ title: 'Summary of the Angular v22.2 Update'
 slug: 'angular-v22-2-update'
 icon: ''
 created_time: '2026-10-03T02:39:00.000Z'
-last_edited_time: '2026-10-03T02:47:00.000Z'
+last_edited_time: '2026-10-18T15:17:00.000Z'
 tags:
   - 'Angular CLI'
   - 'Angular Material'
@@ -20,14 +20,14 @@ features:
   katex: false
   mermaid: false
   tweet: false
-auto_translated_from: '24296daab65414171782e0957ad3c73bc1783f84ad7864a84970e1cb3a02a9d1'
+auto_translated_from: '360d99fa833c1bc7ec5bdc27942d16bc4dec087947ac0af7e702400b6389575a'
 ---
 
-Angular v22.2.0 has been released. Since it's a monthly minor update, several new features have been added. Let's take a look at the details. I've narrowed it down to the important changes, so if you want to know everything, please refer to the official CHANGELOG.
+Angular v22.2.0 has been released. As it is a monthly minor update, various features have been added. Let's go over the contents. I've narrowed it down to the important ones, so if you want to know everything, please refer to the official CHANGELOG.
 
 ## angular/angular
 
-Main changes to the framework are as follows.
+Main changes in the framework are as follows:
 
 https://github.com/angular/angular/blob/main/CHANGELOG.md#2220
 
@@ -35,26 +35,26 @@ https://github.com/angular/angular/blob/main/CHANGELOG.md#2220
 
 https://github.com/angular/angular/commit/48a0fd6e8a8d14bdc1d901ee5615f4b0ab698fe8
 
-It is now possible to reference private members of a class from the component's template HTML. I've already written about the background and impact of this change in a separate article, so please check that out.
+You can now reference private members of a class from a component's template HTML. I have already written about the background and impact of this in another article, so I'd like you to read that.
 
 https://blog.lacolaco.net/posts/angular-private-fields
 
-### Addition of `strictUnclaimedEventNames` 
+### Addition of `strictUnclaimedEventNames`
 
 https://github.com/angular/angular/commit/312e1d808902116fb8cd4e02d936260113453999
 
-A compilation flag has been added that enforces that event bindings `(eventName)` in a template must match either an event belonging to the target DOM element or a directive's output. This is currently opt-in and is not included in `strictTemplates`, so it needs to be configured individually.
+A compiler flag has been added that enforces that event bindings `(eventName)` in a template must match either an event held by the target DOM element or a directive's output. This is currently still opt-in and is not included in `strictTemplates`, so it needs to be configured individually.
 
 ```html
 <!-- error -->
 <button (unknownEvent)="...">
 ```
 
-### Addition of `@Component.deferredImports` 
+### Addition of `@Component.deferredImports`
 
 https://github.com/angular/angular/commit/7d9f55da11319da8f273d9edcd38ff2983bdbb0c
 
-Template type checking now verifies that components, directives, and pipes associated with a specific named `@defer` block via `@Component.deferredImports` are used only within that specified block. Using them outside of `@defer` or in a block with a different name will result in a compilation error.
+For components, directives, and pipes linked to a specific named `@defer` block via `@Component.deferredImports`, template type checking now verifies that they are only used within the specified block. Using them outside of `@defer` or in a block with a different name will result in a compilation error.
 
 ```typescript
 @Component({
@@ -80,7 +80,7 @@ https://github.com/angular/angular/commit/f4a5650ed9c71a8ee1dbd3003e139004648277
 
 https://github.com/angular/angular/pull/70463
 
-An `@boundary` block has been added to catch rendering errors within a template. If rendering inside the block fails, it switches to the `@error` block, allowing errors in a portion of the screen to be handled within that scope. In the `@error` block, you can reference the error using `$error` and attempt a re-render by clearing the error state with `$reset()`.
+An `@boundary` block has been added to capture rendering errors within templates. If rendering within the block fails, it switches to the `@error` block, allowing errors in one part of the screen to be handled within that scope. In `@error`, you can reference the error with `$error` and attempt to re-render by clearing the error state with `$reset()`.
 
 ```html
 @boundary {
@@ -91,15 +91,17 @@ An `@boundary` block has been added to catch rendering errors within a template.
 }
 ```
 
-An `onViewError` hook has also been added to `ErrorHandler`, allowing you to receive details about rendering errors. Along with this, the Angular Language Service now supports `@boundary` and `@error`, enabling features like autocomplete, hover, go-to-definition, and block folding for the new syntax.
+An `onViewError` hook has also been added to `ErrorHandler`, allowing it to receive details of rendering errors. Additionally, the Angular Language Service now supports `@boundary` and `@error`, enabling the new syntax to be handled with autocomplete, hover, go-to-definition, block folding, and more.
 
-### Addition of Testing Utilities for Directives
+https://blog.lacolaco.net/posts/angular-error-boundary
+
+### Addition of Test Utilities for Directives
 
 https://github.com/angular/angular/commit/05c4d5a8354228100b51176f295ed5dee4f3febc
 
-`TestBed.createDirective` has been added, allowing you to test directives without having to define a host component for testing yourself. From the returned `DirectiveFixture`, you can reference the directive itself via `directiveInstance` and the host element via `nativeElement`, and perform change detection with `detectChanges()`.
+`TestBed.createDirective` has been added, making it possible to test directives without having to define a host component for testing yourself. From the returned `DirectiveFixture`, you can reference the directive itself via `directiveInstance` and the host element via `nativeElement`, and perform change detection with `detectChanges()`.
 
-You can specify `inputBinding` or `outputBinding` in `bindings`. Since the tag name of the host element cannot be inferred for directives with only attribute selectors, you also specify a `tagName`.
+You can specify `inputBinding` or `outputBinding` for `bindings`. Since the tag name of the host element cannot be inferred for directives that only have an attribute selector, you also specify `tagName`.
 
 ```typescript
 import { Directive, input, inputBinding, signal } from '@angular/core';
@@ -128,11 +130,11 @@ it('入力に応じてホスト要素のクラスを切り替える', () => {
 });
 ```
 
-### Retrieving `Injector` in View and Content Queries
+### Retrieving `Injector` in View/Content Queries
 
 https://github.com/angular/angular/commit/bd9b45b5cc1dd904cc4a5de45f6de8e1564b70b6
 
-It is now possible to specify `Injector` in the `read` option of view queries and content queries. This retrieves the node injector of the element found by the query, allowing you to resolve providers visible from that element's position.
+It is now possible to specify `Injector` in the `read` option of view and content queries. What you get is the node injector of the element found by the query, which allows you to resolve providers visible from that element's position.
 
 ```typescript
 import { Component, Directive, InjectionToken, Injector, viewChild } from '@angular/core';
@@ -158,11 +160,11 @@ class AppComponent {
 }
 ```
 
-### Specifying Fixed Hidden Fields in Signal Forms
+### Specifying Permanently Hidden Fields in Signal Forms
 
 https://github.com/angular/angular/commit/d5e8b1ef7a02c84d4fd70a6b4d748ead9ff815bf
 
-The condition for the `hidden` rule in Signal Forms can now be omitted. Previously, even if you wanted to keep a field always hidden, you had to specify `{ when: () => true }`, but now you can just write `hidden(path)`. The target field will always have `hidden()` as `true` and will also be excluded from validation.
+In Signal Forms' `hidden` rules, it is now possible to omit the condition. Previously, even if you wanted a field to be always hidden, you had to specify `{ when: () => true }`, but now you can write it just as `hidden(path)`. The target field's `hidden()` will always be `true`, and it will also be excluded from validation.
 
 ```typescript
 import { Component, signal } from '@angular/core';
@@ -184,13 +186,13 @@ class ProfileComponent {
 }
 ```
 
-`hidden` is a rule for specifying the state of a field within the form data and does not automatically hide the DOM. To toggle visibility, you reference `hidden()` on the template side as shown in the example above.
+`hidden` is a rule for specifying the state of a field in the form data, and it does not automatically hide the DOM. To toggle visibility, you reference `hidden()` on the template side, as shown in the example above.
 
-### Public Release of `containsTree` API
+### Exposing the `containsTree` API
 
 https://github.com/angular/angular/commit/2720362818cdeb2a940171e4ab6f21cf78c6a302
 
-`containsTree`, which was used internally by the router, is now a public API in `@angular/router`. You can pass two `UrlTree` objects to determine if one is contained within the other. It can be used for comparing any URLs, not just for comparison with the current URL.
+`containsTree`, which was used internally by the router, has become a public API of `@angular/router`. You can pass two `UrlTree` objects and determine if one is contained within the other. This can be used for purposes such as comparing arbitrary URLs, not just comparisons with the current URL.
 
 ```typescript
 import { containsTree, DefaultUrlSerializer } from '@angular/router';
@@ -204,13 +206,13 @@ containsTree(container, target, { paths: 'exact' });  // false
 containsTree(container, target, { queryParams: 'exact' }); // false
 ```
 
-### Redirecting via throwing `RedirectCommand` 
+### Redirecting by Throwing `RedirectCommand`
 
 https://github.com/angular/angular/commit/b65dea4f03e5fc01093a718c990c72ae9165c43f
 
-It is now possible to redirect by throwing a `RedirectCommand` from guards or resolvers. `RedirectCommand` now inherits from `Error`, and the router treats the thrown command as a redirect rather than a typical navigation error.
+It is now possible to redirect by throwing a `RedirectCommand` from guards or resolvers. `RedirectCommand` now inherits from `Error`, and the router treats the thrown command as a redirect rather than a normal navigation error.
 
-Previously, you had to return a redirect instruction as a return value, but now you can interrupt processing with a `throw` even from nested helper functions. This eliminates the need to propagate a `RedirectCommand` back to the caller and avoids mixing redirect types into the return type of the helper.
+Previously, it was necessary to return the redirect instruction as a return value, but now you can also interrupt processing from nested helper functions by using `throw`. This eliminates the need to propagate the `RedirectCommand` by returning it up to the caller, and avoids mixing redirect types into the return type of the helper.
 
 ```typescript
 import { inject } from '@angular/core';
@@ -228,21 +230,21 @@ export const idResolver: ResolveFn<string> = (route) => {
 };
 ```
 
-### Public Release of Router Resources API
+### Exposing the Router Resources API
 
 https://github.com/angular/angular/commit/3064f3f1dccd78177bf3b86f8ea231102884f0d7
 
-**Router Resources**, which handles per-route data fetching using the Resource API, is now a public API. You can enable it with `withRouterResources()` and define data fetching logic in the route's `resources`. It supports parallel loading across routes, data fetching that doesn't block navigation, and refetching data without re-navigation.
+**Router Resources**, which handles per-route data fetching via the Resource API, has become a public API. You enable it with `withRouterResources()` and can define data fetching logic in the route's `resources`. It supports parallel loading between routes, data fetching that doesn't block screen transitions, and re-fetching data without re-navigation.
 
-I plan to write more about how to use it and the differences from traditional resolvers in a separate article later.
+https://blog.lacolaco.net/posts/angular-router-resources
 
-### Stabilization of Automatic Injector Cleanup per Route
+### Stabilization of Per-Route Injector Auto-Cleanup
 
 https://github.com/angular/angular/commit/7137a41223079b4b172aeccb5031347fcc947b79
 
-The feature that automatically destroys route injectors that are no longer in use has reached stability and is now available as `withAutoCleanupInjectors()`. The previous `withExperimentalAutoCleanupInjectors()` has been deprecated.
+The feature to automatically destroy injectors for unused routes has become stable and is now available as `withAutoCleanupInjectors()`. The previous `withExperimentalAutoCleanupInjectors()` has been deprecated.
 
-Normally, route injectors and the services provided there are retained even after navigating to a different screen. With this feature enabled, the router checks the routes in use and those saved for reuse after navigation completes, and destroys injectors that are no longer needed. Cleanup tasks registered in a service's `ngOnDestroy` or `DestroyRef` will also be executed.
+Normally, route injectors and the services provided there are retained even after navigating to another screen. When this feature is enabled, it checks the routes in use and the routes saved for reuse after navigation is complete, and destroys injectors that are no longer needed. Post-processing registered in the service's `ngOnDestroy` or `DestroyRef` is also executed.
 
 ```typescript
 import { ApplicationConfig } from '@angular/core';
@@ -258,7 +260,7 @@ export const appConfig: ApplicationConfig = {
 
 https://github.com/angular/angular/commit/d0d7f57e0810a24ba16dbb1f2ab9f079a096fa3d
 
-CSS native nesting syntax is now handled correctly with `ViewEncapsulation.Emulated` style encapsulation. It now adds component-scoping attributes to nested child selectors and can handle the `&` that references the parent selector.
+CSS native nesting syntax is now handled correctly by the style encapsulation of `ViewEncapsulation.Emulated`. Component scoping attributes are now attached to nested child selectors as well, and the `&` that references the parent selector can also be handled.
 
 ```css
 .card {
@@ -272,11 +274,11 @@ CSS native nesting syntax is now handled correctly with `ViewEncapsulation.Emula
 }
 ```
 
-### Binding Functions and Signals to `animate.enter` and `animate.leave` 
+### Binding Functions and Signals to `animate.enter` and `animate.leave`
 
 https://github.com/angular/angular/commit/de5889ec4fab2b337e394eb994c8d428272d5ec9
 
-A bug where animations would not run when passing a function or Signal that returns a class name directly to `[animate.enter]` or `[animate.leave]` has been fixed. Previously, you had to call it on the template side like `enterClass()`, but now you can get the class name even if you pass a reference like `enterClass`.
+A bug has been fixed where animations would not run if a function or Signal returning a class name was passed directly to `[animate.enter]` or `[animate.leave]`. Previously, it was necessary to call them on the template side like `enterClass()`, but now you can get the class name even by passing a reference like `enterClass`.
 
 ```typescript
 import { Component, signal } from '@angular/core';
@@ -300,27 +302,27 @@ class Example {
 
 ## angular/angular-cli
 
-Main changes to the Angular CLI are as follows.
+Main changes in Angular CLI are as follows:
 
 https://github.com/angular/angular-cli/blob/main/CHANGELOG.md#2220
 
-### Specifying the Root Directory for MCP Servers
+### Specifying the Root Directory for the MCP Server
 
 https://github.com/angular/angular-cli/commit/41555dfb3b71d08cdfe2853bf2cbeca5b6942f67
 
-A `--root` option has been added to `ng mcp`. You can explicitly specify the scope where the MCP server is allowed file access and the starting point for searching the Angular workspace at startup. Since you can specify `--root` multiple times, it can be used when handling multiple workspaces or when starting the server from outside a workspace.
+A `--root` option has been added to `ng mcp`. You can explicitly specify the range within which the MCP server allows file access and the starting point for exploring the Angular workspace at startup. Since `--root` can be specified multiple times, it can also be used when handling multiple workspaces or when starting the server from outside a workspace.
 
 ```bash
 ng mcp --root /path/to/app-a --root /path/to/app-b
 ```
 
-If the MCP client provides roots via `listRoots()`, those will take precedence. If the client does not support it or returns an empty list, the `--root` specification is used; if neither exists, the current directory is used.
+If the MCP client provides roots via `listRoots()`, those take precedence. If the client does not support it or returns an empty list, the `--root` specification is used; if neither is present, the current directory is used.
 
-### Narrowing the Compilation Scope Based on Test Targets
+### Narrowing Compilation Scope to Match Test Targets
 
 https://github.com/angular/angular-cli/commit/f47f77f5f6db5cda1493652f813c98c26f172ea9
 
-A bug has been fixed in the Vitest execution of `@angular/build:unit-test` where tests would fail due to type errors in test files not specified by `--include`. Previously, all test files included in the `tsconfig` were compiled, even if you narrowed down the tests to be executed.
+A bug has been fixed in the Vitest execution of `@angular/build:unit-test` where tests would fail due to type errors in test files not specified by `--include`. Previously, even if you narrowed down the tests to be executed, all test files included in `tsconfig` were compiled.
 
 ```bash
 ng test --include='src/app/services/test.service.spec.ts'
@@ -330,31 +332,31 @@ ng test --include='src/app/services/test.service.spec.ts'
 
 https://github.com/angular/angular-cli/commit/a6ef9cfbeace725d58c0f7f65640ef6de9b39c33
 
-File watching in `@angular/build` has been replaced with an implementation centered around `@parcel/watcher` instead of `watchpack`. It utilizes the OS's file watching APIs through C++ native bindings, reducing CPU and memory usage in watch mode. In environments where polling is used or native watching is unavailable, it falls back to `chokidar`.
+File watching in `@angular/build` has been replaced with an implementation centered on `@parcel/watcher` instead of `watchpack`. It uses the OS file watching API through C++ native bindings to reduce CPU and memory usage in watch mode. In environments where polling is used or native watching is unavailable, it falls back to `chokidar`.
 
 ### Migration to Native Implementation for the Sass Compiler
 
 https://github.com/angular/angular-cli/commit/ecbcd87b8857225e4df3df7896b3236d63553f23
 
-Sass compilation in `@angular/build` has migrated from running the JavaScript version of Dart Sass in worker threads to using `sass-embedded`. It starts the AOT-compiled Dart binary as a separate process and requests compilation asynchronously via standard input/output. The compiler process is reused across multiple compilations.
+Sass compilation in `@angular/build` has migrated from running the JavaScript version of Dart Sass in worker threads to a method using `sass-embedded`. It starts the Dart AOT-compiled binary as a separate process and requests compilation asynchronously via standard input/output. The compiler process is reused across multiple compilations.
 
 Benchmarks report the following improvements:
 
-- For Sass processing alone, a speedup of approximately 1.3x to 4.3x for median compilation time after compiler startup, and approximately 2x to 3x for incremental compilation.
-- For total `ng build` wall-clock time, a reduction of about 8% to 14% for small apps with 5 Sass files. For large apps with 500 files, the first build is roughly equivalent, while subsequent builds are reduced by about 2% to 3%.
-- Peak memory usage for `ng build` was **reduced by about 14% to 29% for small apps and 31% to 33% for large apps**.
+- In Sass processing alone, a speedup of approximately 1.3–4.3x for the median compilation time after compiler startup, and approximately 2–3x for incremental compilation.
+- For overall `ng build` real time, a reduction of approximately 8–14% for a small app with 5 Sass files. For a large app with 500 files, the first build is roughly equivalent, but subsequent builds are approximately 2–3% faster.
+- Peak memory usage for `ng build` was **reduced by approximately 14–29% for small apps and by approximately 31–33% for large apps**.
 
-In the measurement examples, large apps see a greater effect in memory reduction than in time reduction.
+In the measurement examples, the large app showed a greater effect in memory reduction than in time reduction.
 
 ### Pre-compilation of Critical CSS Processing for SSR
 
 https://github.com/angular/angular-cli/commit/23e3d44a7f051cd3bb67700b8d8407f73b7aa7f3
 
-Analysis of stylesheets for Critical CSS inlining in `@angular/ssr` is now performed at build time. Critical CSS is a process that embeds CSS required for rendering directly into the HTML so that it can be displayed without waiting for external stylesheets to load. Previously, HTML and CSS were analyzed during request processing, but this has changed to a method where a "plan" for processing is generated in advance from the CSS and included in the server manifest. This reduces the burden of analyzing CSS for every request, significantly reducing SSR CPU usage and response wait times.
+In `@angular/ssr`'s Critical CSS inlining, stylesheet analysis is now performed at build time. Critical CSS is a process that embeds the CSS necessary for rendering into the HTML so that it can be displayed without waiting for external stylesheets to load. Previously, HTML and CSS were analyzed during request processing, but this has changed to a method where a "plan" for processing is pre-generated from the CSS and included in the server manifest. This reduces the burden of analyzing CSS for each request, significantly reducing SSR CPU usage and response latency.
 
 ## angular/components
 
-Main changes for Angular CDK, Aria, and Material are as follows.
+Main changes in Angular CDK, Aria, Material, etc. are as follows:
 
 https://github.com/angular/components/blob/main/CHANGELOG.md#2220
 
@@ -362,24 +364,24 @@ https://github.com/angular/components/blob/main/CHANGELOG.md#2220
 
 https://github.com/angular/components/commit/5d64e397b47e722e6ec8cd9eed69cd032766f656
 
-`mat-icon` now identifies the loaded Material Symbols font and automatically applies the corresponding CSS class. Previously, the `material-icons` class for the old Material Icons was applied by default, but if only Material Symbols is loaded, the `material-symbols-*` class corresponding to Outlined, Rounded, or Sharp will be used.
+`mat-icon` now identifies the loaded Material Symbols font and automatically adds the corresponding CSS class. Previously, the `material-icons` class for the old Material Icons was added by default, but if only Material Symbols are loaded, `material-symbols-*` classes corresponding to Outlined, Rounded, or Sharp will be used.
 
 ```html
-<!-- Load fonts in index.html -->
+<!-- Load the font in index.html -->
 <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 
-<!-- No need to specify fontSet in the template -->
+<!-- fontSet specification is not required in the template -->
 <mat-icon>home</mat-icon>
 ```
 
-In the example above, the `material-symbols-outlined` class is automatically applied. This feature does not automatically load the font itself, so separate font loading is still required. If both the old Material Icons and Material Symbols are loaded, the traditional `material-icons` takes precedence for compatibility.
+In the above example, the `material-symbols-outlined` class is automatically applied. This feature doesn't automatically load the font itself, so separate font loading is still required. If both old Material Icons and Material Symbols are loaded, the traditional `material-icons` takes precedence for compatibility.
 
-### Support for `disabledInteractive` in `MatMenuItem` 
+### `MatMenuItem` Support for `disabledInteractive` 
 
 https://github.com/angular/components/commit/cacab5551ba8a4af365b0e99132ef21e87c3b3f5
 
-A `disabledInteractive` input has been added to `MatMenuItem`. When used with `disabled`, it allows the item to accept focus and hover while maintaining a disabled appearance. Since it can be focused when navigating items via keyboard, it can be used for purposes such as explaining why an item cannot be operated via a tooltip.
+A `disabledInteractive` input has been added to `MatMenuItem`. When used with `disabled`, it allows the item to accept focus and hover while maintaining a disabled appearance. Since it can be focused when navigating through items with the keyboard, it can be used for purposes such as explaining the reason it can't be operated via a tooltip.
 
 ```html
 <button [matMenuTriggerFor]="menu">操作</button>
@@ -392,13 +394,13 @@ A `disabledInteractive` input has been added to `MatMenuItem`. When used with `d
 </mat-menu>
 ```
 
-Unlike standard `disabled`, the native `disabled` attribute is not added; instead, the disabled state is communicated via `aria-disabled`.
+Unlike normal `disabled`, the native `disabled` attribute is not added, and the disabled state is conveyed via `aria-disabled`.
 
-### Angular Aria: Support for Omitting `value` in `MenuItem` 
+### Angular Aria: Support for Omitting `value` in `MenuItem`
 
 https://github.com/angular/components/commit/cd9c7da8b6caf503cf1c0b1de1e7e861077abefb
 
-The `value` input can now be omitted in `MenuItem` for `@angular/aria/menu`. Previously, `value` was mandatory even when executing logic via the item's `(click)`, but now there's no need to add dummy values to menu items that don't use them. Even if multiple items omit the value, no warning about duplicate values will be issued.
+In `MenuItem` from `@angular/aria/menu`, the `value` input can now be omitted. Previously, `value` was required even when executing processing via `(click)` on each item, but now you don't need to add dummy values to menu items that don't use a value. Even if there are multiple items with omitted values, no warning about duplicate values will be issued.
 
 ```html
 <div ngMenu>
@@ -407,13 +409,13 @@ The `value` input can now be omitted in `MenuItem` for `@angular/aria/menu`. Pre
 </div>
 ```
 
-### Signal Forms Support for `MatFormFieldControl` 
+### `MatFormFieldControl` Support for Signal Forms
 
 https://github.com/angular/components/commit/42c72bf2ebb0a8ba0b38c5614814385b25df43e9
 
-`MatFormFieldControl` can now handle custom controls that use Signal Forms. By exposing the form field via the `ngField` property, `mat-form-field` can read states like `valid` and `dirty` and reflect them in the corresponding CSS classes.
+`MatFormFieldControl` can now handle custom controls that use Signal Forms. By exposing a form field via the `ngField` property, `mat-form-field` can read states such as `valid` and `dirty` and reflect them in the corresponding CSS classes.
 
-You can integrate with Signal Forms by adding `ngField` to the class provided as `MatFormFieldControl`.
+Signal Forms integration is possible by adding `ngField` to the class provided as `MatFormFieldControl`.
 
 ```typescript
 import { Component, forwardRef, inject } from '@angular/core';
@@ -429,13 +431,13 @@ import { MatFormFieldControl } from '@angular/material/form-field';
   }],
 })
 export class CustomNameInput {
-  // Integration point with Signal Forms
+  // Integration part with Signal Forms
   readonly ngField: FormField<string> | null =
     inject(FORM_FIELD, {optional: true, self: true}) as FormField<string> | null;
 }
 ```
 
-Users of the form pass the field via `[formField]` as usual and place it inside `mat-form-field`. The `inject(FORM_FIELD)` inside the control retrieves this Signal Forms directive.
+The side using the form passes the field via `[formField]` as usual and places it within the `mat-form-field`. The `inject(FORM_FIELD)` within the control retrieves this Signal Forms directive.
 
 ```html
 <mat-form-field>
@@ -444,4 +446,4 @@ Users of the form pass the field via `[formField]` as usual and place it inside 
 </mat-form-field>
 ```
 
-Previously, the state of Angular Forms was referenced via `ngControl`, but if `ngField` is present, it now takes precedence for referencing the Signal Forms state.
+Previously, the state of Angular Forms was referenced through `ngControl`, but if `ngField` exists, it takes precedence and references the state of Signal Forms.
