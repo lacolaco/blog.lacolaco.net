@@ -5,7 +5,9 @@ export function getDate(post: CollectionEntry<'posts' | 'postsEn'>): Date {
   return post.data.created_time;
 }
 
-export function getRelativePostUrl(post: CollectionEntry<'posts' | 'postsEn'>): string {
+export function getRelativePostUrl(post: {
+  data: Pick<CollectionEntry<'posts' | 'postsEn'>['data'], 'slug' | 'locale'>;
+}): string {
   const localeSuffix = post.data.locale === 'en' ? '.en' : '';
   return `/posts/${post.data.slug}${localeSuffix}`;
 }

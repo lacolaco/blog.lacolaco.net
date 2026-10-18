@@ -17,6 +17,7 @@ import ImageLightbox from '../components/ImageLightbox.astro';
 import { SITE_TITLE } from '../consts';
 import { queryAvailablePosts, type AdjacentPosts } from '@lib/query';
 import { getRelativePostUrl, getChannels } from '../libs/compat';
+import { resolveCanonicalUrl } from '../libs/post/canonical';
 import { getZennLinkUrl } from '../libs/post/zenn-link';
 
 type Props = {
@@ -28,6 +29,7 @@ const { entry, adjacentPosts } = Astro.props;
 const { slug, title, tags, created_time, last_edited_time, locale, canonical_url, published, features } =
   entry?.data;
 const channels = getChannels(entry);
+const canonicalHref = resolveCanonicalUrl({ slug, locale, canonicalUrl: canonical_url, site: Astro.site! });
 const isUpdated = differenceInDays(last_edited_time, created_time) > 0;
 const { Content } = await render(entry);
 
@@ -55,7 +57,7 @@ const zennUrl = getZennLinkUrl({ locale, canonical_url });
       }}
     />
 
-    {canonical_url && <link rel="canonical" href={canonical_url} />}
+    {canonicalHref && <link rel="canonical" href={canonicalHref} />}
     {features?.katex ? (
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css" integrity="sha384-5TcZemv2l/9On385z///+d7MSYlvIEw9FuZTIdZ14vJLqWphw7e7ZPuOiCHJcFCP" crossorigin="anonymous" />
     ) : null}

@@ -263,7 +263,7 @@ ja frontmatter を base に以下を変換して en frontmatter を作る。
 | `published` | そのままコピー |
 | `locale` | `'en'` に上書き |
 | `category` | そのままコピー |
-| `canonical_url` | そのままコピー |
+| `canonical_url` | そのままコピー (en ページの link rel=canonical には使わず、en ページ自身の URL を出す) |
 | `notion_url` | ja の値をコピー（en ページが Notion 側に存在しないため） |
 | `features` | そのままコピー |
 | `auto_translated_from` | **新規追加**: `sha256(jaBody + jaTitle + PROMPT_VERSION + MODEL_ID)` の hex 文字列 |

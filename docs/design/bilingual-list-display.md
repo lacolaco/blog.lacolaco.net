@@ -71,8 +71,8 @@ list の構造 (どの記事が並ぶか・順序・件数) は **そのまま**
 
 ### SEO / no-JS / 直接 link 対応
 
-- 検索エンジンは ja の HTML を index する (canonical URL は ja)
-- en 版は個別 URL (`<slug>.en.md` 由来の en page) で別途 index される
+- 検索エンジンは ja の HTML を index する (ja ページの canonical は canonical_url があればその値、無ければ canonical タグなし)
+- en 版は個別 URL (`<slug>.en.md` 由来の en page) で別途 index される。en ページの canonical は ja の canonical_url を使わず、en ページ自身の URL (`/posts/<slug>.en/`) とする
 - no-JS 環境 (古 browser / search bot) では ja のまま表示 (機能劣化なし)
 - 英語ユーザが list の en title をクリックしたら en page に直行 (動線維持)
 
