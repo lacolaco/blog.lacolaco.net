@@ -75,8 +75,8 @@ importers:
         specifier: 19.3.0
         version: 19.3.0(react@19.3.0)
       satori:
-        specifier: ^0.55.0
-        version: 0.55.1
+        specifier: ^0.56.0
+        version: 0.56.1
       unist-util-visit:
         specifier: ^5.0.0
         version: 5.1.0
@@ -92,7 +92,7 @@ importers:
         version: 10.0.1(eslint@10.12.0(jiti@2.7.0))
       '@google/genai':
         specifier: ^2.0.0
-        version: 2.29.0
+        version: 2.29.1
       '@iconify/json':
         specifier: ^2.2.161
         version: 2.2.542
@@ -798,8 +798,8 @@ packages:
     resolution: {integrity: sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==}
     engines: {node: '>=6'}
 
-  '@google/genai@2.29.0':
-    resolution: {integrity: sha512-jrgU07sEkMFX/K/gtEydDx+SH7NDbY5hdg8eLwDtfqHcJqPhsH68btd9QPrN7KqkrlURzSk49wVQYMKVJRy2Hw==}
+  '@google/genai@2.29.1':
+    resolution: {integrity: sha512-keU+JsY11fT4ykdFA6Q8iQHBgOAAVssFLxPtXRjCIEr5Zt2GzE75c22bBmq87XbhgtpuKaObnSgsrG60rj0ZMA==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.25.2
@@ -3812,8 +3812,8 @@ packages:
     engines: {node: '>=20.19.0'}
     hasBin: true
 
-  satori@0.55.1:
-    resolution: {integrity: sha512-YieTyYI+LVOTOX+RYs1ufcf19ApxKKJ8pNHu0B0zJB4NnxCXIOXmIyti6X4zjfRJZna9XD7FjbXF+CyzhTu5FQ==}
+  satori@0.56.1:
+    resolution: {integrity: sha512-1ARgCVs7Tf0uAwuqo8fXfkCv+89CL80ORINjJ0FKf+Y2iwmNPZjTF+NltvbfbGAn6kzP6rOQ+6eosu/lf7rM7A==}
     engines: {node: '>=16'}
 
   satteri@0.10.5:
@@ -4902,7 +4902,7 @@ snapshots:
 
   '@fortawesome/fontawesome-free@6.7.2': {}
 
-  '@google/genai@2.29.0':
+  '@google/genai@2.29.1':
     dependencies:
       google-auth-library: 10.9.1
       p-retry: 4.6.2
@@ -8400,7 +8400,7 @@ snapshots:
     optionalDependencies:
       '@parcel/watcher': 2.5.0
 
-  satori@0.55.1:
+  satori@0.56.1:
     dependencies:
       '@shuding/opentype.js': 1.4.0-beta.0
       css-background-parser: 0.1.0

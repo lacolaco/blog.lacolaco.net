@@ -3,7 +3,7 @@ title: 'Angular v22.2アップデートのまとめ'
 slug: 'angular-v22-2-update'
 icon: ''
 created_time: '2026-10-03T02:39:00.000Z'
-last_edited_time: '2026-10-03T02:47:00.000Z'
+last_edited_time: '2026-10-18T15:17:00.000Z'
 tags:
   - 'Angular CLI'
   - 'Angular Material'
@@ -92,6 +92,8 @@ https://github.com/angular/angular/pull/70463
 ```
 
 `ErrorHandler`にも`onViewError`フックが追加され、描画エラーの詳細を受け取れるようになった。あわせてAngular Language Serviceも`@boundary`と`@error`に対応し、入力補完やホバー、定義への移動、ブロックの折りたたみなどで新しい構文を扱えるようになっている。
+
+https://blog.lacolaco.net/posts/angular-error-boundary
 
 ### ディレクティブ用のテストユーティリティ追加
 
@@ -234,7 +236,7 @@ https://github.com/angular/angular/commit/3064f3f1dccd78177bf3b86f8ea231102884f0
 
 ルート単位のデータ取得をResource APIで扱う**Router Resources**が公開APIになった。`withRouterResources()`で有効にし、ルートの`resources`にデータ取得処理を定義できる。ルート間での並列読み込みや、画面遷移をブロックしないデータ取得、再ナビゲーションなしでのデータ再取得に対応している。
 
-使い方や従来のリゾルバとの違いについては、後日別の記事で詳しく書く予定。
+https://blog.lacolaco.net/posts/angular-router-resources
 
 ### ルート別インジェクタ自動破棄機能の安定化
 
