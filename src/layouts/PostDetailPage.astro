@@ -113,8 +113,6 @@ const zennUrl = getZennLinkUrl({ locale, canonical_url });
                       href={zennUrl}
                       target="_blank"
                       rel="noopener"
-                      data-zenn-link
-                      data-slug={slug}
                       class="flex items-center gap-1 p-1.5 lg:px-2 lg:py-1 rounded text-muted lg:text-tertiary text-[13px] leading-[normal] no-underline hover:text-default lg:hover:text-secondary hover:bg-gray-50 lg:hover:bg-surface transition-colors"
                       title="Zenn で読む"
                       aria-label="Zenn で読む"
@@ -166,16 +164,6 @@ const zennUrl = getZennLinkUrl({ locale, canonical_url });
     <Footer class="py-4 lg:py-0" />
 
     <ImageLightbox />
-
-    <script>
-      import { trackEvent, zennLinkEvents } from '../libs/analytics';
-
-      // pointerdown ではなく click で送る。押した位置と離した位置が違う操作では click が発生せず、遷移も起きない
-      document.querySelector<HTMLAnchorElement>('a[data-zenn-link]')?.addEventListener('click', (event) => {
-        const slug = (event.currentTarget as HTMLElement).dataset.slug;
-        if (slug) trackEvent(zennLinkEvents.click(slug));
-      });
-    </script>
 
     {features?.tweet ? <script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8" /> : null}
     {features?.mermaid ? (
