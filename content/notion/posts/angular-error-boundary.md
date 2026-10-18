@@ -3,7 +3,7 @@ title: 'Angular: Error Boundary解説'
 slug: 'angular-error-boundary'
 icon: ''
 created_time: '2026-10-18T15:05:00.000Z'
-last_edited_time: '2026-10-18T15:05:00.000Z'
+last_edited_time: '2026-10-18T23:44:00.000Z'
 tags: []
 published: true
 locale: 'ja'
@@ -12,6 +12,7 @@ channels:
   - 'Angular'
   - 'Code'
 notion_url: 'https://app.notion.com/p/Angular-Error-Boundary-3fd3521b014a809d9a07c4a1270cadaa'
+auto_translate: true
 features:
   katex: false
   mermaid: false
