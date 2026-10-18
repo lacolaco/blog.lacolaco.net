@@ -68,3 +68,8 @@ export const searchEvents = {
     params: { search_term: toSearchTerm(term), slug },
   }),
 };
+
+/** 記事ヘッダの Zenn リンクのイベントファクトリー */
+export const zennLinkEvents = {
+  click: (slug: string): AnalyticsEvent => ({ name: 'zenn_link_click', params: { slug } }),
+};
