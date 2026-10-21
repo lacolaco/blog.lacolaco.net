@@ -53,7 +53,7 @@
     "yaml": "^2.8.0"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "5.20261015.1",
+    "@cloudflare/workers-types": "5.20261016.1",
     "@eslint/js": "^10.0.1",
     "@google/genai": "^2.0.0",
     "@iconify/json": "^2.2.161",
