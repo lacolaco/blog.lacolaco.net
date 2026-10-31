@@ -14,6 +14,9 @@ importers:
       '@astrojs/markdown-remark':
         specifier: 7.3.4
         version: 7.3.4
+      '@astrojs/markdown-satteri':
+        specifier: 0.4.5
+        version: 0.4.5
       '@astrojs/node':
         specifier: 11.1.9
         version: 11.1.9(astro@7.4.2(@astrojs/markdown-remark@7.3.4)(@types/node@26.6.5)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.106.1)(tsx@4.23.15)(yaml@2.9.1))
@@ -56,12 +59,18 @@ importers:
       escape-html:
         specifier: ^1.0.3
         version: 1.0.3
+      gemoji:
+        specifier: 8.1.0
+        version: 8.1.0
       hast-util-from-html:
         specifier: ^2.0.3
         version: 2.0.3
+      hast-util-to-html:
+        specifier: ^9.0.5
+        version: 9.0.5
       katex:
-        specifier: 0.19.1
-        version: 0.19.1
+        specifier: 0.16.47
+        version: 0.16.47
       mermaid:
         specifier: 12.2.0
         version: 12.2.0
@@ -74,9 +83,18 @@ importers:
       react-dom:
         specifier: 19.3.1
         version: 19.3.1(react@19.3.1)
+      remark-smartypants:
+        specifier: 3.0.3
+        version: 3.0.3
       satori:
         specifier: ^0.63.0
         version: 0.63.2
+      satteri:
+        specifier: 0.10.5
+        version: 0.10.5
+      shiki:
+        specifier: 4.5.0
+        version: 4.5.0
       unist-util-visit:
         specifier: ^5.0.0
         version: 5.2.0
@@ -187,7 +205,7 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       remark-parse:
-        specifier: ^11.0.0
+        specifier: '11'
         version: 11.0.0
       remark-rehype:
         specifier: ^11.1.2
@@ -2974,10 +2992,6 @@ packages:
 
   katex@0.18.10:
     resolution: {integrity: sha512-/B6p9eY9DX7aHBfpkHdpirDTZ5QH9xTwL9y837PWuzuv41O5jFdqNQwVQEQsimY0/iVNkwBY4+4hMfhQ7d4Dbw==}
-    hasBin: true
-
-  katex@0.19.1:
-    resolution: {integrity: sha512-jG8uKntjSEcm2EpQOh0XturpPuuC9r3Sq5HLHdsFdWZT27E672SF19QEi+of0/YeOy15lDgRhKvr5614uRrEfA==}
     hasBin: true
 
   keyv@5.6.0:
@@ -7162,10 +7176,6 @@ snapshots:
       commander: 8.3.0
 
   katex@0.18.10:
-    dependencies:
-      commander: 15.0.0
-
-  katex@0.19.1:
     dependencies:
       commander: 15.0.0
 

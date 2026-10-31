@@ -1,26 +1,10 @@
 import type { Html, Paragraph, Root } from 'mdast';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
-import type { EmbedConfig } from './handlers.ts';
-import { createEmbedHandlers } from './handlers.ts';
-
-// プラグインのオプション型
-interface RemarkEmbedOptions {
-  config?: Partial<EmbedConfig>;
-}
+import { createEmbedResolver, type RemarkEmbedOptions } from './resolve.ts';
 
 const remarkEmbed: Plugin<[RemarkEmbedOptions?], Root> = (options = {}) => {
-  // ユーザー設定をそのまま渡す（デフォルト設定は各ハンドラー内で処理）
-  const config: EmbedConfig = {
-    youtube: options.config?.youtube || {},
-    webpage: options.config?.webpage || {},
-    tweet: options.config?.tweet || {},
-    stackblitz: options.config?.stackblitz || {},
-    googleSlides: options.config?.googleSlides || {},
-  } as EmbedConfig;
-
-  // 設定に基づいてハンドラーを生成
-  const embedHandlers = createEmbedHandlers(config);
+  const resolveEmbed = createEmbedResolver(options);
 
   return async (tree: Root, file) => {
     const source = String(file.value);
@@ -39,36 +23,16 @@ const remarkEmbed: Plugin<[RemarkEmbedOptions?], Root> = (options = {}) => {
       }
 
       const link = node.children[0];
-
-      // リンクに明示的なタイトルがある場合は処理しない
-      const linkText = link.children.map((child) => (child.type === 'text' ? child.value : '')).join('');
-      if (linkText !== link.url) {
-        console.debug('Link has explicit text, skipping:', linkText);
-        return;
-      }
-
-      const url = link.url;
-
-      if (!url) {
-        console.warn('Link has no URL:', link);
-        return; // URLがない場合は何もしない
-      }
-
-      // リンク記法や山括弧の自動リンクではなく、URLがそのまま書かれた行か
       const { start, end } = link.position ?? {};
-      const isBareUrl =
-        start?.offset !== undefined && end?.offset !== undefined && source.slice(start.offset, end.offset) === url;
+      const embed = resolveEmbed({
+        url: link.url,
+        text: link.children.map((child) => (child.type === 'text' ? child.value : '')).join(''),
+        sourceText:
+          start?.offset !== undefined && end?.offset !== undefined ? source.slice(start.offset, end.offset) : undefined,
+      });
+      if (embed === undefined) return;
 
-      // URL パターンに基づいてハンドラーを検索
-      const handler = embedHandlers.find((h) => (isBareUrl || !h.bareUrlOnly) && h.test(url));
-
-      if (!handler) {
-        console.warn(`No handler found for URL: ${url}`);
-        return; // どのハンドラーにもマッチしない場合は何もしない
-      }
-
-      const transformResult = handler.transform(url);
-      const promise = Promise.resolve(transformResult).then((htmlValue) => {
+      const promise = Promise.resolve(embed).then((htmlValue) => {
         if (htmlValue && index !== undefined) {
           const htmlNode: Html = { type: 'html', value: htmlValue };
           parent.children[index] = htmlNode;

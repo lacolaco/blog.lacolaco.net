@@ -55,8 +55,50 @@ after(() => {
 });
 
 describe('Markdown の処理系', () => {
-  test('remark / rehype のプラグインを実行できる unified である (Sätteri ではない)', () => {
-    assert.equal(createMarkdownConfig().processor.name, 'unified');
+  test('Sätteri である', () => {
+    assert.equal(createMarkdownConfig().processor.name, 'satteri');
+  });
+
+  describe('raw HTML', () => {
+    test('文字参照は文字に戻されずそのまま出力される', async () => {
+      const html = await render('<div><span>&#64;lacolaco&#64;misskey.io</span></div>');
+      assert.match(html, /<div><span>&#64;lacolaco&#64;misskey\.io<\/span><\/div>/);
+    });
+  });
+
+  describe('unified の処理系との出力の一致', () => {
+    test('引用符は remark-smartypants の向きになり、日本語の直前の開き引用符も閉じ引用符になる', async () => {
+      const html = await render('日本語の"引用"です');
+      assert.match(html, /日本語の”引用”です/);
+    });
+
+    test('ハイフン2つは em dash になる', async () => {
+      const html = await render('flag --emit を使う');
+      assert.match(html, /flag —emit を使う/);
+    });
+
+    test('コードの末尾の空行は空の行として残る', async () => {
+      const html = await render('```ts\nconst a = 1;\n\n```');
+      assert.match(html, /<span class="line"><\/span><\/code>/);
+    });
+
+    test('markdown のコードブロックの埋め込み言語は、後ろのブロックで読み込まれる言語の影響を受けない', async () => {
+      const html = await render('````markdown\n---\ntitle: x\n---\n````\n\n```yaml\ntitle: x\n```');
+      const [markdownBlock] = html.split('</pre>');
+      assert.match(markdownBlock, /<span style="color:#005CC5;font-weight:bold">---<\/span>/);
+    });
+
+    test('空行を挟んだ入れ子のリストの緩い判定は remark-parse に合わせる', async () => {
+      const html = await render('- d\n  1. x\n  1. y\n\n  - z\n- e\n');
+      assert.match(html, /<ol>\n<li>\n<p>x<\/p>/);
+      assert.match(html, /<li>d\n<ol>/);
+      assert.match(html, /<li>z<\/li>/);
+    });
+
+    test('Mermaid の定義は末尾の改行を含む', async () => {
+      const html = await render('```mermaid\ngraph TD; A-->B;\n```');
+      assert.match(html, /<pre class="mermaid">graph TD; A--&gt;B;\n<\/pre>/);
+    });
   });
 
   describe('数式', () => {
@@ -64,6 +106,13 @@ describe('Markdown の処理系', () => {
       const html = await render('式は $a^2 + b^2$ です。');
       assert.match(html, /<span class="katex">/);
       assert.doesNotMatch(html, /katex-display/);
+    });
+
+    // PostDetailPage が CDN から読む KaTeX の CSS は 0.16 系で、`katex-base` のような 0.17 以降のクラス名を知らない
+    test('KaTeX の出力は PostDetailPage が読む CSS のクラス名 (0.16 系) を使う', async () => {
+      const html = await render('式は $a^2$ です。');
+      assert.match(html, /<span class="base">/);
+      assert.doesNotMatch(html, /katex-base/);
     });
 
     test('ブロック数式は KaTeX の display 要素になる', async () => {

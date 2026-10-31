@@ -37,7 +37,7 @@ export default defineConfig({
     locales: ['ja', 'en'],
   },
 
-  // 記事の変換設定は tools/markdown-pipeline にあり、処理系を unified にしている理由もそこに書いてある
+  // 記事の変換設定は tools/markdown-pipeline にあり、処理系を Sätteri にしている理由もそこに書いてある
   markdown: createMarkdownConfig(),
 
   output: 'static',
