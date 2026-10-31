@@ -576,6 +576,12 @@
     "description": null
   },
   {
+    "id": "677f1d61-30d1-4d11-8d87-2e5b085f9df0",
+    "name": "アニメ",
+    "color": "red",
+    "description": null
+  },
+  {
     "id": "270f42bf-4dd3-4580-abc9-93f916636350",
     "name": "ゲーム",
     "color": "blue",
@@ -630,6 +636,12 @@
     "description": null
   },
   {
+    "id": "1bc166e4-dce4-43fe-beef-2d4511fa1c58",
+    "name": "ポケモン",
+    "color": "brown",
+    "description": null
+  },
+  {
     "id": "2150ac74-930b-42fa-9b86-4002accb078d",
     "name": "英語史",
     "color": "brown",
@@ -663,6 +675,12 @@
     "id": "092ae864-ca59-48d0-b506-85e4230fa4e6",
     "name": "状態論",
     "color": "brown",
+    "description": null
+  },
+  {
+    "id": "cb5d7798-c811-4a88-9a1f-c64568d23668",
+    "name": "仙台",
+    "color": "green",
     "description": null
   },
   {
@@ -717,6 +735,12 @@
     "id": "9bece18b-c3af-409a-887f-2711f016534e",
     "name": "本屋",
     "color": "brown",
+    "description": null
+  },
+  {
+    "id": "cd5b6813-c1c9-4cec-80f0-2bb6d63e1c53",
+    "name": "旅行",
+    "color": "orange",
     "description": null
   },
   {
