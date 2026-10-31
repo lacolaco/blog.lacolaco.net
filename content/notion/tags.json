@@ -246,6 +246,12 @@
     "description": null
   },
   {
+    "id": "a91e4429-9e2c-44dc-bb9c-6173e0b8dbf7",
+    "name": "IaC",
+    "color": "pink",
+    "description": null
+  },
+  {
     "id": "e3d20b6b-e06d-454a-ba0c-0a0ca20e98c5",
     "name": "Import Assertions",
     "color": "yellow",
@@ -441,6 +447,12 @@
     "id": "bd542562-e9a8-4682-ad62-717cecda8912",
     "name": "tailwindcss",
     "color": "green",
+    "description": null
+  },
+  {
+    "id": "2cb75960-b2f6-4f30-92ee-f4e7e5512c22",
+    "name": "Terraform",
+    "color": "brown",
     "description": null
   },
   {
