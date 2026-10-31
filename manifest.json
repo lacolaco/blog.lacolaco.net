@@ -1573,5 +1573,15 @@
   "40a3521b-014a-8013-9569-dd6e9e5e9313": {
     "lastModified": "2026-10-31T04:53:00.000Z",
     "filePath": "content/notion/posts/20261031-domain-transfer.md"
+  },
+  "40a3521b-014a-805c-b97f-cab45524133e": {
+    "lastModified": "2026-10-31T09:48:00.000Z",
+    "filePath": "content/notion/posts/20261031-sendai.md",
+    "imagePaths": [
+      "public/images/20261031-sendai/image.0419664ca3ea20b6.png",
+      "public/images/20261031-sendai/image.ded47f93f9baae53.png",
+      "public/images/20261031-sendai/image.d948c44629934b78.png",
+      "public/images/20261031-sendai/image.ef1307abbd75ead7.png"
+    ]
   }
 }
