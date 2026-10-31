@@ -242,7 +242,7 @@ describe('Embed Handlers', () => {
         assert.ok(html.startsWith('<div class="block-link block-link-misskey">'));
         assert.ok(html.includes('src="https://img.example/avatar.png"'));
         assert.ok(html.includes('alt="らこらこ"'));
-        assert.ok(html.includes('@lacolaco@misskey.io'));
+        assert.ok(html.includes('<span class="misskey-username">&#64;lacolaco&#64;misskey.io</span>'));
         assert.ok(html.includes('こんにちは'));
         assert.ok(html.includes('href="https://misskey.io/@lacolaco"'));
         assert.ok(html.includes('src="https://img.example/server.png"'));
@@ -262,9 +262,26 @@ describe('Embed Handlers', () => {
       test('リモートユーザーは user.host を使う', async () => {
         const note = { ...baseNote, user: { ...baseNote.user, host: 'remote.example' } };
         const html = await withFetch(noteRoutes(note), () => misskeyHandler.transform(noteUrl));
-        assert.ok(html?.includes('@lacolaco@remote.example'));
+        assert.ok(html?.includes('<span class="misskey-username">&#64;lacolaco&#64;remote.example</span>'));
         assert.ok(html?.includes('href="https://misskey.io/@lacolaco@remote.example"'));
         assert.ok(!html?.includes('href="https://misskey.io/@lacolaco"'));
+      });
+
+      // Cloudflare の Email Obfuscation が user@host をメールアドレスとして書き換えないよう、テキストの @ は文字参照にする
+      test('ユーザー名、表示名、本文、CW のテキストの @ は文字参照になる', async () => {
+        const note = {
+          ...baseNote,
+          text: 'cc @foo@example.social',
+          user: { ...baseNote.user, name: 'らこ@休止中' },
+        };
+        const html = await withFetch(noteRoutes(note), () => misskeyHandler.transform(noteUrl));
+        assert.ok(html?.includes('cc &#64;foo&#64;example.social'));
+        assert.ok(html?.includes('らこ&#64;休止中'));
+        assert.doesNotMatch(html ?? '', />[^<]*@[^<]*</);
+
+        const cwNote = { ...baseNote, cw: 'to @bar@example.social' };
+        const cwHtml = await withFetch(noteRoutes(cwNote), () => misskeyHandler.transform(noteUrl));
+        assert.ok(cwHtml?.includes('to &#64;bar&#64;example.social'));
       });
 
       test('投稿日時はJSTの絶対時刻で、元ノートへのリンクになる', async () => {

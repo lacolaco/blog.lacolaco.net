@@ -172,9 +172,14 @@ function collectEmojiNames(...texts: (string | null)[]): string[] {
   return [...names];
 }
 
+// Cloudflare の Email Obfuscation が user@host (ユーザー名やメンション) を書き換えないよう、テキストの @ は文字参照にする
+function escapeText(text: string): string {
+  return escapeHtml(text).replace(/@/g, '&#64;');
+}
+
 // エスケープ済みテキストの :name: を画像に置換する。改行は &#10; にして pre-wrap で保持する
 function renderText(text: string, emojiUrls: Map<string, string>): string {
-  return escapeHtml(text.replace(/\r\n?/g, '\n'))
+  return escapeText(text.replace(/\r\n?/g, '\n'))
     .replace(EMOJI_PATTERN, (whole, name: string) => {
       const url = emojiUrls.get(name);
       return url ? `<img class="misskey-emoji" alt=":${name}:" src="${escapeHtml(url)}">` : whole;
@@ -272,7 +277,7 @@ export async function renderMisskeyNote(url: string, fallback: () => string): Pr
       : '',
     '<div class="misskey-author">',
     externalLink(profileUrl, 'class="misskey-name" ', renderText(displayName, emojiUrls)),
-    `<span class="misskey-username">@${escapeHtml(note.user.username)}@${escapeHtml(note.user.host ?? host)}</span>`,
+    `<span class="misskey-username">${escapeText(`@${note.user.username}@${note.user.host ?? host}`)}</span>`,
     '</div>',
     serverIcon
       ? externalLink(
