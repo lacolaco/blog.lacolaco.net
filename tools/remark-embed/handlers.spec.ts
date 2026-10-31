@@ -242,7 +242,6 @@ describe('Embed Handlers', () => {
         assert.ok(html.startsWith('<div class="block-link block-link-misskey">'));
         assert.ok(html.includes('src="https://img.example/avatar.png"'));
         assert.ok(html.includes('alt="らこらこ"'));
-        // Misskey 本家の MkAcct と同じく、ユーザー名とホストを別の要素にする
         assert.ok(
           html.includes('<span class="misskey-username"><span>@lacolaco</span><span>@misskey.io</span></span>'),
         );
