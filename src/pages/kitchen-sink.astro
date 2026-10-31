@@ -5,6 +5,7 @@ import BaseHead from 'src/components/BaseHead.astro';
 import Footer from 'src/components/Footer.astro';
 import FormattedDate from 'src/components/FormattedDate';
 import Header from 'src/components/Header.astro';
+import ImageLightbox from 'src/components/ImageLightbox.astro';
 import MainContainer from 'src/components/MainContainer.astro';
 import ShareButtons from 'src/components/ShareButtons.astro';
 import ChannelBadge from 'src/components/ChannelBadge.astro';
@@ -65,6 +66,8 @@ const isUpdated = last_edited_time && isAfterDate(last_edited_time, created_time
     </MainContainer>
 
     <Footer class="py-4" />
+
+    <ImageLightbox />
 
     {features?.tweet ? <script is:inline async src="https://platform.twitter.com/widgets.js" charset="utf-8" /> : null}
     {features?.mermaid ? (
