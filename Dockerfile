@@ -1,7 +1,7 @@
-FROM node:lts-alpine AS base
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
+# .node-version と同じメジャーに合わせる
+FROM node:24-alpine AS base
+# corepack は Node 25 以降に同梱されず、Node を上げると壊れるため使わない。pnpm は package.json の packageManager のバージョンへ自動で切り替わる
+RUN npm install -g --ignore-scripts pnpm
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
@@ -16,9 +16,7 @@ FROM base AS build
 COPY ./dist ./dist
 
 # Production image
-FROM node:lts-alpine
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
+FROM node:24-alpine
 WORKDIR /app
 
 COPY --from=prod-deps /app/node_modules ./node_modules
