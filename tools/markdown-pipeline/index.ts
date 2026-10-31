@@ -6,6 +6,7 @@ import rehypeKatex from 'rehype-katex';
 import rehypeMermaid from 'rehype-mermaid';
 import remarkBreaks from 'remark-breaks';
 import remarkMath from 'remark-math';
+import rehypeEscapeAt from '../rehype-escape-at/index.ts';
 import rehypeExtractMediaHtml from '../rehype-extract-media-html/index.ts';
 import rehypeImageCdn from '../rehype-image-cdn/index.ts';
 import remarkEmbed from '../remark-embed/index.ts';
@@ -42,6 +43,8 @@ export function createMarkdownConfig(options: { publicDir?: string } = {}): Mark
         rehypeKatex,
         [rehypeMermaid, { strategy: 'pre-mermaid' }],
         [rehypeImageCdn, { publicDir: options.publicDir }],
+        // 実処理は Astro が最後に実行する rehype-raw の後に回る (tools/rehype-escape-at 参照)
+        rehypeEscapeAt,
       ],
     }),
     syntaxHighlight: {

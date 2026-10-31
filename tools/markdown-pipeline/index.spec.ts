@@ -173,6 +173,36 @@ describe('Markdown の処理系', () => {
     });
   });
 
+  // Cloudflare の Email Obfuscation が `user@host` を書き換えないよう、テキストの @ は文字参照で出力する
+  describe('テキストの @', () => {
+    test('段落のテキストの @ は文字参照になる', async () => {
+      const html = await render('連絡先は user@example.com です');
+      assert.match(html, /user&#x40;example\.com/);
+      assert.doesNotMatch(html, />[^<]*@[^<]*</);
+    });
+
+    test('埋め込みの生 HTML のテキストの @ も文字参照になる', async () => {
+      const html = await render('<div class="card"><span>@lacolaco@misskey.io</span></div>');
+      assert.match(html, /<span>&#x40;lacolaco&#x40;misskey\.io<\/span>/);
+    });
+
+    test('コードブロックのテキストの @ も文字参照になる', async () => {
+      const html = await render('```js\nconst email = "user@example.com";\n```');
+      assert.match(html, /user&#x40;example\.com/);
+      assert.doesNotMatch(html, />[^<]*@[^<]*</);
+    });
+
+    test('属性値の @ はそのまま残る', async () => {
+      const html = await render('[profile](https://misskey.io/@lacolaco)');
+      assert.match(html, /href="https:\/\/misskey\.io\/@lacolaco"/);
+    });
+
+    test('@ 以外の文字の出力は変わらない', async () => {
+      const html = await render('a & b < c');
+      assert.match(html, /<p>a &#x26; b &#x3C; c<\/p>/);
+    });
+  });
+
   describe('コードブロック', () => {
     test('通常の言語は shiki の github-light で色付けされる', async () => {
       const html = await render('```ts\nconst a = 1;\n```');
