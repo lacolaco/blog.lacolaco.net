@@ -242,7 +242,11 @@ describe('Embed Handlers', () => {
         assert.ok(html.startsWith('<div class="block-link block-link-misskey">'));
         assert.ok(html.includes('src="https://img.example/avatar.png"'));
         assert.ok(html.includes('alt="らこらこ"'));
-        assert.ok(html.includes('@lacolaco@misskey.io'));
+        // Misskey 本家の MkAcct と同じく、ユーザー名とホストを別の要素にする
+        assert.ok(
+          html.includes('<span class="misskey-username"><span>@lacolaco</span><span>@misskey.io</span></span>'),
+        );
+        assert.ok(!html.includes('@lacolaco@misskey.io'));
         assert.ok(html.includes('こんにちは'));
         assert.ok(html.includes('href="https://misskey.io/@lacolaco"'));
         assert.ok(html.includes('src="https://img.example/server.png"'));
@@ -262,7 +266,9 @@ describe('Embed Handlers', () => {
       test('リモートユーザーは user.host を使う', async () => {
         const note = { ...baseNote, user: { ...baseNote.user, host: 'remote.example' } };
         const html = await withFetch(noteRoutes(note), () => misskeyHandler.transform(noteUrl));
-        assert.ok(html?.includes('@lacolaco@remote.example'));
+        assert.ok(
+          html?.includes('<span class="misskey-username"><span>@lacolaco</span><span>@remote.example</span></span>'),
+        );
         assert.ok(html?.includes('href="https://misskey.io/@lacolaco@remote.example"'));
         assert.ok(!html?.includes('href="https://misskey.io/@lacolaco"'));
       });
