@@ -125,6 +125,62 @@ describe('remarkEmbed', () => {
     });
   });
 
+  // Notion の bookmark ブロックは notion-sync で URL だけの行として出力される
+  describe('MisskeyノートURLの埋め込み', () => {
+    const noteUrl = 'https://misskey.io/notes/aszh5x0wbw860cta';
+    const note = {
+      id: 'aszh5x0wbw860cta',
+      createdAt: '2026-10-31T04:38:12.080Z',
+      text: 'こんにちは',
+      cw: null,
+      visibility: 'public',
+      renoteId: null,
+      user: { name: 'らこらこ', username: 'lacolaco', host: null, avatarUrl: null, emojis: {} },
+      files: [],
+    };
+
+    async function withNoteApi<T>(run: (calledPaths: string[]) => Promise<T>): Promise<T> {
+      const originalFetch = globalThis.fetch;
+      const calledPaths: string[] = [];
+      globalThis.fetch = (input) => {
+        const url = new URL(typeof input === 'string' ? input : input instanceof URL ? input.href : input.url);
+        calledPaths.push(url.pathname);
+        if (url.pathname === '/api/notes/show') return Promise.resolve(Response.json(note));
+        return Promise.resolve(new Response('Not Found', { status: 404 }));
+      };
+      try {
+        return await run(calledPaths);
+      } finally {
+        globalThis.fetch = originalFetch;
+      }
+    }
+
+    test('URLだけの行であるとき、Misskeyのカードが埋め込まれる', async () => {
+      await withNoteApi(async () => {
+        const result = await processMarkdown(noteUrl);
+        assert.match(result, /<div class="block-link block-link-misskey">/);
+        assert.match(result, /こんにちは/);
+      });
+    });
+
+    test('URLをテキストにしたリンク記法であるとき、Misskeyのカードにせず、APIも呼ばない', async () => {
+      await withNoteApi(async (calledPaths) => {
+        const result = await processMarkdown(`[${noteUrl}](${noteUrl})`);
+        assert.doesNotMatch(result, /block-link-misskey/);
+        assert.match(result, /<div class="block-link block-link-default">/);
+        assert.deepEqual(calledPaths, []);
+      });
+    });
+
+    test('山括弧の自動リンクであるとき、Misskeyのカードにしない', async () => {
+      await withNoteApi(async (calledPaths) => {
+        const result = await processMarkdown(`<${noteUrl}>`);
+        assert.doesNotMatch(result, /block-link-misskey/);
+        assert.deepEqual(calledPaths, []);
+      });
+    });
+  });
+
   describe('WebページURLの埋め込み', () => {
     test('有効なURLであるとき、Webページカードが埋め込まれる', async () => {
       const markdown = 'https://github.com/lacolaco/blog.lacolaco.net';

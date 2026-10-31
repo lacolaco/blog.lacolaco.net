@@ -26,11 +26,14 @@
   });
 
   // 記事内画像にクリックハンドラを付与
-  document.querySelectorAll<HTMLImageElement>('.markdown-body :is(p, figure) > img').forEach((img) => {
-    img.addEventListener('click', () => {
-      dialogImg.src = img.src;
-      dialogImg.alt = img.alt;
-      dialog.showModal();
+  // Misskeyカードの画像はサムネイルなので、data-lightbox-src の元画像を拡大表示する
+  document
+    .querySelectorAll<HTMLImageElement>('.markdown-body :is(p, figure) > img, .markdown-body .misskey-image > img')
+    .forEach((img) => {
+      img.addEventListener('click', () => {
+        dialogImg.src = img.dataset.lightboxSrc ?? img.src;
+        dialogImg.alt = img.alt;
+        dialog.showModal();
+      });
     });
-  });
 </script>

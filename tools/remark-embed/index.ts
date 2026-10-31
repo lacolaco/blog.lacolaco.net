@@ -22,7 +22,9 @@ const remarkEmbed: Plugin<[RemarkEmbedOptions?], Root> = (options = {}) => {
   // 設定に基づいてハンドラーを生成
   const embedHandlers = createEmbedHandlers(config);
 
-  return async (tree: Root) => {
+  return async (tree: Root, file) => {
+    const source = String(file.value);
+
     const promises: Promise<void>[] = [];
 
     visit(tree, 'paragraph', (node: Paragraph, index, parent) => {
@@ -52,8 +54,13 @@ const remarkEmbed: Plugin<[RemarkEmbedOptions?], Root> = (options = {}) => {
         return; // URLがない場合は何もしない
       }
 
+      // リンク記法や山括弧の自動リンクではなく、URLがそのまま書かれた行か
+      const { start, end } = link.position ?? {};
+      const isBareUrl =
+        start?.offset !== undefined && end?.offset !== undefined && source.slice(start.offset, end.offset) === url;
+
       // URL パターンに基づいてハンドラーを検索
-      const handler = embedHandlers.find((h) => h.test(url));
+      const handler = embedHandlers.find((h) => (isBareUrl || !h.bareUrlOnly) && h.test(url));
 
       if (!handler) {
         console.warn(`No handler found for URL: ${url}`);

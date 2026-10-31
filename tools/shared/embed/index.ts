@@ -27,3 +27,18 @@ export function isTweetUrl(url: string): boolean {
     return false;
   }
 }
+
+/**
+ * URLがMisskeyのノートURL(https://<host>/notes/<id>)の形式かどうかを判定する
+ * 実際にMisskeyかどうかは判定せず、形式のみを見る
+ * @param url 判定対象のURL
+ * @returns ノートURLの形式の場合はtrue、そうでなければfalse
+ */
+export function isMisskeyNoteUrl(url: string): boolean {
+  try {
+    const urlObj = new URL(url);
+    return urlObj.protocol === 'https:' && /^\/notes\/[a-zA-Z0-9]+$/.test(urlObj.pathname);
+  } catch {
+    return false;
+  }
+}

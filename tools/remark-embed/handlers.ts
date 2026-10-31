@@ -1,5 +1,6 @@
 import { escapeHtml } from './escape-html.ts';
-import { isTweetUrl } from '../shared/embed';
+import { isMisskeyNoteUrl, isTweetUrl } from '../shared/embed';
+import { renderMisskeyNote } from './misskey.ts';
 
 // 設定インターフェース
 interface EmbedConfig {
@@ -28,6 +29,8 @@ interface EmbedConfig {
 // 埋め込みハンドラーのインターフェース
 interface EmbedHandler {
   name: string;
+  // trueなら、ソースがURLだけの行 (Notionのbookmarkブロック由来) のときだけ適用する
+  bareUrlOnly?: boolean;
   test: (url: string) => boolean;
   transform: (url: string) => Promise<string | undefined> | string;
 }
@@ -87,6 +90,16 @@ function createTweetHandler(): EmbedHandler {
   </blockquote>
 </div>`.trim();
     },
+  };
+}
+
+// ノートURLの形式に合えば、Misskeyかどうかはtransformで実際にAPIを呼んで判定する
+function createMisskeyHandler(): EmbedHandler {
+  return {
+    name: 'misskey',
+    bareUrlOnly: true,
+    test: (url: string) => isMisskeyNoteUrl(url),
+    transform: (url: string) => renderMisskeyNote(url, () => defaultLinkCard(url)),
   };
 }
 
@@ -229,21 +242,23 @@ function createGoogleSlidesHandler(config: EmbedConfig): EmbedHandler {
   };
 }
 
+function defaultLinkCard(url: string): string {
+  // URLが `/` から始まる場合は、相対URLとして扱い、本番ドメインを付加する
+  const safeUrl = new URL(url); // 本番ドメインを付加
+
+  return `
+<div class="block-link block-link-default">
+  <iframe src="/embed?url=${safeUrl.toString()}" loading="lazy"></iframe>
+</div>`.trim();
+}
+
 function createDefaultHandler(): EmbedHandler {
   return {
     name: 'default',
     test: (url: string) => {
       return url.startsWith('https://') || url.startsWith('http://');
     },
-    transform: (url: string) => {
-      // URLが `/` から始まる場合は、相対URLとして扱い、本番ドメインを付加する
-      const safeUrl = new URL(url); // 本番ドメインを付加
-
-      return `
-<div class="block-link block-link-default">
-  <iframe src="/embed?url=${safeUrl.toString()}" loading="lazy"></iframe>
-</div>`.trim();
-    },
+    transform: (url: string) => defaultLinkCard(url),
   };
 }
 
@@ -251,6 +266,7 @@ function createDefaultHandler(): EmbedHandler {
 export function createEmbedHandlers(config: EmbedConfig): EmbedHandler[] {
   return [
     createTweetHandler(),
+    createMisskeyHandler(),
     createYouTubeHandler(config),
     createStackblitzHandler(config),
     createGoogleSlidesHandler(config),

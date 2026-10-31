@@ -490,6 +490,20 @@ https://twitter.com/laco2net/status/1492833480694439940?s=20&t=d9u_aBlsmuSrdXTYP
 
 ---
 
+### Misskey埋め込み
+
+**入力:**
+
+```markdown
+https://misskey.io/notes/aszh5x0wbw860cta
+```
+
+**出力:**
+
+https://misskey.io/notes/aszh5x0wbw860cta
+
+---
+
 ### YouTube埋め込み
 
 **入力:**

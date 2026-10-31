@@ -331,6 +331,90 @@
         }
       }
 
+      &.block-link-misskey {
+        @apply justify-center;
+
+        .misskey-card {
+          @apply w-full max-w-[550px] p-4 md:p-8 bg-white border border-gray-200 rounded-xl;
+        }
+
+        .misskey-header {
+          @apply flex items-center gap-4;
+        }
+
+        .misskey-avatar {
+          @apply shrink-0;
+
+          img {
+            @apply block size-[50px] rounded-full m-0;
+          }
+        }
+
+        .misskey-author {
+          @apply flex flex-col min-w-0 flex-1 text-[14.4px] leading-[1.3];
+        }
+
+        .misskey-name {
+          @apply font-bold break-words text-inherit no-underline;
+        }
+
+        .misskey-username {
+          @apply font-normal break-all;
+        }
+
+        .misskey-server {
+          @apply shrink-0 ml-auto;
+
+          img {
+            @apply block size-8 rounded m-0;
+          }
+        }
+
+        .misskey-text {
+          @apply mt-4 text-[15.12px] leading-[1.35] whitespace-pre-wrap break-words;
+        }
+
+        .misskey-emoji {
+          @apply inline-block h-[2em] align-middle m-0;
+        }
+
+        .misskey-name .misskey-emoji {
+          @apply h-[1.25em];
+        }
+
+        .misskey-images {
+          @apply grid grid-cols-2 gap-2 mt-4;
+
+          &.misskey-images-single {
+            @apply grid-cols-1;
+          }
+
+          .misskey-image {
+            @apply aspect-video rounded-lg bg-gray-100 overflow-hidden;
+
+            img {
+              @apply block w-full h-full object-contain m-0 cursor-pointer transition-opacity duration-200 hover:opacity-80;
+            }
+          }
+        }
+
+        .misskey-more {
+          @apply mt-4 mb-0 text-[13.6px];
+        }
+
+        .misskey-date {
+          @apply block mt-4 text-[13.6px] leading-[1.35] text-muted;
+        }
+
+        &.block-link-misskey-unavailable {
+          @apply flex-col items-center py-6 px-4 text-sm text-muted border border-gray-200 rounded-lg;
+
+          a {
+            @apply text-xs break-all;
+          }
+        }
+      }
+
       &.block-link-youtube {
         @apply flex justify-center;
 
