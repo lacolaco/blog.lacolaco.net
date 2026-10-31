@@ -272,7 +272,8 @@ export async function renderMisskeyNote(url: string, fallback: () => string): Pr
       : '',
     '<div class="misskey-author">',
     externalLink(profileUrl, 'class="misskey-name" ', renderText(displayName, emojiUrls)),
-    `<span class="misskey-username">@${escapeHtml(note.user.username)}@${escapeHtml(note.user.host ?? host)}</span>`,
+    // 1つのテキストにすると、配信時に Cloudflare の Email Obfuscation がメールアドレスとして書き換える
+    `<span class="misskey-username"><span>@${escapeHtml(note.user.username)}</span><span>@${escapeHtml(note.user.host ?? host)}</span></span>`,
     '</div>',
     serverIcon
       ? externalLink(
