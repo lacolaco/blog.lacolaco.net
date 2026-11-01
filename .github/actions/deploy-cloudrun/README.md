@@ -18,8 +18,7 @@ This composite action provides a reusable workflow step for building Docker imag
 | `service-name` | Cloud Run service name | Yes | `web` |
 | `region` | Cloud Run region | Yes | `asia-northeast1` |
 | `registry` | Docker registry URL | Yes | `asia-northeast1-docker.pkg.dev` |
-| `no-traffic` | Set to true for preview deployments | No | `false` |
-| `revision-tag` | Cloud Run revision tag (for preview) | No | - |
+| `labels` | Labels to set on the Cloud Run service (multiline KEY=VALUE) | No | - |
 | `revision-traffic` | Traffic allocation (for production) | No | - |
 
 ## Outputs
@@ -38,12 +37,13 @@ This composite action provides a reusable workflow step for building Docker imag
   uses: ./.github/actions/deploy-cloudrun
   with:
     environment: 'preview'
+    service-name: 'web-pr-${{ github.event.number }}'
     image-tags: |
       asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:pr-${{ github.event.number }}
       asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}
     deploy-image: 'asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}'
-    no-traffic: 'true'
-    revision-tag: 'pr-${{ github.event.number }}'
+    labels: |
+      purpose=preview
 ```
 
 ### Production Environment
