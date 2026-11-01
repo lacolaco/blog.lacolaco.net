@@ -1,0 +1,42 @@
+name: sweep-preview-services
+
+# PR を閉じたときの片付け (shutdown-preview.yml) が失敗して残った、プレビュー用の Cloud Run サービスを削除する
+on:
+  schedule:
+    - cron: '17 19 * * *'
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/sweep-preview-services.yml'
+      - 'tools/preview-cleanup/**'
+
+concurrency:
+  group: sweep-preview-services
+  cancel-in-progress: false
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: read
+    environment: development
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Google Auth
+        uses: 'google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093' # v3.0.0
+        with:
+          workload_identity_provider: 'projects/348931464772/locations/global/workloadIdentityPools/github-actions-pool/providers/github-deploy'
+          service_account: 'github-actions@blog-lacolaco-net.iam.gserviceaccount.com'
+
+      - name: 'Set up Cloud SDK'
+        uses: google-github-actions/setup-gcloud@aa5489c8933f4cc7a4f7d45035b3b1440c9c10db # v3.0.1
+
+      - name: Delete preview services of PRs that are not open
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: tools/preview-cleanup/sweep-preview-services.sh

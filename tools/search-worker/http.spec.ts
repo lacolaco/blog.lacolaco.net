@@ -1,18 +1,29 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { describe, it } from 'node:test';
 import { corsHeaders, isBearerAuthorized, isIndexDocs, parseIndexDocs } from './http.ts';
 
 describe('corsHeaders', () => {
-  const pattern = '^https://pr-[0-9]+---web-[a-z0-9]+-an\\.a\\.run\\.app$';
+  // 設定の実物から読み、プレビューのサービス (web-pr-<番号>) の URL を許可できていることを確かめる
+  const wrangler = readFileSync(import.meta.dirname + '/wrangler.jsonc', 'utf8');
+  const pattern = JSON.parse(wrangler.match(/"ALLOWED_ORIGIN_PATTERN":\s*("[^"\n]*")/)![1]) as string;
+
+  it('wrangler.jsonc のパターンが、プレビューのサービスの URL だけに一致する', () => {
+    const allowed = 'https://web-pr-2260-njpdbbjcea-an.a.run.app';
+    assert.deepEqual(corsHeaders(allowed, pattern), { 'access-control-allow-origin': allowed, vary: 'origin' });
+    // 本番の web と、旧形式のタグ付きリビジョンの URL は許可しない
+    assert.deepEqual(corsHeaders('https://web-njpdbbjcea-an.a.run.app', pattern), {});
+    assert.deepEqual(corsHeaders('https://pr-2260---web-njpdbbjcea-an.a.run.app', pattern), {});
+  });
 
   it('パターンに一致するオリジンだけを許可する', () => {
-    assert.deepEqual(corsHeaders('https://pr-12---web-abc123-an.a.run.app', pattern), {
-      'access-control-allow-origin': 'https://pr-12---web-abc123-an.a.run.app',
+    assert.deepEqual(corsHeaders('https://web-pr-12-abc123-an.a.run.app', pattern), {
+      'access-control-allow-origin': 'https://web-pr-12-abc123-an.a.run.app',
       vary: 'origin',
     });
     assert.deepEqual(corsHeaders('https://evil.example.com', pattern), {});
     // 前後に余計な文字が付いたオリジンは通さない
-    assert.deepEqual(corsHeaders('https://pr-12---web-abc123-an.a.run.app.evil.com', pattern), {});
+    assert.deepEqual(corsHeaders('https://web-pr-12-abc123-an.a.run.app.evil.com', pattern), {});
   });
 
   it('パターンに ^ と $ が無くても、オリジン全体が一致したときだけ許可する', () => {

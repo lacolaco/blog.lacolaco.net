@@ -126,17 +126,21 @@ jobs:
           SEARCH_API_URL: ${{ steps.search-preview-url.outputs.url }}
         run: pnpm exec tsx tools/search-worker/push-index.ts "$SEARCH_API_URL"
 
+      # PR ごとに別のサービス web-pr-<番号> へ配備し、本番の web には書き込まない。
+      # 片付けはサービスの削除 (shutdown-preview.yml と sweep-preview-services.yml)
       - name: Deploy to Cloud Run
         id: deploy-cloudrun
         uses: ./.github/actions/deploy-cloudrun
         with:
           environment: 'preview'
+          service-name: 'web-pr-${{ github.event.number }}'
           image-tags: |
             asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:pr-${{ github.event.number }}
             asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}
           deploy-image: 'asia-northeast1-docker.pkg.dev/blog-lacolaco-net/cloud-run-source-deploy/web:${{ github.sha }}'
-          no-traffic: 'true'
-          revision-tag: 'pr-${{ github.event.number }}'
+          # sweep-preview-services.yml が、閉じ忘れたサービスをこのラベルで見つける
+          labels: |
+            purpose=preview
           # GCP_PROJECT_IDはCloud Runメタデータサーバーから取得するため不要
           env-vars: |
             FIRESTORE_DATABASE=likes-preview

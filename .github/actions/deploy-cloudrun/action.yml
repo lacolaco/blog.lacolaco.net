@@ -26,12 +26,8 @@ inputs:
   env-vars:
     description: 'Environment variables to set on the Cloud Run service (multiline KEY=VALUE)'
     required: false
-  no-traffic:
-    description: 'Set to true for preview deployments'
-    required: false
-    default: 'false'
-  revision-tag:
-    description: 'Cloud Run revision tag (for preview)'
+  labels:
+    description: 'Labels to set on the Cloud Run service (multiline KEY=VALUE)'
     required: false
   revision-traffic:
     description: 'Traffic allocation (for production)'
@@ -103,8 +99,7 @@ runs:
         service: ${{ inputs.service-name }}
         region: ${{ inputs.region }}
         image: ${{ inputs.deploy-image }}
-        no_traffic: ${{ inputs.no-traffic }}
-        tag: ${{ inputs.revision-tag }}
+        labels: ${{ inputs.labels }}
         revision_traffic: ${{ inputs.revision-traffic }}
         env_vars: ${{ inputs.env-vars }}
         flags: '--allow-unauthenticated'
