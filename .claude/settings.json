@@ -13,6 +13,15 @@
             "command": "$CLAUDE_PROJECT_DIR/tools/check-branch-state.sh"
           }
         ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/tools/protect-cloud-run-tags/protect-cloud-run-tags.sh"
+          }
+        ]
       }
     ]
   }
