@@ -1,5 +1,5 @@
 # .node-version と同じメジャーに合わせる
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 # corepack は Node 25 以降に同梱されず、Node を上げると壊れるため使わない。pnpm は package.json の packageManager のバージョンへ自動で切り替わる
 RUN npm install -g --ignore-scripts pnpm@10
 WORKDIR /app
@@ -16,7 +16,7 @@ FROM base AS build
 COPY ./dist ./dist
 
 # Production image
-FROM node:24-alpine
+FROM node:26-alpine
 WORKDIR /app
 
 COPY --from=prod-deps /app/node_modules ./node_modules
