@@ -61,7 +61,7 @@
     "@tailwindcss/vite": "^4.1.4",
     "@testing-library/jest-dom": "^7.0.0",
     "@testing-library/react": "^16.3.2",
-    "@types/dom-chromium-ai": "^0.0.17",
+    "@types/dom-chromium-ai": "^0.0.18",
     "@types/escape-html": "^1.0.4",
     "@types/gtag.js": "^0.0.20",
     "@types/hast": "3.0.5",
