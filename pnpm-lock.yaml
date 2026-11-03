@@ -45,8 +45,8 @@ importers:
         specifier: 7.4.4
         version: 7.4.4(@astrojs/markdown-remark@7.3.5)(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(sass@1.106.1)(tsx@4.23.15)(yaml@2.9.1)
       budoux:
-        specifier: 0.10.1
-        version: 0.10.1
+        specifier: 0.10.2
+        version: 0.10.2
       cheerio:
         specifier: 1.2.0
         version: 1.2.0
@@ -2017,8 +2017,9 @@ packages:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
 
-  budoux@0.10.1:
-    resolution: {integrity: sha512-nSq29N1dluXnyPX5crFfBVeiQkF8WzFqvr9veCdfMDRXNqGfGdfhO9bW0jjVb3RKZ+8pgXyHYE9wfHiSMgm5nQ==}
+  budoux@0.10.2:
+    resolution: {integrity: sha512-b9xs9NrUGC7rB4io0yC7OtRjU7oj/2OEAIAhLZm2KETupgDfPU2bOO6E3Mp0OheJkZ99HrZSxuFfmn8AIN3Mow==}
+    engines: {node: '>=22'}
     hasBin: true
 
   buffer-equal-constant-time@1.0.1:
@@ -6049,7 +6050,7 @@ snapshots:
       fill-range: 7.1.1
     optional: true
 
-  budoux@0.10.1:
+  budoux@0.10.2:
     dependencies:
       commander: 15.0.0
       linkedom: 0.18.12
