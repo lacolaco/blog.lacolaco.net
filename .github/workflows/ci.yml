@@ -151,7 +151,7 @@ jobs:
           node-version-file: .node-version
           cache: 'pnpm'
       - run: pnpm install --frozen-lockfile
-      - run: pnpm test:tools
+      - run: pnpm test
 
   terraform:
     runs-on: ubuntu-latest

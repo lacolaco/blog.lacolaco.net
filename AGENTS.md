@@ -79,7 +79,7 @@ Kent Beck style. Tests = spec. Fix implementation, not tests.
 
 ### Stack
 - Astro 7.x blog, Notion CMS, bilingual (ja/en)
-- Node.js 24+, pnpm 10.34.5, TS strict
+- Node.js は .node-version、pnpm は package.json の packageManager に固定。TS strict
 - Astro 7.x+React, Tailwind 4.x
 - GCP: Cloud Run
 - Cloudflare: R2 (画像CDN), CDN (OG画像キャッシュ)

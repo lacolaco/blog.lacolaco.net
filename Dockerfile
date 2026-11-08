@@ -1,14 +1,14 @@
 # .node-version と同じメジャーに合わせる
 FROM node:26-alpine AS base
-# corepack は Node 25 以降に同梱されず、Node を上げると壊れるため使わない。pnpm は package.json の packageManager のバージョンへ自動で切り替わる
-RUN npm install -g --ignore-scripts pnpm@10
 WORKDIR /app
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+# corepack は Node 25 以降に同梱されないため、packageManager と同じ pnpm を npm で入れる。
+RUN npm install -g --ignore-scripts "$(node -p 'require("./package.json").packageManager')" && pnpm --version
 
 # Install Astro runtime dependencies
 FROM base AS prod-deps
-RUN pnpm install --prod --ignore-scripts --shamefully-hoist
+RUN pnpm install --prod --frozen-lockfile --ignore-scripts
 
 # NOTE: Requires Astro build output before Docker build
 FROM base AS build

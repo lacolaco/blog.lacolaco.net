@@ -16,6 +16,7 @@ on:
       # Package dependencies
       - 'package.json'
       - 'pnpm-lock.yaml'
+      - 'pnpm-workspace.yaml'
       # 検索 API (Cloudflare Workers) のコードと設定
       - 'tools/search-worker/**'
       # Remark plugins and tools affecting build

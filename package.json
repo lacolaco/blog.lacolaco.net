@@ -98,10 +98,5 @@
     "vitest": "5.1.0",
     "wrangler": "4.156.2",
     "zod": "^3.22.4"
-  },
-  "pnpm": {
-    "overrides": {
-      "uuid": ">=10"
-    }
   }
 }
