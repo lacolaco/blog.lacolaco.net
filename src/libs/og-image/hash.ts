@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { parse as parseYaml } from 'yaml';
+import { parseAllDocuments } from 'yaml';
 
 /**
  * OG画像の描画結果を左右する実装ファイル。
@@ -72,12 +72,19 @@ type LockfileEntry = { version: string; snapshot: string };
  * 古い描画が永久に配信され続けるため、必ず失敗させる。
  */
 function readLockfileEntries(raw: string, lockfilePath: string): Record<string, LockfileEntry> {
-  const lockfile = parseYaml(raw) as {
-    importers?: Record<string, { [section: string]: Record<string, { version?: string }> | undefined }>;
-    snapshots?: Record<string, unknown>;
-  };
-  const importer = lockfile.importers?.['.'];
-  if (!importer) {
+  const documents = parseAllDocuments(raw);
+  for (const document of documents) {
+    if (document.errors.length > 0) throw document.errors[0];
+  }
+  // pnpm の boot document は先頭、プロジェクトの依存グラフは常に最後の document にある。
+  const lockfile = documents.at(-1)?.toJS() as
+    | {
+        importers?: Record<string, { [section: string]: Record<string, { version?: string }> | undefined }>;
+        snapshots?: Record<string, unknown>;
+      }
+    | undefined;
+  const importer = lockfile?.importers?.['.'];
+  if (!lockfile || !importer) {
     throw new Error(`${lockfilePath} から importers['.'] を読めなかった。lockfileの形式が変わった可能性がある`);
   }
 

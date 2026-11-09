@@ -1,5 +1,8 @@
-# pnpm 10.34 の設定はここに置く。pnpm.io の Settings (pnpm-workspace.yaml) が
-# 設定の置き場として案内しており、.npmrc は認証系の設定向けとされている。
+# pnpm の設定はここに置く。.npmrc は認証・registry の設定にのみ使う。
+shamefullyHoist: true
+
+overrides:
+  uuid: '>=10'
 
 # 公開から 5 日 (7200 分) 未満のバージョンはインストールしない。
 # Renovate の minimumReleaseAge ("5 days", .github/renovate.json) と同じ基準にして、

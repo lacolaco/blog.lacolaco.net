@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { mkdtempSync, writeFileSync, mkdirSync, cpSync, rmSync } from 'node:fs';
+import { mkdtempSync, readFileSync, writeFileSync, mkdirSync, cpSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { stringify as stringifyYaml } from 'yaml';
@@ -64,6 +64,21 @@ function defaultVersions(): Record<string, string> {
   return Object.fromEntries(RENDERER_DEPENDENCIES.map((name) => [name, '1.0.0']));
 }
 
+function prependBootLockfile(rootDir: string, pnpmVersion = '12.16.1'): void {
+  const path = join(rootDir, 'pnpm-lock.yaml');
+  const boot = stringifyYaml({
+    lockfileVersion: '9.0',
+    importers: {
+      '.': {
+        configDependencies: {},
+        packageManagerDependencies: { pnpm: { specifier: pnpmVersion, version: pnpmVersion } },
+      },
+    },
+    snapshots: { [`pnpm@${pnpmVersion}`]: {} },
+  });
+  writeFileSync(path, `---\n${boot}---\n${readFileSync(path, 'utf8')}`, 'utf8');
+}
+
 describe('computeOgImageHash', () => {
   // ビルド時 (og:image のURL組み立て) とCI (画像生成) で同じ値になる必要がある
   it('同じmarkdownと同じfingerprintなら同じhashを返す', () => {
@@ -92,6 +107,71 @@ describe('computeRendererFingerprint', () => {
   it('同じ実装ファイル群なら同じ値を返す', () => {
     const root = createFakeRoot();
     expect(computeRendererFingerprint(root)).toBe(computeRendererFingerprint(root));
+  });
+
+  it('boot documentの有無でfingerprintが変わらない', () => {
+    const root = createFakeRoot();
+    const before = computeRendererFingerprint(root);
+    prependBootLockfile(root);
+
+    expect(computeRendererFingerprint(root)).toBe(before);
+  });
+
+  it('boot documentのpnpmバージョンだけが変わってもfingerprintが変わらない', () => {
+    const root = createFakeRoot();
+    prependBootLockfile(root);
+    const before = computeRendererFingerprint(root);
+    writeLockfile(root, defaultVersions());
+    prependBootLockfile(root, '12.17.0');
+
+    expect(computeRendererFingerprint(root)).toBe(before);
+  });
+
+  it('boot documentがあっても描画依存の更新を検知する', () => {
+    const root = createFakeRoot();
+    prependBootLockfile(root);
+    const before = computeRendererFingerprint(root);
+    writeLockfile(root, { ...defaultVersions(), satori: '1.0.1' });
+    prependBootLockfile(root);
+
+    expect(computeRendererFingerprint(root)).not.toBe(before);
+  });
+
+  it('boot documentがあっても描画依存のsnapshot更新を検知する', () => {
+    const root = createFakeRoot();
+    prependBootLockfile(root);
+    const before = computeRendererFingerprint(root);
+    const versions = defaultVersions();
+    const snapshots = Object.fromEntries(
+      Object.entries(versions).map(([name, version]) => [
+        `${name}@${version}`,
+        { dependencies: name === 'satori' ? { 'yoga-layout': '3.2.2' } : {} },
+      ]),
+    );
+    writeLockfile(root, versions, { snapshots });
+    prependBootLockfile(root);
+
+    expect(computeRendererFingerprint(root)).not.toBe(before);
+  });
+
+  it('project documentのsnapshot欠落をboot documentから補わない', () => {
+    const root = createFakeRoot();
+    const boot = readFileSync(join(root, 'pnpm-lock.yaml'), 'utf8');
+    writeLockfile(root, defaultVersions(), { snapshots: {} });
+    const project = readFileSync(join(root, 'pnpm-lock.yaml'), 'utf8');
+    writeFileSync(join(root, 'pnpm-lock.yaml'), `---\n${boot}---\n${project}`, 'utf8');
+
+    expect(() => computeRendererFingerprint(root)).toThrow(/snapshots/);
+  });
+
+  it.each(['boot', 'project'])('%s documentのYAMLが不正ならエラーになる', (target) => {
+    const root = createFakeRoot();
+    const path = join(root, 'pnpm-lock.yaml');
+    const project = readFileSync(path, 'utf8');
+    const invalid = 'importers: [\n';
+    writeFileSync(path, target === 'boot' ? `---\n${invalid}---\n${project}` : `---\n${project}---\n${invalid}`);
+
+    expect(() => computeRendererFingerprint(root)).toThrow(/flow sequence/i);
   });
 
   // 手動でバージョンを上げ忘れても、実装を変えれば必ず再生成が走ることを担保する
