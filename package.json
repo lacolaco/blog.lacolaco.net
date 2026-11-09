@@ -90,7 +90,7 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.2",
     "sass": "1.107.1",
-    "tailwindcss": "4.3.3",
+    "tailwindcss": "4.3.4",
     "tsx": "4.23.15",
     "typescript-eslint": "^8.33.1",
     "unified": "^11.0.5",
