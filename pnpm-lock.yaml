@@ -66,8 +66,8 @@ importers:
         specifier: 12.3.0
         version: 12.3.0
       p-retry:
-        specifier: ^8.0.0
-        version: 8.0.1
+        specifier: ^9.0.0
+        version: 9.0.0
       react:
         specifier: 19.3.1
         version: 19.3.1
@@ -3442,8 +3442,8 @@ packages:
     resolution: {integrity: sha512-312Id396EbJdvRONlngUx0NydfrIQ5lsYu0znKVUzVvArzEIt08V1qhtyESbGVd1FGX7UKtiFp5uwKZdM8wIuQ==}
     engines: {node: '>=8'}
 
-  p-retry@8.0.1:
-    resolution: {integrity: sha512-NAigyu8hfvJe7MsS18mnc4is0MZtau3QMdBklaJKK23oBQb6occO3UPM3vHmTckW8KhfyjMZaUOqdTFEYliHgg==}
+  p-retry@9.0.0:
+    resolution: {integrity: sha512-HuEats8gYn/UUYa5uyveyQGv75mQmwdFtuMgnZlS12dj/7bdnJSO6keaTjgcZUhvkANTj5EO3lACUmV3xmgj0Q==}
     engines: {node: '>=22'}
 
   p-timeout@7.0.1:
@@ -7863,7 +7863,7 @@ snapshots:
       '@types/retry': 0.12.0
       retry: 0.13.1
 
-  p-retry@8.0.1:
+  p-retry@9.0.0:
     dependencies:
       is-network-error: 1.3.2
 
