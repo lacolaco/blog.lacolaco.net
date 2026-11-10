@@ -75,7 +75,7 @@
     "eslint-plugin-import-x": "4.17.1",
     "husky": "^9.1.7",
     "image-size": "^2.0.2",
-    "jsdom": "^30.0.0",
+    "jsdom": "^31.0.0",
     "prettier": "3.9.10",
     "rehype-github-alert": "^1.0.0",
     "rehype-github-emoji": "^1.0.0",
