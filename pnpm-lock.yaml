@@ -92,7 +92,7 @@ importers:
         version: 10.0.1(eslint@10.14.0(jiti@2.7.0))
       '@google/genai':
         specifier: ^3.0.0
-        version: 3.1.0
+        version: 3.2.0
       '@iconify/json':
         specifier: ^2.2.161
         version: 2.2.555
@@ -376,8 +376,8 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
 
-  '@babel/runtime@7.29.13':
-    resolution: {integrity: sha512-v+oN26xP4YIlQsbQ/CbTH1WG5m/l/DjKKZNy/Kp3f/AFvbgt7Em/D0FeMM3O2hX0YzeN2M16W8lOpyhIkfCBcQ==}
+  '@babel/runtime@7.29.14':
+    resolution: {integrity: sha512-Y5tqevQaUAZhhj82BpYMNC1ssvLQTVAfwKdm8iy8qwmhvC2/CpcAu8OC+QEtjM7pMk7knx83u1Qj8gzkicyelw==}
     engines: {node: '>=6.9.0'}
 
   '@babel/types@7.29.8':
@@ -776,8 +776,8 @@ packages:
     resolution: {integrity: sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==}
     engines: {node: '>=6'}
 
-  '@google/genai@3.1.0':
-    resolution: {integrity: sha512-fKLeRkpULBDox+b5wmm4UN6PsUw1v5kP+8vJF1aq/wSpiI2sV4AuDtL0uZqu91AH4lc25fZ8sDa6cyCQOFyaXg==}
+  '@google/genai@3.2.0':
+    resolution: {integrity: sha512-AyT5kezsBpxRr8ljz7RmfhrxfjTse0aIDv7DGoNmk6lyta0A13AEOiGpw7VFcrYSmXq8HtkbWYBAeqqdALv6gw==}
     engines: {node: '>=22.0.0'}
     peerDependencies:
       '@modelcontextprotocol/sdk': ^1.25.2
@@ -4507,7 +4507,7 @@ snapshots:
     dependencies:
       '@babel/types': 7.29.8
 
-  '@babel/runtime@7.29.13': {}
+  '@babel/runtime@7.29.14': {}
 
   '@babel/types@7.29.8':
     dependencies:
@@ -4797,7 +4797,7 @@ snapshots:
 
   '@fortawesome/fontawesome-free@6.7.2': {}
 
-  '@google/genai@3.1.0':
+  '@google/genai@3.2.0':
     dependencies:
       google-auth-library: 10.9.1
       p-retry: 4.6.2
@@ -5362,7 +5362,7 @@ snapshots:
   '@testing-library/dom@10.4.1':
     dependencies:
       '@babel/code-frame': 7.29.7
-      '@babel/runtime': 7.29.13
+      '@babel/runtime': 7.29.14
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       dom-accessibility-api: 0.5.16
@@ -5384,7 +5384,7 @@ snapshots:
 
   '@testing-library/react@16.3.3(@testing-library/dom@10.4.1)(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
-      '@babel/runtime': 7.29.13
+      '@babel/runtime': 7.29.14
       '@testing-library/dom': 10.4.1
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
